@@ -18,6 +18,7 @@
 function! MakeHtmlAll()
   let s:log = []
   call MakeTagsFile()
+  echo ""
   let files = split(glob('*.??[tx]'), '\n')
   for i in range(len(files))
     let file = files[i]
@@ -30,14 +31,6 @@ function! MakeHtmlAll()
     new
     call append(0, s:log)
   endif
-endfunction
-
-function! MakeHtmlAllBatch()
-  call MakeTagsFile()
-  let files = split(glob('*.??[tx]'), '\n')
-  for i in range(len(files))
-    call MakeHtml(files[i])
-  endfor
 endfunction
 
 function! MakeTagsFile()
@@ -67,7 +60,7 @@ endfunction
 
 function! MakeHtml(fname)
   let r = MakeHtml2(a:fname, s:HtmlName(a:fname))
-  quit!
+  silent quit!
   return r
 endfunction
 
@@ -95,7 +88,7 @@ function! MakeHtml2(src, dst)
   silent %s@<span class="\(helpStar\|helpBar\|Ignore\)">[^<]*</span>@@ge
   call s:TranslateHelpExampleBlock()
   " remove style
-  g/^\.\(helpBar\|helpStar\|helpHyperTextEntry\|helpHyperTextJump\|helpOption\)/silent delete _
+  silent g/^\.\(helpBar\|helpStar\|helpHyperTextEntry\|helpHyperTextJump\|helpOption\)/silent delete _
 
   call s:Header()
   call s:Footer()
