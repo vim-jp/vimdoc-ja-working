@@ -5,6 +5,10 @@ sudo: false
 env:
   global:
     - secure: "Q2G6nx07n89YKJo9lYOjFkejMo4psh/2iUV61OiwUaMSkGV1EhfYJJe0j9aKeTK4p/KKzx0QTRW+/o2l1HFH3mM++bs64j4Y9NUmAbgDtk8Pc2NCkRoSbpeNk+luB0aGdpSH7bJGncUzbfty3Yv3eQ9KB4fl9Y/CpuiDbTvmxGo="
+    - 'DEPLOY_BRANCH="working"'
+    - 'DEPLOY_REPO_SLUG="vim-jp/vimdoc-ja-tmp"'
+    - 'DEPLOY_USER_NAME="vimdoc-ja on travis-ci"'
+    - 'DEPLOY_USER_EMAIL="vimdoc-ja+travis-ci@vim-jp.org"'
 
 install: go get github.com/koron/nvcheck
 
@@ -13,5 +17,5 @@ script:
 
 after_success:
   - sh ./tools/install_sshkey_github.sh "$CI_KEY" ./tools/ci@vimdoc-ja.vim-jp.org.enc ~/.ssh/ci@vimdoc-ja.vim-jp.org
-  - '[ "$TRAVIS_BRANCH" == "working" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && sh ./tools/deploy-master.sh _master'
-  - '[ "$TRAVIS_BRANCH" == "working" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && sh ./tools/deploy-gh-pages.sh _gh-pages'
+  - '[ "$TRAVIS_BRANCH" == "$DEPLOY_BRANCH" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && sh ./tools/deploy-master.sh _master'
+  - '[ "$TRAVIS_BRANCH" == "$DEPLOY_BRANCH" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && sh ./tools/deploy-gh-pages.sh _gh-pages'
