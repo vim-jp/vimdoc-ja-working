@@ -1,7 +1,15 @@
 language: go
 go: 1.5
 sudo: false
+
+env:
+  global:
+    - secure: "Q2G6nx07n89YKJo9lYOjFkejMo4psh/2iUV61OiwUaMSkGV1EhfYJJe0j9aKeTK4p/KKzx0QTRW+/o2l1HFH3mM++bs64j4Y9NUmAbgDtk8Pc2NCkRoSbpeNk+luB0aGdpSH7bJGncUzbfty3Yv3eQ9KB4fl9Y/CpuiDbTvmxGo="
+
 install: go get github.com/koron/nvcheck
 script:
   - sh ./tools/nvcheck.sh doc
   - sh ./tools/nvcheck.sh vim_faq
+
+after_success:
+  - openssl aes-256-cbc -k "$CI_KEY" -in tools/enctest.txt.enc -d -a
