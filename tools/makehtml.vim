@@ -94,7 +94,7 @@ function! MakeHtml2(src, dst)
   endif
 
   silent! %foldopen!
-  TOhtml
+  silent! call tohtml#Convert2HTML(1, line('$'))
 
   let lang = s:GetLang(a:src)
   silent %s@<span class="\(helpHyperTextEntry\|helpHyperTextJump\|helpOption\)">\([^<]*\)</span>@\=s:MakeLink(lang, submatch(1), submatch(2))@ge

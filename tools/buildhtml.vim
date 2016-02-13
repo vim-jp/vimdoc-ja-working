@@ -4,10 +4,10 @@ set encoding=utf-8
 set fileencodings=utf-8
 syntax on
 colorscheme delek
+let g:html_no_progress = 1
 
 enew!
 
-source <sfile>:h/tohtml.vim
 source <sfile>:h/makehtml.vim
 
 function! s:main()
@@ -38,7 +38,7 @@ function! s:BuildHtml()
   " 2html.vim escape modeline.  But it doesn't escape /^vim:/.
   set nomodeline
   args *.html
-  argdo call s:PostEdit() | update!
+  argdo call s:PostEdit() | silent update!
 endfunction
 
 function! s:system(cmd)
@@ -67,11 +67,11 @@ function! s:ToJekyll()
     let helpname = 'help'
   endif
   " remove header
-  1,/^<hr>/delete _
+  silent 1,/^<hr>/delete _
   " remove footer
-  /^<hr>/,$delete _
+  silent /^<hr>/,$delete _
   " escape jekyll tags
-  %s/{\{2,}\|{%/{{ "\0" }}/ge
+  silent %s/{\{2,}\|{%/{{ "\0" }}/ge
   " YAML front matter
   call append(0, [
         \ '---',
