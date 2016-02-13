@@ -13,7 +13,5 @@ script:
 
 after_success:
   - sh ./tools/install_sshkey_github.sh "$CI_KEY" ./tools/ci@vimdoc-ja.vim-jp.org.enc ~/.ssh/ci@vimdoc-ja.vim-jp.org
-  # Update gh-pages
-  #- '[ "$TRAVIS_BRANCH" == "working" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && sh ./tools/deploy-gh-pages.sh _gh-pages'
-  # Update master
   - '[ "$TRAVIS_BRANCH" == "working" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && sh ./tools/deploy-master.sh _master'
+  - '[ "$TRAVIS_BRANCH" == "working" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && sh ./tools/deploy-gh-pages.sh _gh-pages'
