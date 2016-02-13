@@ -41,21 +41,6 @@ function! s:BuildHtml()
   argdo call s:PostEdit() | silent update!
 endfunction
 
-function! s:system(cmd)
-  call system(a:cmd)
-  if v:shell_error
-    throw 'system() failed: ' . a:cmd
-  endif
-endfunction
-
-function! s:rmdir(path)
-  if executable('rm')
-    call s:system('rm -rf ' . shellescape(a:path))
-  else
-    call s:system('rmdir /s /q ' . shellescape(a:path))
-  endif
-endfunction
-
 function! s:PostEdit()
   set fileformat=unix
   call s:ToJekyll()
