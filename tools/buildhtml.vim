@@ -38,7 +38,7 @@ function! s:BuildHtml()
   " 2html.vim escape modeline.  But it doesn't escape /^vim:/.
   set nomodeline
   args *.html
-  argdo call s:PostEdit() | silent update!
+  silent argdo call s:PostEdit() | update!
 endfunction
 
 function! s:PostEdit()

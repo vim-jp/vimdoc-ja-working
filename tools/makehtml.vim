@@ -16,21 +16,15 @@
 "   :call MakeHtmlAll()
 
 function! MakeHtmlAll()
-  if bufname("%") != "" || &modified
-    new
-  endif
   let s:log = []
   call MakeTagsFile()
   let files = split(glob('*.??[tx]'), '\n')
   for i in range(len(files))
-    call append('$', printf("%d/%d %s -> %s", i+1, len(files), files[i], s:HtmlName(files[i])))
-  endfor
-  silent 1delete _
-  for i in range(len(files))
     let file = files[i]
+    echon printf("%d/%d %s -> %s", i+1, len(files), files[i], s:HtmlName(files[i]))
     call MakeHtml(file)
-    echo printf("%d/%d %s -> %s *DONE*", i+1, len(files), files[i], s:HtmlName(files[i]))
-    redraw
+    echon " *DONE*"
+    echo ""
   endfor
   if s:log != []
     new
