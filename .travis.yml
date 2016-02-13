@@ -10,13 +10,12 @@ install: go get github.com/koron/nvcheck
 
 script:
   - make check
-  - make html
 
 after_success:
   - sh ./tools/install_sshkey_github.sh "$CI_KEY" ./tools/ci@vimdoc-ja.vim-jp.org.enc ~/.ssh/ci@vimdoc-ja.vim-jp.org
+  # Update gh-pages
+  - '[ "$TRAVIS_BRANCH" == "working" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && sh ./tools/deploy-gh-pages.sh _gh-pages'
+  # Update master
   - git clone -b master --depth 1 git@github.com:vim-jp/vimdoc-ja-tmp.git _master
   # TODO: build master and copy its products to _master
   # TODO: commit and push to _master
-  - git clone -b gh-pages --depth 1 git@github.com:vim-jp/vimdoc-ja-tmp.git _gh-pages
-  # TODO: build gh-pages and copy its products to _gh-pages
-  # TODO: commit and push to _gh-pages
