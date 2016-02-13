@@ -27,11 +27,10 @@ function! MakeHtmlAll()
   endfor
   silent 1delete _
   for i in range(len(files))
-    call cursor(i+1, 1)
-    redraw!   " show progress
     let file = files[i]
     call MakeHtml(file)
-    call setline(i+1, getline(i+1) . ' *DONE*')
+    echo printf("%d/%d %s -> %s *DONE*", i+1, len(files), files[i], s:HtmlName(files[i]))
+    redraw
   endfor
   if s:log != []
     new
@@ -57,7 +56,7 @@ function! MakeTagsFile()
     else
       let fname = printf("tags.%sx", lang)
     endif
-    new `=fname`
+    silent new `=fname`
     silent %delete _
     let tags = s:GetTags(lang)
     for tagname in sort(keys(tags))
@@ -68,7 +67,7 @@ function! MakeTagsFile()
     endfor
     call append('$', ' vim:ft=help:')
     silent 1delete _
-    wq!
+    silent wq!
   endfor
 endfunction
 
@@ -79,7 +78,7 @@ function! MakeHtml(fname)
 endfunction
 
 function! MakeHtml2(src, dst)
-  new `=a:src`
+  silent new `=a:src`
 
   " 2html options
   let g:html_use_css = 1
@@ -107,7 +106,7 @@ function! MakeHtml2(src, dst)
   call s:Header()
   call s:Footer()
 
-  wq! `=a:dst`
+  silent wq! `=a:dst`
 endfunction
 
 " <span>...</span>  -> <div>...
