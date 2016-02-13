@@ -2,18 +2,16 @@
 
 all:
 
+check:
+	nvcheck doc/*.jax vim_faq/*.jax
+
 html:
-	vim -u tools/buildhtml.vim
-
-htmlbatch:
-	git show-branch devel || git branch -t devel origin/devel
-	git show-branch gh-pages || git branch -t gh-pages origin/gh-pages
-	vim -u tools/buildhtml.vim -e -s -- --batch
-	cd html && git push ..
-
-deploy:
-	sh ./tools/update-master.sh
-	sh ./tools/update-gh-pages.sh
+	rm -rf target/html
+	mkdir -p target/html/doc
+	cp -R syntax target/html
+	cp doc/*.jax vim_faq/*.jax target/html/doc
+	cp tools/buildhtml.vim tools/makehtml.vim tools/tohtml.vim target/html
+	( cd target/html/doc && vim -eu ../buildhtml.vim -c "qall!" )
 
 clean:
 	rm -rf target

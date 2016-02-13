@@ -1,5 +1,3 @@
-#!gvim -u
-
 set nocompatible
 set nomore
 set encoding=utf-8
@@ -9,8 +7,7 @@ colorscheme delek
 
 enew!
 
-runtime plugin/tohtml.vim
-
+source <sfile>:h/tohtml.vim
 source <sfile>:h/makehtml.vim
 
 function! s:main()

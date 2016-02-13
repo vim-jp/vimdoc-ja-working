@@ -1,6 +1,3 @@
-#!vim -u
-" FIXME:
-
 set nocompatible
 set nomore
 
