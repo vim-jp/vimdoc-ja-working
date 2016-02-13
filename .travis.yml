@@ -12,4 +12,10 @@ script:
   - sh ./tools/nvcheck.sh vim_faq
 
 after_success:
-  - openssl aes-256-cbc -k "$CI_KEY" -in tools/enctest.txt.enc -d -a
+  - sh ./tools/install_sshkey_github.sh "$CI_KEY" ./tools/ci@vimdoc-ja.vim-jp.org.enc ~/.ssh/ci@vimdoc-ja.vim-jp.org
+  - git clone -b master --depth 1 git@github.com:vim-jp/vimdoc-ja-tmp.git _master
+  # TODO: build master and copy its products to _master
+  # TODO: commit and push to _master
+  - git clone -b gh-pages --depth 1 git@github.com:vim-jp/vimdoc-ja-tmp.git _gh-pages
+  # TODO: build gh-pages and copy its products to _gh-pages
+  # TODO: commit and push to _gh-pages
