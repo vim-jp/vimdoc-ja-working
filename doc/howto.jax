@@ -11,7 +11,7 @@ How to ...				*howdoi* *how-do-i* *howto* *how-to*
 |initialization|	Vim を初期化する
 |vimrc-intro|		Vimスクリプトファイル(vimrc)を書く
 |suspend|		Vim をサスペンドする
-|usr_11.txt|		クラッシュした後にリカバリーする
+|usr_11.txt|		クラッシュした後にリカバリする
 |07.4|			上書きするときにバックアップファイルを作っておく
 
 |usr_07.txt|		ファイルを編集する
