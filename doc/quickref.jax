@@ -816,9 +816,9 @@
 'more'			    スクリーンを埋めるような出力で一時停止するか
 'mouse'			    マウスを使うか
 'mousefocus'	  'mousef'  マウスの移動でキーボードのフォーカスを移動する
-'mousehide'	  'mh'      入力時にマウスポインタを非表示にする
+'mousehide'	  'mh'      入力時にマウスポインターを非表示にする
 'mousemodel'	  'mousem'  マウスボタンの機能を変える
-'mouseshape'	  'mouses'  モード別にマウスポインタの形を変える
+'mouseshape'	  'mouses'  モード別にマウスポインターの形を変える
 'mousetime'	  'mouset'  ダブルクリックの間隔時間
 'mzquantum'	  'mzq'	    MzSchemeスレッドに切り替える間隔
 'nrformats'	  'nf'      CTRL-A用の数値書式
@@ -879,7 +879,7 @@
 'shellcmdflag'	  'shcf'    シェル実行時のフラグ
 'shellpipe'	  'sp'      |:make|の出力をエラーファイルに入れるのに使う文字
 'shellquote'	  'shq'     シェルで使う引用符
-'shellredir'	  'srr'     フィルタの出力を一時ファイルに入れるのに使う文字
+'shellredir'	  'srr'     フィルターの出力を一時ファイルに入れるのに使う文字
 'shellslash'	  'ssl'     シェルで使うファイルのパス区切りに使う
 'shelltemp'	  'stmp'    シェルコマンドに一時ファイルを使うかどうか
 'shelltype'	  'st'      Amiga: シェルの使い方に影響する
