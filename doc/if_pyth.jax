@@ -208,7 +208,7 @@ vim.buffers						*python-buffers*
 	一連のvimバッファへのアクセスを提供するマッピングオブジェクト。
 	次の操作がサポートされています: >
 	    :py b = vim.buffers[i]	# インデックス化する (読取り専用)
-	    :py b in vim.buffers	# メンバかどうか調べる
+	    :py b in vim.buffers	# メンバーかどうか調べる
 	    :py n = len(vim.buffers)	# 要素の個数
 	    :py for b in vim.buffers:	# バッファリストのイテレート
 
@@ -216,7 +216,7 @@ vim.windows						*python-windows*
 	一連のvimウィンドウへのアクセスを提供するシーケンスオブジェクト。
 	このオブジェクトは次の操作をサポートしています: >
 	    :py w = vim.windows[i]	# インデックス化する (読取り専用)
-	    :py w in vim.windows	# メンバかどうか調べる
+	    :py w in vim.windows	# メンバーかどうか調べる
 	    :py n = len(vim.windows)	# 要素の個数
 	    :py for w in vim.windows:	# シーケンシャルアクセス
 <	Note: vim.windows オブジェクトは常に現在のタブページ内にアクセスしま
@@ -230,7 +230,7 @@ vim.tabpages						*python-tabpages*
 	Vim のタブページの一覧へのアクセスを提供するシーケンスオブジェクト。
 	このオブジェクトは次の操作をサポートしています: >
 	    :py t = vim.tabpages[i]	# インデックス化する (読取り専用)
-	    :py t in vim.tabpages	# メンバかどうか調べる
+	    :py t in vim.tabpages	# メンバーかどうか調べる
 	    :py n = len(vim.tabpages)	# 要素の個数
 	    :py for t in vim.tabpages:	# シーケンシャルアクセス
 

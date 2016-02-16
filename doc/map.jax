@@ -1295,8 +1295,8 @@ Note: That some completion methods might expand environment variables.
 合、補完候補のリストからArgLeadにそぐわない候補(ArgLeadで始まらない文字)を取り
 除く必要はありません。Vimは補完関数を実行した後にふさわしくない候補を取り除き
 ます。おそらくその方がほとんどの場面で有用です。"customlist" を使った場合、Vim
-は補完候補のリストをフィルタしません。補完候補のリストを自分でフィルタしてくだ
-さい。
+は補完候補のリストをフィルターしません。補完候補のリストを自分でフィルターして
+ください。
 
 次の例はFingerコマンドでユーザー名を補完します >
     :com -complete=custom,ListUsers -nargs=1 Finger !finger <args>

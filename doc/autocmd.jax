@@ -180,8 +180,8 @@ Note [group] はあらかじめ定義されていなければならないこと�
 「ファイル読み込み」には次の4種類のイベントが発生しうる。
 	BufNewFile			存在しないファイルの編集を開始する。
 	BufReadPre	BufReadPost	既存のファイルの編集を開始する。
-	FilterReadPre	FilterReadPost	フィルタの出力による一時ファイルを読み
-					込む。
+	FilterReadPre	FilterReadPost	フィルターの出力による一時ファイルを読
+					み込む。
 	FileReadPre	FileReadPost	その他のファイルを読み込む。
 Vimはファイルを読み込むときにこの4種類のうちどれか1つを利用する。"Pre"と"Post"
 のイベントは、ファイル読み込みの前後で両方とも起動される。
@@ -219,8 +219,8 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |FileReadPost|		":read"でファイルを読み込んだ後
 |FileReadCmd|		":read"でファイルを読み込む前 |Cmd-event|
 
-|FilterReadPre|		フィルタコマンドでファイルを読み込む前
-|FilterReadPost|	フィルタコマンドでファイルを読み込んだ後
+|FilterReadPre|		フィルターコマンドでファイルを読み込む前
+|FilterReadPost|	フィルターコマンドでファイルを読み込んだ後
 
 |StdinReadPre|		標準入力からバッファに読み込む前
 |StdinReadPost|		標準入力からバッファに読み込んだ後
@@ -239,8 +239,8 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |FileAppendPost|	ファイルに追加した後
 |FileAppendCmd|		ファイルに追加する前 |Cmd-event|
 
-|FilterWritePre|	フィルタコマンドやdiff用にファイルを書き込むとき
-|FilterWritePost|	フィルタコマンドやdiff用にファイルを書き込んだ後
+|FilterWritePre|	フィルターコマンドやdiff用にファイルを書き込むとき
+|FilterWritePost|	フィルターコマンドやdiff用にファイルを書き込んだ後
 
 	バッファ
 |BufAdd|		バッファリストにバッファを追加した直後
@@ -285,7 +285,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |FileChangedRO|		読み込み専用ファイルに対して最初に変更を加える前
 
 |ShellCmdPost|		シェルコマンドを実行した後
-|ShellFilterPost|	シェルコマンドでフィルタをかけた後
+|ShellFilterPost|	シェルコマンドでフィルターをかけた後
 
 |CmdUndefined|		呼び出そうとしたユーザー定義コマンドが定義されていな
 			かったとき
@@ -653,26 +653,26 @@ FileWritePost			バッファ全体を書き込まない場合の、ファイル�
 FileWritePre			バッファ全体を書き込まない場合の、ファイルに書
 				き込む前。
 							*FilterReadPost*
-FilterReadPost			フィルタコマンドからファイルを読み込んだ後。
+FilterReadPost			フィルターコマンドからファイルを読み込んだ後。
 				Vimは FilterReadPre と同様に、現在のバッファの
 				名前に対してパターンを調べる。
 							*FilterReadPre* *E135*
-FilterReadPre			フィルタコマンドからファイルを読み込む前。Vim
-				は、フィルタコマンドの出力である一時ファイルの
-				名前ではなく、現在のバッファの名前に対してパター
-				ンを調べる。
+FilterReadPre			フィルターコマンドからファイルを読み込む前。
+				Vimは、フィルターコマンドの出力である一時ファ
+				イルの名前ではなく、現在のバッファの名前に対し
+				てパターンを調べる。
 							*FilterWritePost*
-FilterWritePost			フィルタコマンド用のファイルを書き込んだり、差
-				分表示用のファイルを作った後。
+FilterWritePost			フィルターコマンド用のファイルを書き込んだり、
+				差分表示用のファイルを作った後。
 				Vimは FilterWritePre と同様、現在のバッファの
 				名前に対してパターンをチェックする。
 				'shelltemp' がオフのときは発生しない。
 							*FilterWritePre*
-FilterWritePre			フィルタコマンド用のファイルを書き込んだり、差
-				分表示用のファイルを作る前。
-				Vimはフィルタコマンドの出力である一時ファイル
-				の名前ではなく、現在のバッファの名前に対してパ
-				ターンをチェックする。
+FilterWritePre			フィルターコマンド用のファイルを書き込んだり、
+				差分表示用のファイルを作る前。
+				Vimはフィルターコマンドの出力である一時ファイ
+				ルの名前ではなく、現在のバッファの名前に対して
+				パターンをチェックする。
 				'shelltemp' がオフのときは発生しない。
 							*FocusGained*
 FocusGained			Vimが入力フォーカスを得たとき。GUI版と、入力
@@ -730,8 +730,8 @@ InsertLeave			挿入モードを抜けるとき。CTRL-O |i_CTRL-O| を
 				生しない。
 							*MenuPopup*
 MenuPopup			(マウス右ボタンで)ポップアップメニューを表示す
-				る直前。カーソル下やマウスポインタの下にあるも
-				のによってメニューを調整するのに便利。
+				る直前。カーソル下やマウスポインターの下にある
+				ものによってメニューを調整するのに便利。
 				パターンにはモードを表す文字を記述する:
 					n	ノーマル
 					v	ビジュアル
@@ -1201,7 +1201,7 @@ NOTE オプション 'eventignore' はここにも適用されることに注意
 は、これらのうち1組しか使われない。
 
 BufWriteCmd	BufWritePre	BufWritePost	バッファ全体を書き込む
-		FilterWritePre	FilterWritePost	フィルタ用一時ファイルに書込む
+		FilterWritePre	FilterWritePost	フィルター用一時ファイルに書込む
 FileAppendCmd	FileAppendPre	FileAppendPost	ファイルに追加する
 FileWriteCmd	FileWritePre	FileWritePost	その他の書き込み
 
@@ -1289,14 +1289,14 @@ VimLeave によって実行された自動コマンドは、バッファの被�
 あるコマンドを実行するときだけ自動コマンドをスキップしたい場合は、修飾子
 |:noautocmd|を使うかオプション'eventignore'を使う。
 
-Note (":read file" やフィルタコマンドで) 読み込んだファイルの最後の行に <EOL>
-がないとき、Vimはこのことを記憶する。その次の (":write file" やフィルタコマン
-ドでの) 書き込みで、先ほどの最後の行が再び最後の行として書き込まれ、かつオプショ
-ン 'binary' がオンになっていると、<EOL> は付け足されない。これにより、読み込ま
-れた行に対するフィルタコマンドで、読み込まれた通りに書き出すことができる。また、
-フィルタ処理された行に対する書き込みのコマンドで、フィルタが出力した通りに書き
-出すことができる。例えば、圧縮されたファイルを書き込むもう一つの例は以下のよう
-になる。 >
+Note (":read file" やフィルターコマンドで) 読み込んだファイルの最後の行に <EOL>
+がないとき、Vimはこのことを記憶する。その次の (":write file" やフィルターコマン
+ドでの) 書き込みで、先ほどの最後の行が再び最後の行として書き込まれ、かつオプ
+ション 'binary' がオンになっていると、<EOL> は付け足されない。これにより、読み
+込まれた行に対するフィルターコマンドで、読み込まれた通りに書き出すことができ
+る。また、フィルター処理された行に対する書き込みのコマンドで、フィルターが出力
+した通りに書き出すことができる。例えば、圧縮されたファイルを書き込むもう一つの
+例は以下のようになる。 >
 
   :autocmd FileWritePre *.gz   set bin|'[,']!gzip
   :autocmd FileWritePost *.gz  undo|set nobin
