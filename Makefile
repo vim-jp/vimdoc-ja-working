@@ -5,6 +5,9 @@ all:
 check:
 	nvcheck doc/*.jax vim_faq/*.jax
 
+replace:
+	nvcheck -i doc/*.jax vim_faq/*.jax
+
 html:
 	rm -rf target/html
 	mkdir -p target/html/doc
