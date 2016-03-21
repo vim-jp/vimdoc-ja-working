@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/vim-jp/vimdoc-ja-working.svg?branch=master)](https://travis-ci.org/vim-jp/vimdoc-ja-working)
 
-日本語に翻訳したVimの付属ドキュメントを翻訳するためのプロジェクトです。
+日本語に翻訳したVimの付属ドキュメントを配布するためのプロジェクトです。
 
 間違いを見つけたらメーリングリストかissueトラッカーでお知らせください。
 
@@ -16,8 +16,3 @@
   - Gitレポジトリ https://github.com/vim-jp/vimdoc-ja-working
   - Wiki https://github.com/vim-jp/vimdoc-ja/wiki (旧)
     - [新Wiki予定地](https://github.com/vim-jp/vimdoc-ja-working/wiki)
-
-## 注意事項
-
-README-dist.md は vim-jp/vimdoc-ja の README.md として配布されます。
-内容を変更する際はそれに相応しい変更であるよう留意してください。

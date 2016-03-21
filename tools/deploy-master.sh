@@ -9,7 +9,7 @@ git clone -b master --depth 1 "git@github.com:${DEPLOY_REPO_SLUG}.git" "$dir"
 # install
 rsync -rlptD --delete-after doc/ ${dir}/doc
 rsync -rlptD --delete-after syntax/ ${dir}/syntax
-rsync -rlptD --delete-after README.md ${dir}/README.md
+rsync -rlptD --delete-after README-dist.md ${dir}/README.md
 
 cd "$dir"
 git add --all
