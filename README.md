@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/vim-jp/vimdoc-ja-working.svg?branch=master)](https://travis-ci.org/vim-jp/vimdoc-ja-working)
 
-日本語に翻訳したVimの付属ドキュメントを翻訳するためのプロジェクトです。
+Vimの付属ドキュメントを日本語に翻訳するためのプロジェクトです。
 
 間違いを見つけたらメーリングリストかissueトラッカーでお知らせください。
 
