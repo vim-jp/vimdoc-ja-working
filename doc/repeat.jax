@@ -232,7 +232,6 @@ Vimスクリプトの書き方はユーザーマニュアルの41章|usr_41.txt|
 				pack/*/opt/{name} ~
 			見つかったディレクトリは、もし含まれていなければ
 			'runtimepath' に追加されます。
-			there yet.
 
 			Note {name} はディレクトリの名前です。.vimファイルの
 			名前ではありません。もし "{name}/plugin" ディレクトリが
