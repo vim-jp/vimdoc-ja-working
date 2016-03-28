@@ -3,3 +3,5 @@
 doc/tags-ja
 target
 tmp
+*.sw?
+*~
