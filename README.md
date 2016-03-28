@@ -1,23 +1,24 @@
-# vimdoc-ja
+# vimdoc-ja-working
 
 [![Build Status](https://travis-ci.org/vim-jp/vimdoc-ja-working.svg?branch=master)](https://travis-ci.org/vim-jp/vimdoc-ja-working)
 
-Vimの付属ドキュメントを日本語に翻訳するためのプロジェクトです。
+Vim 付属のヘルプを日本語に翻訳するためのプロジェクトです。
 
-間違いを見つけたらメーリングリストかissueトラッカーでお知らせください。
+### ヘルプを利用したい
+配布専用の[ページ](https://github.com/vim-jp/vimdoc-ja)にアクセス！
 
-- **利用者向け**
-  - HTML版 http://vim-jp.org/vimdoc-ja/
-  - Gitレポジトリ https://github.com/vim-jp/vimdoc-ja
-  - メーリングリスト http://groups.google.com/group/vimdoc-ja
-  - issueトラッカー https://github.com/vim-jp/vimdoc-ja-working/issues
-    - [旧 issue トラッカー](https://github.com/vim-jp/vimdoc-ja/issues)
-- 翻訳作業者向け
-  - Gitレポジトリ https://github.com/vim-jp/vimdoc-ja-working
-  - Wiki https://github.com/vim-jp/vimdoc-ja/wiki (旧)
-    - [新Wiki予定地](https://github.com/vim-jp/vimdoc-ja-working/wiki)
+### ヘルプの翻訳に協力したい
+作業手順については [wiki](https://github.com/vim-jp/vimdoc-ja-working/wiki) をご覧ください。
+
+間違いを見付けた場合、[issue](https://github.com/vim-jp/vimdoc-ja-working/issues)トラッカーでお知らせください。プルリクエストも大歓迎です。
+
+GitHub のアカウントをお持ちでない場合は、次の方法による連絡も可能です。
+
+- メーリングリスト http://groups.google.com/group/vimdoc-ja
+
+#### 姉妹プロジェクトがあります！
+Vim 本体の日本語メッセージ、GUI 版の日本語メニュー、日本語チュートリアル、日本語 man ファイルについては [vim-jp/lang-ja](https://github.com/vim-jp/lang-ja) でやっています！お気軽にどうぞ。
 
 ## 注意事項
-
 README-dist.md は vim-jp/vimdoc-ja の README.md として配布されます。
 内容を変更する際はそれに相応しい変更であるよう留意してください。
