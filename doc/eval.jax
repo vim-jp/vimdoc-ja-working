@@ -2220,16 +2220,16 @@ assert_fails({cmd} [, {error}])					*assert_fails()*
 		{error}が渡された場合、|v:errmsg|と一致しなければならない。
 
 assert_false({actual} [, {msg}])				*assert_false()*
-		{actual}がfalseでない場合、|v:errors|にエラーメッセージを追加す
-		る。|assert_equal()|のような。
+		|assert_equal()|と同様に、{actual}がfalseでない場合、|v:errors|
+		にエラーメッセージを追加する。
 		ゼロである時、その値はfalseである。{actual}が数値でない場合、
 		テストが失敗する。
 		{msg}が省略された場合、"Expected False but got {actual}"という
 		形式のメッセージが生成される。
 
 assert_true({actual} [, {msg}])					*assert_true()*
-		{actual}がtrueでない場合、|v:errors|にエラーメッセージを追加する
-		。|assert_equal()|のような。
+		|assert_equal()|と同様に、{actual}がtrueでない場合、|v:errors|
+		にエラーメッセージを追加する。
 		非ゼロである時、その値はtrueである。{actual}が数値でない場合、
 		テストが失敗する。
 		{msg}が省略された場合、"Expected True but got {actual}"という
