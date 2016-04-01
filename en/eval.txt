@@ -864,7 +864,7 @@ These three can be repeated and mixed.	Examples:
 expr8							*expr8*
 -----
 expr8[expr1]		item of String or |List|	*expr-[]* *E111*
-
+							*E909*
 If expr8 is a Number or String this results in a String that contains the
 expr1'th single byte from expr8.  expr8 is used as a String, expr1 as a
 Number.  This doesn't recognize multi-byte encodings, see |byteidx()| for
@@ -1965,9 +1965,9 @@ mapcheck( {name}[, {mode} [, {abbr}]])
 				String	check for mappings matching {name}
 match( {expr}, {pat}[, {start}[, {count}]])
 				Number	position where {pat} matches in {expr}
-matchadd( {group}, {pattern}[, {priority}[, {id}]])
+matchadd( {group}, {pattern}[, {priority}[, {id} [, {dict}]]])
 				Number	highlight {pattern} with {group}
-matchaddpos( {group}, {list}[, {priority}[, {id}]])
+matchaddpos( {group}, {pos}[, {priority}[, {id}[, {dict}]]])
 				Number	highlight positions with {group}
 matcharg( {nr})			List	arguments of |:match|
 matchdelete( {id})		Number	delete match identified by {id}
@@ -2203,7 +2203,7 @@ argidx()	The result is the current index in the argument list.  0 is
 		the first file.  argc() - 1 is the last one.  See |arglist|.
 
 							*arglistid()*
-arglistid([{winnr}, [ {tabnr} ]])
+arglistid([{winnr} [, {tabnr}]])
 		Return the argument list ID.  This is a number which
 		identifies the argument list being used.  Zero is used for the
 		global argument list.  See |arglist|.
@@ -2263,7 +2263,7 @@ assert_fails({cmd} [, {error}])					*assert_fails()*
 assert_false({actual} [, {msg}])				*assert_false()*
 		When {actual} is not false an error message is added to
 		|v:errors|, like with |assert_equal()|.
-		A value is false when it is zero. When "{actual}" is not a
+		A value is false when it is zero. When {actual} is not a
 		number the assert fails.
 		When {msg} is omitted an error in the form "Expected False but
 		got {actual}" is produced.
@@ -2430,7 +2430,6 @@ bufwinnr({expr})					*bufwinnr()*
 <		The number can be used with |CTRL-W_w| and ":wincmd w"
 		|:wincmd|.
 		Only deals with the current tab page.
-
 
 byte2line({byte})					*byte2line()*
 		Return the line number that contains the character at byte
@@ -3883,7 +3882,7 @@ glob2regpat({expr})					 *glob2regpat()*
 		empty string.
 
 								*globpath()*
-globpath({path}, {expr} [, {nosuf} [, {list} [, {allinks}]]])
+globpath({path}, {expr} [, {nosuf} [, {list} [, {alllinks}]]])
 		Perform glob() on all directories in {path} and concatenate
 		the results.  Example: >
 			:echo globpath(&rtp, "syntax/c.vim")
@@ -3909,7 +3908,7 @@ globpath({path}, {expr} [, {nosuf} [, {list} [, {allinks}]]])
 		they are separated by <NL> characters.  Example: >
 			:echo globpath(&rtp, "syntax/c.vim", 0, 1)
 <
-		{allinks} is used as with |glob()|.
+		{alllinks} is used as with |glob()|.
 
 		The "**" item can be used to search in a directory tree.
 		For example, to find all "README.txt" files in the directories
@@ -4636,7 +4635,7 @@ match({expr}, {pat}[, {start}[, {count}]])			*match()*
 		done like 'magic' is set and 'cpoptions' is empty.
 
 					*matchadd()* *E798* *E799* *E801*
-matchadd({group}, {pattern}[, {priority}[, {id} [, {dict}]]])
+matchadd({group}, {pattern}[, {priority}[, {id}[, {dict}]]])
 		Defines a pattern to be highlighted in the current window (a
 		"match").  It will be highlighted with {group}.  Returns an
 		identification number (ID), which can be used to delete the
@@ -4672,7 +4671,7 @@ matchadd({group}, {pattern}[, {priority}[, {id} [, {dict}]]])
 		highlighted matches. The dict can have the following members:
 
 			conceal	    Special character to show instead of the
-				    match (only for |hl-Conceal| highlighed
+				    match (only for |hl-Conceal| highlighted
 				    matches, see |:syn-cchar|)
 
 		The number of matches is not limited, as it is the case with
@@ -5824,7 +5823,7 @@ setqflist({list} [, {action}])				*setqflist()*
 
 
 							*setreg()*
-setreg({regname}, {value} [,{options}])
+setreg({regname}, {value} [, {options}])
 		Set the register {regname} to {value}.
 		{value} may be any value returned by |getreg()|, including 
 		a |List|.
@@ -6515,8 +6514,7 @@ systemlist({expr} [, {input}])				*systemlist()*
 		is the same as |readfile()| will output with {binary} argument 
 		set to "b".
 
-		Returns an empty string on error, so be careful not to run 
-		into |E706|.
+		Returns an empty string on error.
 
 
 tabpagebuflist([{arg}])					*tabpagebuflist()*
@@ -6679,6 +6677,8 @@ type({expr})	The result is a Number, depending on the type of {expr}:
 			Float:	    5
 			Boolean:    6 (v:false and v:true)
 			None	    7 (v:null and v:none)
+			Job	    8
+			Channel	    9
 		To avoid the magic numbers it should be used this way: >
 			:if type(myvar) == type(0)
 			:if type(myvar) == type("")
@@ -6687,7 +6687,7 @@ type({expr})	The result is a Number, depending on the type of {expr}:
 			:if type(myvar) == type({})
 			:if type(myvar) == type(0.0)
 			:if type(myvar) == type(v:false)
-			:if type(myvar) == type(v:none
+			:if type(myvar) == type(v:none)
 
 undofile({name})					*undofile()*
 		Return the name of the undo file that would be used for a file
@@ -7053,7 +7053,7 @@ ebcdic			Compiled on a machine with ebcdic character set.
 emacs_tags		Compiled with support for Emacs tags.
 eval			Compiled with expression evaluation support.  Always
 			true, of course!
-ex_extra		Compiled with extra Ex commands |+ex_extra|.
+ex_extra		|+ex_extra|, always true now
 extra_search		Compiled with support for |'incsearch'| and
 			|'hlsearch'|
 farsi			Compiled with Farsi support |farsi|.
@@ -7074,6 +7074,7 @@ gui_athena		Compiled with Athena GUI.
 gui_gnome		Compiled with Gnome support (gui_gtk is also defined).
 gui_gtk			Compiled with GTK+ GUI (any version).
 gui_gtk2		Compiled with GTK+ 2 GUI (gui_gtk is also defined).
+gui_gtk3		Compiled with GTK+ 3 GUI (gui_gtk is also defined).
 gui_mac			Compiled with Macintosh GUI.
 gui_motif		Compiled with Motif GUI.
 gui_photon		Compiled with Photon GUI.
@@ -7136,7 +7137,6 @@ scrollbind		Compiled with 'scrollbind' support.
 showcmd			Compiled with 'showcmd' support.
 signs			Compiled with |:sign| support.
 smartindent		Compiled with 'smartindent' support.
-sniff			Compiled with SNiFF interface support.
 spell			Compiled with spell checking support |spell|.
 startuptime		Compiled with |--startuptime| support.
 statusline		Compiled with support for 'statusline', 'rulerformat'
@@ -7158,12 +7158,14 @@ termresponse		Compiled with support for |t_RV| and |v:termresponse|.
 textobjects		Compiled with support for |text-objects|.
 tgetent			Compiled with tgetent support, able to use a termcap
 			or terminfo file.
+timers			Compiled with |timer_start()| support.
 title			Compiled with window title support |'title'|.
 toolbar			Compiled with support for |gui-toolbar|.
 unix			Unix version of Vim.
 user_commands		User-defined commands.
 vertsplit		Compiled with vertically split windows |:vsplit|.
 vim_starting		True while initial source'ing takes place. |startup|
+			*vim_starting*
 viminfo			Compiled with viminfo support.
 virtualedit		Compiled with 'virtualedit' option.
 visual			Compiled with Visual mode.
@@ -7173,7 +7175,6 @@ vms			VMS version of Vim.
 vreplace		Compiled with |gR| and |gr| commands.
 wildignore		Compiled with 'wildignore' option.
 wildmenu		Compiled with 'wildmenu' option.
-win16			Win16 version of Vim (MS-Windows 3.1).
 win32			Win32 version of Vim (MS-Windows 95 and later, 32 or
 			64 bits)
 win32unix		Win32 version of Vim, using Unix files (Cygwin)
