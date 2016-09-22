@@ -1,4 +1,4 @@
-*if_pyth.txt*   For Vim バージョン 8.0.  Last change: 2015 Nov 10
+*if_pyth.txt*   For Vim バージョン 8.0.  Last change: 2016 Sep 01
 
 
 		  VIMリファレンスマニュアル    by Paul Moore
@@ -55,7 +55,11 @@ Python 3 インターフェイスは Vim が |+python3| 機能付きでコンパ
 			print 'EAT ME'
 	EOF
 	endfunction
-<
+
+使っている Python のバージョンを見るには: >
+	:python import sys
+	:python print(sys.version)
+
 Note: Pythonはインデントに関して非常に繊細です。"class" の行と "EOF" の行はまっ
 たくインデントしないでください。
 
@@ -641,10 +645,37 @@ vim.List オブジェクト				*python-List*
 
 vim.Function オブジェクト			*python-Function*
     Vim の関数参照 (|Funcref|) と似た動作をする関数系オブジェクト。
-    `.name` 属性サポートしている。呼び出し可能。特別な引数として `self` を指定
-    できる (|Dictionary-function| 参照)。`vim.Function(name)` を使って作成する
-    こともできる。これは `vim.bindeval('function(%s)'%json.dumps(name))` と同
-    じ。
+    特別な引数として `self` を指定できる (|Dictionary-function| 参照)。
+    `vim.Function(name)` を使って作成することもできる。
+    これは `vim.bindeval('function(%s)'%json.dumps(name))` と同じ。
+
+    属性 (読み取り専用):
+        属性名       説明 ~
+        name         関数名
+        args         `None` または引数を示す |python-List| オブジェクト。これ
+                     はこの属性をリクエストするたびに作られる引数のコピーであ
+                     ることに注意してください。このリストに対する変更は(引数リ
+                     スト内のコンテナを除いて: |deepcopy()| ではなく |copy()|
+                     のように)無視されます
+        self         `None` または自身の辞書である |python-Dictionary| オブ
+                     ジェクト。呼び出し時に明示的な `self` キーワードが使われ
+                     た場合には、渡されるオブジェクトでこの属性はオーバーライ
+                     ドされる。
+        auto_rebind  ブール値。Pythonのオブジェクトから作られVimLの辞書に格納
+                     されたパーシャルが、その辞書が参照された際に自動的に再バ
+                     インドされる場合に `True` となります。Vimスクリプトで説明
+                     すると `dict.func` (auto_rebind=True) と
+                     `function(dict.func,dict)` (auto_rebind=False) の違いにな
+                     ります。 `self` 属性の値が `None` の場合には、この属性値
+                     には意味がありません。
+
+    コンストラクタは、加えて `args`, `self`そして `auto_rebind` キーワードを受
+    け付けます。`args` と `self` どちらか一方、もしくは両方が与えられた場合に
+    は、パーシャルが生成されます。詳しくは |function()| を参照してください。
+    `auto_rebind` は `self` だけが与えられた場合にのみ使われます。そうでない場
+    合には、それが与えられたかどうかにかかわらず `True` であると見做されます。
+    `self` が与えられた場合には、そのデフォルト値は `False` です。
+
 
     例: >
         f = vim.Function('tr')			# コンストラクタ
@@ -657,6 +688,11 @@ vim.Function オブジェクト			*python-Function*
         f = vim.bindeval('function("DictFun")')
         print f(self={})			# call('DictFun', [],{})と同じ
         print isinstance(f, vim.Function)	# True
+
+        p = vim.Function('DictFun', self={})
+        print f()
+        p = vim.Function('tr', args=['abc', 'a'])
+        print f('b')
 
 ==============================================================================
 8. Vim 関数 pyeval() と py3eval()			*python-pyeval*
@@ -675,19 +711,26 @@ MS-Windows と UNIX では Python ライブラリを動的に読み込むこと�
 ルを検索します。Pythonインターフェイスを使わないときはDLLを必要としないので、
 DLLなしでVimを使うことができます。
 
+
+MS-Windows ~
+
 WindowsでPythonインターフェイスを使うには、PythonのDLLが検索パス内に存在しなけ
 ればなりません。コンソールウィンドウで "path" とタイプすると、どのディレクトリ
-が検索パスとなるか表示することができます。
+が検索パスとなるか表示することができます。また 'pythondll' か 'pythonthreedll'
+オプションを Python の DLL を指定するのに使うこともできます。
 
 DLLの名前はVimをコンパイルした時のPythonのバージョンに一致しなければなりませ
 ん。現在その名前は "python24.dll" です。これはPython2.4用です。これを確かめる
 には、"gvim.exe" を開き、"python\d*.dll\c" を検索してください。
 
-Unix ではコンパイル時に DYNAMIC_PYTHON_DLL もしくは DYNAMIC_PYTHON3_DLL で指定
-されたファイルの代わりに 'pythondll' もしくは 'pythonthreedll' オプションで使用
-する Python の共有ライブラリのファイルを指定するのに使えます。共有ライブラリの
-バージョンは Vim をコンパイルする時に用いた Python 2.x または Python 3 のバージ
-ョンと一致していなければなりません。
+
+Unix ~
+
+'pythondll' と 'pythonthreedll' オプションを、コンパイル時に
+DYNAMIC_PYTHON_DLL と DYNAMIC_PYTHON3_DLL で指定されている Python の共有ライブ
+ラリのファイルの、代わりを指定するのに使えます。共有ライブラリのバージョンは
+Vim をコンパイルする時に用いた Python 2.x または Python 3 のバージョンと一致し
+ていなければなりません。
 
 ==============================================================================
 10. Python 3						*python3*
@@ -697,8 +740,12 @@ Unix ではコンパイル時に DYNAMIC_PYTHON_DLL もしくは DYNAMIC_PYTHON3
 コマンドが機能するか簡単にチェックするには: >
 	:py3 print("Hello")
 <							*:py3file*
+使っている Python のバージョンを見るには: >
+	:py3 import sys
+	:py3 print(sys.version)
+
 `:py3file` コマンドは `:pyfile` と同様に機能します。
-							*:py3do* *E863*
+							*:py3do*
 `:py3do` コマンドは `:pydo` と同様に機能します。
 
 
