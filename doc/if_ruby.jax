@@ -204,7 +204,8 @@ MS-Windows ~
 これが動作するためには Ruby の適切なバージョンがインストールされている必要があ
 る。次の場所からパッケージをダウンロードできる:
 http://www.garbagecollect.jp/ruby/mswin32/en/download/release.html
-現在のパッケージは ruby-1.9.1-p136-i386-mswin32.zip である。
+現在のパッケージは ruby-1.9.2-p136-i386-mswin32.zip である。
+(訳注: 現在は RubyInstaller 2.2 になっており、近い将来訂正予定)
 
 Rubyインターフェイスを使うにはRubyのDLLが検索パス内に存在しなければならな
 い。コンソールウィンドウで "path" とタイプすると、どのディレクトリが検索パスと

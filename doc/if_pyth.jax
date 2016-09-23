@@ -654,24 +654,24 @@ vim.Function オブジェクト			*python-Function*
         name         関数名
         args         `None` または引数を示す |python-List| オブジェクト。これ
                      はこの属性をリクエストするたびに作られる引数のコピーであ
-                     ることに注意してください。このリストに対する変更は(引数リ
-                     スト内のコンテナを除いて: |deepcopy()| ではなく |copy()|
-                     のように)無視されます
+                     ることに注意してください。このリストに対する変更は無視さ
+		     れます。(ただし引数リスト内のコンテナについては無視されま
+		     せん。これは |deepcopy()| ではなく |copy()| と同様です)
         self         `None` または自身の辞書である |python-Dictionary| オブ
                      ジェクト。呼び出し時に明示的な `self` キーワードが使われ
                      た場合には、渡されるオブジェクトでこの属性はオーバーライ
-                     ドされる。
+                     ドされます。
         auto_rebind  ブール値。Pythonのオブジェクトから作られVimLの辞書に格納
-                     されたパーシャルが、その辞書が参照された際に自動的に再バ
-                     インドされる場合に `True` となります。Vimスクリプトで説明
-                     すると `dict.func` (auto_rebind=True) と
-                     `function(dict.func,dict)` (auto_rebind=False) の違いにな
-                     ります。 `self` 属性の値が `None` の場合には、この属性値
-                     には意味がありません。
+		     された部分適用が、その辞書が参照された際に自動的に再バイ
+		     ンドされる場合に `True` となります。Vimスクリプトで説明す
+		     ると `dict.func` (auto_rebind=True) と
+		     `function(dict.func,dict)` (auto_rebind=False) の違いにな
+		     ります。 `self` 属性の値が `None` の場合には、この属性値
+		     には意味がありません。
 
     コンストラクタは、加えて `args`, `self`そして `auto_rebind` キーワードを受
     け付けます。`args` と `self` どちらか一方、もしくは両方が与えられた場合に
-    は、パーシャルが生成されます。詳しくは |function()| を参照してください。
+    は、部分適用が生成されます。詳しくは |function()| を参照してください。
     `auto_rebind` は `self` だけが与えられた場合にのみ使われます。そうでない場
     合には、それが与えられたかどうかに関わらず `True` であると見做されます。
     `self` が与えられた場合には、そのデフォルト値は `False` です。
@@ -739,11 +739,11 @@ Vim をコンパイルする時に用いた Python 2.x または Python 3 のバ
 |:py3| コマンドと |:python3| コマンドは |:python| と同様に機能します。`:py3`
 コマンドが機能するか簡単にチェックするには: >
 	:py3 print("Hello")
-<							*:py3file*
+
 使っている Python のバージョンを見るには: >
 	:py3 import sys
 	:py3 print(sys.version)
-
+<							*:py3file*
 `:py3file` コマンドは `:pyfile` と同様に機能します。
 							*:py3do*
 `:py3do` コマンドは `:pydo` と同様に機能します。
