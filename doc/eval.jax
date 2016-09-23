@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.0.  Last change: 2016 Jan 28
+*eval.txt*	For Vim バージョン 8.0.  Last change: 2016 Sep 07
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -9,8 +9,8 @@ Vimスクリプト				*expression* *expr* *E15* *eval*
 Vimスクリプトの利用についてはユーザーマニュアルの41章|usr_41.txt|でも解説され
 ている。
 
-注意:Vimスクリプトはコンパイル時に無効化できる。もしそうなっているとこのドキュ
-メントに書かれている事は有効ではない。|+eval|と|no-eval-feature|を参照。
+注意: Vimスクリプトはコンパイル時に無効化できる。もしそうなっているとこのド
+キュメントに書かれている事は有効ではない。|+eval|と|no-eval-feature|を参照。
 
 1.  変数		|variables|
     1.1 変数の型
@@ -29,6 +29,7 @@ Vimスクリプトの利用についてはユーザーマニュアルの41章|us
 10. +eval機能が無効	|no-eval-feature|
 11. サンドボックス	|eval-sandbox|
 12. テキストロック	|textlock|
+13. テスト		|testing|
 
 {Vi にはこれらのコマンドはない}
 
@@ -37,10 +38,11 @@ Vimスクリプトの利用についてはユーザーマニュアルの41章|us
 
 1.1 変数の型 ~
 							*E712*
-変数には6種類の型がある:
+変数には9種類の型がある:
 
 数値		32ビットまたは64ビットの符号有整数。|expr-number| *Number*
-		例: -123 0x10 0177
+		64ビット数値は |+num64| 機能つきでコンパイルされたときのみ有効。
+		例:  -123  0x10  0177  0b1011
 
 浮動小数点数	浮動小数点数。|floating-point-format| *Float*
 		{|+float| 機能つきでコンパイルされたときのみ}
@@ -49,14 +51,23 @@ Vimスクリプトの利用についてはユーザーマニュアルの41章|us
 文字列		終端がNUL文字である8ビットの符号無し文字(バイト)。
 		|expr-string| 例: "ab\txx\"--"  'x-z''a,c'
 
-Funcref		関数への参照 |Funcref|。
-		例: function("strlen")
-
 リスト		要素の順序つきの列 |List|。
 		例: [1, 2, ['a', 'b']]
 
 辞書		順序を持たない連想配列: 各要素はキーと値を持つ。|Dictionary|
 		例: {'blue': "#0000ff", 'red': "#ff0000"}
+
+Funcref		関数への参照 |Funcref|。
+		例: function("strlen")
+		辞書や引数とバインドすることができ、そのときは部分適用(Partial)
+		のように働く。
+		例: function("Callback", [arg], myDict)
+
+特殊値		|v:false|, |v:true|, |v:none| と |v:null|。  *Special*
+
+ジョブ		ジョブに使われる。|job_start()|を参照。 *Job* *Jobs*
+
+チャンネル	チャンネルに使われる。|ch_open()|を参照。 *Channel* *Channels*
 
 数値と文字列は文脈に応じて相互に変換される。
 
@@ -84,40 +95,50 @@ Funcref		関数への参照 |Funcref|。
 先頭の0によって8進数とみなされるのを防いだり、異なる基数を使うには|str2nr()|を
 使う。
 
-ブール(真理値)演算には数値が使われる。0は偽を意味し、非0は真を表す。
+							*TRUE* *FALSE*
+ブール(真理値)演算には数値が使われる。0は偽を意味し、非0は真を表す。また、
+|v:false| と |v:ture| を使うこともできる。関数から真が返されたときは数値の 1
+であり、偽が返されたときは数値の 0 である。
 
 Note 次のコマンドをみると >
 	:if "foo"
-"foo" は0に変換され、それは偽を意味する。文字列が空ではないか調べるためには
-empty()を使用して次のようにする。 >
+	:" 実行されない
+"foo" は 0 に変換され、それは偽を意味する。もし文字列がゼロでない数値から始ま
+る場合は真を意味する: >
+	:if "8foo"
+	:" 実行される
+文字列が空ではないか調べるためには empty() を使用して次のようにする。 >
 	:if !empty("foo")
-<				*E745* *E728* *E703* *E729* *E730* *E731*
-リスト、辞書、Funcrefは自動的に変換されない。
+<
+							*non-zero-arg*
+Function arguments often behave slightly different from |TRUE|: If the
+argument is present and it evaluates to a non-zero Number, |v:true| or a
+non-empty String, then the value is considered to be TRUE.
+Note that " " and "0" are also non-empty strings, thus cause the mode to be
+cleared.  A List, Dictionary or Float is not a Number or String, thus
+evaluates to FALSE.
+
+		*E745* *E728* *E703* *E729* *E730* *E731* *E908* *E910* *E913*
+リスト、辞書、Funcref、ジョブは自動的に変換されない。
 
 							*E805* *E806* *E808*
 数値と浮動小数点数をまぜると浮動小数点数になる。それ以外には浮動小数点数への自
 動的な変換は存在しない。文字列から浮動小数点数へは str2float() を使い、浮動小
 数点数から文字列へは printf() を、浮動小数点数から数値へは float2nr() を使う。
 
-						*E891* *E892* *E893* *E894*
+			*E891* *E892* *E893* *E894* *E907* *E911* *E914*
 浮動小数点数が予期されているところでは数値も使用可能だが、それ以外は使用できな
 い。
 
-						*E706* *sticky-type-checking*
-変数の型を変えようとするとエラーになる。このエラーを避けるには、まず|:unlet|す
-る必要がある。しかし文字列と数値は同値であると見なされる。同じく、浮動小数点数
-と数値も同値であるとみなされる。例: >
-	:let l = "string"
-	:let l = 44		" 型が文字列から数値に変わる
-	:let l = [1, 2, 3]	" エラー! l はまだ数値である
-	:let l = 4.4		" 型が数値から浮動小数点数に変わる
-	:let l = "string"	" エラー!
+						*no-type-checking*
+変数の型を変更しようとしてもエラーは発生しない。
 
 
 1.2 関数への参照 ~
 					*Funcref* *E695* *E718*
-関数|function()|は関数への参照を返す。関数への参照は、式の中で関数名が要求され
-る場所で使うと参照先の関数を呼び出す。例: >
+関数への参照は、関数|function()|、関数|funcref()|またはラムダ式|expr-lambda|を
+使うことで得られる。関数への参照は、式の中で関数名が要求される場所で使うと参照
+先の関数を呼び出す。例: >
 
 	:let Fn = function("MyFunc")
 	:echo Fn()
@@ -143,6 +164,44 @@ empty()を使用して次のようにする。 >
 
 |call()|を使うと、リスト型の変数を引数として関数参照を呼び出すことができる: >
 	:let r = call(Fn, mylist)
+<
+								*Partial*
+関数参照は、辞書および/もしくは引数とバインドすることができる。これは部分適用
+(Partial)とも呼ばれる。これは、辞書および/もしくは引数を function() または
+funcref() に渡すことで作成される。その関数を呼び出すと、その辞書および/もしく
+は引数がその関数に渡される。例: >
+
+	let Cb = function('Callback', ['foo'], myDict)
+	call Cb()
+
+これは、関数を以下のようにして呼び出す: >
+	call myDict.Callback('foo')
+
+これは関数を何かに渡す場合、例えば |ch_open()| の引数とする場合などに非常に有
+用である。
+
+Note 関数の辞書へのバインドは、その関数が辞書のメンバーであるときにも発生する
+ことに注意: >
+
+	let myDict.myFunction = MyFunction
+	call myDict.myFunction()
+
+ここで、MyFunction() は myDict を "self" として受け取る。これは、"myFunction"
+メンバーがアクセスされたときに起こる。"myFunction" を別の辞書 otherDict に代入
+して呼び出すと、それは otherDict にバインドされる: >
+
+	let otherDict.myFunction = myDict.myFunction
+	call otherDict.myFunction()
+
+今度は、"seft" は "otherDict" になる。しかし、辞書を明示的にバインドしたときに
+はこれは起こらない: >
+
+	let myDict.myFunction = function(MyFunction, myDict)
+	let otherDict.myFunction = myDict.myFunction
+	call otherDict.myFunction()
+
+ここでは、"self" は "myDict" である。なぜなら明示的にバインドされているからで
+ある。
 
 
 1.3 リスト ~
@@ -197,7 +256,7 @@ empty()を使用して次のようにする。 >
 
 
 部分リスト ~
-
+							*sublist*
 リストの一部分を取り出すには、[]の中に始点と終点のインデックスを書き、コロンで
 区切る: >
 	:let shortlist = mylist[2:-1]	" リスト[3, "four"]を得る
@@ -335,9 +394,6 @@ for ループ ~
 	:   let index = index + 1
 	:endwhile
 
-Note リストの全要素が同じ型でなければならない。そうでないとエラー|E706|にな
-る。ループの最後でループ変数を|:unlet|すれば、異なる型でも扱える。
-
 やりたいことがリストの各要素を変更するだけなら、forループを使うより関数|map()|
 を使った方がよりシンプルになる。
 
@@ -397,7 +453,7 @@ Note リストの全要素が同じ型でなければならない。そうでな
 キーは必ず文字列である。数値を使うこともできるが、自動的に文字列に変換される。
 よって文字列 '4' のキーと数値4のキーは同一の要素を参照する。
 Note 文字列 '04' と数値04は異なることに注意。なぜなら数値04は文字列 '4' に変換
-されるからである。
+されるからである。空文字列もキーとして使用できる。
 
 値はどんな式でもよい。辞書を値にすると、ネストした辞書ができる: >
 	:let nestdict = {1: {11: 'a', 12: 'b'}, 2: {21: 'c'}}
@@ -561,13 +617,17 @@ MY_VAR_6		viminfoファイル
 
 式文法一覧、優先順位の低いものから高い順に:
 
-|expr1| expr2 ? expr1 : expr1	if-then-else 条件式
+|expr1|	expr2
+	expr2 ? expr1 : expr1	if-then-else 条件式
 
-|expr2|	expr3 || expr3 ..	論理和
+|expr2|	expr3
+	expr3 || expr3 ..	論理和
 
-|expr3|	expr4 && expr4 ..	論理積
+|expr3|	expr4
+	expr4 && expr4 ..	論理積
 
-|expr4|	expr5 == expr5		等しい
+|expr4|	expr5
+	expr5 == expr5		等しい
 	expr5 != expr5		等しくない
 	expr5 >	 expr5		より大きい
 	expr5 >= expr5		大きいか等しい
@@ -584,19 +644,23 @@ MY_VAR_6		viminfoファイル
 	expr5 is expr5		同一の |List| のインスタンス
 	expr5 isnot expr5	異なる |List| のインスタンス
 
-|expr5|	expr6 +	 expr6 ..	足し算またはリストの連結
+|expr5|	expr6
+	expr6 +	 expr6 ..	足し算またはリストの連結
 	expr6 -	 expr6 ..	引き算
 	expr6 .	 expr6 ..	文字列の連結
 
-|expr6|	expr7 *	 expr7 ..	掛け算
+|expr6|	expr7
+	expr7 *	 expr7 ..	掛け算
 	expr7 /	 expr7 ..	割り算
 	expr7 %	 expr7 ..	剰余(割った余り)
 
-|expr7|	! expr7			論理否定
+|expr7|	expr8
+	! expr7			論理否定
 	- expr7			単項のマイナス {訳注: -1等}
 	+ expr7			単項のプラス
 
-|expr8|	expr8[expr1]		文字列のバイト、またはリストの要素
+|expr8|	expr9
+	expr8[expr1]		文字列のバイト、またはリストの要素
 	expr8[expr1 : expr1]	文字列の部分文字列、またはリストの部分リスト
 	expr8.name		辞書 |Dictionary| の要素
 	expr8(expr1, ...)	|Funcref| 変数による関数呼び出し
@@ -614,6 +678,7 @@ MY_VAR_6		viminfoファイル
 	@r			レジスタ 'r' の値
 	function(expr1, ...)	関数呼出し
 	func{ti}on(expr1, ...)	波括弧付きの内部変数
+	{args -> expr1}		ラムダ式
 
 ".." はその演算が、その後に他の演算を続ける事ができることを示している。
 例: >
@@ -627,9 +692,9 @@ expr1							*expr1* *E109*
 
 expr2 ? expr1 : expr1
 
-'?' より前の式は数値として評価される。その結果が非0であった場合、'?' と ':' に
-挟まれた式の値がこの式全体の値となり、逆に0であった場合は ':' 以降の式の値が全
-体の値となる。
+'?' より前の式は数値として評価される。その結果が|TRUE|であった場合、'?' と ':'
+に挟まれた式の値がこの式全体の値となり、そうでなかった場合は ':' 以降の式の値
+が全体の値となる。
 例: >
 	:echo lnum == 1 ? "先頭" : lnum
 
@@ -652,15 +717,17 @@ expr2 ? expr1 : expr1
 expr2 and expr3						*expr2* *expr3*
 ---------------
 
-						*expr-barbar* *expr-&&*
+expr3 || expr3 ..	論理和		*expr-barbar*
+expr4 && expr4 ..	論理積		*expr-&&*
+
 演算子 "||" と "&&" は左右に一つずつ引数を取る。引数は数値に変換される。結果は:
 
-	  入力				   出力		    ~
-n1		n2		n1 || n2	n1 && n2    ~
-零		零		零		零
-零		非零		非零		零
-非零		零		非零		零
-非零		非零		非零		非零
+    入力			 出力 ~
+n1	n2		n1 || n2	n1 && n2 ~
+|FALSE|	|FALSE|		|FALSE|		|FALSE|
+|FALSE|	|TRUE|		|TRUE|		|FALSE|
+|TRUE|	|FALSE|		|TRUE|		|FALSE|
+|TRUE|	|TRUE|		|TRUE|		|TRUE|
 
 演算子は続けて書く事ができる。例: >
 
@@ -676,8 +743,8 @@ Note "&&" は "||" よりも高い優先順位を持っている。これは次�
 	let a = 1
 	echo a || b
 
-これはaが非零で戻り値は絶対に非零であるから、変数bが宣言されていなくても有効で
-ある。次のも同様に: >
+これはaが|TRUE|であるため、変数bが宣言されていなくても有効であり、結果は絶対
+に|TRUE|である。次のも同様に: >
 
 	echo exists("b") && b == "yes"
 
@@ -727,20 +794,38 @@ expr5 {cmp} expr5
 これらは辞書のキー/値を再帰的に比較する。大文字小文字無視にすると要素を
 比較するときに大文字小文字を無視する。
 
-							*E693* *E694*
-|Funcref|は|Funcref|とだけ比較可能で、"equal" と "not equal" のみ利用できる。
-大文字小文字は常に区別される。
+							*E694*
+|Funcref|は|Funcref|とだけ比較可能で、"equal", "not equal", "is", "isnot" のみ
+利用できる。大文字小文字は常に区別される。引数や辞書が(部分適用に)バインドされ
+ているかどうかも重要である。辞書も同値(あるいは "is" の場合は同一)でなければな
+らず、引数も同値(あるいは同一)でなければならない。
+
+関数参照が同じ関数を指しているのかを、バインドされた辞書や引数を無視して比較し
+たい場合は、|get()| を使用して関数名を取得すればよい: >
+	if get(Part1, 'name') == get(Part2, 'name')
+	   " Part1 と Part2 は同じ関数を指している
 
 リスト (|List|) や 辞書 (|Dictionary|) に対して "is" や "isnot" を使うと、それ
 らの式が同じリストのインスタンスを参照しているか判定される。リストのコピーと元
 のリストは異なると判定される。リスト以外に対して "is" は "equal" と同じで、
 "isnot" は "not equal" と同じである。ただし "is"、"isnot" は型が異なると値が等
-しくない点が "==" とは異なる。"4 == '4'" は真、"4 is '4'" は偽、"0 is []" は偽
-でエラーにはならない、"is#"/"isnot#" と "is?"/"isnot?" は大文字小文字を区別す
-るかどうかが違う。
+しくない点が "==" とは異なる。 >
+	echo 4 == '4'
+	1
+	echo 4 is '4'
+	0
+	echo 0 is []
+	0
+"is#"/"isnot#" と "is?"/"isnot?" は大文字小文字を区別するかどうかが違う。
 
 文字列と数値を比較した場合、文字列が数値に変換され、数値として比較される。これ
-は "0 == 'x'" が、'x' が数値としては0であることから、真となることを意味する。
+は以下のようになることを意味する: >
+	echo 0 == 'x'
+	1
+なぜなら、'x' は数値のゼロに変換されるからである。しかし、 >
+	echo [0] == ['x']
+	0
+リストや辞書の中ではこの変換は行われない。
 
 文字列同士を比較した場合、strcmp()やstricmp()によって比較される。これは数値的
 に(バイトの値で)比較されるのであって、必ずしも言語に基づく文字種の違いではな
@@ -806,7 +891,11 @@ expr7 %	 expr7 ..	剰余(割った余り)			*expr-%*
 	{訳注: >0 は正の数、<0 は負の数の意味}
 	(Vim 7.2 以前では常に 0x7fffffff だった)
 
-'/' の右辺(除数)が0の場合、結果は0x7ffffffになる。
+64ビット数値が有効化されている場合は:
+	  0 / 0  = -0x8000000000000000	(浮動小数点数の NaN のようなもの)
+	 >0 / 0  =  0x7fffffffffffffff	(正の無限大のようなもの)
+	 <0 / 0  = -0x7fffffffffffffff	(負の無限大のようなもの)
+
 '%' の右辺(法)が0の場合、結果は0になる。
 
 これらは全て|Funcref|には適用できない。
@@ -820,7 +909,7 @@ expr7							*expr7*
 - expr7			単項マイナス		*expr-unary--*
 + expr7			単項プラス		*expr-unary-+*
 
-'!' 演算子では非零は0に、0は1になる。
+'!' 演算子では|TRUE|は|FALSE|に、|FALSE|は|TRUE|になる。
 '-' では数値の符号が反転される。
 '+" では変化はない。
 
@@ -835,12 +924,13 @@ expr7							*expr7*
 expr8							*expr8*
 -----
 expr8[expr1]		文字列またはリストの要素	*expr-[]* *E111*
-							*E909*
+							*E909* *subscript*
 expr8が数値か文字列ならば、この値は文字列 expr8 の第 expr1 番目のバイトからな
 る 1 バイトの文字列となる。expr8は文字列、expr1は数として扱われる。ただし
 expr8 がマルチバイト文字列である場合、この値は単なるバイトコードであり、1文字
 とはならないかもしれないことに注意。マルチバイト文字列に対する代替方法は
-|byteidx()| を参照。
+|byteidx()| を参照するか、`split()`を使って文字列を文字のリストに変換すれば良
+い。
 
 インデックスが0の場合、先頭のバイトが得られることに注意。これはC言語のように働
 く。注意:カラム番号は1から始まる。例えばカーソルの下のバイトを得るためには、次
@@ -881,10 +971,10 @@ expr1aが省略されたときは0となる。expr1bが省略されたときは�
 	:let s = line(".")[4:]		" 5バイト目から末尾まで
 	:let s = s[:-3]			" 最後の2文字を削除する
 <
-							*sublist* *slice*
+							*slice*
 expr8がリストならば、インデックスexpr1aとexpr1bの間の要素からなる新しいリスト
-となる。上で説明した文字列の場合と同様だが、インデックスが範囲を超えるとエラー
-になる。例: >
+となる。すぐ上で説明した文字列の場合と同様である。部分リスト|sublist|も参照の
+こと。例: >
 	:let l = mylist[:3]		" 最初の4個の要素
 	:let l = mylist[4:4]		" 1個の要素からなるリスト
 	:let l = mylist[:]		" リストの浅いコピー
@@ -925,9 +1015,10 @@ expr8が|Funcref|型の変数のとき、その参照する関数を呼び出す
 数
 ------
 number			数定数				*expr-number*
-						*hex-number* *octal-number*
+				*hex-number* *octal-number* *binary-number*
 
-10進数、16進数(0xか0Xで始まる)、もしくは8進数(0で始まる)の数定数。
+10進数、16進数(0xか0Xで始まる)、2進数(0bか0Bで始まる)、もしくは8進数(0で始まる)
+の数定数。
 
 						*floating-point-format*
 浮動小数点数は次の2つの形式で書ける:
@@ -1004,8 +1095,10 @@ number			数定数				*expr-number*
 \\	円記号(バックスラッシュ)
 \"	ダブルクォート
 \<xxx>	"xxx" という名の特殊キー。 例 "\<C-W>" は CTRL-W。これはマップで使うた
-	めのものである。utf-8 文字を得るためには <Char-xxxx> を使わずに、上述
-	の \uxxxx を使うこと。
+	めのものであり、0x80 バイトはエスケープされる。
+	ダブルクォート文字を使う場合はエスケープしなければならない: "<M-\">"
+	utf-8 文字を得るためには <Char-xxxx> を使わずに、上述の \uxxxx を使う
+	こと。
 
 Note "\xff" は値255の1バイトとなる。これはエンコーディングによっては無効な値か
 もしれない。現在の 'encoding' の値に応じた文字255を得るには "\u00ff" を使う。
@@ -1089,6 +1182,62 @@ variable		内部変数
 function(expr1, ...)	関数呼出
 以下の|functions|を参照。
 
+
+ラムダ式					*expr-lambda* *lambda*
+--------
+{args -> expr1}		ラムダ式
+
+ラムダ式は、|expr1| を評価した結果を返す新しい無名関数を作成する。ラムダ式は以
+下の点がユーザー定義関数|user-functions|と異なる:
+
+1. ラムダ式の本体は単一の式|expr1|であり、|Ex|コマンド列ではない。
+2. 引数に前置詞 "a:" を使用しない。例: >
+	:let F = {arg1, arg2 -> arg1 - arg2}
+	:echo F(5, 2)
+<	3
+
+引数は任意である。例: >
+	:let F = {-> 'error function'}
+	:echo F()
+<	error function
+							*closure*
+ラムダ式は外側のスコープの変数と引数にアクセスできる。これはよくクロージャと呼
+ばれる。以下の例ではラムダの中で "i" と "a:arg" が使われているが、これらは関数
+のスコープに存在する。これらは関数から抜けても有効であり続ける: >
+	:function Foo(arg)
+	:  let i = 3
+	:  return {x -> x + i - a:arg}
+	:endfunction
+	:let Bar = Foo(4)
+	:echo Bar(6)
+<	5
+
+|:func-closure|も参照。ラムダとクロージャのサポートは以下のように判定できる: >
+	if has('lambda')
+
+|sort()|, |map()|, |filter()|とともにラムダ式を使う例: >
+	:echo map([1, 2, 3], {idx, val -> val + 1})
+<	[2, 3, 4] >
+	:echo sort([3,7,2,1,4], {a, b -> a - b})
+<	[1, 2, 3, 4, 7]
+
+ラムダ式は、チャンネル、ジョブ、タイマーを使う際にも有用である: >
+	:let timer = timer_start(500,
+			\ {-> execute("echo 'Handler called'", "")},
+			\ {'repeat': 3})
+<	Handler called
+	Handler called
+	Handler called
+
+Note Exコマンドを実行するためにどのように execute() を使っているかに注意。
+醜いが。
+
+
+ラムダ式は '<lambda>42' のような内部名を持っている。もしラムダ式でエラーが発生
+した場合には、以下のコマンドでどのラムダ式でエラーが起きたかを調べることができ
+る: >
+	:function {'<lambda>42'}
+|numbered-function|も参照。
 
 ==============================================================================
 3. 内部変数					*internal-variables* *E461*
@@ -1260,6 +1409,10 @@ v:beval_winnr	マウスポインタがあるウィンドウの番号。オプシ
 		を評価している最中のみ有効。1番目のウィンドウの番号はゼロであ
 		る(他の場所でのウィンドウ番号と異なっている)。
 
+					*v:beval_winid* *beval_winid-variable*
+v:beval_winid	マウスポインタがあるウィンドウのウィンドウID |window-ID|。
+		それ以外は v:beval_winnr と同様。
+
 					*v:char* *char-variable*
 v:char		'formatexpr' を評価しているときの引数。また、短縮入力
 		|:map-<expr>| で <expr> を指定しているとき、タイプされた文字を
@@ -1365,10 +1518,12 @@ v:exception	最も直近に捕捉され、まだ終了していない例外の�
 <		出力: "caught oops".
 
 					*v:false* *false-variable*
-v:false		数値 0。JSONでは "false" として使われる。|jsonencode()|を参照。
-		文字列として使われた時、これは "false" として評価される。 >
+v:false		数値0。JSONでは "false" として使われる。|json_encode()|を参照。
+		文字列として使われた時、これは "v:false" として評価される。 >
 			echo v:false
-<			false ~
+<			v:false ~
+		これは eval() がその文字列をパースしたときに、元の値に戻せるよ
+		うにするためである。読出し専用。
 
 					*v:fcs_reason* *fcs_reason-variable*
 v:fcs_reason	|FileChangedShell|イベントが発生した理由。オートコマンドの中で
@@ -1492,6 +1647,10 @@ v:mouse_win	|getchar()|でマウスクリックイベントを取得したとき
 		ウィンドウ番号が代入されている。|winnr()|と同じく番号は1から始
 		まる。マウスがクリックされなかったときは0となる。
 
+					*v:mouse_winid* *mouse_winid-variable*
+v:mouse_winid	Window ID for a mouse click obtained with |getchar()|.
+		The value is zero when there was no mouse button click.
+
 					*v:mouse_lnum* *mouse_lnum-variable*
 v:mouse_lnum	|getchar()|でマウスクリックイベントを取得したとき、この変数に
 		行番号が代入されている。物理行ではなく論理行。マウスがクリック
@@ -1504,18 +1663,22 @@ v:mouse_col	|getchar()|でマウスクリックイベントを取得したとき
 
 					*v:none* *none-variable*
 v:none		空の文字列。JSONでは空の要素として使われる。
-		|jsonencode()|を参照。
+		|json_encode()|を参照。
 		数値として使われた時、これは 0 として評価される。
-		文字列として使われた時、これは "none" として評価される。 >
+		文字列として使われた時、これは "v:none" として評価される。 >
 			echo v:none
-<			none ~
+<			v:none ~
+		これは eval() がその文字列をパースしたときに、元の値に戻せるよ
+		うにするためである。読出し専用。
 
 					*v:null* *null-variable*
-v:null		空の文字列。JSONでは "null" して使われる。|jsonencode()|を参照。
-		数値として使われた時、これは 0 として評価される。
-		文字列として使われた時、これは "null" として評価される。 >
+v:null		空の文字列。JSONでは "null" して使われる。|json_encode()|を参
+		照。数値として使われた時、これは 0 として評価される。
+		文字列として使われた時、これは "v:null" として評価される。 >
 			echo v:null
-<			null ~
+<			v:null ~
+		これは eval() がその文字列をパースしたときに、元の値に戻せるよ
+		うにするためである。読出し専用。
 
 					*v:oldfiles* *oldfiles-variable*
 v:oldfiles	起動時に |viminfo| から読み込まれたファイルの名前のリスト。
@@ -1649,6 +1812,27 @@ v:swapcommand	ファイルを開いた後に実行するノーマルモードコ
 		へジャンプするには、この変数に ":tag tagname\r" という値を代入
 		する。":edit +cmd file" を実行させるには ":cmd\r" を代入する。
 
+				*v:t_TYPE* *v:t_bool* *t_bool-variable*
+v:t_bool	真偽値型の値。読出し専用。 参照: |type()|
+					*v:t_channel* *t_channel-variable*
+v:t_channel	チャンネル型の値。読出し専用。 参照: |type()|
+					*v:t_dict* *t_dict-variable*
+v:t_dict	辞書型の値。読出し専用。 参照: |type()|
+					*v:t_float* *t_float-variable*
+v:t_float	浮動小数点数型の値。読出し専用。 参照: |type()|
+					*v:t_func* *t_func-variable*
+v:t_func	Funcref型の値。読出し専用。 参照: |type()|
+					*v:t_job* *t_job-variable*
+v:t_job		ジョブ型の値。読出し専用。 参照: |type()|
+					*v:t_list* *t_list-variable*
+v:t_list	リスト型の値。読出し専用。 参照: |type()|
+					*v:t_none* *t_none-variable*
+v:t_none	特殊値型の値。読出し専用。 参照: |type()|
+					*v:t_number* *t_number-variable*
+v:t_number	数値型の値。読出し専用。 参照: |type()|
+					*v:t_string* *t_string-variable*
+v:t_string	文字列型の値。読出し専用。 参照: |type()|
+
 				*v:termresponse* *termresponse-variable*
 v:termresponse	termcapのエントリ|t_RV|で端末から返されるエスケープシーケン
 		ス。ESC [またはCSIで始まり、途中数字と ';' と '.' だけから構成
@@ -1660,6 +1844,9 @@ v:termresponse	termcapのエントリ|t_RV|で端末から返されるエスケ�
 		 1ならvt220。Pvはパッチレベル(パッチ95で導入されたため常
 		 に95以上)。Pcは常に0。
 		{Vimが|+termresponse|機能付きでコンパイルされたときのみ有効}
+
+					*v:testing* *testing-variable*
+v:testing	`test_garbagecollect_now()` を使う前に設定する必要がある。
 
 				*v:this_session* *this_session-variable*
 v:this_session	最後にロードされたか、セーブされたセッションファイルの完全な
@@ -1681,10 +1868,12 @@ v:throwpoint	最も直近に捕捉されてまだ終了していない例外が�
 <		出力: "Exception from test.vim, line 2"
 
 						*v:true* *true-variable*
-v:true		数値 1。JSONでは "true" して使われる。|jsonencode()|を参照。
-		文字列として使われた時、これは "true" として評価される。 >
+v:true		数値 1。JSONでは "true" して使われる。|json_encode()|を参照。
+		文字列として使われた時、これは "v:true" として評価される。 >
 			echo v:true
-<			true ~
+<			v:true ~
+		これは eval() がその文字列をパースしたときに、元の値に戻せるよ
+		うにするためである。読出し専用。
 						*v:val* *val-variable*
 v:val		辞書|Dictionary|の現在の要素の値。|map()|と|filter()|で使わ
 		れる式を評価している最中のみ有効。
@@ -1700,6 +1889,10 @@ v:version	Vimのバージョン番号。メジャーバージョン番号は100�
 <		Note 5.0と5.1には両方ともパッチ123が存在しているが、バージョン
 		が違えば番号は同じでもパッチの内容は全く異なっている。
 
+				*v:vim_did_enter* *vim_did_enter-variable*
+v:vim_did_enter	ほとんどのスタートアップが完了するまでの間 0。|VimEnter| 自動
+		コマンドが実行される直前に 1 にセットされる。
+
 					*v:warningmsg* *warningmsg-variable*
 v:warningmsg	最後に表示された警告メッセージ。この変数は代入することが許され
 		ている。
@@ -1711,7 +1904,8 @@ v:windowid	X11 ベースの GUI を使っているとき、もしくは端末の
 		MS-Windows の GUI を使っているときはウィンドウハンドルがセット
 		される。
 		それ以外では値はゼロである。
-		Note: Vim の中のウィンドウを扱うときは |winnr()| を使う。
+		Note: Vim の中のウィンドウを扱うときは |winnr()| または
+		|win_getid()| を使う。|window-ID| を参照。
 
 ==============================================================================
 4. 組み込み関数						*functions*
