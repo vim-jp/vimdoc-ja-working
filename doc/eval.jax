@@ -2440,6 +2440,7 @@ arglistid([{winnr} [, {tabnr}]])
 		れる。
 		{winnr} と {tabnr} を指定した場合は指定したタブページ内のウィ
 		ンドウが使われる。
+		{winnr} にはウィンドウ番号または|window-ID|が使える。
 
 							*argv()*
 argv([{nr}])	結果は引数リスト内の、{nr}番目のファイル。|arglist|を参照。
@@ -2489,16 +2490,54 @@ assert_false({actual} [, {msg}])				*assert_false()*
 		にエラーメッセージを追加する。
 		ゼロである時、その値はfalseである。{actual}が数値でない場合、
 		テストが失敗する。
-		{msg}が省略された場合、"Expected False but got {actual}"という
-		形式のメッセージが生成される。
+		{msg}が省略された場合、"Expected False but got {actual}" とい
+		う形式のメッセージが生成される。
+
+assert_inrange({lower}, {upper}, {actual} [, {msg}])	 *assert_inrange()*
+		This asserts number values.  When {actual}  is lower than
+		{lower} or higher than {upper} an error message is added to
+		|v:errors|.
+		When {msg} is omitted an error in the form
+		"Expected range {lower} - {upper}, but got {actual}" is
+		produced.
+
+								*assert_match()*
+assert_match({pattern}, {actual} [, {msg}])
+		When {pattern} does not match {actual} an error message is
+		added to |v:errors|.
+
+		{pattern} is used as with |=~|: The matching is always done
+		like 'magic' was set and 'cpoptions' is empty, no matter what
+		the actual value of 'magic' or 'cpoptions' is.
+
+		{actual} is used as a string, automatic conversion applies.
+		Use "^" and "$" to match with the start and end of the text.
+		Use both to match the whole text.
+
+		When {msg} is omitted an error in the form
+		"Pattern {pattern} does not match {actual}" is produced.
+		Example: >
+	assert_match('^f.*o$', 'foobar')
+<		Will result in a string to be added to |v:errors|:
+	test.vim line 12: Pattern '^f.*o$' does not match 'foobar' ~
+
+							*assert_notequal()*
+assert_notequal({expected}, {actual} [, {msg}])
+		The opposite of `assert_equal()`: add an error message to
+		|v:errors| when {expected} and {actual} are equal.
+
+							*assert_notmatch()*
+assert_notmatch({pattern}, {actual} [, {msg}])
+		The opposite of `assert_match()`: add an error message to
+		|v:errors| when {pattern} matches {actual}.
 
 assert_true({actual} [, {msg}])					*assert_true()*
 		|assert_equal()|と同様に、{actual}がtrueでない場合、|v:errors|
 		にエラーメッセージを追加する。
-		非ゼロである時、その値はtrueである。{actual}が数値でない場合、
+		非ゼロである時、その値はTRUEである。{actual}が数値でない場合、
 		テストが失敗する。
-		{msg}が省略された場合、"Expected True but got {actual}"という
-		形式のメッセージが生成される。
+		{msg}が省略された場合、"Expected True but got {actual}" とい
+		う形式のメッセージが生成される。
 
 asin({expr})						*asin()*
 		{expr} の逆正弦 (アークサイン) をラジアンで返す。
@@ -2540,10 +2579,10 @@ atan2({expr1}, {expr2})					*atan2()*
 
 							*browse()*
 browse({save}, {title}, {initdir}, {default})
-		ファイル選択ダイアログを起動。"has("browse")" が非零を返すとき
-		(幾つかのGUIバージョンに限定)だけ利用可能。
+		ファイル選択ダイアログを起動。"has("browse")" が|TRUE|を返すと
+		き (幾つかのGUIバージョンに限定)だけ利用可能。
 		入力フィールドの意味は:
-		    {save}	非零ならば書込み用ファイルの選択
+		    {save}	|TRUE|ならば書込み用ファイルの選択
 		    {title}	ダイアログのタイトル
 		    {initdir}	ダイアログの始まるディレクトリ
 		    {default}	ファイル名の省略値
@@ -2552,8 +2591,8 @@ browse({save}, {title}, {initdir}, {default})
 
 							*browsedir()*
 browsedir({title}, {initdir})
-		ディレクトリ選択ダイアログを起動。"has("browse")" が非零を返す
-		とき(幾つかのGUIバージョンに限定)だけ利用可能。
+		ディレクトリ選択ダイアログを起動。"has("browse")" が|TRUE|を返
+		すとき(幾つかのGUIバージョンに限定)だけ利用可能。
 		ディレクトリ選択ダイアログがないシステムにおいてはファイル選択
 		ダイアログが使われる。その場合は、指定したいディレクトリの中の
 		ファイルを選択すること。
@@ -2565,7 +2604,8 @@ browsedir({title}, {initdir})
 
 							*bufexists()*
 bufexists({expr})
-		結果は数値で、{expr}と呼ばれるバッファが存在すれば非零となる。
+		結果は数値で、{expr}と呼ばれるバッファが存在すれば|TRUE|とな
+		る。
 		{expr}が数値の場合、バッファ番号とみなされる。
 		{expr}が文字列の場合、バッファ名に正確にマッチしなければな
 		らない。名前として以下のものが許される:
@@ -2586,15 +2626,15 @@ bufexists({expr})
 
 buflisted({expr})					*buflisted()*
 		戻り値は数値で、{expr}と呼ばれるバッファが存在しリストされてい
-		る ('buflisted' オプションがオンになっている) ならば結果は非零
-		となる。引数{expr}は|bufexists()|と同じように扱われる。
+		る ('buflisted' オプションがオンになっている) ならば結果は
+		|TRUE|となる。引数{expr}は|bufexists()|と同じように扱われる。
 
 							*bufloaded()*
 bufloaded({expr})
 		戻り値は数値で、{expr}と呼ばれるバッファが存在しロード済み(
 		ウィンドウに表示されているか、隠されているかは問わない)ならば
-		結果は非零となる。引数{expr}は|bufexists()|と同じように扱われ
-		る。
+		結果は|TRUE|となる。引数{expr}は|bufexists()|と同じように扱わ
+		れる。
 
 							*bufname()*
 bufname({expr})
@@ -2646,6 +2686,16 @@ bufnr({expr} [, {create}])
 							*last_buffer_nr()*
 		bufnr("$")の以前の名前: last_buffer_nr().
 
+bufwinid({expr})					*bufwinid()*
+		The result is a Number, which is the |window-ID| of the first
+		window associated with buffer {expr}.  For the use of {expr},
+		see |bufname()| above.  If buffer {expr} doesn't exist or
+		there is no such window, -1 is returned.  Example: >
+
+	echo "A window containing buffer 1 is " . (bufwinid(1))
+<
+		Only deals with the current tab page.
+
 							*bufwinnr()*
 bufwinnr({expr})
 		結果は数値で、バッファ{expr}に関連付けられた最初のウィンドウの
@@ -2678,7 +2728,8 @@ byteidx({expr}, {nr})					*byteidx()*
 <		は4文字目を表示する。次も同じことをする: >
 			let s = strpart(str, byteidx(str, 3))
 			echo strpart(s, 0, byteidx(s, 1))
-<		{expr}が{nr}文字以下の場合は-1を返す。
+<		|strgetchar()| と |strcharpart()| も参照。
+		{expr}が{nr}文字以下の場合は-1を返す。
 		{expr}がちょうど{nr}文字の場合は文字列の長さ(バイト単位)を返す。
 
 byteidxcomp({expr}, {nr})					*byteidxcomp()*
@@ -2780,9 +2831,9 @@ col({expr})
 <
 complete({startcol}, {matches})			*complete()* *E785*
 		挿入モード補完の候補を設定する。
-		挿入モードでのみ使用できる。CTRL-R = |i_CTRL-R|と組み合わせて
-		マッピングを作る必要がある。CTRL-Oの後や、<expr>マッピングの中
-		では正しく動作しない。
+		挿入モードでのみ使用できる。CTRL-R = (|i_CTRL-R| を参照)と組み
+		合わせてマッピングを作る必要がある。CTRL-Oの後や、<expr>マッピ
+		ングの中では正しく動作しない。
 		{startcol}は補完すべき単語の開始位置を示す、行内のバイトオフセッ
 		トである。その位置からカーソルまでのテキストが補完すべき単語と
 		なる。
@@ -2816,7 +2867,7 @@ complete_add({expr})				*complete_add()*
 complete_check()				*complete_check()*
 		補完候補を探している間にキーがタイプされたかどうか確認する。補
 		完の検索に時間がかかる場合に使われる。候補の検索を中断しようと
-		しているときは0以外を返す。そうでないときは0を返す。
+		しているときは|TRUE|を返す。そうでないときは0を返す。
 		'completefunc' で指定された関数の中でのみ使われる。
 
 							*confirm()*
@@ -2872,17 +2923,177 @@ confirm({msg} [, {choices} [, {default} [, {type}]]])
 		は、垂直配置が使われる。幾つかのシステムでは常に水平配置が使わ
 		れる。
 
-connect({address}, {mode} [, {callback}])		*connect()*
+ch_close({handle})						*ch_close()*
+		Close {handle}.  See |channel-close|.
+		{handle} can be Channel or a Job that has a Channel.
+		A close callback is not invoked.
+
+		{only available when compiled with the |+channel| feature}
+
+ch_close_in({handle})						*ch_close_in()*
+		Close the "in" part of {handle}.  See |channel-close-in|.
+		{handle} can be Channel or a Job that has a Channel.
+		A close callback is not invoked.
+
+		{only available when compiled with the |+channel| feature}
+
+ch_evalexpr({handle}, {expr} [, {options}])			*ch_evalexpr()*
+		Send {expr} over {handle}.  The {expr} is encoded
+		according to the type of channel.  The function cannot be used
+		with a raw channel.  See |channel-use|.
+		{handle} can be Channel or a Job that has a Channel.
+								*E917*
+		{options} must be a Dictionary.  It must not have a "callback"
+		entry.  It can have a "timeout" entry to specify the timeout
+		for this specific request.
+
+		ch_evalexpr() waits for a response and returns the decoded
+		expression.  When there is an error or timeout it returns an
+		empty string.
+
+		{only available when compiled with the |+channel| feature}
+
+ch_evalraw({handle}, {string} [, {options}])		*ch_evalraw()*
+		Send {string} over {handle}.
+		{handle} can be Channel or a Job that has a Channel.
+
+		Works like |ch_evalexpr()|, but does not encode the request or
+		decode the response.  The caller is responsible for the
+		correct contents.  Also does not add a newline for a channel
+		in NL mode, the caller must do that.  The NL in the response
+		is removed.
+		See |channel-use|.
+
+		{only available when compiled with the |+channel| feature}
+
+ch_getbufnr({handle}, {what})				 *ch_getbufnr()*
+		Get the buffer number that {handle} is using for {what}.
+		{handle} can be Channel or a Job that has a Channel.
+		{what} can be "err" for stderr, "out" for stdout or empty for
+		socket output.
+		Returns -1 when there is no buffer.
+		{only available when compiled with the |+channel| feature}
+
+ch_getjob({channel})						*ch_getjob()*
+		Get the Job associated with {channel}.
+		If there is no job calling |job_status()| on the returned Job
+		will result in "fail".
+
+		{only available when compiled with the |+channel| and
+		|+job| features}
+
+ch_info({handle})						*ch_info()*
+		Returns a Dictionary with information about {handle}.  The
+		items are:
+		   "id"		  number of the channel
+		   "status"	  "open" (any part is open) or "closed"
+		When opened with ch_open():
+		   "hostname"	  the hostname of the address
+		   "port"	  the port of the address
+		   "sock_status"  "open" or "closed"
+		   "sock_mode"	  "NL", "RAW", "JSON" or "JS"
+		   "sock_io"	  "socket"
+		   "sock_timeout" timeout in msec
+		When opened with job_start():
+		   "out_status"	  "open" or "closed"
+		   "out_mode"	  "NL", "RAW", "JSON" or "JS"
+		   "out_io"	  "null", "pipe", "file" or "buffer"
+		   "out_timeout"  timeout in msec
+		   "err_status"	  "open" or "closed"
+		   "err_mode"	  "NL", "RAW", "JSON" or "JS"
+		   "err_io"	  "out", "null", "pipe", "file" or "buffer"
+		   "err_timeout"  timeout in msec
+		   "in_status"	  "open" or "closed"
+		   "in_mode"	  "NL", "RAW", "JSON" or "JS"
+		   "in_io"	  "null", "pipe", "file" or "buffer"
+		   "in_timeout"	  timeout in msec
+
+ch_log({msg} [, {handle}])					*ch_log()*
+		Write {msg} in the channel log file, if it was opened with
+		|ch_logfile()|.
+		When {handle} is passed the channel number is used for the
+		message.
+		{handle} can be Channel or a Job that has a Channel.  The
+		Channel must open.
+
+ch_logfile({fname} [, {mode}])					*ch_logfile()*
+		Start logging channel activity to {fname}.
+		When {fname} is an empty string: stop logging.
+
+		When {mode} is omitted or "a" append to the file.
+		When {mode} is "w" start with an empty file.
+
+		The file is flushed after every message, on Unix you can use
+		"tail -f" to see what is going on in real time.
+
+
+ch_open({address} [, {options}])				*ch_open()*
 		{address}へのチャンネルを開く。|channel|を参照。
+		チャンネルを返す。失敗をチェックするには |ch_status()| を使用
+		する。
 
 		{address}は "localhost:8765" のように "ホスト名:ポート" の形式
 		である。
 
-		{mode}は "json" か "raw" のどちらかである。これらの意味につい
-		ては|channel-mode|を参照。
+		If {options} is given it must be a |Dictionary|.
+		See |channel-open-options|.
 
-		{callback}はチャンネルから受信されたメッセージをハンドルする関
-		数である。|channel-callback|を参照。
+		{only available when compiled with the |+channel| feature}
+
+ch_read({handle} [, {options}])					*ch_read()*
+		Read from {handle} and return the received message.
+		{handle} can be Channel or a Job that has a Channel.
+		See |channel-more|.
+		{only available when compiled with the |+channel| feature}
+
+ch_readraw({handle} [, {options}])			*ch_readraw()*
+		Like ch_read() but for a JS and JSON channel does not decode
+		the message.  See |channel-more|.
+		{only available when compiled with the |+channel| feature}
+
+ch_sendexpr({handle}, {expr} [, {options}])			*ch_sendexpr()*
+		{expr}を{handle}に送る。The {expr} is encoded
+		according to the type of channel.  The function cannot be used
+		with a raw channel.
+		|channel-use|を参照。
+		{handle} can be Channel or a Job that has a Channel.
+
+		{only available when compiled with the |+channel| feature}
+
+ch_sendraw({handle}, {string} [, {options}])		*ch_sendraw()*
+		{string}を{handle}に送る。
+		|ch_sendexpr()|のように動作するがリクエストをエンコードしたり、
+		レスポンスをデコードしたりはしない。The caller is responsible
+		for the correct contents.  Also does not add a newline for a
+		channel in NL mode, the caller must do that.  The NL in the
+		response is removed.
+		|channel-use|を参照。
+
+		{only available when compiled with the |+channel| feature}
+
+ch_setoptions({handle}, {options})			*ch_setoptions()*
+		Set options on {handle}:
+			"callback"	the channel callback
+			"timeout"	default read timeout in msec
+			"mode"		mode for the whole channel
+		See |ch_open()| for more explanation.
+		{handle} can be Channel or a Job that has a Channel.
+
+		Note that changing the mode may cause queued messages to be
+		lost.
+
+		These options cannot be changed:
+			"waittime"	only applies to |ch_open()|
+
+ch_status({handle})						*ch_status()*
+		Return the status of {handle}:
+			"fail"		failed to open the channel
+			"open"		channel can be used
+			"buffered"	channel can be read, not written to
+			"closed"	channel can not be used
+		{handle} can be Channel or a Job that has a Channel.
+		"buffered" is used when the channel was closed but there is
+		still data that can be obtained with |ch_read()|.
 
 							*copy()*
 copy({expr})	{expr}のコピーを作る。数値と文字列の場合は、{expr}そのものとコ
@@ -2890,7 +3101,9 @@ copy({expr})	{expr}のコピーを作る。数値と文字列の場合は、{exp
 		{expr}がリスト|List|の場合は浅いコピーを作る。つまり元のリスト
 		を変更してもコピーは変更されず、逆も同じである。しかし要素は共
 		通で、片方の要素に対し変更を加えると、もう一方の要素も変更され
-		る。|deepcopy()|も参照。
+		る。
+		辞書はリストと同様な方法でコピーされる。
+		|deepcopy()|も参照。
 
 cos({expr})						*cos()*
 		{expr} の余弦(コサイン)をラジアンで浮動小数点数 |Float| で返す。
@@ -2921,7 +3134,7 @@ count({comp}, {expr} [, {ic} [, {start}]])			*count()*
 		現れるかを返す。
 		{start}が指定されたときはそのインデックスの要素から検索を開始
 		する。{start}は{comp}がリストの場合のみ使用できる。
-		{ic}が指定され、0でない場合は大文字・小文字は区別されない。
+		{ic}が指定され、|TRUE|の場合は大文字・小文字は区別されない。
 
 
 							*cscope_connection()*
@@ -2970,6 +3183,7 @@ cursor({list})
 
 		引数に {list} が 1 つだけ指定された場合は、それは要素が 2 個か
 		3 個、または 4 個の |List| として解釈される:
+			[{lnum}, {col}]
 			[{lnum}, {col}, {off}]
 			[{lnum}, {col}, {off}, {curswant}]
 		これは |getpos()| や |getcurpos()| の返り値とほぼ同じである。
@@ -2994,8 +3208,10 @@ deepcopy({expr}[, {noref}])				*deepcopy()* *E698*
 		ピーの間に違いはない。
 		{expr}がリスト|List|の場合は完全なコピーを作る。つまり元のリス
 		トを変更してもコピーは変更されず、逆も同じである。要素の1つが
-		リストであるときは、再帰的にコピーが作成される。よってコピーの
-		要素に変更を加えても元のリストの要素は変更を受けない。
+		リストまたは辞書であるときは、再帰的にコピーが作成される。
+		よってコピーの要素に変更を加えても元のリストの要素は変更を受け
+		ない。
+		辞書はリストと同様な方法でコピーされる。
 		{noref}が省略された、または0のとき、含まれているリストや辞書は
 		1度だけコピーされる。全ての参照はこのただ1つのコピーを指す。
 		{noref}が1の場合、リストや辞書は現れるたびに新しいコピーが作ら
@@ -3010,12 +3226,16 @@ delete({fname} [, {flags}])					*delete()*
 		{fname}を削除する。
 		これは{fname}がシンボリックリンクの時でも動作する。
 
-		{flags}が"d"の場合: ディレクトリ{fname}を削除する。
+		{flags}が "d" の場合: ディレクトリ{fname}を削除する。
 		これはディレクトリ{fname}が空でない場合は失敗する。
 
-		{flags}が"rf"の場合: ディレクトリ{fname}、その中に含むすべての
-		ものを再帰的に削除する。気をつけて！
-		シンボリックリンク自身が削除され、それが示すものではない。
+		{flags}が "rf" の場合: ディレクトリ{fname}、その中に含むすべて
+		のものを再帰的に削除する。気をつけて！
+		Note: MS-Windowsでは、使用中のディレクトリを削除することはでき
+		ない。
+
+		シンボリックリンクは、それが示すものではなく、リンク自身が削除
+		される。
 
 		結果は数値であり、削除に成功すれば 0、削除に失敗すれば -1 であ
 		る。
@@ -3025,8 +3245,8 @@ delete({fname} [, {flags}])					*delete()*
 
 							*did_filetype()*
 did_filetype()	autocommandが実行されFileTypeイベントが一度でも起こっていれ
-		ば、非零が返る。スクリプトのFileTypeイベントが、複数回呼び出さ
-		れるのを回避するのに使える。 |FileType|
+		ば、|TRUE|が返る。スクリプトのFileTypeイベントが、複数回呼び出
+		されるのを回避するのに使える。 |FileType|
 		他のファイルへ移動すると、このカウンタはリセットされる。よって
 		実際は、カレントバッファに対してFileTypeイベントが発生したかど
 		うかを判定する。他のバッファを開くオートコマンドの中でこの関数
@@ -3052,9 +3272,13 @@ diff_hlID({lnum}, {col})				*diff_hlID()*
 
 empty({expr})						*empty()*
 		{expr}が空なら1を、そうでなければ0を返す。
-		リスト|List|または辞書|Dictionary|は要素を1個も持たないとき空
-		とみなされる。数値は値が0のとき空とみなされる。
-		|v:false|, |v:none| and |v:null| are empty, |v:true| is not.
+		- リスト|List|または辞書|Dictionary|は要素を1個も持たないとき
+		  空とみなされる。
+		- 数値と浮動小数点数は値が0のとき空とみなされる。
+		- |v:false|, |v:none|, |v:null| は空であり、|v:true| は空では
+		  ない。
+		- ジョブは開始に失敗したときは空である。
+		- チャンネルは閉じられていると空である。
 		長いリストに対しては長さを0と比較するよりこちらの方がずっと高
 		速である。
 
@@ -3101,6 +3325,32 @@ executable({expr})					*executable()*
 			0	存在しない
 			-1	このシステム上では実装されていない
 
+execute({command} [, {silent}])					*execute()*
+		Execute an Ex command or commands and return the output as a
+		string.
+		{command} can be a string or a List.  In case of a List the
+		lines are executed one by one.
+		This is equivalent to: >
+			redir => var
+			{command}
+			redir END
+<
+		The optional {silent} argument can have these values:
+			""		no `:silent` used
+			"silent"	`:silent` used
+			"silent!"	`:silent!` used
+		The default is 'silent'.  Note that with "silent!", unlike
+		`:redir`, error messages are dropped.  When using an external
+		command the screen may be messed up, use `system()` instead.
+							*E930*
+		It is not possible to use `:redir` anywhere in {command}.
+
+		To get a list of lines use |split()| on the result: >
+			split(execute('args'), "\n")
+
+<		When used recursively the output of the recursive call is not
+		included in the output of the higher level call.
+
 exepath({expr})						*exepath()*
 		{expr} が実行ファイルで、それが絶対パス、相対パス、または
 		$PATH の中に存在する場合は、そのフルパスを返す。
@@ -3111,8 +3361,13 @@ exepath({expr})						*exepath()*
 		かった場合は空文字列が返る。
 
 							*exists()*
-exists({expr})	結果は数値で、変数{expr}が存在すれば1となり、そうでなければ0と
-		なる。引数{expr}は文字列で次のうちいずれかである。
+exists({expr})	結果は数値で、変数{expr}が存在すれば|TRUE|となり、そうでなけれ
+		ば0となる。
+
+		ある機能がサポートされているか判定するには|has()|を使う。
+		ファイルが存在するかを判定するには|filereadable()|を使う。
+
+		引数{expr}は文字列で次のうちいずれかである。
 			&option-name	Vimオプション(存在するかだけを判定し、
 					本当に動作するかは判定しない)
 			+option-name	動作するVimオプション
@@ -3158,7 +3413,6 @@ exists({expr})	結果は数値で、変数{expr}が存在すれば1となり、�
 					るオートコマンド定義
 			##event		このイベントに対するオートコマンドがサ
 					ポートされているか
-		ある機能がサポートされているか判定するには|has()|を使う。
 
 		例: >
 			exists("&shortname")
@@ -3206,7 +3460,7 @@ expand({expr} [, {nosuf} [, {list}]])				*expand()*
 		ワイルドカードと{expr}内の特殊なキーワードを展開する。
 		'wildignorecase' が適用される。
 
-		{list} が指定されその値が非ゼロなら、結果はリストで返される。
+		{list} が指定されその値が|TRUE|なら、結果はリストで返される。
 		そうでない場合は結果は文字列で返される。その場合、複数のマッチ
 		があるときはそれらは文字 <NL> で区切られる。[Note: バージョン
 		5.0 では空白文字が用いられ、スペースを含むファイル名について問
@@ -3260,7 +3514,7 @@ expand({expr} [, {nosuf} [, {list}]])				*expand()*
 		場合、結果はカレントディレクトリに '/' が付加されたものになる。
 
 		'%' や '#' や '<' で始まらない{expr}は、コマンドラインのファイ
-		ル名と同じように展開される。{nosuf}引数に非ゼロを指定しない限
+		ル名と同じように展開される。{nosuf}引数に|TRUE|を指定しない限
 		り、'suffixes' と 'wildignore' が使用される。
 		存在しないファイルの名前も結果の文字列に含まれる。"**" を使う
 		とディレクトリツリーを検索できる。例えば、カレントディレクトリ
@@ -3339,15 +3593,22 @@ feedkeys({string} [, {mode}])				*feedkeys()*
 			これは ":normal!" を使うのと似ている。
 			'x' なしで数回feedkeys()を呼んだ後、'x' ありで1回
 			({string}が空でも可能) feedkeys()を呼ぶことで先行入力
-			をすべて実行できる。
+			をすべて実行できる。Note that when Vim ends in Insert
+			mode it will behave as if <Esc> is typed, to avoid
+			getting stuck, waiting for a character to be typed
+			before the script continues.
+		'!'	When used with 'x' will not end Insert mode. Can be
+			used in a test when a timer is set to exit Insert mode
+			a little later.  Useful for testing CursorHoldI.
+
 		戻り値は常に0。
 
 							*filereadable()*
 filereadable({file})
 		結果は数値で、{file}というファイルが存在し、読みこむことが可能
-		ならばTRUEとなる。ファイル{file}が存在しないかディレクトリだっ
-		た場合には、結果はFALSEとなる。引数{file}は文字列として使えれ
-		ばどのような表現でもよい。
+		ならば|TRUE|となる。ファイル{file}が存在しないかディレクトリ
+		だった場合には、結果は|FALSE|となる。引数{file}は文字列として
+		使えればどのような表現でもよい。
 		ファイルが読み込み可能でなくてもよい場合には|glob()|を使う。
 							*file_readable()*
 		以前の名前: file_readable().
@@ -3359,29 +3620,47 @@ filewritable({file})					*filewritable()*
 		み可能な場合、結果は2となる。
 
 
-filter({expr}, {string})					*filter()*
-		{expr}はリスト|List|または辞書|Dictionary|でなければならない。
-		{expr}の各要素に対して{string}を評価し、その結果が0ならばリス
-		トまたは辞書からその要素を削除する。{string}の内部では|v:val|
-		が現在の要素の値を保持している。
-		辞書の場合は|v:key|が現在の要素のキーを保持している。
+filter({expr}, {expr2})					*filter()*
+		{expr1}はリスト|List|または辞書|Dictionary|でなければならない。
+		{expr1}の各要素に対して{expr2}を評価し、その結果が0ならばリス
+		トまたは辞書からその要素を削除する。
+		{expr2}は文字列|string|または関数参照|Funcref|でなければならな
+		い。
+
+		{expr2}が文字列の場合、{expr2}の内部では|v:val|が現在の要素の
+		値を保持している。辞書の場合は|v:key|が現在の要素のキーを保持
+		している。
 		例: >
-			:call filter(mylist, 'v:val !~ "OLD"')
+			call filter(mylist, 'v:val !~ "OLD"')
 <		は要素 "OLD" を削除する。 >
-			:call filter(mydict, 'v:key >= 8')
+			call filter(mydict, 'v:key >= 8')
 <		は8未満のキーを持つ要素を削除する。 >
-			:call filter(var, 0)
+			call filter(var, 0)
 <		は全要素を削除する。つまりリストまたは辞書をクリアする。
 
-		Note {string}は式を表す文字列である。バックスラッシュを二重に
-		しなくても済むように|literal-string|を使うとよいだろう。
+		Note {expr2}は式を表す文字列である。バックスラッシュを二重に
+		しなくても済むように|literal-string|を使うとよいだろう。ただし
+		その場合はシングルクォートを二重にしなければならない。
 
+		{expr2}が|Funcref|の場合は、2つの引数で呼び出される:
+			1. 現在の要素のキーまたはインデックス。
+			2. 現在の要素の値。
+		関数は、その要素を保持すべきときは|TRUE|を返さなければならな
+		い。リストの奇数版目の要素を保持する例: >
+			func Odd(idx, val)
+			  return a:idx % 2 == 1
+			endfunc
+			call filter(mylist, function('Odd'))
+<
 		この操作はその場で(in-place)行われる。リストや辞書を変更したく
 		ない場合は最初にコピーを作ること: >
 			:let l = filter(copy(mylist), 'v:val =~ "KEEP"')
 
-<		フィルタされたリストまたは辞書を返す。{string}を評価している最
-		中にエラーが発生した場合は、それ以降の要素の処理は行われない。
+<		{expr1}のリストまたは辞書をフィルターした結果を返す。{expr2}を
+		評価している最中にエラーが発生した場合は、{expr1}内のそれ以降
+		の要素の処理は行われない。{expr2}が関数参照の場合、関数が
+		"abort" フラグつきで定義されていない限り、関数内のエラーは無視
+		される。
 
 
 finddir({name}[, {path}[, {count}]])				*finddir()*
@@ -3411,16 +3690,19 @@ float2nr({expr})					*float2nr()*
 		{expr} の小数点以下を切り捨てて |Number| に変換する。
 		{expr} は |Float| または |Number| に評価されなければならない。
 		{expr} の値が |Number| の範囲外の場合、結果は 0x7fffffff また
-		は -0x7fffffff になる。NaN は -0x80000000 になる。
+		は -0x7fffffff になる(64ビット数値が有効化されている場合は
+		0x7fffffffffffffff または -0x7fffffffffffffff)。
+		NaN は -0x80000000 になる(64ビット数値が有効化されている場合は
+		-0x8000000000000000)。
 		例: >
 			echo float2nr(3.95)
 <			3  >
 			echo float2nr(-23.45)
 <			-23  >
 			echo float2nr(1.0e100)
-<			2147483647  >
+<			2147483647  (または 9223372036854775807) >
 			echo float2nr(-1.0e150)
-<			-2147483647  >
+<			-2147483647  (または -9223372036854775807) >
 			echo float2nr(1.0e-100)
 <			0
 		{|+float| 機能つきでコンパイルされたときのみ有効}
@@ -3535,10 +3817,81 @@ foreground()	Vimのウィンドウを前面に移動する。この関数はク�
 		{Win32, Athena, Motif, GTKいずれかのGUI版とWin32コンソール版で
 		のみ利用できる}
 
+						*funcref()*
+funcref({name} [, {arglist}] [, {dict}])
+		Just like |function()|, but the returned Funcref will lookup
+		the function by reference, not by name.  This matters when the
+		function {name} is redefined later.
 
-function({name})					*function()* *E700*
+		Unlike |function()|, {name} must be an existing user function.
+		Also for autoloaded functions. {name} cannot be a builtin
+		function.
+
+					*function()* *E700* *E922* *E923*
+function({name} [, {arglist}] [, {dict}])
 		関数{name}を参照する|Funcref|の変数を返す。{name}はユーザー定義
 		関数でも組み込み関数でもよい。
+
+		{name} can also be a Funcref or a partial.  When it is a
+		partial the dict stored in it will be used and the {dict}
+		argument is not allowed. E.g.: >
+			let FuncWithArg = function(dict.Func, [arg])
+			let Broken = function(dict.Func, [arg], dict)
+<
+		When using the Funcref the function will be found by {name},
+		also when it was redefined later.  Use |funcref()| to keep the
+		same function.
+
+		When {arglist} or {dict} is present this creates a partial.
+		That means the argument list and/or the dictionary is stored in
+		the Funcref and will be used when the Funcref is called.
+		
+		The arguments are passed to the function in front of other
+		arguments.  Example: >
+			func Callback(arg1, arg2, name)
+			...
+			let Func = function('Callback', ['one', 'two'])
+			...
+			call Func('name')
+<		Invokes the function as with: >
+			call Callback('one', 'two', 'name')
+
+<		The function() call can be nested to add more arguments to the
+		Funcref.  The extra arguments are appended to the list of
+		arguments.  Example: >
+			func Callback(arg1, arg2, name)
+			...
+			let Func = function('Callback', ['one'])
+			let Func2 = function(Func, ['two'])
+			...
+			call Func2('name')
+<		Invokes the function as with: >
+			call Callback('one', 'two', 'name')
+
+<		The Dictionary is only useful when calling a "dict" function.
+		In that case the {dict} is passed in as "self". Example: >
+			function Callback() dict
+			   echo "called for " . self.name
+			endfunction
+			...
+			let context = {"name": "example"}
+			let Func = function('Callback', context)
+			...
+			call Func()	" will echo: called for example
+<		The use of function() is not needed when there are no extra
+		arguments, these two are equivalent: >
+			let Func = function('Callback', context)
+			let Func = context.Callback
+
+<		The argument list and the Dictionary can be combined: >
+			function Callback(arg1, count) dict
+			...
+			let context = {"name": "example"}
+			let Func = function('Callback', ['one'], context)
+			...
+			call Func(500)
+<		Invokes the function as with: >
+			call context.Callback('one', 500)
 
 
 garbagecollect([{atexit}])				*garbagecollect()*
