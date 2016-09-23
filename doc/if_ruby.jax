@@ -59,7 +59,7 @@ Vimスクリプトの例: >
 	EOF
 	endfunction
 <
-使っている Perl のバージョンを見るには: >
+使っている Ruby のバージョンを見るには: >
 	:ruby print RUBY_VERSION
 <
 
