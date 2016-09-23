@@ -7989,6 +7989,10 @@ xor({expr}, {expr})					*xor()*
 	:if has("patch-7.4.248")
 <    Note: 148 が適用されていても、147 が抜けていることもありうるので注意。
 
+Hint: To find out if Vim supports backslashes in a file name (MS-Windows),
+use: `if exists('+shellslash')`
+
+
 acl			|ACL| をサポート
 all_builtin_terms	全ての組込みターミナルを有効にしてコンパイル
 amiga			AMIGAバージョン
@@ -8017,10 +8021,8 @@ dialog_con		コンソールダイアログのサポート
 dialog_gui		GUIダイアログのサポート
 diff			|vimdiff| と 'diff' のサポート
 digraphs		ダイグラフをサポート
-directx			Direct-X と 'renderoptions' をサポート
+directx			DirectX と 'renderoptions' をサポート
 dnd			レジスタ "~ をサポート |quote_~|
-dos16			16ビットDOSバージョン
-dos32			32ビットDOSバージョン (DJGPP)
 ebcdic			EBCDIC文字集合のマシン用
 emacs_tags		Emacs式のタグファイルをサポート
 eval			式評価をサポート。もちろん常に真。
@@ -8055,6 +8057,7 @@ iconv			iconv()をサポート
 insert_expand		挿入モード時にCTRL-Xの展開がサポートされる
 jumplist		|jumplist| をサポート
 keymap			'keymap' をサポート
+lambda			|lambda| をサポート
 langmap			'langmap' サポート
 libcall			|libcall()| をサポート
 linebreak		'linebreak'、'breakat'、'showbreak'、'breakindent' を
@@ -8064,8 +8067,9 @@ listcmds		バッファリスト用のコマンド|:files|と引数リスト用�
 			ンド|arglist|をサポート
 localmap		ローカルなマッピングと短縮入力をサポート|:map-local|
 lua			Lua インターフェイスをサポート |Lua|
-mac			マッキントッシュバージョン
-macunix			Unixファイル用のマッキントッシュバージョン(OS-X)
+mac			すべてのマッキントッシュ版Vim
+macunix			darwinつきのOS X
+osx			darwinなしのOS X
 menu			|:menu|をサポート
 mksession		|:mksession|をサポート
 modify_fname		ファイル名変換子をサポート |filename-modifiers|
@@ -8086,8 +8090,9 @@ multi_lang		複数言語をサポート
 mzscheme		MzSchemeインターフェイスをサポート |mzscheme|
 netbeans_enabled	|netbeans|をサポートし、現在接続している
 netbeans_intg		|netbeans|をサポート
+num64			64ビット数値をサポート |Number|
 ole			Win32にてOLEオートメーションをサポート
-os2			OS/2バージョン
+packages		|packages|をサポート
 path_extra		'path' と 'tags' の上方・下方検索をサポート
 perl			Perlインターフェイスをサポート
 persistent_undo		永続アンドゥをサポート
@@ -8117,6 +8122,7 @@ tag_binary		タグファイル内のバイナリサーチ |tag-binary-search|
 tag_old_static		旧式の静的tagsをサポート |tag-old-static|
 tag_any_white		タグファイル内の空白文字をサポート |tag-any-white|
 tcl			TCLインターフェイスをサポート
+termguicolors		端末でのtrueカラーをサポート
 terminfo		termcapの代わりにterminfoをサポート
 termresponse		|t_RV|と|v:termresponse|をサポート
 textobjects		|text-objects|をサポート
