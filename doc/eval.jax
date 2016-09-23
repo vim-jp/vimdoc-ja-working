@@ -1914,384 +1914,455 @@ v:windowid	X11 ベースの GUI を使っているとき、もしくは端末の
 
 (関数名の上でCTRL-]を使うことで、詳細な説明へ飛ぶことができる。)
 
-使用法				結果	説明		~
+使用法				結果	説明	~
 
-abs( {expr})			浮動小数点数または数値	{expr}の絶対値
-acos( {expr})			浮動小数点数	{expr}のアークコサイン
-add( {list}, {item})		リスト	{item}をリスト{list}に追加する
-alloc_fail( {id}, {countdown}, {repeat})
-				なし	メモリの確保を失敗にさせる
-and( {expr}, {expr})		数値    ビット論理積
-append( {lnum}, {string})	数値	{string}を{lnum}行目に付け加える
-append( {lnum}, {list})		数値	行{list}を{lnum}行目に付け加える
+abs({expr})			浮動小数点数または数値	{expr}の絶対値
+acos({expr})			浮動小数点数	{expr}のアークコサイン
+add({list}, {item})		リスト	{item}をリスト{list}に追加する
+and({expr}, {expr})		数値	ビット論理積
+append({lnum}, {string})	数値	{string}を{lnum}行目に付け加える
+append({lnum}, {list})		数値	行{list}を{lnum}行目に付け加える
 argc()				数値	引数内のファイルの数
 argidx()			数値	引数リスト内の現在のインデックス
-arglistid( [{winnr} [, {tabnr}]])
+arglistid([{winnr} [, {tabnr}]])
 				数値	引数リストID
-argv( {nr})			文字列	引数の第{nr}番目
-argv( )				リスト	引数リスト
-assert_equal( {exp}, {act} [, {msg}])
+argv({nr})			文字列	引数の第{nr}番目
+argv()				リスト	引数リスト
+assert_equal({exp}, {act} [, {msg}])
 				なし	{exp}と{act}が等しいかどうかテストする
 assert_exception({error} [, {msg}])
 				なし	|v:exception|が{error}であるかテストする
-assert_fails( {cmd} [, {error}])
+assert_fails({cmd} [, {error}])
 				なし	{cmd}が失敗するかどうかテストする
-assert_false( {actual} [, {msg}])
+assert_false({actual} [, {msg}])
 				なし	{actual}がfalseかどうかテストする
-assert_true( {actual} [, {msg}])
+assert_inrange({lower}, {upper}, {actual} [, {msg}])
+				none	assert {actual} is inside the range
+assert_match({pat}, {text} [, {msg}])    none  assert {pat} matches {text}
+assert_notequal({exp}, {act} [, {msg}])  none  assert {exp} is not equal {act}
+assert_notmatch({pat}, {text} [, {msg}]) none  assert {pat} not matches {text}
+assert_true({actual} [, {msg}])
 				なし	{actual}がtrueかどうかテストする
-asin( {expr})			浮動小数点数	{expr}のアークサイン
-atan( {expr})			浮動小数点数	{expr}のアークタンジェント
-atan2( {expr}, {expr})		浮動小数点数	{expr1} / {expr2} のアークタン
+asin({expr})			浮動小数点数	{expr}のアークサイン
+atan({expr})			浮動小数点数	{expr}のアークタンジェント
+atan2({expr}, {expr})		浮動小数点数	{expr1} / {expr2} のアークタン
 						ジェント
-browse( {save}, {title}, {initdir}, {default})
+browse({save}, {title}, {initdir}, {default})
 				文字列	ファイル選択ダイアログを表示
-browsedir( {title}, {initdir})  文字列	ディレクトリ選択ダイアログを表示
-bufexists( {expr})		数値	バッファ{expr}が存在すればTRUE
-buflisted( {expr})		数値	バッファ{expr}がリストにあるならTRUE
-bufloaded( {expr})		数値	バッファ{expr}がロード済みならTRUE
-bufname( {expr})		文字列	バッファ{expr}の名前
-bufnr( {expr} [, {create}])	数値	バッファ{expr}の番号
-bufwinnr( {nr})			数値	バッファ{nr}のウィンドウ番号
-byte2line( {byte})		数値	{byte}番目のバイトの行番号
-byteidx( {expr}, {nr})		数値	{expr}の{nr}文字目のバイトインデックス
-byteidxcomp( {expr}, {nr})	数値	{expr}の{nr}文字目のバイトインデックス
-call( {func}, {arglist} [, {dict}])
+browsedir({title}, {initdir})	文字列	ディレクトリ選択ダイアログを表示
+bufexists({expr})		数値	バッファ{expr}が存在すればTRUE
+buflisted({expr})		数値	バッファ{expr}がリストにあるならTRUE
+bufloaded({expr})		数値	バッファ{expr}がロード済みならTRUE
+bufname({expr})			文字列	バッファ{expr}の名前
+bufnr({expr} [, {create}])	数値	バッファ{expr}の番号
+bufwinnr({nr})			数値	バッファ{nr}のウィンドウ番号
+byte2line({byte})		数値	{byte}番目のバイトの行番号
+byteidx({expr}, {nr})		数値	{expr}の{nr}文字目のバイトインデックス
+byteidxcomp({expr}, {nr})	数値	{expr}の{nr}文字目のバイトインデックス
+call({func}, {arglist} [, {dict}])
 				任意	引数{arglist}をつけて{func}を呼ぶ
-ceil( {expr})			浮動小数点数	{expr} を切り上げる
+ceil({expr})			浮動小数点数	{expr} を切り上げる
+ch_close({handle})		none	close {handle}
+ch_close_in({handle})		none	close in part of {handle}
+ch_evalexpr({handle}, {expr} [, {options}])
+				any	evaluate {expr} on JSON {handle}
+ch_evalraw({handle}, {string} [, {options}])
+				any	evaluate {string} on raw {handle}
+ch_getbufnr({handle}, {what})	Number	get buffer number for {handle}/{what}
+ch_getjob({channel})		Job	get the Job of {channel}
+ch_info({handle})		String	info about channel {handle}
+ch_log({msg} [, {handle}])	none	write {msg} in the channel log file
+ch_logfile({fname} [, {mode}])	none	start logging channel activity
+ch_open({address} [, {options}])
+				Channel	open a channel to {address}
+ch_read({handle} [, {options}]) String	read from {handle}
+ch_readraw({handle} [, {options}])
+				String	read raw from {handle}
+ch_sendexpr({handle}, {expr} [, {options}])
+				任意	{expr}をJSONチャンネル{handle}に送る
+ch_sendraw({handle}, {string} [, {options}])
+				任意	{string}をrawチャンネル{handle}に送る
+ch_setoptions({handle}, {options})
+				none	set options for {handle}
+ch_status({handle})		String	status of channel {handle}
 changenr()			数値	現在の変更番号
-char2nr( {expr}[, {utf8}])	数値	{expr}の先頭文字のASCII/UTF8コード
-cindent( {lnum})		数値	{lnum}行目のCインデント量
+char2nr({expr}[, {utf8}])	数値	{expr}の先頭文字のASCII/UTF8コード
+cindent({lnum})			数値	{lnum}行目のCインデント量
 clearmatches()			なし	全マッチをクリアする
-col( {expr})			数値	カーソルかマークのカラム番号
-complete( {startcol}, {matches}) なし	挿入モード補完を設定する
-complete({startcol}, {matches})	文字列  挿入モード補完の結果を設定する
-complete_add( {expr})		数値	補完候補を追加する
+col({expr})			数値	カーソルかマークのカラム番号
+complete({startcol}, {matches})	なし	挿入モード補完を設定する
+complete_add({expr})		数値	補完候補を追加する
 complete_check()		数値	補完中に押されたキーをチェックする
-confirm( {msg} [, {choices} [, {default} [, {type}]]])
+confirm({msg} [, {choices} [, {default} [, {type}]]])
 				数値	ユーザーへの選択肢と番号
-connect( {address}, {mode} [, {callback}])
-				数値	チャンネルを開く
-copy( {expr})			任意	{expr}の浅いコピーを作る
-cos( {expr})			浮動小数点数	{expr} の余弦(コサイン)
-cosh( {expr})			浮動小数点数	{expr}のハイパボリックコサイン
-count( {list}, {expr} [, {ic} [, {start}]])
+copy({expr})			任意	{expr}の浅いコピーを作る
+cos({expr})			浮動小数点数	{expr} の余弦(コサイン)
+cosh({expr})			浮動小数点数	{expr}のハイパボリックコサイン
+count({list}, {expr} [, {ic} [, {start}]])
 				数値	 {list}中に{expr}が何個現れるか数える
-cscope_connection( [{num} , {dbpath} [, {prepend}]])
+cscope_connection([{num} , {dbpath} [, {prepend}]])
 				数値	cscope接続の存在を判定する
-cursor( {lnum}, {col} [, {off}])
+cursor({lnum}, {col} [, {off}])
 				数値	カーソルを{lnum}, {col}, {off}へ移動
-cursor( {list})			数値	カーソルを{list}の位置へ移動
-deepcopy( {expr} [, {noref}])	任意	{expr}の完全なコピーを作る
-delete( {fname} [, {flags}])	数値	ファイルやディレクトリ{fname}を消す
+cursor({list})			数値	カーソルを{list}の位置へ移動
+deepcopy({expr} [, {noref}])	任意	{expr}の完全なコピーを作る
+delete({fname} [, {flags}])	数値	ファイルやディレクトリ{fname}を消す
 did_filetype()			数値	FileTypeのautocommandが実行されたか?
-diff_filler( {lnum})		数値	差分モードで{lnum}に挿入された行
-diff_hlID( {lnum}, {col})	数値	差分モードで{lnum}/{col}位置の強調
-empty( {expr})			数値	{expr}が空ならTRUE
-escape( {string}, {chars})	文字列	{string}内の{chars}を '\' でエスケープ
-eval( {string})			任意	{string}を評価し、値を得る
-eventhandler( )			数値	イベントハンドラの内側ならTRUE
-executable( {expr})		数値	実行可能な{expr}が存在するなら1
-exepath( {expr})		文字列  コマンド {expr} のフルパス
-exists( {var})			数値	変数{var}が存在したらTRUE
-extend( {expr1}, {expr2} [, {expr3}])
+diff_filler({lnum})		数値	差分モードで{lnum}に挿入された行
+diff_hlID({lnum}, {col})	数値	差分モードで{lnum}/{col}位置の強調
+empty({expr})			数値	{expr}が空ならTRUE
+escape({string}, {chars})	文字列	{string}内の{chars}を '\' でエスケープ
+eval({string})			任意	{string}を評価し、値を得る
+eventhandler()			数値	イベントハンドラの内側ならTRUE
+executable({expr})		数値	実行可能な{expr}が存在するなら1
+execute({command})		String	execute {command} and get the output
+exepath({expr})			文字列	コマンド {expr} のフルパス
+exists({var})			数値	変数{var}が存在したらTRUE
+extend({expr1}, {expr2} [, {expr3}])
 				リスト/辞書 {expr1}に{expr2}の要素を挿入
-exp( {expr})			浮動小数点数	{expr}の指数
-expand( {expr} [, {nosuf} [, {list}]])
+exp({expr})			浮動小数点数	{expr}の指数
+expand({expr} [, {nosuf} [, {list}]])
 				任意	{expr}内の特別なキーワードを展開
-feedkeys( {string} [, {mode}])	数値	先行入力バッファにキーシーケンスを追加
-filereadable( {file})		数値	{file}が読みこみ可能ならTRUE
-filewritable( {file})		数値	{file}が書き込み可能ならTRUE
-filter( {expr}, {string})	リスト/辞書  {string}が0となる要素を{expr}から
+feedkeys({string} [, {mode}])	数値	先行入力バッファにキーシーケンスを追加
+filereadable({file})		数値	{file}が読みこみ可能ならTRUE
+filewritable({file})		数値	{file}が書き込み可能ならTRUE
+filter({expr}, {string})	リスト/辞書  {string}が0となる要素を{expr}から
 					とり除く
-finddir( {name}[, {path}[, {count}]])
+finddir({name}[, {path}[, {count}]])
 				文字列	{path}からディレクトリ{name}を探す
-findfile( {name}[, {path}[, {count}]])
+findfile({name}[, {path}[, {count}]])
 				文字列	{path}からファイル{name}を探す
-float2nr( {expr})		数値	浮動小数点数 {expr} を数値に変換する
-floor( {expr})			浮動小数点数	{expr} を切り捨てる
-fmod( {expr1}, {expr2})		浮動小数点数	{expr1} / {expr2} の余り
-fnameescape( {fname})		文字列	{fname} 内の特殊文字をエスケープする
-fnamemodify( {fname}, {mods})	文字列	ファイル名を変更
-foldclosed( {lnum})		数値	{lnum}の折り畳みの最初の行(閉じている
+float2nr({expr})		数値	浮動小数点数 {expr} を数値に変換する
+floor({expr})			浮動小数点数	{expr} を切り捨てる
+fmod({expr1}, {expr2})		浮動小数点数	{expr1} / {expr2} の余り
+fnameescape({fname})		文字列	{fname} 内の特殊文字をエスケープする
+fnamemodify({fname}, {mods})	文字列	ファイル名を変更
+foldclosed({lnum})		数値	{lnum}の折り畳みの最初の行(閉じている
 					なら)
-foldclosedend( {lnum})		数値	{lnum}の折り畳みの最後の行(閉じている
+foldclosedend({lnum})		数値	{lnum}の折り畳みの最後の行(閉じている
 					なら)
-foldlevel( {lnum})		数値	{lnum}の折り畳みレベル
-foldtext( )			文字列	閉じた折り畳みに表示されている行
-foldtextresult( {lnum})		文字列	{lnum}で閉じている折り畳みのテキスト
-foreground( )			数値	Vimウィンドウを前面に移動する
-function( {name})		Funcref 関数{name}への参照を取得
-garbagecollect( [{atexit}])	なし	メモリを解放する。循環参照を断ち切る
-get( {list}, {idx} [, {def}])	任意	{list}や{def}から要素{idx}を取得
-get( {dict}, {key} [, {def}])	任意	{dict}や{def}から要素{key}を取得
-getbufline( {expr}, {lnum} [, {end}])
+foldlevel({lnum})		数値	{lnum}の折り畳みレベル
+foldtext()			文字列	閉じた折り畳みに表示されている行
+foldtextresult({lnum})		文字列	{lnum}で閉じている折り畳みのテキスト
+foreground()			数値	Vimウィンドウを前面に移動する
+funcref({name} [, {arglist}] [, {dict}])
+				Funcref	reference to function {name}
+function({name} [, {arglist}] [, {dict}])
+				Funcref	関数{name}への参照を取得
+garbagecollect([{atexit}])	なし	メモリを解放する。循環参照を断ち切る
+get({list}, {idx} [, {def}])	任意	{list}や{def}から要素{idx}を取得
+get({dict}, {key} [, {def}])	任意	{dict}や{def}から要素{key}を取得
+get({func}, {what})		any	get property of funcref/partial {func}
+getbufinfo([{expr}])		List	information about buffers
+getbufline({expr}, {lnum} [, {end}])
 				リスト	バッファ{expr}の{lnum}から{end}行目
-getbufvar( {expr}, {varname} [, {def}])
+getbufvar({expr}, {varname} [, {def}])
 				任意	バッファ{expr}の変数 {varname}
-getchar( [expr])		数値	ユーザーから1文字を取得する
-getcharmod( )			数値	修飾キーの状態を表す数値を取得
+getchar([expr])			数値	ユーザーから1文字を取得する
+getcharmod()			数値	修飾キーの状態を表す数値を取得
 getcharsearch()			辞書	最後の文字検索を取得
 getcmdline()			文字列	現在のコマンドラインを取得
 getcmdpos()			数値	コマンドラインのカーソル位置を取得
 getcmdtype()			文字列	現在のコマンドラインの種類を取得
 getcmdwintype()			文字列	現在のコマンドラインウィンドウの種類
+getcompletion({pat}, {type} [, {filtered}])
+				List	list of cmdline completion matches
 getcurpos()			リスト	カーソルの位置
-getcwd( [{winnr} [, {tabnr}]])	文字列	現在の作業ディレクトリを取得
-getfontname( [{name}])		文字列	使用しているフォントの名前
-getfperm( {fname})		文字列	ファイル{fname}の許可属性を取得
-getfsize( {fname})		数値	ファイル{fname}のバイト数を取得
-getftime( {fname})		数値	ファイルの最終更新時間
-getftype( {fname})		文字列	ファイル{fname}の種類の説明
-getline( {lnum})		文字列	現在のバッファから行の内容を取得
-getline( {lnum}, {end})		リスト	カレントバッファの{lnum}から{end}行目
-getloclist( {nr})		リスト	ロケーションリストの要素のリスト
+getcwd([{winnr} [, {tabnr}]])	文字列	現在の作業ディレクトリを取得
+getfontname([{name}])		文字列	使用しているフォントの名前
+getfperm({fname})		文字列	ファイル{fname}の許可属性を取得
+getfsize({fname})		数値	ファイル{fname}のバイト数を取得
+getftime({fname})		数値	ファイルの最終更新時間
+getftype({fname})		文字列	ファイル{fname}の種類の説明
+getline({lnum})			文字列	現在のバッファから行の内容を取得
+getline({lnum}, {end})		リスト	カレントバッファの{lnum}から{end}行目
+getloclist({nr})		リスト	ロケーションリストの要素のリスト
 getmatches()			リスト	現在のマッチのリスト
 getpid()			数値	Vim のプロセス ID
-getpos( {expr})			リスト	カーソル・マークなどの位置を取得
-getqflist()			リスト	quickfixリストの要素のリスト
-getreg( [{regname} [, 1 [, {list}]]])
+getpos({expr})			リスト	カーソル・マークなどの位置を取得
+getqflist([{what}])		リスト	quickfix要素のリスト
+getreg([{regname} [, 1 [, {list}]]])
 				文字列/リスト   レジスタの中身を取得
-getregtype( [{regname}])	文字列	レジスタの種類を取得
-gettabvar( {nr}, {varname} [, {def}])
+getregtype([{regname}])		文字列	レジスタの種類を取得
+gettabinfo([{expr}])		List	list of tab pages
+gettabvar({nr}, {varname} [, {def}])
 				任意	タブ{nr}の変数{varname}または{def}
-gettabwinvar( {tabnr}, {winnr}, {name} [, {def}])
+gettabwinvar({tabnr}, {winnr}, {name} [, {def}])
 				任意	タブページ{tabnr}の{winnr}の{name}
+getwininfo([{winid}])		List	list of windows
 getwinposx()			数値	GUI vim windowのX座標
 getwinposy()			数値	GUI vim windowのY座標
-getwinvar( {nr}, {varname} [, {def}])
+getwinvar({nr}, {varname} [, {def}])
 				文字列	ウィンドウ{nr}の変数{varname}
-glob( {expr} [, {nosuf} [, {list} [, {alllinks}]]])
+glob({expr} [, {nosuf} [, {list} [, {alllinks}]]])
 				任意	{expr}内のfile wildcardを展開
-glob2regpat( {expr})		文字列  globパターンを検索パターンに変換
-globpath( {path}, {expr} [, {nosuf} [, {list} [, {alllinks}]]])
+glob2regpat({expr})		文字列  globパターンを検索パターンに変換
+globpath({path}, {expr} [, {nosuf} [, {list} [, {alllinks}]]])
 				文字列	{path}の全ディレクトリに対し
 					glob({expr})を行う
-has( {feature})			数値	機能{feature}がサポートならばTRUE
-has_key( {dict}, {key})		数値	{dict}が要素{key}を持つならTRUE
-haslocaldir( [{winnr} [, {tabnr}]])
+has({feature})			数値	機能{feature}がサポートならばTRUE
+has_key({dict}, {key})		数値	{dict}が要素{key}を持つならTRUE
+haslocaldir([{winnr} [, {tabnr}]])
 				数値	現在のウィンドウで|:lcd|が実行された
 					ならTRUE
-hasmapto( {what} [, {mode} [, {abbr}]])
+hasmapto({what} [, {mode} [, {abbr}]])
 				数値	{what}へのマッピングが存在するならTRUE
-histadd( {history},{item})	文字列	ヒストリに追加
-histdel( {history} [, {item}])	文字列	ヒストリからitemを削除
-histget( {history} [, {index}])	文字列	ヒストリから{index}アイテムを取得
-histnr( {history})		数値	ヒストリの数
-hlexists( {name})		数値	highlight group {name}が存在したらTRUE
-hlID( {name})			数値	highlight group {name}のID
+histadd({history}, {item})	文字列	ヒストリに追加
+histdel({history} [, {item}])	文字列	ヒストリからitemを削除
+histget({history} [, {index}])	文字列	ヒストリから{index}アイテムを取得
+histnr({history})		数値	ヒストリの数
+hlexists({name})		数値	highlight group {name}が存在したらTRUE
+hlID({name})			数値	highlight group {name}のID
 hostname()			文字列	vimが動作しているマシンの名前
-iconv( {expr}, {from}, {to})	文字列	{expr}のエンコーディングを変換する
-indent( {lnum})			文字列	行{lnum}のインデントを取得
-index( {list}, {expr} [, {start} [, {ic}]])
+iconv({expr}, {from}, {to})	文字列	{expr}のエンコーディングを変換する
+indent({lnum})			文字列	行{lnum}のインデントを取得
+index({list}, {expr} [, {start} [, {ic}]])
 				数値	{list}中に{expr}が現れる位置
-input( {prompt} [, {text} [, {completion}]])
+input({prompt} [, {text} [, {completion}]])
 				文字列	ユーザーからの入力を取得
-inputdialog( {p} [, {t} [, {c}]]) 文字列  input()と同様。GUIのダイアログを使用
-inputlist( {textlist})		数値	ユーザーに選択肢から選ばせる
+inputdialog({prompt} [, {text} [, {completion}]]])
+				文字列	input()と同様。GUIのダイアログを使用
+inputlist({textlist})		数値	ユーザーに選択肢から選ばせる
 inputrestore()			数値	先行入力を復元する
 inputsave()			数値	先行入力を保存し、クリアする
-inputsecret( {prompt} [, {text}]) 文字列  input()だがテキストを隠す
-insert( {list}, {item} [, {idx}]) リスト  {list}に要素{item}を挿入 [{idx}の前]
-invert( {expr})			数値    ビット反転
-isdirectory( {directory})	数値	{directory}がディレクトリならばTRUE
-islocked( {expr})		数値	{expr}がロックされているならTRUE
-items( {dict})			リスト	{dict}のキーと値のペアを取得
-join( {list} [, {sep}])		文字列	{list}の要素を連結して文字列にする
-jsondecode( {string})		任意	JSONの文字列{string}をVimの式に変換する
-jsonencode( {expr})		文字列	Vimの式{expr}をJSONの文字列に変換する
-keys( {dict})			リスト	{dict}のキーを取得
-len( {expr})			数値	{expr}の長さを取得
-libcall( {lib}, {func}, {arg}	文字列	ライブラリ{lib}の関数{func}をコール
-libcallnr( {lib}, {func}, {arg})  数値  上と同じ。ただし数値を返す
-line( {expr})			数値	行番号の取得
-line2byte( {lnum})		数値	行{lnum}のバイトカウント
-lispindent( {lnum})		数値	{lnum}行目のLispインデント量を取得
+inputsecret({prompt} [, {text}]) 文字列	input()だがテキストを隠す
+insert({list}, {item} [, {idx}]) リスト	{list}に要素{item}を挿入 [{idx}の前]
+invert({expr})			数値	ビット反転
+isdirectory({directory})	数値	{directory}がディレクトリならばTRUE
+islocked({expr})		数値	{expr}がロックされているならTRUE
+isnan({expr})			Number	|TRUE| if {expr} is NaN
+items({dict})			リスト	{dict}のキーと値のペアを取得
+job_getchannel({job})		Channel	get the channel handle for {job}
+job_info({job})			Dict	get information about {job}
+job_setoptions({job}, {options}) none	set options for {job}
+job_start({command} [, {options}])
+				Job	start a job
+job_status({job})		String	get the status of {job}
+job_stop({job} [, {how}])	Number	stop {job}
+join({list} [, {sep}])		文字列	{list}の要素を連結して文字列にする
+js_decode({string})		任意	JS形式のJSONをデコードする
+js_encode({expr})		文字列	JS形式のJSONにエンコードする
+json_decode({string})		任意	JSONをデコードする
+json_encode({expr})		文字列	JSONにエンコードする
+keys({dict})			リスト	{dict}のキーを取得
+len({expr})			数値	{expr}の長さを取得
+libcall({lib}, {func}, {arg}	文字列	ライブラリ{lib}の関数{func}をコール
+libcallnr({lib}, {func}, {arg})	数値	上と同じ。ただし数値を返す
+line({expr})			数値	行番号の取得
+line2byte({lnum})		数値	行{lnum}のバイトカウント
+lispindent({lnum})		数値	{lnum}行目のLispインデント量を取得
 localtime()			数値	現在時刻
-log( {expr})			浮動小数点数	{expr}の自然対数(底e)
-log10( {expr})			浮動小数点数	浮動小数点数 {expr} の 10 を底
+log({expr})			浮動小数点数	{expr}の自然対数(底e)
+log10({expr})			浮動小数点数	浮動小数点数 {expr} の 10 を底
 						とする対数
-luaeval( {expr}[, {expr}])	任意	|Lua| の式を評価する
-map( {expr}, {string})		リスト/辞書  {expr}の各要素を{expr}に変える
-matchadd( {group}, {pattern}[, {priority}[, {id} [, {dict}]]])
-				数値	{pattern} を {group} で強調表示する
-matchaddpos( {group}, {pos}[, {priority}[, {id}[, {dict}]]])
-				数値	位置を {group} で強調表示する
-maparg( {name}[, {mode} [, {abbr} [, {dict}]]])
+luaeval({expr}[, {expr}])	任意	|Lua| の式を評価する
+map({expr}, {string})		リスト/辞書  {expr}の各要素を{expr}に変える
+maparg({name}[, {mode} [, {abbr} [, {dict}]]])
 				文字列/辞書
 					モード{mode}でのマッピング{name}の値
-mapcheck( {name}[, {mode} [, {abbr}]])
+mapcheck({name}[, {mode} [, {abbr}]])
 				文字列	{name}にマッチするマッピングを確認
-match( {expr}, {pat}[, {start}[, {count}]])
+match({expr}, {pat}[, {start}[, {count}]])
 				数値	{expr}内で{pat}がマッチする位置
-matcharg( {nr})			リスト	|:match|の引数
-matchdelete( {id})		数値	{id} で指定されるマッチを削除する
-matchend( {expr}, {pat}[, {start}[, {count}]])
+matchadd({group}, {pattern}[, {priority}[, {id} [, {dict}]]])
+				数値	{pattern} を {group} で強調表示する
+matchaddpos({group}, {pos}[, {priority}[, {id}[, {dict}]]])
+				数値	位置を {group} で強調表示する
+matcharg({nr})			リスト	|:match|の引数
+matchdelete({id})		数値	{id} で指定されるマッチを削除する
+matchend({expr}, {pat}[, {start}[, {count}]])
 				数値	{expr}内で{pat}が終了する位置
-matchlist( {expr}, {pat}[, {start}[, {count}]])
+matchlist({expr}, {pat}[, {start}[, {count}]])
 				リスト	{expr}内の{pat}のマッチと部分マッチ
-matchstr( {expr}, {pat}[, {start}[, {count}]])
+matchstr({expr}, {pat}[, {start}[, {count}]])
 				文字列	{expr}内の{count}番目の{pat}のマッチ
-max( {list})			数値	{list}内の要素の最大値
-min( {list})			数値	{list}内の要素の最小値
-mkdir( {name} [, {path} [, {prot}]])
+matchstrpos({expr}, {pat}[, {start}[, {count}]])
+				List	{count}'th match of {pat} in {expr}
+max({list})			数値	{list}内の要素の最大値
+min({list})			数値	{list}内の要素の最小値
+mkdir({name} [, {path} [, {prot}]])
 				数値	ディレクトリ{name}を作成
-mode( [expr])			文字列	現在の編集モード
-mzeval( {expr})			任意	|MzScheme| の式を評価する
-nextnonblank( {lnum})		数値	{lnum}行目以降で空行でない行の行番号
-nr2char( {expr}[, {utf8}])	文字列	ASCII/UTF8コード{expr}で示される文字
-or( {expr}, {expr})		数値    ビット論理和
-pathshorten( {expr})		文字列	path内の短縮したディレクトリ名
-perleval( {expr})		任意	|Perl|の式を評価する
-pow( {x}, {y})			浮動小数点数	{x} の {y} 乗
-prevnonblank( {lnum})		数値	{lnum}行目以前の空行でない行の行番号
-printf( {fmt}, {expr1}...)	文字列	文字列を組み立てる
+mode([expr])			文字列	現在の編集モード
+mzeval({expr})			任意	|MzScheme| の式を評価する
+nextnonblank({lnum})		数値	{lnum}行目以降で空行でない行の行番号
+nr2char({expr}[, {utf8}])	文字列	ASCII/UTF8コード{expr}で示される文字
+or({expr}, {expr})		数値    ビット論理和
+pathshorten({expr})		文字列	path内の短縮したディレクトリ名
+perleval({expr})		任意	|Perl|の式を評価する
+pow({x}, {y})			浮動小数点数	{x} の {y} 乗
+prevnonblank({lnum})		数値	{lnum}行目以前の空行でない行の行番号
+printf({fmt}, {expr1}...)	文字列	文字列を組み立てる
 pumvisible()			数値	ポップアップメニューが表示されているか
-pyeval( {expr})			任意	|Python| の式を評価する
-py3eval( {expr})		任意	|python3| の式を評価する
-range( {expr} [, {max} [, {stride}]])
+pyeval({expr})			任意	|Python| の式を評価する
+py3eval({expr})			任意	|python3| の式を評価する
+range({expr} [, {max} [, {stride}]])
 				リスト	{expr}から{max}までの要素のリスト
-readfile( {fname} [, {binary} [, {max}]])
+readfile({fname} [, {binary} [, {max}]])
 				リスト	ファイル{fname}から行のリストを取得
-reltime( [{start} [, {end}]])	リスト	時刻の値を取得
-reltimestr( {time})		文字列	時刻の値を文字列に変換
-remote_expr( {server}, {string} [, {idvar}])
+reltime([{start} [, {end}]])	リスト	時刻の値を取得
+reltimefloat({time})		Float	turn the time value into a Float
+reltimestr({time})		文字列	時刻の値を文字列に変換
+remote_expr({server}, {string} [, {idvar}])
 				文字列	式を送信する
-remote_foreground( {server})	数値	Vimサーバーを前面に出す
-remote_peek( {serverid} [, {retvar}])
+remote_foreground({server})	数値	Vimサーバーを前面に出す
+remote_peek({serverid} [, {retvar}])
 				数値	返信文字列を確認する
-remote_read( {serverid})	文字列	返信文字列を読み込む
-remote_send( {server}, {string} [, {idvar}])
+remote_read({serverid})		文字列	返信文字列を読み込む
+remote_send({server}, {string} [, {idvar}])
 				文字列	キーシーケンスを送信する
-remove( {list}, {idx} [, {end}])  任意	{list}から{idx}と{end}間の要素を削除
-remove( {dict}, {key})		任意	{dict}から要素{key}を削除
+remove({list}, {idx} [, {end}])	任意	{list}から{idx}と{end}間の要素を削除
+remove({dict}, {key})		任意	{dict}から要素{key}を削除
 rename({from}, {to})		数値	{file}から{to}へファイル名変更
-repeat( {expr}, {count})	文字列	{expr}を{count}回繰り返す
-resolve( {filename})		文字列	ショートカットが指す先のファイル名
-reverse( {list})		文字列	{list}をその場で反転させる
-round( {expr})			浮動小数点数	{expr} を四捨五入する
-screenattr( {row}, {col})	数値	スクリーン位置の属性
-screenchar( {row}, {col})	数値	スクリーン位置の文字
+repeat({expr}, {count})		文字列	{expr}を{count}回繰り返す
+resolve({filename})		文字列	ショートカットが指す先のファイル名
+reverse({list})			文字列	{list}をその場で反転させる
+round({expr})			浮動小数点数	{expr} を四捨五入する
+screenattr({row}, {col})	数値	スクリーン位置の属性
+screenchar({row}, {col})	数値	スクリーン位置の文字
 screencol()			数値	現在のカーソル列
 screenrow()			数値	現在のカーソル行
-search( {pattern} [, {flags} [, {stopline} [, {timeout}]]])
+search({pattern} [, {flags} [, {stopline} [, {timeout}]]])
 				数値	{pattern} を検索する
-searchdecl( {name} [, {global} [, {thisblock}]])
+searchdecl({name} [, {global} [, {thisblock}]])
 				数値	変数の宣言を検索
-searchpair( {start}, {middle}, {end} [, {flags} [, {skip} [...]]])
+searchpair({start}, {middle}, {end} [, {flags} [, {skip} [...]]])
 				数値	開始/終端のペアの他方を検索
-searchpairpos( {start}, {middle}, {end} [, {flags} [, {skip} [...]]])
+searchpairpos({start}, {middle}, {end} [, {flags} [, {skip} [...]]])
 				リスト	開始/終端のペアの他方を検索
-searchpos( {pattern} [, {flags} [, {stopline} [, {timeout}]]])
+searchpos({pattern} [, {flags} [, {stopline} [, {timeout}]]])
 				リスト	{pattern}を検索
-sendexpr( {handle}, {expr} [, {callback}])
-				任意	{expr}をJSONチャンネル{handle}に送る
-sendraw( {handle}, {string} [, {callback}])
-				任意	{string}をrawチャンネル{handle}に送る
-server2client( {clientid}, {string})
+server2client({clientid}, {string})
 				数値	返信文字列を送信する
 serverlist()			文字列	利用可能なサーバーのリストを取得
-setbufvar( {expr}, {varname}, {val})	バッファ{expr}内の変数{varname}に{val}
+setbufvar({expr}, {varname}, {val})	バッファ{expr}内の変数{varname}に{val}
 					をセット
-setcharsearch( {dict})		辞書	文字検索を{dict}に設定
-setcmdpos( {pos})		数値	コマンドライン内のカーソル位置を設定
-setline( {lnum}, {line})	数値	行{lnum}に{line}(文字列)をセット
-setloclist( {nr}, {list}[, {action}])
+setcharsearch({dict})		辞書	文字検索を{dict}に設定
+setcmdpos({pos})		数値	コマンドライン内のカーソル位置を設定
+setfperm({fname}, {mode})	Number	set {fname} file permissions to {mode}
+setline({lnum}, {line})		数値	行{lnum}に{line}(文字列)をセット
+setloclist({nr}, {list}[, {action}[, {what}]])
 				数値	{list}を使ってロケーションリストを変更
-setmatches( {list})		数値	マッチのリストを復元する
-setpos( {expr}, {list})		なし	{expr}の位置を{list}にする
-setqflist( {list}[, {action}])	数値	{list}を使ってQuickFixリストを変更
-setreg( {n}, {v}[, {opt}])	数値	レジスタの値とタイプを設定
-settabvar( {nr}, {varname}, {val})	タブページ{nr}の変数{varname}を{val}に
+setmatches({list})		数値	マッチのリストを復元する
+setpos({expr}, {list})		なし	{expr}の位置を{list}にする
+setqflist({list}[, {action}[, {what}]])
+				数値	{list}を使ってQuickFixリストを変更
+setreg({n}, {v}[, {opt}])	数値	レジスタの値とタイプを設定
+settabvar({nr}, {varname}, {val}) なし	タブページ{nr}の変数{varname}を{val}に
 					設定する
-settabwinvar( {tabnr}, {winnr}, {varname}, {val})  タブページ{tabnr}内のウィン
-					ドウ{winnr}の変数{varname}に{val}を
+settabwinvar({tabnr}, {winnr}, {varname}, {val})
+				なし	タブページ{tabnr}内のウィンドウ{winnr}
+					の変数{varname}に{val}をセット
+setwinvar({nr}, {varname}, {val}) なし	ウィンドウ{nr}の変数{varname}に{val}を
 					セット
-setwinvar( {nr}, {varname}, {val})	ウィンドウ{nr}の変数{varname}に{val}を
-					セット
-sha256( {string})		文字列	{string}のSHA256チェックサム
-shellescape( {string} [, {special}])
+sha256({string})		文字列	{string}のSHA256チェックサム
+shellescape({string} [, {special}])
 				文字列	{string}をシェルコマンド引数として使う
 					ためにエスケープする。
 shiftwidth()			数値	実際に使用される 'shiftwidth' の値
-simplify( {filename})		文字列	ファイル名を可能なかぎり簡略化する
-sin( {expr})			浮動小数点数	{expr} の正弦(サイン)
-sinh( {expr})			浮動小数点数	{expr}のハイパボリックサイン
-sort( {list} [, {func} [, {dict}]])
+simplify({filename})		文字列	ファイル名を可能なかぎり簡略化する
+sin({expr})			浮動小数点数	{expr} の正弦(サイン)
+sinh({expr})			浮動小数点数	{expr}のハイパボリックサイン
+sort({list} [, {func} [, {dict}]])
 				リスト	比較に{func}を使って{list}をソートする
-soundfold( {word})		文字列	{word}のsound-fold
+soundfold({word})		文字列	{word}のsound-fold
 spellbadword()			文字列	カーソル位置のスペルミスした単語
-spellsuggest( {word} [, {max} [, {capital}]])
+spellsuggest({word} [, {max} [, {capital}]])
 				リスト	スペリング補完
-split( {expr} [, {pat} [, {keepempty}]])
+split({expr} [, {pat} [, {keepempty}]])
 				リスト	{expr}を{pat}で区切ってリストを作る
-sqrt( {expr})			浮動小数点数	{expr} の平方根
-str2float( {expr})		浮動小数点数	文字列を浮動小数点数に変換する
-str2nr( {expr} [, {base}])	数値	文字列を数値に変換する
-strchars( {expr} [, {skipcc}])	数値	文字列{expr}の文字の数
-strdisplaywidth( {expr} [, {col}]) 数値 文字列{expr}の表示幅
-strftime( {format}[, {time}])	文字列	指定されたフォーマットでの時刻
-stridx( {haystack}, {needle}[, {start}])
+sqrt({expr})			浮動小数点数	{expr} の平方根
+str2float({expr})		浮動小数点数	文字列を浮動小数点数に変換する
+str2nr({expr} [, {base}])	数値	文字列を数値に変換する
+strchars({expr} [, {skipcc}])	数値	文字列{expr}の文字の数
+strcharpart({str}, {start}[, {len}])
+				String	{len} characters of {str} at {start}
+strdisplaywidth({expr} [, {col}]) 数値	文字列{expr}の表示幅
+strftime({format}[, {time}])	文字列	指定されたフォーマットでの時刻
+strgetchar({str}, {index})	Number	get char {index} from {str}
+stridx({haystack}, {needle}[, {start}])
 				数値	{haystack}内の{needle}のインデックス
-string( {expr})			文字列	{expr}の値の文字列表現
-strlen( {expr})			数値	文字列{expr}の長さ
-strpart( {src}, {start}[, {len}])
+string({expr})			文字列	{expr}の値の文字列表現
+strlen({expr})			数値	文字列{expr}の長さ
+strpart({src}, {start}[, {len}])
 				文字列	{src}内{start}から長さ{len}の部分
-strridx( {haystack}, {needle} [, {start}])
+strridx({haystack}, {needle} [, {start}])
 				数値	{haystack}内の最後の{needle}のインデッ
 					クス
-strtrans( {expr})		文字列	文字列を表示可能に変更
-strwidth( {expr})		数値	文字列{expr}の表示セル幅
-submatch( {nr}[, {list}])	文字列/リスト
+strtrans({expr})		文字列	文字列を表示可能に変更
+strwidth({expr})		数値	文字列{expr}の表示セル幅
+submatch({nr}[, {list}])	文字列/リスト
 					":s" やsubstitute()における特定のマッチ
-substitute( {expr}, {pat}, {sub}, {flags})
+substitute({expr}, {pat}, {sub}, {flags})
 				文字列	{expr}の{pat}を{sub}に置換え
-synID( {line}, {col}, {trans})	数値	{line}と{col}のsyntax IDを取得
-synIDattr( {synID}, {what} [, {mode}])
+synID({line}, {col}, {trans})	数値	{line}と{col}のsyntax IDを取得
+synIDattr({synID}, {what} [, {mode}])
 				文字列	syntax ID{synID}の属性{what}を取得
-synIDtrans( {synID})		数値	{synID}の翻訳されたsyntax ID
-synconcealed( {lnum}, {col})	リスト  Conceal の情報
-synstack( {lnum}, {col})	リスト	{lnum}行{col}列目における構文IDの
+synIDtrans({synID})		数値	{synID}の翻訳されたsyntax ID
+synconcealed({lnum}, {col})	リスト  Conceal の情報
+synstack({lnum}, {col})	リスト	{lnum}行{col}列目における構文IDの
 					スタック
-system( {expr} [, {input}])	文字列	シェルコマンド{expr}の出力結果
-systemlist( {expr} [, {input}])	リスト	シェルコマンド{expr}の出力結果
-tabpagebuflist( [{arg}])	リスト	タブページ内のバッファ番号のリスト
-tabpagenr( [{arg}])		数値	現在または最後のタブページの番号
-tabpagewinnr( {tabarg}[, {arg}])
+system({expr} [, {input}])	文字列	シェルコマンド{expr}の出力結果
+systemlist({expr} [, {input}])	リスト	シェルコマンド{expr}の出力結果
+tabpagebuflist([{arg}])		リスト	タブページ内のバッファ番号のリスト
+tabpagenr([{arg}])		数値	現在または最後のタブページの番号
+tabpagewinnr({tabarg}[, {arg}])
 				数値	タブページ内の現在のウィンドウの番号
-taglist( {expr})		リスト	{expr}にマッチするタグのリスト
+taglist({expr})			リスト	{expr}にマッチするタグのリスト
 tagfiles()			リスト	使用しているタグファイルのリスト
-tempname()			文字列	テンポラリファイルの名前
-tan( {expr})			浮動小数点数	{expr}のタンジェント
-tanh( {expr})			浮動小数点数	{expr}のハイパボリックタンジェ
+tan({expr})			浮動小数点数	{expr}のタンジェント
+tanh({expr})			浮動小数点数	{expr}のハイパボリックタンジェ
 						ント
-tolower( {expr})		文字列	文字列{expr}を小文字にする
-toupper( {expr})		文字列	文字列{expr}を大文字にする
-tr( {src}, {fromstr}, {tostr})	文字列	{src}中に現れる文字{fromstr}を{tostr}
+tempname()			文字列	テンポラリファイルの名前
+test_alloc_fail({id}, {countdown}, {repeat})
+				なし	メモリの確保を失敗にさせる
+test_autochdir()		none	enable 'autochdir' during startup
+test_disable_char_avail({expr}) none	test without typeahead
+test_garbagecollect_now()	none	free memory right now for testing
+test_null_channel()		Channel	null value for testing
+test_null_dict()		Dict	null value for testing
+test_null_job()			Job	null value for testing
+test_null_list()		List	null value for testing
+test_null_partial()		Funcref	null value for testing
+test_null_string()		String	null value for testing
+test_settime({expr})		none	set current time for testing
+timer_info([{id}])		List	information about timers
+timer_pause({id}, {pause})	none	pause or unpause a timer
+timer_start({time}, {callback} [, {options}])
+				Number	create a timer
+timer_stop({timer})		none	stop a timer
+timer_stopall()			none	stop all timers
+tolower({expr})			文字列	文字列{expr}を小文字にする
+toupper({expr})			文字列	文字列{expr}を大文字にする
+tr({src}, {fromstr}, {tostr})	文字列	{src}中に現れる文字{fromstr}を{tostr}
 					に変換する
-trunc( {expr})			浮動小数点数	浮動小数点数{expr}を切り詰める
-type( {name})			数値	変数{name}の型
-undofile( {name})		文字列	{name}に対するアンドゥファイルの名前
+trunc({expr})			浮動小数点数	浮動小数点数{expr}を切り詰める
+type({name})			数値	変数{name}の型
+undofile({name})		文字列	{name}に対するアンドゥファイルの名前
 undotree()			リスト	アンドゥファイルツリー
-uniq( {list} [, {func} [, {dict}]])
+uniq({list} [, {func} [, {dict}]])
 				リスト	リストから隣接した重複を削除
-values( {dict})			リスト	{dict}の値のリスト
-virtcol( {expr})		数値	カーソルのスクリーンカラム位置
-visualmode( [expr])		文字列	最後に使われたビジュアルモード
+values({dict})			リスト	{dict}の値のリスト
+virtcol({expr})			数値	カーソルのスクリーンカラム位置
+visualmode([expr])		文字列	最後に使われたビジュアルモード
 wildmenumode()			数値	'wildmenu' モードが有効かどうか
-winbufnr( {nr})			数値	ウィンドウ{nr}のバッファ番号
+win_findbuf({bufnr})		List	find windows containing {bufnr}
+win_getid([{win} [, {tab}]])	Number	get window ID for {win} in {tab}
+win_gotoid({expr})		Number	go to window with ID {expr}
+win_id2tabwin({expr})		List	get tab and window nr from window ID
+win_id2win({expr})		Number	get window nr from window ID
+winbufnr({nr})			数値	ウィンドウ{nr}のバッファ番号
 wincol()			数値	カーソル位置のウィンドウ桁
-winheight( {nr})		数値	ウィンドウ{nr}の高さ
+winheight({nr})			数値	ウィンドウ{nr}の高さ
 winline()			数値	カーソル位置のウィンドウ行
-winnr()				数値	現在のウィンドウの番号
+winnr([{expr}])			数値	現在のウィンドウの番号
 winrestcmd()			文字列	ウィンドウサイズを復元するコマンド
-winrestview( {dict})		なし	現在のウィンドウのビューを復元
+winrestview({dict})		なし	現在のウィンドウのビューを復元
 winsaveview()			辞書	現在のウィンドウのビューを保存
-winwidth( {nr})			数値	ウィンドウ{nr}の幅を取得
+winwidth({nr})			数値	ウィンドウ{nr}の幅を取得
 wordcount()			辞書	バイト/文字/単語の統計情報を取得
-writefile( {list}, {fname} [, {flags}])
+writefile({list}, {fname} [, {flags}])
 				数値	行のリストをファイル{fname}に書き込む
-xor( {expr}, {expr})		数値	ビット排他的論理和
+xor({expr}, {expr})		数値	ビット排他的論理和
 
 
 abs({expr})							*abs()*
