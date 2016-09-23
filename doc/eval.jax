@@ -3895,16 +3895,25 @@ function({name} [, {arglist}] [, {dict}])
 
 
 garbagecollect([{atexit}])				*garbagecollect()*
-		循環参照を持ち、使われていないリスト|List|と辞書|Dictionaries|
-		をクリーンアップする。これはメモリ不足に陥ったときや、
-		'updatetime' 経過後ユーザーのキー入力を待っているときに自動的
-		に行われるので、この関数を呼ぶ必要があることはほとんどない。
-		循環参照を持たない要素は、使われなくなったとき必ず解放される。
-		長時間実行されるスクリプトの中で循環参照を持つ非常に大きなリス
-		トや辞書を削除したときに有用である。
+		循環参照を持ち、使われていないリスト|List|、辞書
+		|Dictionaries|、チャンネル|Channels|、ジョブ|Jobs| をクリーン
+		アップする。
+
+		これはメモリ不足に陥ったときや、'updatetime' 経過後ユーザーの
+		キー入力を待っているときに自動的に行われるので、この関数を呼ぶ
+		必要があることはほとんどない。循環参照を持たない要素は、使われ
+		なくなったとき必ず解放される。長時間実行されるスクリプトの中で
+		循環参照を持つ非常に大きなリストや辞書を削除したときに有用であ
+		る。
+
 		省略可能な引数 {atexit} に 1 を指定すると、Vim を終了するとき
 		にもガーべッジコレクションが行われる。これはメモリリークを発見
 		するのに役に立つ。
+
+		The garbage collection is not done immediately but only when
+		it's safe to perform.  This is when waiting for the user to
+		type a character.  To force garbage collection immediately use
+		|test_garbagecollect_now()|.
 
 get({list}, {idx} [, {default}])			*get()*
 		リスト|List| {list}から{idx}番目の要素を取得する。この要素を取
@@ -3914,7 +3923,68 @@ get({dict}, {key} [, {default}])
 		辞書|Dictionary| {dict}からキー{key}に関連づけられた値を取得す
 		る。この要素を取得できないときは{default}を返す。{default}が省
 		略されたときは0を返す。
+get({func}, {what})
+		Get an item with from Funcref {func}.  Possible values for
+		{what} are:
+			'name'	The function name
+			'func'	The function
+			'dict'	The dictionary
+			'args'	The list with arguments
 
+							*getbufinfo()*
+getbufinfo([{expr}])
+getbufinfo([{dict}])
+		Get information about buffers as a List of Dictionaries.
+
+		Without an argument information about all the buffers is
+		returned.
+
+		When the argument is a Dictionary only the buffers matching
+		the specified criteria are returned.  The following keys can
+		be specified in {dict}:
+			buflisted	include only listed buffers.
+			bufloaded	include only loaded buffers.
+
+		Otherwise, {expr} specifies a particular buffer to return
+		information for.  For the use of {expr}, see |bufname()|
+		above.  If the buffer is found the returned List has one item.
+		Otherwise the result is an empty list.
+
+		Each returned List item is a dictionary with the following
+		entries:
+			bufnr		buffer number.
+			changed		TRUE if the buffer is modified.
+			changedtick	number of changes made to the buffer.
+			hidden		TRUE if the buffer is hidden.
+			listed		TRUE if the buffer is listed.
+			lnum		current line number in buffer.
+			loaded		TRUE if the buffer is loaded.
+			name		full path to the file in the buffer.
+			signs		list of signs placed in the buffer.
+					Each list item is a dictionary with
+					the following fields:
+					    id	  sign identifier
+					    lnum  line number
+					    name  sign name
+			variables	a reference to the dictionary with
+					buffer-local variables.
+			windows		list of |window-ID|s that display this
+					buffer
+
+		Examples: >
+			for buf in getbufinfo()
+			    echo buf.name
+			endfor
+			for buf in getbufinfo({'buflisted':1})
+			    if buf.changed
+				....
+			    endif
+			endfor
+<
+		To get buffer-local options use: >
+			getbufvar({bufnr}, '&')
+
+<
 							*getbufline()*
 getbufline({expr}, {lnum} [, {end}])
 		バッファ{expr}の{lnum}行目から{end}行目まで(両端含む)の行から
@@ -3945,6 +4015,10 @@ getbufvar({expr}, {varname} [, {def}])				*getbufvar()*
 		の値を返す。Note "b:" をつけない変数名を指定すること。
 		{varname} が空文字列の場合、全てのバッファローカル変数からなる
 		辞書を返す。
+		When {varname} is equal to "&" returns a dictionary with all
+		the buffer-local options.
+		Otherwise, when {varname} starts with "&" returns the value of
+		a buffer-local option.
 		グローバルオプション、バッファローカルオプションのどちらに対し
 		ても動作するが、グローバル変数、ウィンドウローカル変数、ウィン
 		ドウローカルオプションに対しては動作しない。
@@ -3982,9 +4056,9 @@ getchar([expr])						*getchar()*
 		修飾キーを取得するには getcharmod() を使う。
 
 		ユーザーがマウスをクリックしたときはマウスイベントを返す。クリッ
-		クした位置は|v:mouse_col|, |v:mouse_lnum|, |v:mouse_win|で得ら
-		れる。以下の例は、普通にマウスがクリックされたときと同じように
-		カーソルを移動させる。 >
+		クした位置は|v:mouse_col|, |v:mouse_lnum|, |v:mouse_winid|,
+		|v:mouse_win|で得られる。以下の例は、普通にマウスがクリックさ
+		れたときと同じようにカーソルを移動させる。 >
 			let c = getchar()
 			if c == "\<LeftMouse>" && v:mouse_win > 0
 			  exe v:mouse_win . "wincmd w"
@@ -4089,6 +4163,53 @@ getcmdwintype()						*getcmdwintype()*
 		を返す。返り値の意味は |getcmdtype()| と同じ。コマンドライン
 		ウィンドウでなければ空文字列を返す。
 
+getcompletion({pat}, {type} [, {filtered}])		*getcompletion()*
+		Return a list of command-line completion matches. {type}
+		specifies what for.  The following completion types are
+		supported:
+
+		augroup		autocmd groups
+		buffer		buffer names
+		behave		:behave suboptions
+		color		color schemes
+		command		Ex command (and arguments)
+		compiler	compilers
+		cscope		|:cscope| suboptions
+		dir		directory names
+		environment	environment variable names
+		event		autocommand events
+		expression	Vim expression
+		file		file and directory names
+		file_in_path	file and directory names in |'path'|
+		filetype	filetype names |'filetype'|
+		function	function name
+		help		help subjects
+		highlight	highlight groups
+		history		:history suboptions
+		locale		locale names (as output of locale -a)
+		mapping		mapping name
+		menu		menus
+		option		options
+		shellcmd	Shell command
+		sign		|:sign| suboptions
+		syntax		syntax file names |'syntax'|
+		syntime		|:syntime| suboptions
+		tag		tags
+		tag_listfiles	tags, file names
+		user		user names
+		var		user variables
+
+		If {pat} is an empty string, then all the matches are returned.
+		Otherwise only items matching {pat} are returned. See
+		|wildcards| for the use of special characters in {pat}.
+
+		If the optional {filtered} flag is set to 1, then 'wildignore'
+		is applied to filter the results.  Otherwise all the matches
+		are returned. The 'wildignorecase' option always applies.
+
+		If there are no matches, an empty list is returned.  An
+		invalid value for {type} produces an error.
+
 							*getcurpos()*
 getcurpos()	カーソルの位置を返す。これは getpos('.') に似ているが、追加の
 		情報を含む:
@@ -4108,6 +4229,7 @@ getcwd([{winnr} [, {tabnr}]])
 		ウのローカルカレントディレクトリを返す。
 		{winnr}と{tabnr}が指定された場合、{tabnr}のタブページ内の
 		{winnr}のウィンドウのローカルカレントディレクトリを返す。
+		{winnr} にはウィンドウ番号または|window-ID|が使える。
 		もし引数が不正の場合、空文字列を返す。
 
 getfsize({fname})					*getfsize()*
@@ -4143,6 +4265,8 @@ getfperm({fname})					*getfperm()*
 			:echo getfperm(expand("~/.vimrc"))
 <		この例は、(セキュリティの観点から望ましい設定がされているなら
 		ば) "rw-r--r--" あるいは "rw-------" と表示する。
+
+		許可属性を設定するには|setfperm()|を使用する。
 
 							*getftime()*
 getftime({fname})
@@ -4194,12 +4318,18 @@ getline({lnum} [, {end}])
 
 <		他のバッファの行を取得するには|getbufline()|を参照。
 
-getloclist({nr})					*getloclist()*
+getloclist({nr}[, {what}])				*getloclist()*
 		ウィンドウ{nr}のロケーションリストの全項目からなるリストを返す。
-		{nr}に0を指定するとカレントウィンドウになる。ロケーションリス
-		トウィンドウに対して使用すると、そこに表示されているロケーショ
-		ンリストが返る。ウィンドウ番号{nr}が無効な場合は、空リストが返
-		る。それ以外は|getqflist()|と同じ。
+		{nr} にはウィンドウ番号または|window-ID|が使える。{nr}に0を指
+		定するとカレントウィンドウになる。
+
+		ロケーションリストウィンドウに対して使用すると、そこに表示され
+		ているロケーションリストが返る。ウィンドウ番号{nr}が無効な場合
+		は、空リストが返る。それ以外は|getqflist()|と同じ。
+
+		If the optional {what} dictionary argument is supplied, then
+		returns the items listed in {what} as a dictionary. Refer to
+		|getqflist()| for the supported items in {what}.
 
 getmatches()						*getmatches()*
 		|matchadd()| と |:match| により定義された全てのマッチの |List|
@@ -4248,20 +4378,20 @@ getpos({expr})	{expr}の位置を返す。{expr}として指定できる値に�
 <		|getcurpos()| と |setpos()|も参照。
 
 
-getqflist()						*getqflist()*
+getqflist([{what}])					*getqflist()*
 		現在の全quickfixエラーのリストを返す。リストの各要素は辞書で、
 		以下の要素を持つ:
 			bufnr	ファイル名を持つバッファの番号。その名前を取得
 				するにはbufname()を使う。
 			lnum	バッファ中の行番号(最初の行は1)
 			col	桁番号(最初の桁は1)
-			vcol	0以外: "col" は画面上の桁
-				0: "col" はバイトインデックス
+			vcol	|TRUE|: "col" は画面上の桁
+				|FALSE|: "col" はバイトインデックス
 			nr	エラー番号
 			pattern	エラーの位置を特定するために使う検索パターン
 			text	エラーの説明
 			type	エラーメッセージの種類。'E', '1' など。
-			valid	0以外: エラーメッセージが認識されている
+			valid	|TRUE|: エラーメッセージが認識されている
 
 		エラーリストがまったくないか、空であるときは空リストを返す。
 		存在しないバッファ番号を持つquickfixリストの項目は "bufnr" を0
@@ -4273,20 +4403,45 @@ getqflist()						*getqflist()*
 			:for d in getqflist()
 			:   echo bufname(d.bufnr) ':' d.lnum '=' d.text
 			:endfor
+<
+		If the optional {what} dictionary argument is supplied, then
+		returns only the items listed in {what} as a dictionary. The
+		following string items are supported in {what}:
+			nr	get information for this quickfix list
+			title	get the list title
+			winid	get the |window-ID| (if opened)
+			all	all of the above quickfix properties
+		Non-string items in {what} are ignored.
+		If "nr" is not present then the current quickfix list is used.
+		In case of error processing {what}, an empty dictionary is
+		returned.
+
+		The returned dictionary contains the following entries:
+			nr	quickfix list number
+			title	quickfix list title text
+			winid	quickfix |window-ID| (if opened)
+
+		Examples: >
+			:echo getqflist({'all': 1})
+			:echo getqflist({'nr': 2, 'title': 1})
+<
 
 getreg([{regname} [, 1 [, {list}]]])			*getreg()*
 		レジスタ{regname}の中身を文字列にして返す。例: >
 			:let cliptext = getreg('*')
-<		getreg('=')は最後に評価した式レジスタの値を返す。(マップの中で
+<		{regname} がセットされていないときは、結果は空文字列となる。
+		getreg('=')は最後に評価した式レジスタの値を返す。(マップの中で
 		使用する)。
 		getreg('=', 1)はその式そのものを返す。これを使って|setreg()|で
 		復元することができる。他のレジスタの場合は、この引数は無視され
 		るので、常に指定していても害はない。
-		{list} が指定され、その値が非ゼロのときは、返り値はリスト
+		{list} が指定され、その値が|TRUE|のときは、返り値はリスト
 		(|List|) になる。リストの各要素はテキスト 1 行である。これはレ
 		ジスタの中に値ゼロのバイトが含まれる場合に使用する。{list} を
 		指定しなかった場合は NL 文字と値ゼロのバイトは両方とも NL 文字
 		として扱われる (|NL-used-for-Nul| 参照)。
+		指定したレジスタがセットされていないときは、空のリストが返され
+		る。
 		{regname}を指定しないときは|v:register|が使われる。
 
 
@@ -4300,6 +4455,19 @@ getregtype([{regname}])					*getregtype()*
 		<CTRL-V>は値0x16の1文字である。
 		{regname}を指定しないときは|v:register|が使われる。
 
+gettabinfo([{arg}])					*gettabinfo()*
+		If {arg} is not specified, then information about all the tab
+		pages is returned as a List. Each List item is a Dictionary.
+		Otherwise, {arg} specifies the tab page number and information
+		about that one is returned.  If the tab page does not exist an
+		empty List is returned.
+
+		Each List item is a Dictionary with the following entries:
+			tabnr		tab page number.
+			variables	a reference to the dictionary with
+					tabpage-local variables
+			windows		List of |window-ID|s in the tag page.
+
 gettabvar({tabnr}, {varname} [, {def}])				*gettabvar()*
 		タブページ {tabnr} のタブローカル変数 {varname} を取得する。
 		|t:var|
@@ -4312,13 +4480,16 @@ gettabvar({tabnr}, {varname} [, {def}])				*gettabvar()*
 gettabwinvar({tabnr}, {winnr}, {varname} [, {def}])		*gettabwinvar()*
 		タブページ{tabnr}内のウィンドウ{winnr}のウィンドウローカル変数
 		{varname}の値を取得する。
-		{varname}が文字 "&" で始まるときはウィンドウローカルオプション
-		の値を取得する。
 		{varname}が空のときは全ウィンドウローカル変数からなる辞書を返
 		す。
+		{varname}が "&" と等しい場合はすべてのウィンドウローカルオプ
+		ションの値を辞書に入れて返す。
+		{varname}が文字 "&" で始まるときはウィンドウローカルオプション
+		の値を取得する。
 		Note {varname}は "w:" をつけずに指定しなければならない。
 		タブページ番号は1から始まる。カレントタブページを指定するには
 		|getwinvar()|を指定する。
+		{winnr} にはウィンドウ番号または|window-ID|が使える。
 		{winnr}が0のときはカレントウィンドウとなる。
 		グローバルオプション、バッファローカルオプション、ウィンドウ
 		ローカルオプションに対しても動作するが、グローバル変数やバッ
@@ -4338,6 +4509,33 @@ getwinposx()	結果はGUIのVimウィンドウの左端の、デスクトップ�
 getwinposy()	結果はGUIのVimウィンドウの上端の、デスクトップ上でのY座標値(数
 		値)。情報が存在しない(コンソールの)場合は-1となる。
 
+getwininfo([{winid}])					*getwininfo()*
+		Returns information about windows as a List with Dictionaries.
+
+		If {winid} is given Information about the window with that ID
+		is returned.  If the window does not exist the result is an
+		empty list.
+
+		Without {winid} information about all the windows in all the
+		tab pages is returned.
+
+		Each List item is a Dictionary with the following entries:
+			bufnr		number of buffer in the window
+			height		window height
+			loclist		1 if showing a location list
+					{only with the +quickfix feature}
+			quickfix	1 if quickfix or location list window
+					{only with the +quickfix feature}
+			tabnr		tab page number
+			variables	a reference to the dictionary with
+					window-local variables
+			width		window width
+			winid		|window-ID|
+			winnr		window number
+
+		To obtain all window-local variables use: >
+			gettabwinvar({tabnr}, {winnr}, '&')
+
 getwinvar({winnr}, {varname} [, {def}])				*getwinvar()*
 		カレントタブページに対する|gettabwinvar()|と同様。
 		例: >
@@ -4348,12 +4546,12 @@ glob({expr} [, {nosuf} [, {list} [, {alllinks}]]])		*glob()*
 		{expr}内のファイル名のワイルドカードを展開する。特殊文字につい
 		ては|wildcards|を参照。
 
-		{nosuf} に非零を指定しない限り、'suffixes' と 'wildignore' が
-		適用される。つまり 'wildignore' のパターンにマッチする名前はス
-		キップされ、'suffixes' がマッチの順番に影響を与える。
+		{nosuf} に|TRUE|を指定しない限り、'suffixes' と 'wildignore'
+		が適用される。つまり 'wildignore' のパターンにマッチする名前は
+		スキップされ、'suffixes' がマッチの順番に影響を与える。
 		'wildignorecase' は常に適用される。
 
-		{list} が指定されその値が非ゼロなら、マッチしたすべてのファイ
+		{list} が指定されその値が|TRUE|なら、マッチしたすべてのファイ
 		ルがリストとして返される。リストを使うことで、改行を含むファイ
 		ル名があっても結果を正しく受け取ることができる。
 		そうでない場合は結果は文字列で返される。その場合、複数のマッチ
@@ -4363,7 +4561,7 @@ glob({expr} [, {nosuf} [, {list} [, {alllinks}]]])		*glob()*
 		
 		存在しないファイル名は結果に含まれない。シンボリックリンクは、
 		それが存在するファイルを指す場合のみ含まれる。
-		ただし、{alllinks} 引数が存在し、それが非ゼロである場合はすべ
+		ただし、{alllinks} 引数が存在し、それが|TRUE|である場合はすべ
 		てのシンボリックリンクが含まれる。
 
 		多くのシステムではバッククォート(「`」という文字のこと)を、外
@@ -4383,7 +4581,11 @@ glob2regpat({expr})					 *glob2regpat()*
 			if filename =~ glob2regpat('Make*.mak')
 <		上記は次と同じである: >
 			if filename =~ '^Make.*\.mak$'
-<
+<		When {expr} is an empty string the result is "^$", match an
+		empty string.
+		Note that the result depends on the system.  On MS-Windows
+		a backslash usually means a path separator.
+
 								*globpath()*
 globpath({path}, {expr} [, {nosuf} [, {list} [, {alllinks}]]])
 		{path}の中の全ディレクトリに対して|glob()|を実行し、結果を連結
@@ -4400,11 +4602,11 @@ globpath({path}, {expr} [, {nosuf} [, {list} [, {alllinks}]]])
 		どれかのディレクトリに対して展開が失敗してもエラーメッセージは
 		表示されない。
 
-		{nosuf} に非零が指定されない限り、オプション 'wildignore' が適
-		用される。つまり、'wildignore' のパターンにマッチする名前はス
-		キップされる。
+		{nosuf} に|TRUE|が指定されない限り、オプション 'wildignore' が
+		適用される。つまり、'wildignore' のパターンにマッチする名前は
+		スキップされる。
 
-		{list} が指定され、その値が非ゼロなら、マッチしたすべてのファ
+		{list} が指定され、その値が|TRUE|なら、マッチしたすべてのファ
 		イルがリストとして返る。リストとして受け取る利点は、改行文字を
 		含んだファイル名も正しく扱えることである。{list} を指定しな
 		かった場合は、返り値は文字列であり、マッチした複数のファイル名
@@ -4439,13 +4641,14 @@ haslocaldir([{winnr} [, {tabnr}]])			*haslocaldir()*
 		ウを対象とする。
 		{winnr}と{tabnr}が指定された場合、{tabnr}のタブページ内の
 		{winnr}のウィンドウを対象とする。
+		{winnr} にはウィンドウ番号または|window-ID|が使える。
 		もし引数が不正の場合、0 を返す。
 
 hasmapto({what} [, {mode} [, {abbr}]])			*hasmapto()*
 		結果は数値。右辺側(マップした先)の一部分に{what}を含むマッピン
 		グが存在し、それが{mode}で指定されたモードのいずれかで定義され
 		ているなら1を返す。
-		{abbr}が指定されていて0でないときはマッピングでなく短縮入力の
+		{abbr}が指定されていて|TRUE|のときはマッピングでなく短縮入力の
 		存在を判定する。挿入モードまたはコマンドモードを指定することを
 		忘れないように。
 		グローバルマップとバッファローカルマップの両方をチェックする。
@@ -4597,7 +4800,7 @@ index({list}, {expr} [, {start} [, {ic}]])			*index()*
 		小文字は区別される。
 		{start}が指定された場合はインデックス{start}から要素の検索を始
 		める(負数を指定すると末尾からの相対位置となる)。
-		{ic}に0でない値が指定された場合、大文字・小文字は区別されない。
+		{ic}に|TRUE|が指定された場合、大文字・小文字は区別されない。
 		そうでない場合は区別される。
 		{list}の中に{expr}が見つからない場合は-1を返す。
 		例: >
@@ -4721,14 +4924,14 @@ invert({expr})						*invert()*
 
 isdirectory({directory})				*isdirectory()*
 		結果は数値で、{directory}という名前のディレクトリが存在すれば
-		TRUEとなる。{directory}が存在しないか、存在したとしてもディレ
-		クトリではなかった場合には、FALSEが返される。文字列として解釈
-		できるのならば{directory}の表現はどのようなものであってもかま
-		わない。
+		|TRUE|となる。{directory}が存在しないか、存在したとしても
+		ディレクトリではなかった場合には、|FALSE|が返される。文字列と
+		して解釈できるのならば{directory}の表現はどのようなもので
+		あってもかまわない。
 
 islocked({expr})					*islocked()* *E786*
-		結果は数値で、{expr}がロックされている変数の名前ならば非0を返
-		す。
+		結果は数値で、{expr}がロックされている変数の名前ならば|TRUE|を
+		返す。
 		{expr}は変数の名前、リストの要素、辞書の要素のいずれかでなけれ
 		ばならない。変数そのものを指定しないように注意。例: >
 			:let alist = [0, ['a', 'b'], 2, 3]
@@ -4739,11 +4942,133 @@ islocked({expr})					*islocked()* *E786*
 <		{expr}が存在しない変数のときはエラーメッセージが表示される。変
 		数の存在を確認するには|exists()|を使う。
 
+isnan({expr})						*isnan()*
+		{expr} が NaN の値を持つ浮動小数点数ならば |TRUE| を返す。 >
+			echo isnan(0.0 / 0.0)
+<			1 ~
+
+		{|+float| 機能を有効にしてコンパイルしたときのみ有効}
+
 items({dict})						*items()*
 		{dict}の全要素のキー・値のペアからなるリストを返す。戻り値の各
 		要素はリストであり、キーと値の2個の要素を持つ。戻り値のリスト
 		の要素の順序は不定である。
 
+job_getchannel({job})					 *job_getchannel()*
+		Get the channel handle that {job} is using.
+		To check if the job has no channel: >
+			if string(job_getchannel()) == 'channel fail'
+<
+		{only available when compiled with the |+job| feature}
+
+job_info({job})						*job_info()*
+		Returns a Dictionary with information about {job}:
+		   "status"	what |job_status()| returns
+		   "channel"	what |job_getchannel()| returns
+		   "exitval"	only valid when "status" is "dead"
+		   "exit_cb"	function to be called on exit
+		   "stoponexit"	|job-stoponexit|
+
+job_setoptions({job}, {options})			*job_setoptions()*
+		Change options for {job}.  Supported are:
+		   "stoponexit"	|job-stoponexit|
+		   "exit_cb"	|job-exit_cb|
+
+job_start({command} [, {options}])			*job_start()*
+		Start a job and return a Job object.  Unlike |system()| and
+		|:!cmd| this does not wait for the job to finish.
+
+		{command} can be a String.  This works best on MS-Windows.  On
+		Unix it is split up in white-separated parts to be passed to
+		execvp().  Arguments in double quotes can contain white space.
+
+		{command} can be a List, where the first item is the executable
+		and further items are the arguments.  All items are converted
+		to String.  This works best on Unix.
+
+		On MS-Windows, job_start() makes a GUI application hidden. If
+		want to show it, Use |:!start| instead.
+
+		The command is executed directly, not through a shell, the
+		'shell' option is not used.  To use the shell: >
+	let job = job_start(["/bin/sh", "-c", "echo hello"])
+<		Or: >
+	let job = job_start('/bin/sh -c "echo hello"')
+<		Note that this will start two processes, the shell and the
+		command it executes.  If you don't want this use the "exec"
+		shell command.
+
+		On Unix $PATH is used to search for the executable only when
+		the command does not contain a slash.
+
+		The job will use the same terminal as Vim.  If it reads from
+		stdin the job and Vim will be fighting over input, that
+		doesn't work.  Redirect stdin and stdout to avoid problems: >
+	let job = job_start(['sh', '-c', "myserver </dev/null >/dev/null"])
+<
+		The returned Job object can be used to get the status with
+		|job_status()| and stop the job with |job_stop()|.
+
+		{options} must be a Dictionary.  It can contain many optional
+		items, see |job-options|.
+
+		{only available when compiled with the |+job| feature}
+
+job_status({job})					*job_status()* *E916*
+		Returns a String with the status of {job}:
+			"run"	job is running
+			"fail"	job failed to start
+			"dead"	job died or was stopped after running
+		
+		On Unix a non-existing command results in "dead" instead of
+		"fail", because a fork happens before the failure can be
+		detected.
+
+		If an exit callback was set with the "exit_cb" option and the
+		job is now detected to be "dead" the callback will be invoked.
+
+		For more information see |job_info()|.
+
+		{only available when compiled with the |+job| feature}
+
+job_stop({job} [, {how}])					*job_stop()*
+		Stop the {job}.  This can also be used to signal the job.
+
+		When {how} is omitted or is "term" the job will be terminated.
+		For Unix SIGTERM is sent.  On MS-Windows the job will be
+		terminated forcedly (there is no "gentle" way).
+		This goes to the process group, thus children may also be
+		affected.
+
+		Effect for Unix:
+			"term"	 SIGTERM (default)
+			"hup"	 SIGHUP
+			"quit"	 SIGQUIT
+			"int"	 SIGINT
+			"kill"	 SIGKILL (strongest way to stop)
+			number	 signal with that number
+
+		Effect for MS-Windows:
+			"term"	 terminate process forcedly (default)
+			"hup"	 CTRL_BREAK
+			"quit"	 CTRL_BREAK
+			"int"	 CTRL_C
+			"kill"	 terminate process forcedly
+			Others	 CTRL_BREAK
+
+		On Unix the signal is sent to the process group.  This means
+		that when the job is "sh -c command" it affects both the shell
+		and the command.
+
+		The result is a Number: 1 if the operation could be executed,
+		0 if "how" is not supported on the system.
+		Note that even when the operation was executed, whether the
+		job was actually stopped needs to be checked with
+		job_status().
+		The status of the job isn't checked, the operation will even
+		be done when Vim thinks the job isn't running.
+
+		{only available when compiled with the |+job| feature}
 
 join({list} [, {sep}])					*join()*
 		リスト{list}の要素を連結し、1個の文字列にして返す。
@@ -4756,15 +5081,32 @@ join({list} [, {sep}])					*join()*
 		|string()|を使ったときと同じようにして文字列に変換される。
 		この逆を行う関数は|split()|である。
 
-jsondecode({string})					*jsondecode()*
+js_decode({string})					*js_decode()*
+		This is similar to |json_decode()| with these differences:
+		- Object key names do not have to be in quotes.
+		- Empty items in an array (between two commas) are allowed and
+		  result in v:none items.
+
+js_encode({expr})					*js_encode()*
+		This is similar to |json_encode()| with these differences:
+		- Object key names are not in quotes.
+		- v:none items in an array result in an empty item between
+		  commas.
+		For example, the Vim object:
+			[1,v:none,{"one":1},v:none] ~
+		Will be encoded as:
+			[1,,{one:1},,] ~
+		While json_encode() would produce:
+			[1,null,{"one":1},null] ~
+		This encoding is valid for JavaScript. It is more efficient
+		than JSON, especially when using an array with optional items.
+
+
+json_decode({string})					*json_decode()*
 		これはJSONフォーマットの文字列を解析し、それと同等のVimの値を
-		返す。JSONとVimの値の関係は|jsonencode()|を参照。
+		返す。JSONとVimの値の関係は|json_encode()|を参照。
 		デコードは寛容である:
 		- 配列やオブジェクトの末尾コンマは無視される。
-		- 配列内の空要素、2つのコンマの間がホワイトスペースもしくは無
-		  い場合はv:noneとされる。
-		- オブジェクトのメンバ名が文字列でない場合、それは文字列に変換
-		  される。例えば数値123は文字列 "123" として使われる。
 		- 多くの浮動小数点数を認識する。例えば "1." は "1.0" として認
 		  識される。
 		結果は必ずVimの型として有効になる:
@@ -4779,6 +5121,8 @@ jsonencode({expr})					*jsonencode()*
 		Vimの値は以下の通りに変換される:
 		   数値			10進数
 		   浮動小数点数		浮動小数点数
+		   浮動小数点数 nan	"NaN"
+		   浮動小数点数 inf	"Infinity"
 		   文字列		ダブルクォートで括られた文字列(null可)
 		   Funcref		不可、エラー
 		   リスト		配列(null可)
@@ -4787,14 +5131,11 @@ jsonencode({expr})					*jsonencode()*
 					再帰的に使用された場合: {}
 		   v:false		"false"
 		   v:true		"true"
-		   v:none		nothing
+		   v:none		"null"
 		   v:null		"null"
-		Note JSON標準では空要素は許されないが、v:noneを使うことで許さ
-		れている。これは配列内で要素を省略する時に使えるだろう:
-			[0,,,,,5] ~
-		これはずっと効率的であるが:
-			[0,null,null,null,null,5] ~
-		である。しかし、厳格なJSONパーサーでは許可しないだろう。
+		Note that NaN and Infinity are passed on as values.  This is
+		missing in the JSON standard, but several implementations do
+		allow it.  If not then you will get an error.
 
 keys({dict})						*keys()*
 		{dict}の全キーからなるリストを返す。リストの順序は不定である。
@@ -4949,27 +5290,42 @@ luaeval({expr}[, {expr}])					*luaeval()*
 		詳細は |lua-luaeval| を参照。
 		{|+lua| 機能つきでコンパイルされたときのみ有効}
 
-map({expr}, {string})					*map()*
-		{expr}はリスト|List|または辞書|Dictionary|。
-		{expr}の各要素を、{string}を評価した結果で置き換える。
-		{string}の中では|v:val|が現在の要素の値を保持している。
-		辞書の場合は|v:key|が現在の要素のキーを保持している。
-		リストの場合は|v:key|が現在の要素のインデックスを保持してい
-		る。
+map({expr1}, {expr2})					*map()*
+		{expr1}はリスト|List|または辞書|Dictionary|。
+		{expr1}の各要素を、{expr2}を評価した結果で置き換える。
+		{expr2}は文字列|string|または関数参照|Funcref|でなければならな
+		い。
+
+		{expr2}が文字列の場合、{expr2}の内部では|v:val|が現在の要素の
+		値を保持している。辞書の場合は|v:key|が現在の要素のキーを保持
+		している。リストの場合は|v:key|が現在の要素のインデックスを保
+		持している。
 		例: >
 			:call map(mylist, '"> " . v:val . " <"')
 <		これは "mylist" の各要素の前に "> " をつけ、後に " <" をつける。
-
-		Note {string}は式を表す文字列である。バックスラッシュを二重に
+		Note {expr2}は式を表す文字列である。バックスラッシュを二重に
 		しなくても済むように|literal-string|を使うとよいだろう。ただし
-		その場合はシングルクォートを2重にしなければならない。
+		その場合はシングルクォートを二重にしなければならない。
 
+		{expr2}が|Funcref|の場合は、2つの引数で呼び出される:
+			1. 現在の要素のキーまたはインデックス。
+			2. 現在の要素の値。
+		関数は、その要素の新しい値を返さなければならない。それぞれの値
+		を "key-value" に置き換える例: >
+			func KeyValue(key, val)
+			  return a:key . '-' . a:val
+			endfunc
+			call map(myDict, function('KeyValue'))
+<
 		この操作はその場で(in-place)行われる。リストや辞書を変更したく
 		ない場合は最初にコピーを作ること: >
 			:let tlist = map(copy(mylist), ' v:val . "\t"')
 
-<		式を適用した結果の{expr}を返す。{string}を評価している最中にエ
-		ラーが発生した場合は、それ以降の要素は処理されない。
+<		{expr1}のリストまたは辞書に式を適用した結果を返す。{expr2}を
+		評価している最中にエラーが発生した場合は、{expr1}内のそれ以降
+		の要素の処理は行われない。{expr2}が関数参照の場合、関数が
+		"abort" フラグつきで定義されていない限り、関数内のエラーは無視
+		される。
 
 
 maparg({name}[, {mode} [, {abbr} [, {dict}]]])			*maparg()*
@@ -4994,11 +5350,11 @@ maparg({name}[, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 			""	ノーマル、ビジュアル、及びオペレータ待機
 		{mode}が省略された場合、"" が使用される。
 
-		{abbr}が指定され、0でない場合はマッピングでなく短縮入力を対象
+		{abbr}が指定され、|TRUE|の場合はマッピングでなく短縮入力を対象
 		とする。
 
-		{dict} に非ゼロの値が指定されたときはマッピングのすべての情報
-		を含んだ辞書が返る:
+		{dict} に|TRUE|が指定されたときはマッピングのすべての情報を含
+		んだ辞書が返る:
 		  "lhs"	     マッピングの {lhs}
 		  "rhs"	     マッピングの {rhs} (入力されたまま)
 		  "silent"   |:map-silent| マッピングなら 1。そうでなければ0。
@@ -5022,7 +5378,7 @@ maparg({name}[, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 mapcheck({name}[, {mode} [, {abbr}]])			*mapcheck()*
 		モード{mode}におけるキーマップ{name}が存在するかチェックする。
 		{name}に指定できる特殊文字は|maparg()|を参照。
-		{abbr}が指定され、0でない場合はマッピングでなく短縮入力を対象
+		{abbr}が指定され、|TRUE|の場合はマッピングでなく短縮入力を対象
 		とする。
 		マッピングが{name}で始まるとき、またはマッピングが{name}のはじ
 		めに等しいときマッチすると見なされる。
@@ -5152,7 +5508,8 @@ matchadd({group}, {pattern}[, {priority}[, {id}[, {dict}]]])
 		|getmatches()| で取得できる。全てのマッチを削除するのは
 		|clearmatches()| 一発でできる。
 
-matchaddpos({group}, {pos}[, {priority}[, {id}[, {dict}]]])	*matchaddpos()*
+							*matchaddpos()*
+matchaddpos({group}, {pos}[, {priority}[, {id}[, {dict}]]])
 		|matchadd()| と同じだが、パターンを指定するのではなく、位置の
 		リスト {pos} を指定する。このコマンドは正規表現を扱う必要もな
 		く、画面更新のためにバッファ行の境界を設定するため、
@@ -5248,6 +5605,24 @@ matchstr({expr}, {pat}[, {start}[, {count}]])			*matchstr()*
 		その要素の型は変換されないため、必ずしも文字列であるとは限らな
 		い。
 
+matchstrpos({expr}, {pat}[, {start}[, {count}]])		*matchstrpos()*
+		Same as |matchstr()|, but return the matched string, the start
+		position and the end position of the match.  Example: >
+			:echo matchstrpos("testing", "ing")
+<		results in ["ing", 4, 7].
+		When there is no match ["", -1, -1] is returned.
+		The {start}, if given, has the same meaning as for |match()|. >
+			:echo matchstrpos("testing", "ing", 2)
+<		results in ["ing", 4, 7]. >
+			:echo matchstrpos("testing", "ing", 5)
+<		result is ["", -1, -1].
+		When {expr} is a |List| then the matching item, the index
+		of first item where {pat} matches, the start position and the
+		end position of the match are returned. >
+			:echo matchstrpos([1, '__x'], '\a')
+<		result is ["x", 1, 2, 3].
+		The type isn't changed, it's not necessarily a String.
+
 							*max()*
 max({list})	{list}の全要素の値の最大値を返す。
 		{list}がリストでなかったり、要素のどれかが数値に変換できない場
@@ -5281,8 +5656,7 @@ mkdir({name} [, {path} [, {prot}]])
 mode([expr])		現在のモードを示す文字列を返す。
 			[expr] に 0 でない数値か空でない文字列(|non-zero-arg|)
 			を指定した場合、フルモードが返される。それ以外の場合は
-			最初の一文字だけが返される。" " と "0" はどちらも空文
-			字列ではないことに注意。
+			最初の一文字だけが返される。
 
 			n	ノーマル
 			no	オペレータ待機
