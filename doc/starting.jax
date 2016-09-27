@@ -12,7 +12,7 @@ Vimの起動						*starting*
 4. 初期化			|initialization|
 5. $VIM と $VIMRUNTIME		|$VIM|
 6. サスペンド			|suspend|
-7. Exiting			|exiting|
+7. 終了				|exiting|
 8. 設定の保存			|save-settings|
 9. ビューとセッション		|views-sessions|
 10. viminfo ファイル		|viminfo-file|
@@ -44,7 +44,8 @@ filename	1つ以上のファイル名が与えられた場合。まずは最初�
 			vim -- -filename
 <		"--" の後の全ての引数はファイル名として解釈されるので、その他
 		のオプションや引数 "+command" は使用することができない。
-		For behavior of quotes on MS-Windows, see |win32-quotes|.
+		MS-Windows におけるクォートの動作については |win32-quotes| を
+		参照。
 
 							*--*
 -		この引数はExモードで起動するかどうかで意味が異なる。
@@ -894,11 +895,10 @@ Evimでは以下のオプションが標準設定から変更される:
 	'insertmode' オプションがセットされていると、挿入モードに入る。
 	スタートフラグがリセットされ、has("vim_starting") がゼロを返すようにな
 	る。
-	The |v:vim_did_enter| variable is set to 1.
+	|v:vim_did_enter| 変数が 1 にセットされる。
 	|VimEnter|のautocommandが実行される。
 
-The $MYVIMRC or $MYGVIMRC file will be set to the first found vimrc and/or
-gvimrc file.
+最初に見つかった vimrc、gvimrc が $MYVIMRC、$MYGVIMRC に設定される。
 
 
 初期化のヒント ~
@@ -1190,7 +1190,7 @@ X-windowsではVimをサスペンドするとセレクションの所有権が�
 止しているのでセレクションを得ようとしたプログラムがフリーズしてしまう)。
 
 ==============================================================================
-7. Exiting						*exiting*
+7. 終了							*exiting*
 
 There are several ways to exit Vim:
 - Close the last window with `:quit`.  Only when there are no changes.
