@@ -2007,7 +2007,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 'conskey' 'consk'	切替 (既定ではオフ)
 			グローバル
 			{Vi にはない}  {VimのMS-DOS版のみ}
-	このオプションはMS-DOSのためのものであったが、もうサポートされていない。
+	これMS-DOSのためのものであったが、もうサポートされていない。
 
 			*'copyindent'* *'ci'* *'nocopyindent'* *'noci'*
 'copyindent' 'ci'	切替	(既定ではオフ)
@@ -2917,13 +2917,19 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 			グローバル
 			{Vi にはない}
 	カレントディレクトリ内のファイル .vimrc, .exrc や .gvimrc 等の読み込み
-	を有効にする。このオプションをオンにするなら、オプション 'secure' もオ
-	ンにするよう検討すること (|initialization| を参照)。ファイル .exrc,
-	.vimrc や .gvimrc にローカルなものを用いると潜在的な安全保護の漏れを招
-	くので、注意して使うこと！
+	を有効にする。
+
+	Setting this option is a potential security leak.  E.g., consider
+	unpacking a package or fetching files from github, a .vimrc in there
+	might be a trojan horse.  BETTER NOT SET THIS OPTION!
+	Instead, define an autocommand in your .vimrc to set options for a
+	matching directory.
+
+	このオプションをオンにするなら、オプション 'secure' もオンにするよう検
+	討すること (|initialization| を参照)。
 	|.vimrc| と |gui-init| も参照。
-	安全上の理由から、このオプションをモードライン|modeline|やサンドボック
-	ス|sandbox|の中で設定することはできない。
+	安全上の理由から、このオプションをモードライン |modeline| やサンド
+	ボックス |sandbox| の中で設定することはできない。
 
 				*'fileencoding'* *'fenc'* *E213*
 'fileencoding' 'fenc'	文字列 (既定では "")
@@ -4428,6 +4434,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	Note マッチが表示されても、カーソルは実際にはマッチした場所に移動して
 	いないので注意。カーソルを移動させるには、やはり <Enter> を打ち込んで
 	検索コマンドを完了させる必要がある。
+	マッチを表示中は、次や前のマッチへ移動するのに CTRL-G と CTRL-T キーを
+	使える。 |c_CTRL-G| |c_CTRL-T|
 	|+reltime| 機能つきでコンパイルされているときは約0.5秒だけ検索する。複
 	雑なパターンであったり、大量のテキストはマッチしない場合がある。これは
 	文字をタイプしている途中で Vim が応答しなくなってしまうのを避けるため
@@ -4753,7 +4761,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	このオプションは 'keymap' と正反対のものである。'keymap' は挿入モード
 	でマッピングを行う。
 	また 'langmap' の文字がマッピングの結果として適用されない様に
-	'langnoremap' の設定も考慮する。
+	'langremap' をリセットすることも考慮する。
 	このオプションはセキュリティ上の理由で、|modeline| からや |sandbox| の
 	中で設定することはできない。
 
@@ -4813,26 +4821,26 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	がいったん削除される！
 
 			*'langnoremap'* *'lnr'* *'nolangnoremap'* *'nolnr'*
-'langnoremap' 'lnr'	boolean (default off, set in |defaults.vim|)
-			global
-			{not in Vi}
-			{only available when compiled with the |+langmap|
-			feature}
-	This is just like 'langremap' but with the value inverted.  It only
-	exists for backwards compatibility.  When setting 'langremap' then
-	'langnoremap' is set to the inverted value, and the other way around.
-
-			*'langremap'* *'lrm'* *'nolangremap'* *'nolrm'*
-'langremap' 'lrm'	切替 (既定ではオフ、|defaults.vim| 内でオンに設定される)
+'langnoremap' 'lnr'	切替 (既定ではオフ、 |defaults.vim| でオンに設定される)
 			グローバル
 			{Vi にはない}
 			{Vimが |+langmap| 機能付きでコンパイルされたときのみ
 			有効}
-	オンの場合、'langmap' の文字がマッピングの結果として適用されない様に
+	これは 'langremap' に似ているが、値が逆になっている。また後方互換製の
+	ためだけに残されている。'langremap' を設定した時は、逆の値が
+	'langnoremap' に設定され、反対もまた同様である。
+
+			*'langremap'* *'lrm'* *'nolangremap'* *'nolrm'*
+'langremap' 'lrm'	切替 (既定ではオン、|defaults.vim| 内でオフに設定される)
+			グローバル
+			{Vi にはない}
+			{Vimが |+langmap| 機能付きでコンパイルされたときのみ
+			有効}
+	オフの場合、'langmap' の文字がマッピングの結果として適用されない様に
 	なる。基本的には、もし 'langmap' の設定により幾らかのマッピングが無効
-	になっていると気づいた場合にはこのオプションの設定を試みると良い。
-	このオプションは後方互換性の為にデフォルトでオフである。マッピングが壊
-	れないようにするにはオンを設定すると良い。
+	になっていると気づいた場合には、このオプションの設定を試みると良い。
+	このオプションは後方互換性の為にデフォルトでオンである。マッピングが壊
+	れないようにするにはオフを設定すると良い。
 
 					*'laststatus'* *'ls'*
 'laststatus' 'ls'	数値	(既定では 1)
@@ -5035,10 +5043,11 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 'magic'			切替	(既定ではオン)
 			グローバル
 	検索パターン内で使用可能な特別な文字を変更する。|pattern| を参照。
-	NOTE: パターンの使用に関わる移植性の問題を避けるため、常にこのオプショ
-	ンを既定値のオンにしておくこと。古いViのスクリプトを使うときのみオフに
-	切り替えること。それ以外では、いつでも 'magic' がオンのときに動作する
-	ようなパターンを書くこと。nomagic が使いたい場合は "\M" を使う。|/\M|
+	WARNING: Switching this option off most likely breaks plugins!  That
+	is because many patterns assume it's on and will fail when it's off.
+	Only switch it off when working with old Vi scripts.  In any other
+	situation write patterns that work when 'magic' is on.  Include "\M"
+	when you want to |/\M|.
 
 						*'makeef'* *'mef'*
 'makeef' 'mef'		文字列	(既定では "")
@@ -6387,6 +6396,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	「行末の後」というのは、カーソルを行末より1文字後ろに置けることを表す。
 	「末尾に操作」というのは、選択領域の末尾の文字が操作を受けることを表す。
 	例えば、選択領域の削除に "x" が使われたときなどに違いが出る。
+	When "old" is used and 'virtualedit' allows the cursor to move past
+	the end of line the line break still isn't included.
 	"exclusive" に設定していると、'virtualedit' が空のときノーマルモードか
 	ら選択を開始し、末尾から後方に選択すると行末の文字を含めることができな
 	くなる。
@@ -6608,6 +6619,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	'shelltemp' がオフのときは自動コマンドイベント |FilterReadPre|,
 	|FilterReadPost|, |FilterWritePre|, |FilterWritePost| が発生しない。
 	|system()| 関数はこのオプションを参照せず常に一時ファイルを利用する。
+	The `system()` function does not respect this option and always uses
+	temp files.
 
 						*'shelltype'* *'st'*
 'shelltype' 'st'	数値	(既定では 0)
@@ -6869,12 +6882,11 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 	例: 次の例のように、このオプションを 'sidescroll' と 'listchars' と一
 	    緒に設定し、カーソルを "extends" の文字の上に決して来ないようにし
-	    てみる。
->
+	    てみる。 >
+
 		 :set nowrap sidescroll=1 listchars=extends:>,precedes:<
 		 :set sidescrolloff=1
 <
-
 						*'signcolumn'* *'scl'*
 'signcolumn' 'scl'	文字列	(既定では "auto")
 			ウィンドウについてローカル
@@ -7568,6 +7580,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	デフォルトではタグ検索は大文字小文字を区別する。'ignorecase' が設定済
 	みで 'tagcase' が "followic" もしくは 'tagcase' が "ignore" に設定され
 	ている時は大文字小文字の違いが無視される。
+	Also when 'tagcase' is "followscs" and 'smartcase' is set, or
+	'tagcase' is "smart", and the pattern contains only lowercase
+	characters.
 
 	'tagbsearch' がオフの場合、完全なマッチがあるときはタグの検索はより遅
 	くなるが、完全なマッチがないときは検索はより速くなる。整列されていない
@@ -7587,8 +7602,10 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	このオプションはタグファイルを探索する際に大文字小文字をどの様に取り扱
 	うかを指定する:
 	   followic	オプション 'ignorecase' に従う
+	   followscs    Follow the 'smartcase' and 'ignorecase' options
 	   ignore	大文字小文字の違いを無視する
 	   match	大文字小文字をマッチする
+	   smart	Ignore case unless an upper case letter is used
 
 						*'taglength'* *'tl'*
 'taglength' 'tl'	数値	(既定では 0)
@@ -7733,8 +7750,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 			{Vi にはない}
 			{Vimが |+termguicolors| 機能付きでコンパイルされたときの
 			み有効}
-	オンのとき、|highlight-guifg| と |highlight-guibg| がターミナル内で使われる
-	(24ビットカラー)。ISO-8613-3 互換なターミナルが必要。
+	オンのとき、|highlight-guifg| と |highlight-guibg| がターミナル内で使
+	われる(24ビットカラー)。ISO-8613-3 互換なターミナルが必要。
 	このオプションを設定しても機能しない (色が UI に付かない) 場合は、
 	|xterm-true-color| を読むと助けになるかもしれない。
 
