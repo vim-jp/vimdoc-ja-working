@@ -415,9 +415,9 @@ VMSでは全てのオプション引数は小文字であるとみなされる�
 		(|terminal-info|を参照)。{Vi にはない}
 
 							*--not-a-term*
---not-a-term	Tells Vim that the user knows that the input and/or output is
-		not connected to a terminal.  This will avoid the warning and
-		the two second delay that would happen. {not in Vi}
+--not-a-term	入力と出力(もしくはどちらか一方)が端末に接続されていないと、
+		ユーザーが知っていることをVimに伝える。これにより警告が表示さ
+		れ2秒間の遅延が発生するのを避けられる。{Vi にはない}
 
 							*-d*
 -d		差分モードで起動する。|vimdiff|と同じ。
@@ -814,9 +814,9 @@ Evimでは以下のオプションが標準設定から変更される:
 	IV  ユーザーのexrcファイル。vimrcと同じだが、vimrcがexrcによって置き換
 	    えられている。しかし ".exrc" と "_exrc" のどちらか1つだけが使われ
 	    る。これはシステムによる。(*)の注釈は適用されない。
-	V   The default vimrc file, $VIMRUNTIME/defaults.vim.  This sets up
-	    options values and has "syntax on" and "filetype on" commands,
-	    which is what most new users will want.  See |defaults.vim|.
+	V   デフォルトの $VIMRUNTIME/defaults.vim を読み込む。これは、大半の新
+	    規ユーザーが必要するであろう各種オプションを設定し、"syntax on" 及
+	    び "filetype on" コマンドを含んでいる。|defaults.vim| を参照。
 
      d. 'exrc' オプションがオン(初期状態ではオフ)の場合、現在のディレクトリで4
 	つのファイルが検索される。最初に見つかったものだけが使用され、残りは無
@@ -838,8 +838,8 @@ Evimでは以下のオプションが標準設定から変更される:
 	"plugin" にある拡張子が ".vim" となっているファイルを実行する(各ディレ
 	クトリごとに名前順で実行される)。サブディレクトリに対しても再帰的に検
 	索される。
-	However, directories in 'runtimepath' ending in "after" are skipped
-	here and only loaded after packages, see below.
+	ただし "after" において変更した 'runtimepath' 内のディレクトリはこの手
+	順をスキップし、afterパッケージだけを読み込む。下の説明を参照。
 	次の場合にはプラグインを読み込まない:
 	- vimrcファイルでオプション 'loadplugins' がオフに設定された。
 	- 起動時の引数に|--noplugin|が指定された。
@@ -849,15 +849,15 @@ Evimでは以下のオプションが標準設定から変更される:
 	ドはこの時点ではまだ実行されない。"--cmd 'set noloadplugins'" または
 	"--cmd 'set loadplugins'" とすればよい。|--cmd|
 
-	Packages are loaded.  These are plugins, as above, but found in the
-	"start" directory of each entry in 'packpath'.  Every plugin directory
-	found is added in 'runtimepath' and then the plugins are sourced.  See
-	|packages|.
+	パッケージが読み込まれる。'packpath' 内の各エントリの "start" ディレク
+	トリの下で見つかったプラグインだけが上記の要領で読み込まれる。見つけた
+	pluginディレクトリはすべて 'runtimepath' に追加され、すべてのプラグイ
+	ンが読み込まれる。詳細は |packages| を参照。
 
-	The plugins scripts are loaded, as above, but now only the directories
-	ending in "after" are used.  Note that 'runtimepath' will have changed
-	if packages have been found, but that should not add a directory
-	ending in "after".
+	プラグインスクリプトが読み込まれるが、しかし上で言及したように、ここで
+	は"after" で終わるディレクトリに限られる。パッケージが見つかった際に
+	は 'runtimepath' が変更されるが、"after" で終わるディレクトリは追加さ
+	れないことに注意。
 
 5. 'shellpipe' と 'shellredir' を設定する
 	それ以前に設定されていなければ、'shell' オプションに従って 'shellpipe'
@@ -948,82 +948,62 @@ MS-DOS風(MS-DOS自身、Win32、そしてOS/2)では、全てのvimrcファイ�
 ^Mは無視されてしまうだろう。
 
 
-Vi compatible default value ~
+Vi と互換性のあるデフォルトの値 ~
 						     *compatible-default*
 Vim が起動すると、オプション 'compatible' がオンに設定される。これは初期化時に
-使用される。しかし、以下の条件に当てはまるとすぐに:
-{旧訳: ユーザーの vimrc ファイルが見つかるか、現在のディレクトリに vimrc
-が見つかるか、もしくは環境変数 VIMINIT が設定されている場合にはすぐに、
-'nocompatible' が設定される。これには副作用があって、設定が変更されてしまうオ
-プションがある('compatible' 参照)。しかしその時点でユーザーが値を設定していな
-いオプションだけが変更される。これは Vim の起動時に 'compatible' が設定された
-場合と同様である。Note: これはシステムの vimrc ファイルが存在する場合や、コマ
-ンドライン引数 |-u| つきで起動されたときは起こらない。gvimrc に対しても同様で
-ある。最初に見つかった vimrc、gvimrc が $MYVIMRC、$MYGVIMRC に設定される。}
-- a user vimrc file is found, or
-- a vimrc file in the current directory, or
-- the "VIMINIT" environment variable is set, or
-- the "-N" command line argument is given, or
-  even when no vimrc file exists.
-- the |defaults.vim| script is loaded, or
-- gvimrc file was found,
-then it will be set to 'nocompatible'.
+使用される。しかし以下の条件のいずれかに当てはまると、直ちに 'nocompatible' が
+設定される。
+- ユーザーの vimrc ファイルが見つかる
+- カレントディレクトリに vimrc ファイルが見つかる
+- 環境変数 "VIMINIT" が設定されている
+- 起動引数 "-N" が指定されている
+  これは vimrc ファイルが無くても機能する
+- |defaults.vim| がロードされる
+- gvimrc が見つかる
 
-Note that this does NOT happen when a system-wide vimrc file was found.
+上記はシステムの vimrc ファイルでは発生しないことに注意。
 
-This has the side effect of setting or resetting other options (see
-'compatible').  But only the options that have not been set or reset will be
-changed.  This has the same effect like the value of 'compatible' had this
-value when starting Vim.
+これには他のオプションを設定やリセットする副作用がある('compatible'参照)。しか
+し変更されるのは、設定やリセットされていないオプションに限られる。これは、Vim
+起動時に 'compatible' の値に起こるのと同様の作用となる。
 
-'compatible' is NOT reset, and |defaults.vim| is not loaded:
-- when Vim was started with the |-u| command line argument, especially with
-  "-u NONE", or
-- when started with the |-C| command line argument, or
-- when the name of the executable ends in "ex". (This has been done to make
-  Vim behave like "ex", when it is started as "ex")
+'compatible' はリセットされず、|defaults.vim| が読み込まれない:
+- Vimが |-u| 起動引数で起動され、特にそれが "-u NONE" であった。または…
+- |-C| 起動引数で起動された。または…
+- 実行ファイルの名前が "ex" で終わっていた。(これは Vim を "ex" として起動した
+  場合には、"ex" のように動作させるための仕様である)
 
 'compatible' を .vimrc で設定すると副作用が発生する。マッピングは見つかった時
 点で解釈されるので、"<CR>" のようなものを使う時に違いが生じる。もしもマッピン
 グが 'compatible' の値に依存している場合、そのマッピングを定義する前に
 'compatible' を設定する。
 
-{旧訳:
-以上の振る舞いは次の方法で無効にすることができる:
-- コマンドライン引数に "-N" を与えた場合、vimrcファイルが存在しなくても
-  'nocompatible' が使用される。
-- コマンドライン引数に "-C" が与えられた場合、vimrcが存在しても 'compatible'
-  が使用される。
-- 引数 "-u {vimrc}" が使用された場合、'compatible' が使われる。
-- 実行ファイルの名前が "ex" で終わっていた場合、"-C" 引数が与えられたのと同様
-  に働く: vimrcファイルが存在しても 'compatible' が使用される。これは "ex" と
-  してVimが起動された時にはVimは "ex" のように振舞うようにするためである。
-}
 
-Defaults without a .vimrc file ~
+.vimrc ファイルが無い際のデフォルト ~
 							*defaults.vim*
-If Vim is started normally and no user vimrc file is found, the
-$VIMRUTIME/defaults.vim script is loaded.  This will set 'compatible' off,
-switch on syntax highlighting and a few more things.  See the script for
-details.  NOTE: this is done since Vim 8.0, not in Vim 7.4. (it was added in
-patch 7.4.2111 to be exact).
+Vim を普通に起動してユーザー vimrc ファイルが見つからない場合には、
+$VIMRUTIME/defaults.vim スクリプトが読みこまれる。このスクリプトは'compatible'
+をオフにし、シンタックスハイライトを有効にする他、幾つかのことを実施する。詳細
+はそのスクリプトを参照せよ。NOTE: これは正確には Vim 8.0 からではなく 7.4.2111
+から導入された。
 
-This should work well for new Vim users.  If you create your own .vimrc, it is
-recommended to add this line somewhere near the top: >
+これはVimの新規ユーザーにとって良く機能する。自分で .vimrcを作る際には、その最
+上部のほうに以下の2行を追加することが推奨される: >
 	unlet! skip_defaults_vim
 	source $VIMRUNTIME/defaults.vim
-Then Vim works like before you had a .vimrc. Copying $VIMRUNTIME/vimrc_example
-is way to do this.  Alternatively, you can copy defaults.vim to your .vimrc
-and modify it (but then you won't get updates when it changes).
+る。 $VIMRUNTIME/vimrc_example をコピーすることでも、同じことができる。他の方
+法として、defaults.vim 自体をあなたの .vimrc にコピーし、変更をすることもでき
+る。(ただしこの方法では、将来 defaults.vim が変更された際に、そのアップデート
+は反映されない)
 
-If you don't like some of the defaults, you can still source defaults.vim and
-revert individual settings.  See the defaults.vim file for hints on how to
-revert each item.
+もしも defaults.vim の一部が気に入らない場合でも、まず defaults.vim を読み込ん
+でから、個々の設定を変更することができる。個別の項目をどのように変更するべきか
+のヒントとして defaults.vim ファイルを参照せよ。
 						*skip_defaults_vim*
-If you use a system-wide vimrc and don't want defaults.vim to change settings,
-set the "skip_defaults_vim" variable.  If this was set and you want to load
-defaults.vim from your .vimrc, first unlet skip_defaults_vim, as in the
-example above.
+システムワイドの vimrc を使っていて defaults.vim を使いたくない場合に
+は、"skip_defaults_vim" 変数を設定する。これが設定された状態で、自分の .vimrc
+で defaults.vim を読み込みたい場合には、上で示した例のように、最初に unlet
+skip_defaults_vim を行うと良い。
 
 
 トロイの木馬を回避する ~
@@ -1051,7 +1031,7 @@ vimrcを作成し、所有者を貴方にすることを可能にしている。
 るvimrc/exrcからコマンドが実行されるのと、ちょうど同じように働く。
 
 
-If Vim startup is slow ~
+Vimの起動が遅いときには ~
 							*slow-start*
 Vimの起動に時間がかかる場合は |--startuptime| 引数を使って原因を探すことができ
 る。よくある原因としては次のようなものがある:
@@ -1066,7 +1046,7 @@ Vimの起動に時間がかかる場合は |--startuptime| 引数を使って原
   る(Vimを引数 "-i NONE" で起動する。|-i|)。":set viminfo='20,<50,s10" と設定
   して、レジスタに保存される行数を減らしてみるのも良い。|viminfo-file|。
 
-Intro message ~
+紹介メッセージ~
 							*:intro*
 ファイル名を与えずにVimを起動した場合、(Vimのことを知らない人に向けて)紹介メッ
 セージが表示される。そのメッセージはなんらかの操作によって画面が再描画されると
@@ -1192,15 +1172,15 @@ X-windowsではVimをサスペンドするとセレクションの所有権が�
 ==============================================================================
 7. 終了							*exiting*
 
-There are several ways to exit Vim:
-- Close the last window with `:quit`.  Only when there are no changes.
-- Close the last window with `:quit!`.  Also when there are changes.
-- Close all windows with `:qall`.  Only when there are no changes.
-- Close all windows with `:qall!`.  Also when there are changes.
-- Use `:cquit`.  Also when there are changes.
+Vimを終了する方法はいくつかある:
+- 最後のウィンドウを `:quit` で閉じる。変更がない場合にのみ。
+- 最後のウィンドウを `:quit!` で閉じる。変更がある場合にも。
+- 全てのウィンドウを `:qall` で閉じる。変更が一切ない場合にのみ。
+- 全てのウィンドウを `:qall!` で閉じる。変更がある場合にも。
+- `:cquit` を使う。変更がある場合にも。
 
-When using `:cquit` or when there was an error message Vim exits with exit
-code 1.  Errors can be avoided by using `:silent!`.
+`:cquit` を使ったり、エラーメッセージがある場合には、Vimは終了コード 1 で終了
+する。エラーは `:silent!` を使うことで避けられる。
 
 ==============================================================================
 8. 設定の保存						*save-settings*
@@ -1460,33 +1440,32 @@ Vimが終了する時に 'viminfo' が空でなかったら、情報がviminfo�
 は、どのような情報を保存するか、またどのくらいの量を保存するべきかその限界を指
 定する為の情報を含む文字列である。('viminfo' 参照)。
 
-Merging happens in two ways.  Most items that have been changed or set in the
-current Vim session are stored, and what was not changed is filled from what
-is currently in the viminfo file.  For example:
-- Vim session A reads the viminfo, which contains variable START.
-- Vim session B does the same
-- Vim session A sets the variables AAA and BOTH and exits
-- Vim session B sets the variables BBB and BOTH and exits
-Now the viminfo will have:
-   START - it was in the viminfo and wasn't changed in session A or B
-   AAA   - value from session A, session B kept it
-   BBB   - value from session B
-   BOTH  - value from session B, value from session A is lost
+マージは2つの方法で実施される。Vimのセッション中で変更や(訳注:あらたに)設定さ
+れた大半のアイテムは保存され、変更されなかったものは既存のviminfoファイルのも
+のが流用される。例えば:
+- VimセッションAが、変数 START の含まれた viminfo を読み込む。
+- VimセッションBが、同様にviminfoを読み込む
+- VimセッションAが、変数 AAA と BOTH を設定し終了する
+- VimセッションBが、変数 BBB と BOTH を設定し終了する
+こうするとviminfoは次のようになるだろう:
+   START - 元からviminfoにあったものは、セッションA及びBに拠らず維持される
+   AAA   - セッションA由来の値は、Bにより維持される
+   BBB   - セッションB由来の値
+   BOTH  - セッションB由来の値。Aの値は失われる。
 
 							*viminfo-timestamp*
-For some items a timestamp is used to keep the last changed version.  Here it
-doesn't matter in which sequence Vim sessions exit, the newest item(s) are
-always kept.  This is used for:
-- The command line history.
-- The search string history.
-- The input-line history.
-- Contents of non-empty registers.
-- The jump list
-- File marks
-The timestamp feature was added before Vim 8.0.  Older versions of Vim,
-starting with 7.4.1131, will keep the items with timestamp, but not use them.
-Thus when using both an older and a newer version of Vim the most recent data
-will be kept.
+幾つかのアイテムには、最後に変更された値を優先するために、タイムスタンプを用い
+ている。これによりVimセッションの終了順序に関係なく、最新のアイテムが維持され
+る。タイムスタンプは以下のアイテムに導入されている:
+- コマンドラインの履歴
+- 検索文字列の履歴
+- 入力行の履歴
+- 空ではないレジスタの値
+- ジャンプリスト
+- ファイルのマーク
+このタイムスタンプ機能自体は Vim 8.0 よりも以前に追加された。Vim 7.4.1131 以降
+の Vim 7.4 では各アイテムにタイムスタンプを記録しているが、使ってはいない。そ
+のため古いVimと新しいVimを混在して使う場合には、常に新しいデータが維持される。
 
 Note: Unixにおける注意点:
 - viminfoファイルには入力したテキストや、使用したコマンドが記載されているの
