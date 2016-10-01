@@ -2007,7 +2007,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 'conskey' 'consk'	切替 (既定ではオフ)
 			グローバル
 			{Vi にはない}  {VimのMS-DOS版のみ}
-	これMS-DOSのためのものであったが、もうサポートされていない。
+	これはMS-DOSのためのものであったが、もうサポートされていない。
 
 			*'copyindent'* *'ci'* *'nocopyindent'* *'noci'*
 'copyindent' 'ci'	切替	(既定ではオフ)
@@ -4826,7 +4826,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 			{Vi にはない}
 			{Vimが |+langmap| 機能付きでコンパイルされたときのみ
 			有効}
-	これは 'langremap' に似ているが、値が逆になっている。また後方互換製の
+	これは 'langremap' に似ているが、値が逆になっている。また後方互換性の
 	ためだけに残されている。'langremap' を設定した時は、逆の値が
 	'langnoremap' に設定され、反対もまた同様である。
 
@@ -6618,9 +6618,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	できることである。
 	'shelltemp' がオフのときは自動コマンドイベント |FilterReadPre|,
 	|FilterReadPost|, |FilterWritePre|, |FilterWritePost| が発生しない。
-	|system()| 関数はこのオプションを参照せず常に一時ファイルを利用する。
-	The `system()` function does not respect this option and always uses
-	temp files.
+	`system()` 関数はこのオプションを参照せず常に一時ファイルを利用する。
 
 						*'shelltype'* *'st'*
 'shelltype' 'st'	数値	(既定では 0)
