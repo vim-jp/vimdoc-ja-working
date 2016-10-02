@@ -1934,13 +1934,14 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 		    ウィンドウに表示する。"menu" または "menuone" と組み合わせ
 		    たときのみ有効。
 
-	   noinsert Do not insert any text for a match until the user selects
-		    a match from the menu. Only works in combination with
-		    "menu" or "menuone". No effect if "longest" is present.
+	   noinsert いかなるマッチしたテキストも、ユーザーがメニューから選択し
+		    ない限り挿入しない。"menu" か "menuone" と組み合わせたとき
+		    にだけ機能する。"longest" が指定された場合には、なんの影響
+		    も発生しない。
 
-	   noselect Do not select a match in the menu, force the user to
-		    select one from the menu. Only works in combination with
-		    "menu" or "menuone".
+	   noselect メニューからマッチを {訳注:自動では} 選択せず、ユーザーに
+		    自分で選ぶことを強制する。"menu" か "menuone" と組み合わせ
+		    たときにだけ機能する。
 
 
 						*'concealcursor'* *'cocu'*
@@ -2908,8 +2909,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	オンのときのインデントでも空白を使う。'expandtab' がオンのときに本当の
 	タブを挿入するには、CTRL-V<Tab> を使うこと。|:retab| と |ins-expandtab|
 	も参照。
-	This option is reset when the 'paste' option is set and restored when
-	the 'paste' option is reset.
+	このオプションは 'paste' オプションがオンになった時にはリセットされ、
+	'paste' オプションがリセットされた際には復元される。
 	NOTE: このオプションは、'compatible' がオンのときはオフになるので注意。
 
 					*'exrc'* *'ex'* *'noexrc'* *'noex'*
@@ -2919,11 +2920,12 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	カレントディレクトリ内のファイル .vimrc, .exrc や .gvimrc 等の読み込み
 	を有効にする。
 
-	Setting this option is a potential security leak.  E.g., consider
-	unpacking a package or fetching files from github, a .vimrc in there
-	might be a trojan horse.  BETTER NOT SET THIS OPTION!
-	Instead, define an autocommand in your .vimrc to set options for a
-	matching directory.
+	このオプションを設定することには潜在的な機密漏洩の危険性を意味します。
+	例えば、パッケージを回答することや github からファイルを取得することを
+	考えると、その中に含まれる .vimrc はトロイの木馬になりえます。
+	このオプションは設定しないほうが良い! {訳注:太字で強調}
+	その代わりに自分の .vimrc で、ディレクトリ毎のオプションを設定する
+	autocommand を定義するべきである。
 
 	このオプションをオンにするなら、オプション 'secure' もオンにするよう検
 	討すること (|initialization| を参照)。
@@ -3092,8 +3094,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	     ら、'fileformat' は "unix" になる。 Note <NL> があって、その前に
 	     <CR> がないと、"dos" より "unix" が優先的に使われることに注意。
 	  3. 'fileformat' がまだ設定されておらず、ファイル内に1つ <CR> が見つ
-	     かり(訳注:後ろに<NL>が続かない)、'fileformats' に "mac" が含まれ
-	     ているときは、'fileformat' は "mac" に設定される。
+	     かり {訳注:後ろに<NL>が続かない} 、'fileformats' に "mac" が含ま
+	     れているときは、'fileformat' は "mac" に設定される。
 	     つまり "mac" が選択されるのは:
 	      "unix" が含まれていないか <NL> がファイルに無い、そして
 	      "dos" が含まれていないか <CR><NL> がファイルに無いときである。
@@ -4634,8 +4636,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	ド上で CTRL-] を入力したときにそのコマンドについてのヘルプにジャンプで
 	きるようにするため)。
 	'lisp' がオンのときは、文字 '-' は常に含まれる。
-	This option also influences syntax highlighting, unless the syntax
-	uses |:syn-iskeyword|.
+	このオプションは、シンタックスが |:syn-iskeyword| を使っていない場合に
+	は、シンタックスハイライトにも影響を与える。
 	NOTE: このオプションは、オプション 'compatible' がオンのときはViの既定
 	値に、オフのときはVimの既定値になるので注意すること。
 
@@ -5469,9 +5471,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 		"007" の上で CTRL-A を使うと "010" となる。
 	hex	これが含まれると、"0x" や "0X" で始まる数は16進数として認識さ
 		れる。例: "0x100" の上で CTRL-X を使うと "0x0ff" となる。
-	bin	If included, numbers starting with "0b" or "0B" will be
-		considered to be binary.  Example: Using CTRL-X on
-		"0b1000" subtracts one, resulting in "0b0111".
+	bin	これが含まれている場合には、 "0b" か "0B" で始まる数値は2進数
+		であるとみなす。例えば "0b1000" の上で CTRL-X を押すと1減算さ
+		れ、結果 "0b0111" になる。
 	1 から 9 の数字で始まる数は、常に10進数として認識される。8進数または16
 	進数として認識されない数も10進数として認識される。
 
@@ -6081,8 +6083,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	らば挿入モードでコマンド CTRL-_ を使うことで切り替えられる。
 	NOTE: このオプションは、オプション 'compatible' がオンのときはオフにな
 	るので注意。
-	This option is reset when 'paste' is set and restored when 'paste' is
-	reset.
+	このオプションは 'paste' オプションがオンになった時にはリセットされ、
+	'paste' オプションがリセットされた際には復元される。
 
 				 *'rightleft'* *'rl'* *'norightleft'* *'norl'*
 'rightleft' 'rl'	切替	(既定ではオフ)
@@ -6149,8 +6151,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	の列数が、ダッシュで区切られて両方表示される。
 	空行では "0-1" と表示される。
 	空のバッファでは行数も0になり、 "0,0-1" と表示される。
-	This option is reset when 'paste' is set and restored when 'paste' is
-	reset.
+	このオプションは 'paste' オプションがオンになった時にはリセットされ、
+	'paste' オプションがリセットされた際には復元される。
 	ルーラーを常に表示したくはないが、テキスト内のどこにいるのか知りたいと
 	きは、コマンド "g CTRL-G" を使うこと |g_CTRL-G|。
 	NOTE:  このオプションは、オプション 'compatible' がオンのときはオフに
@@ -6816,8 +6818,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	間はオプション 'matchtime' で設定できる。
 	マッチする閉じ括弧がないときは、ビープ音が鳴る (マッチが見えても見えな
 	くても)。
-	This option is reset when 'paste' is set and restored when 'paste' is
-	reset.
+	このオプションは 'paste' オプションがオンになった時にはリセットされ、
+	'paste' オプションがリセットされた際には復元される。
 	'cpoptions' にフラグ 'm' が含まれていないときは、ジャンプ中に文字を入
 	力するとカーソルがすぐに元の場所に戻る。
 	マッチの表示時のカーソルの形状や点滅方法については、'guicursor' の
@@ -6937,8 +6939,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	コマンド ">>" を使ったとき、'#' で始まる行は右に移動しない。
 	NOTE: 'smartindent' は、'compatible' がオンのときはオフに設定されるの
 	で注意。
-	This option is reset when 'paste' is set and restored when 'paste' is
-	reset.
+	このオプションは 'paste' オプションがオンになった時にはリセットされ、
+	'paste' オプションがリセットされた際には復元される。
 
 				 *'smarttab'* *'sta'* *'nosmarttab'* *'nosta'*
 'smarttab' 'sta'	切替	(既定ではオフ)
@@ -6954,8 +6956,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	挿入される文字 (タブ文字または空白) は 'expandtab' によって変わる。
 	|ins-expandtab| も参照。'expandtab' がオフのときは、 <Tab> を打ち込む
 	と空白の数が最小になる {訳注: できる限り空白をタブ文字で置き換える}。
-	This option is reset when 'paste' is set and restored when 'paste' is
-	reset.
+	このオプションは 'paste' オプションがオンになった時にはリセットされ、
+	'paste' オプションがリセットされた際には復元される。
 	NOTE: このオプションは、オプション 'compatible' がオンのときはオフにな
 	るので注意。
 
@@ -7787,8 +7789,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 			{Vi にはない}
 	入力されているテキストの最大幅。行がそれより長くなると、この幅を超えな
 	いように空白の後で改行される。値を 0 に設定すると無効になる。
-	'textwidth' is set to 0 when the 'paste' option is set and restored
-	when 'paste' is reset.
+	'textwidth' は、'paste' オプションがオンになった時には0が設定され、
+	'paste' オプションがリセットされた際には復元される。
 	オプション 'textwidth' が 0 のときは、'wrapmargin' が使われる場合があ
 	る。'formatoptions' と |ins-textwidth| を参照。
 	'formatexpr' が設定されている場合、その値を使って改行される。
@@ -8813,8 +8815,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	'number' や 'foldcolumn' など幅をとるオプションを使用していると、テキ
 	ストの幅がこの値より少なくなる。これはVi互換の動作である。
 	オプション 'textwidth' が非0 のときは、このオプションは使われない。
-	This option is set to 0 when 'paste' is set and restored when 'paste'
-	is reset.
+	このオプションは 'paste' オプションがオンになった時には0が設定され、
+	'paste' オプションがリセットされた際には復元される。
 	'formatoptions' と |ins-textwidth| も参照。  {Vi: 少し不便な、違った動
 	作をする}
 
