@@ -1,4 +1,4 @@
-*channel.txt*      For Vim バージョン 8.0.  Last change: 2016 Jan 28
+*channel.txt*      For Vim バージョン 8.0.  Last change: 2016 Sep 11
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -6,26 +6,60 @@
 
 		      プロセス間通信				*channel*
 
-ドラフト  ドラフト  ドラフト  ドラフト  ドラフト  ドラフト  ドラフト
-
 Vimは別のプロセスと通信するのにチャンネルを用います。
-チャンネルはソケットを用います。			*socket-interface*
-
-現在のところVimは同時に10個までのチャンネルをサポートします。
+チャンネルはソケットまたはパイプを用います。		*socket-interface*
+Jobs can be used to start processes and communicate with them.
 Netbeansインターフェイスもチャンネルを使っています。 |netbeans|
 
-1. デモ					|channel-demo|
-2. チャンネルを開く			|channel-open|
-3. JSONチャンネルを使う			|channel-use|
-4. Vimコマンド 				|channel-commands|
-5. rawチャンネルを使う			|channel-use|
-6. ジョブ制御				|job-control|
+1. 概要					|job-channel-overview|
+2. チャンネルデモ			|channel-demo|
+3. チャンネルを開く			|channel-open|
+4. JSON、JSチャンネルを使う		|channel-use|
+5. チャンネルコマンド			|channel-commands|
+6. RAW、NLチャンネルをつかう		|channel-raw|
+7. More channel functions		|channel-more|
+8. Starting a job with a channel	|job-start|
+9. Starting a job without a channel	|job-start-nochannel|
+10. ジョブオプション			|job-options|
+11. ジョブを制御する			|job-control|
 
 {Vi にはこれらの機能はありません}
-{|+channel| 機能付きでコンパイルされたときのみ利用可能}
+{only when compiled with the |+channel| feature for channel stuff}
+	You can check this with: `has('channel')`
+{only when compiled with the |+job| feature for job stuff}
+	You can check this with: `has('job')`
 
 ==============================================================================
-1. デモ							*channel-demo*
+1. 概要							*job-channel-overview*
+
+There are four main types of jobs:
+1. A daemon, serving several Vim instances.
+   Vim connects to it with a socket.
+2. One job working with one Vim instance, asynchronously.
+   Uses a socket or pipes.
+3. A job performing some work for a short time, asynchronously.
+   Uses a socket or pipes.
+4. Running a filter, synchronously.
+   Uses pipes.
+
+For when using sockets See |job-start|, |job-start-nochannel| and
+|channel-open|.  For 2 and 3, one or more jobs using pipes, see |job-start|.
+For 4 use the ":{range}!cmd" command, see |filter|.
+
+Over the socket and pipes these protocols are available:
+RAW	nothing known, Vim cannot tell where a message ends
+NL	every message ends in a NL (newline) character
+JSON	JSON encoding |json_encode()|
+JS	JavaScript style JSON-like encoding |js_encode()|
+
+Common combination are:
+- Using a job connected through pipes in NL mode.  E.g., to run a style
+  checker and receive errors and warnings.
+- Using a deamon, connecting over a socket in JSON mode.  E.g. to lookup
+  cross-references in a database.
+
+==============================================================================
+2. チャンネルデモ			*channel-demo* *demoserver.py*
 
 デモにはPythonが必要です。デモプログラムは次の場所にあります。
 $VIMRUNTIME/tools/demoserver.py
@@ -33,13 +67,13 @@ $VIMRUNTIME/tools/demoserver.py
 
 次に別のターミナルでVimを実行します。そして以下のコマンドでサーバーに接続しま
 す: >
-	let handle = connect('localhost:8765', 'json')
+	let channel = ch_open('localhost:8765')
 
 T1の中に次のように表示されます:
 	=== socket opened === ~
 
 ついにサーバーにメッセージを送信できます: >
-	echo sendexpr(handle, 'hello!')
+	echo ch_evalexpr(channel, 'hello!')
 
 このメッセージはT1で受信され、Vimには応答が送り返されます。
 T1ではVimが送った生のメッセージを確認できます:
@@ -49,73 +83,158 @@ T1ではVimが送った生のメッセージを確認できます:
 この数値はメッセージを送るたびに増加していきます。
 
 サーバーはVimにコマンドを送信できます。T1に於いて、次のように正確に(引用符を含
-めて文字通りに)タイプしてください: >
-	ま　だ　実　装　さ　れ　て　い　ま　せ　ん
-	["ex","echo 'hi there'"]
-するとそのメッセージがVimに表示されます。
+めて文字通りに)タイプしてください:
+	["ex","echo 'hi there'"] ~
+するとそのメッセージがVimに表示されます。You can move the cursor a word forward:
+	["normal","w"] ~
 
 非同期通信を取り扱うためにはコールバック(以下ハンドラー)が必要です: >
-	func MyHandler(handle, msg)
+	func MyHandler(channel, msg)
 	  echo "from the handler: " . a:msg
 	endfunc
-	call sendexpr(handle, 'hello!', "MyHandler")
+	call ch_sendexpr(channel, 'hello!', {'callback': "MyHandler"})
+Vim will not wait for a response.  Now the server can send the response later
+and MyHandler will be invoked.
 
 sendを呼ぶたびに毎回コールバックを指定する代わりに、チャンネルを開く際に指定す
 ることもできます: >
-	call disconnect(handle)
-	let handle = connect('localhost:8765', 'json', "MyHandler")
-	call sendexpr(handle, 'hello!', 0)
+	call ch_close(channel)
+	let channel = ch_open('localhost:8765', {'callback': "MyHandler"})
+	call ch_sendexpr(channel, 'hello!')
+
+When trying out channels it's useful to see what is going on.  You can tell
+Vim to write lines in log file: >
+	call ch_logfile('channellog', 'w')
+See |ch_logfile()|.
 
 ==============================================================================
-2. チャンネルを開く					*channel-open*
+3. チャンネルを開く					*channel-open*
 
 チャンネルを開くには次のようにします: >
-    let handle = connect({address}, {mode}, {callback})
+    let channel = ch_open({address} [, {options}])
+    if ch_status(channel) == "open"
+      " use the channel
+
+Use |ch_status()| to see if the channel could be opened.
 
 {address} は "ホスト名:ポート番号" の形式です。 例:"localhost:8765"
 
-{mode} でモード(通信フォーマット)を指定します:		*channel-mode*
-	"json" - JSONを使う(詳しくは下記を参照。もっとも使いやすい方法)
-	"raw"  - rawメッセージを使う
+{options} is a dictionary with optional entries:	*channel-open-options*
 
-							*channel-callback*
-{callback} はメッセージ受信時に他のハンドラーで扱われない時に呼ばれます。
-これはチャンネルのハンドルと、受信したメッセージの2つの引数を取ります。例: >
-	func Handle(handle, msg)
+"mode" でモード(通信フォーマット)を指定します:		*channel-mode*
+	"json" - JSONを使う(詳しくは下記を参照。もっとも使いやすい方法。既定)
+	"js"   - Use JS (JavaScript) encoding, more efficient than JSON.
+	"nl"   - Use messages that end in a NL character
+	"raw"  - rawメッセージを使う
+						*channel-callback* *E921*
+"callback"	メッセージ受信時に他のハンドラーで扱われない時に呼ばれます。
+		これはチャンネルのハンドルと、受信したメッセージの2つの引数を
+		取ります。例: >
+	func Handle(channel, msg)
 	  echo '受信した: ' . a:msg
 	endfunc
-	let handle = connect("localhost:8765", 'json', "Handle")
+	let channel = ch_open("localhost:8765", {"callback": "Handle"})
+<
+		"mode" が "json", "js" の時には、"msg" 引数は受信したメッセー
+		ジの本文で、Vimの型に変換されています。
+		When "mode" is "nl" the "msg" argument is one message,
+		excluding the NL.
+		"mode" が "raw" の時には、 "msg" 引数はメッセージ全体を格納し
+		た文字列です。
 
+		For all callbacks: Use |function()| to bind it to arguments
+		and/or a Dictionary.  Or use the form "dict.function" to bind
+		the Dictionary.
 
-{mode} が "json" の時には、"msg" 引数は受信したメッセージの本文で、Vimの型に変
-換されています。
-一方 {mode} が "raw" の時には、 "msg" 引数はメッセージ全体を格納した文字列で
-す。
+		Callbacks are only called at a "safe" moment, usually when Vim
+		is waiting for the user to type a character.  Vim does not use
+		multi-threading.
 
-{mode} が "json" の時には {callback} はオプションです。これを省略した場合、
-メッセージを1つ受信するにはメッセージを1つ送信する必要があります。
+							*close_cb*
+"close_cb"	A function that is called when the channel gets closed, other
+		than by calling ch_close().  It should be defined like this: >
+	func MyCloseHandler(channel)
+<		Vim will invoke callbacks that handle data before invoking
+		close_cb, thus when this function is called no more data will
+		be received.
+							*waittime*
+"waittime"	The time to wait for the connection to be made in
+		milliseconds.  A negative number waits forever.
 
-ハンドラーは後から追加したり、変更したりできます: >
-    call sethandler(handle, {callback})
-{callback} が空の場合 (一度も指定しないか、空文字列を指定した場合) ハンドラー
+		The default is zero, don't wait, which is useful if a local
+		server is supposed to be running already.  On Unix Vim
+		actually uses a 1 msec timeout, that is required on many
+		systems.  Use a larger value for a remote server, e.g.  10
+		msec at least.
+							*channel-timeout*
+"timeout"	The time to wait for a request when blocking, E.g. when using
+		ch_evalexpr().  In milliseconds.  The default is 2000 (2
+		seconds).
+
+"mode" が "json" か "js" の時には "callback" はオプションです。これを省略した
+場合、メッセージを1つ受信するにはメッセージを1つ送信する必要があります。
+
+To change the channel options after opening it use |ch_setoptions()|.  The
+arguments are similar to what is passed to |ch_open()|, but "waittime" cannot
+be given, since that only applies to opening the channel.
+
+例えば、ハンドラーは後から追加したり、変更したりできます: >
+    call ch_setoptions(channel, {'callback': callback})
+"callback" が空の場合 (一度も指定しないか、空文字列を指定した場合) ハンドラー
 は削除されます。
 
+After a callback has been invoked Vim will update the screen and put the
+cursor back where it belongs.  Thus the callback should not need to do
+`:redraw`.
+
+The timeout can be changed: >
+    call ch_setoptions(channel, {'timeout': msec})
+<
+							  *channel-close* *E906*
 チャンネルを使い終わったら、以下のように切断してください: >
-    call disconnect(handle)
+    call ch_close(channel)
+When a socket is used this will close the socket for both directions.  When
+pipes are used (stdin/stdout/stderr) they are all closed.  This might not be
+what you want!  Stopping the job with job_stop() might be better.
+All readahead is discarded, callbacks will no longer be invoked.
+
+Note that a channel is closed in three stages:
+  - The I/O ends, log message: "Closing channel". There can still be queued
+    messages to read or callbacks to invoke.
+  - The readahead is cleared, log message: "Clearing channel".  Some variables
+    may still reference the channel.
+  - The channel is freed, log message: "Freeing channel".
+
+When the channel can't be opened you will get an error message.  There is a
+difference between MS-Windows and Unix: On Unix when the port doesn't exist
+ch_open() fails quickly.  On MS-Windows "waittime" applies.
+*E898* *E901* *E902*
+
+If there is an error reading or writing a channel it will be closed.
+*E630* *E631* 
 
 ==============================================================================
-3. JSONチャンネルを使う					*channel-use*
+4. JSON、JSチャンネルを使う					*channel-use*
 
-{mode} が "json" 場合は、以下のようにメッセージを同期的に送信できます: >
-    let response = sendexpr(handle, {expr})
+"mode" が JSON の場合は、以下のようにメッセージを同期的に送信できます: >
+    let response = ch_evalexpr(channel, {expr})
 これは通信相手から応答があるまで待ち合わせます。
 
-応答を処理する必要が無いのであれば、以下のように送れます: >
-    call sendexpr(handle, {expr}, 0)
+When mode is JS this works the same, except that the messages use
+JavaScript encoding.  See |js_encode()| for the difference.
+
+To send a message, without handling a response or letting the channel callback
+handle the response: >
+    call ch_sendexpr(channel, {expr})
 
 メッセージを送信し、応答を特別な関数で非同期的に処理する場合には、このようにし
 ます: >
-    call sendexpr(handle, {expr}, {callback})
+    call ch_sendexpr(channel, {expr}, {'callback': Handler})
+
+Vim will match the response with the request using the message ID.  Once the
+response is received the callback will be invoked.  Further responses with the
+same ID will be ignored.  If your server sends back multiple responses you
+need to send them with ID zero, they will be passed to the channel callback.
 
 {expr} は JSON に変換され、配列で包まれます。{expr} として文字列 "hello" を送
 信した場合に、通信相手が受け取るメッセージの例は次のようになります:
@@ -132,9 +251,15 @@ sendを呼ぶたびに毎回コールバックを指定する代わりに、チ�
 でき、正しいハンドラーを呼び出すことができます。これによって応答メッセージの到
 着順序を気にしなくても良くなります。
 
+A newline character is terminating the JSON text.  This can be used to
+separate the read text.  For example, in Python:
+	splitidx = read_text.find('\n')
+	message = read_text[:splitidx]
+	rest = read_text[splitidx + 1:]
+
 送信側はかならず有効なJSONをVimへ送らなければなりません。VimはJSONとして解釈す
 ることで、受信メッセージの終端をチェックします。終端を受信することが、
-メッセージを受理する唯一の方法です。
+メッセージを受理する唯一の方法です。A newline after the message is optional.
 
 サーバープロセスがVimからのメッセージを受信すること無く、メッセージを送信する
 には、数値に 0 を使う必要があります。
@@ -144,8 +269,9 @@ sendを呼ぶたびに毎回コールバックを指定する代わりに、チ�
 しょう。チャンネルにハンドラーが関連付けられていない場合には、メッセージは破棄
 されます。
 
-読み込みエラーが発生した場合や |disconnect()| した場合には、可能であるなら文字
-列 "DETACH" が送られます。チャンネルはそれから非アクティブになります。
+It is also possible to use ch_sendraw() and ch_evalraw() on a JSON or JS
+channel.  The caller is then completely responsible for correct encoding and
+decoding.
 
 ==============================================================================
 4. Vimコマンド						*channel-commands*
