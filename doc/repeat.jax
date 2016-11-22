@@ -46,7 +46,8 @@
 
 					*:g* *:global* *E147* *E148*
 :[range]g[lobal]/{pattern}/[cmd]
-			[range]の範囲で{pattern}にマッチする行に対して、Exコマンド[cmd](省略した場合 ":p")を実行する。
+			[range]の範囲で{pattern}にマッチする行に対して、Exコマ
+			ンド[cmd](省略した場合 ":p")を実行する。
 
 :[range]g[lobal]!/{pattern}/[cmd]
 			[range]の範囲で{pattern}にマッチしない行に対して、Exコ
