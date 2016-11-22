@@ -3374,7 +3374,7 @@ SYNTAX ISKEYWORD SETTING				*:syn-iskeyword*
 	ワードは認識されない。
 	マルチバイト文字を使うこともできる。マルチバイト文字は 'iskeyword' に
 	含まれている必要はない。
-	See |:syn-iskeyword| for defining syntax specific iskeyword settings.
+	シンタックス特有の iskeyword 設定については|:syn-iskeyword|を参照。
 
 	キーワードは常にマッチやリージョンより優先される。キーワードは一要素以
 	上マッチしたとき使われる。キーワードは入れ子にならなく、それ以外のもの
@@ -3610,7 +3610,7 @@ conceal						*conceal* *:syn-conceal*
 際に Conceal 表示されるかどうかは 'conceallevel' オプションの設定に依存する。
 現在行のアイテムを Conceal 表示するかどうかは 'concealcursor' オプションで制御
 できる (行の編集を妨げないようにするため)。
-Another way to conceal text with with |matchadd()|.
+もう一つの方法として|matchadd()|を用いても、テキストを隠すことができる。
 
 concealends						*:syn-concealends*
 
