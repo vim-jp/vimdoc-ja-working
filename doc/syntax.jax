@@ -1122,12 +1122,13 @@ iniファイルをハイライトする。ただし次をvimrcファイルに書
 
 DIFF							*diff.vim*
 
-The diff highlighting normally finds translated headers.  This can be slow if
-there are very long lines in the file.  To disable translations: >
+diff 構文ハイライトは、通常ローカライズされた {訳注：英語以外の} diff ヘッダも
+検出する。ファイルにとても長い行が含まれる場合、この機能は低速になる。ローカラ
+イズヘッダへの対応を無効化するには: >
 
 	:let diff_translations = 0
 
-Also see |diff-slow|.
+|diff-slow|も参照。
 
 
 DIRCOLORS			       *dircolors.vim* *ft-dircolors-syntax*
