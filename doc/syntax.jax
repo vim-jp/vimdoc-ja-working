@@ -925,8 +925,8 @@ Cには幾つかの補助的なハイライト方法がある。それらを有�
 			をエラーとして表示しない。
 			デフォルトでエラーとして表示される。欠落した ")" を見
 			つけられないため。
-*c_curly_error*		対応する { がない } をハイライトする。これを有効に
-			すると、ファイルの先頭から同期が始まるため、遅くなる。
+*c_curly_error*		対応する { がない } をハイライトする。これを有効にする
+			と、ファイルの先頭から同期が始まるため、遅くなる。
 *c_no_ansi*		ANSI標準の型と定数をハイライトしない
 *c_ansi_typedefs*		 ... 但し標準ANSI型はハイライトする
 *c_ansi_constants*	 ... 但し標準ANSI定数はハイライトする
@@ -1030,8 +1030,8 @@ CLOJURE							*ft-clojure-syntax*
 <
 有効な構文グループについては、Clojure 構文スクリプトを参照。
 
-|buffer-variable| *b:clojure_syntax_without_core_keywords* がセットされると、
-言語定数と特定のフォームにのみマッチする。
+バッファ変数(|buffer-variable|) *b:clojure_syntax_without_core_keywords* がセッ
+トされると、言語定数と特定のフォームにのみマッチする。
 
 |g:clojure_fold| を設定するとシンタックスエンジンに基づいた Clojure コードの折
 り畳みが有効化される。複数行に渡るリスト、ベクタ、マップなどを標準の Vim を
@@ -2574,7 +2574,7 @@ RUBY						*ruby.vim* *ft-ruby-syntax*
     Ruby: 演算子のハイライト		|ruby_operators|
     Ruby: ホワイトスペース エラー	|ruby_space_errors|
     Ruby: 折り畳み			|ruby_fold| |ruby_foldable_groups|
-    Ruby: 負荷の高い作業の削減		|ruby_no_expensive| |ruby_minlines|
+    Ruby: 負荷の高い処理の削減		|ruby_no_expensive| |ruby_minlines|
     Ruby: スペルチェック		|ruby_spellcheck_strings|
 
 						*ruby_operators*
@@ -2638,7 +2638,7 @@ RUBY						*ruby.vim* *ft-ruby-syntax*
     __END__      "__END__" ディレクティブ以降のソースコード
 
 						*ruby_no_expensive*
- Ruby: 負荷の高い作業の削減 ~
+ Ruby: 負荷の高い処理の削減 ~
 
 デフォルトではキーワード "end" はそれに対応するブロック開始文にしたがって色づ
 けされる。この機能は便利だが、コストがかかる。再描画が遅くなったら(または色機
