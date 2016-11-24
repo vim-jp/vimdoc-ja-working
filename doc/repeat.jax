@@ -509,7 +509,8 @@ Note "pack/foo/opt" 以下のファイルは自動的に読み込まれず、"pa
 
 単一のプラグインを自動的にロードして使用する ~
 
-パッケージでなく単一のプラグインがある場合は、余分なディレクトリ階層を作成する必要がある。
+パッケージでなく単一のプラグインがある場合は、余分なディレクトリ階層を作成する
+必要がある。
 	% mkdir -p ~/.vim/pack/foo/start/foobar
 	% cd ~/.vim/pack/foo/start/foobar
 	% unzip /tmp/someplugin.zip
@@ -545,8 +546,8 @@ Note "pack/foo/opt" 以下のファイルは自動的に読み込まれず、"pa
 
 どこに何を置くか ~
 
-`:colorscheme` で読み込まれるカラースキームは "pack/*/start" と "pack/*/opt" の
-下から探し出されるのでどこにでも置くことができる。たとえば、
+`:colorscheme` で読み込まれるカラースキームは "pack/*/start" と "pack/*/opt"
+の下から探し出されるのでどこにでも置くことができる。たとえば、
 ".vim/pack/mycolors/opt/dark/colors/very_dark.vim" のように、"pack/*/opt" の下
 に置くことをお勧めする。
 
@@ -581,11 +582,11 @@ Filetype プラグインはファイルタイプに複数のプラグインが�
 ディレクトリ構成は次のようになる。 >
    start/foobar/plugin/foo.vim    	" 常にロードされ、コマンドを定義する
    start/foobar/plugin/bar.vim    	" 常にロードされ、コマンドを定義する
-   start/foobar/autoload/foo.vim  	" fooコマンドが使用されたときに読み込まれる
+   start/foobar/autoload/foo.vim  	" fooコマンドを使用した時に読み込む
    start/foobar/doc/foo.txt       	" foo.vimのヘルプ
    start/foobar/doc/tags          	" ヘルプタグ
-   opt/fooextra/plugin/extra.vim  	" オプションのプラグイン、コマンドの定義
-   opt/fooextra/autoload/extra.vim  	" extraコマンドが使用されたときに読み込まれる
+   opt/fooextra/plugin/extra.vim  	" オプションのプラグイン、コマンド定義
+   opt/fooextra/autoload/extra.vim  	" extraコマンドを使用した時に読み込む
    opt/fooextra/doc/extra.txt  	        " extra.vimのヘルプ
    opt/fooextra/doc/tags  	        " ヘルプタグ
 
@@ -594,8 +595,8 @@ Filetype プラグインはファイルタイプに複数のプラグインが�
 	cd ~/.vim/pack/myfoobar
 	git clone https://github.com/you/foobar.git
 
-ここで "myfoobar" はユーザーが選択できる名前だが、唯一の条件は他のパッケージ
-とは異なることである。
+ここで "myfoobar" はユーザーが選択できる名前だが、唯一の条件は他のパッケージと
+は異なることである。
 
 ドキュメントでは、プラグインの機能について説明し、オプションのプラグインをロー
 ドする方法をユーザーに伝える。 >
@@ -604,10 +605,10 @@ Filetype プラグインはファイルタイプに複数のプラグインが�
 このpackaddコマンドをプラグインの1つに追加して、オプションのプラグインが必要な
 ときに実行することができる。
 
-`:helptags` コマンドを実行して、doc/tags ファイルを生成する。この生成されたファ
-イルをパッケージに含めるということは、パッケージディレクトリにパッケージを落と
-すことができ、ヘルプコマンドがすぐに動作することを意味する。プラグインヘルプを
-変更した後にコマンドを再実行することを忘れないでほしい。 >
+`:helptags` コマンドを実行して、doc/tags ファイルを生成する。この生成されたフ
+ァイルをパッケージに含めるということは、パッケージディレクトリにパッケージを落
+とすことができ、ヘルプコマンドがすぐに動作することを意味する。プラグインヘルプ
+を変更した後にコマンドを再実行することを忘れないでほしい。 >
 	:helptags path/start/foobar/doc
 	:helptags path/opt/fooextra/doc
 
@@ -615,8 +616,8 @@ Filetype プラグインはファイルタイプに複数のプラグインが�
 プラグイン間の依存関係 ~
 							*packload-two-steps*
 同じ機能に依存する2つのプラグインがあるとする。共通機能を autoload ディレクト
-リに置くことで、自動的に見つかるようにすることができる。あなたのパッケージに
-は次のファイルがあるとする。
+リに置くことで、自動的に見つかるようにすることができる。あなたのパッケージには
+次のファイルがあるとする。
 
 	pack/foo/start/one/plugin/one.vim  >
 		call foolib#getit()
@@ -625,8 +626,8 @@ Filetype プラグインはファイルタイプに複数のプラグインが�
 <	pack/foo/start/lib/autoload/foolib.vim >
 		func foolib#getit()
 
-これは動作する。なぜなら、パッケージをロードすると、プラグインを読み込む前に
-見つかったすべてのディレクトリが 'runtimepath' に追加されるからである。
+これは動作する。なぜなら、パッケージをロードすると、プラグインを読み込む前に見
+つかったすべてのディレクトリが 'runtimepath' に追加されるからである。
 
 ==============================================================================
 7. スクリプトのデバッグ					*debug-scripts*
