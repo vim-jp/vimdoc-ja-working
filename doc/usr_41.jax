@@ -930,7 +930,7 @@ Vimサーバー:					*server-functions*
 	js_decode()		JSONの文字列を式にデコードする
 
 Jobs:		    			        *job-functions*
-	job_startw()		Job を開始する
+	job_start()		Job を開始する
 	job_stop()		Job を停止する
 	job_status()		Job のステータスを取得する
 	job_getchannel()	Job が使用する channel を取得する
@@ -2292,8 +2292,8 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 このように行継続を使うには 'cpoptions' から "C" フラグを取り除く必要がありま
 す。上述の |use-cpo-save| を参照してください。
 
-インデントスクリプトのアンドゥを行う為には、それに応じた b:undo_indent 変数を
-設定すべきです。
+インデントスクリプトの効果をアンドゥする為には、それに応じた b:undo_indent 変
+数を設定すべきです。
 
 
 ファイル名
