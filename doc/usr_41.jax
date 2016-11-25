@@ -900,7 +900,7 @@ Vimサーバー:					*server-functions*
 	test_autochdir()	起動中に 'autochdir' を有効にする
 	test_disable_char_avail()	typeahead なしにテスト
 	test_garbagecollect_now()	直ちにメモリを解放する
-	test_null_channel()	空のチャネルを返す
+	test_null_channel()	空のチャンネルを返す
 	test_null_dict()	空の辞書を返す
 	test_null_job()		空の Job を返す
 	test_null_list()	空のリストを返す
@@ -910,20 +910,20 @@ Vimサーバー:					*server-functions*
 プロセス間通信:					*channel-functions*
 	ch_open()		チャンネルを開く
 	ch_close()		チャンネルを閉じる
-	ch_close_in()		チャネルの入力パートを閉じる
-	ch_read()		チャネルからメッセージを読み取る
-	ch_readraw()		チャネルから raw メッセージを読み取る
+	ch_close_in()		チャンネルの入力パートを閉じる
+	ch_read()		チャンネルからメッセージを読み取る
+	ch_readraw()		チャンネルから raw メッセージを読み取る
 	ch_sendexpr()		チャンネルにJSONメッセージを送る
 	ch_sendraw()		チャンネルにrawメッセージを送る
-	ch_evalexpr()		チャネル経由で式を評価する
-	ch_evalraw()		チャネル経由で文字列を評価する
-	ch_status()		チャネルの情報を取得する
-	ch_getbufnr()		チャネルのバッファ番号を取得する
-	ch_getjob()		チャネルが割り当てられている Job を取得する
-	ch_info()		チャネルの情報を取得する
-	ch_log()		チャネルのログファイルにメッセージを出力する
-	ch_logfile()		チャネルのログファイルを設定する
-	ch_setoptions()		チャネルのオプションを設定する
+	ch_evalexpr()		チャンネル経由で式を評価する
+	ch_evalraw()		チャンネル経由で文字列を評価する
+	ch_status()		チャンネルの情報を取得する
+	ch_getbufnr()		チャンネルのバッファ番号を取得する
+	ch_getjob()		チャンネルが割り当てられている Job を取得する
+	ch_info()		チャンネルの情報を取得する
+	ch_log()		チャンネルのログファイルにメッセージを出力する
+	ch_logfile()		チャンネルのログファイルを設定する
+	ch_setoptions()		チャンネルのオプションを設定する
 	json_encode()		式をJSONの文字列に変換する
 	json_decode()		JSONの文字列を式に変換する
 	js_encode()		式を JSON 文字列にエンコードする
