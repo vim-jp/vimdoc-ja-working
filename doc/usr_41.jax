@@ -900,12 +900,12 @@ Vimサーバー:					*server-functions*
 	test_autochdir()	起動中に 'autochdir' を有効にする
 	test_disable_char_avail()	typeahead なしにテスト
 	test_garbagecollect_now()	直ちにメモリを解放する
-	test_null_channel()	空のチャンネルを返す
-	test_null_dict()	空の辞書を返す
-	test_null_job()		空の Job を返す
-	test_null_list()	空のリストを返す
-	test_null_partial()	空の部分適用関数を返す
-	test_null_string()	空の文字列を返す
+	test_null_channel()	null のチャンネルを返す
+	test_null_dict()	null の辞書を返す
+	test_null_job()		null の Job を返す
+	test_null_list()	null のリストを返す
+	test_null_partial()	null の部分適用関数を返す
+	test_null_string()	null の文字列を返す
 
 プロセス間通信:					*channel-functions*
 	ch_open()		チャンネルを開く
