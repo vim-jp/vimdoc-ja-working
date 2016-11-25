@@ -916,7 +916,7 @@ Vimサーバー:					*server-functions*
 	ch_sendexpr()		チャンネルにJSONメッセージを送る
 	ch_sendraw()		チャンネルにrawメッセージを送る
 	ch_evalexpr()		チャンネル経由で式を評価する
-	ch_evalraw()		チャンネル経由で文字列を評価する
+	ch_evalraw()		チャンネル経由で raw 文字列を評価する
 	ch_status()		チャンネルの情報を取得する
 	ch_getbufnr()		チャンネルのバッファ番号を取得する
 	ch_getjob()		チャンネルが割り当てられている Job を取得する
