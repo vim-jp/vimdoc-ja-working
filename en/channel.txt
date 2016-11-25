@@ -1,4 +1,4 @@
-*channel.txt*      For Vim version 8.0.  Last change: 2016 Sep 11
+*channel.txt*      For Vim version 8.0.  Last change: 2016 Nov 07
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -33,7 +33,7 @@ The Netbeans interface also uses a channel. |netbeans|
 1. Overview						*job-channel-overview*
 
 There are four main types of jobs:
-1. A deamon, serving several Vim instances.
+1. A daemon, serving several Vim instances.
    Vim connects to it with a socket.
 2. One job working with one Vim instance, asynchronously.
    Uses a socket or pipes.
@@ -369,7 +369,7 @@ Leave out the fourth argument if no response is to be sent:
 ==============================================================================
 6. Using a RAW or NL channel				*channel-raw*
 
-If mode is RAW or NL then a message can be send like this: >
+If mode is RAW or NL then a message can be sent like this: >
     let response = ch_evalraw(channel, {string})
 
 The {string} is sent as-is.  The response will be what can be read from the
@@ -465,6 +465,11 @@ it like this: >
 Without the handler you need to read the output with |ch_read()| or
 |ch_readraw()|. You can do this in the close callback, see |read-in-close-cb|.
 
+Note that if the job exits before you read the output, the output may be lost.
+This depends on the system (on Unix this happens because closing the write end
+of a pipe causes the read end to get EOF).  To avoid this make the job sleep
+for a short while before it exits.
+
 The handler defined for "out_cb" will not receive stderr.  If you want to
 handle that separately, add an "err_cb" handler: >
     let job = job_start(command, {"out_cb": "MyHandler",
@@ -516,7 +521,7 @@ If the job can take some time and you don't need intermediate results, you can
 add a close callback and read the output there: >
 
 	func! CloseHandler(channel)
-	  while ch_status(a:channel) == 'buffered'
+	  while ch_status(a:channel, {'part': 'out'}) == 'buffered'
 	    echomsg ch_read(a:channel)
 	  endwhile
 	endfunc
@@ -593,9 +598,10 @@ See |job_setoptions()| and |ch_setoptions()|.
 						*job-exit_cb*
 "exit_cb": handler	Callback for when the job ends.  The arguments are the
 			job and the exit status.
-			Vim checks about every 10 seconds for jobs that ended.
-			The check also be triggered by calling |job_status()|,
-			which may then invoke the exit_cb handler.
+			Vim checks up to 10 times per second for jobs that
+			ended.  The check can also be triggered by calling
+			|job_status()|, which may then invoke the exit_cb
+			handler.
 			Note that data can be buffered, callbacks may still be
 			called after the process ends.
 							*job-timeout*
