@@ -63,8 +63,8 @@
 特殊なパターン<buffer>や<buffer=N>はバッファローカルな自動コマンドを定義する。
 |autocmd-buflocal|を参照。
 
-Note: '|' が {cmd} の前にある場合、 ":autocmd" コマンドの後には別のコマンドを
-続けることができる。これは動作する: >
+Note: '|' が {cmd} の前にある場合、":autocmd" コマンドの後には別のコマンドを続
+けることができる。これは動作する: >
 	:augroup mine | au! BufRead | augroup END
 しかし、これは定義されたコマンドの一部として "augroup" を見る: >
 	:augroup mine | au BufRead * set tw=70 | augroup END
@@ -135,8 +135,9 @@ Note [group] はあらかじめ定義されていなければならないこと�
 :au[tocmd]! [group] {event}
 			{event} に関連づけられた「全ての」自動コマンドを除去す
 			る。
-			警告: |BufRead| のグループなしでこれを行うべきではない
-			。プラグインや構文の強調表示などを中断することがでる。
+			警告: |BufRead| や他の一般的なイベントのためのグループ
+			なしでこれを行うべきではない。プラグインや構文のハイラ
+			イトなどを壊すことがある。
 
 :au[tocmd]! [group]	「全ての」自動コマンドを除去する。
 			警告: 通常はグループなしでこれを行うべきではない。プラ
@@ -562,10 +563,9 @@ CursorHold			'updatetime' の時間の間、ユーザーがキーを押さ
 				全てのGUI 版でのみ有効}
 							*CursorHoldI*
 CursorHoldI			CursorHoldと同様だが、挿入モードのとき発生す
-				る。
-                                例えば別のキーを待っているときにはトリガーされ
-                                ない。 CTRL-V の後ではなく、 CTRL-X モードのと
-                                き |insert_expand| ではない。
+				る。例えば別のキーを待っているとき、例えば
+				CTRL-V の後で、CTRL-X モード |insert_expand|
+				ではないときにはトリガーされない。
 							*CursorMoved*
 CursorMoved			ノーマルモードかビジュアルモードでカーソルが移
 				動した後。カーソル行のテキストが変更されたとき
@@ -783,7 +783,7 @@ QuickFixCmdPre			QuickFixコマンドが実行される前 (|:make|,
 				|:lgetfile|, |:laddfile|, |:helpgrep|,
 				|:lhelpgrep|, |:cexpr|, |:cgetexpr|,
 				|:caddexpr|, |:cbuffer|, |:cgetbuffer|,
-				|:caddbuffer|).
+				|:caddbuffer|)。
 				パターンには実行されるコマンドを記述する。
 				|:grep| が書かれていると、'grepprg' が
 				"internal" にセットされていても実行される。
@@ -942,7 +942,7 @@ VimEnter			ファイル .vimrc の読み込みを含む、全てのスター
 				   else
 				     au VimEnter * call s:init()
 				   endif
-							*VimLeave*
+<							*VimLeave*
 VimLeave			Vim を終了する前で、ファイル .viminfo を書き込
 				んだ後。VimLeavePre のように、ただ1度だけ実行
 				される。
@@ -1222,7 +1222,7 @@ NOTE オプション 'eventignore' はここにも適用されることに注意
 			れている場合はモードラインは処理されない。バッファの
 			ロード以外で使われるイベント (例えば |User|) などは
 			<nomodeline> を指定したほうがよいかもしれない。
-			一致する自動コマンドが実行されなかった場合も、モデルラ
+			一致する自動コマンドが実行されなかった場合も、モードラ
 			インの処理はスキップされる。
 
 						*:doautoa* *:doautoall*
