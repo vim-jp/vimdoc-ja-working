@@ -912,7 +912,7 @@ Vimサーバー:					*server-functions*
 	ch_close()		チャンネルを閉じる
 	ch_close_in()		チャンネルの入力パートを閉じる
 	ch_read()		チャンネルからメッセージを読み取る
-	ch_readraw()		チャンネルから raw メッセージを読み取る
+	ch_readraw()		チャンネルからrawメッセージを読み取る
 	ch_sendexpr()		チャンネルにJSONメッセージを送る
 	ch_sendraw()		チャンネルにrawメッセージを送る
 	ch_evalexpr()		チャンネル経由で式を評価する
@@ -924,10 +924,10 @@ Vimサーバー:					*server-functions*
 	ch_log()		チャンネルのログファイルにメッセージを出力する
 	ch_logfile()		チャンネルのログファイルを設定する
 	ch_setoptions()		チャンネルのオプションを設定する
-	json_encode()		式をJSONの文字列に変換する
-	json_decode()		JSONの文字列を式に変換する
-	js_encode()		式を JSON 文字列にエンコードする
-	js_decode()		JSON 文字列を Vim の型にデコードする
+	json_encode()		式をJSONの文字列にエンコードする
+	json_decode()		JSONの文字列を式にデコードする
+	js_encode()		式をJSONの文字列にエンコードする
+	js_decode()		JSONの文字列を式にデコードする
 
 Jobs:		    			        *job-functions*
 	job_startw()		Job を開始する
