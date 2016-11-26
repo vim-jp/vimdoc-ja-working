@@ -47,7 +47,7 @@ Copyright: Copyright (C) 2016 Charles E Campbell    *netrw-copyright*
       ブラウジングの紹介..................................|netrw-intro-browse|
       クイックリファレンス: マップ........................|netrw-browse-maps|
       クイックリファレンス: コマンド......................|netrw-browse-cmds|
-      Banner Display......................................|netrw-I|
+      バナーの表示を切り替える............................|netrw-I|
       ディレクトリをブックマークする......................|netrw-mb|
       ブラウジング........................................|netrw-cr|
       現在のツリー表示ディレクトリを閉じる................|netrw-s-cr|
@@ -75,13 +75,13 @@ Copyright: Copyright (C) 2016 Charles E Campbell    *netrw-copyright*
       ブラウジングディレクトリをカレントディレクトリにする |netrw-c|
       ファイルをマークする................................|netrw-mf|
       ファイルのマークを外す..............................|netrw-mF|
-      Marking Files By Location List......................|netrw-qL|
+      Location リストを使ってファイルをマークする.........|netrw-qL|
       QuickFix リストを使ってファイルをマークする.........|netrw-qF|
       正規表現を使ってファイルをマークする................|netrw-mr|
       マークファイル: シェルコマンド......................|netrw-mx|
       マークファイル: 一括シェルコマンド..................|netrw-mX|
       マークファイル: Vimコマンド.........................|netrw-mv|
-      Marked Files: Argument List.........................|netrw-ma| |netrw-mA|
+      マークファイル: 引数リスト..........................|netrw-ma| |netrw-mA|
       マークファイル: 圧縮と伸長..........................|netrw-mz|
       マークファイル: コピー..............................|netrw-mc|
       マークファイル: Diff................................|netrw-md|
@@ -1089,7 +1089,7 @@ QUICK HELP						*netrw-quickhelp* {{{2
 	   qb	ブックマークと履歴の一覧を表示する                   |netrw-qb|
 	   qf	ファイル情報を表示する                               |netrw-qf|
 	   qF	QuickFix リストを使ってファイルをマークする          |netrw-qF|
-	   qL	Mark files using a |location-list|                     |netrw-qL|
+	   qL	|location-list| を使ってファイルをマークする           |netrw-qF|
 	   r	ソート順を逆にする                                   |netrw-r|
 	   R	ファイル/ディレクトリ(複数可)の名前を変える          |netrw-R|
 	   s	ソート方法を変える: name, time, file size            |netrw-s|
@@ -1137,11 +1137,11 @@ QUICK HELP						*netrw-quickhelp* {{{2
      :Texplore[!] [dir] タブ & Explore.........................|netrw-explore|
      :Vexplore[!] [dir] 垂直分割 & Explore.....................|netrw-explore|
 
-BANNER DISPLAY						*netrw-I*
+バナーの表示を切り替える				*netrw-I*
 
-One may toggle the banner display on and off by pressing "I".
+"I" を押すことによってバナーの表示を切り替えることができます。
 
-Also See: |g:netrw_banner|
+以下も参照: |g:netrw_banner|
 
 
 ディレクトリをブックマークする {{{2
@@ -1224,19 +1224,18 @@ gui (gvim) では <leftmouse> (左クリック) でファイルを選択でき�
 新するには ctrl-L (|netrw-ctrl-l|参照) を押してください。
 
 								*netrw-s-cr*
-Squeezing the Current Tree-Listing Directory~
+現在のツリー表示ディレクトリを閉じる~
 
-When the tree listing style is enabled (see |netrw-i|) and one is using
-gvim, then the <s-cr> mapping may be used to squeeze (close) the
-directory currently containing the cursor.
+gvim でツリー表示をしているとき (|netrw-i| 参照)、<s-cr> を使うと、カーソルが
+置かれているディレクトリを閉じることができます。
 
-Otherwise, one may remap a key combination of one's own choice to get
-this effect: >
+あるいは、この効果をユーザが選択したキーの組み合わせにリマップすることができま
+す: >
 
     nmap <buffer> <silent> <nowait> YOURKEYCOMBO  <Plug>NetrwTreeSqueeze
 <
-Put this line in $HOME/ftplugin/netrw/netrw.vim; it needs to be generated
-for netrw buffers only.
+この行を $HOME/ftplugin/netrw/netrw.vim に置いてください。netrw バッファのみに
+生成される必要があります。
 
 関連トピック:
 	|netrw-ctrl-r|	|netrw-o|	|netrw-p|
@@ -1478,18 +1477,15 @@ gx マッピングはすべてのバッファに適用できます。カーソ�
 (|visual-start| 参照) により選択することもできます。通常 gx はカーソル位置のテ
 キストを取得するのに expand("<cfile>") を使用しますが、|g:netrw_gx| 変数で
 |expand()| が使用する引数を変えることができます。また、代わりに gx で使用する
-テキストを最初にビジュアル選択を行っておくことで選択することもできます
+テキストを最初にビジュアル選択を行っておくか、|'isfname'| オプション (グローバル
+なので netrw は変更しません) を変更することで選択することもできます
 (|visual-block| 参照)。
- Alternatively, one may select the text to be used by
--gx via first making a visual selection (see |visual-block|).
-+gx via first making a visual selection (see |visual-block|) or by changing
-+the |'isfname'| option (which is global, so netrw doesn't modify it).
 
 関連設定:
 	|g:netrw_gx|	gx がどのようにカーソル位置のテキストを取得するか制御
 			する
 	|g:netrw_nogx|	編集中 gx マップを無効にする
-	|g:netrw_suppress_gx_mesg| controls gx's suppression of browser messages
+	|g:netrw_suppress_gx_mesg| gx がブラウザーの出力を抑制するか制御する
 
 							*netrw_filehandler*
 
@@ -1699,13 +1695,9 @@ g:netrw_rmdir_cmd によるディレクトリの削除が失敗した場合は�
 スターとパターンを使った探索 {{{2
 
 Explore, Sexplore, Hexplore, Vexplore それぞれのコマンドで、次のようなパターン
-が使われた場合、Explore はそれにマッチするようなファイルのリストを生成します。
- When Explore, Sexplore, Hexplore, or Vexplore are used with one of the
--following four patterns Explore generates a list of files which satisfy
--the request. >
-+following four patterns Explore generates a list of files which satisfy the
-+request for the local file system.  These exploration patterns will not work
-+with remote file browsing.
+が使われた場合、Explore はそれにマッチするようなファイルのリストをローカルファ
+イルシステムに対して生成します。これらの探索パターンはリモートファイルのブラウ
+ジングに対しては機能しません。
 >
     */filepat	カレントディレクトリの、filepat にマッチするファイル
     **/filepat	カレントディレクトリとそれ以下のディレクトリの、filepat にマッ
@@ -2059,9 +2051,9 @@ netrw はファイルをマークする方法をいくつか提供していま�
 <
 	* (Note: :MF の引数は |<f-args>| として、空白区切りで解釈される)
 
-	* Mark files using the |argument-list| (|netrw-mA|)
+	* |argument-list| を使用してファイルをマークする (|netrw-mA|)
 
-	* Mark files based upon a |location-list| (|netrw-qL|)
+	* |location-list| 上のファイルをマークする (|netrw-qL|)
 
 	* クイックフィックスリストに基づいてマークする (|netrw-qF|)
 	  (|quickfix-error-lists|)
@@ -2070,10 +2062,10 @@ netrw はファイルをマークする方法をいくつか提供していま�
 
     |netrw-a|	ファイル/ディレクトリを隠す
     |netrw-D|	ファイル/ディレクトリを削除する
-    |netrw-ma|	Move marked files' names to |arglist|
-    |netrw-mA|	Move |arglist| filenames to marked file list
-    |netrw-mb|	マークされたファイルをブックマークに追加する
-    |netrw-mB|	マークされたファイルをブックマークから削除する
+    |netrw-ma|	マークしたファイルを |arglist| に移動する
+    |netrw-mA|	|arglist| をマークしたファイルに移動する
+    |netrw-mb|	マークしたファイルをブックマークに追加する
+    |netrw-mB|	マークしたファイルをブックマークから削除する
     |netrw-mc|	ファイルをターゲットディレクトリにコピーする
     |netrw-md|	マークしたファイルに vimdiff を適用する
     |netrw-me|	マークしたファイルを開く
@@ -2129,14 +2121,14 @@ netrw はファイルをマークする方法をいくつか提供していま�
 できます。ファイルごとに個別にマークを外したい場合は mf (|netrw-mf|) を使いま
 す。
 
-MARKING FILES BY LOCATION LIST					*netrw-qL* {{{2
+Location リストを使ってファイルをマークする			*netrw-qL* {{{2
 	(also see |netrw-mf|)
 
-One may convert |location-list|s into a marked file list using "qL".
-You may then proceed with commands such as me (|netrw-me|) to edit them.
+|location-list| のファイルをマークするには "qL" を使います。続けて me
+(|netrw-me|) などのコマンドを使うとそれらのファイルを開くことができます。
 
 
-QUICKFIX リストを使ってファイルをマークする		*netrw-qF* {{{2
+QUICKFIX リストを使ってファイルをマークする			*netrw-qF* {{{2
 	(|netrw-mf| も参照)
 
 |quickfix-error-lists| のファイルをマークするには "qF" を使います。続けて me
@@ -2211,15 +2203,14 @@ regexp: " というプロンプトが表示されるので、例えば *.c$ の�
 
 	tar cf mynewtarball.tar 'file1' 'file2' ...
 
+マークファイル: 引数リスト				*netrw-ma* *netrw-mA*
+	     (マークの設定方法は |netrw-mf| と |netrw-mr| を参照)
+		     (グローバルマークファイルリスト使用)
 
-MARKED FILES: ARGUMENT LIST				*netrw-ma* *netrw-mA*
-	    (See |netrw-mf| and |netrw-mr| for how to mark files)
-		      (uses the global marked-file list)
+ma を使うと、マークファイルリストを引数リストに移動します。
+mA を使うと、引数リストをマークファイルリストに移動します。
 
-Using ma, one moves filenames from the marked file list to the argument list.
-Using mA, one moves filenames from the argument list to the marked file list.
-
-See Also: |netrw-qF| |argument-list| |:args|
+参照: |netrw-qF| |argument-list| |:args|
 
 
 マークファイル: 圧縮と伸長				*netrw-mz* {{{2
@@ -2232,9 +2223,6 @@ See Also: |netrw-qF| |argument-list| |:args|
 
 伸長には、拡張子と伸長コマンドを関連付けた |Dictionary| が使われます。
 |g:netrw_decompress| 参照。
--For decompression, netrw provides a |Dictionary| of suffices and their
-+For decompression, netrw uses a |Dictionary| of suffices and their
- associated decompressing utilities; see |g:netrw_decompress|.
 
 正規表現で複数ファイルをマークできることを思い出してください (|netrw-mr|参照)。
 これはたくさんのファイルを圧縮・解凍するのに便利です。
@@ -2737,15 +2725,15 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 				この変数を定義するとバルーン評価は抑制される。
 				(参照 |'ballooneval'|)
 
- *g:netrw_sizestyle*		not defined: actual bytes (default)
- 				="b" : actual bytes       (default)
- 				="h" : human-readable (ex. 5k, 4m, 3g)
-				       uses 1000 base
- 				="H" : human-readable (ex. 5K, 4M, 3G)
-				       uses 1024 base
-				The long listing (|netrw-i|) and query-file
-				maps (|netrw-qf|) will display file size
-				using the specified style.
+ *g:netrw_sizestyle*		未定義: 実際のバイト数 (デフォルト)
+ 				="b" : 実際のバイト数  (デフォルト)
+ 				="h" : 人間が読める形式 (例: 5k, 4m, 3g)
+				       1000 ベース
+ 				="H" : 人間が読める形式 (例: 5K, 4M, 3G)
+				       1024 ベース
+				long 形式の一覧表示スタイル (|netrw-i|) と
+				query-file maps (|netrw-qf|) はファイルサイズを
+				指定されたスタイルで表示します。
 
   *g:netrw_usetab*		もしこの変数が存在し、その値が 非0 なら、<tab>
 				マップは Lexplore または netrw ウィンドウの縮
@@ -2864,13 +2852,12 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 				に使われます。
 				 初期設定: ssh
 
- *g:netrw_suppress_gx_mesg*	=1 : browsers sometimes produce messages
-				which are normally unwanted intermixed
-				with the page.
-				However, when using links, for example,
-				those messages are what the browser produces.
-				By setting this option to 0, netrw will not
-				suppress browser messages.
+ *g:netrw_suppress_gx_mesg*	=1 : ブラウザーは時々、ページと入り混じった
+				不必要と思われるメッセージを出力することがあり
+				ます。しかし、例えば links を使用している時、
+				それらの出力はブラウザーが出力したものです。
+				このオプションを 0 にセットすることで、netrw
+				はブラウザーのメッセージを抑制しなくなります。
 
   *g:netrw_tmpfile_escape*	=' &;'
 				一時ファイルを escape() で処理するときに使われ
@@ -3024,15 +3011,9 @@ netrw を次のように設定すると便利かもしれません: >
 
 以前のウィンドウ				*netrw-P* *netrw-prvwin* {{{2
 
-ファイル/ディレクトリを以前の (最後にアクセスした) ウィンドウ (:he |CTRL-W_p|)
-で開くには、"P" を押します。ウィンドウが 1 つしかない場合は、新しいウィンドウ
-が水平分割 (初期設定) で作成されます。
--To edit a file or directory in the previously used (last accessed) window (see
--:he |CTRL-W_p|), press a "P".  If there's only one window, then the one window
--will be horizontally split (by default).
-+To edit a file or directory under the cursor in the previously used (last
-+accessed) window (see :he |CTRL-W_p|), press a "P".  If there's only one
-+window, then the one window will be horizontally split (by default).
+カーソル下のファイル/ディレクトリを以前の (最後にアクセスした) ウィンドウ
+(:he |CTRL-W_p|) で開くには、"P" を押します。ウィンドウが 1 つしかない場合は、
+新しいウィンドウが水平分割 (初期設定) で作成されます。
 
 ウィンドウが複数ある場合は、以前のウィンドウを使ってファイル/ディレクトリが開
 かれます。以前のウィンドウで表示されているバッファに未保存の変更があり、その
@@ -3631,17 +3612,10 @@ netrw#Call("funcname"[,args])        netrw の内部関数を指定の引数で
 	vim -u netrw.vimrc --noplugins -i NONE [他にパスがあればここに追加]
 <
 必要な netrw のコマンドを実行し、問題がまだ起きていることを確認してください。
-この手順は個人の .vimrc の設定や他のプラグインによる問題を回避するためです。も
-し問題が再現しなくなったら、あなたの .vimrc のどの設定が netrw かあるいは他の
-プラグインと衝突しているかを見極める必要があります。
- Perform whatever netrw commands you need to, and check that the problem is
- still present.  This procedure sidesteps any issues due to personal .vimrc
--settings and other plugins.  If the problem does not appear, then you need
--to determine what setting in your .vimrc is causing the conflict with netrw
--or which plugin.
-+settings, .viminfo file, and other plugins.  If the problem does not appear,
-+then you need to determine which setting in your .vimrc is causing the
-+conflict with netrw or which plugin(s) is/are involved.
+この手順は個人の .vimrc の設定、.viminfo ファイル、他のプラグインによる問題を
+回避するためです。もし問題が再現しなくなったら、あなたの .vimrc のどの設定が
+netrw かあるいは関与している他のプラグインと衝突しているかを見極める必要があり
+ます。
 
 ステップ3: 問題がまだ起きているようなら、netrw からデバッグトレースを取得して
 ください:
