@@ -1229,7 +1229,7 @@ gui (gvim) では <leftmouse> (左クリック) でファイルを選択でき�
 gvim でツリー表示をしているとき (|netrw-i| 参照)、<s-cr> を使うと、カーソルが
 置かれているディレクトリを閉じることができます。
 
-あるいは、この効果をユーザが選択したキーの組み合わせにリマップすることができま
+あるいは、この効果をユーザーが選択したキーの組み合わせにリマップすることができま
 す: >
 
     nmap <buffer> <silent> <nowait> YOURKEYCOMBO  <Plug>NetrwTreeSqueeze
