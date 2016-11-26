@@ -1141,7 +1141,7 @@ QUICK HELP						*netrw-quickhelp* {{{2
 
 "I" を押すことによってバナーの表示を切り替えることができます。
 
-以下も参照: |g:netrw_banner|
+参照: |g:netrw_banner|
 
 
 ディレクトリをブックマークする {{{2
