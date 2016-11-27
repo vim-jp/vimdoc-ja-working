@@ -63,7 +63,7 @@ Copyright: Copyright (C) 2005-2015 Charles E Campbell	 *zip-copyright*
 <
 							*g:zip_extractcmd*
    このオプションは zip アーカイブからファイルを解凍する為のプログラム(とそれ
-   に必要なオプション)を指定する。初期設定: >
+   に必要なオプション)を指定します。初期設定: >
    	let g:zip_extractcmd= g:zip_unzipcmd
 <
    ロードの無効化~
