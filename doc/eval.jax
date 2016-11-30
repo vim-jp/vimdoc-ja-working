@@ -1648,8 +1648,9 @@ v:mouse_win	|getchar()|でマウスクリックイベントを取得したとき
 		まる。マウスがクリックされなかったときは0となる。
 
 					*v:mouse_winid* *mouse_winid-variable*
-v:mouse_winid	Window ID for a mouse click obtained with |getchar()|.
-		The value is zero when there was no mouse button click.
+v:mouse_winid	|getchar()|でマウスクリックインベントを取得したとき、この変数
+		にウィンドウIDが代入されている。マウスがクリックされていないと
+		きは0になる。
 
 					*v:mouse_lnum* *mouse_lnum-variable*
 v:mouse_lnum	|getchar()|でマウスクリックイベントを取得したとき、この変数に
