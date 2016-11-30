@@ -7482,7 +7482,7 @@ test_disable_char_avail({expr})
 
 test_garbagecollect_now()			 *test_garbagecollect_now()*
 		garbagecollect() とほぼ同じであるが、
-		この関数はガベージコレクトを直ちに実行する。
+		この関数はガーベッジコレクトを直ちに実行する。
 		この関数を実行する場合は、
 		構造体が内部に存在しないようにするために
 		直ちに呼び出す必要がある。
