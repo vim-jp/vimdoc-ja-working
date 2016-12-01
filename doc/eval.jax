@@ -7462,42 +7462,37 @@ tempname()
 
 
 test_alloc_fail({id}, {countdown}, {repeat})		*test_alloc_fail()*
-		この関数はテストのために使われる。
-		{id} のメモリ割り当てが行われた際に
-		{countdown} はデクリメントされ、それが 0 になれば
-		{repeat} 回のメモリの割り当ての失敗を発生させる。
-		{repeat} が 1 未満の場合は、失敗を 1 回のみ発生させる。
+		この関数はテストのために使われる: {id} のメモリ割り当てが行わ
+		れた際に {countdown} はデクリメントされ、それが0になれば
+		{repeat} 回のメモリの割り当ての失敗を発生させる。{repeat} が1
+		未満の場合は、失敗を1回のみ発生させる。
 
 test_autochdir()					*test_autochdir()*
 		Vimの起動が完了する前に 'autochdir' を有効にする。
 
 						*test_disable_char_avail()*
 test_disable_char_avail({expr})
-		{expr} が 1 であれば、
-		内部の char_avail() 関数は |FALSE| を返すようになる。
-		{expr} が 0 であれば、 char_avail() 関数は通常通り機能する。
-		これは、入力によってテストが動作しない場合のみに使用される。
-		例:
-			CursorMovedI イベントを起動したい場合
+		{expr} が 1 であれば、内部の char_avail() 関数は |FALSE| を返
+		すようになる。{expr} が 0 であれば、 char_avail() 関数は通常通
+		り機能する。これは、入力によってテストが動作しない場合のみに使
+		用される。例:CursorMovedI イベントを起動したい場合
 
 test_garbagecollect_now()			 *test_garbagecollect_now()*
-		garbagecollect() とほぼ同じであるが、
-		この関数はガーベッジコレクトを直ちに実行する。
-		この関数を実行する場合は、
-		構造体が内部に存在しないようにするために
-		直ちに呼び出す必要がある。
-		また、この関数を呼び出す前に |v:testing| を設定する必要がある。
+		garbagecollect() とほぼ同じであるが、この関数はガーベッジコレ
+		クトを直ちに実行する。この関数を実行する場合は、構造体が内部に
+		存在しないようにするために直ちに呼び出す必要がある。また、この
+		関数を呼び出す前に |v:testing| を設定する必要がある。
 
 test_null_channel()					*test_null_channel()*
 		空の Channel を返す。 これはテストのみに使われる。
-		{|+channel| 機能つきでコンパイルされたときのみ}
+		{|+channel| 機能つきでコンパイルされたときのみ有効}
 
 test_null_dict()					*test_null_dict()*
 		空の Dict を返す。 これはテストのみに使われる。
 
 test_null_job()						*test_null_job()*
 		空の Job を返す。 これはテストのみに使われる。
-		{|+job| 機能つきでコンパイルされたときのみ}
+		{|+job| 機能つきでコンパイルされたときのみ有効}
 
 test_null_list()					*test_null_list()*
 		空の List を返す。 これはテストのみに使われる。
@@ -7509,12 +7504,10 @@ test_null_string()					*test_null_string()*
 		空の String を返す。 これはテストのみに使われる。
 
 test_settime({expr})					*test_settime()*
-		Vim が内部的に用いる時間を設定する。
-		現在は
-		history のタイムスタンプ、viminfo のタイムスタンプ、
-		undo に使用されている。
-		{expr} には、数値が設定される。
-		また {expr} に 0 を渡せば、Vimの内部時間は通常動作に戻る。
+		Vim が内部的に用いる時間を設定する。現在はhistory のタイムスタ
+		ンプ、viminfo のタイムスタンプ、undo に使用されている。{expr}
+		には、数値が設定される。また {expr} に 0 を渡せば、Vimの内部時
+		間は通常動作に戻る。
 
 							*timer_info()*
 timer_info([{id}])
