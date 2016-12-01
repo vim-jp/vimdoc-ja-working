@@ -2498,8 +2498,9 @@ assert_false({actual} [, {msg}])				*assert_false()*
 assert_inrange({lower}, {upper}, {actual} [, {msg}])	 *assert_inrange()*
 		これは数値の値かをテストする。{actual}が{lower}より低いか
 		{upper}より大きい場合、|v:errors|にエラーメッセージが追加され
-		る。{msg}を省略すると、"Expected range {lower} - {upper}, but
-		got {actual}"という形式のエラーが生成される。
+		る。
+		{msg}を省略すると、"Expected range {lower} - {upper}, but
+		got {actual}" という形式のエラーが生成される。
 
 								*assert_match()*
 assert_match({pattern}, {actual} [, {msg}])
@@ -2522,7 +2523,7 @@ assert_match({pattern}, {actual} [, {msg}])
 
 							*assert_notequal()*
 assert_notequal({expected}, {actual} [, {msg}])
-		`assert_equal() `の反対: {expected}と{actual}が等しいときにエ
+		`assert_equal()` の反対: {expected}と{actual}が等しいときにエ
 		ラーメッセージを |v:errors| に追加する。
 
 							*assert_notmatch()*
