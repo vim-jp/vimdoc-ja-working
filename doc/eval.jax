@@ -2511,14 +2511,14 @@ assert_match({pattern}, {actual} [, {msg}])
 		'cpoptions' の実際の値に関係なく、'magic' が設定さ
 		れ、'cpoptions' が空であるように常に行われる。
 
-		{actual}は文字列として使用され、自動変換が適用される。"^" と
-		"$" を使用して、テキストの先頭と最後に一致させる。両方を使用し
-		てテキスト全体を一致させる。
+		{actual}は文字列として使用され、自動変換が適用される。テキスト
+		の先頭と最後に一致させるためには、"^" と "$" を使用すること。
+		(使わなければ、部分一致で判定が行われる。)
 
 		{msg}を省略すると、"Pattern {pattern} does not match {actual}"
 		という形式のエラーが生成される。例: >
 	assert_match('^f.*o$', 'foobar')
-<		結果は |v:errors| に追加される文字列になる:
+<		これは |v:errors| に文字列が追加されることになる:
 	test.vim line 12: Pattern '^f.*o$' does not match 'foobar' ~
 
 							*assert_notequal()*
