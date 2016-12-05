@@ -7479,33 +7479,33 @@ test_disable_char_avail({expr})
 
 test_garbagecollect_now()			 *test_garbagecollect_now()*
 		garbagecollect() とほぼ同じであるが、この関数はガーベッジコレ
-		クトを直ちに実行する。この関数を実行する場合は、構造体が内部に
-		存在しないようにするために直ちに呼び出す必要がある。また、この
-		関数を呼び出す前に |v:testing| を設定する必要がある。
+		クトを直接実行する。この関数を実行する場合は、構造体が内部に存
+		在しないようにするために直ちに呼び出す必要がある。また、この関
+		数を呼び出す前に |v:testing| を設定する必要がある。
 
 test_null_channel()					*test_null_channel()*
-		空の Channel を返す。 これはテストのみに使われる。
+		null の Channel を返す。これはテストのみに使われる。
 		{|+channel| 機能つきでコンパイルされたときのみ有効}
 
 test_null_dict()					*test_null_dict()*
-		空の Dict を返す。 これはテストのみに使われる。
+		null の Dict を返す。これはテストのみに使われる。
 
 test_null_job()						*test_null_job()*
-		空の Job を返す。 これはテストのみに使われる。
+		null の Job を返す。これはテストのみに使われる。
 		{|+job| 機能つきでコンパイルされたときのみ有効}
 
 test_null_list()					*test_null_list()*
-		空の List を返す。 これはテストのみに使われる。
+		null の List を返す。これはテストのみに使われる。
 
 test_null_partial()					*test_null_partial()*
-		空の Partial を返す。 これはテストのみに使われる。
+		null の Partial を返す。これはテストのみに使われる。
 
 test_null_string()					*test_null_string()*
-		空の String を返す。 これはテストのみに使われる。
+		null の String を返す。これはテストのみに使われる。
 
 test_settime({expr})					*test_settime()*
-		Vim が内部的に用いる時間を設定する。現在はhistory のタイムスタ
-		ンプ、viminfo のタイムスタンプ、undo に使用されている。{expr}
+		Vim が内部的に用いる時間を設定する。現在は history のタイムス
+		タンプ、viminfo のタイムスタンプ、undo に使用されている。{expr}
 		には、数値が設定される。また {expr} に 0 を渡せば、Vimの内部時
 		間は通常動作に戻る。
 
