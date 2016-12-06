@@ -7479,8 +7479,8 @@ test_disable_char_avail({expr})
 
 test_garbagecollect_now()			 *test_garbagecollect_now()*
 		garbagecollect() とほぼ同じであるが、この関数はガーベッジコレ
-		クトを直接実行する。この関数を実行する場合は、構造体が内部に存
-		在しないようにするために直ちに呼び出す必要がある。また、この関
+		クトを直ちに実行する。この関数を実行する場合は、構造体が内部に
+		存在しないようにするために直接呼び出す必要がある。また、この関
 		数を呼び出す前に |v:testing| を設定する必要がある。
 
 test_null_channel()					*test_null_channel()*
