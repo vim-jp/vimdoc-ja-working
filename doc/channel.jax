@@ -671,7 +671,7 @@ job_setoptions(job, {options}) を使用して、ジョブの開始後にいく�
 			channel output..." に設定される
 
 				*job-err_io* *err_name* *err_buf*
-"err_io": "out"		stderr のメッセージを stdout に行く
+"err_io": "out"		stderr のメッセージは stdout に行く
 "err_io": "null"	stderr を切断する(/dev/nullに行く)
 "err_io": "pipe"	stderr がチャンネルに接続されている(デフォルト)
 "err_io": "file"	stderr はファイルに書き込む
