@@ -7775,31 +7775,31 @@ wildmenumode()					*wildmenumode()*
 
 
 win_findbuf({bufnr})					*win_findbuf()*
-		Returns a list with |window-ID|s for windows that contain
-		buffer {bufnr}.  When there is none the list is empty.
+		バッファ {bufnr} が含まれているウィンドウについて |window-ID|
+		のリストを返す。存在しない場合は空のリストになる。
 
 win_getid([{win} [, {tab}]])				*win_getid()*
-		Get the |window-ID| for the specified window.
-		When {win} is missing use the current window.
-		With {win} this is the window number.  The top window has
-		number 1.
-		Without {tab} use the current tab, otherwise the tab with
-		number {tab}.  The first tab has number one.
-		Return zero if the window cannot be found.
+		特定のウィンドウに関する |window-ID|を得る。
+		{win} が未指定の時は現在のウィンドウとなる。
+		この {win} はウィンドウ番号である。トップウィンドウは番号 1 を
+		持つ。{tab} が未指定の場合現在のタブが使用され、{tab} が番号
+		で指定された場合はそのタブとなる。最初のタブ番号は 1 である。
+		ウィンドウが見付からない場合には 0 を返す。
 
 win_gotoid({expr})					*win_gotoid()*
-		Go to window with ID {expr}.  This may also change the current
-		tabpage.
-		Return 1 if successful, 0 if the window cannot be found.
+		{expr} の ID で示されるウィンドウへ移動する。これは現在のタブ
+		ページも移動する。
+		成功した場合は 1 を、ウィンドウが見付からない場合は 0 を返す。
 
 win_id2tabwin({expr})					*win_id2tabwin()*
-		Return a list with the tab number and window number of window
-		with ID {expr}: [tabnr, winnr].
-		Return [0, 0] if the window cannot be found.
+		{expr} の ID で示されるタブ番号とウィンドウ番号のリストを返す:
+		[tabnr, winnr]
+		ウィンドウが見付からなかった場合は [0, 0] を返す。
 
 win_id2win({expr})					*win_id2win()*
-		Return the window number of window with ID {expr}.
-		Return 0 if the window cannot be found in the current tabpage.
+		{expr} の ID で示されるウィンドウのウィンドウ番号を返す。
+		現在のタブページ内でそのウィンドウが見付からなかった場合は 0
+		を返す。
 
 							*winbufnr()*
 winbufnr({nr})	結果は数値で、{nr}番目のウィンドウに関連付けられているバッファ
