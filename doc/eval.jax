@@ -4955,7 +4955,7 @@ items({dict})						*items()*
 		の要素の順序は不定である。
 
 job_getchannel({job})					 *job_getchannel()*
-		{job}が使用しているチャネルハンドルを取得する。
+		{job}が使用しているチャンネルハンドルを取得する。
 		ジョブにチャンネルがないかどうかを確認するには: >
 			if string(job_getchannel()) == 'channel fail'
 <
@@ -4984,12 +4984,12 @@ job_start({command} [, {options}])			*job_start()*
 
 		{command}はリストにでき、最初の項目は実行可能ファイルであり、
 		残りの項目は引数である。すべての項目は文字列に変換される。これ
-		はUnix上で最適である。
+		はUnixで最も効果的である。
 
 		MS-Windowsでは、|job_start()|はGUIアプリケーションを隠す。それ
 		を表示したい場合は、|:!start|を代わりに使用すること。
 
-		コマンドはシェルではなく直接実行され、'shell'オプションは使用
+		コマンドはシェルではなく直接実行され、'shell' オプションは使用
 		されない。シェルを使用するには: >
 	let job = job_start(["/bin/sh", "-c", "echo hello"])
 <		または: >
