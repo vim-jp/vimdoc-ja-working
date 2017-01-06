@@ -4965,7 +4965,7 @@ job_info({job})						*job_info()*
 		{job}に関する情報を持つ辞書を返す:
 		   "status"	|job_status()|が返すもの
 		   "channel"	|job_getchannel()|が返すもの
-		   "exitval"	"status"が"dead"ときのみ有効
+		   "exitval"	"status" が "dead" のときのみ有効
 		   "exit_cb"	終了時に呼び出される関数
 		   "stoponexit"	|job-stoponexit|
 
@@ -4995,8 +4995,8 @@ job_start({command} [, {options}])			*job_start()*
 <		または: >
 	let job = job_start('/bin/sh -c "echo hello"')
 <		これは2つのプロセス、シェルとそれが実行するコマンドを開始する
-		ことに注意すること。これを望まない場合は、"exec"シェルコマンド
-		を使用する。
+		ことに注意すること。これを望まない場合は、"exec" シェルコマン
+		ドを使用する。
 
 		Unixでは$PATHは、コマンドにスラッシュが含まれていない場合にの
 		み実行可能ファイルを検索するために使用される。
@@ -5021,7 +5021,7 @@ job_status({job})					*job_status()* *E916*
 			"dead"	ジョブが死んだか実行後にジョブが停止した
 
 		Unixでは存在しないコマンドは、失敗が検出される前にフォークが発
-		生するため、"fail"ではなく"dead"になる。
+		生するため、"fail" ではなく "dead" になる。
 
 		exitコールバックが "exit_cb" オプションで設定され、ジョブが
 		"dead" と検出された場合、コールバックが呼び出される。
