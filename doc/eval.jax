@@ -5039,7 +5039,7 @@ job_stop({job} [, {how}])					*job_stop()*
 		で、子供たちも影響を受けるかもしれない。
 
 		UNIXへの影響:
-			"term"	 SIGTERM (既定)
+			"term"	 SIGTERM (規定)
 			"hup"	 SIGHUP
 			"quit"	 SIGQUIT
 			"int"	 SIGINT
@@ -5047,7 +5047,7 @@ job_stop({job} [, {how}])					*job_stop()*
 			number	 その番号の信号
 
 		MS-Windowsへの影響:
-			"term"	 プロセスを強制終了 (既定)
+			"term"	 プロセスを強制終了 (規定)
 			"hup"	 CTRL_BREAK
 			"quit"	 CTRL_BREAK
 			"int"	 CTRL_C
@@ -7000,3 +7000,3220 @@ strcharpart({src}, {start}[, {len}])			*strcharpart()*
 strdisplaywidth({expr}[, {col}])			*strdisplaywidth()*
 		結果は数値で、文字列 {expr} が {col} で始まる時のスクリーン上
 		での表示セル幅を返す。
+		{col} が省略されたときはゼロが使われる。{col} には計算を開始す
+		るスクリーン上の列の位置を指定する。これはタブ文字の幅の計算に
+		影響する。
+		計算にはカレントウィンドウのオプションが使用される。'tabstop'
+		や 'display' のような表示を変更するようなオプションが影響す
+		る。
+		{expr} に幅が曖昧 (Ambiguous) な東アジアの文字が含まれていると
+		きは、文字幅は 'ambiwidth' の設定に依存する。
+		|strlen()|, |strwidth()|, |strchars()| も参照。
+
+							*strftime()*
+strftime({format} [, {time}])
+		結果は文字列で、{format}に従って日付や時間がフォーマットされた
+		ものになる。{time}が与えられた場合にはそれを使うが、省略された
+		場合には現在時刻を使用する。受け付け可能な文字列{format}は使用
+		するシステムに依存するので、ポータブルとは言えない。フォーマッ
+		トについてはCの関数strftime()のマニュアルを参照。結果は最大80
+		文字に制限される。|localtime()|と|getftime()|も参照。
+		ここで使われる言語はコマンド|:language|で変更できる。
+		例: >
+		  :echo strftime("%c")		   Sun Apr 27 11:49:23 1997
+		  :echo strftime("%Y %b %d %X")	   1997 Apr 27 11:53:25
+		  :echo strftime("%y%m%d %T")	   970427 11:53:55
+		  :echo strftime("%H:%M")	   11:55
+		  :echo strftime("%c", getftime("file.c"))
+						   file.cの更新時刻を表示
+<		この関数はどのシステムでも利用できるとは限らない。利用できるか
+		チェックするには次のようにする: >
+			:if exists("*strftime")
+
+strgetchar({str}, {index})				*strgetchar()*
+		Get character {index} from {str}.  This uses a character
+		index, not a byte index.  Composing characters are considered
+		separate characters here.
+		Also see |strcharpart()| and |strchars()|.
+
+stridx({haystack}, {needle} [, {start}])		*stridx()*
+		結果は数値で、{heystack}の中で文字列{needle}が最初に現れる位置
+		のバイトインデックスを表す。{start}を指定すると、インデックス
+		{start}の位置から検索を開始する。
+		2番目のマッチを探すには次のようにする: >
+			:let colon1 = stridx(line, ":")
+			:let colon2 = stridx(line, ":", colon1 + 1)
+<		検索は大文字・小文字を区別する。
+		検索パターンについては|match()|を使う。
+		{haystack}の中に{needle}がないときは-1を返す。
+		|strridx()|も参照。
+		例: >
+		  :echo stridx("An Example", "Example")	     3
+		  :echo stridx("Starting point", "Start")    0
+		  :echo stridx("Starting point", "start")   -1
+<						*strstr()* *strchr()*
+		stridx()はCの関数strstr()と同じように動作する。{needle}が1文字
+		のときはstrchr()と同じように動作する。
+
+							*string()*
+string({expr})	{expr}を文字列に変換して返す。{expr}が数値、浮動小数点数、文字
+		列、それらの複合の場合は、この戻り値を|eval()|でパースして復元
+		できる。
+			{expr} 型	結果 ~
+			文字列		'string' (シングルクォートは二重化され
+					る)
+			数値		123
+			浮動小数点数	123.123456 or 1.123456e8
+			Funcref		function('name')
+			リスト		[item, item]
+			辞書		{key: value, key: value}
+		リストや辞書に循環参照がある場合、それらは "[...]" や "{...}"
+		に置き換えられる。その結果に対して eval() を使用すると失敗す
+		る。
+		|strtrans()|も参照。
+
+							*strlen()*
+strlen({expr})	結果は数値で、文字列{expr}のバイト単位での長さ。
+		引数が数値の場合は、まず文字列に変換される。
+		それ以外の型の場合はエラーとなる。
+		マルチバイト文字の数を数える場合は|strchars()|を使用する。
+		|len()|, |strdisplaywidth()|, |strwidth()| も参照。
+
+strpart({src}, {start}[, {len}])			*strpart()*
+		結果は文字列で、{src}の{start}番目の文字から始まる、長さ{len}
+		の部分文字列。
+		バイト数ではなく文字数で数えるには |strcharpart()| を用いる。
+		存在しない文字を含むように範囲を指定しても、エラーにはならな
+		い。単に文字が省略されるだけである。
+		{len}を省略すると、{start}から{src}の末尾までの部分文字列を返
+		す。 >
+			strpart("abcdefg", 3, 2)    == "de"
+			strpart("abcdefg", -2, 4)   == "ab"
+			strpart("abcdefg", 5, 4)    == "fg"
+			strpart("abcdefg", 3)       == "defg"
+<		Note: 文字列の最初の文字を指定するためには、{start}は0でなけれ
+		ばならない。カーソルのある位置から3文字を取得する例: >
+			strpart(getline("."), col(".") - 1, 3)
+<
+strridx({haystack}, {needle} [, {start}])			*strridx()*
+		結果は数値で、{haystack}の中で文字列{needle}が最後に現れる位置
+		のバイトインデックスとなる。
+		{start}を指定すると、そのインデックス以降でのマッチは無視され
+		る。前のマッチより前にあるものを見つけるには次のようにする: >
+			:let lastcomma = strridx(line, ",")
+			:let comma2 = strridx(line, ",", lastcomma - 1)
+<		検索は大文字・小文字を区別する。
+		検索パターンについては|match()|を使う。
+		{haystack}の中に{needle}がないときは-1を返す。
+		{needle}が空文字列のときは{haystack}の長さを返す。
+		|stridx()|も参照。例: >
+		  :echo strridx("an angry armadillo", "an")	     3
+<							*strrchr()*
+		{needle}が1文字の場合はCの関数strrchr()と同じように動作する。
+
+							*strtrans()*
+strtrans({expr})
+		結果は文字列で、{expr}内の表示不可能な文字を|'isprint'|で指定
+		される、表示可能な文字に変換したもの。ウィンドウに表示すること
+		ができるようになる。例: >
+			echo strtrans(@a)
+<		これはレジスタの中の改行を、改行として表示する代わりに "^@" と
+		表示する。
+
+strwidth({expr})					*strwidth()*
+		結果は数値で、文字列 {expr} のスクリーン上での表示セル幅を返
+		す。タブ文字の幅は 1 として数えられる (タブ文字の幅も考慮した
+		い場合は|strdisplaywidth()| を使うこと)。
+		{expr} に幅が曖昧 (Ambiguous) な東アジアの文字が含まれていると
+		きは、文字幅は 'ambiwidth' の設定に依存する。
+		|strlen()|, |strdisplaywidth()|, |strchars()| も参照。
+
+submatch({nr}[, {list}])			*submatch()* *E935*
+		|:substitute| や substitute() 関数の中の式でのみ使われる。
+		マッチしたテキストの{nr} 番目の部分マッチを返す。{nr}が0のとき
+		はマッチしたテキスト全体を返す。
+		Note: 文字列中の NL 文字は複数行マッチにおける改行文字か、NUL
+		文字のどちらかである。
+		|sub-replace-expression| も参照。
+
+		{list} に非ゼロの値が指定されたときは submatch() は文字列のリ
+		ストを返す。|getline()| に 2 つの引数を指定したときの返り値と
+		同じである。テキスト中の NL 文字は NUL 文字を表す。
+		|:substitute| で使われたときのみ複数要素のリストを返す。
+		|substitute()| では、実際の改行はそこにはないので、リストは常
+		に 0 または 1 つの要素である。
+
+		例: >
+			:s/\d\+/\=submatch(0) + 1/
+<		この例は、行の中で最初の数値を検索し、それに1を加える。改行は
+		改行文字として含まれる。
+
+							*substitute()*
+substitute({expr}, {pat}, {sub}, {flags})
+		結果は文字列で、{expr}内で最初に{pat}にマッチした部分を{sub}に
+		置換えたコピーになる。
+		{flags} が "g" なら、{expr} 内の {pat} にマッチした部分をすべ
+		て置換する。そうしたくない場合は {flags} は "" にすべきであ
+		る。
+
+		これはコマンド ":substitute" (一切のフラグ無し) のように働く。
+		しかしマッチングは常にオプション 'magic' が設定され、オプショ
+		ン 'cpoptions' は空にして実行される(スクリプトをポータブルにす
+		るため)。'ignorecase' は適用される。'ignorecase' の設定に関わ
+		らず大文字小文字を区別するかしないか固定するには |/\c| か
+		|/\C| を使う。 'smartcase' は適用されない。{pat}がどう扱われる
+		かについては|string-match|を参照。
+
+		また、{sub}内の "~" は前回の{sub}に置換されない。
+		{sub}内の幾つかのコードには|sub-replace-special|の特殊な意味
+		があることに注意。例えば、何かの文字列をリテラルの "\n" に置換
+		えるためには、"\\\\n" か '\\n' を使う必要がある。
+
+		{pat}が{expr}の何処にもマッチしなければ、{expr}が何の変更も受
+		けずに返される。
+
+		例: >
+		   :let &path = substitute(&path, ",\\=[^,]*$", "", "")
+<		これはオプション 'path' の最後のコンポーネントを削除する。 >
+		   :echo substitute("testing", ".*", "\\U\\0", "")
+<		結果は "TESTING" となる。
+
+		{sub} が "\=" で開始している場合は、その後ろの文字列は式として
+		解釈される。|sub-replace-expression| 参照。例: >
+		   :echo substitute(s, '%\(\x\x\)',
+			   \ '\=nr2char("0x" . submatch(1))', 'g')
+
+<		When {sub} is a Funcref that function is called, with one
+		optional argument.  Example: >
+		   :echo substitute(s, '%\(\x\x\)', SubNr, 'g')
+<		The optional argument is a list which contains the whole
+		matched string and up to nine submatches, like what
+		|submatch()| returns.  Example: >
+		   :echo substitute(s, '%\(\x\x\)', {m -> '0x' . m[1]}, 'g')
+
+synID({lnum}, {col}, {trans})				*synID()*
+		結果は数値で、現在のウィンドウ内での位置{lnum}と{col}の位置の
+		構文ID。
+		構文IDは|synIDattr()|と|synIDtrans()|に渡すことで、テキストに
+		ついての構文情報を取得するのに使用できる。
+		
+		最左のカラムを指定するには{col}に1を、最初の行を指定するには
+		{line}に1を指定する。'synmaxcol' が適用され、長すぎる行では0が
+		返ってくる。
+		Note 挿入モードでカーソル位置を最後の文字より後ろにした場合、
+		synID()は0を返す。
+
+		{trans}が|TRUE|ならば、透過属性のアイテムは省略され、実際に表
+		示されているアイテムが評価対象になる。これは実際に有効になって
+		いるカラーを知りたい時に役に立つ。{trans}が|FALSE|ならば、透過
+		属性のアイテムが返される。これはどの構文アイテムが有効になって
+		いるかを知りたい時に役に立つ(例:カッコの中とか)。
+		警告: この関数は非常に遅い。ファイルを順方向に走査する時にだけ
+		ベストなスピードが得られる。
+
+		例(カーソルの下の構文アイテムの名前を表示する): >
+			:echo synIDattr(synID(line("."), col("."), 1), "name")
+<
+
+							*synIDattr()*
+synIDattr({synID}, {what} [, {mode}])
+		結果は文字列で、{synID}の属性{what}の内容を示す。これは構文
+		アイテムの情報を取得するのに使用できる。
+		{mode}には取得したいモードの属性に応じて、"gui" か "cterm" か
+		"term" が指定できる。{mode}が省略されるか、無効な値が指定され
+		た場合、現在有効になっているハイライトモードが使用される (GUI、
+		cterm、termのどれか)。
+		ハイライトグループにリンクされた属性を取得するにはsynIDtrans()
+		を使用する。
+		{what}		結果
+		"name"		構文アイテムの名前
+		"fg"		前景色(GUI:カラー名、cterm:文字列としてのカ
+				ラー番号、term空文字列)
+		"bg"		背景色("fg" 同様)
+		"font"		フォント名 (GUI でのみ利用可)
+				|highlight-font|
+		"sp"		特殊な色 ("fg" 同様) |highlight-guisp|
+		"fg#"		"fg" 同様だが、"#RRGGBB" のフォーマットで
+		"bg#"		"bg" 同様だが、"#RRGGBB" のフォーマットで
+		"sp#"		"sp" 同様だが、"#RRGGBB" のフォーマットで
+		"bold"		太字なら "1"
+		"italic"	斜体なら "1"
+		"reverse"	反転なら "1"
+		"inverse"	反転(原文inverse)なら "1" (reverseと等価)
+		"standout"	強調 (standout) なら "1"
+		"underline"	下線付きなら "1"
+		"undercurl"	波線付きなら "1"
+
+		例(カーソルの下の構文アイテムのカラーを表示する): >
+	:echo synIDattr(synIDtrans(synID(line("."), col("."), 1)), "fg")
+<
+							*synIDtrans()*
+synIDtrans({synID})
+		結果は数値で、{synID}を構文IDに変換したもの。キャラク
+		タをハイライト表示している構文グループのIDである。
+		":highlight link" によって与えられるハイライトのリンクはこれに
+		従っている。
+
+synconcealed({lnum}, {col})				*synconcealed()*
+		リストを返す。リストの 1 番目のアイテムは、{lnum} と {col} が
+		指す位置の文字が Conceal 可能リージョン の中にあるなら 1、そう
+		でないなら 0。リストの 2 番目のアイテムは文字列で、最初のアイ
+		テムが 1 なら、代わりに表示される Conceal テキスト が入る (実
+		行時の 'conceallevel' の設定に依存)。リストの 3 番目のアイテム
+		は、どのシンタックスリージョンにマッチしたかを示すユニーク番
+		号。これは同じ置換文字を持つ二つのリージョンが連続していた場合
+		にその区切りを識別できるようにするため。
+		使用例は $VIMRUNTIME/syntax/2html.vim を参照。
+
+
+synstack({lnum}, {col})					*synstack()*
+		カレントウィンドウの {lnum}, {col} の位置の構文アイテムのス
+		タックを |List| にして返す。このリストの要素は |synID()|が
+		返すのと同じ種類の ID である。
+		リストの最初の要素が一番外側の領域で、続く要素がその中に内包さ
+		れている。アイテム全体がハイライトされている、または最後の要素
+		が transparent なアイテムである場合を除き、最後の要素が
+		|synID()| が返すものである。
+		この関数は構文ファイルをデバッグするのに役に立つ。
+		例(カーソル下の構文スタックを表示する): >
+			for id in synstack(line("."), col("."))
+			   echo synIDattr(id, "name")
+			endfor
+<		{lnum} と {col} が不正な場所を指しているときは返り値なし。行の
+		最後の文字の一つ後ろと空行の一番目の列は有効な位置である。
+
+system({expr} [, {input}])				*system()* *E677*
+		シェルコマンド {expr} の実行結果を文字列として得る。リストとし
+		て受け取るには |systemlist()| を参照。
+
+		{input} に文字列が指定された場合、その文字列はファイルに書き出
+		され、コマンドの標準入力として渡される。この文字列はそのまま
+		(as-is) 書き出されるので、正しい改行文字を使うよう自分自身で気
+		をつけなければならない。
+		{input} にリスト (|List|) が指定された場合は、|writefile()| の
+		{binary} に "b" を指定したのと同様にファイルに書き出される (つ
+		まり、リストの各要素は改行文字で連結され、要素内の改行文字は
+		NUL 文字に変換される)。
+		パイプは使用されない。
+
+		|:silent| が前置されたときは、端末は cooked モードには設定され
+		ない。これはユーザー入力を必要としないコマンドを使用することを
+		意味する。これは画面に不要な文字が表示されるのを防ぐ (|CTRL-L|
+		でそれをクリアする必要がなくなる)。 >
+			:silent let f = system('ls *.vim')
+<
+		Note: コマンドの引数をエスケープするには、 |shellescape()|、
+		|expand()| の |::S|、または |fnamemodify()| を使用する。{expr}
+		内に改行文字があるとコマンドは失敗するだろう。'shellquote' や
+		'shellxquote' 内にある文字も問題を起こすかもしれない。
+		対話的なコマンドを使用することはできない。
+
+		戻り値は文字列。例: >
+		    :let files = system("ls " .  shellescape(expand('%:h')))
+		    :let files = system('ls ' . expand('%:h:S'))
+
+<		システムに依存しないような戻り値にするために、シェルの出力を
+		フィルタリングし、マッキントッシュにおいては<CR>を<NL>に変換
+		し、DOS系のシステムにおいては<CR><NL>を<NL>に変換している。
+		実行されるコマンドはいくつかのオプションを適用して構成される:
+		文字列が NUL 文字で切れるのを防ぐため、すべての NUL 文字は SOH
+		(0x01) に置換される。
+
+	'shell' 'shellcmdflag' 'shellxquote' {expr} 'shellredir' {tmp} 'shellxquote'
+		({tmp}は自動的に生成されるファイル名)
+		UnixとOS/2ではコマンドの連結ができるように{expr}の両側に波括弧
+		が置かれる。
+
+		コマンドは「cooked」モードで実行される。そのためCTRL-Cでコマン
+		ドを中断できる(少なくともUnixでは)。
+
+		エラーコードは|v:shell_error|に格納される。
+		この関数は|restricted-mode|では失敗する。
+
+		Note 上記のオプションに不正な値が入っていると、この関数の呼び
+		出しが失敗する可能性がある。セキュリティエージェントアプリケー
+		ションを使っていると失敗することがあるとも報告されている。
+		":!cmd" とは違い、ファイルが変更されているかのチェックは行わな
+		い。
+		明示的にチェックさせるには|:checktime|を使う。
+
+systemlist({expr} [, {input}])				*systemlist()*
+		|system()| と同じだが行のリスト (|List|) を返す。行は NL 文字
+		で区切られ、NUL 文字は NL 文字に変換される。出力は
+		|readfile()| の {binary} 引数に "b" を指定したのと同様である。
+
+		エラー時には空文字列が返る。
+
+
+tabpagebuflist([{arg}])					*tabpagebuflist()*
+		カレントタブページ内の各ウィンドウに表示されているバッファの番
+		号を要素とするリスト|List|を返す。{arg}は対象とするタブページ
+		の番号を指定する。省略したときはカレントタブページを対象とする。
+		{arg}が無効なときは数値0を返す。
+		全タブページ中の全バッファのリストを得るには次のようにする: >
+			let buflist = []
+			for i in range(tabpagenr('$'))
+			   call extend(buflist, tabpagebuflist(i + 1))
+			endfor
+<		1つのバッファが複数のウィンドウに表示されている場合があること
+		に注意。
+
+
+tabpagenr([{arg}])					*tabpagenr()*
+		結果は数値で、カレントタブページの番号。最初のタブページの番号
+		は1となる。
+		省略可能な引数{arg}に指定できる値は "$" のみであり、最後のタブ
+		ページの番号(つまりタブページの個数)を返す。
+		この番号はコマンド|:tab|で指定できるものと同じである。
+
+
+tabpagewinnr({tabarg} [, {arg}])			*tabpagewinnr()*
+		|winnr()|と同様だが、タブページ{tabarg}を対象とする。
+		{tabarg}は対象とするタブページの番号を指定する。
+		{arg}は|winnr()|の場合と同じように扱われる。すなわち:
+		- 省略するとカレントウィンドウの番号を返す。これは、このタブペー
+		  ジに入るとき使われるウィンドウである。
+		- "$" とするとウィンドウの個数を返す。
+		- "#" とすると前のウィンドウ番号を返す。
+		役に立つ例: >
+		    tabpagewinnr(1)	    " タブページ1のカレントウィンドウ
+		    tabpagewinnr(4, '$')    " タブページ4内のウィンドウの個数
+<		{tabarg}が無効なときは0を返す。
+
+							*tagfiles()*
+tagfiles()	カレントバッファにおいて、タグを検索するときに使うファイルの名
+		前からなるリスト|List|を返す。オプション 'tags' を展開したもので
+		ある。
+
+
+taglist({expr})							*taglist()*
+		正規表現{expr}にマッチするタグのリストを返す。そのリストの各要
+		素は辞書であり、少なくとも次の要素を持つ:
+			name		タグの名前。
+			filename	タグの定義があるファイルの名前。カレン
+					トディレクトリからの相対パス、またはフ
+					ルパスである。
+			cmd		そのファイルの中でタグの位置を特定する
+					ために使うexコマンド。
+			kind		タグの種類。種類は言語に依存する。この
+					要素は、Exuberant ctagsかhdrtagによっ
+					て生成されたタグファイルを使っていると
+					きのみ使用できる。
+			static		ファイル固有のタグ。より詳しくは
+					|static-tag|を参照。
+		タグファイルの内容によってはこれ以上の要素が存在することもある。
+		例: アクセス、実装、継承、シグネチャ。これらのフィールドについ
+		ての情報はctagsのドキュメントを参照。Cのソースにおいては、
+		フィールド "struct"、"class"、"enum" が現れることがある。これ
+		らは、タグを含んでいるものの名前を示す。
+
+		exコマンド 'cmd' は検索パターンか、行番号か、行番号とバイト番
+		号のいずれかである。
+
+		マッチするタグがない場合は空リストを返す。
+
+		完全一致するタグを取得するには、{expr}にアンカー '^' と '$' を
+		つけること。これは関数の動作を速くすることにもなる。タグ検索の
+		正規表現についてより詳しいことは |tag-regexp|を参照。
+
+		Vimが使用するタグファイルについては |'tags'| を参照。様々な
+		ctagsによって生成されるタグファイルのフォーマットについては
+		|tags-file-format|を参照。
+
+tan({expr})						*tan()*
+		{expr} の正接 (タンジェント) をラジアンで返す。
+		値は [-inf, inf] の範囲の浮動小数点数 (|Float|)。
+		{expr} は浮動小数点数 (|Float|) か数値 (|Number|) でなければな
+		らない。
+		例: >
+			:echo tan(10)
+<			0.648361 >
+			:echo tan(-4.01)
+<			-1.181502
+		{|+float| 機能を有効にしてコンパイルしたときのみ有効}
+
+
+tanh({expr})						*tanh()*
+		{expr} の双曲線正接 (ハイパボリックタンジェント) を返す。
+		値は [-1, 1] の範囲の浮動小数点数 (|Float|)。
+		{expr} は浮動小数点数 (|Float|) か数値 (|Number|) でなければな
+		らない。
+		例: >
+			:echo tanh(0.5)
+<			0.462117 >
+			:echo tanh(-1)
+<			-0.761594
+		{|+float| 機能を有効にしてコンパイルしたときのみ有効}
+
+
+						*tempname()* *temp-file-name*
+tempname()
+		結果は文字列で、存在しないファイルのファイル名を示す。これはテ
+		ンポラリファイルの名前として使用可能である。少なくとも連続26回
+		の呼出しまでは違う名前を生成することが保証される。例: >
+			:let tmpfile = tempname()
+			:exe "redir > " . tmpfile
+<		Unix では、ファイルはプライベートなディレクトリに置かれる。
+		|tempfile|
+		MS-Windowsでは、'shellslash' がオンのときか 'shellcmdflag' が
+		'-' で始まるときはスラッシュが使われる。
+
+
+test_alloc_fail({id}, {countdown}, {repeat})		*test_alloc_fail()*
+		この関数はテストのために使われる: {id} のメモリ割り当てが行わ
+		れた際に {countdown} はデクリメントされ、それが0になれば
+		{repeat} 回のメモリの割り当ての失敗を発生させる。{repeat} が1
+		未満の場合は、失敗を1回のみ発生させる。
+
+test_autochdir()					*test_autochdir()*
+		Vimの起動が完了する前に 'autochdir' を有効にする。
+
+						*test_disable_char_avail()*
+test_disable_char_avail({expr})
+		{expr} が 1 であれば、内部の char_avail() 関数は |FALSE| を返
+		すようになる。{expr} が 0 であれば、 char_avail() 関数は通常通
+		り機能する。これは、入力によってテストが動作しない場合のみに使
+		用される。例:CursorMovedI イベントを起動したい場合
+
+test_garbagecollect_now()			 *test_garbagecollect_now()*
+		garbagecollect() とほぼ同じであるが、この関数はガーベッジコレ
+		クトを直ちに実行する。この関数を実行する場合は、構造体が内部に
+		存在しないようにするために直接呼び出す必要がある。また、この関
+		数を呼び出す前に |v:testing| を設定する必要がある。
+
+test_null_channel()					*test_null_channel()*
+		null の Channel を返す。これはテストのみに使われる。
+		{|+channel| 機能つきでコンパイルされたときのみ有効}
+
+test_null_dict()					*test_null_dict()*
+		null の Dict を返す。これはテストのみに使われる。
+
+test_null_job()						*test_null_job()*
+		null の Job を返す。これはテストのみに使われる。
+		{|+job| 機能つきでコンパイルされたときのみ有効}
+
+test_null_list()					*test_null_list()*
+		null の List を返す。これはテストのみに使われる。
+
+test_null_partial()					*test_null_partial()*
+		null の Partial を返す。これはテストのみに使われる。
+
+test_null_string()					*test_null_string()*
+		null の String を返す。これはテストのみに使われる。
+
+test_settime({expr})					*test_settime()*
+		Vim が内部的に用いる時間を設定する。現在は history のタイムス
+		タンプ、viminfo のタイムスタンプ、undo に使用されている。{expr}
+		には、数値が設定される。また {expr} に 0 を渡せば、Vimの内部時
+		間は通常動作に戻る。
+
+							*timer_info()*
+timer_info([{id}])
+		タイマーに関する情報のリストを返す。
+		{id} が指定された場合はそのタイマーに関する情報だけが返され
+		る。タイマー {id} が存在しない場合は空のリストが返される。
+		{id} が省略された場合は全てのタイマーに関する情報が返される。
+
+		各タイマーの情報は以下の項目を含んだ辞書で格納される:
+		    "id"	    タイマーのID
+		    "time"	    タイマーが開始してからの時間
+		    "remaining"	    タイマーが発火するまでの時間
+		    "repeat"	    何回タイマーを発火させるかの回数;
+				    -1 は無限を意味する
+		    "callback"	    コールバック
+		    "paused"	    タイマーが一時停止中なら 1、それ以外は 0
+
+		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+
+timer_pause({timer}, {paused})				*timer_pause()*
+		タイマーを一時停止もしくは再開する。一時停止したタイマーは時間
+		が経過してもコールバックを呼び出さない。タイマーの再開は十分
+		に時間が経過しているなら、すぐさまコールバックが呼び出されるか
+		もしれない。
+
+		タイマーの停止は少しの間、コールバックが呼び出されるのを避ける
+		のに便利である。
+
+		{paused} が 0 以外の数値、もしくは空でない文字列で評価される
+		場合にタイマーが停止し、それ以外は再開する。
+		|non-zero-arg| を参照。
+
+		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+
+						*timer_start()* *timer* *timers*
+timer_start({time}, {callback} [, {options}])
+		タイマーを作成しその ID を返す。
+
+		{time} はミリ秒での待機時間。これはコールバックが呼び出される
+		までの最短の時間である。システムがビジーもしくは Vim が入力待
+		ちでない場合、これは長くなる。
+
+		{callback} は呼び出す関数。関数の名前もしくは|Funcref|であって
+		も良い。引数にはタイマーIDの引数が1つだけ渡されて呼び出され
+		る。コールバックは Vim が入力待ちの場合だけ呼び出される。
+
+		{options} は辞書。以下がサポートされている:
+		   "repeat"	コールバックを呼び出す繰り返し回数。-1 は無限
+				を意味する。指定されない場合はコールバックは一
+				度だけ呼び出される。
+
+		例: >
+			func MyHandler(timer)
+			  echo 'Handler called'
+			endfunc
+			let timer = timer_start(500, 'MyHandler',
+				\ {'repeat': 3})
+<		これは MyHandler() を 500ms 間隔で3回呼び出す。
+
+		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+
+timer_stop({timer})					*timer_stop()*
+		タイマーを停止する。タイマーのコールバックは以降呼び出されな
+		い。{timer} は timer_start() が返した ID である。よって数値で
+		なければならない。{timer} が存在しなかった場合でもエラーは発生
+		しない。
+
+		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+
+timer_stopall()						*timer_stopall()*
+		全てのタイマーを停止する。タイマーのコールバックは以降呼び出さ
+		れない。タイマーが不作法に振る舞う場合に便利である。タイマーが
+		存在しなかった場合でもエラーは発生しない。
+
+		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+
+tolower({expr})						*tolower()*
+		引数の文字列の大文字を小文字に変換してできた文字列を返す(文字
+		列に|gu|を適用するのとちょうど同じ)。
+
+toupper({expr})						*toupper()*
+		引数の文字列の小文字を大文字に変換してできた文字列を返す(文字
+		列に|gU|を適用するのとちょうど同じ)。
+
+tr({src}, {fromstr}, {tostr})				*tr()*
+		文字列{src}の中で、{fromstr}に含まれる全ての文字を{tostr}の対
+		応する文字で置き換えた文字列を返す。つまり、{fromstr}の最初の
+		文字が{tostr}の最初の文字に置き換えられる。2文字目以降も同様。
+		Unixのコマンド "tr" とちょうど同じである。
+		マルチバイト文字も正しく扱える。
+
+		例: >
+			echo tr("hello there", "ht", "HT")
+<		戻り値は "Hello THere" となる。 >
+			echo tr("<blob>", "<>", "{}")
+<		戻り値は "{blob}" となる。
+
+trunc({expr})							*trunc()*
+		{expr} をゼロ方向に切りつめた整数を |Float| で返す。
+		{expr} は |Float| または |Number| に評価されなければならない。
+		例: >
+			echo trunc(1.456)
+<			1.0  >
+			echo trunc(-5.456)
+<			-5.0  >
+			echo trunc(4.0)
+<			4.0
+		{|+float| 機能つきでコンパイルされたときのみ有効}
+		
+							*type()*
+type({expr})	{expr}の型を示す数値を返す。
+		マジックナンバーを使わずに、v:t_ 変数を使う方が良い。それぞれ
+		の値は以下の通り:
+			数値:	      0  |v:t_number|
+			文字列:	      1  |v:t_string|
+			Funcref:      2  |v:t_func|
+			リスト:	      3  |v:t_list|
+			辞書:	      4  |v:t_dict|
+			浮動小数点数: 5  |v:t_float|
+			真偽値:	      6  |v:t_bool| (v:false と v:true)
+			特殊値:	      7  |v:t_none| (v:null と v:none)
+			ジョブ:	      8  |v:t_job|
+			チャンネル:   9  |v:t_channel|
+		後方互換性のためには、次のような使い方ができる: >
+			:if type(myvar) == type(0)
+			:if type(myvar) == type("")
+			:if type(myvar) == type(function("tr"))
+			:if type(myvar) == type([])
+			:if type(myvar) == type({})
+			:if type(myvar) == type(0.0)
+			:if type(myvar) == type(v:false)
+			:if type(myvar) == type(v:none)
+<		v:t_ 変数が存在するかを判定するにはこれを使う: >
+			:if exists('v:t_number')
+
+undofile({name})					*undofile()*
+		{name} という名前のファイルの保存時に使用されるアンドゥファイ
+		ルの名前を返す。'undodir' オプションが使用され、存在するディレ
+		クトリが検索される。アンドゥファイルが存在するかどうかはチェッ
+		クされない。
+		{name} は常に絶対パスに展開される (内部では絶対パスを使ってい
+		るため)。
+		{name} が空の場合 undofile() は空文字列を返す。ファイル名のな
+		いバッファはアンドゥファイルを書かないからである。
+		|:wundo| や |:rundo| と組み合わせて使うと便利だろう。
+		+persistent_undo オプションを無効にしてコンパイルされた場合は
+		この関数は常に空文字列を返す。
+
+undotree()						*undotree()*
+		アンドゥツリーの現在の状態を辞書で返す。辞書の内容は次のとお
+		り:
+		  "seq_last"	使用されたアンドゥシーケンス番号の最大値。
+		  "seq_cur"	アンドゥツリーの現在のシーケンス番号。いくつか
+				の変更がアンドゥされた状態だと "seq_last" と違
+				う値になる。
+		  "time_cur"	最後に |:earlier| 系のコマンドが使われた時間。
+				読みやすい形式に変換するには |strftime()| を使
+				う。
+		  "save_last"	最後にファイルが保存された番号。保存がまだなら
+				ゼロになる。
+		  "save_cur"	アンドゥツリー内の現在位置の番号。
+		  "synced"	最後のアンドゥブロックが同期されていれば非ゼ
+				ロ。これはユーザーからの入力を待機しているとき
+				に起こる。|undo-blocks| 参照。
+		  "entries"	アンドゥブロックの情報を表す辞書のリスト。
+
+		"entries" リストの 1 番目にはもっとも古いアンドゥアイテムが
+		入っている。リストの各アイテムは次のような情報を持った辞書であ
+		る:
+		  "seq"		アンドゥシーケンス番号。|:undolist| で表示され
+				るものと同じ。
+		  "time"	変更が起こった時間。読みやすい形式に変換するに
+				は |strftime()| を使う。
+		  "newhead"	この項目は最後に追加されたアイテムにのみある。
+				これは最後の変更を示し、次の変更を追加する場所
+				を示す。
+		  "curhead"	この項目は最後にアンドゥされたアイテムにのみあ
+				る。これはアンドゥツリーの現在位置を示し、次に
+				リドゥコマンドによって使われるブロックを示す。
+				最後に変更を加えてからアンドゥを一度も実行して
+				いないときはこの項目はどこにも現れない。
+		  "save"	この項目はファイルが保存される前の最後のブロッ
+				クにのみある。番号は保存回数を示す。最初の保存
+				は 1 で、最後のものは "save_last" と同じ。
+		  "alt"		切り替えエントリ。同じアンドゥブロックのリスト
+				が入れ子にされている。それぞれのアイテムはさら
+				に "alt" アイテムを持っていることがある。
+
+uniq({list} [, {func} [, {dict}]])			*uniq()* *E882*
+		{list} 内の隣接する同じ値の要素の 2 個目以降をその場で
+		(in-place) 削除する。{list} を返す。リストを変更したくない場合
+		は事前にコピーする: >
+			:let newlist = uniq(copy(mylist))
+<		デフォルトの比較関数は各要素の文字列表現を使う。{func} と
+		{dict} については |sort()| 参照。
+
+values({dict})						*values()*
+		{dict}の全ての値からなるリスト|List|を返す。このリストの順序は
+		不定である。
+
+virtcol({expr})						*virtcol()*
+		結果は数値で、{expr}で与えられるファイルの位置の、スクリーン上
+		での桁の位置を示す。返る値は、指定された位置にある文字の末尾が、
+		スクリーン座標(の桁)でどこに存在するかである。<Tab>(タブ文字)
+		が指定した位置にあった場合には、戻り値はそのタブの最後のカラム
+		(桁)位置になる。具体的に、'ts' が8に設定された状態で第1桁に
+		<Tab>があった場合、戻り値は8になる。|conceal| は無視される。
+		バイト位置については |col()| を使う。
+		{expr}の解釈の仕方については|col()|を参照。
+		'virtualedit' がオンのときは[lnum, col, off]というリストを指定
+		することもできる。"off" は文字の開始位置からのスクリーン座標で
+		のオフセットである。例えば、<Tab>の中の位置や、行の最後の文字
+		以降の位置を示すために使う。"off" が省略された場合はゼロが使わ
+		れる。
+		現在のモードに対して仮想編集がオンのときは、行末を越えた位置が
+		返ってくることもある。|'virtualedit'|
+		可能な位置指定:
+		    .	    カーソルの位置
+		    $	    カーソル行の末尾(カーソル行に表示されている文字数
+			    +1となる)
+		    'x	    マークxの位置(マークが設定されていない場合、0が返
+			    る)
+		    v	    ビジュアルモードでは: ビジュアル選択領域の開始行
+			    (カーソルがその端)。ビジュアルモード以外ではカーソ
+			    ル位置を返す。すぐに更新される点が |'<| と違う。
+		現在のファイルに対して設定されているマークだけが使用可能なこと
+		に注意。
+		例: >
+  virtcol(".")	   "foo^Lbar" の "^L" の位置にカーソル、戻り値5
+  virtcol("$")	   "foo^Lbar" に対し、戻り値9
+  virtcol("'t")    "    there" の 'h' に 't を設定、戻り値6
+<		最初の桁は1となる。エラーの場合は0が返る。
+		より高度な例(全ての行の長さの最大値を返す): >
+		    echo max(map(range(1, line('$')), "virtcol([v:val, '$'])"))
+
+visualmode([expr])						*visualmode()*
+		結果は文字列で、カレントバッファ内で最後に使われたビジュアルモー
+		ドを教えてくれる。初期状態では単に空文字列を返すだけだが、一度
+		でもビジュアルモードが使われた場合、その種類によって "v" か
+		"V" か "<CTRL-V>" (CTRL-Vの文字が1文字で) 返される。これはそれ
+		ぞれ文字選択、行選択、矩形選択を意味している。
+		例: >
+			exe "normal " . visualmode()
+<		これは最後に使われたのと同じビジュアルモードに入る。また、スク
+		リプトの動作を、最後に使われたビジュアルモードに応じて変更した
+		い場合にも便利だろう。
+		ビジュアルモードにいるときは |mode()| を使ってビジュアルモード
+		の種類を取得できる。(|:vmap| などの中などで)
+		{expr}に0以外の数値か空文字列以外の文字列を指定した場合は、ビ
+		ジュアルモードがクリアされ、以前の値を返す。|non-zero-arg| を
+		参照。
+
+wildmenumode()					*wildmenumode()*
+		wildmenuが有効な場合は|TRUE|を返し、そうでなければ|FALSE|を返
+		す。'wildmenu' と 'wildmode' を参照。
+		マッピングの中で 'wildcharm' オプションを有効に扱うために使用
+		できる。(|mapmode-c|マッピングの場合のみ意味をなす。)
+
+		例えば、wildmodeで<c-j>が<down>と同じように動作するようにする
+		には: >
+    :cnoremap <expr> <C-j> wildmenumode() ? "\<Down>\<Tab>" : "\<c-j>"
+<
+		(Note 'wildcharm' オプションが適切に設定されている必要がある。)
+
+
+win_findbuf({bufnr})					*win_findbuf()*
+		バッファ {bufnr} が含まれているウィンドウについて |window-ID|
+		のリストを返す。存在しない場合は空のリストになる。
+
+win_getid([{win} [, {tab}]])				*win_getid()*
+		特定のウィンドウに関する |window-ID|を得る。
+		{win} が未指定の時は現在のウィンドウとなる。
+		この {win} はウィンドウ番号である。トップウィンドウは番号 1 を
+		持つ。
+		{tab} が未指定の場合現在のタブが使用され、{tab} が番号で指定さ
+		れた場合はそのタブとなる。最初のタブ番号は 1 である。
+		ウィンドウが見付からない場合には 0 を返す。
+
+win_gotoid({expr})					*win_gotoid()*
+		{expr} の ID で示されるウィンドウへ移動する。これは現在のタブ
+		ページも移動する。
+		成功した場合は 1 を、ウィンドウが見付からない場合は 0 を返す。
+
+win_id2tabwin({expr})					*win_id2tabwin()*
+		{expr} の ID で示されるタブ番号とウィンドウ番号のリストを返す:
+		[tabnr, winnr]
+		ウィンドウが見付からなかった場合は [0, 0] を返す。
+
+win_id2win({expr})					*win_id2win()*
+		{expr} の ID で示されるウィンドウのウィンドウ番号を返す。
+		現在のタブページ内でそのウィンドウが見付からなかった場合は 0
+		を返す。
+
+							*winbufnr()*
+winbufnr({nr})	結果は数値で、{nr}番目のウィンドウに関連付けられているバッファ
+		の番号。{nr} にはウィンドウ番号または|window-ID|が使える。
+		{nr}が0の場合、現在のウィンドウに関連付けられているバッファの
+		番号が返る。{nr}で存在しないウィンドウを指定した場合には-1が返
+		る。
+		例: >
+  :echo "The file in the current window is " . bufname(winbufnr(0))
+<
+							*wincol()*
+wincol()	結果は数値で、ウィンドウの中でカーソルがある位置の仮想桁番号を
+		表す。これはウィンドウの左側から数えたスクリーン上の桁である。
+		一番左の桁は1となる。
+
+winheight({nr})						*winheight()*
+		結果は数値で、{nr}で示されるウィンドウの高さ(行数)を示す。
+		{nr} にはウィンドウ番号または|window-ID|が使える。
+		{nr}が0ならば、現在のウィンドウの高さが返る。{nr}というウィン
+		ドウが存在しない場合、-1が返る。存在しているウィンドウは、絶対
+		に0かそれ以上の高さを持っている。
+		例: >
+  :echo "The current window has " . winheight(0) . " lines."
+<
+
+							*winline()*
+winline()	結果は数値で、ウィンドウの最上行から数えた行番号を返す。ウィン
+		ドウでの最上行が1となる。
+		カーソルが移動するとファイルの表示が更新され、それによってスク
+		ロールが引き起こされることがある。
+
+							*winnr()*
+winnr([{arg}])	結果は現在のウィンドウを示す数値。最上位のウィンドウは1であ
+		る。
+		省略可能な引数{arg}に "$" を設定すると、最後のウィンドウの番号
+		が返る (つまりウィンドウの個数)。 >
+			let window_count = winnr('$')
+<		{arg}に "#" を設定すると、最後にアクセスしたウィンドウの番号を
+		返す (|CTRL-W_p|で移動するウィンドウと同じ)。
+		以前のウィンドウがない場合、またはそれが他のタブページにある場
+		合は0を返す。
+		この番号は|CTRL-W_w|と ":wincmd w" で使える。|:wincmd|
+		|tabpagewinnr()|も参照。
+
+							*winrestcmd()*
+winrestcmd()	現在のウィンドウサイズを復元するための一連の|:resize|コマンド
+		を返す。これが返すコマンドは、ウィンドウを開閉せず、カレントウィ
+		ンドウとカレントタブページが変更されていないときのみ正しく動作
+		する。
+		例: >
+			:let cmd = winrestcmd()
+			:call MessWithWindowSizes()
+			:exe cmd
+<
+							*winrestview()*
+winrestview({dict})
+		|winsaveview()|が返す辞書|Dictionary|を使ってカレントウィンド
+		ウの表示状態を復元する。
+		Note: {dict} は |winsaveview()| の返り値に含まれる値をすべて
+		持っていなくても構わない。値がない場合はその設定は復元されな
+		い。次のようにできる: >
+		    :call winrestview({'curswant': 4})
+<
+		これは curswant 値 (縦方向移動でカーソルの移動先として使われる
+		列番号) を列番号 5 に設定する (はいそのとおり。5 です)。ほかの
+		設定値は変更されない。これはカーソル位置を手動で設定したい場合
+		に便利である。
+
+		この値を手動で変更した場合、結果は予測できない。
+		ウィンドウサイズが変更されていると、結果は必ずしも元通りになら
+		ない。
+
+							*winsaveview()*
+winsaveview()	カレントウィンドウの表示状態を復元するための情報を持つ辞書
+		|Dictionary|を返す。この表示状態を復元するには|winrestview()|
+		を使う。
+		マッピング内でジャンプして、元の表示状態を戻したいときに使われ
+		る。
+		折り畳み情報は保存しない。オプション 'foldenable' によって一時
+		的に折り畳みをオフにし、移動中に折り畳みが開かれないようにする
+		こと。これは副作用があるかもしれない。
+		戻り値は以下のキーを持つ:
+			lnum		カーソルの行番号
+			col		カーソルの桁番号 (Note: getpos() とは
+					異なり最初の桁番号はゼロ)
+			coladd		カーソル位置の桁オフセット。
+					'virtualedit' がオンのとき使われる。
+			curswant	垂直移動するときの桁
+			topline		ウィンドウの最上行
+			topfill		削除行。差分モードでのみ
+			leftcol		表示されている最初の桁
+			skipcol		スキップされている桁
+		Note オプションの値は保存されない。
+
+
+winwidth({nr})						*winwidth()*
+		結果は数値で、ウィンドウ{nr}の幅。
+		{nr} にはウィンドウ番号または|window-ID|が使える。
+		{nr}が0のときはカレントウィンドウの幅を返す。ウィンドウ{nr}が
+		存在しないときは-1を返す。ウィンドウは必ず0以上の幅を持つ。
+		例: >
+  :echo "The current window has " . winwidth(0) . " columns."
+  :if winwidth(0) <= 50
+  :  exe "normal 50\<C-W>|"
+  :endif
+<               For getting the terminal or screen size, see the 'columns'
+               option.
+
+
+wordcount()						*wordcount()*
+		この結果は現在のバッファのバイト/文字/単語統計情報の辞書である。
+		これは|g_CTRL-G|が提供する情報と同じである。
+		この値には下記が含まれる:
+			bytes		バッファ内のバイト数
+			chars		バッファ内の文字数
+			words		バッファ内の単語数
+			cursor_bytes    カーソル位置より前のバイト数
+					(ビジュアルモードでない)
+			cursor_chars    カーソル位置より前の文字数
+					(ビジュアルモードでない)
+			cursor_words    カーソル位置より前の単語数
+					(ビジュアルモードでない)
+			visual_bytes    ビジュアル選択領域内のバイト数
+					(ビジュアルモードのみ)
+			visual_chars    ビジュアル選択領域内の文字数
+					(ビジュアルモードのみ)
+			visual_words    ビジュアル選択領域内の単語数
+					(ビジュアルモードのみ)
+
+							*writefile()*
+writefile({list}, {fname} [, {flags}])
+		|List| {list}をファイル{fname}に書き込む。リストの各要素は改行
+		文字(NL)で区切られる。各要素は文字列か数値でなければならない。
+		{flags}が "b" を含むときはバイナリモードとなり、最後の要素の後
+		にNLが追加されない。最後の要素が空であると、ファイルの最後の行
+		がNLで終わるようになる。
+		{flags}が "a" を含むときは追記モードとなり、ファイルに行が追記
+		される。 >
+			:call writefile(["foo"], "event.log", "a")
+			:call writefile(["bar"], "event.log", "a")
+>
+<		NL文字はNUL文字に置換される。
+		CR文字を加えるには、{list}をwritefile()に渡す前に行わねばなら
+		ない。
+		既存のファイルは上書きされる(上書き可能ならば)。
+		書き込みが失敗したときは-1を返す。そうでなければ0を返す。ファ
+		イルを作成できないときや、書き込みが失敗したときはエラーメッ
+		セージが表示される。
+		|readfile()|も参照。
+		バイト単位でファイルをコピーするには次のようにする: >
+			:let fl = readfile("foo", "b")
+			:call writefile(fl, "foocopy", "b")
+
+
+xor({expr}, {expr})					*xor()*
+		二つの引数のビット排他的論理和。引数は数値に変換される。リス
+		ト、辞書、浮動小数点数を指定するとエラーになる。
+		例: >
+			:let bits = xor(bits, 0x80)
+<
+
+							*feature-list*
+機能は大別して 4 つの系統に分けられる:
+1.  コンパイル時に|+feature-list|とした時にだけサポートされる機能。例: >
+		:if has("cindent")
+2.  ある状態の時にだけサポートされる機能。例: >
+		:if has("gui_running")
+<							*has-patch*
+3.  適用済みパッチ。"patch123" はパッチ 123 が適用されていることを示す。Note:
+    この形式は Vim のバージョンをチェックしない。あなたは |v:version| を解析す
+    る必要がある。
+    例 (6.2.148 以降かどうかを確認する): >
+	:if v:version > 602 || v:version == 602 && has("patch148")
+<    Note: 148 が適用されていても、147 が抜けていることもありうるので注意。
+
+4.  特定のバージョン以降であるか、またはバージョンが同じで特定のパッチが含まれ
+    ているかどうか。"patch-7.4.237" は、Vim のバージョンが 7.5 以降か、または
+    7.4 でパッチ 237 を含んでいるかどうかを示す。
+    Note: これはパッチ 7.4.237 以降でのみ機能する。それ以前では上述のように
+    v:version を確認する必要がある。例: >
+	:if has("patch-7.4.248")
+<    Note: 148 が適用されていても、147 が抜けていることもありうるので注意。
+
+Hint: To find out if Vim supports backslashes in a file name (MS-Windows),
+use: `if exists('+shellslash')`
+
+
+acl			|ACL| をサポート
+all_builtin_terms	全ての組込みターミナルを有効にしてコンパイル
+amiga			AMIGAバージョン
+arabic			アラビア語をサポート |Arabic|
+arp			ARPをサポート (Amiga)
+autocmd			オートコマンドをサポート |autocommand|
+balloon_eval		|balloon-eval| をサポート
+balloon_multiline	複数行バルーンをサポート
+beos			BeOSバージョン
+browse			|:browse|をサポートし、browse()が動作する
+browsefilter		|browsefilter| をサポート
+builtin_terms		幾つかの組込みターミナルが有効
+byte_offset		'statusline' において 'o' がサポートされる
+cindent			'cindent' をサポート
+clientserver		リモート呼び出しをサポート |clientserver|
+clipboard		'clipboard' をサポート
+cmdline_compl		|cmdline-completion| コマンドライン補完をサポート
+cmdline_hist		|cmdline-history| コマンドライン履歴をサポート
+cmdline_info		'showcmd' と 'ruler' をサポート
+comments		|'comments'| をサポート
+compatible		Vi互換度を非常に高めてコンパイルされている
+cryptv			暗号化をサポート |encryption|
+cscope			|cscope|をサポート
+debug			デバッグバージョンである
+dialog_con		コンソールダイアログのサポート
+dialog_gui		GUIダイアログのサポート
+diff			|vimdiff| と 'diff' のサポート
+digraphs		ダイグラフをサポート
+directx			DirectX と 'renderoptions' をサポート
+dnd			レジスタ "~ をサポート |quote_~|
+ebcdic			EBCDIC文字集合のマシン用
+emacs_tags		Emacs式のタグファイルをサポート
+eval			式評価をサポート。もちろん常に真。
+ex_extra		今は常に真 |+ex_extra|
+extra_search		|'incsearch'| と |'hlsearch'| をサポート
+farsi			|farsi|をサポート
+file_in_path		|gf|と|<cfile>|をサポート
+filterpipe		'shelltemp' がオフのとき、シェルの読み込み・書き込み・
+			フィルタコマンドにパイプを使う。
+find_in_path		includeファイル内の検索をサポート |+find_in_path|
+float			浮動小数点数 |Float| サポート
+fname_case		ファイル名の大文字小文字が区別される(Amiga,MS-DOS,
+			そしてWindowsでは区別されないので偽)
+folding			|folding| 折り畳みをサポート
+footer			GUIのフッターをサポート |gui-footer|
+fork			system()の代わりにfork()/exec()を用いている
+gettext			翻訳メッセージをサポート |multi-lang|
+gui			GUIが有効である
+gui_athena		AthenaのGUIが有効である
+gui_gnome		Gnomeサポート(gui_gtkも定義される)
+gui_gtk			GTK+のGUIが有効である
+gui_gtk2		GTK+ 2のGUIが有効である (gui_gtkも定義される)
+gui_gtk3		GTK+ 3のGUIが有効である (gui_gtkも定義される)
+gui_mac			マッキントッシュのGUIが有効である
+gui_motif		MotifのGUIが有効である
+gui_photon		PhotonのGUIが有効である
+gui_running		VimがGUIモードで起動している、もしくは間もなくする
+gui_win32		Win32のGUIが有効である
+gui_win32s		Win32sのGUIが有効である (Windows 3.1)
+hangul_input		ハングル入力サポート
+iconv			iconv()をサポート
+insert_expand		挿入モード時にCTRL-Xの展開がサポートされる
+jumplist		|jumplist| をサポート
+keymap			'keymap' をサポート
+lambda			|lambda| をサポート
+langmap			'langmap' サポート
+libcall			|libcall()| をサポート
+linebreak		'linebreak'、'breakat'、'showbreak'、'breakindent' を
+			サポート
+lispindent		lisp式のインデントをサポート
+listcmds		バッファリスト用のコマンド|:files|と引数リスト用のコマ
+			ンド|arglist|をサポート
+localmap		ローカルなマッピングと短縮入力をサポート|:map-local|
+lua			Lua インターフェイスをサポート |Lua|
+mac			すべてのマッキントッシュ版Vim
+macunix			darwinつきのOS X
+osx			darwinなしのOS X
+menu			|:menu|をサポート
+mksession		|:mksession|をサポート
+modify_fname		ファイル名変換子をサポート |filename-modifiers|
+mouse			マウスをサポート
+mouse_dec		DECのターミナルマウスをサポート
+mouse_gpm		gpmをサポート (Linuxのコンソールマウス)
+mouse_netterm		nettermのマウスをサポート
+mouse_pterm		qnx ptermのマウスをサポート
+mouse_sysmouse		sysmouse (*BSD コンソールマウス)をサポート
+mouse_sgr		sgrのマウスをサポート
+mouse_urxvt		urxvtのマウスをサポート
+mouse_xterm		xtermのマウスをサポート
+mouseshape		'mouseshape' をサポート
+multi_byte		'encoding' をサポート
+multi_byte_encoding	'encoding' がマルチバイトエンコーディングになる
+multi_byte_ime		IMEによる入力をサポート
+multi_lang		複数言語をサポート
+mzscheme		MzSchemeインターフェイスをサポート |mzscheme|
+netbeans_enabled	|netbeans|をサポートし、現在接続している
+netbeans_intg		|netbeans|をサポート
+num64			64ビット数値をサポート |Number|
+ole			Win32にてOLEオートメーションをサポート
+packages		|packages|をサポート
+path_extra		'path' と 'tags' の上方・下方検索をサポート
+perl			Perlインターフェイスをサポート
+persistent_undo		永続アンドゥをサポート
+postscript		PostScriptファイルの印刷をサポート
+printer			|:hardcopy| をサポート
+profile			|:profile| をサポート
+python			Python 2.x インターフェイスをサポート |has-python|
+python3			Python 3.x インターフェイスをサポート |has-python|
+qnx			QNXバージョン
+quickfix		|quickfix|をサポート
+reltime			|reltime()|をサポート
+rightleft		'rightleft' をサポート
+ruby			Rubyインターフェイスをサポート
+scrollbind		'scrollbind' をサポート
+showcmd			'showcmd' をサポート
+signs			|:sign|をサポート
+smartindent		'smartindent' をサポート
+spell			スペルチェックをサポート |spell|
+startuptime		|--startuptime| をサポート
+statusline		'statusline', 'rulerformat' そして 'titlestring' と
+			'iconstring' の特殊フォーマットをサポート
+sun_workshop		Sun |workshop|をサポート
+syntax			構文ハイライトをサポート
+syntax_items		現在のバッファに有効なシンタックスが設定されている
+system			fork()/exec()の代わりにsystem()が使用されている
+tag_binary		タグファイル内のバイナリサーチ |tag-binary-search|
+tag_old_static		旧式の静的tagsをサポート |tag-old-static|
+tag_any_white		タグファイル内の空白文字をサポート |tag-any-white|
+tcl			TCLインターフェイスをサポート
+termguicolors		端末でのtrueカラーをサポート
+terminfo		termcapの代わりにterminfoをサポート
+termresponse		|t_RV|と|v:termresponse|をサポート
+textobjects		|text-objects|をサポート
+tgetent			tgetentをサポート。termcapかterminfoファイルが使用可能
+timers                  |timer_start()| をサポート
+title			ウィンドウタイトルをサポート |'title'|
+toolbar			|gui-toolbar|をサポート
+unix			UNIXバージョン
+user_commands		ユーザー定義コマンドをサポート
+vertsplit		ウィンドウの垂直分割をサポート |:vsplit|
+vim_starting		Vimの初期化プロセス中は真となる。|startup|
+			*vim_starting*
+viminfo			viminfoをサポート
+virtualedit		オプション 'virtualedit' をサポート
+visual			ビジュアルモードをサポート
+visualextra		拡張ビジュアルモードをサポート |blockwise-operators|
+vms			VMSバージョン
+vreplace		コマンド|gR|と|gr|をサポート
+wildignore		オプション 'wildignore' をサポート
+wildmenu		オプション 'wildmenu' を指定してコンパイル
+win32			Win32バージョン(MS-Windows 95 以上の 32 or 64 ビット)
+win32unix		Win32バージョン。Unixファイルを使用 (Cygwin)
+win64			Win64バージョン(MS-Windows 64 bit)
+win95			Win32バージョン。MS-Windows 95/98/ME用。
+winaltkeys		オプション 'winaltkeys' を指定してコンパイル
+windows			複数ウィンドウをサポート
+writebackup		オプション 'writebackup' が起動時にonになる
+xfontset		X fontsetをサポート |xfontset|
+xim			XIMをサポート |xim|
+xpm			pixmap をサポート
+xpm_w32			Win32 で pixmap をサポート(後方互換性のためのみ。
+			代わりに "xpm" を使用せよ。)
+xsmp			Xセッションマネージメントをサポート
+xsmp_interact		対話的Xセッションマネージメントをサポート
+xterm_clipboard		xtermのクリップボードサポート
+xterm_save		xtermのスクリーンの保存復帰をサポート
+x11			X11をサポート
+
+							*string-match*
+文字列内でのパターンマッチング
+
+|pattern|で説明されている正規表現パターンは通常、バッファ内の行に対してマッチ
+を検索するために使われる。文字列内でマッチを見つけるために使うときも、ほとんど
+は同じように動作する。違いは、文字列が1つの行であるかのように扱われる事である。
+文字列が文字 "\n" だけを含むとき、これは改行とはみなされない。この "\n" はパ
+ターン内の "\n" や "." にマッチする。例: >
+	:let a = "aaaa\nxxxx"
+	:echo matchstr(a, "..\n..")
+	aa
+	xx
+	:echo matchstr(a, "a.x")
+	a
+	x
+
+"^" は文字列の最初の文字でだけマッチし、"$" は最後の文字でだけマッチすることに
+注意。"\n" の前後にはマッチしない。
+
+==============================================================================
+5. 関数定義						*user-functions*
+
+ユーザーは自分で新しい関数を定義することができる。その関数は組込み関数とまった
+く同じように呼び出せる。関数は一連のExコマンドを実行する。ノーマルモードコマン
+ドはコマンド|:normal|によって実行できる。
+
+関数名は組込み関数との混同を避ける為、大文字で始まらなければならない。他のスク
+リプトで同じ関数名を使用してしまうことを避ける為に、露骨に短い名前は避けるべき
+である。関数名を例えば "HTMLcolor()" のように、スクリプトの名前から始めるとい
+うのは良い習慣である。
+
+波括弧変数というものもある(|curly-braces-names|を参照)。また、オートロード
+|autoload|機構を使うと、関数が呼ばれたときだけ定義することができる。
+
+							*local-function*
+スクリプトローカルな関数の名前は "s:" で始めなければならない。スクリプトローカ
+ルな関数は、そのスクリプトの中の関数から、またはそのスクリプト内で定義された
+ユーザー定義コマンド、オートコマンドからしか呼ぶことができない。そのスクリプト
+内で定義されたマッピングにより呼ぶこともできるが、スクリプトの外部でマッピング
+が展開された場合は "s:" の代わりに |<SID>| をつけなければならない。
+ローカル関数はスクリプトローカル関数だけである。バッファローカル関数やウィンド
+ウローカル関数というものはない。
+
+					*:fu* *:function* *E128* *E129* *E123*
+:fu[nction]		全ての関数と、その引数を表示する。
+
+:fu[nction] {name}	関数{name}の定義を表示する。
+			{name}は辞書|Dictionary|の要素の|Funcref|であってもよ
+			い: >
+				:function dict.init
+
+:fu[nction] /{pattern}	{pattern}にマッチする名前の関数を表示する。"File" で終
+			わる関数を全て表示する例: >
+				:function /File$
+<
+							*:function-verbose*
+'verbose' が 0 でないとき、これらのコマンドで関数を表示すると、それがどこで定
+義されたかも表示する。例: >
+
+    :verbose function SetFileTypeSH
+	function SetFileTypeSH(name)
+	    Last set from /usr/share/vim/vim-7.0/filetype.vim
+<
+より詳しくは|:verbose-cmd|を参照。
+
+						*E124* *E125* *E853* *E884*
+:fu[nction][!] {name}([arguments]) [range] [abort] [dict] [closure]
+			{name}という名前で新しい関数を定義する。関数名はアル
+			ファベットと数字と '_' からなり、通常の関数はアルファ
+			ベットの大文字、スクリプトローカル関数は "s:" で始まら
+			なければならない。Note: "b:" や "g:" は使用できない
+			(7.4.260 からは関数名にコロンが含まれる場合は E884 エ
+			ラーが発生する。例 "foo:bar()"。このパッチ以前はエラー
+			にはならない)。
+
+			{name}は辞書|Dictionary|の要素の|Funcref|であってもよ
+			い: >
+				:function dict.init(arg)
+<			"dict" は既に定義されている辞書でなければならない。そ
+			の要素 "init" がまだ存在しないならば追加される。存在す
+			る場合は、既存の関数を上書きするためには [!] をつけな
+			ければならない。この値は番号つきの関数を指す|Funcref|
+			である。この関数は|Funcref|を通してのみ呼ぶことができ、
+			そこへの参照がなくなると削除される。
+								*E127* *E122*
+			この名前で定義される関数が既に定義済みで [!] が使用さ
+			れなかった場合、エラーとなる。[!] が使用されていれば、
+			それまで存在していた関数は、速やかに新しいものへ置換え
+			られる。
+
+			引数{arguments}については|function-argument|を参照。
+
+					*:func-range* *a:firstline* *a:lastline*
+			引数[range]を追加した場合、関数は「範囲」を管理するこ
+			とができる。「範囲」は "a:firstline" と "a:lastline"
+			によって渡される。[range]がなかった場合、
+			":{range}call" が「範囲」を指定されて実行されると、1行
+			1行について、カーソルをその行の先頭に置いた状態で関数
+			を呼び出すことになる。|function-range-example|を参照。
+			他の Ex コマンドと同様に、カーソルは選択範囲の最初の行
+			に移動される。
+								*:func-abort*
+			引数 [abort] を追加すると、関数の実行中にエラーに遭遇
+			し次第、即関数は中断される。
+								*:func-dict*
+			引数 [dict] を追加すると、この関数は辞書|Dictionary|の
+			要素を通してしか呼べなくなる。そしてその辞書にローカル
+			変数 "self" が定義される。|Dictionary-function|を参照。
+						*:func-closure* *E932*
+			引数 [closure] を追加すると、関数は外側のスコープの変
+			数と引数をアクセスできるようになる。これは一般的にク
+			ロージャーと呼ばれる。以下の例では Bar() は Foo() のス
+			コープの "x" を使用している。それは Foo() から戻っても
+			参照され続ける: >
+				:function! Foo()
+				:  let x = 0
+				:  function! Bar() closure
+				:    let x += 1
+				:    return x
+				:  endfunction
+				:  return funcref('Bar')
+				:endfunction
+
+				:let F = Foo()
+				:echo F()
+<				1 >
+				:echo F()
+<				2 >
+				:echo F()
+<				3
+
+						*function-search-undo*
+			関数の実行によって、最後に使用されたサーチパターン、及
+			びredoコマンドの "." の内容は変更されない。したがって、
+			関数内で|:nohlsearch| を行っても、関数から戻ると検索結
+			果のハイライトが元に戻ることになる。
+
+					*:endf* *:endfunction* *E126* *E193*
+:endf[unction]		関数定義の終了。このコマンド1つで1行とすること。他のコ
+			マンドをいっしょに書いてはならない。
+
+				*:delf* *:delfunction* *E130* *E131* *E933*
+:delf[unction] {name}	関数{name}を削除する。
+			{name}は辞書|Dictionary|の要素の|Funcref|であってもよ
+			い: >
+				:delfunc dict.init
+<			この例は "dict" から要素 "init" を削除する。この関数へ
+			の参照がなくなると、関数は削除される。
+							*:retu* *:return* *E133*
+:retu[rn] [expr]	関数から戻る。"[expr]" が与えられた場合、それは評価さ
+			れ関数の戻り値として呼出し側に渡される。"[expr]" が与
+			えられない場合、数値0が呼出し側に渡される。
+			関数内に実行されない命令があるかどうかはチェックされな
+			いことに留意すること。つまり、たとえ ":return" 命令の
+			後に何か命令があったとしても、警告も何も与えられない。
+
+			|:try|と|:finally|の間で ":return" が実行された場合、
+			":finally" から対応する|:endtry|までのコマンドがまず実
+			行される。":try" がネストしている場合、それらの全てに
+			対してこのプロセスが適用される。そして最も外側の
+			":endtry" にて関数を抜ける。
+
+						*function-argument* *a:var*
+引数は、与えられた名前によって定義される。関数のなかでは "a:name" ("a:" を引数
+に接頭)のようにして参照することができる。
+					*a:0* *a:1* *a:000* *E740* *...*
+引数はコンマで区切ることで、最大20まで与えることができる。最後の引数を "..."
+にすることで、可変長の引数を使用できる。関数の中では "a:1" や "a:2" のようにし
+て可変長の引数にアクセスできる。"a:0" は可変長引数が幾つあるかを示している (0
+であること、つまり引数がそれ以上ないこともある)。"a:000" は全引数を持つリスト
+|List|を示している。Note "a:1" は "a:000[0]" と同じである。
+								*E742*
+a: のスコープとこの変数は固定されており、変更できない。
+しかしリスト|List|や辞書|Dictionary|のような複合型が使用された場合は、その内容
+を変更できる。よって関数にリスト|List|を渡し、そこに要素を追加させることができ
+る。関数にリストや辞書を変更させたくない場合は|:lockvar|を使うこと。
+
+"..." が使われていない時は、関数呼び出しの時の引数の数は名前付きの引数の数と一
+致していなければならない。"..." を使った時には引数の数は大きくなるだろう。
+
+関数を引数無しで定義することも可能である。その時でも()は付けなければならない。
+関数の本体は、宣言の次の行から始まり、対応する|:endfunction|までになる。関数の
+中で別の関数を定義することも可能である。
+
+
+							*local-variables*
+関数の中でローカル変数を使うこともできる。これらは関数から戻ると消滅する。
+グローバル変数にアクセスするためには "g:" を付ける必要がある。
+
+例: >
+  :function Table(title, ...)
+  :  echohl Title
+  :  echo a:title
+  :  echohl None
+  :  echo a:0 . " items:"
+  :  for s in a:000
+  :    echon ' ' . s
+  :  endfor
+  :endfunction 
+
+この関数は次のように呼ぶことができる: >
+  let lines = Table("Table", "line1", "line2")
+  let lines = Table("Empty Table")
+
+一つ以上の値を返したい場合には、リスト|List|を返すようにする: >
+  :function Compute(n1, n2)
+  :  if a:n2 == 0
+  :    return ["fail", 0]
+  :  endif
+  :  return ["ok", a:n1 / a:n2]
+  :endfunction
+
+この関数は次のように呼ぶことができる: >
+  :let [success, div] = Compute(102, 6)
+  :if success == "ok"
+  :  echo div
+  :endif
+<
+
+						*:cal* *:call* *E107* *E117*
+:[range]cal[l] {name}([arguments])
+		関数を呼び出す。関数の名前と引数は|:function|によって指定され
+		るものである。引数は最大20まで使用可能。戻り値は破棄される。
+		「範囲」を受け付ける関数に「範囲」を指定しなかった場合、関数は
+		カーソルの現在位置について一度だけ呼び出される。
+		「範囲」を受け付けない関数に「範囲」を指定した場合、その範囲の
+		一行ずつについて関数が呼び出される。その時カーソルは当該行の先
+		頭に設定される。カーソルは「範囲」の最下行の左端になる(恐らく
+		最後の関数呼出しの結果、動いた先である)。引数は各呼出しについ
+		て繰り返し評価される。それは次の例で確かめることができる:
+						*function-range-example*  >
+	:function Mynumber(arg)
+	:  echo line(".") . " " . a:arg
+	:endfunction
+	:1,5call Mynumber(getline("."))
+<
+		"a:firstline" と "a:lastline" はとにかく定義されるので、「範
+		囲」の最初や最後で何か違った事をするのにも用いることができる。
+
+		「範囲」自身を扱っている関数の例: >
+
+	:function Cont() range
+	:  execute (a:firstline + 1) . "," . a:lastline . 's/^/\t\\ '
+	:endfunction
+	:4,8call Cont()
+< 
+		この関数は「範囲」の最初の行を除いた全ての行の先頭に、継続のた
+		めの文字 "\" を挿入する。
+
+		この関数の戻り値からさらに間接参照が行われる場合、その参照先に
+		は範囲が渡されない。例: >
+	:4,8call GetDict().method()
+<		GetDict()には範囲が渡されるが、method()には渡されない。
+
+								*E132*
+関数の再帰的な使用はオプション |'maxfuncdepth'| によって制限することができる。
+
+自動的に読み込まれる関数 ~
+							*autoload-functions*
+たくさんの関数または巨大な関数を使うときは、それらが使用されたときだけ自動的に
+定義されるようにすることができる。これには2つの方法がある: オートコマンドによ
+る方法と、'runtimepath' 内の "autoload" ディレクトリによる方法である。
+
+
+オートコマンドを使う方法 ~
+
+これはユーザーマニュアルのセクション|41.14|で説明されている。
+
+オートコマンドは、長いVimスクリプトファイルのプラグインに対して有用である。自
+動コマンドを定義し、すぐに|:finish|でそのスクリプトを抜ける。こうするとVimの起
+動が速くなる。その後オートコマンドにより|:finish|コマンドをスキップする変数を
+定義し、そのファイルが再び読み込まれる。
+
+定義すべき関数名にマッチするパターンを指定してオートコマンドイベント
+FuncUndefinedを使う。例: >
+
+	:au FuncUndefined BufNet* source ~/vim/bufnetfuncs.vim
+
+ファイル "~/vim/bufnetfuncs.vim" は "BufNet" で始まる関数を定義しなければなら
+ない。|FuncUndefined|も参照。
+
+
+オートロードスクリプトの使い方 ~
+							*autoload* *E746*
+これはユーザーマニュアルのセクション|41.15|で説明されている。
+
+"autoload" ディレクトリのスクリプトを使う方法はより簡単である。しかし完全に正
+しいファイル名を使う必要がある。オートロードされる関数は次のような名前を持つ: >
+
+	:call filename#funcname()
+
+このような関数が呼ばれ、それがまだ定義されていなかった場合、Vimは 'runtimepath'
+内の "autoload" ディレクトリから "filename.vim" というスクリプトファイルを探
+す。例えば "~/.vim/autoload/filename.vim" のように。そしてこのファイルは次のよ
+うな関数を定義していなければならない: >
+
+	function filename#funcname()
+	   echo "Done!"
+	endfunction
+
+このファイル名と関数の # の前の部分は完全に一致しなければならない。そして定義
+された関数は呼ばれた関数と完全に同じ名前でなければならない。
+
+サブディレクトリを使うこともできる。関数名の中の # はパスのセパレータのように
+解釈される。つまり、次の関数を呼ぶと: >
+
+	:call foo#bar#func()
+
+Vimは 'runtimepath' からファイル "autoload/foo/bar.vim" を探す。
+
+これはまだ定義されていない変数を参照するときにも使える: >
+
+	:let l = foo#bar#lvar
+
+しかしこのオートロードスクリプトがすでに読み込まれている場合、未知の変数があっ
+てもこのスクリプトは再読み込みされない。
+
+この変数に値を代入するときは、何も特別なことはない。この方法は、オートロードス
+クリプトが読み込まれる前に設定を渡すために使うことができる: >
+
+	:let foo#bar#toggle = 1
+	:call foo#bar#func()
+
+オートロードスクリプト内で定義されるはずの関数を呼んだがスクリプト内で関数が定
+義されなかった場合、その関数を呼ぶたびにそのスクリプトがsourceされる。そして毎
+回エラーメッセージが表示される。
+
+また、2つのスクリプト間で、互いに自分が定義される前に相手を呼ぶような関数があ
+ると、これは動作しない。
+トップレベルでオートロード機能を使うのは避けること。
+
+Hint: たくさんのファイルからなるスクリプトを配布する場合には、|vimball|ユーティ
+リティを使うとそれらをまとめることができる。ユーザーマニュアルの
+|distribute-script|も参照。
+
+==============================================================================
+6. 波括弧変数						*curly-braces-names*
+
+変数を使用可能なほとんどの文脈では「波括弧」変数を使うことができる。これは有効
+な変数名であり、次のように、1個以上の式を波括弧{}で囲む: >
+	my_{adjective}_variable
+
+Vimはこれを見つけると、まず波括弧の中の式を評価し、その値をもとの位置に置きか
+え、全体を変数名として再解釈する。よって上の例では、変数 "adjective" に
+"noisy" が代入されていたとすると、この変数は "my_noisy_variable" となる。ある
+いは、"adjective" に "quiet" が代入されていたとすれば "my_quiet_variable" とな
+る。
+
+これの応用の1つは、オプション値によって支配される変数の集合を作ることである。
+例えば次の文 >
+	echo my_{&background}_message
+
+は現在の 'background' の値に応じて "my_dark_message" か "my_light_message" の
+中身を表示する。
+
+波括弧を複数使うこともできる: >
+	echo my_{adverb}_{adjective}_message
+ネストさせることもできる: >
+	echo my_{ad{end_of_word}}_message
+ここで "end_of_word" は "verb" か "jective" のどちらかである。
+
+しかし、波括弧の中の式を評価した結果が有効な変数名とならなければならない。
+つまり、次は無効である: >
+	:let foo='a + b'
+	:echo c{foo}d
+というのは、展開の結果が "ca + bd" となるからで、これは有効な名前ではない。
+
+						*curly-braces-function-names*
+同様の方法で評価した名前により関数を定義したり呼び出したりできる。
+例: >
+	:let func_end='whizz'
+	:call my_func_{func_end}(parameter)
+
+この例は関数 "my_func_whizz(parameter)" を呼びだす。
+
+これらは機能しない: >
+  :let i = 3
+  :let @{i} = ''  " error
+  :echo @{i}      " error
+
+==============================================================================
+7. コマンド						*expression-commands*
+
+:let {var-name} = {expr1}				*:let* *E18*
+			内部変数{var-name}に式{expr1}の結果をセットする。変数
+			の型は{expr1}によって決定される。{var-name}という変数
+			がまだ存在しない場合、新たに作成される。
+
+:let {var-name}[{idx}] = {expr1}			*E689*
+			リストの要素に式{expr1}の結果をセットする。{var-name}
+			はリストを参照し、{idx}はそのリストの有効なインデック
+			スでなければならない。ネストしたリストに対してはイン
+			デックスを繰り返すことができる。
+			このコマンドはリストに要素を追加するためには使えない。
+			文字列の i バイト目をセットするためにも使えない。それ
+			には次のようにする: >
+				:let var = var[0:2] . 'X' . var[4:]
+<
+
+							*E711* *E719*
+:let {var-name}[{idx1}:{idx2}] = {expr1}		*E708* *E709* *E710*
+			リスト|List|の一部を式{expr}の値で置き換える。{expr}の
+			値は正しい個数の要素を持つリストでなければならない。
+			{idx1}を省略すると0となる。
+			{idx2}を省略するとリストの末尾となる。
+			指定された範囲の一部がリストの末尾を越える場合、要素が
+			追加される。
+
+					*:let+=* *:let-=* *:let.=* *E734*
+:let {var} += {expr1}	":let {var} = {var} + {expr1}" と同様。
+:let {var} -= {expr1}	":let {var} = {var} - {expr1}" と同様。
+:let {var} .= {expr1}	":let {var} = {var} . {expr1}" と同様。
+			{var}がセットされていないときや、{var}と{expr1}の型が
+			演算子に合わないときは失敗する。
+
+
+:let ${env-name} = {expr1}			*:let-environment* *:let-$*
+			環境変数{env-name}に式{expr1}の結果をセットする。型は
+			常に文字列。
+:let ${env-name} .= {expr1}
+			環境変数{env-name}に{expr1}を付け加える。その環境変数
+			が存在しないときは "=" と同様に働く。
+
+:let @{reg-name} = {expr1}			*:let-register* *:let-@*
+			式{expr1}の結果をレジスタ{reg-name}に書きこむ。
+			{reg-name}は単一の文字でかつ、書きこむことのできるレジ
+			スタでなければならない(|registers|を参照)。"@@" は名前
+			無しレジスタとして使用でき、"@/" はサーチパターンとし
+			て使用できる。
+			{expr1}の結果が<CR>か<NL>で終了していた場合、レジスタ
+			は行単位で設定され、そうでなければ文字単位で設定される。
+			次のコマンドにより最後に検索したパターンをクリアするこ
+			とができる: >
+				:let @/ = ""
+<			これは空文字列を検索するのとは異なる。空文字列を検索す
+			ると、いたるところでマッチする。
+
+:let @{reg-name} .= {expr1}
+			レジスタ{reg-name}に{expr1}を付け加える。このレジスタ
+			が空のときは、そこに{expr1}をセットする。
+
+:let &{option-name} = {expr1}			*:let-option* *:let-&*
+			オプション{option-name}に式{expr}の値をセットする。文
+			字列や数値の値はそのオプションの型に変換される。
+			ウィンドウやバッファについてローカルなオプションに対し
+			ては、その効果は|:set|コマンドを使ったときと同様で、ロー
+			カルな値とグローバルな値の両方が変更される。
+			例: >
+				:let &path = &path . ',/usr/local/include'
+
+:let &{option-name} .= {expr1}
+			文字列のオプションの場合: その値に{expr}を付け加える。
+			|:set+=|とは違い、コンマを挿入しない。
+
+:let &{option-name} += {expr1}
+:let &{option-name} -= {expr1}
+			数値または切替のオプションの場合: {expr1}を足す・引く。 
+
+:let &l:{option-name} = {expr1}
+:let &l:{option-name} .= {expr1}
+:let &l:{option-name} += {expr1}
+:let &l:{option-name} -= {expr1}
+			上と同様だが、オプションのローカルな値だけをセットする
+			(ローカルな値があるならば)。|:setlocal|と同様に働く。
+
+:let &g:{option-name} = {expr1}
+:let &g:{option-name} .= {expr1}
+:let &g:{option-name} += {expr1}
+:let &g:{option-name} -= {expr1}
+			上と同様だが、オプションのグローバルな値だけをセットす
+			る(グローバルな値があるならば)。|:setglobal|と同様に働
+			く。
+
+:let [{name1}, {name2}, ...] = {expr1}		*:let-unpack* *E687* *E688*
+			{expr1}の値はリスト|List|でなければならない。そのリス
+			トの最初の要素が{name1}に代入され、2番目の要素が
+			{name2}に代入される。以下同様。
+			nameの個数がリスト|List|の要素の個数に一致しなければな
+			らない。
+			前述のように各nameは ":let" コマンドの要素の1つになる
+			ことができる。
+			例: >
+				:let [s, item] = GetItem(s)
+<			詳細: 最初に{expr1}が評価され、それから順番に代入が行
+			われる。{name2}が{name1}に依存するかどうかは問題になる。
+			例: >
+				:let x = [0, 1]
+				:let i = 0
+				:let [i, x[i]] = [1, 2]
+				:echo x
+<			この結果は[0, 2]となる。
+
+:let [{name1}, {name2}, ...] .= {expr1}
+:let [{name1}, {name2}, ...] += {expr1}
+:let [{name1}, {name2}, ...] -= {expr1}
+			上と同様だが、リスト|List|の各要素に対し連結・足し算・
+			引き算を行う。
+
+:let [{name}, ..., ; {lastname}] = {expr1}
+			|:let-unpack|と同様だが、リスト|List|の要素数がnamesの
+			数より多くてもよい。余った要素のリストが{lastname}に代
+			入される。要素の余りがないとき{lastname}は空リストにな
+			る。
+			例: >
+				:let [a, b; rest] = ["aval", "bval", 3, 4]
+<
+:let [{name}, ..., ; {lastname}] .= {expr1}
+:let [{name}, ..., ; {lastname}] += {expr1}
+:let [{name}, ..., ; {lastname}] -= {expr1}
+			上と同様だが、リスト|List|の各要素に対して連結・足し算
+			・引き算を行う。
+
+								*E121*
+:let {var-name}	..	変数{var-name}の値を一覧表示する。変数の名前を複数指定
+			することができる。以下の特別な名前が認識される:	*E738*
+			  g:	グローバル変数
+			  b:	バッファローカル変数
+			  w:	ウィンドウローカル変数
+			  t:	タブページローカル変数
+			  s:	スクリプトローカル変数
+			  l:	関数ローカル変数
+			  v:	Vimの変数
+
+:let			全変数の値を一覧表示する。値の前に変数の型が示される:
+			    <nothing>	文字列
+				#	数値
+				*	Funcref
+
+
+:unl[et][!] {name} ...				*:unlet* *:unl* *E108* *E795*
+			内部変数{name}を削除する。複数の変数名を指定すると、そ
+			れらが全て削除される。名前はリスト|List|や辞書
+			|Dictionary|の要素でもよい。
+			[!]をつけると存在しない変数に対するエラーメッセージを
+			表示しない。
+			リスト|List|から1個以上の要素を削除することができる: >
+				:unlet list[3]	  " 4番目の要素を削除
+				:unlet list[3:]   " 4番目から最後までの要素を
+						    削除
+<			辞書からは一度に1個の要素を削除することができる: >
+				:unlet dict['two']
+				:unlet dict.two
+			グローバル変数とスクリプトローカル変数をクリーンアップ
+			するために特に便利である(これらはスクリプト終了時に検
+			出されない)。関数ローカルな関数は、その関数から抜ける
+			ときに自動的に削除される。
+
+:lockv[ar][!] [depth] {name} ...			*:lockvar* *:lockv*
+			内部変数{name}をロックする。ロックすると、それ以降変更
+			ができなくなる(アンロックするまで)。
+			ロックされた変数を削除することはできる: >
+				:lockvar v
+				:let v = 'asdf'		" 失敗!
+				:unlet v
+<							*E741*
+			ロックされた変数を変更しようとするとエラーメッセージ
+			"E741: Value is locked: {name}" が表示される。
+
+			[depth]はリスト|List|や辞書|Dictionary|をロックすると
+			きに意味がある。どれだけ深くロックするかを指定する:
+				1	リストや辞書それ自身をロックする。要素
+					を追加したり削除はできないが、要素の値
+					を変えることはできる。
+				2	要素の値もロックする。その要素がリスト
+					や辞書である場合、その中の要素の追加や
+					削除はできないが、値の変更はできる。
+				3	2と同様だが、リスト・辞書内のリスト・
+					辞書に対してもあてはまる。1レベル深い。
+			[depth]の既定値は2であり、{name}がリストまたは辞書であ
+			る場合、その値は変更できない。
+								*E743*
+			深さを無限にするには[!]を使い、[depth]を省略する。しか
+			しループを捕捉するために深さの最大値は100に設定されて
+			いる。
+
+			Note 2つの変数が同じリスト|List|を参照している場合、片
+			方の変数をロックすると、もう一方の変数を介してアクセス
+			した場合もロックされている。
+			例: >
+				:let l = [0, 1, 2, 3]
+				:let cl = l
+				:lockvar l
+				:let cl[1] = 99		" 代入できない!
+<			
+			これを回避するにはリストのコピーを作るとよい。
+			|deepcopy()|を参照。
+
+
+:unlo[ckvar][!] [depth] {name} ...			*:unlockvar* *:unlo*
+			内部変数{name}をアンロックする。|:lockvar|の逆を行う。
+
+
+:if {expr1}			*:if* *:endif* *:en* *E171* *E579* *E580*
+:en[dif]		{expr1}が非ゼロと評価された場合に、対応する ":else" か
+			":endif" までの命令を実行する。
+
+			バージョン4.5から5.0まで間のVimは、":if" と ":endif"
+			の間の全てのExコマンドは無視する。この2つのコマンドは
+			将来の拡張性を、下位互換と同時に提供するためのものであ
+			る。ネスティング (入れ子) が可能である。":else" や
+			":elseif" は無視され、"else" 部分は一切実行されないこ
+			とに注意。
+
+			あなたはこれを、旧バージョンとの互換性を保ったまま使用
+			することができる: >
+				:if version >= 500
+				:  version-5-specific-commands
+				:endif
+<			しかしそれでも "endif" を見つけるために後続のコマンド
+			をパースする必要がある。古いVimで新しいコマンドを使う
+			と問題が起こることがある。例えば ":silent" が
+			":substitute" コマンドと認識されるなど。その場合には、
+			":execute" を使うと問題を避けることができる: >
+				:if version >= 600
+				:  execute "silent 1,$delete"
+				:endif
+<
+			NOTE: ":append" と ":insert" コマンドは ":if" と
+			":endif" の間では正しく動かない。
+
+						*:else* *:el* *E581* *E583*
+:el[se]			対応する ":if" ブロックが実行されなかった場合には、こ
+			れに対応する ":else" か ":endif" までのコマンドが実行
+			される。
+
+					*:elseif* *:elsei* *E582* *E584*
+:elsei[f] {expr1}	":else" ":if" の省略形。":endif" を付け加える (入れ子
+			にする) 手間を省くことができる。
+
+:wh[ile] {expr1}			*:while* *:endwhile* *:wh* *:endw*
+						*E170* *E585* *E588* *E733*
+:endw[hile]		{expr1}が非ゼロとして評価される間、":while" と
+			":endwhile" の間のコマンドを繰り返し実行する。
+			ループの内側でエラーが生じた場合、endwhileの直後から実
+			行が再開される。
+			例: >
+				:let lnum = 1
+				:while lnum <= line("$")
+				   :call FixLine(lnum)
+				   :let lnum = lnum + 1
+				:endwhile
+<
+		NOTE: ":append" や ":insert" コマンドは ":while" ループの内側
+		では正しく動かない。
+
+:for {var} in {list}					*:for* *E690* *E732*
+:endfo[r]						*:endfo* *:endfor*
+			{list}の各要素に対し、":for" と ":endfor" の間のコマン
+			ドを繰り返す。変数{var}に各要素の値がセットされる。
+			ループの内側のコマンドでエラーが検出されたときは
+			"endfor" の後から実行が継続される。
+			ループの内側で{list}を変更するとどの要素が使われるかに
+			影響を与える。それを望まない場合はコピーを作ること: >
+				:for item in copy(mylist)
+<			コピーを作らないと、Vimは現在の要素に対してコマンドを
+			実行する前に、リストの次の要素への参照を保存する。その
+			ため副作用なしに現在の要素を削除することができる。それ
+			以降の要素を変更すると、それが見つからなくなる。つまり
+			以下の例は動作する(リストを空にする非効率な方法): >
+				for item in mylist
+				   call remove(mylist, 0)
+				endfor
+<			Note リストを並べ替える(例えばsort()やreverse()で)と予
+			期しない結果になることがある。
+
+:for [{var1}, {var2}, ...] in {listlist}
+:endfo[r]
+			上の ":for" と同様だが、{listlist}の各要素がリストでな
+			ければならない点が異なる。そのリストの各要素が{var1},
+			{var2}などに代入される。例: >
+				:for [lnum, col] in [[1, 3], [2, 5], [3, 8]]
+				   :echo getline(lnum)[col]
+				:endfor
+<
+						*:continue* *:con* *E586*
+:con[tinue]		":while" または ":for" ループの内側で使われたときは、
+			そのループの開始位置まで戻る。
+			ループの内側の|:try|と|:finally|の間で使われた場合、
+			|:finally|から|:endtry|までの間のコマンドがまず実行さ
+			れる。ループの内側で ":try" がネストしている場合、全て
+			の ":try" に対してこのプロセスが適用される。最も外側の
+			":endtry" の後ループの開始位置まで戻る。
+
+						*:break* *:brea* *E587*
+:brea[k]		":while" または ":for" ループの内側で使われたときは、
+			対応する ":endwhile" または ":endfor" の後のコマンドま
+			でスキップする。
+			ループの内側の|:try|と|:finally|の間で使われた場合、
+			|:finally|から|:endtry|までの間のコマンドがまず実行さ
+			れる。ループの内側で ":try" がネストしている場合、全て
+			の ":try" に対してこのプロセスが適用される。最も外側の
+			":endtry" の後ループの後までジャンプする。
+
+:try				*:try* *:endt* *:endtry* *E600* *E601* *E602*
+:endt[ry]		":try" と ":endtry" の間のコマンド (":source" コマン
+			ド、関数呼び出し、オートコマンド実行を含めた全てのコマ
+			ンド実行) のエラー制御を変更する。
+
+			エラーや割り込みが検出された場合、後に|:finally|コマン
+			ドがあるならば、":finally" の後から実行が継続される。
+			そうでなければ、または ":endtry" に達した後は次の動的
+			に囲んでいる ":try" に対応する ":finally" などが探され
+			る。その後スクリプトは実行を停止する。(関数定義に引数
+			"abort" がついているかどうかは関係ない)
+			例: >
+		:try | edit too much | finally | echo "cleanup" | endtry
+		:echo "impossible"	" 実行されない。上のコマンドにより
+					" スクリプトは停止する。
+<
+			さらに、(動的に) ":try" と ":endtry" の内側にあるエラー
+			や割り込みは例外に変換される。そしてそれは|:throw|コマ
+			ンドによって投げたときと同様に捕捉できる(|:catch|を参
+			照)。この場合はスクリプトの実行は停止しない。
+
+			割り込み例外には "Vim:Interrupt" という値が使われる。
+			Vimコマンドにおけるエラーは "Vim({command}):{errmsg}"
+			という形式の値に変換される。その他のエラーは
+			"Vim:{errmsg}" という形式のエラーに変換される。ここで
+			{command}はコマンドの完全な名前であり、{errmsg}はその
+			例外が捕捉されなかった場合に表示されるメッセージで、常
+			にエラー番号で始まる。
+			例: >
+		:try | sleep 100 | catch /^Vim:Interrupt$/ | endtry
+		:try | edit | catch /^Vim(edit):E\d\+/ | echo "error" | endtry
+<
+					*:cat* *:catch* *E603* *E604* *E605*
+:cat[ch] /{pattern}/	{pattern}にマッチする例外が発生し、より前の|:catch|
+			で捕捉されなかった場合、このコマンドから次の|:catch|,
+			|:finally|, |:endtry|までのコマンドが実行される。その
+			ような例外が発生しなかった場合、そのコマンドはスキップ
+			される。
+			{pattern}が省略された場合は全てのエラーが捕捉される。
+			例: >
+		:catch /^Vim:Interrupt$/	" 割り込み (CTRL-C) を捕捉
+		:catch /^Vim\%((\a\+)\)\=:E/	" 全Vimエラーを捕捉
+		:catch /^Vim\%((\a\+)\)\=:/	" 例外と割り込みを捕捉
+		:catch /^Vim(write):/		" :writeにおける全エラーを捕捉
+		:catch /^Vim\%((\a\+)\)\=:E123/	" エラーE123を捕捉
+		:catch /my-exception/		" ユーザー定義例外を捕捉
+		:catch /.*/			" 全てを捕捉
+		:catch				" /.*/と同じ
+<
+			{pattern}を囲むのに/以外の文字を使うことができる。ただ
+			しその文字は特別な意味(例: '|' や '"' など)を持ってい
+			てはならず、{pattern}の内側に現れてはならない。
+			例外の情報は |v:exception| で得られる。
+			|throw-variables| も参照。
+			NOTE: エラーメッセージの本文によって ":catch" すること
+			は確実ではない。メッセージはロケールによって異なるから
+			である。
+
+					*:fina* *:finally* *E606* *E607*
+:fina[lly]		|:try|と ":finally" の間を抜ける前に必ず、このコマンド
+			から対応する|:endtry|の間のコマンドが実行される。つま
+			り正常に進んだ場合、|:continue|, |:break|, |:finish|,
+			|:return|を使った場合、エラー・割り込み・例外が発生し
+			た場合(|:throw|を参照)のいずれの場合でも。
+
+							*:th* *:throw* *E608*
+:th[row] {expr1}	{expr1}を評価し、例外として投げる。|:try|と|:catch|の
+			間で ":throw" が使われた場合、{expr1}にマッチする最初
+			の|:catch|までのコマンドはスキップされる。そのような
+			":catch" がない場合、または ":catch" と|:finally|の間
+			で ":throw" が使われた場合、":finally" から|:endtry|ま
+			でのコマンドが実行される。":throw" が ":finally" の後
+			で実行された場合、":endtry" までのコマンドはスキップさ
+			れる。
+			":endtry" において、動的に囲んでいる次の ":try" (これ
+			は関数呼び出しやスクリプトsourceも含めて探される) から
+			対応する ":catch" までに対しこのプロセスが再び適用され
+			る。例外が捕捉されない場合、コマンドの処理は終了する。
+			例: >
+		:try | throw "oops" | catch /^oo/ | echo "caught" | endtry
+<			Note: エラーによって行のパースがスキップされ、"|" によ
+			るコマンド区切りが解釈されないような場合は "catch" は
+			行を分けて書く必要がある。
+
+							*:ec* *:echo*
+:ec[ho] {expr1} ..	各{expr1}をスペースで区切って表示する。最初の{expr1}の
+			表示は、常に新しい行から始まる。
+			|:comment|も参照。
+			改行が必要な場合 "\n" を使用する。カーソルを第1桁に
+			持って行くには "\r" を使用する。
+			色強調を行うにはコマンド|:echohl|を使用する。
+			コメント文を同じ行に続けることはできない。
+			例: >
+		:echo "the value of 'shell' is" &shell
+<							*:echo-redraw*
+			このコマンドの後、再描画を行うと表示したメッセージが消
+			えてしまう。Vim は一連のコマンドが完了するまで再描画を
+			後回しにするため、この現象は頻繁に発生する。例えば、
+			":echo" より前に実行したコマンドが後で再描画を引き起こ
+			し、メッセージが消えてしまうということがある(再描画は
+			しばしばユーザーが何か入力するまで後回しにされる)。こ
+			の問題を避けるには、|:redraw| を使って強制的に再描画す
+			ること。例: >
+		:new | redraw | echo "there is a new window"
+<
+
+							*:echon*
+:echon {expr1} ..	改行を付けずに、{expr1}を表示する。|:comment|も参照。
+			色強調を行うにはコマンド|:echohl|を使用する。
+			コメント文を同じ行に続けることはできない。
+			例: >
+				:echon "the value of 'shell' is " &shell
+<
+			Vimコマンドの ":echo" と、外部のシェルコマンドである
+			":!echo" との違いに注意: >
+		:!echo %		--> filename
+<			":!" の引数は展開される。|:_%|を参照。 >
+		:!echo "%"		--> filename or "filename"
+<			前の例のように働く。ダブルクォートが表示されるかどうか
+			は、使用している 'shell' に依存する。 >
+		:echo %			--> 何も表示されない
+<			'%' は式として不当な文字である。 >
+		:echo "%"		--> %
+<			単に文字 '%' を表示する。 >
+		:echo expand("%")	--> filename
+<			'%' を展開するために関数expand()を呼び出している。
+
+							*:echoh* *:echohl*
+:echoh[l] {name}	次の |:echo|, |:echon|, |:echomsg| コマンドから、ハイ
+			ライトグループ{name}を適用する。|input()|のプロンプト
+			に対しても適用される。例: >
+		:echohl WarningMsg | echo "Don't panic!" | echohl None
+<			使用した後にはグループを "None" に戻すことを忘れないよ
+			うに。さもないとそれ以降のechoの表示全てがハイライトさ
+			れてしまう。
+
+							*:echom* *:echomsg*
+:echom[sg] {expr1} ..	式を本当のメッセージとして表示し、そのメッセージをメッ
+			セージ履歴|message-history|に保存する。
+			|:echo|コマンド同様に、引数の間にスペースが挿入される。
+			しかし印字不可能な文字は解釈されずに表示される。
+			|:echo|とはかなり異なり、むしろ|:execute|に近い方法で
+			解析がされる。なんらかを表示する前に、まず最初に全ての
+			式が評価し、連結する。式を評価した値は数値か文字列でな
+			ければならない。辞書やリストはエラーとなる。
+			強調を行うには|:echohl|コマンドを使う。
+			例: >
+		:echomsg "It's a Zizzer Zazzer Zuzz, as you can plainly see."
+<			画面を再描画したときメッセージが消去されてしまうのを避
+			ける方法については|:echo-redraw|を参照。
+							*:echoe* *:echoerr*
+:echoe[rr] {expr1} ..	式をエラーメッセージとして表示し、そのメッセージを
+			メッセージ履歴|message-history|に保存する。スクリプト
+			や関数の中で使用されたときは行番号が付け加えられる。
+			|:echo|コマンドと同様に引数の間にスペースが挿入される。
+			try条件文の中で使用されたときは、このメッセージがエ
+			ラー例外として投げられる。(|try-echoerr|を参照)
+			例: >
+		:echoerr "This script just failed!"
+<			
+			単にメッセージを強調させたい場合には|:echohl|を使うこ
+			と。ビープを鳴らしたいときには次のようにする: >
+		:exe "normal \<Esc>"
+<
+							*:exe* *:execute*
+:exe[cute] {expr1} ..	{expr1}の評価結果の文字列をExコマンドとして実行する。
+			複数の引数は連結され、間にスペースが挿入される。余計な
+			スペースを入れたくない場合は "." オペレータを使って文
+			字列を連結すること。
+			{expr1}は処理されたコマンドとして扱われ、コマンドライ
+			ン編集用のキーは認識されない。
+			コメント文を同じ行に続けることはできない。
+			例: >
+		:execute "buffer" nextbuf
+		:execute "normal" count . "w"
+<
+			":execute" は '|' を受けつけないコマンドに、次のコマン
+			ドを続けて実行させるのにも使用できる。例: >
+		:execute '!ls' | echo "theend"
+<			{訳注: 普通の使い方では ":!ls" の後には '|' を使って、
+			Exコマンドを続けることはできない}
+			また ":execute" は、Vimスクリプト内でコマンド ":normal"
+			の引数に制御文字を書くことを避けるために役に立つ。 >
+		:execute "normal ixxx\<Esc>"
+<			これで<Esc>文字を表す。|expr-string|を参照。
+
+			ファイル名の中の特殊文字を正しくエスケープするように
+			注意すること。Vim コマンドに与えるファイル名をエス
+			ケープするには |fnameescape()| を使う。|:!| コマンドに
+			与えるときは |shellescape()| を使う。
+			例: >
+		:execute "e " . fnameescape(filename)
+		:execute "!ls " . shellescape(filename, 1)
+<
+			Note: execute に渡す文字列はいかなるコマンドでも構わな
+			いが、"if" や "while"、"for" の開始や終了は常に機能す
+			るとは限らない。なぜならコマンドをスキップするときには
+			":execute" は解釈されないので Vim はブロックの開始や終
+			了を認識することができない。"break" と "continue" も
+			":execute" で実行すべきではない。
+			次の例は機能しない。":execute" は評価されず、Vim は
+			"while" を認識しないので、":endwhile" を見つけたときに
+			エラーが発生する: >
+		:if 0
+		: execute 'while i > 5'
+		:  echo "test"
+		: endwhile
+		:endif
+<
+			文字列の中に完全な "while" や "if" コマンドが含まれる
+			ことが求められる: >
+		:execute 'while i < 5 | echo i | let i = i + 1 | endwhile'
+<
+
+							*:exe-comment*
+			":execute" や ":echo" そして ":echon" は、同一行に直接
+			コメントを続けることはできない。何故ならそれらのコマン
+			ドにとって '"' は文字列の始まりに見えてしまうからであ
+			る。しかし '|' の後にコメントを書くことは可能である。
+			例: >
+		:echo "foo" | "this is a comment
+
+==============================================================================
+8. 例外処理					*exception-handling*
+
+Vimスクリプト言語は例外処理機構を備えている。この節では例外処理をどのように行
+うかについて説明する。
+
+例外はエラー発生時や割り込み発生時にVimによって投げられる。それについては
+|catch-errors|と|catch-interrupt|を参照。ユーザーはコマンド|:throw|によって明示
+的に例外を投げることができる。|throw-catch|を参照。
+
+
+TRY 条件文					*try-conditionals*
+
+例外を捕捉したり、例外を引き金として後始末のコードを実行することができる。try
+条件文を使う事によってcatch節(これが例外を捕捉する)やfinally節(後始末のために
+実行される)を指定する事ができる。
+try条件文はコマンド|:try|によって始まり、対応するコマンド|:endtry|によって終了
+する。その間でコマンド|:catch|によりcatch節を定めたり、コマンド|:finally|に
+よってfinally節を定めることができる。catch節は1個もなかったり、複数個あっても
+よい。しかしfinally節は1個までしか持てない。finally節の後にcatch節があってはな
+らない。catch節とfinally節の前の部分はtryブロックと呼ばれる。
+
+     :try
+     :  ...
+     :  ...				try ブロック
+     :  ...
+     :catch /{pattern}/
+     :  ...
+     :  ...				catch 節
+     :  ...
+     :catch /{pattern}/
+     :  ...
+     :  ...				catch 節
+     :  ...
+     :finally
+     :  ...
+     :  ...				finally 節
+     :  ...
+     :endtry
+
+try条件文により、コードから発生する例外を監視したり、適切な対応を取ることがで
+きる。tryブロック内で発生した例外は捕捉される。tryブロックとcatch節内で発生し
+た例外は捕捉され、後始末が行われる。
+tryブロックの実行中に例外が発生しなかった場合は、制御は (もしあれば) finally節
+に移動する。その実行後に、スクリプトは ":endtry" の後の行から実行を継続する。
+tryブロックの実行中に例外が発生した場合は、tryブロックの残りの行はスキップされ
+る。例外はコマンド ":catch" の引数として指定された正規表現に照合される。最初に
+マッチした ":catch" の後のcatch節が実行される。他のcatch節は実行されない。
+catch節は次に ":catch", ":finally", ":endtry" が現れたところで終了する (どれで
+もよい)。
+":endtry" に達すると、スクリプトは次の行から通常通り実行が続けられる。
+発生した例外が、コマンド ":catch" で指定されたどの正規表現にもマッチしないとき、
+その例外はそのtry条件文で捕捉されず、どのcatch節も実行されない。finally節があ
+るならば実行される。finally節の実行中は例外は後回しにされ、":endtry" のときに
+実行される。そして ":endtry" の後のコマンドは実行されず、例外は他のどこかで捕
+捉される。|try-nesting|を参照。
+catch節の実行中に新たな例外が発生した場合は、そのcatch節の残りの行は実行されな
+い。新しい例外は同じtry条件文のどの ":catch" コマンドの正規表現にも照合されず、
+どのcatch節も実行されない。しかしfinally節があるならばそこが実行され、その間そ
+の例外は保留される。":endtry" の後のコマンドは実行されない。新しい例外は他のど
+こかで捕捉される。|try-nesting|を参照。
+finally節の実行中に例外が発生した場合は、そのfinally節の残りの行は実行されない。
+tryブロックやそのcatch節のどこかで例外が発生してからそのfinally節が実行されて
+いた場合は、元の(保留されていた)例外は破棄される。":endtry" の後のコマンドは実
+行されない。finally節で発生した例外は伝播し、他のどこかで捕捉される。
+|try-nesting|を参照。
+
+完全なtry条件文を囲む ":while" ループ内で、tryブロックやcatch節において
+":break" や ":continue" が実行されたときもfinally節が実行される。
+また、関数の中やsourceされたスクリプト中で、tryブロックやtry条件文のcatch節に
+おいて ":return" や ":finish" が実行されたときもfinally節が実行される。finally
+節の実行中は ":break", ":continue", ":return", ":finish" は保留され、":endtry"
+に達したとき再開される。しかしこれらは、そのfinally節内で例外が発生したときは
+破棄される。
+完全なtry条件節を囲む ":while" ループ内での ":break" や ":continue"、または
+finally節内で ":return" や ":finish" に出会ったときは、finally節の残りはスキッ
+プされ、通常通り ":break", "continue", ":return", "finish" が実行される。もし
+そのfinally節の前に、tryブロックやcatch節内で例外が発生したり、":break",
+":continue", ":return", ":finally" が行われていた場合は、それらの保留されてい
+た例外やコマンドは破棄される。
+
+例として |throw-catch| と |try-finally| を参照。
+
+
+try条件文のネスト					*try-nesting*
+
+try条件文は任意にネストされられる。つまり、try条件文のtryブロック・catch節・
+finally節のなかに別の完全なtry条件文を書くことができる。内側のtry条件文がtryブ
+ロックで発生した例外を捕捉しなかったときや、catch節・finally節で新たな例外が発
+生したときは、外側のtry条件文がそのルールにしたがって例外を捕捉する。内側の
+try条件文が外側の条件文のtryブロックの中にある場合はcatch節が判定されるが、そ
+うでない場合はfinally節のみが実行される。これはネストの仕方には関係ない。つま
+り、内側のtry条件文が直接外側のtry条件文に含まれていてもよいし、外側がスクリプ
+トをsourceしたり、内側のtry条件文を含む関数を呼び出していてもよい。
+
+有効なtry条件文のどれも例外を捕捉しなかったときは、それらのfinally節が実行され
+る。その後、スクリプトの実行は停止する。":throw" コマンドにより明示的に投げら
+れた例外が捕捉されなかった場合は、エラーメッセージが表示される。Vimによって暗
+黙的に投げられたエラーや割り込み例外については、通常通りエラーメッセージや割り
+込みメッセージが表示される。
+
+例として |throw-catch| を参照。
+
+
+例外処理コードの検査					*except-examine*
+
+例外処理のコードはトリッキーになりがちである。何が起こっているか知りたいときは
+スクリプトファイルをsourceするときに 'verbose' を13に設定するか、コマンド修飾
+子 ":13verbose" を使う。すると例外が発生・破棄・捕捉・完了したときには表示され
+るようになる。冗長度のレベルを14以上にすると、finally節において保留されている
+ものも表示されるようになる。この情報はデバッグモードでも表示される
+(|debug-scripts|を参照)。
+
+
+例外の生成と捕捉					*throw-catch*
+
+任意の数値や文字列を例外として投げることができる。コマンド|:throw|を使い、投げ
+られる値を引数に渡す: >
+	:throw 4711
+	:throw "string"
+<							*throw-expression*
+式を引数に指定することもできる。まずその式が評価され、その結果が投げられる: >
+	:throw 4705 + strlen("string")
+	:throw strpart("strings", 0, 6)
+
+":throw" コマンドの引数を評価している最中に例外が発生することもありうる。その
+例外が捕捉されない限り、その式の評価は破棄される。
+よって、その ":throw" コマンドは例外を投げることができない。
+   例: >
+
+	:function! Foo(arg)
+	:  try
+	:    throw a:arg
+	:  catch /foo/
+	:  endtry
+	:  return 1
+	:endfunction
+	:
+	:function! Bar()
+	:  echo "in Bar"
+	:  return 4710
+	:endfunction
+	:
+	:throw Foo("arrgh") + Bar()
+
+この例を実行すると "arrgh" が投げられ、Bar()が実行されないため "in Bar" は表示
+されない。しかし次のようにすると >
+	:throw Foo("foo") + Bar()
+"in Bar" を表示し、4711を投げる。
+
+式を引数として受け取る他のコマンドでも、式の評価中に捕捉されない例外が発生する
+とコマンドが破棄される。そして例外はそのコマンドを呼び出した位置へ伝播する。
+   例: >
+
+	:if Foo("arrgh")
+	:  echo "then"
+	:else
+	:  echo "else"
+	:endif
+
+この例で、"then" と "else" のどちらも表示されない。
+
+							*catch-order*
+例外は、1個以上の|:catch|コマンドを持つtry条件文で捕捉することができる。これに
+ついては|try-conditionals|を参照。各 ":catch" コマンドで捕捉される値は、引数に
+て正規表現で指定できる。マッチする例外が捕捉されると、その後に続くcatch節が実
+行される。
+   例: >
+
+	:function! Foo(value)
+	:  try
+	:    throw a:value
+	:  catch /^\d\+$/
+	:    echo "Number thrown"
+	:  catch /.*/
+	:    echo "String thrown"
+	:  endtry
+	:endfunction
+	:
+	:call Foo(0x1267)
+	:call Foo('string')
+
+最初のFoo()の呼び出しは "Number thrown" を表示し、2番目の呼び出しは "String
+thrown" を表示する。例外は、順番に ":catch" コマンドに照合される。最初にマッチ
+したcatch節だけが実行される。そのため、より限定的な ":catch" を先に書くべきで
+ある。次の順序で書くと無意味になってしまう: >
+
+	:  catch /.*/
+	:    echo "String thrown"
+	:  catch /^\d\+$/
+	:    echo "Number thrown"
+
+最初の ":catch" は常にマッチするため、2番目のcatch節は決して実行されない。
+
+							*throw-variables*
+一般的な正規表現により例外を捕捉した場合、その正確な値には変数|v:exception|に
+よりアクセスできる: >
+
+	:  catch /^\d\+$/
+	:    echo "Number thrown.  Value is" v:exception
+
+また、どこで例外が発生したかも知りたいだろう。これは|v:throwpoint|に保持されて
+いる。Note "v:exception" と "v:throwpoint" は最も直近に捕捉された例外に対し、
+それが終了するまで有効である。
+   例: >
+
+	:function! Caught()
+	:  if v:exception != ""
+	:    echo 'Caught "' . v:exception . '" in ' . v:throwpoint
+	:  else
+	:    echo 'Nothing caught'
+	:  endif
+	:endfunction
+	:
+	:function! Foo()
+	:  try
+	:    try
+	:      try
+	:	 throw 4711
+	:      finally
+	:	 call Caught()
+	:      endtry
+	:    catch /.*/
+	:      call Caught()
+	:      throw "oops"
+	:    endtry
+	:  catch /.*/
+	:    call Caught()
+	:  finally
+	:    call Caught()
+	:  endtry
+	:endfunction
+	:
+	:call Foo()
+
+上の例は次のように表示する  >
+
+	Nothing caught
+	Caught "4711" in function Foo, line 4
+	Caught "oops" in function Foo, line 10
+	Nothing caught
+
+実用的な例:  次のコマンド ":LineNumber" は、それが呼び出されたスクリプトや関数
+中の行番号を表示する: >
+
+	:function! LineNumber()
+	:    return substitute(v:throwpoint, '.*\D\(\d\+\).*', '\1', "")
+	:endfunction
+	:command! LineNumber try | throw "" | catch | echo LineNumber() | endtry
+<
+							*try-nested*
+try条件文によって捕捉されない例外はそれを囲むtry条件文によって捕捉することがで
+きる: >
+
+	:try
+	:  try
+	:    throw "foo"
+	:  catch /foobar/
+	:    echo "foobar"
+	:  finally
+	:    echo "inner finally"
+	:  endtry
+	:catch /foo/
+	:  echo "foo"
+	:endtry
+
+内側のtry条件文はこの例外を捕捉せず、finally節が実行されるだけである。そしてこ
+の例外は外側のtry条件文で捕捉される。この例を実行すると "inner finally" と
+"foo" が表示される。
+
+							*throw-from-catch*
+例外を捕捉した後、新しい例外を投げて他のcatch節で捕捉させることができる: >
+
+	:function! Foo()
+	:  throw "foo"
+	:endfunction
+	:
+	:function! Bar()
+	:  try
+	:    call Foo()
+	:  catch /foo/
+	:    echo "Caught foo, throw bar"
+	:    throw "bar"
+	:  endtry
+	:endfunction
+	:
+	:try
+	:  call Bar()
+	:catch /.*/
+	:  echo "Caught" v:exception
+	:endtry
+
+これを実行すると "Caught foo, throw bar" と "Caught bar" が表示される。
+
+							*rethrow*
+Vimスクリプト言語には本物のrethrowはないが、代わりに "v:exception" を使うこと
+ができる: >
+
+	:function! Bar()
+	:  try
+	:    call Foo()
+	:  catch /.*/
+	:    echo "Rethrow" v:exception
+	:    throw v:exception
+	:  endtry
+	:endfunction
+<							*try-echoerr*
+Note この方法はVimのエラーや割り込み例外を "rethrow" するためには使えない。Vim
+の内部例外を偽装することはできないからである。それを行おうとするとエラー例外が
+発生する。その状況を表す自分自身の例外を投げるべきである。独自のエラー例外値を
+含むVimのエラー例外を発生させたい場合には、コマンド|:echoerr|を使うことができ
+る: >
+
+	:try
+	:  try
+	:    asdf
+	:  catch /.*/
+	:    echoerr v:exception
+	:  endtry
+	:catch /.*/
+	:  echo v:exception
+	:endtry
+
+このコードを実行すると次が表示される
+
+	Vim(echoerr):Vim:E492: Not an editor command:   asdf ~
+
+
+後始末処理						*try-finally*
+
+しばしばスクリプト中でグローバルな設定を変更し、最後に元の設定を復元することが
+ある。しかしユーザーがCTRL-Cを押してスクリプトを中断すると、設定が一貫しない状
+態になってしまう。スクリプトの開発段階においても、エラーが発生したり、明示的に
+例外を投げたが捕捉されなかった場合に、同じことが起こりうる。この問題は、try条
+件文を使ってfinally節で設定を復元することで解決できる。finally節は、通常の制御
+フロー・エラー時・明示的な ":throw" 時・割り込み時に実行されることが保証されて
+いる。(Note try条件文の内側で発生したエラーと割り込みは例外に変換される。これ
+らが捕捉されなかったときには、finally節の実行の後にスクリプトの実行が停止す
+る。)
+例: >
+
+	:try
+	:  let s:saved_ts = &ts
+	:  set ts=17
+	:
+	:  " Do the hard work here.
+	:
+	:finally
+	:  let &ts = s:saved_ts
+	:  unlet s:saved_ts
+	:endtry
+
+関数やスクリプトの一部でグローバルな設定を変更し、その関数・スクリプトの失敗時・
+通常終了時に設定を復元する必要があるときは、必ず局所的にこの手法を使うべきであ
+る。
+
+							*break-finally*
+":continue", ":break", ":return", ":finish" などによってtryブロックやcatch節を
+抜けるときも後始末処理が働く。
+   例: >
+
+	:let first = 1
+	:while 1
+	:  try
+	:    if first
+	:      echo "first"
+	:      let first = 0
+	:      continue
+	:    else
+	:      throw "second"
+	:    endif
+	:  catch /.*/
+	:    echo v:exception
+	:    break
+	:  finally
+	:    echo "cleanup"
+	:  endtry
+	:  echo "still in while"
+	:endwhile
+	:echo "end"
+
+上の例を実行すると "first", "cleanup", "second", "cleanup", "end" と表示される:
+>
+	:function! Foo()
+	:  try
+	:    return 4711
+	:  finally
+	:    echo "cleanup\n"
+	:  endtry
+	:  echo "Foo still active"
+	:endfunction
+	:
+	:echo Foo() "returned by Foo"
+
+上の例を実行すると "cleanup" と "4711 returned by Foo" が表示される。finally節
+に余計な ":return" を書く必要はない。(そうすると戻り値が上書きされてしまう)
+
+							*except-from-finally*
+finally節で ":continue", ":break", ":return", ":finish", ":throw" を使うことは
+可能である。しかしそうするとtry条件文の後始末を破棄してしまうことになるので推
+奨されていない。しかし、当然、finally節の中で割り込みとエラー例外が発生するこ
+とはありうる。
+finally節におけるエラーにより、割り込みが正しく動作しなくなる例: >
+
+	:try
+	:  try
+	:    echo "Press CTRL-C for interrupt"
+	:    while 1
+	:    endwhile
+	:  finally
+	:    unlet novar
+	:  endtry
+	:catch /novar/
+	:endtry
+	:echo "Script still running"
+	:sleep 1
+
+失敗する可能性のあるコマンドをfinally節に書く必要があるときは、それらのコマン
+ドにより発生するエラーを捕捉したり無視したりすることについて考えること。
+|catch-errors| と |ignore-errors| を参照。
+
+
+エラーを変更する					*catch-errors*
+
+特定のエラーを捕捉するには、監視したいコードをtryブロックに入れ、そのエラー
+メッセージに対するcatch節を加えるだけでよい。try条件節が存在すると全てのエラー
+は例外に変換される。そのため、メッセージはまったく表示されず、|v:errmsg|は設定
+されない。":catch" コマンドに対する正しい正規表現を作るには、エラー例外のフォー
+マットがどのようなものか知っていなければならない。
+   エラー例外は次のフォーマットを持つ: >
+
+	Vim({cmdname}):{errmsg}
+または >
+	Vim:{errmsg}
+
+{cmdname}は失敗したコマンド名である。2番目の形式はコマンド名が不明のとき用いら
+れる。{errmsg}は、そのエラーがtry条件文の外で発生したときに通常表示されるエラー
+メッセージである。エラーメッセージは必ず大文字の "E" で始まり、その後に2,3桁の
+エラー番号、コロン、スペースが続く。
+
+例:
+
+次のコマンドを実行すると、 >
+	:unlet novar
+通常次のエラーメッセージが表示される  >
+	E108: No such variable: "novar"
+これはtry条件文の中では例外に変換される >
+	Vim(unlet):E108: No such variable: "novar"
+
+次のコマンドを実行すると、 >
+	:dwim
+通常次のエラーメッセージが表示される  >
+	E492: Not an editor command: dwim
+これはtry条件文の中では例外に変換される >
+	Vim:E492: Not an editor command: dwim
+
+":unlet" の全てのエラーを次によって捕捉できる >
+	:catch /^Vim(unlet):/
+また、全てのミススペルされたコマンドのエラーは次で捕捉できる  >
+	:catch /^Vim:E492:/
+
+複数のコマンドによって同一のエラーメッセージが表示される場合もある: >
+	:function nofunc
+と  >
+	:delfunction nofunc
+は両方とも次のエラーメッセージを表示する。 >
+	E128: Function name must start with a capital: nofunc
+これはtry条件節の中では例外に変換される。それぞれ >
+	Vim(function):E128: Function name must start with a capital: nofunc
+または  >
+	Vim(delfunction):E128: Function name must start with a capital: nofunc
+となる。どのコマンドによって発生したかに関係なくこのエラーを捕捉するには、次の
+正規表現を使う: >
+	:catch /^Vim(\a\+):E128:/
+
+複数のエラーメッセージを表示するコマンドもある:  >
+	:let x = novar
+は次のエラーメッセージを表示する: >
+	E121: Undefined variable: novar
+	E15: Invalid expression:  novar
+最初のエラーメッセージのみが例外の値として使われる。それが最も限定的なメッセー
+ジだからである(|except-several-errors|を参照)。これは次のようにして捕捉できる
+>
+	:catch /^Vim(\a\+):E121:/
+
+"nofunc" という名前に関係したエラー全てを捕捉するには >
+	:catch /\<nofunc\>/
+
+コマンド ":write" と ":read" による全てのVimエラーを捕捉するには >
+	:catch /^Vim(\(write\|read\)):E\d\+:/
+
+全てのVimエラーを捕捉するには次の正規表現を使う >
+	:catch /^Vim\((\a\+)\)\=:E\d\+:/
+<
+							*catch-text*
+NOTE: エラーメッセージの本文によって捕捉しようとしてはならない >
+	:catch /No such variable/
+こうすると英語の環境では動作するが、コマンド |:language|により他の言語を使って
+いるユーザーの環境では動作しなくなる。しかし、コメントとしてメッセージテキスト
+を引用することは役に立つ: >
+	:catch /^Vim(\a\+):E108:/   " No such variable
+
+エラーを無視する					*ignore-errors*
+
+特定のコマンドで発生したエラーを捕捉すれば、エラーを無視することができる: >
+
+	:try
+	:  write
+	:catch
+	:endtry
+
+しかしこの単純な形は使わないよう強く推奨されている。なぜなら、これはあなたが望
+むより多くの例外を捕捉してしまうからである。":write" コマンドを使うと自動コマ
+ンドが実行され、書き込みとは関係ないエラーが発生する可能性がある。例えば: >
+
+	:au BufWritePre * unlet novar
+
+このようなエラーの中には、スクリプトの作者が責任を負わないものもある: つまり、
+スクリプトのユーザーがそのようなオートコマンドを定義している場合である。その
+場合、上の例のようにすると、ユーザーからエラーを隠してしまうことになる。エラー
+を無視するには、次のようにした方がよい >
+
+	:try
+	:  write
+	:catch /^Vim(write):/
+	:endtry
+
+これは書き込みエラーだけを捕捉する。つまり、あなたが意図的に無視したいエラーだ
+けである。
+
+オートコマンドを発生させないような1つのコマンドに対しては、":silent!" を使えば
+エラーを例外に変換すること自体を抑制させることができる: >
+	:silent! nunmap k
+これはtry条件文が有効なときも機能する。
+
+
+割り込みを捕捉する					*catch-interrupt*
+
+有効なtry条件文内では、割り込み(CTRL-C)は例外 "Vim:Interrupt" に変換される。こ
+れを他の例外と同様に捕捉することができる。するとそのスクリプトは停止しない。
+   例: >
+
+	:function! TASK1()
+	:  sleep 10
+	:endfunction
+
+	:function! TASK2()
+	:  sleep 20
+	:endfunction
+
+	:while 1
+	:  let command = input("Type a command: ")
+	:  try
+	:    if command == ""
+	:      continue
+	:    elseif command == "END"
+	:      break
+	:    elseif command == "TASK1"
+	:      call TASK1()
+	:    elseif command == "TASK2"
+	:      call TASK2()
+	:    else
+	:      echo "\nIllegal command:" command
+	:      continue
+	:    endif
+	:  catch /^Vim:Interrupt$/
+	:    echo "\nCommand interrupted"
+	:    " 例外捕捉。次のプロンプトから継続する。
+	:  endtry
+	:endwhile
+
+ここでCTRL-Cを押すとタスクに割り込むことができる。その後スクリプトは新しいコマ
+ンドを要求する。プロンプトでCTRL-Cを押すとスクリプトが終了する。
+
+スクリプト中の特定の行でCTRL-Cが押されたとき何が起こるかをテストするにはデバッ
+グモードを使い、その行の上で|>quit|や|>interrupt|コマンドを使う。
+|debug-scripts|を参照。
+
+
+全てを捕捉する						*catch-all*
+
+次のコマンド >
+
+	:catch /.*/
+	:catch //
+	:catch
+
+は全てをエラー例外・割り込み例外・|:throw|コマンドにより明示的に投げられた例外
+の捕捉する。これは、スクリプトのトップレベルで、予期しないことを捕捉するために
+役に立つ。
+   例: >
+
+	:try
+	:
+	:  " ここで難しいことをする
+	:
+	:catch /MyException/
+	:
+	:  " 既知の問題を制御する
+	:
+	:catch /^Vim:Interrupt$/
+	:    echo "Script interrupted"
+	:catch /.*/
+	:  echo "Internal error (" . v:exception . ")"
+	:  echo " - occurred at " . v:throwpoint
+	:endtry
+	:" スクリプトの終わり
+
+Note: 全てを捕捉すると、期待していた以上のものを捕捉してしまうかもしれない。そ
+れゆえ、":catch" コマンドの引数に正規表現を指定することにより、自分が本当に制
+御できる問題だけを捕捉することが強く推奨されている。
+全てを捕捉してしまうと、CTRL-C を押してスクリプトを中断することがほぼ不可能に
+なってしまうことがある。その例: >
+
+	:while 1
+	:  try
+	:    sleep 1
+	:  catch
+	:  endtry
+	:endwhile
+
+
+例外とオートコマンド				*except-autocmd*
+
+オートコマンドの実行中に例外を使うこともできる。例: >
+
+	:autocmd User x try
+	:autocmd User x   throw "Oops!"
+	:autocmd User x catch
+	:autocmd User x   echo v:exception
+	:autocmd User x endtry
+	:autocmd User x throw "Arrgh!"
+	:autocmd User x echo "Should not be displayed"
+	:
+	:try
+	:  doautocmd User x
+	:catch
+	:  echo v:exception
+	:endtry
+
+上の例を実行すると "Oops!" と "Arrgh!" が表示される。
+
+							*except-autocmd-Pre*
+いくつかのコマンドでは、それ自身が実行される前にオートコマンドが実行される。
+例外が発生し、それが一連のオートコマンドの中で捕捉されない場合、一連の自動コマ
+ンドと、その引き金となったコマンドは破棄され、例外がそのコマンドを呼んだ位置へ
+伝播する。
+   例: >
+
+	:autocmd BufWritePre * throw "FAIL"
+	:autocmd BufWritePre * echo "Should not be displayed"
+	:
+	:try
+	:  write
+	:catch
+	:  echo "Caught:" v:exception "from" v:throwpoint
+	:endtry
+
+ここで ":write" コマンドは現在編集しているファイルを書き込まない ('modified'
+を確認すればわかる)。BufWritePreのオートコマンドで発生した例外により、":write"
+が破棄されたためである。そしてその例外は捕捉され、次を表示する: >
+
+	Caught: FAIL from BufWrite Auto commands for "*"
+<
+							*except-autocmd-Post*
+いくつかのコマンドでは、それ自身が実行された後でオートコマンドが実行される。引
+き金となったコマンド自身が失敗して、それが有効なtry条件文の内側にあった場合、
+自動コマンドはスキップされ、エラー例外が発生する。その例外は、コマンドを呼んだ
+位置で捕捉することができる。
+   例: >
+
+	:autocmd BufWritePost * echo "File successfully written!"
+	:
+	:try
+	:  write /i/m/p/o/s/s/i/b/l/e
+	:catch
+	:  echo v:exception
+	:endtry
+
+この例は次を表示する: >
+
+	Vim(write):E212: Can't open file for writing (/i/m/p/o/s/s/i/b/l/e)
+
+引き金となったコマンドが失敗したときでさえもオートコマンドを実行したいという場
+合は、catch節の中でそのイベントを引き起こすことできる。
+   例: >
+
+	:autocmd BufWritePre  * set noreadonly
+	:autocmd BufWritePost * set readonly
+	:
+	:try
+	:  write /i/m/p/o/s/s/i/b/l/e
+	:catch
+	:  doautocmd BufWritePost /i/m/p/o/s/s/i/b/l/e
+	:endtry
+<
+":silent!" を使うこともできる: >
+
+	:let x = "ok"
+	:let v:errmsg = ""
+	:autocmd BufWritePost * if v:errmsg != ""
+	:autocmd BufWritePost *   let x = "after fail"
+	:autocmd BufWritePost * endif
+	:try
+	:  silent! write /i/m/p/o/s/s/i/b/l/e
+	:catch
+	:endtry
+	:echo x
+
+上の例は "after fail" を表示する。
+
+引き金となったコマンドが失敗しなかった場合、オートコマンドから発生した例外は、
+元のコマンドを呼んだ位置から捕捉できる: >
+
+	:autocmd BufWritePost * throw ":-("
+	:autocmd BufWritePost * echo "Should not be displayed"
+	:
+	:try
+	:  write
+	:catch
+	:  echo v:exception
+	:endtry
+<
+							*except-autocmd-Cmd*
+いくつかのコマンドでは、通常の処理を一連のオートコマンドで置き換えることができ
+る。そのコマンド列で発生した例外は元のコマンドの呼び出し位置で捕捉できる。
+   例: ":write" コマンドでは、例外が発生したとき、呼び出し側は実際にファイルが
+書き込まれたのかどうかを知ることができない。これを教える必要があるときは、なん
+らかの手段を使わねばならない。 >
+
+	:if !exists("cnt")
+	:  let cnt = 0
+	:
+	:  autocmd BufWriteCmd * if &modified
+	:  autocmd BufWriteCmd *   let cnt = cnt + 1
+	:  autocmd BufWriteCmd *   if cnt % 3 == 2
+	:  autocmd BufWriteCmd *     throw "BufWriteCmdError"
+	:  autocmd BufWriteCmd *   endif
+	:  autocmd BufWriteCmd *   write | set nomodified
+	:  autocmd BufWriteCmd *   if cnt % 3 == 0
+	:  autocmd BufWriteCmd *     throw "BufWriteCmdError"
+	:  autocmd BufWriteCmd *   endif
+	:  autocmd BufWriteCmd *   echo "File successfully written!"
+	:  autocmd BufWriteCmd * endif
+	:endif
+	:
+	:try
+	:	write
+	:catch /^BufWriteCmdError$/
+	:  if &modified
+	:    echo "Error on writing (file contents not changed)"
+	:  else
+	:    echo "Error after writing"
+	:  endif
+	:catch /^Vim(write):/
+	:    echo "Error on writing"
+	:endtry
+
+バッファに変更を行った後でこのスクリプトを数回sourceすると、1回目は次のように
+表示される >
+	File successfully written!
+2回目は >
+	Error on writing (file contents not changed)
+3回目は >
+	Error after writing
+以下同様。
+
+							*except-autocmd-ill*
+異なるイベントに対するオートコマンドにわたってtry条件文を展開することはできな
+い。以下のコードは不正である: >
+
+	:autocmd BufWritePre  * try
+	:
+	:autocmd BufWritePost * catch
+	:autocmd BufWritePost *   echo v:exception
+	:autocmd BufWritePost * endtry
+	:
+	:write
+
+
+例外の階層と付加情報つき例外				*except-hier-param*
+
+プログラミング言語の中には例外クラスを階層化したり、例外クラスのオブジェクトに
+付加的な情報を渡すことができるものがある。これと似たことをVimでもできる。
+階層構造を持った例外を投げるには、各部分をコロンで区切った完全なクラス名を投げ
+ればよい。例えば、数学ライブラリ内でオーバーフローが発生したときに
+"EXCEPT:MATHERR:OVERFLOW" を投げる。
+例外クラスに付加的な情報を与えたいときは、それを括弧の中に書く。例えば、
+"myfile" の書き込み中にエラーが発生したときに文字列 "EXCEPT:IO:WRITEERR(myfile)"
+を投げる。
+":catch" コマンドにおいて適切な正規表現を使えば、階層の基底クラスや派生クラス
+を捕捉できる。括弧の中の付加情報は、":substitute" コマンドを使って|v:exception|
+から切り出すことができる。
+例: >
+
+	:function! CheckRange(a, func)
+	:  if a:a < 0
+	:    throw "EXCEPT:MATHERR:RANGE(" . a:func . ")"
+	:  endif
+	:endfunction
+	:
+	:function! Add(a, b)
+	:  call CheckRange(a:a, "Add")
+	:  call CheckRange(a:b, "Add")
+	:  let c = a:a + a:b
+	:  if c < 0
+	:    throw "EXCEPT:MATHERR:OVERFLOW"
+	:  endif
+	:  return c
+	:endfunction
+	:
+	:function! Div(a, b)
+	:  call CheckRange(a:a, "Div")
+	:  call CheckRange(a:b, "Div")
+	:  if (a:b == 0)
+	:    throw "EXCEPT:MATHERR:ZERODIV"
+	:  endif
+	:  return a:a / a:b
+	:endfunction
+	:
+	:function! Write(file)
+	:  try
+	:    execute "write" fnameescape(a:file)
+	:  catch /^Vim(write):/
+	:    throw "EXCEPT:IO(" . getcwd() . ", " . a:file . "):WRITEERR"
+	:  endtry
+	:endfunction
+	:
+	:try
+	:
+	:  " 計算やI/Oを行う
+	:
+	:catch /^EXCEPT:MATHERR:RANGE/
+	:  let function = substitute(v:exception, '.*(\(\a\+\)).*', '\1', "")
+	:  echo "Range error in" function
+	:
+	:catch /^EXCEPT:MATHERR/	" catches OVERFLOW and ZERODIV
+	:  echo "Math error"
+	:
+	:catch /^EXCEPT:IO/
+	:  let dir = substitute(v:exception, '.*(\(.\+\),\s*.\+).*', '\1', "")
+	:  let file = substitute(v:exception, '.*(.\+,\s*\(.\+\)).*', '\1', "")
+	:  if file !~ '^/'
+	:    let file = dir . "/" . file
+	:  endif
+	:  echo 'I/O error for "' . file . '"'
+	:
+	:catch /^EXCEPT/
+	:  echo "Unspecified error"
+	:
+	:endtry
+
+エラー時やCTRL-Cを押したときにVim自身によって投げられる例外は平坦な階層になっ
+ている: つまりこれらは全て "Vim" クラスに入っている。ユーザーは接頭辞 "Vim" を
+つけた例外を投げることはできない。これらはVim用に予約されている。
+Vimのエラー例外は失敗したコマンドの名前(わかっているならば)という付加情報がつ
+いている。|catch-errors|を参照。
+
+
+変わった特性
+							*except-compat*
+例外制御のコンセプトは、例外を引き起こしたコマンドは即座に異常終了し、制御が
+finally節またはcatch節に移るという前提に基づいている。
+
+Vimスクリプト言語では、エラーの後もスクリプトや関数が処理を続行する場合がある。
+"abort" フラグのない関数や、":silent!" をつけて実行されたコマンドでは、制御は
+次の行、そして関数の外へ移り、制御フローは最外側の ":endwhile" や ":endif" の
+次の行へ移る。一方、エラーは例外と同様に捕捉できるべきである (つまり、即座に異
+常終了することが要求される)。
+
+この問題は、try条件文が有効なときだけエラーを例外に変換し、(":silent!" で抑制
+されていない限り)即座に異常終了することで解決される。(エラー)例外は有効なtry条
+件文でのみ捕捉可能であるため、これはなんら制約とはならない。エラーを捕捉せずに
+即座に終了してほしいなら、単にcatch節を持たないtry条件文を使えばよい。(finally
+節を指定すれば、終了の前に後始末処理を行うことができる)
+
+有効なtry条件文がないとき、即座の異常終了でなく、通常の異常終了と継続が行われ
+る。これによってVim6.1以前用に書かれたスクリプトの互換性を保証している。
+
+しかし、有効なtry条件文の中から、例外処理コマンドを使っていない既存のスクリプ
+トをsourceする(またはその関数の1つを呼ぶ)と、エラー発生時に既存のスクリプトの
+制御フローが変わるかもしれない。エラー発生時に即座に異常終了し、新しい方のスク
+リプト内でエラーを捕捉できる。しかしsourceされたスクリプトが ":silent!" コマン
+ドでエラーメッセージを抑制していた場合(それが適切なスクリプトなら|v:errmsg|を
+見ることでエラーを確認している)、実行パスは変わらない。そのエラーは例外に変換
+されない(|:silent|を参照)。これが起こる残りのただ1つの原因は、エラーに関心を
+払っていなく、エラーメッセージを表示させるスクリプトである。おそらく新しいスク
+リプトからそのようなコードを使いたいとは思わないだろう。
+
+							*except-syntax-err*
+例外処理コマンドにおける構文エラーは、それが属するtry条件文のどの ":catch" コ
+マンドでも決して捕捉されない。しかしfinally節は実行される。
+   例: >
+
+	:try
+	:  try
+	:    throw 4711
+	:  catch /\(/
+	:    echo "in catch with syntax error"
+	:  catch
+	:    echo "inner catch-all"
+	:  finally
+	:    echo "inner finally"
+	:  endtry
+	:catch
+	:  echo 'outer catch-all caught "' . v:exception . '"'
+	:  finally
+	:    echo "outer finally"
+	:endtry
+
+上の例を実行すると次が表示される: >
+    inner finally
+    outer catch-all caught "Vim(catch):E54: Unmatched \("
+    outer finally
+元の例外は破棄され、代わりにエラー例外が投げられる。
+
+{訳注: throw 4711により例外が発生したが、その後の catch /\(/ に構文エラーがあ
+       るためエラー例外が発生し、最初の例外は破棄された。}
+
+							*except-single-line*
+コマンド ":try", ":catch", ":finally", ":endtry" は1行の中に書くことができる。
+しかし構文エラーがあったとき "catch" の行を認識するのが難しくなるので、避けた
+方がよい。
+   例: >
+	:try | unlet! foo # | catch | endtry
+この例は ":unlet!" の後に余計な文字があるためエラー例外を発生させる。そして
+":catch" と ":endtry" が認識されないため、この例外は破棄され、"E488: Trailing
+characters" のメッセージが表示される。
+
+							*except-several-errors*
+1つのコマンドにより複数のエラーが発生した場合、普通は最初のエラーメッセージが
+最も限定的であるため、それがエラー例外に変換される。
+   例: >
+	echo novar
+は次を発生させる: >
+	E121: Undefined variable: novar
+	E15: Invalid expression: novar
+try条件文の中のエラー例外の値は次になる: >
+	Vim(echo):E121: Undefined variable: novar
+<							*except-syntax-error*
+しかし、同じコマンドにおいて通常のエラーの後に構文エラーが検出されたときは、構
+文エラーが例外として投げられる。
+   例: >
+	unlet novar #
+これは次を発生させる: >
+	E108: No such variable: "novar"
+	E488: Trailing characters 
+try条件文の中のエラー例外の値は次になる: >
+	Vim(unlet):E488: Trailing characters
+この理由は、構文エラーによってユーザーが予期していない実行パスになってしまうか
+もしれないためである。例: >
+	try
+	    try | unlet novar # | catch | echo v:exception | endtry
+	catch /.*/
+	    echo "outer catch:" v:exception
+	endtry
+これは "outer catch: Vim(unlet):E488: Trailing characters" を表示し、次にエラー
+メッセージ "E600: Missing :endtry" が表示される。|except-single-line|を参照。
+
+==============================================================================
+9. 例							    *eval-examples*
+
+16進数で表示する ~
+>
+  :" 関数 Nr2Bin() は数値の2進文字列表現を返す。
+  :func Nr2Bin(nr)
+  :  let n = a:nr
+  :  let r = ""
+  :  while n
+  :    let r = '01'[n % 2] . r
+  :    let n = n / 2
+  :  endwhile
+  :  return r
+  :endfunc
+
+  :" 関数 String2Bin() は文字列中の各文字を2進文字列に変換して、ハイフン(-)で
+  :" 区切って返す。
+  :func String2Bin(str)
+  :  let out = ''
+  :  for ix in range(strlen(a:str))
+  :    let out = out . '-' . Nr2Bin(char2nr(a:str[ix]))
+  :  endfor
+  :  return out[1:]
+  :endfunc
+
+使い方の例: >
+  :echo Nr2Bin(32)
+結果: "100000" >
+  :echo String2Bin("32")
+結果: "110011-110010"
+
+
+
+行をソート(並べ替え)する (by Robert Webb) ~
+
+以下は、指定した比較関数を使って行をソートする例である。 >
+
+  :func SortBuffer()
+  :  let lines = getline(1, '$')
+  :  call sort(lines, function("Strcmp"))
+  :  call setline(1, lines)
+  :endfunction
+
+ワンライナーにすると次のようになる: >
+  :call setline(1, sort(getline(1, '$'), function("Strcmp")))
+
+scanf() の代替 ~
+							*sscanf*
+Vimにはsscanf()に相当する関数が無い。行の一部を取り出す必要がある場合には、
+matchstr()やsubstitute()を使えば実現できる。以下の例は、"foobar.txt, 123, 45"
+というような行から、ファイル名と行番号とカラム番号を取り出す方法を示している。
+>
+   :" 正規表現を設定
+   :let mx='\(\f\+\),\s*\(\d\+\),\s*\(\d\+\)'
+   :" 正規表現全体にマッチする部分を取り出す
+   :let l = matchstr(line, mx)
+   :" マッチ結果から各要素を取り出す
+   :let file = substitute(l, mx, '\1', '')
+   :let lnum = substitute(l, mx, '\2', '')
+   :let col = substitute(l, mx, '\3', '')
+
+入力は変数 "line"、結果は "file" と "lnum" と "col" に格納される(このアイデア
+はMichael Geddesによる)。
+
+
+辞書からscriptnamesを取り出す ~
+						*scriptnames-dictionary*
+コマンド|:scriptnames|により今までにsourceされた全てのスクリプトファイルのリス
+トを取得することができる。これと等価な関数や変数は存在しない(めったに必要にな
+らないからである)。そのような場合には次のコードが利用できる: >
+    " ":scriptnames" の出力を変数scriptnames_outputに入れる。
+    let scriptnames_output = ''
+    redir => scriptnames_output
+    silent scriptnames
+    redir END
+    
+    " 出力を行のリストに分割し、各行をパースする。辞書 "scripts" に要素を追加
+    " する。
+    let scripts = {}
+    for line in split(scriptnames_output, "\n")
+      " 空行以外に対して実行
+      if line =~ '\S'
+	" 行内の最初の番号を取得
+        let nr = matchstr(line, '\d\+')
+	" ファイル名を取得。スクリプト番号" 123: "を削除。
+        let name = substitute(line, '.\+:\s*', '', '')
+	" 辞書に要素を追加
+        let scripts[nr] = name
+      endif
+    endfor
+    unlet scriptnames_output
+
+==============================================================================
+10. +eval機能が無効					*no-eval-feature*
+
+コンパイル時に|+eval|機能が無効とされている場合、全ての式評価(eval)コマンドは
+提供されない。その場合、Vimスクリプトが全ての種類のエラーを引き起こすことを避
+ける為、":if" と ":endif" は解釈される。":if" とそれに対応する ":endif" に挟ま
+れた内容は無視される。":if" の後に続く引数も無視される。この ":if" コマンドは
+ネスティングが可能である。しかし必ず行の先頭に書かれている必要がある。":else"
+コマンドは認識されない。
+
+|+eval|機能が存在しなかった場合、どのようにコマンドが実行を免れるかの例: >
+
+	:if 1
+	:  echo "Expression evaluation is compiled in"
+	:else
+	:  echo "You will _never_ see this message"
+	:endif
+
+==============================================================================
+11. サンドボックス				*eval-sandbox* *sandbox* *E48*
+
+オプション 'foldexpr', 'formatexpr', 'includeexpr', 'indentexpr',
+'statusline', 'foldtext' はサンドボックスの中で評価される。これによって、悪質
+な副作用を持つ式からの保護がなされている。これによって、これらのオプションが
+モードラインから設定された場合にある種の安全性がもたらされている。tagsファイル
+からのコマンドが実行されたときとコマンドラインでのCTRL-R =に対してもサンドボッ
+クスが使われる。
+コマンド|:sandbox|に対してもサンドボックスが使われる。
+
+サンドボックス内では以下の事が禁止される:
+	- バッファの変更
+	- マッピング、オートコマンド、関数、ユーザー定義コマンドの定義・変更
+	- ある種のオプションの設定 (|option-summary|を参照)
+	- ある種のVim定義済変数(v:)の設定 (|v:var|を参照)  *E794*
+	- シェルコマンドの実行
+	- ファイルの読み書き
+	- 他のバッファへの移動・ファイルを開く
+	- Python, Perl等のコマンドの実行
+これは100%安全と保証するものではない。しかし、ある種の攻撃を防ぐ事はできるはず
+である。
+
+							*:san* *:sandbox*
+:san[dbox] {cmd}	サンドボックス内で{cmd}を実行する。モードラインから設
+			定された可能性のあるオプションを評価するために使える。
+			例: 'foldexpr'.
+
+							*sandbox-option*
+いくつかのオプションは式を含んでいる。その式を評価するときはセキュリティ上の危
+険性を回避するためにサンドボックス内で行わねばならない。しかしサンドボックスに
+は制限があるので、これはそのオプションが安全でない場所で設定されたときのみ行わ
+れる。ここで「安全でない」とは次の場合をいう:
+- カレントディレクトリの .vimrc や .exrc を source するとき
+- サンドボックス内で実行している最中
+- モードラインから設定された値
+
+Note サンドボックス内でオプションの値を退避し、それから復元した場合、そのオプ
+ションはやはりサンドボックス内で設定されたものとマークされる。
+
+==============================================================================
+12. テキストロック						*textlock*
+
+いくつか状況においては、バッファを変更する・他のウィンドウへジャンプするなど、
+Vimの現在の処理を混乱させたり破壊してしまうような動作は禁止される。これはVimが
+実際に他の何かをしているときに起こることに対して当てはまる。例えば、
+'balloonexpr' の評価は、マウスカーソルがある位置に留まっているどんなときにでも
+起こりうる。
+
+テキストロックが有効になっているときは、以下の事が禁止される:
+	- バッファのテキスト変更
+	- 他のバッファやウィンドウへの移動
+	- 他のファイルを開く
+	- ウィンドウを閉じたりVimを終了したり
+	- その他
+
+==============================================================================
+13. テスト							*testing*
+
+Vim はビルドした後、通常 "make test" を使ってテストできる。テストはディレクト
+リ "src/testdir" にある。
+
+時間の経過と共にいくつかのタイプのテストが追加された:
+	test33.in		最も古い、もう追加しない
+	test_something.in	古いスタイルのテスト
+	test_something.vim	新しいスタイルのテスト
+
+						*new-style-testing*
+新しいテストは新しいスタイルのテストで追加すべきである。これらは
+|assert_equal()| などの関数を使用して、テストコマンドと期待される結果を1か所に
+保持する。
+						*old-style-testing*
+場合によっては、古いスタイルのテストを使用する必要がある。例えば、|+eval| 機能
+なしでVimをテストするとき。
+
+詳細は、src/testdir/README.txt ファイルを参照。
+
+
+ vim:tw=78:ts=8:ft=help:norl:
