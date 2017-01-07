@@ -5039,7 +5039,7 @@ job_stop({job} [, {how}])					*job_stop()*
 		で、子供たちも影響を受けるかもしれない。
 
 		UNIXへの影響:
-			"term"	 SIGTERM (規定)
+			"term"	 SIGTERM (既定)
 			"hup"	 SIGHUP
 			"quit"	 SIGQUIT
 			"int"	 SIGINT
@@ -5047,7 +5047,7 @@ job_stop({job} [, {how}])					*job_stop()*
 			number	 その番号の信号
 
 		MS-Windowsへの影響:
-			"term"	 プロセスを強制終了 (規定)
+			"term"	 プロセスを強制終了 (既定)
 			"hup"	 CTRL_BREAK
 			"quit"	 CTRL_BREAK
 			"int"	 CTRL_C
