@@ -7000,4 +7000,3 @@ strcharpart({src}, {start}[, {len}])			*strcharpart()*
 strdisplaywidth({expr}[, {col}])			*strdisplaywidth()*
 		結果は数値で、文字列 {expr} が {col} で始まる時のスクリーン上
 		での表示セル幅を返す。
-		{col} が省略されたときはゼロが使われる。{col} には計
