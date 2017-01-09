@@ -2182,8 +2182,7 @@ matchlist({expr}, {pat}[, {start}[, {count}]])
 matchstr({expr}, {pat}[, {start}[, {count}]])
 				文字列	{expr}内の{count}番目の{pat}のマッチ
 matchstrpos({expr}, {pat}[, {start}[, {count}]])
-				リスト	{expr} を {pat} でマッチした {count}
-					番目
+				リスト	{expr}内の{count}番目の{pat}のマッチ
 max({list})			数値	{list}内の要素の最大値
 min({list})			数値	{list}内の要素の最小値
 mkdir({name} [, {path} [, {prot}]])
@@ -2206,7 +2205,7 @@ range({expr} [, {max} [, {stride}]])
 readfile({fname} [, {binary} [, {max}]])
 				リスト	ファイル{fname}から行のリストを取得
 reltime([{start} [, {end}]])	リスト	時刻の値を取得
-reltimefloat({time})		浮動小数点数	時刻の値を浮動小数点で取得
+reltimefloat({time})		浮動小数点数	時刻の値を浮動小数点に変換
 reltimestr({time})		文字列	時刻の値を文字列に変換
 remote_expr({server}, {string} [, {idvar}])
 				文字列	式を送信する
@@ -5877,9 +5876,9 @@ printf({fmt}, {expr1} ...)				*printf()*
 			幅より多くの桁を必要とする場合は、十分な幅に広げられる。
 			モディファイア 'h' は引数が16ビット引数である事を示す。
 			モディファイア 'l' は引数が32ビット引数をある事を示す。
-			モディファイア 'L' は引数が32ビット引数をある事を示す。
+			モディファイア 'L' は引数が64ビット引数をある事を示す。
 			一般的にモディファイアは便利ではない。引数から型が分か
-			らない時には無視されてしまう。
+			る時には無視されてしまう。
 
 		i	d のエイリアス
 		D	ld のエイリアス
@@ -6497,12 +6496,12 @@ setcmdpos({pos})					*setcmdpos()*
 		成功なら0、コマンドラインを編集しているとき以外には1を返す。
 
 setfperm({fname}, {mode})				*setfperm()* *chmod*
-		{fname} のファイルパーミッションを {mode} に設定する。
+		{fname} のファイル許可属性を {mode} に設定する。
 		{mode} は9文字の文字列でなければならない。形式は "rwxrwxrwx"
-		であり、それぞれはファイルのオーナー権限、グループ権限、その他
+		であり、それぞれはファイルの所有者権限、グループ権限、その他
 		のユーザーを表す "rwx" というフラグのグループである。文字 "-"
-		はパーミッションがオフであり、その他の文字はオンである。マル
-		チバイト文字はサポートされない。
+		は許可属性がオフであり、その他の文字はオンである。マルチバイト
+		文字はサポートされない。
 
 		例えば "rw-r-----" はそのユーザーの読み書き、グループでは読み
 		取り専用、その他のユーザーはアクセス不可である。"xx-x-----" は
@@ -6510,7 +6509,7 @@ setfperm({fname}, {mode})				*setfperm()* *chmod*
 
 		成功するとゼロ以外を返し、失敗するとゼロを返す。
 
-		パーミッションの読み取りについては |getfperm()|を参照。
+		許可属性の読み取りについては|getfperm()|を参照。
 
 
 setline({lnum}, {text})					*setline()*
@@ -7000,7 +6999,7 @@ strchars({expr} [, {skipcc}])					*strchars()*
 <
 strcharpart({src}, {start}[, {len}])			*strcharpart()*
 		|strpart()| と同様だがバイトのインデックスおよび長さではなく文
-		字のインデックスおよび長さである。
+		字のインデックスおよび長さを使用する。
 		文字インデックスが存在しない文字を指す場合、それは1バイトであ
 		るとして扱われる。例: >
 			strcharpart('abc', -1, 2)
