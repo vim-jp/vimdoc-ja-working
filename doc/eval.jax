@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.0.  Last change: 2016 Sep 07
+*eval.txt*	For Vim バージョン 8.0.  Last change: 2017 Jan 08
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2935,16 +2935,18 @@ confirm({msg} [, {choices} [, {default} [, {type}]]])
 		れる。
 
 ch_canread({handle})						*ch_canread()*
-		Return non-zero when there is something to read from {handle}.
-		{handle} can be a Channel or a Job that has a Channel.
+		{handle} から何か読むものがあれば非ゼロを返す。
+		{handle} はチャンネルもしくはチャンネルを持つジョブであっても
+		良い。
 
-		This is useful to read from a channel at a convenient time,
-		e.g. from a timer.
+		これはチャンネルから、使いやすいときに読むときに便利である。
+		例えば、タイマーから。
 
-		Note that messages are dropped when the channel does not have
-		a callback.  Add a close callback to avoid that.
+		チャンネルがコールバックを持っていない場合、メッセージはドロッ
+		プされることに注意。それを防ぐには close コールバックを追加す
+		ること。
 
-		{only available when compiled with the |+channel| feature}
+		{|+channel| 機能付きでコンパイルされたときのみ有効}
 
 ch_close({handle})						*ch_close()*
 		{handle} を閉じる。|channel-close| を参照。
@@ -3124,9 +3126,9 @@ ch_status({handle} [, {options}])				*ch_status()*
 		チャンネルは閉じられているが |ch_read()| を使って残ったデータ
 		をまだ読み取る事ができる場合には "buffered" が利用できる。
 
-		If {options} is given it can contain a "part" entry to specify
-		the part of the channel to return the status for: "out" or
-		"err".  For example, to get the error status: >
+		{options} が指定された場合、"part" 要素でチャンネルのどのパー
+		ト ("out" または "err") の状態を返すかを指定できる。例えば、エ
+		ラーの状態を得るには: >
 			ch_status(job, {"part": "err"})
 <
 							*copy()*
@@ -7381,6 +7383,7 @@ systemlist({expr} [, {input}])				*systemlist()*
 		|system()| と同じだが行のリスト (|List|) を返す。行は NL 文字
 		で区切られ、NUL 文字は NL 文字に変換される。出力は
 		|readfile()| の {binary} 引数に "b" を指定したのと同様である。
+		MS-Windows では末尾の CR 文字がつくかもしれないことに注意。
 
 		エラー時には空文字列が返る。
 
