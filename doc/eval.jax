@@ -1951,9 +1951,9 @@ atan2({expr}, {expr})		浮動小数点数	{expr1} / {expr2} のアークタン
 browse({save}, {title}, {initdir}, {default})
 				文字列	ファイル選択ダイアログを表示
 browsedir({title}, {initdir})	文字列	ディレクトリ選択ダイアログを表示
-bufexists({expr})		数値	バッファ{expr}が存在すればTRUE
-buflisted({expr})		数値	バッファ{expr}がリストにあるならTRUE
-bufloaded({expr})		数値	バッファ{expr}がロード済みならTRUE
+bufexists({expr})		数値	バッファ{expr}が存在すれば|TRUE|
+buflisted({expr})		数値	バッファ{expr}がリストにあるなら|TRUE|
+bufloaded({expr})		数値	バッファ{expr}がロード済みなら|TRUE|
 bufname({expr})			文字列	バッファ{expr}の名前
 bufnr({expr} [, {create}])	数値	バッファ{expr}の番号
 bufwinid({expr})		数値	バッファ{expr}のウィンドウID
@@ -1992,7 +1992,7 @@ ch_sendraw({handle}, {string} [, {options}])
 ch_setoptions({handle}, {options})
 				なし	{handle}にオプションを設定する
 ch_status({handle} [, {options}])
-				文字列	チャンネル{handle}のステータス
+				文字列	チャンネル{handle}の状態
 changenr()			数値	現在の変更番号
 char2nr({expr}[, {utf8}])	数値	{expr}の先頭文字のASCII/UTF8コード
 cindent({lnum})			数値	{lnum}行目のCインデント量
@@ -2018,22 +2018,22 @@ delete({fname} [, {flags}])	数値	ファイルやディレクトリ{fname}を�
 did_filetype()			数値	FileTypeのautocommandが実行されたか?
 diff_filler({lnum})		数値	差分モードで{lnum}に挿入された行
 diff_hlID({lnum}, {col})	数値	差分モードで{lnum}/{col}位置の強調
-empty({expr})			数値	{expr}が空ならTRUE
+empty({expr})			数値	{expr}が空なら|TRUE|
 escape({string}, {chars})	文字列	{string}内の{chars}を '\' でエスケープ
 eval({string})			任意	{string}を評価し、値を得る
-eventhandler()			数値	イベントハンドラの内側ならTRUE
+eventhandler()			数値	イベントハンドラの内側なら|TRUE|
 executable({expr})		数値	実行可能な{expr}が存在するなら1
 execute({command})		String	execute {command} and get the output
 exepath({expr})			文字列	コマンド {expr} のフルパス
-exists({var})			数値	変数{var}が存在したらTRUE
+exists({var})			数値	変数{var}が存在したら|TRUE|
 extend({expr1}, {expr2} [, {expr3}])
 				リスト/辞書 {expr1}に{expr2}の要素を挿入
 exp({expr})			浮動小数点数	{expr}の指数
 expand({expr} [, {nosuf} [, {list}]])
 				任意	{expr}内の特別なキーワードを展開
 feedkeys({string} [, {mode}])	数値	先行入力バッファにキーシーケンスを追加
-filereadable({file})		数値	{file}が読みこみ可能ならTRUE
-filewritable({file})		数値	{file}が書き込み可能ならTRUE
+filereadable({file})		数値	{file}が読みこみ可能なら|TRUE|
+filewritable({file})		数値	{file}が書き込み可能なら|TRUE|
 filter({expr1}, {expr2})	リスト/辞書  {expr2}が0となる要素を{expr1}から
 					とり除く
 finddir({name}[, {path}[, {count}]])
@@ -2108,18 +2108,18 @@ glob2regpat({expr})		文字列  globパターンを検索パターンに変換
 globpath({path}, {expr} [, {nosuf} [, {list} [, {alllinks}]]])
 				文字列	{path}の全ディレクトリに対し
 					glob({expr})を行う
-has({feature})			数値	機能{feature}がサポートならばTRUE
-has_key({dict}, {key})		数値	{dict}が要素{key}を持つならTRUE
+has({feature})			数値	機能{feature}がサポートならば|TRUE|
+has_key({dict}, {key})		数値	{dict}が要素{key}を持つなら|TRUE|
 haslocaldir([{winnr} [, {tabnr}]])
 				数値	現在のウィンドウで|:lcd|が実行された
-					ならTRUE
+					なら|TRUE|
 hasmapto({what} [, {mode} [, {abbr}]])
-				数値	{what}へのマッピングが存在するならTRUE
+				数値	{what}のマッピングが存在するなら|TRUE|
 histadd({history}, {item})	文字列	ヒストリに追加
 histdel({history} [, {item}])	文字列	ヒストリからitemを削除
 histget({history} [, {index}])	文字列	ヒストリから{index}アイテムを取得
 histnr({history})		数値	ヒストリの数
-hlexists({name})		数値	highlight group {name}が存在したらTRUE
+hlexists({name})		数値	highlight group {name}が存在したら|TRUE|
 hlID({name})			数値	highlight group {name}のID
 hostname()			文字列	vimが動作しているマシンの名前
 iconv({expr}, {from}, {to})	文字列	{expr}のエンコーディングを変換する
@@ -2136,9 +2136,9 @@ inputsave()			数値	先行入力を保存し、クリアする
 inputsecret({prompt} [, {text}]) 文字列	input()だがテキストを隠す
 insert({list}, {item} [, {idx}]) リスト	{list}に要素{item}を挿入 [{idx}の前]
 invert({expr})			数値	ビット反転
-isdirectory({directory})	数値	{directory}がディレクトリならばTRUE
-islocked({expr})		数値	{expr}がロックされているならTRUE
-isnan({expr})			数値	{expr}がNanならばTRUE
+isdirectory({directory})	数値	{directory}がディレクトリならば|TRUE|
+islocked({expr})		数値	{expr}がロックされているなら|TRUE|
+isnan({expr})			数値	{expr}がNaNならば|TRUE|
 items({dict})			リスト	{dict}のキーと値のペアを取得
 job_getchannel({job})		チャンネル  {job}のチャンネルハンドルを取得
 job_info({job})			辞書	{job}についての情報を取得
