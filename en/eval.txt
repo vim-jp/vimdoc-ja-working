@@ -1,4 +1,4 @@
-*eval.txt*	For Vim version 8.0.  Last change: 2016 Sep 07
+*eval.txt*	For Vim version 8.0.  Last change: 2017 Jan 08
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -125,7 +125,8 @@ cleared.  A List, Dictionary or Float is not a Number or String, thus
 evaluates to FALSE.
 
 		*E745* *E728* *E703* *E729* *E730* *E731* *E908* *E910* *E913*
-List, Dictionary, Funcref and Job types are not automatically converted.
+List, Dictionary, Funcref, Job and Channel types are not automatically
+converted.
 
 							*E805* *E806* *E808*
 When mixing Number and Float the Number is converted to Float.  Otherwise
@@ -643,7 +644,7 @@ It's possible to form a variable name with curly braces, see
 
 Expression syntax summary, from least to most significant:
 
-|expr1|   expr2
+|expr1|	expr2
 	expr2 ? expr1 : expr1	if-then-else
 
 |expr2|	expr3
@@ -691,7 +692,7 @@ Expression syntax summary, from least to most significant:
 	expr8.name		entry in a |Dictionary|
 	expr8(expr1, ...)	function call with |Funcref| variable
 
-|expr9|   number		number constant
+|expr9|	number			number constant
 	"string"		string constant, backslash is special
 	'string'		string constant, ' is doubled
 	[expr1, ...]		|List|
@@ -957,7 +958,7 @@ expr8[expr1]		item of String or |List|	*expr-[]* *E111*
 							*E909* *subscript*
 If expr8 is a Number or String this results in a String that contains the
 expr1'th single byte from expr8.  expr8 is used as a String, expr1 as a
-Number.  This doesn't recognize multi-byte encodings, see |byteidx()| for
+Number.  This doesn't recognize multi-byte encodings, see `byteidx()` for
 an alternative, or use `split()` to turn the string into a list of characters.
 
 Index zero gives the first byte.  This is like it works in C.  Careful:
@@ -1244,7 +1245,7 @@ The arguments are optional.  Example: >
 <	error function
 							*closure*
 Lambda expressions can access outer scope variables and arguments.  This is
-often called a closure.  Example where "i" a and "a:arg" are used in a lambda
+often called a closure.  Example where "i" and "a:arg" are used in a lambda
 while they exist in the function scope.  They remain valid even after the
 function returns: >
 	:function Foo(arg)
@@ -2008,6 +2009,7 @@ byteidxcomp({expr}, {nr})	Number	byte index of {nr}'th char in {expr}
 call({func}, {arglist} [, {dict}])
 				any	call {func} with arguments {arglist}
 ceil({expr})			Float	round {expr} up
+ch_canread({handle})		Number	check if there is something to read
 ch_close({handle})		none	close {handle}
 ch_close_in({handle})		none	close in part of {handle}
 ch_evalexpr({handle}, {expr} [, {options}])
@@ -2030,7 +2032,8 @@ ch_sendraw({handle}, {string} [, {options}])
 				any	send {string} over raw {handle}
 ch_setoptions({handle}, {options})
 				none	set options for {handle}
-ch_status({handle})		String	status of channel {handle}
+ch_status({handle} [, {options}])
+				String	status of channel {handle}
 changenr()			Number	current change number
 char2nr({expr}[, {utf8}])	Number	ASCII/UTF8 value of first char in {expr}
 cindent({lnum})			Number	C indent for line {lnum}
@@ -2072,8 +2075,8 @@ expand({expr} [, {nosuf} [, {list}]])
 feedkeys({string} [, {mode}])	Number	add key sequence to typeahead buffer
 filereadable({file})		Number	|TRUE| if {file} is a readable file
 filewritable({file})		Number	|TRUE| if {file} is a writable file
-filter({expr}, {string})	List/Dict  remove items from {expr} where
-					{string} is 0
+filter({expr1}, {expr2})	List/Dict  remove items from {expr1} where
+					{expr2} is 0
 finddir({name}[, {path}[, {count}]])
 				String	find directory {name} in {path}
 findfile({name}[, {path}[, {count}]])
@@ -2097,7 +2100,7 @@ garbagecollect([{atexit}])	none	free memory, breaking cyclic references
 get({list}, {idx} [, {def}])	any	get item {idx} from {list} or {def}
 get({dict}, {key} [, {def}])	any	get item {key} from {dict} or {def}
 get({func}, {what})		any	get property of funcref/partial {func}
-getbufinfo([{expr}])		List  	information about buffers
+getbufinfo([{expr}])		List	information about buffers
 getbufline({expr}, {lnum} [, {end}])
 				List	lines {lnum} to {end} of buffer {expr}
 getbufvar({expr}, {varname} [, {def}])
@@ -2128,12 +2131,12 @@ getqflist([{what}])		List	list of quickfix items
 getreg([{regname} [, 1 [, {list}]]])
 				String or List   contents of register
 getregtype([{regname}])		String	type of register
-gettabinfo([{expr}])		List  	list of tab pages
+gettabinfo([{expr}])		List	list of tab pages
 gettabvar({nr}, {varname} [, {def}])
 				any	variable {varname} in tab {nr} or {def}
 gettabwinvar({tabnr}, {winnr}, {name} [, {def}])
 				any	{name} in {winnr} in tab page {tabnr}
-getwininfo([{winid}])		List  	list of windows
+getwininfo([{winid}])		List	list of windows
 getwinposx()			Number	X coord in pixels of GUI Vim window
 getwinposy()			Number	Y coord in pixels of GUI Vim window
 getwinvar({nr}, {varname} [, {def}])
@@ -2197,7 +2200,7 @@ localtime()			Number	current time
 log({expr})			Float	natural logarithm (base e) of {expr}
 log10({expr})			Float	logarithm of Float {expr} to base 10
 luaeval({expr}[, {expr}])	any	evaluate |Lua| expression
-map({expr}, {string})		List/Dict  change each item in {expr} to {expr}
+map({expr1}, {expr2})		List/Dict  change each item in {expr1} to {expr}
 maparg({name}[, {mode} [, {abbr} [, {dict}]]])
 				String or Dict
 					rhs of mapping {name} in mode {mode}
@@ -2521,7 +2524,7 @@ assert_exception({error} [, {msg}])			*assert_exception()*
 assert_fails({cmd} [, {error}])					*assert_fails()*
 		Run {cmd} and add an error message to |v:errors| if it does
 		NOT produce an error.
-		When {error} is given it must match |v:errmsg|.
+		When {error} is given it must match in |v:errmsg|.
 
 assert_false({actual} [, {msg}])				*assert_false()*
 		When {actual} is not false an error message is added to
@@ -2978,16 +2981,28 @@ confirm({msg} [, {choices} [, {default} [, {type}]]])
 		don't fit, a vertical layout is used anyway.  For some systems
 		the horizontal layout is always used.
 
+ch_canread({handle})						*ch_canread()*
+		Return non-zero when there is something to read from {handle}.
+		{handle} can be a Channel or a Job that has a Channel.
+
+		This is useful to read from a channel at a convenient time,
+		e.g. from a timer.
+
+		Note that messages are dropped when the channel does not have
+		a callback.  Add a close callback to avoid that.
+
+		{only available when compiled with the |+channel| feature}
+
 ch_close({handle})						*ch_close()*
 		Close {handle}.  See |channel-close|.
-		{handle} can be Channel or a Job that has a Channel.
+		{handle} can be a Channel or a Job that has a Channel.
 		A close callback is not invoked.
 
 		{only available when compiled with the |+channel| feature}
 
 ch_close_in({handle})						*ch_close_in()*
 		Close the "in" part of {handle}.  See |channel-close-in|.
-		{handle} can be Channel or a Job that has a Channel.
+		{handle} can be a Channel or a Job that has a Channel.
 		A close callback is not invoked.
 
 		{only available when compiled with the |+channel| feature}
@@ -2996,7 +3011,7 @@ ch_evalexpr({handle}, {expr} [, {options}])			*ch_evalexpr()*
 		Send {expr} over {handle}.  The {expr} is encoded
 		according to the type of channel.  The function cannot be used
 		with a raw channel.  See |channel-use|.
-		{handle} can be Channel or a Job that has a Channel.
+		{handle} can be a Channel or a Job that has a Channel.
 								*E917*
 		{options} must be a Dictionary.  It must not have a "callback"
 		entry.  It can have a "timeout" entry to specify the timeout
@@ -3010,7 +3025,7 @@ ch_evalexpr({handle}, {expr} [, {options}])			*ch_evalexpr()*
 
 ch_evalraw({handle}, {string} [, {options}])		*ch_evalraw()*
 		Send {string} over {handle}.
-		{handle} can be Channel or a Job that has a Channel.
+		{handle} can be a Channel or a Job that has a Channel.
 
 		Works like |ch_evalexpr()|, but does not encode the request or
 		decode the response.  The caller is responsible for the
@@ -3023,7 +3038,7 @@ ch_evalraw({handle}, {string} [, {options}])		*ch_evalraw()*
 
 ch_getbufnr({handle}, {what})				 *ch_getbufnr()*
 		Get the buffer number that {handle} is using for {what}.
-		{handle} can be Channel or a Job that has a Channel.
+		{handle} can be a Channel or a Job that has a Channel.
 		{what} can be "err" for stderr, "out" for stdout or empty for
 		socket output.
 		Returns -1 when there is no buffer.
@@ -3041,7 +3056,8 @@ ch_info({handle})						*ch_info()*
 		Returns a Dictionary with information about {handle}.  The
 		items are:
 		   "id"		  number of the channel
-		   "status"	  "open" (any part is open) or "closed"
+		   "status"	  "open", "buffered" or "closed", like
+				  ch_status()
 		When opened with ch_open():
 		   "hostname"	  the hostname of the address
 		   "port"	  the port of the address
@@ -3050,11 +3066,11 @@ ch_info({handle})						*ch_info()*
 		   "sock_io"	  "socket"
 		   "sock_timeout" timeout in msec
 		When opened with job_start():
-		   "out_status"	  "open" or "closed"
+		   "out_status"	  "open", "buffered" or "closed"
 		   "out_mode"	  "NL", "RAW", "JSON" or "JS"
 		   "out_io"	  "null", "pipe", "file" or "buffer"
 		   "out_timeout"  timeout in msec
-		   "err_status"	  "open" or "closed"
+		   "err_status"	  "open", "buffered" or "closed"
 		   "err_mode"	  "NL", "RAW", "JSON" or "JS"
 		   "err_io"	  "out", "null", "pipe", "file" or "buffer"
 		   "err_timeout"  timeout in msec
@@ -3068,8 +3084,8 @@ ch_log({msg} [, {handle}])					*ch_log()*
 		|ch_logfile()|.
 		When {handle} is passed the channel number is used for the
 		message.
-		{handle} can be Channel or a Job that has a Channel.  The
-		Channel must open.
+		{handle} can be a Channel or a Job that has a Channel.  The
+		Channel must be open for the channel number to be used.
 
 ch_logfile({fname} [, {mode}])					*ch_logfile()*
 		Start logging channel activity to {fname}.
@@ -3096,7 +3112,7 @@ ch_open({address} [, {options}])				*ch_open()*
 
 ch_read({handle} [, {options}])					*ch_read()*
 		Read from {handle} and return the received message.
-		{handle} can be Channel or a Job that has a Channel.
+		{handle} can be a Channel or a Job that has a Channel.
 		See |channel-more|.
 		{only available when compiled with the |+channel| feature}
 
@@ -3110,7 +3126,7 @@ ch_sendexpr({handle}, {expr} [, {options}])			*ch_sendexpr()*
 		according to the type of channel.  The function cannot be used
 		with a raw channel.
 		See |channel-use|.				*E912*
-		{handle} can be Channel or a Job that has a Channel.
+		{handle} can be a Channel or a Job that has a Channel.
 
 		{only available when compiled with the |+channel| feature}
 
@@ -3131,7 +3147,7 @@ ch_setoptions({handle}, {options})			*ch_setoptions()*
 			"timeout"	default read timeout in msec
 			"mode"		mode for the whole channel
 		See |ch_open()| for more explanation.
-		{handle} can be Channel or a Job that has a Channel.
+		{handle} can be a Channel or a Job that has a Channel.
 
 		Note that changing the mode may cause queued messages to be
 		lost.
@@ -3139,16 +3155,21 @@ ch_setoptions({handle}, {options})			*ch_setoptions()*
 		These options cannot be changed:
 			"waittime"	only applies to |ch_open()|
 
-ch_status({handle})						*ch_status()*
+ch_status({handle} [, {options}])				*ch_status()*
 		Return the status of {handle}:
 			"fail"		failed to open the channel
 			"open"		channel can be used
 			"buffered"	channel can be read, not written to
 			"closed"	channel can not be used
-		{handle} can be Channel or a Job that has a Channel.
+		{handle} can be a Channel or a Job that has a Channel.
 		"buffered" is used when the channel was closed but there is
 		still data that can be obtained with |ch_read()|.
 
+		If {options} is given it can contain a "part" entry to specify
+		the part of the channel to return the status for: "out" or
+		"err".  For example, to get the error status: >
+			ch_status(job, {"part": "err"})
+<
 							*copy()*
 copy({expr})	Make a copy of {expr}.  For Numbers and Strings this isn't
 		different from using {expr} directly.
@@ -3701,9 +3722,10 @@ filter({expr1}, {expr2})				*filter()*
 		is zero remove the item from the |List| or |Dictionary|.
 		{expr2} must be a |string| or |Funcref|.
 		
-		if {expr2} is a |string|, inside {expr2} |v:val| has the value
+		If {expr2} is a |string|, inside {expr2} |v:val| has the value
 		of the current item.  For a |Dictionary| |v:key| has the key
-		of the current item.
+		of the current item and for a |List| |v:key| has the index of
+		the current item.
 		Examples: >
 			call filter(mylist, 'v:val !~ "OLD"')
 <		Removes the items where "OLD" appears. >
@@ -3725,6 +3747,10 @@ filter({expr1}, {expr2})				*filter()*
 			  return a:idx % 2 == 1
 			endfunc
 			call filter(mylist, function('Odd'))
+<		It is shorter when using a |lambda|: >
+			call filter(myList, {idx, val -> idx * val <= 42})
+<		If you do not use "val" you can leave it out: >
+			call filter(myList, {idx -> idx % 2 == 1})
 <
 		The operation is done in-place.  If you want a |List| or
 		|Dictionary| to remain unmodified make a copy first: >
@@ -4274,7 +4300,9 @@ getcompletion({pat}, {type} [, {filtered}])		*getcompletion()*
 		locale		locale names (as output of locale -a)
 		mapping		mapping name
 		menu		menus
+		messages	|:messages| suboptions
 		option		options
+		packadd		optional package |pack-add| names
 		shellcmd	Shell command
 		sign		|:sign| suboptions
 		syntax		syntax file names |'syntax'|
@@ -4356,7 +4384,7 @@ getfperm({fname})					*getfperm()*
 <		This will hopefully (from a security point of view) display
 		the string "rw-r--r--" or even "rw-------".
 
-		For setting permissins use |setfperm()|.
+		For setting permissions use |setfperm()|.
 
 getftime({fname})					*getftime()*
 		The result is a Number, which is the last modification time of
@@ -4503,7 +4531,8 @@ getqflist([{what}])					*getqflist()*
 		If the optional {what} dictionary argument is supplied, then
 		returns only the items listed in {what} as a dictionary. The
 		following string items are supported in {what}:
-			nr	get information for this quickfix list
+			nr	get information for this quickfix list; zero
+				means the current quickfix list
 			title	get the list title
 			winid	get the |window-ID| (if opened)
 			all	all of the above quickfix properties
@@ -4782,6 +4811,7 @@ histadd({history}, {item})				*histadd()*
 			"expr"	 or "="   typed expression history
 			"input"  or "@"	  input line history
 			"debug"  or ">"   debug command history
+			empty		  the current or last used history
 		The {history} string does not need to be the whole name, one
 		character is sufficient.
 		If {item} does already exist in the history, it will be
@@ -5439,6 +5469,10 @@ map({expr1}, {expr2})					*map()*
 			  return a:key . '-' . a:val
 			endfunc
 			call map(myDict, function('KeyValue'))
+<		It is shorter when using a |lambda|: >
+			call map(myDict, {key, val -> key . '-' . val})
+<		If you do not use "val" you can leave it out: >
+			call map(myDict, {key -> 'item: ' . key})
 <
 		The operation is done in-place.  If you want a |List| or
 		|Dictionary| to remain unmodified make a copy first: >
@@ -6149,9 +6183,9 @@ range({expr} [, {max} [, {stride}]])				*range()*
 							*readfile()*
 readfile({fname} [, {binary} [, {max}]])
 		Read file {fname} and return a |List|, each line of the file
-		as an item.  Lines broken at NL characters.  Macintosh files
-		separated with CR will result in a single long line (unless a
-		NL appears somewhere).
+		as an item.  Lines are broken at NL characters.  Macintosh
+		files separated with CR will result in a single long line
+		(unless a NL appears somewhere).
 		All NUL characters are replaced with a NL character.
 		When {binary} contains "b" binary mode is used:
 		- When the last line ends in a NL an extra empty list item is
@@ -7371,6 +7405,9 @@ submatch({nr}[, {list}])			*submatch()* *E935*
 		|substitute()| this list will always contain one or zero
 		items, since there are no real line breaks.
 
+		When substitute() is used recursively only the submatches in
+		the current (deepest) call can be obtained.
+
 		Example: >
 			:s/\d\+/\=submatch(0) + 1/
 <		This finds the first number in the line and adds one to it.
@@ -7524,7 +7561,11 @@ system({expr} [, {input}])				*system()* *E677*
 		If {input} is given and is a |List| it is written to the file
 		in a way |writefile()| does with {binary} set to "b" (i.e.
 		with a newline between each list item with newlines inside
-		list items converted to NULs).  
+		list items converted to NULs).
+		When {input} is given and is a number that is a valid id for
+		an existing buffer then the content of the buffer is written
+		to the file line by line, each line terminated by a NL and
+		NULs characters where the text has a NL.
 
 		Pipes are not used, the 'shelltemp' option is not used.
 
@@ -7574,7 +7615,8 @@ systemlist({expr} [, {input}])				*systemlist()*
 		Same as |system()|, but returns a |List| with lines (parts of 
 		output separated by NL) with NULs transformed into NLs. Output 
 		is the same as |readfile()| will output with {binary} argument 
-		set to "b".
+		set to "b".  Note that on MS-Windows you may get trailing CR
+		characters.
 
 		Returns an empty string on error.
 
@@ -8190,7 +8232,7 @@ writefile({list}, {fname} [, {flags}])
 		end does cause the last line in the file to end in a NL.
 
 		When {flags} contains "a" then append mode is used, lines are
-		append to the file: >
+		appended to the file: >
 			:call writefile(["foo"], "event.log", "a")
 			:call writefile(["bar"], "event.log", "a")
 >
@@ -8392,6 +8434,8 @@ tgetent			Compiled with tgetent support, able to use a termcap
 timers			Compiled with |timer_start()| support.
 title			Compiled with window title support |'title'|.
 toolbar			Compiled with support for |gui-toolbar|.
+ttyin			input is a terminal (tty)
+ttyout			output is a terminal (tty)
 unix			Unix version of Vim.
 user_commands		User-defined commands.
 vertsplit		Compiled with vertically split windows |:vsplit|.
