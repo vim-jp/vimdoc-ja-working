@@ -3334,30 +3334,30 @@ executable({expr})					*executable()*
 			-1	このシステム上では実装されていない
 
 execute({command} [, {silent}])					*execute()*
-		Execute an Ex command or commands and return the output as a
-		string.
-		{command} can be a string or a List.  In case of a List the
-		lines are executed one by one.
-		This is equivalent to: >
+		Exコマンドもしくはコマンドを実行して、 出力を文字列として返す。
+		{command}は文字列かリストとなることができる。 リストの場合は
+		それらの行は一行ずつ実行される.
+		これは同値である: >
 			redir => var
 			{command}
 			redir END
 <
-		The optional {silent} argument can have these values:
-			""		no `:silent` used
-			"silent"	`:silent` used
-			"silent!"	`:silent!` used
-		The default is 'silent'.  Note that with "silent!", unlike
-		`:redir`, error messages are dropped.  When using an external
-		command the screen may be messed up, use `system()` instead.
+		オプションの {silent} の引数は以下の値を取ることができる:
+			""		 `:silent`を使わない
+			"silent"	`:silent` を使う
+			"silent!"	`:silent!` を使う
+		デフォルトは 'silent' である.  "silent!" の Note , `redir`とは
+		異なり, エラーメッセージは削除される. もし 外部コマンドを使うこ
+		とがうんざりするなら, 代わりに`system()` を使うことができる.
 							*E930*
-		It is not possible to use `:redir` anywhere in {command}.
+		{command}の中で いつでも `:redir`を使うことができるわけではない.
 
-		To get a list of lines use |split()| on the result: >
+		行のリストを得るために,
+		出力に`split()`を実行することができる: >
 			split(execute('args'), "\n")
 
-<		When used recursively the output of the recursive call is not
-		included in the output of the higher level call.
+<		 再帰的に使用されると、再帰呼び出しの出力は、上位呼び出しの出力
+		に含まれません。
 
 exepath({expr})						*exepath()*
 		{expr} が実行ファイルで、それが絶対パス、相対パス、または
