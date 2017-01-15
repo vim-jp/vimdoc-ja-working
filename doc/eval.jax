@@ -3356,7 +3356,7 @@ execute({command} [, {silent}])					*execute()*
 >
 			split(execute('args'), "\n")
 
-<		 再帰的に使用されると、再帰呼び出しの出力は、上位呼び出しの出力
+<		再帰的に使用されると、再帰呼び出しの出力は、上位呼び出しの出力
 		に含まれません。
 
 exepath({expr})						*exepath()*
