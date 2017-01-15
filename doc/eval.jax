@@ -2051,7 +2051,7 @@ foldtext()			文字列	閉じた折り畳みに表示されている行
 foldtextresult({lnum})		文字列	{lnum}で閉じている折り畳みのテキスト
 foreground()			数値	Vimウィンドウを前面に移動する
 funcref({name} [, {arglist}] [, {dict}])
-				関数の参照	関数 {name} の参照
+				関数の参照	関数{name}の参照
 function({name} [, {arglist}] [, {dict}])
 				Funcref	関数{name}への参照を取得
 garbagecollect([{atexit}])	なし	メモリを解放する。循環参照を断ち切る
@@ -3827,13 +3827,13 @@ foreground()	Vimのウィンドウを前面に移動する。この関数はク�
 
 						*funcref()*
 funcref({name} [, {arglist}] [, {dict}])
-		`function()`と全く同じである。ただし, Funcrefは名前ではなく
+		|function()|と全く同じである。ただし、Funcrefは名前ではなく
 		関数の参照で検索された関数の参照を返す。これは関数{name} が
-		後で最低期されるときに重要である。
+		後で再定義されるときに重要である。
 
-		`function()`とは違い。 {name}はユーザーの関数として存在してい
-		るべきである。 また,ロード済みの関数も同様である。  {name}はビ
-		ルトインの関数であってはならない。
+		`function()`とは違い、{name}はユーザー定義関数として存在してい
+		るべきである。また、autoload関数についても同様である。{name}
+		は組込み関数であってはならない。
 
 					*function()* *E700* *E922* *E923*
 function({name} [, {arglist}] [, {dict}])
