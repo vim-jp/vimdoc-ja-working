@@ -3335,7 +3335,7 @@ executable({expr})					*executable()*
 
 execute({command} [, {silent}])					*execute()*
 		Exコマンドもしくはコマンドを実行して、出力を文字列として返す。
-		{command}は文字列かリストを使える。リストの場合はそれ
+		{command} は文字列かリストを使える。リストの場合はそれ
 		らの行は一行ずつ実行される。
 		以下と同等である: >
 			redir => var
@@ -3348,8 +3348,8 @@ execute({command} [, {silent}])					*execute()*
 			"silent!"	`:silent!` を使う
 		デフォルトは 'silent' である。 Note "silent!" は
 		`redir`とは異なり、エラーメッセージは削除されることに注意するこ
-		と。もし外部コマンドを使うと画面がおかしくなるかもしれないので、
-		代わりに`system()`を使うことができる。
+		と。もし外部コマンドを使って画面がおかしくなる様であれば、代わ
+		りに`system()`を使うことができる。
 							*E930*
 		{command} の中のどこかで`:redir`を使うことができない。
 
