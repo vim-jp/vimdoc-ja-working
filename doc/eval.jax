@@ -3840,15 +3840,15 @@ function({name} [, {arglist}] [, {dict}])
 		関数{name}を参照する|Funcref|の変数を返す。{name}はユーザー定義
 		関数でも組み込み関数でもよい。
 
-		ここで{name}は関数の参照、もしくはその一部である。関数の参照
-		の一部であるとき、関数の参照一覧の辞書が使用され、{dict}引数
+		ここで{name}は関数の参照、もしくは部分適用である。部分適用
+		であるとき、関数の参照一覧の辞書が使用され、{dict}引数
 		が使用できない。E.g.: >
 			let FuncWithArg = function(dict.Func, [arg])
 			let Broken = function(dict.Func, [arg], dict)
 <
 		Funcrefが利用されるとき、その関数は{name}から見つけられる。
 		これは後で再定義された場合も同様である。常に同じ関数を見つける
-		ために|funcref()|を使うことができる。
+		ために|funcref()|を使うこと。
 
 		{arglist}もしくは{dict}が与えられると、関数の部分適応が作られ
 		る。すなわちリストと辞書が関数のリファレンスを作成し、その
@@ -3863,8 +3863,8 @@ function({name} [, {arglist}] [, {dict}])
 <		関数は次のように呼び出すことができる: >
 			call Callback('one', 'two', 'name')
 
-<		function()はFuncrefにより多くの引数を加えるためにネストして 呼
-		び出すことができる。 例えば: >
+<		function()はFuncrefにより多くの引数を加えるためにネストして呼
+		び出すことができる。例えば: >
 			func Callback(arg1, arg2, name)
 			...
 			let Func = function('Callback', ['one'])
