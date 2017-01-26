@@ -5603,13 +5603,13 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 		- 挿入モードとコマンドラインモードでのマッピングが無効になる
 		- 略語展開が無効になる
 		- 'autoindent' がオフになる
-		- 'expandtab' is reset
+		- 'expandtab' がオフになる
 		- 'formatoptions' が空のときのような動作になる
 		- 'revins' がオフになる
 		- 'ruler' がオフになる
 		- 'showmatch' がオフになる
 		- 'smartindent' がオフになる
-		- 'smarttab' is reset
+		- 'smarttab' がオフになる
 		- 'softtabstop' が 0 になる
 		- 'textwidth' が 0 になる
 		- 'wrapmargin' が 0 になる
