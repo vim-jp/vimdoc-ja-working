@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.0.  Last change: 2017 Jan 14
+*eval.txt*	For Vim バージョン 8.0.  Last change: 2017 Jan 28
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2186,8 +2186,8 @@ matchstr({expr}, {pat}[, {start}[, {count}]])
 				文字列	{expr}内の{count}番目の{pat}のマッチ
 matchstrpos({expr}, {pat}[, {start}[, {count}]])
 				リスト	{expr}内の{count}番目の{pat}のマッチ
-max({list})			数値	{list}内の要素の最大値
-min({list})			数値	{list}内の要素の最小値
+max({expr})			数値	{expr}内の要素の最大値
+min({expr})			数値	{expr}内の要素の最小値
 mkdir({name} [, {path} [, {prot}]])
 				数値	ディレクトリ{name}を作成
 mode([expr])			文字列	現在の編集モード
@@ -2203,6 +2203,7 @@ printf({fmt}, {expr1}...)	文字列	文字列を組み立てる
 pumvisible()			数値	ポップアップメニューが表示されているか
 pyeval({expr})			任意	|Python| の式を評価する
 py3eval({expr})			任意	|python3| の式を評価する
+pyxeval({expr})			任意	|python_x| の式を評価する
 range({expr} [, {max} [, {stride}]])
 				リスト	{expr}から{max}までの要素のリスト
 readfile({fname} [, {binary} [, {max}]])
@@ -4100,6 +4101,10 @@ getchar([expr])						*getchar()*
 			  exe "normal " . v:mouse_col . "|"
 			endif
 <
+		When using bracketed paste only the first character is
+		returned, the rest of the pasted text is dropped.
+		|xterm-bracketed-paste|.
+
 		この関数を呼んだときプロンプトは表示されない。文字入力を待って
 		いることをなんらかの方法でユーザーがわかるようにしなければなら
 		ないだろう。
@@ -5661,16 +5666,20 @@ matchstrpos({expr}, {pat}[, {start}[, {count}]])		*matchstrpos()*
 		型は変更されない。必ずしも文字列である必要はない。
 
 							*max()*
-max({list})	{list}の全要素の値の最大値を返す。
-		{list}がリストでなかったり、要素のどれかが数値に変換できない場
-		合はエラーとなる。
-		空リストの場合は0を返す。
+max({expr})	{expr}の全要素の値の最大値を返す。
+		{expr}はリストか辞書である。辞書の場合、辞書に含まれるすべての
+		値の最大値を返す。
+		{expr}がリストでも辞書でもなかったり、要素のどれかが数値に変換
+		できない場合はエラーとなる。
+		空のリストまたは辞書の場合は0を返す。
 
 							*min()*
-min({list})	{list}の全要素の値の最小値を返す。
-		{list}がリストでなかったり、要素のどれかが数値に変換できない場
-		合はエラーとなる。
-		空リストの場合は0を返す。
+min({expr})	{expr}の全要素の値の最小値を返す。
+		{expr}はリストか辞書である。辞書の場合、辞書に含まれるすべての
+		値の最小値を返す。
+		{expr}がリストでも辞書でもなかったり、要素のどれかが数値に変換
+		できない場合はエラーとなる。
+		空のリストまたは辞書の場合は0を返す。
 
 							*mkdir()* *E739*
 mkdir({name} [, {path} [, {prot}]])
@@ -5996,6 +6005,14 @@ pyeval({expr})						*pyeval()*
 		辞書は Vim の |Dictionary| 型に変換される。文字列ではない辞書
 		のキーはエラーになる。
 		{|+python| 機能付きでコンパイルされたときのみ利用可能}
+
+pyxeval({expr})						*pyxeval()*
+		Evaluate Python expression {expr} and return its result
+		converted to Vim data structures.
+		Uses Python 2 or 3, see |python_x| and 'pyxversion'.
+		See also: |pyeval()|, |py3eval()|
+		{only available when compiled with the |+python| or the
+		|+python3| feature}
 
 							*E726* *E727*
 range({expr} [, {max} [, {stride}]])				*range()*
@@ -6588,10 +6605,17 @@ setpos({expr}, {list})
 		    [bufnum, lnum, col, off]
 		    [bufnum, lnum, col, off, curswant]
 
-		"bufnum" はバッファ番号。0にするとカレントバッファを表す。カー
+		"bufnum" はバッファ番号。0にするとカレントバッファを表す。
+		{旧訳: カー
 		ソル位置の設定はカレントバッファに対してのみ可能。他のバッファ
 		のマークを設定するには、関数|bufnr()|を使ってファイル名をバッ
-		ファ番号に変換する。
+		ファ番号に変換する。}
+		When setting an uppercase mark "bufnum" is
+		used for the mark position.  For other marks it specifies the
+		buffer to set the mark in.  You can use the |bufnr()| function
+		to turn a file name into a buffer number.
+		For setting the cursor and the ' mark "bufnum" is ignored,
+		since these are associated with a window, not a buffer.
 		ジャンプリストは変更されない。
 
 		"lnum" と "col" はバッファ内の位置。桁番号は1から始まる。
@@ -7885,7 +7909,7 @@ winnr([{arg}])	結果は現在のウィンドウを示す数値。最上位の�
 		以前のウィンドウがない場合、またはそれが他のタブページにある場
 		合は0を返す。
 		この番号は|CTRL-W_w|と ":wincmd w" で使える。|:wincmd|
-		|tabpagewinnr()|も参照。
+		|tabpagewinnr()|と|win_getid()|も参照。
 
 							*winrestcmd()*
 winrestcmd()	現在のウィンドウサイズを復元するための一連の|:resize|コマンド
@@ -8137,6 +8161,7 @@ printer			|:hardcopy| をサポート
 profile			|:profile| をサポート
 python			Python 2.x インターフェイスをサポート |has-python|
 python3			Python 3.x インターフェイスをサポート |has-python|
+pythonx			|python_x| インターフェイスをサポート |has-pythonx|
 qnx			QNXバージョン
 quickfix		|quickfix|をサポート
 reltime			|reltime()|をサポート
