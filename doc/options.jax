@@ -5906,32 +5906,32 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	は設定できない。
 
 						*'pyxversion'* *'pyx'*
-'pyxversion' 'pyx'	number	(default depends on the build)
-			global
-			{not in Vi}
-			{only available when compiled with the |+python| or
-			the |+python3| feature}
-	Specifies the python version used for pyx* functions and commands
-	|python_x|.  The default value is as follows:
+'pyxversion' 'pyx'	数値	(既定値はビルドに依存)
+			グローバル
+			{Vi にはない}
+			{Vimが |+python| または |+python3| 機能付きでコンパイ
+			ルされたときのみ有効}
+	pyx* 関数とコマンドで使用する python のバージョンを指定する
+	|python_x|。既定値は以下の通り:
 
-		Compiled with		     Default ~
-		|+python| and |+python3|	0
-		only |+python|			2
-		only |+python3|			3
+		以下でコンパイル	      既定値 ~
+		|+python| と |+python3|		0
+		|+python| のみ			2
+		|+python3| のみ			3
 
-	Available values are 0, 2 and 3.
-	If 'pyxversion' is 0, it is set to 2 or 3 after the first execution of
-	any python2/3 commands or functions.  E.g. `:py` sets to 2, and `:py3`
-	sets to 3. `:pyx` sets it to 3 if Python 3 is available, otherwise sets
-	to 2 if Python 2 is available.
-	See also: |has-pythonx|
+	使用可能な値は 0, 2, 3 のいずれかである。
+	'pyxversion' が 0 の場合、最初に実行された python2/3 コマンドまたは関
+	数によって 2 または 3 に設定される。例えば、`:py` は 2 に設定し、
+	`:py3` は 3 に設定する。`:pyx` は、Python 3 が利用可能ならば 3 に設定
+	し、そうでなく Python 2 が利用可能ならば 2 に設定する。
+	|has-pythonx| も参照。
 
-	If Vim is compiled with only |+python| or |+python3| setting
-	'pyxversion' has no effect.  The pyx* functions and commands are
-	always the same as the compiled version.
+	もし Vim が |+python| または |+python3| のみでコンパイルされている場
+	合、'pyxversion' は効果がない。pyx* 関数とコマンドは、つねにコンパイル
+	されたバージョンと同じとなる。
 
-	This option cannot be set from a |modeline| or in the |sandbox|, for
-	security reasons.
+	このオプションはセキュリティの理由により |modeline| や |sandbox| から
+	は設定できない。
 
 						*'quoteescape'* *'qe'*
 'quoteescape' 'qe'	文字列	(既定では "\")

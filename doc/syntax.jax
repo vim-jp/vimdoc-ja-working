@@ -3359,7 +3359,8 @@ ZSH						    *zsh.vim* *ft-zsh-syntax*
 	影響する。
 
 :sy[ntax] case
-	Show either "syntax case match" or "syntax case ignore" (translated).
+	"syntax case match" または "syntax case ignore" (翻訳される)を表示す
+	る。
 
 スペルチェック						*:syn-spell*
 
@@ -3379,8 +3380,8 @@ ZSH						    *zsh.vim* *ft-zsh-syntax*
 	らない。
 
 :sy[ntax] spell
-	Show either "syntax spell toplevel", "syntax spell notoplevel" or
-	"syntax spell default" (translated).
+	"syntax spell toplevel", "syntax spell notoplevel" または
+	"syntax spell default" (翻訳される)を表示する。
 
 
 SYNTAX ISKEYWORD SETTING				*:syn-iskeyword*
@@ -3947,7 +3948,8 @@ Note この例はネストした "if" には機能しないことに注意。ネ
 	ればならない状態に戻る。
 
 :sy[ntax] conceal
-	Show either "syntax conceal on" or "syntax conceal off" (translated).
+	"syntax conceal on" または "syntax conceal off" (翻訳される)を表示す
+	る。
 
 ==============================================================================
 7. syntaxのパターン				*:syn-pattern* *E401* *E402*

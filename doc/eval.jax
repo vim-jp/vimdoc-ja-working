@@ -4101,8 +4101,8 @@ getchar([expr])						*getchar()*
 			  exe "normal " . v:mouse_col . "|"
 			endif
 <
-		When using bracketed paste only the first character is
-		returned, the rest of the pasted text is dropped.
+		bracketed pasteを使用しているときは最初の文字のみが返され、ペー
+		ストされた残りのテキストは切り捨てられる。
 		|xterm-bracketed-paste|.
 
 		この関数を呼んだときプロンプトは表示されない。文字入力を待って
@@ -6007,12 +6007,13 @@ pyeval({expr})						*pyeval()*
 		{|+python| 機能付きでコンパイルされたときのみ利用可能}
 
 pyxeval({expr})						*pyxeval()*
-		Evaluate Python expression {expr} and return its result
-		converted to Vim data structures.
-		Uses Python 2 or 3, see |python_x| and 'pyxversion'.
-		See also: |pyeval()|, |py3eval()|
-		{only available when compiled with the |+python| or the
-		|+python3| feature}
+		Python の式 {expr} を評価して、結果を Vim のデータ形式にして返
+		す。
+		Python 2 または 3 を使用する。|python_x| と 'pyxversion' を参
+		照。
+		|pyeval()|, |py3eval()| も参照。
+		{|+python| または |+python3| 機能付きでコンパイルされたときの
+		み利用可能}
 
 							*E726* *E727*
 range({expr} [, {max} [, {stride}]])				*range()*
@@ -6605,17 +6606,14 @@ setpos({expr}, {list})
 		    [bufnum, lnum, col, off]
 		    [bufnum, lnum, col, off, curswant]
 
-		"bufnum" はバッファ番号。0にするとカレントバッファを表す。
-		{旧訳: カー
-		ソル位置の設定はカレントバッファに対してのみ可能。他のバッファ
-		のマークを設定するには、関数|bufnr()|を使ってファイル名をバッ
-		ファ番号に変換する。}
-		When setting an uppercase mark "bufnum" is
-		used for the mark position.  For other marks it specifies the
-		buffer to set the mark in.  You can use the |bufnr()| function
-		to turn a file name into a buffer number.
-		For setting the cursor and the ' mark "bufnum" is ignored,
-		since these are associated with a window, not a buffer.
+		"bufnum" はバッファ番号。0にするとカレントバッファを表す。大文
+		字のマークを設定するとき、"bufnum" はマーク位置として用いられ
+		る。それ以外のマークの場合、"bufnum" はマークを設定するバッファ
+		を指定する。関数|bufnr()|を使ってファイル名をバッファ番号に変
+		換することができる。
+		カーソルと ' マークを設定する場合、バッファ番号は無視される。
+		なぜならそれらはバッファではなくウィンドウに関連付けられている
+		からである。
 		ジャンプリストは変更されない。
 
 		"lnum" と "col" はバッファ内の位置。桁番号は1から始まる。
