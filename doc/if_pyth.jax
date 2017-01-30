@@ -807,61 +807,64 @@ Note: Python の 2 と 3 の両方が利用可能で、Python が動的ロード
 ==============================================================================
 11. Python X						*python_x* *pythonx*
 
-Because most python code can be written so that it works with python 2.6+ and
-python 3 the pyx* functions and commands have been writen.  They work exactly
-the same as the Python 2 and 3 variants, but select the Python version using
-the 'pyxversion' setting.
+多くの python コードは、python 2.6+ と python 3 に両方で動くことができるように
+書けるため、pyx* 関数とコマンドが用意されました。それらは、Python 2 や 3 向け
+の変種とまったく同じように動作しますが、'pyxversion' 設定を用いて Python のバー
+ジョンを選択できる点が異なります。
 
-You should set 'pyxversion' in your |.vimrc| to prefer Python 2 or Python 3
-for Python commands. If you change this setting at runtime you may risk that
-state of plugins (such as initialization) may be lost.
+Python コマンドに Python 2 と 3 のどちらを使いたいかに応じて、|.vimrc| の中で
+'pyxversion' を設定してください。もしこの設定を実行時に変更すると、プラグイン
+の状態(例えば初期化など)が失われる危険性があります。
 
-If you want to use a module, you can put it in the {rtp}/pythonx directory.
-See |pythonx-directory|.
+モジュールを使用したい場合には、{rtp}/pythonx ディレクトリの中に置くことができ
+ます。|pythonx-directory| を参照してください。
 
 							*:pyx* *:pythonx*
-The `:pyx` and `:pythonx` commands work similar to `:python`.  A simple check
-if the `:pyx` command is working: >
+`:pyx` コマンドと `:pythonx` コマンドは `:python` と同様に機能します。`:pyx`
+コマンドが機能するか簡単にチェックするには: >
 	:pyx print("Hello")
 
-To see what version of Python is being used: >
+使っている Python のバージョンを見るには: >
 	:pyx import sys
 	:pyx print(sys.version)
 <
 					*:pyxfile* *python_x-special-comments*
-The `:pyxfile` command works similar to `:pyfile`.  However you can add one of
-these comments to force Vim using `:pyfile` or `:py3file`: >
-  #!/any string/python2		" Shebang. Must be the first line of the file.
-  #!/any string/python3		" Shebang. Must be the first line of the file.
-  # requires python 2.x		" Maximum lines depend on 'modelines'.
-  # requires python 3.x		" Maximum lines depend on 'modelines'.
-Unlike normal modelines, the bottom of the file is not checked.
-If none of them are found, the 'pyxversion' setting is used.
+`:pyxfile` コマンドは `:pyfile` と同様に機能します。しかし、Vim が `:pyfile`
+または `:py3file` を使うように強制したい場合は以下のコメントのうち 1 つを追加
+することができます: >
+  #!/any string/python2		" Shebang。ファイルの先頭でなければならない。
+  #!/any string/python3		" Shebang。ファイルの先頭でなければならない。
+  # requires python 2.x		" 最大行数は 'modelines' に依存。
+  # requires python 3.x		" 最大行数は 'modelines' に依存。
+通常のモードラインとは異なり、ファイルの末尾はチェックされません。
+いずれのコメントも見つからない場合は、'pyxversion' の設定が使われます。
 							*W20* *W21*
-If Vim does not support the selected Python version a silent message will be
-printed.  Use `:messages` to read them.
+もし Vim が指定された Python のバージョンをサポートしない場合、静かなメッセー
+ジが表示されます。それらを読むには `:messages` を使用してください。
 
 							*:pyxdo*
-The `:pyxdo` command works similar to `:pydo`.
+`:pyxdo` コマンドは `:pydo` と同様に機能します。
 
 							*has-pythonx*
-You can test if pyx* commands are available with: >
+pyx* コマンドが使用できるかどうかを調べるには以下が使えます: >
 	if has('pythonx')
 	  echo 'pyx* commands are available. (Python ' . &pyx . ')'
 	endif
 
-When compiled with only one of |+python| or |+python3|, the has() returns 1.
-When compiled with both |+python| and |+python3|, the test depends on the
-'pyxversion' setting.  If 'pyxversion' is 0, it tests Python 3 first, and if
-it is not available then Python 2.  If 'pyxversion' is 2 or 3, it tests only
-Python 2 or 3 respectively.
+|+python| または |+python3| のどちらか一方のみでコンパイルされている場合は、
+has() は 1 を返します。
+|+python| と |+python3| の両方でコンパイルされている場合は、テストは
+'pyxversion' の設定に依存します。もし 'pyxversion' が 0 ならば最初に Python 3
+がテストされ、使用可能でなければ Python 2 がテストされます。もし 'pyxversion'
+が 2 または 3 であれば、Python 2 または 3 のそれぞれどちらか一方のみをテストし
+ます。
 
-Note that for has('pythonx') to work it may try to dynamically load Python 3
-or 2.  This may have side effects, especially when Vim can only load one of
-the two.
+has('pythonx') は動作のため、Python 3 または 2 を動的にロードしようとすること
+がある点に注意してください。これは特に Vim が 2 つのうち 1 つしかロードできな
+い場合に副作用があります。
 
-If a user prefers Python 2 and want to fallback to Python 3, he needs to set
-'pyxversion' explicitly in his |.vimrc|.  E.g.: >
+もしもユーザーが Python 2 を優先し、Python 3 にフォールバックしたい場合は、
+|.vimrc| で 'pyxversion' を明示的に設定する必要があります。例: >
 	if has('python')
 	  set pyx=2
 	elseif has('python3')
