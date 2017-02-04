@@ -17,6 +17,13 @@
 
 function! MakeHtmlAll()
   let s:log = []
+
+  " syntax hilight for `:foobar`
+  syn match helpBacktick	contained "`" conceal
+  syn match helpCommand		"`[^` \t]\+`"hs=s+1,he=e-1 contains=helpBacktick
+  syn match helpCommand		"\(^\|[^a-z"[]\)\zs`[^`]\+`\ze\([^a-z\t."']\|$\)"hs=s+1,he=e-1 contains=helpBacktick
+  hi def link helpCommand	Comment
+
   call MakeTagsFile()
   echo ""
   let files = split(glob('*.??[tx]'), '\n')
@@ -73,7 +80,7 @@ function! MakeHtml2(src, dst)
   " set dumy highlight to keep syntax identity
   if !exists("s:attr_save")
     let s:attr_save = {}
-    for name in ["helpStar", "helpBar", "helpHyperTextEntry", "helpHyperTextJump", "helpOption", "helpExample"]
+    for name in ["helpStar", "helpBar", "helpHyperTextEntry", "helpHyperTextJump", "helpOption", "helpExample", "helpCommand"]
       let s:attr_save[name] = synIDattr(synIDtrans(hlID(name)), "name")
       execute printf("hi %s term=bold cterm=bold gui=bold", name)
     endfor
@@ -83,12 +90,12 @@ function! MakeHtml2(src, dst)
   silent! call tohtml#Convert2HTML(1, line('$'))
 
   let lang = s:GetLang(a:src)
-  silent %s@<span class="\(helpHyperTextEntry\|helpHyperTextJump\|helpOption\)">\([^<]*\)</span>@\=s:MakeLink(lang, submatch(1), submatch(2))@ge
+  silent %s@<span class="\(helpHyperTextEntry\|helpHyperTextJump\|helpOption\|helpCommand\)">\([^<]*\)</span>@\=s:MakeLink(lang, submatch(1), submatch(2))@ge
   silent %s@^<span class="Ignore">&lt;</span>\ze&nbsp;@\&nbsp;@ge
   silent %s@<span class="\(helpStar\|helpBar\|Ignore\)">[^<]*</span>@@ge
   call s:TranslateHelpExampleBlock()
   " remove style
-  silent g/^\.\(helpBar\|helpStar\|helpHyperTextEntry\|helpHyperTextJump\|helpOption\)/silent delete _
+  silent g/^\.\(helpBar\|helpStar\|helpHyperTextEntry\|helpHyperTextJump\|helpOption\|helpCommand\)/silent delete _
 
   call s:Header()
   call s:Footer()
@@ -155,6 +162,8 @@ function! s:MakeLink(lang, hlname, tagname)
     let sep = "*"
   elseif a:hlname == "helpHyperTextJump"
     let sep = "|"
+  elseif a:hlname == "helpCommand"
+    let sep = "`"
   elseif a:hlname == "helpOption"
     let sep = ""
   endif
