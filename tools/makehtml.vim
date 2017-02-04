@@ -17,13 +17,6 @@
 
 function! MakeHtmlAll()
   let s:log = []
-
-  " syntax hilight for `:foobar`
-  syn match helpBacktick	contained "`" conceal
-  syn match helpCommand		"`[^` \t]\+`"hs=s+1,he=e-1 contains=helpBacktick
-  syn match helpCommand		"\(^\|[^a-z"[]\)\zs`[^`]\+`\ze\([^a-z\t."']\|$\)"hs=s+1,he=e-1 contains=helpBacktick
-  hi def link helpCommand	Comment
-
   call MakeTagsFile()
   echo ""
   let files = split(glob('*.??[tx]'), '\n')
