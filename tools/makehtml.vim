@@ -189,6 +189,9 @@ function! s:MakeLink(lang, hlname, tagname)
         let href .= '#' . tagname
       endif
       let res = printf('<a class="EnglishTag" href="%s">%s%s%s</a>', href, sep, a:tagname, sep)
+    elseif a:hlname == "helpCommand"
+      " Don't use MissingTag class for a command.
+      let res = printf('<span class="%s">%s%s%s</span>', s:attr_save[a:hlname], sep, a:tagname, sep)
     else
       let res = printf('<span class="MissingTag">%s%s%s</span>', sep, a:tagname, sep)
     endif
