@@ -12,10 +12,11 @@
 " Usage:
 "   :cd doc
 "   :helptags .
-"   :source mkhtml.vim
+"   :source makehtml.vim
 "   :call MakeHtmlAll()
 
-function! MakeHtmlAll()
+function! MakeHtmlAll(...)
+  let conceal = get(a:000, 0, 1)  " Enable concealing by default.
   let s:log = []
   call MakeTagsFile()
   echo ""
@@ -23,7 +24,7 @@ function! MakeHtmlAll()
   for i in range(len(files))
     let file = files[i]
     echon printf("%d/%d %s -> %s", i+1, len(files), files[i], s:HtmlName(files[i]))
-    call MakeHtml(file)
+    call MakeHtml(file, conceal)
     echon " *DONE*"
     echo ""
   endfor
@@ -58,13 +59,13 @@ function! MakeTagsFile()
   endfor
 endfunction
 
-function! MakeHtml(fname)
-  let r = MakeHtml2(a:fname, s:HtmlName(a:fname))
+function! MakeHtml(fname, conceal)
+  let r = MakeHtml2(a:fname, s:HtmlName(a:fname), a:conceal)
   silent quit!
   return r
 endfunction
 
-function! MakeHtml2(src, dst)
+function! MakeHtml2(src, dst, conceal)
   silent new `=a:src`
 
   " 2html options
@@ -83,7 +84,7 @@ function! MakeHtml2(src, dst)
   silent! call tohtml#Convert2HTML(1, line('$'))
 
   let lang = s:GetLang(a:src)
-  silent %s@<span class="\(helpHyperTextEntry\|helpHyperTextJump\|helpOption\|helpCommand\)">\([^<]*\)</span>@\=s:MakeLink(lang, submatch(1), submatch(2))@ge
+  silent %s@<span class="\(helpHyperTextEntry\|helpHyperTextJump\|helpOption\|helpCommand\)">\([^<]*\)</span>@\=s:MakeLink(lang, submatch(1), submatch(2), a:conceal)@ge
   silent %s@^<span class="Ignore">&lt;</span>\ze&nbsp;@\&nbsp;@ge
   silent %s@<span class="\(helpStar\|helpBar\|Ignore\)">[^<]*</span>@@ge
   call s:TranslateHelpExampleBlock()
@@ -146,19 +147,23 @@ function! s:Footer()
   call append(search('^</body', 'wn') - 1, footer)
 endfunction
 
-function! s:MakeLink(lang, hlname, tagname)
+function! s:MakeLink(lang, hlname, tagname, conceal)
   let tagname = a:tagname
   let tagname = substitute(tagname, '&lt;', '<', 'g')
   let tagname = substitute(tagname, '&gt;', '>', 'g')
   let tagname = substitute(tagname, '&amp;', '\&', 'g')
-  if a:hlname == "helpHyperTextEntry"
-    let sep = "*"
-  elseif a:hlname == "helpHyperTextJump"
-    let sep = "|"
-  elseif a:hlname == "helpCommand"
-    let sep = "`"
-  elseif a:hlname == "helpOption"
+  if a:conceal
     let sep = ""
+  else
+    if a:hlname == "helpHyperTextEntry"
+      let sep = "*"
+    elseif a:hlname == "helpHyperTextJump"
+      let sep = "|"
+    elseif a:hlname == "helpCommand"
+      let sep = "`"
+    elseif a:hlname == "helpOption"
+      let sep = ""
+    endif
   endif
   let tags = s:GetTags(a:lang)
   if has_key(tags, tagname)
