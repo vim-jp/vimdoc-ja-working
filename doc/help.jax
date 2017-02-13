@@ -116,7 +116,7 @@ VIM は Vi IMproved の略です。VIM の大部分は Bram Moolenaar によっ�
 |change.txt|	テキストの削除と変更
 |indent.txt|	C言語や、その他の言語の自動インデント
 |undo.txt|	アンドゥとリドゥ
-|repeat.txt|	繰り返しコマンド、Vimスクリプト、スクリプトのデバッグ
+|repeat.txt|	繰り返しコマンド、Vim script、スクリプトのデバッグ
 |visual.txt|	ビジュアルモード (テキストの選択)
 |various.txt|	その他の様々なコマンド
 |recover.txt|	クラッシュからの復帰

@@ -303,8 +303,8 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |FuncUndefined|		呼び出そうとしたユーザー定義関数が定義されていなかった
 			とき
 |SpellFileMissing|	スペリングファイルを使おうとしたが見つからなかったとき
-|SourcePre|		Vimスクリプトを読み込む前
-|SourceCmd|		Vimスクリプトを読み込む前 |Cmd-event|
+|SourcePre|		Vim script を読み込む前
+|SourceCmd|		Vim script を読み込む前 |Cmd-event|
 
 |VimResized|		Vimのウィンドウサイズが変わったとき
 |FocusGained|		Vimが入力フォーカスを得たとき
@@ -827,13 +827,12 @@ ShellFilterPost			":{range}!cmd", ":w !cmd", ":r !cmd"を使って
 				シェルコマンドを実行した後。変更されたファイル
 				をチェックするのに使える。
 							*SourcePre*
-SourcePre			Vimスクリプトを読み込む前。 |:source|
-				<afile>は読み込まれるファイルの名前となる。
+SourcePre			Vim script を読み込む前。 |:source| <afile> は
+				読み込まれるファイルの名前となる。
 							*SourceCmd*
-SourceCmd			Vimスクリプトを読み込むとき。|:source|
-				<afile>は読み込まれるファイルの名前となる。こ
-				の自動コマンドはこのファイルを読み込まねばなら
-				ない。
+SourceCmd			Vim script を読み込むとき。|:source| <afile>
+				は読み込まれるファイルの名前となる。この自動コ
+				マンドはこのファイルを読み込まねばならない。
 							*SpellFileMissing*
 SpellFileMissing		スペルチェックファイルを読み込もうとしたが、見
 				つからなかったとき。パターンは言語に対して照合
