@@ -3259,7 +3259,7 @@ deepcopy({expr}[, {noref}])				*deepcopy()* *E698*
 		|copy()|も参照。
 
 delete({fname} [, {flags}])					*delete()*
-		{flags}を指定しないもくは{flags}を空で指定した場合: ファイル
+		{flags}を指定しないもしくは{flags}を空で指定した場合: ファイル
 		{fname}を削除する。
 		これは{fname}がシンボリックリンクの時でも動作する。
 
