@@ -342,7 +342,7 @@ N  *+digraphs*		|digraphs| *E196*
 m  *+directx*		Win32 GUI のみ: DirectX と |'renderoptions'|
    *+dnd*		"~レジスタ |quote_~|を使ったDnDのサポート
 B  *+emacs_tags*	|emacs-tags| ファイル
-N  *+eval*		式評価 {訳注: Vim script } |eval.txt|
+N  *+eval*		式評価 {訳注: Vim script} |eval.txt|
 N  *+ex_extra*		今は常にオン、かつてVimの拡張Exコマンドのためにあった
 N  *+extra_search*	|'hlsearch'| と |'incsearch'| オプション
 B  *+farsi*		|farsi| 言語

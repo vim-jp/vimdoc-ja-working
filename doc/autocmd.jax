@@ -827,12 +827,13 @@ ShellFilterPost			":{range}!cmd", ":w !cmd", ":r !cmd"を使って
 				シェルコマンドを実行した後。変更されたファイル
 				をチェックするのに使える。
 							*SourcePre*
-SourcePre			Vim script を読み込む前。 |:source| <afile> は
-				読み込まれるファイルの名前となる。
+SourcePre			Vim script を読み込む前。|:source|
+				<afile> は読み込まれるファイルの名前となる。
 							*SourceCmd*
-SourceCmd			Vim script を読み込むとき。|:source| <afile>
-				は読み込まれるファイルの名前となる。この自動コ
-				マンドはこのファイルを読み込まねばならない。
+SourceCmd			Vim script を読み込むとき。|:source| 
+				<afile>は読み込まれるファイルの名前となる。こ
+				の自動コマンドはこのファイルを読み込まねばなら
+				ない。
 							*SpellFileMissing*
 SpellFileMissing		スペルチェックファイルを読み込もうとしたが、見
 				つからなかったとき。パターンは言語に対して照合
