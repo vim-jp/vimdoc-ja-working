@@ -5,3 +5,6 @@ target
 tmp
 *.sw?
 *~
+
+# Explicitly exclude from translation.
+doc/todo.jax
