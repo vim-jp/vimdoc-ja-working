@@ -15,6 +15,10 @@
 "   :source makehtml.vim
 "   :call MakeHtmlAll()
 
+if !exists('g:makehtml_external_taglinks')
+  let g:makehtml_external_taglinks = {}
+end
+
 function! MakeHtmlAll(...)
   let conceal = get(a:000, 0, 1)  " Enable concealing by default.
   let s:log = []
@@ -197,6 +201,8 @@ function! s:MakeLink(lang, hlname, tagname, conceal)
     elseif a:hlname == "helpCommand"
       " Don't use MissingTag class for a command.
       let res = printf('<span class="%s">%s%s%s</span>', s:attr_save[a:hlname], sep, a:tagname, sep)
+    elseif has_key(g:makehtml_external_taglinks, a:tagname)
+      let res = printf('<a class="ExternalTaglink"">%s%s%s</a>', sep, a:tagname, sep)
     else
       let res = printf('<span class="MissingTag">%s%s%s</span>', sep, a:tagname, sep)
     endif

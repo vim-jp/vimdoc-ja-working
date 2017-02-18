@@ -8,6 +8,7 @@ let g:html_no_progress = 1
 
 enew!
 
+source <sfile>:h/untranslated.vim
 source <sfile>:h/makehtml.vim
 
 function! s:main()
