@@ -202,7 +202,8 @@ function! s:MakeLink(lang, hlname, tagname, conceal)
       " Don't use MissingTag class for a command.
       let res = printf('<span class="%s">%s%s%s</span>', s:attr_save[a:hlname], sep, a:tagname, sep)
     elseif has_key(g:makehtml_external_taglinks, a:tagname)
-      let res = printf('<a class="ExternalTaglink"">%s%s%s</a>', sep, a:tagname, sep)
+      let url = g:makehtml_external_taglinks[a:tagname]
+      let res = printf('<a class="ExternalTaglink" href="%s">%s%s%s</a>', url, sep, a:tagname, sep)
     else
       let res = printf('<span class="MissingTag">%s%s%s</span>', sep, a:tagname, sep)
     endif
