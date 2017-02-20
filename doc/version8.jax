@@ -5,40 +5,38 @@
 
 
 				*vim8* *vim-8* *version-8.0* *version8.0*
-Welcome to Vim 8!  A large number of bugs have been fixed and several nice
-features have been added.  This file mentions all the new items and changes to
-existing features since Vim 7.4. The patches up to Vim 7.4 can be found here:
-|vim-7.4|.
+ようこそ Vim 8 へ! 多数のバグが修正され、いくつかの素敵な機能が追加されていま
+す。このファイルは Vim 7.4 以降のすべての新規要素と既存の機能に対する変更に言
+及しています。Vim 7.4 以降のパッチはここで見られます: |vim-7.4|
 
-Use this command to see the full version and features information of the Vim
-program you are using: >
+あなたが使用している Vim の完全なバージョンと機能に関する情報を見るには以下の
+コマンドを使用してください: >
 	:version
 
-NEW FEATURES				|new-8|
-	Vim script enhancements		|new-vim-script-8|
-	Various new items		|new-items-8|
+新機能					|new-8|
+	Vim script の拡張		|new-vim-script-8|
+	さまざまな新要素		|new-items-8|
 
-INCOMPATIBLE CHANGES			|incompatible-8|
+非互換な変更				|incompatible-8|
 
-IMPROVEMENTS				|improvements-8|
+改善点					|improvements-8|
 
-COMPILE TIME CHANGES			|compile-changes-8|
+コンパイル時の変更			|compile-changes-8|
 
-PATCHES					|patches-8|
+パッチ					|patches-8|
 
 
-See |vi_diff.txt| for an overview of differences between Vi and Vim 8.0.
-See |version4.txt|, |version5.txt|, |version6.txt| and |version7.txt| for
-differences between other versions.
+Vi と Vim 8.0 の違いの概要については |vi_diff.txt| を参照してください。
+他のバージョンとの違いについては |version4.txt|, |version5.txt|,
+|version6.txt|, |version7.txt| を参照してください。
 
 ==============================================================================
-NEW FEATURES						*new-8*
+新機能							*new-8*
 
-First an overview of the more interesting new features.  A comprehensive list
-is below.
+初めに、より興味深い新機能の概要を示します。包括的な一覧は下にあります。
 
 
-Asynchronous I/O support, channels ~
+非同期 I/O 対応、チャンネル ~
 
 Vim can now exchange messages with other processes in the background.  This
 makes it possible to have servers do work and send back the results to Vim.
@@ -53,7 +51,7 @@ This makes it possible to build very complex plugins, written in any language
 and running in a separate process.
 
 
-Jobs ~
+ジョブ ~
 
 Vim can now start a job, communicate with it and stop it.  This is very useful
 to run a process for completion, syntax checking, etc.  Channels are used to
@@ -61,7 +59,7 @@ communicate with the job.  Jobs can also read from or write to a buffer or a
 file.  See |job_start()|.
 
 
-Timers ~
+タイマー ~
 
 Also asynchronous are timers.  They can fire once or repeatedly and invoke a
 function to do any work.  For example: >
@@ -70,7 +68,7 @@ This will call the CheckTemp() function four seconds (4000 milli seconds)
 later.  See |timer_start()|.
 
 
-Partials ~
+部分適用 ~
 
 Vim already had a Funcref, a reference to a function.  A partial also refers
 to a function, and additionally binds arguments and/or a dictionary.  This is
@@ -80,7 +78,7 @@ example above, to pass an argument to the function: >
 This will call CheckTemp('out') four seconds later.
 
 
-Lambda and Closure ~
+ラムダとクロージャ ~
 
 A short way to create a function has been added: {args -> expr}.  See |lambda|.
 This is useful for functions such as `filter()` and `map()`, which now also
@@ -94,7 +92,7 @@ User defined functions can also be a closure by adding the "closure" argument
 |:func-closure|.
 
 
-Packages ~
+パッケージ ~
 
 Plugins keep growing and more of them are available than ever before.  To keep
 the collection of plugins manageable package support has been added.  This is
@@ -103,7 +101,7 @@ possibly keep them updated.  Vim will load them automatically, or only when
 desired.  See |packages|.
 
 
-New style tests ~
+新スタイルのテスト ~
 
 This is for Vim developers.  So far writing tests for Vim has not been easy.
 Vim 8 adds assert functions and a framework to run tests.  This makes it a lot
@@ -111,33 +109,33 @@ simpler to write tests and keep them updated.  Also new are several functions
 that are added specifically for testing. See |test-functions|.
 
 
-Window IDs ~
+ウィンドウ ID ~
 
 Previously windows could only be accessed by their number. And every time a
 window would open, close or move that number changes.  Each window now has a
 unique ID, so that they are easy to find.  See |win_getid()| and |win_id2win()|.
 
 
-Viminfo uses timestamps ~
+Viminfo のタイムスタンプ利用 ~
 
 Previously the information stored in viminfo was whatever the last Vim wrote
 there.  Now timestamps are used to always keep the most recent items.
 See |viminfo-timestamp|.
 
 
-Wrapping lines with indent ~
+インデント付きの行折り返し ~
 
 The 'breakindent' option has been added to be able to wrap lines without
 changing the amount of indent.
 
 
-Windows: DirectX support ~
+Windows: DirectX 対応 ~
 
 This adds the 'renderoptions' option to allow for switching on DirectX
 (DirectWrite) support on MS-Windows.
 
 
-GTK+ 3 support ~
+GTK+ 3 対応 ~
 
 The GTK+ 3 GUI works just like GTK+ 2 except for hardly noticeable technical
 differences between them.  Configure still chooses GTK+ 2 if both 2 and 3 are
@@ -145,8 +143,8 @@ available.  See src/Makefile for how to use GTK+ 3 instead.  See
 |gui-x11-compiling| for other details.
 
 
-Vim script enhancements					*new-vim-script-8*
------------------------
+Vim script の拡張					*new-vim-script-8*
+-----------------
 
 In Vim script the following types have been added:
 
@@ -165,10 +163,10 @@ printf() now accepts any type of argument for %s.  It is converted to a string
 like with string().
 
 
-Various new items					*new-items-8*
------------------
+さまざまな新要素					*new-items-8*
+----------------
 
-Visual mode commands: ~
+ビジュアルモードコマンド: ~
 
 |v_CTRL-A|	CTRL-A		add N to number in highlighted text
 |v_CTRL-X|	CTRL-X		subtract N from number in highlighted text
@@ -176,18 +174,18 @@ Visual mode commands: ~
 |v_g_CTRL-X|	g CTRL-X	subtract N from number in highlighted text
 
 
-Insert mode commands: ~
+挿入モードコマンド: ~
 
 |i_CTRL-G_U|	CTRL-G U	don't break undo with next cursor movement
 
 
-Cmdline mode commands: ~
+コマンドラインモードコマンド: ~
 
 |/_CTRL-G|	CTRL-G		move to the next match in 'incsearch' mode
 |/_CTRL-T|	CTRL-T		move to the previous match in 'incsearch' mode
 
 
-Options: ~
+オプション: ~
 
 'belloff'		do not ring the bell for these reasons
 'breakindent'		wrapped line repeats indent
@@ -208,7 +206,7 @@ Options: ~
 'termguicolors'		use GUI colors for the terminal
 
 
-Ex commands: ~
+Ex コマンド: ~
 
 |:cbottom|		scroll to the bottom of the quickfix window
 |:cdo|			execute command in each valid error list entry
@@ -227,13 +225,13 @@ Ex commands: ~
 |:smile|		make the user happy
 
 
-Ex command modifiers: ~
+Ex コマンド修飾子: ~
 
 |:keeppatterns|		following command keeps search pattern history
 |<mods>|		supply command modifiers to user defined commands
 
 
-New and extended functions: ~
+新規および拡張された関数: ~
 
 |arglistid()|		get id of the argument list
 |assert_equal()|	assert that two expressions values are equal
@@ -319,7 +317,7 @@ New and extended functions: ~
 |wordcount()|		get byte/word/char count of buffer
 
 
-New Vim variables: ~
+新しい Vim 変数: ~
 
 |v:beval_winid|		Window ID of the window where the mouse pointer is
 |v:completed_item|	complete items for the most recently completed word
@@ -348,7 +346,7 @@ New Vim variables: ~
 |v:vim_did_enter|	set just before VimEnter autocommands are triggered
 
 
-New autocommand events: ~
+新しい自動コマンドイベント: ~
 
 |CmdUndefined|		a user command is used but it isn't defined
 |OptionSet|		after setting any option
@@ -359,18 +357,18 @@ New autocommand events: ~
 |WinNew|		after creating a new window
 
 
-New highlight groups: ~
+新しいハイライトグループ: ~
 
 EndOfBuffer		filler lines (~) after the last line in the buffer.
 			|hl-EndOfBuffer|
 
 
-New items in search patterns: ~
+検索パターンにおける新要素: ~
 
 |/\%C|	\%C		match any composing characters
 
 
-New Syntax/Indent/FTplugin files: ~
+新しい Syntax/Indent/FTplugin ファイル: ~
 
 AVR Assembler (Avra) syntax
 Arduino syntax
@@ -407,20 +405,20 @@ Text ftplugin
 Vroom syntax and indent and ftplugin
 
 
-New Keymaps: ~
+新しいキーマップ: ~
 
 Armenian eastern and western
 Russian jcukenwintype
 Vietnamese telex and vni
 
 ==============================================================================
-INCOMPATIBLE CHANGES				*incompatible-8*
+非互換な変更					*incompatible-8*
 
-These changes are incompatible with previous releases.  Check this list if you
-run into a problem when upgrading from Vim 7.4 to 8.0.
+これらの変更は以前のリリースとは互換性がありません。もしもあなたが Vim 7.4 か
+ら 8.0 に更新した際に問題が起きたなら、この一覧を確認してください。
 
 
-Better defaults without a vimrc ~
+vimrc が無いときのより良い既定値 ~
 
 When no vimrc file is found, the |defaults.vim| script is loaded to set more
 useful default values for new users.  That includes setting 'nocompatible'.
@@ -429,7 +427,7 @@ either create a .vimrc file that does "set compatible" or start Vim with
 "Vim -C".
 
 
-Support removed ~
+対応の削除 ~
 
 The support for MS-DOS has been removed.  It hasn't been working for a while
 (Vim doesn't fit in memory) and removing it cleans up the code quite a bit.
@@ -442,12 +440,12 @@ while since nobody uses it.
 The SNiFF+ support has been removed.
 
 
-Minor incompatibilities: ~
+小さな非互換点 ~
 
-Probably...
+おそらく……
 
 ==============================================================================
-IMPROVEMENTS						*improvements-8*
+改善点							*improvements-8*
 
 The existing blowfish encryption turned out to be much weaker than it was
 supposed to be.  The blowfish2 method has been added to fix that.  Note that
@@ -456,7 +454,7 @@ usage.  See 'cryptmethod'.
 
 
 ==============================================================================
-COMPILE TIME CHANGES					*compile-changes-8*
+コンパイル時の変更					*compile-changes-8*
 
 The Vim repository was moved from Google code to github, since Google code
 was shut down.  It can now be found at https://github.com/vim/vim.
@@ -467,11 +465,11 @@ required.
 The +visual feature is now always included.
 
 ==============================================================================
-PATCHES						*patches-8* *bug-fixes-8*
+パッチ						*patches-8* *bug-fixes-8*
 
-The list of patches that got included since 7.4.0.  This includes all the new
-features, but does not include runtime file changes (syntax, indent, help,
-etc.)
+7.4.0 以降に取り込まれたパッチのリストです。これはすべての新機能を含んでいます
+が、ランタイムファイルの変更 (シンタックス、インデント、ヘルプなど) は含んでい
+ません。
 
 Patch 7.4.001
 Problem:    Character classes such as [a-z] do not react to 'ignorecase'.
