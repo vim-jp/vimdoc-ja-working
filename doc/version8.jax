@@ -38,58 +38,59 @@ Vi と Vim 8.0 の違いの概要については |vi_diff.txt| を参照して�
 
 非同期 I/O 対応、チャンネル ~
 
-Vim can now exchange messages with other processes in the background.  This
-makes it possible to have servers do work and send back the results to Vim.
-See |channel-demo| for an example, this shows communicating with a Python
-server.
+Vim はバックグラウンドで他のプロセスとメッセージをやり取りすることができるよう
+になりました。これにより、サーバーに仕事をさせ、結果を Vim に送り返すことがで
+きます。例として |channel-demo| を参照してください。これは Python サーバーとの
+通信を示しています。
 
-Closely related to channels is JSON support.  JSON is widely supported and can
-easily be used for inter-process communication, allowing for writing a server
-in any language.  The functions to use are |json_encode()| and |json_decode()|.
+チャンネルと深くかかわっているのが JSON 対応です。JSON は広くサポートされてお
+り、簡単にプロセス間通信に使うことができます。これにより、どんな言語でもサー
+バーを書くことができます。これに使う関数は、|json_encode()| と |json_decode()|
+です。
 
-This makes it possible to build very complex plugins, written in any language
-and running in a separate process.
+これにより、任意の言語で書かれて、別のプロセスで動作する非常に複雑なプラグイン
+を作ることができるようになります。
 
 
 ジョブ ~
 
-Vim can now start a job, communicate with it and stop it.  This is very useful
-to run a process for completion, syntax checking, etc.  Channels are used to
-communicate with the job.  Jobs can also read from or write to a buffer or a
-file.  See |job_start()|.
+Vim はジョブを開始し、それと通信し、そしてそれを停止することができるようになり
+ました。これは補完や文法チェックなどのためのプロセスを走らせる際に非常に有用で
+す。ジョブと通信するためにチャンネルが使われます。ジョブはまた、バッファやファ
+イルから読んだり書いたりすることができます。|job_start()| を参照してください。
 
 
 タイマー ~
 
-Also asynchronous are timers.  They can fire once or repeatedly and invoke a
-function to do any work.  For example: >
+タイマーもまた非同期です。これは、1 回あるいは周期的に発火し、任意の仕事を行う
+関数を呼ぶことができます。例えば: >
 	let tempTimer = timer_start(4000, 'CheckTemp')
-This will call the CheckTemp() function four seconds (4000 milli seconds)
-later.  See |timer_start()|.
+これは 4 秒 (4000 ミリ秒) 後に CheckTemp() 関数を呼びます。|timer_start()| を
+参照してください。
 
 
 部分適用 ~
 
-Vim already had a Funcref, a reference to a function.  A partial also refers
-to a function, and additionally binds arguments and/or a dictionary.  This is
-especially useful for callbacks on channels and timers.  E.g., for the timer
-example above, to pass an argument to the function: >
+Vim は既に Funcref、すなわち関数への参照を持っていました。部分適用も関数を参照
+しますが、それに加えて引数および/もしくは辞書と結びついています。これは特にチャ
+ンネルやタイマーのコールバックに有用です。例えば、上のタイマーの例で、引数を関
+数に渡すには: >
 	let tempTimer = timer_start(4000, function('CheckTemp', ['out']))
-This will call CheckTemp('out') four seconds later.
+これは 4 秒後に CheckTemp('out') を呼び出します。
 
 
-ラムダとクロージャ ~
+ラムダとクロージャー ~
 
-A short way to create a function has been added: {args -> expr}.  See |lambda|.
-This is useful for functions such as `filter()` and `map()`, which now also
-accept a function argument.  Example: >
+関数を作成する簡単な方法が追加されました: {args -> expr}。 |lambda| を参照して
+ください。これは例えば `filter()` や `map()` のような関数に有用です。これらの
+関数は関数引数も受け付けるようになりました。例: >
 	:call filter(mylist, {idx, val -> val > 20})
 
-A lambda can use variables defined in the scope where the lambda is defined.
-This is usually called a |closure|.
+ラムダは、ラムダが定義されたスコープ内で定義されている変数を使用することができ
+ます。これは通常、クロージャー (|closure|) と呼ばれます。
 
-User defined functions can also be a closure by adding the "closure" argument
-|:func-closure|.
+ユーザー定義関数も "closure" 引数を追加することでクロージャーになることができ
+ます |:func-closure|。
 
 
 パッケージ ~
