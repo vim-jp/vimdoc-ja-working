@@ -95,73 +95,75 @@ Vim は既に Funcref、すなわち関数への参照を持っていました�
 
 パッケージ ~
 
-Plugins keep growing and more of them are available than ever before.  To keep
-the collection of plugins manageable package support has been added.  This is
-a convenient way to get one or more plugins, drop them in a directory and
-possibly keep them updated.  Vim will load them automatically, or only when
-desired.  See |packages|.
+プラグインは成長を続け、今まで以上に多くのプラグインが使えるようになっていま
+す。プラグインの集合を管理し続けることができるように、パッケージ対応が追加され
+ました。これは、1 つまたは複数のプラグインを取得し、ディレクトリに格納し、そし
+て更新状態を保てるようにするための便利な方法です。Vim はそれらを自動的にロード
+したり、必要な時にロードします。|packages| を参照してください。
 
 
 新スタイルのテスト ~
 
-This is for Vim developers.  So far writing tests for Vim has not been easy.
-Vim 8 adds assert functions and a framework to run tests.  This makes it a lot
-simpler to write tests and keep them updated.  Also new are several functions
-that are added specifically for testing. See |test-functions|.
+これは、Vim 開発者のためのものです。今まで Vim のためのテストを書くのは簡単で
+はありませんでした。Vim 8 は assert 関数とテストを実行するためのフレームワーク
+を追加しました。これは、テストを書くことを大幅に単純化し、更新された状態が保た
+れるようになります。また、テストのための関数もいくつか追加されています。
+|test-functions| を参照してください。
 
 
 ウィンドウ ID ~
 
-Previously windows could only be accessed by their number. And every time a
-window would open, close or move that number changes.  Each window now has a
-unique ID, so that they are easy to find.  See |win_getid()| and |win_id2win()|.
+以前は、ウィンドウはその番号でのみアクセスすることができました。そして、その番
+号はウィンドウを開いたり閉じたり移動するたびに変更されます。それぞれのウィンド
+ウは一意な ID を持つようになり、ウィンドウを簡単に見つけることができます。
+|win_getid()| と |win_id2win()| を参照してください。
 
 
 Viminfo のタイムスタンプ利用 ~
 
-Previously the information stored in viminfo was whatever the last Vim wrote
-there.  Now timestamps are used to always keep the most recent items.
-See |viminfo-timestamp|.
+以前は、viminfo に格納される情報はどんなものでも最後の Vim が書いたものでした。
+常に最新の要素が保持されるように、タイムスタンプが使用されるようになりました。
+|viminfo-timestamps| を参照してください。
 
 
 インデント付きの行折り返し ~
 
-The 'breakindent' option has been added to be able to wrap lines without
-changing the amount of indent.
+インデントの量を変更せずに行の折り返しを行えるように、'breakindent' オプション
+が追加されました。
 
 
 Windows: DirectX 対応 ~
 
-This adds the 'renderoptions' option to allow for switching on DirectX
-(DirectWrite) support on MS-Windows.
+MS-Windows で DirectX (DirectWrite) 対応を有効化できるように、'renderoptions'
+オプションが追加されました。
 
 
 GTK+ 3 対応 ~
 
-The GTK+ 3 GUI works just like GTK+ 2 except for hardly noticeable technical
-differences between them.  Configure still chooses GTK+ 2 if both 2 and 3 are
-available.  See src/Makefile for how to use GTK+ 3 instead.  See
-|gui-x11-compiling| for other details.
+GTK+ 3 GUI は、いくつかのなかなか気づかない技術上の差分を除き、GTK+ 2 と同じよ
+うに動作します。Configure は、GTK+ 2 と 3 が両方使用可能な場合、引き続き 2 を
+選択します。どうやって代わりに GTK+ 3 を使うかは src/Makefile を参照してくださ
+い。その他の詳細は |gui-x11-compiling| を参照してください。
 
 
 Vim script の拡張					*new-vim-script-8*
 -----------------
 
-In Vim script the following types have been added:
+Vim script に以下の型が追加されました:
 
-	|Special|	|v:false|, |v:true|, |v:none| and |v:null|
-	|Channel|	connection to another process for asynchronous I/O
-	|Job|		process control
+	|Special|	|v:false|, |v:true|, |v:none| と |v:null|
+	|Channel|	非同期 I/O 用の他のプロセスとの接続
+	|Job|		プロセス制御
 
-Many functions and commands have been added to support the new types.
+新しい型に対応するため、たくさんの関数とコマンドが追加されました。
 
-On some systems the numbers used in Vim script are now 64 bit.  This can be
-checked with the |+num64| feature.
+いくつかのシステムでは Vim script で使用する数値が 64 bit になりました。これは
+|+num64| 機能で確認できます。
 
-Many items were added to support |new-style-testing|.
+新スタイルのテスト(|new-style-testing|)対応のため多数の要素が追加されました。
 
-printf() now accepts any type of argument for %s.  It is converted to a string
-like with string().
+printf() は %s の引数として任意の型を受け付けるようになりました。引数は
+string() と同じように文字列に変換されます。
 
 
 さまざまな新要素					*new-items-8*
@@ -421,24 +423,24 @@ Vietnamese telex and vni
 
 vimrc が無いときのより良い既定値 ~
 
-When no vimrc file is found, the |defaults.vim| script is loaded to set more
-useful default values for new users.  That includes setting 'nocompatible'.
-Thus Vim no longer starts up in Vi compatible mode.  If you do want that,
-either create a .vimrc file that does "set compatible" or start Vim with
-"Vim -C".
+vimrc ファイルが見つからないとき、新規ユーザーのためにより有用な既定値を設定す
+るために |defaults.vim| がロードされます。これは 'nocompatible' の設定も含んで
+います。そのため、Vim はもはや Vi 互換モードでは起動しません。もしそうしたい場
+合は、"set compatible" を行う .vimrc ファイルを作るか、"Vim -C" で Vim を開始
+してください。
 
 
 対応の削除 ~
 
-The support for MS-DOS has been removed.  It hasn't been working for a while
-(Vim doesn't fit in memory) and removing it cleans up the code quite a bit.
+MS-DOS 対応は削除されました。それは、(Vim がメモリに収まらないため) しばらく動
+いていませんでした。削除によりコードが少しきれいになりました。
 
-The support for Windows 16 bit (Windows 95 and older) has been removed.
+Windows 16 bit (Windows 95 とそれ以前) の対応は削除されました。
 
-The support for OS/2 has been removed.  It probably hasn't been working for a
-while since nobody uses it.
+OS/2 の対応は削除されました。それはしばらく誰も使っていなかったため、おそらく
+動いていませんでした。
 
-The SNiFF+ support has been removed.
+SNiFF+ 対応は削除されました。
 
 
 小さな非互換点 ~
@@ -448,22 +450,22 @@ The SNiFF+ support has been removed.
 ==============================================================================
 改善点							*improvements-8*
 
-The existing blowfish encryption turned out to be much weaker than it was
-supposed to be.  The blowfish2 method has been added to fix that.  Note that
-this still isn't a state-of-the-art encryption, but good enough for most
-usage.  See 'cryptmethod'.
+既存の blowfish 暗号化は想定よりも弱かったことが判明しました。それを修正するた
+め、blowfish2 方式が追加されました。これは依然として最先端の暗号化ではないこと
+に注意してください。しかし、たいていの用途には十分でしょう。'cryptmethod' を参
+照してください。
 
 
 ==============================================================================
 コンパイル時の変更					*compile-changes-8*
 
-The Vim repository was moved from Google code to github, since Google code
-was shut down.  It can now be found at https://github.com/vim/vim.
+Vim のリポジトリは、Google code が閉鎖されたため、Google code から github に移
+動しました。 https://github.com/vim/vim で見つけることができます。
 
-Functions now use ANSI-C declarations.  At least a C-89 compatible compiler is
-required.
+ANSI-C 関数宣言を使用するようになりました。最低でも C-89 互換のコンパイラーが
+要求されます。
 
-The +visual feature is now always included.
+常に +visual 機能が含まれるようになりました。
 
 ==============================================================================
 パッチ						*patches-8* *bug-fixes-8*
