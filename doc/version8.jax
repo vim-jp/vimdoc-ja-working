@@ -171,67 +171,68 @@ string() と同じように文字列に変換されます。
 
 ビジュアルモードコマンド: ~
 
-|v_CTRL-A|	CTRL-A		add N to number in highlighted text
-|v_CTRL-X|	CTRL-X		subtract N from number in highlighted text
-|v_g_CTRL-A|	g CTRL-A	add N to number in highlighted text
-|v_g_CTRL-X|	g CTRL-X	subtract N from number in highlighted text
+|v_CTRL-A|	CTRL-A		選択範囲の数値を一律に N ずつ増やす
+|v_CTRL-X|	CTRL-X		選択範囲の数値を一律に N ずつ減らす
+|v_g_CTRL-A|	g CTRL-A	選択範囲の数値を漸増的に N ずつ増やす
+|v_g_CTRL-X|	g CTRL-X	選択範囲の数値を漸減的に N ずつ減らす
 
 
 挿入モードコマンド: ~
 
-|i_CTRL-G_U|	CTRL-G U	don't break undo with next cursor movement
+|i_CTRL-G_U|	CTRL-G U	次のカーソル移動までアンドゥ地点を変更しない
 
 
 コマンドラインモードコマンド: ~
 
-|/_CTRL-G|	CTRL-G		move to the next match in 'incsearch' mode
-|/_CTRL-T|	CTRL-T		move to the previous match in 'incsearch' mode
+|/_CTRL-G|	CTRL-G		'incsearch' がアクティブならば、次マッチへ移動
+|/_CTRL-T|	CTRL-T		'incsearch' がアクティブならば、前マッチへ移動
 
 
 オプション: ~
 
-'belloff'		do not ring the bell for these reasons
-'breakindent'		wrapped line repeats indent
-'breakindentopt'	settings for 'breakindent'.
-'emoji'			emoji characters are considered full width
-'fixendofline'		make sure last line in file has <EOL>
-'langremap'		do apply 'langmap' to mapped characters
-'luadll'		name of the Lua dynamic library
-'packpath'		list of directories used for packages
-'perldll'		name of the Perl dynamic library
-'pythondll'		name of the Python 2 dynamic library
-'pythonthreedll'	name of the Python 3 dynamic library
-'signcolumn'		when to display the sign column
-'renderoptions'		options for text rendering on Windows
-'rubydll'		name of the Ruby dynamic library
-'tagcase'		how to handle case when searching in tags files
-'tcldll'		name of the Tcl dynamic library
-'termguicolors'		use GUI colors for the terminal
+'belloff'		指定した場合にベルを鳴らさない
+'breakindent'		折り返された行でインデントを繰り返す
+'breakindentopt'	'breakindent' のための設定
+'emoji'			絵文字を全角として扱う
+'fixendofline'		ファイル末尾に <EOL> を必ずつける
+'langremap'		マッピングされた文字に 'langmap' を適用する
+'luadll'		Lua 動的ライブラリの名前
+'packpath'		パッケージのために使われるディレクトリのリスト
+'perldll'		Perl 動的ライブラリの名前
+'pythondll'		Python 2 動的ライブラリの名前
+'pythonthreedll'	Python 3 動的ライブラリの名前
+'signcolumn'		目印用の桁をどう表示するか
+'renderoptions'		Windows でのテキストレンダリングの設定
+'rubydll'		Ruby 動的ライブラリの名前
+'tagcase'		タグファイル内検索で大文字小文字の扱いを指定する
+'tcldll'		Tcl 動的ライブラリの名前
+'termguicolors'		ターミナルで GUI カラーを使う
 
 
 Ex コマンド: ~
 
-|:cbottom|		scroll to the bottom of the quickfix window
-|:cdo|			execute command in each valid error list entry
-|:cfdo|			execute command in each file in error list
-|:chistory|		display quickfix list stack
-|:clearjumps|		clear the jump list
-|:filter|		only output lines that (do not) match a pattern
-|:helpclose|		close one help window
-|:lbottom|		scroll to the bottom of the location window
-|:ldo|			execute command in valid location list entries
-|:lfdo|			execute command in each file in location list
-|:lhistory|		display location list stack
-|:noswapfile|		following commands don't create a swap file
-|:packadd|		add a plugin from 'packpath'
-|:packloadall|		load all packages under 'packpath'
-|:smile|		make the user happy
+|:cbottom|		QuickFixウィンドウの最下へスクロールする
+|:cdo|			QuickFixリストの各項目に対してコマンドを実行する
+|:cfdo|			QuickFixリストの各ファイルに対してコマンドを実行する
+|:chistory|		エラーリストの一覧を表示する
+|:clearjumps|		ジャンプリストを削除する
+|:filter|		コマンドの出力をフィルターする
+|:helpclose|		ヘルプウィンドウを1つ閉じる
+|:lbottom|		ロケーションウィンドウの最下へスクロールする
+|:ldo|			ロケーションリストの各項目に対してコマンドを実行する
+|:lfdo|			ロケーションリストの各ファイルに対してコマンドを実行す
+			る
+|:lhistory|		ロケーションリストの一覧を表示する
+|:noswapfile|		スワップファイルを作らずにコマンドを実行する
+|:packadd|		'packpath' からプラグインを追加する
+|:packloadall|		'packpath' 下の全プラグインをロードする
+|:smile|		ユーザーを幸せにする
 
 
 Ex コマンド修飾子: ~
 
-|:keeppatterns|		following command keeps search pattern history
-|<mods>|		supply command modifiers to user defined commands
+|:keeppatterns|		検索パターン履歴を変更せずにコマンドを実行する
+|<mods>|		コマンド修飾子をユーザー定義コマンドに提供する
 
 
 新規および拡張された関数: ~
