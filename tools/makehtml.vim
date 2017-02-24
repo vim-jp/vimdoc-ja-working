@@ -170,6 +170,9 @@ function! s:MakeLink(lang, hlname, tagname, conceal)
     endif
   endif
   let tags = s:GetTags(a:lang)
+  if !has_key(tags, tagname) && has_key(g:makehtml_tag_aliases, tagname)
+    let tagname = g:makehtml_tag_aliases[tagname]
+  endif
   if has_key(tags, tagname)
     let href = tags[tagname]["html"]
     if tagname !~ '\.txt$' && tagname != "help-tags"
