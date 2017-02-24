@@ -11,9 +11,8 @@ replace:
 html:
 	rm -rf target/html
 	mkdir -p target/html/doc
-	cp -R syntax target/html
 	cp doc/*.jax vim_faq/*.jax target/html/doc
-	-cd target/html/doc ; vim --cmd "set rtp^=../../../tools" -eu ../../../tools/buildhtml.vim -c "qall!"
+	-cd target/html/doc ; vim -eu ../../../tools/buildhtml.vim -c "qall!"
 
 clean:
 	rm -rf target
