@@ -1866,7 +1866,7 @@ v:throwpoint	最も直近に捕捉されてまだ終了していない例外が�
 <		出力: "Exception from test.vim, line 2"
 
 						*v:true* *true-variable*
-v:true		数値 1。JSONでは "true" して使われる。|json_encode()|を参照。
+v:true		数値1。JSONでは "true" して使われる。|json_encode()|を参照。
 		文字列として使われた時、これは "v:true" として評価される。 >
 			echo v:true
 <			v:true ~

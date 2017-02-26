@@ -237,139 +237,141 @@ Ex コマンド修飾子: ~
 
 新規および拡張された関数: ~
 
-|arglistid()|		get id of the argument list
-|assert_equal()|	assert that two expressions values are equal
-|assert_exception()|	assert that a command throws an exception
-|assert_fails()|	assert that a function call fails
-|assert_false()|	assert that an expression is false
-|assert_inrange()|	assert that an expression is inside a range
-|assert_match()|	assert that a pattern matches the value
-|assert_notequal()|	assert that two expressions values are not equal
-|assert_notmatch()|	assert that a pattern does not match the value
-|assert_true()|		assert that an expression is true
-|bufwinid()|		get the window ID of a specific buffer
-|byteidxcomp()|		like byteidx() but count composing characters
-|ch_close()|		close a channel
-|ch_close_in()|		close the in part of a channel
-|ch_evalexpr()|		evaluates an expression over channel
-|ch_evalraw()|		evaluates a raw string over channel
-|ch_getbufnr()|		get the buffer number of a channel
-|ch_getjob()|		get the job associated with a channel
-|ch_info()|		get channel information
-|ch_log()|		write a message in the channel log file
-|ch_logfile()|		set the channel log file
-|ch_open()|		open a channel
-|ch_read()|		read a message from a channel
-|ch_readraw()|		read a raw message from a channel
-|ch_sendexpr()|		send a JSON message over a channel
-|ch_sendraw()|		send a raw message over a channel
-|ch_setoptions()|	set the options for a channel
-|ch_status()|		get status of a channel
-|execute()|		execute an Ex command and get the output
-|exepath()|		full path of an executable program
-|funcref()|		return a reference to function {name}
-|getbufinfo()|		get a list with buffer information
-|getcharsearch()|	return character search information
-|getcmdwintype()|	return the current command-line window type
-|getcompletion()|	return a list of command-line completion matches
-|getcurpos()|		get position of the cursor
-|gettabinfo()|		get a list with tab page information
-|getwininfo()|		get a list with window information
-|glob2regpat()|		convert a glob pattern into a search pattern
-|isnan()|		check for not a number
-|job_getchannel()|	get the channel used by a job
-|job_info()|		get information about a job
-|job_setoptions()|	set options for a job
-|job_start()|		start a job
-|job_status()|		get the status of a job
-|job_stop()|		stop a job
-|js_decode()|		decode a JSON string to Vim types
-|js_encode()|		encode an expression to a JSON string
-|json_decode()|		decode a JSON string to Vim types
-|json_encode()|		encode an expression to a JSON string
-|matchaddpos()|		define a list of positions to highlight
-|matchstrpos()|		match and positions of a pattern in a string
-|perleval()|		evaluate Perl expression
-|reltimefloat()|	convert reltime() result to a Float
-|setcharsearch()|	set character search information
-|setfperm()|		set the permissions of a file
-|strcharpart()|		get part of a string using char index
-|strgetchar()|		get character from a string using char index
-|systemlist()|		get the result of a shell command as a list
-|test_alloc_fail()|	make memory allocation fail
-|test_autochdir()|	test 'autochdir' functionality
-|test_disable_char_avail()| test without typeahead
-|test_garbagecollect_now()| free memory right now
-|test_null_channel()|	return a null Channel
-|test_null_dict()|	return a null Dict
-|test_null_job()|	return a null Job
-|test_null_list()|	return a null List
-|test_null_partial()|	return a null Partial function
-|test_null_string()|	return a null String
-|test_settime()|	set the time Vim uses internally
-|timer_info()|		get information about timers
-|timer_pause()|		pause or unpause a timer
-|timer_start()|		create a timer
-|timer_stop()|		stop a timer
-|timer_stopall()|	stop all timers
-|uniq()|		remove copies of repeated adjacent items
-|win_findbuf()|		find windows containing a buffer
-|win_getid()|		get window ID of a window
-|win_gotoid()|		go to window with ID
-|win_id2tabwin()|	get tab and window nr from window ID
-|win_id2win()|		get window nr from window ID
-|wordcount()|		get byte/word/char count of buffer
+|arglistid()|		引数リストのIDを得る
+|assert_equal()|	2つの式が等しい事をテストする
+|assert_exception()|	コマンドが例外を投げる事をテストする
+|assert_fails()|	関数呼び出しが失敗する事をテストする
+|assert_false()|	式がfalseかどうかテストする
+|assert_inrange()|	式が範囲内にある事をテストする
+|assert_match()|	値がパターンにマッチする事をテストする
+|assert_notequal()|	2つの式が等しくない事をテストする
+|assert_notmatch()|	値がパターンにマッチしない事をテストする
+|assert_true()|		式がtrueかどうかテストする
+|bufwinid()|		バッファ固有のウィンドウIDを得る
+|byteidxcomp()|		byteidx() と同様だが合成文字を数に入れる
+|ch_close()|		チャンネルを閉じる
+|ch_close_in()|		チャンネルの入力パートを閉じる
+|ch_evalexpr()|		チャンネル経由で式を評価する
+|ch_evalraw()|		チャンネル経由で raw 文字列を評価する
+|ch_getbufnr()|		チャンネルのバッファ番号を取得する
+|ch_getjob()|		チャンネルが割り当てられている Job を取得する
+|ch_info()|		チャンネルの情報を取得する
+|ch_log()|		チャンネルのログファイルにメッセージを出力する
+|ch_logfile()|		チャンネルのログファイルを設定する
+|ch_open()|		チャンネルを開く
+|ch_read()|		チャンネルからメッセージを読み取る
+|ch_readraw()|		チャンネルからrawメッセージを読み取る
+|ch_sendexpr()|		チャンネルにJSONメッセージを送る
+|ch_sendraw()|		チャンネルにrawメッセージを送る
+|ch_setoptions()|	チャンネルのオプションを設定する
+|ch_status()|		チャンネルの情報を取得する
+|execute()|		Ex コマンドを実行し出力を得る
+|exepath()|		実行ファイルのフルパスを得る
+|funcref()|		関数 {name} への参照を返す
+|getbufinfo()|		バッファの情報一覧を得る
+|getcharsearch()|	文字検索情報を返す
+|getcmdwintype()|	現在のコマンドラインウィンドウの種類を返す
+|getcompletion()|	マッチするコマンド補完リストを返す
+|getcurpos()|		カーソルの位置を取得する
+|gettabinfo()|		タブページの情報一覧を得る
+|getwininfo()|		ウィンドウの情報一覧を得る
+|glob2regpat()|		glob パターンを正規表現に変換する
+|isnan()|		数値でないかどうかのチェック
+|job_getchannel()|	Job が使用する channel を取得する
+|job_info()|		Job の情報を取得する
+|job_setoptions()|	Job のオプションを設定する
+|job_start()|		Job を開始する
+|job_status()|		Job のステータスを取得する
+|job_stop()|		Job を停止する
+|js_decode()|		JSONの文字列を式にデコードする
+|js_encode()|		式をJSONの文字列にエンコードする
+|json_decode()|		JSONの文字列を式にデコードする
+|json_encode()|		式をJSONの文字列にエンコードする
+|matchaddpos()|		強調表示する位置のリストを定義する
+|matchstrpos()|		文字列の中でパターンにマッチした文字列と位置
+|perleval()|		Perlの式を評価する
+|reltimefloat()|	reltime()の結果を浮動小数点に変換する
+|setcharsearch()|	文字検索情報を設定する
+|setfperm()|		ファイルのパーミッションを設定する
+|strcharpart()|		文字のインデックスで指定された部分文字列を得る
+|strgetchar()|		文字のインデックスで指定された文字コードを得る
+|systemlist()|		シェルコマンドを実行し、その結果をリストで得る
+|test_alloc_fail()|	メモリの確保を失敗させる
+|test_autochdir()|	起動中に 'autochdir' を有効にする
+|test_disable_char_avail()| typeahead なしにテスト
+|test_garbagecollect_now()| 直ちにメモリを解放する
+|test_null_channel()|	null のチャンネルを返す
+|test_null_dict()|	null の辞書を返す
+|test_null_job()|	null の Job を返す
+|test_null_list()|	null のリストを返す
+|test_null_partial()|	null の部分適用を返す
+|test_null_string()|	null の文字列を返す
+|test_settime()|	Vim が内部的に使用する時間を設定する
+|timer_info()|		タイマーの情報を得る
+|timer_pause()|		タイマーを一時停止もしくは再開する
+|timer_start()|		タイマーを作る
+|timer_stop()|		タイマーを止める
+|timer_stopall()|	全てのタイマーを止める
+|uniq()|		隣接して繰り返される要素のコピーを削除する
+|win_findbuf()|		バッファが含まれるウィンドウを探す
+|win_getid()|		ウィンドウのウィンドウIDを得る
+|win_gotoid()|		IDで指定されたウィンドウへ移動する
+|win_id2tabwin()|	IDで指定されたタブとウィンドウの番号を得る
+|win_id2win()|		IDで指定されたウィンドウの番号を得る
+|wordcount()|		バッファ内のバイト数/単語数/文字数などを得る
 
 
 新しい Vim 変数: ~
 
-|v:beval_winid|		Window ID of the window where the mouse pointer is
-|v:completed_item|	complete items for the most recently completed word
-|v:errors|		errors found by assert functions
-|v:false|		a Number with value zero
-|v:hlsearch|		indicates whether search highlighting is on
-|v:mouse_winid|		Window ID for a mouse click obtained with |getchar()|
-|v:none|		an empty String, used for JSON
-|v:null|		an empty String, used for JSON
-|v:option_new|    	new value of the option, used by |OptionSet|
-|v:option_old|    	old value of the option, used by |OptionSet|
-|v:option_type|   	scope of the set command, used by |OptionSet|
-|v:progpath|		the command with which Vim was invoked
-|v:t_bool|		value of Boolean type
-|v:t_channel|		value of Channel type
-|v:t_dict|		value of Dictionary type
-|v:t_float|		value of Float type
-|v:t_func|		value of Funcref type
-|v:t_job|		value of Job type
-|v:t_list|		value of List type
-|v:t_none|		value of None type
-|v:t_number|		value of Number type
-|v:t_string|		value of String type
-|v:testing|		must be set before using `test_garbagecollect_now()`
-|v:true|		a Number with value one
-|v:vim_did_enter|	set just before VimEnter autocommands are triggered
+|v:beval_winid|		マウスポインタがあるウィンドウのウィンドウID
+|v:completed_item|	最も最近補完された単語用の補完要素
+|v:errors|		assert 関数によって見つかったエラー
+|v:false|		数値0
+|v:hlsearch|		検索による強調表示がオンになっているかどうかを示す
+|v:mouse_winid|		|getchar()|でマウスクリックイベントが発生したときのウィ
+			ンドウ番号
+|v:none|		空の文字列、JSONで使われる
+|v:null|		空の文字列、JSONで使われる
+|v:option_new|    	オプションに設定された新しい値、|OptionSet| で使われる
+|v:option_old|    	オプションの以前の値、|OptionSet| で使われる
+|v:option_type|   	set コマンドのスコープ、|OptionSet| で使われる
+|v:progpath|		Vim を起動したときのコマンド
+|v:t_bool|		真偽値型の値
+|v:t_channel|		チャンネル型の値
+|v:t_dict|		辞書型の値
+|v:t_float|		浮動小数点数型の値
+|v:t_func|		Funcref型の値
+|v:t_job|		ジョブ型の値
+|v:t_list|		リスト型の値
+|v:t_none|		特殊値型の値
+|v:t_number|		数値型の値
+|v:t_string|		文字列型の値
+|v:testing|		`test_garbagecollect_now()` を使う前に設定する必要がある
+|v:true|		数値1
+|v:vim_did_enter|	VimEnter 自動コマンドが実行される直前にセットされる
 
 
 新しい自動コマンドイベント: ~
 
-|CmdUndefined|		a user command is used but it isn't defined
-|OptionSet|		after setting any option
-|TabClosed|		after closing a tab page
-|TabNew|		after creating a new tab page
-|TextChangedI|		after a change was made to the text in Insert mode
-|TextChanged|		after a change was made to the text in Normal mode
-|WinNew|		after creating a new window
+|CmdUndefined|		呼び出そうとしたユーザー定義コマンドが定義されていな
+			かったとき
+|OptionSet|		オプションが設定された後
+|TabClosed|		タブページを閉じた後
+|TabNew|		新しいタブページを作成した後
+|TextChanged|		ノーマルモードでテキストが変更された後
+|TextChangedI|		挿入モードでテキストが変更された後
+|WinNew|		新しいウィンドウを作成した後
 
 
 新しいハイライトグループ: ~
 
-EndOfBuffer		filler lines (~) after the last line in the buffer.
+EndOfBuffer		バッファ中で最終行以降の領域を埋めるための行 (~)。
 			|hl-EndOfBuffer|
 
 
 検索パターンにおける新要素: ~
 
-|/\%C|	\%C		match any composing characters
+|/\%C|	\%C		すべての合成文字
 
 
 新しい Syntax/Indent/FTplugin ファイル: ~
