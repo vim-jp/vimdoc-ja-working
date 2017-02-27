@@ -773,7 +773,7 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	tabpagenr()		タブページの番号を取得する
 	tabpagewinnr()		タブページを対象にwinnr()と同様
 	winnr()			カレントウィンドウの番号を得る
-	bufwinid()		バッファ固有のウィンドウIDを得る
+	bufwinid()		バッファのウィンドウIDを得る
 	bufwinnr()		バッファのウィンドウ番号を得る
 	winbufnr()		ウィンドウのバッファ番号を得る
 	getbufline()		バッファの行のリストを得る
@@ -918,7 +918,7 @@ Vimサーバー:					*server-functions*
 	ch_sendraw()		チャンネルにrawメッセージを送る
 	ch_evalexpr()		チャンネル経由で式を評価する
 	ch_evalraw()		チャンネル経由で raw 文字列を評価する
-	ch_status()		チャンネルの情報を取得する
+	ch_status()		チャンネルの状態を取得する
 	ch_getbufnr()		チャンネルのバッファ番号を取得する
 	ch_getjob()		チャンネルが割り当てられている Job を取得する
 	ch_info()		チャンネルの情報を取得する
@@ -926,9 +926,9 @@ Vimサーバー:					*server-functions*
 	ch_logfile()		チャンネルのログファイルを設定する
 	ch_setoptions()		チャンネルのオプションを設定する
 	json_encode()		式をJSONの文字列にエンコードする
-	json_decode()		JSONの文字列を式にデコードする
+	json_decode()		JSONの文字列をVimの型にデコードする
 	js_encode()		式をJSONの文字列にエンコードする
-	js_decode()		JSONの文字列を式にデコードする
+	js_decode()		JSONの文字列をVimの型にデコードする
 
 Jobs:		    			        *job-functions*
 	job_start()		Job を開始する
