@@ -3373,7 +3373,7 @@ execute({command} [, {silent}])					*execute()*
 			""		`:silent` を使わない
 			"silent"	`:silent` を使う
 			"silent!"	`:silent!`を使う
-		デフォルトは 'silent' である。 Note "silent!" は `redir` とは
+		デフォルトは "silent" である。 Note "silent!" は `redir` とは
 		異なり、エラーメッセージは削除されることに注意すること。もし外
 		部コマンドを使って画面がおかしくなる様であれば、代わりに
 		`system()`を使うことができる。
@@ -3964,10 +3964,10 @@ get({dict}, {key} [, {default}])
 		略されたときは0を返す。
 get({func}, {what})
 		Funcref {func}から項目を取得する。{what}の可能な値は:
-			'name'	関数名
-			'func'	関数
-			'dict'	辞書
-			'args'	引数リスト
+			"name"	関数名
+			"func"	関数
+			"dict"	辞書
+			"args"	引数リスト
 
 							*getbufinfo()*
 getbufinfo([{expr}])
@@ -5833,7 +5833,7 @@ printf({fmt}, {expr1} ...)				*printf()*
 		  %e	浮動小数点数。1.23e3, inf, -inf, nan
 		  %E	浮動小数点数。1.23E3, INF, -INF, NAN
 		  %g	浮動小数点数。値によって %f または %e となる
-		  %G	浮動小数点数。値によって %f または %E となる
+		  %G	浮動小数点数。値によって %F または %E となる
 		  %%    文字 % そのもの
 
 		変換指示子は '%' で始まり、変換文字で終わる。それ以外の全ての
@@ -7471,7 +7471,7 @@ taglist({expr})							*taglist()*
 		フィールド "struct"、"class"、"enum" が現れることがある。これ
 		らは、タグを含んでいるものの名前を示す。
 
-		exコマンド 'cmd' は検索パターンか、行番号か、行番号とバイト番
+		exコマンド "cmd" は検索パターンか、行番号か、行番号とバイト番
 		号のいずれかである。
 
 		マッチするタグがない場合は空リストを返す。
