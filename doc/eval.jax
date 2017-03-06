@@ -2774,165 +2774,6 @@ ceil({expr})							*ceil()*
 <			4.0
 		{|+float| 機能つきでコンパイルされたときのみ有効}
 
-changenr()						*changenr()*
-		最も最近の変更の番号を返す。|:undolist|で表示される番号と同じ
-		であり、|:undo|コマンドの引数として使うことができる。
-		変更を行った直後ではその変更の番号となる。redoを行った直後は
-		redoされた変更の番号となる。undoを行った直後はundoされた変更よ
-		り1小さい番号になる。
-
-char2nr({expr}[, {utf8}])					*char2nr()*
-		{expr}の最初の文字のASCIIコードを返す。例: >
-			char2nr(" ")		returns 32
-			char2nr("ABC")		returns 65
-<		{utf8} を省略、またはゼロを指定すると、現在の 'encoding' が適
-		用される。"utf-8" の場合の例: >
-			char2nr("á")		returns 225
-			char2nr("á"[0])		returns 195
-<		{utf8} に 1 を指定すると、常に utf-8 文字として扱われる。
-		合成文字は個別の文字として扱われる。
-		|nr2char()| はこの逆を行う。
-
-cindent({lnum})						*cindent()*
-		'cindent' で使われるのと同じC言語用のインデント規則に従った場
-		合の{lnum}行目のインデント量を返す。
-		インデント量はスペースで数えられ、'tabstop' の値は関係ない。
-		{lnum}は|getline()|の場合と同様に扱われる。
-		{lnum}が無効な値のときや|+cindent|機能なしでコンパイルされてい
-		るときは-1を返す。
-		|C-indenting|を参照。
-
-clearmatches()						*clearmatches()*
-		|matchadd()| と コマンド |:match| により定義されたマッチをすべ
-		て消去する。
-
-							*col()*
-col({expr})	
-		戻り値は数値で、{expr}で与えられる位置の桁番号(バイトインデッ
-		クス)。有効な位置は:
-		    .	    現在の位置
-		    $	    カレント行の末尾(カレント行のバイト数+1を返す)
-		    'x	    マークxの位置(マークが設定されていない場合0)
-		    v	    ビジュアルモードでは: ビジュアル選択領域の開始行
-			    (カーソルがその端)。ビジュアルモード以外ではカーソ
-			    ル位置を返す。すぐに更新される点が |'<| と違う。
-		さらに {expr} は [lnum, col] という行番号と桁番号のリストで
-		あってもよい。col に "$" を指定して、ある行の最後の桁を取得す
-		るのにとても便利である。"lnum" か "col" が範囲外である場合は
-		0 を返す。
-		行番号を取得するには|line()|を使う。行番号と桁番号両方を取得す
-		るには|getpos()|を使う。
-		画面上の桁番号を取得するには|virtcol()|を使う。
-		Note 現在のファイルのマークしか使えないことに注意。
-		例: >
-			col(".")		カーソルの桁
-			col("$")		カレント行の長さ+1
-			col("'t")		マークtの桁
-			col("'" . markname)	マークmarknameの桁
-<		先頭の桁は1になる。戻り値0はエラーを意味する。
-		大文字のマークは他のバッファを指しているかもしれない。
-		'virtualedit' が有効なとき、カーソルが行末を越えていると、桁番
-		号は行の長さより1大きい値を返す。挿入モードで桁番号を取得する
-		には次のマップが使える: >
-			:imap <F2> <C-O>:let save_ve = &ve<CR>
-				\<C-O>:set ve=all<CR>
-				\<C-O>:echo col(".") . "\n" <Bar>
-				\let &ve = save_ve<CR>
-<
-complete({startcol}, {matches})			*complete()* *E785*
-		挿入モード補完の候補を設定する。
-		挿入モードでのみ使用できる。CTRL-R = (|i_CTRL-R| を参照)と組み
-		合わせてマッピングを作る必要がある。CTRL-Oの後や、<expr>マッピ
-		ングの中では正しく動作しない。
-		{startcol}は補完すべき単語の開始位置を示す、行内のバイトオフセッ
-		トである。その位置からカーソルまでのテキストが補完すべき単語と
-		なる。
-		{matches}はリスト|List|でなければならない。リストの各要素が1つ
-		の候補となる。この要素として許される値については
-		|complete-items|を参照。
-		Note この関数を呼んだ後は補完を停止させるようなテキストの挿入
-		をしないように注意しなければならない。
-		この関数で設定した候補は普通の挿入モード補完と同じ様にCTRL-Nと
-		CTRL-Pで選択できる。設定されていればポップアップメニューが表示
-		される。|ins-completion-menu|を参照。
-		例: >
-	inoremap <F5> <C-R>=ListMonths()<CR>
-	func! ListMonths()
-	  call complete(col('.'), ['January', 'February', 'March',
-		\ 'April', 'May', 'June', 'July', 'August', 'September',
-		\ 'October', 'November', 'December'])
-	  return ''
-	endfunc
-<		この例はそれほど役には立たないが、使い方を示している。Note 0が
-		挿入されてしまわないように空文字列を返していることに注意。
-
-complete_add({expr})				*complete_add()*
-		候補のリストに{expr}を追加する。'completefunc' で指定された関
-		数の中でのみ使われる。
-		失敗したときは0を返す(空文字列かメモリ不足)。候補が追加された
-		ときは1を返し、その候補が既にリストに存在するときは2を返す。
-		{expr}の説明については|complete-functions|を参照。'omnifunc'
-		が返すリストと同じである。
-
-complete_check()				*complete_check()*
-		補完候補を探している間にキーがタイプされたかどうか確認する。補
-		完の検索に時間がかかる場合に使われる。候補の検索を中断しようと
-		しているときは|TRUE|を返す。そうでないときは0を返す。
-		'completefunc' で指定された関数の中でのみ使われる。
-
-							*confirm()*
-confirm({msg} [, {choices} [, {default} [, {type}]]])
-		confirm()はユーザーに選択させるためのダイアログを提供する。戻
-		り値は選択した番号になる。最初の選択肢が1である。
-		Note: confirm()は、ダイアログサポートを有効にしてコンパイルし
-		た時にだけ動作する。|+dialog_con|と|+dialog_gui|を参照。
-
-		ダイアログには{msg}に加えて{choices}の選択肢が表示される。
-		{choices}が指定されない、または空の場合は選択肢 "&OK" が表示さ
-		れる(使用している言語に翻訳される)。
-		{msg}は文字列で '\n' を改行として使用できる。幾つかのシステム
-		では、長すぎる行は自動的に折り返される。
-
-		{choices}は文字列で、個々の選択肢は '\n' によって区切られる。
-		例: >
-			confirm("Save changes?", "&Yes\n&No\n&Cancel")
-<		'&' の後の文字は選択肢のショートカットキーになる。この場合
-		"Cancel" を選択するのに 'c' をタイプすることができる。ショート
-		カットキーは最初の文字である必要は無い: >
-			confirm("file has been modified", "&Save\nSave &All")
-<		コンソールでは、デフォルトのショートカットキーとして、各選択肢
-		の最初の文字が使われる。
-
-		省略可能な引数{default}は<CR>キーを叩いた時に選択される選択肢
-		の番号を指定する。最初の選択肢をデフォルトにするならば1を使用
-		する。デフォルトを設定したくないのならば0を使用する。
-		{default}を省略した場合、1が使用される。
-
-		省略可能な引数{type}はダイアログの種類を指定する。これは GTK,
-		Mac, Motif, Win32 の GUI でアイコンを指定するのに使われる。
-		"Error", "Question", "Info", "Warning", "Generic" のうちどれか
-		一つを指定する。以上のうちの先頭の文字だけで指定できる。{type}
-		が省略された場合、"Generic" が使用される。
-
-		ユーザーが<Esc>やCTRL-Cや、その他の割りこみキーでダイアログを
-		中断した場合、confirm()は0を返す。
-
-		例: >
-   :let choice = confirm("What do you want?", "&Apples\n&Oranges\n&Bananas", 2)
-   :if choice == 0
-   :	echo "make up your mind!"
-   :elseif choice == 3
-   :	echo "tasteful"
-   :else
-   :	echo "I prefer bananas myself."
-   :endif
-<		GUIのダイアログではボタンが使用される。ボタンの配置は
-		'guioptions' の 'v' フラグに依存する。もしも 'v' フラグが含ま
-		れているのなら、ボタンは常に垂直に配置される。そうでなければ水
-		平に配置しようと試みられる。水平配置がうまくマッチしない場合
-		は、垂直配置が使われる。幾つかのシステムでは常に水平配置が使わ
-		れる。
-
 ch_canread({handle})						*ch_canread()*
 		{handle} から何か読むものがあれば非ゼロを返す。
 		{handle} はチャンネルもしくはチャンネルを持つジョブであっても
@@ -3130,6 +2971,164 @@ ch_status({handle} [, {options}])				*ch_status()*
 		ラーの状態を得るには: >
 			ch_status(job, {"part": "err"})
 <
+changenr()						*changenr()*
+		最も最近の変更の番号を返す。|:undolist|で表示される番号と同じ
+		であり、|:undo|コマンドの引数として使うことができる。
+		変更を行った直後ではその変更の番号となる。redoを行った直後は
+		redoされた変更の番号となる。undoを行った直後はundoされた変更よ
+		り1小さい番号になる。
+
+char2nr({expr}[, {utf8}])					*char2nr()*
+		{expr}の最初の文字のASCIIコードを返す。例: >
+			char2nr(" ")		returns 32
+			char2nr("ABC")		returns 65
+<		{utf8} を省略、またはゼロを指定すると、現在の 'encoding' が適
+		用される。"utf-8" の場合の例: >
+			char2nr("á")		returns 225
+			char2nr("á"[0])		returns 195
+<		{utf8} に 1 を指定すると、常に utf-8 文字として扱われる。
+		合成文字は個別の文字として扱われる。
+		|nr2char()| はこの逆を行う。
+
+cindent({lnum})						*cindent()*
+		'cindent' で使われるのと同じC言語用のインデント規則に従った場
+		合の{lnum}行目のインデント量を返す。
+		インデント量はスペースで数えられ、'tabstop' の値は関係ない。
+		{lnum}は|getline()|の場合と同様に扱われる。
+		{lnum}が無効な値のときや|+cindent|機能なしでコンパイルされてい
+		るときは-1を返す。
+		|C-indenting|を参照。
+
+clearmatches()						*clearmatches()*
+		|matchadd()| と コマンド |:match| により定義されたマッチをすべ
+		て消去する。
+
+							*col()*
+col({expr})	戻り値は数値で、{expr}で与えられる位置の桁番号(バイトインデッ
+		クス)。有効な位置は:
+		    .	    現在の位置
+		    $	    カレント行の末尾(カレント行のバイト数+1を返す)
+		    'x	    マークxの位置(マークが設定されていない場合0)
+		    v	    ビジュアルモードでは: ビジュアル選択領域の開始行
+			    (カーソルがその端)。ビジュアルモード以外ではカーソ
+			    ル位置を返す。すぐに更新される点が |'<| と違う。
+		さらに {expr} は [lnum, col] という行番号と桁番号のリストで
+		あってもよい。col に "$" を指定して、ある行の最後の桁を取得す
+		るのにとても便利である。"lnum" か "col" が範囲外である場合は
+		0 を返す。
+		行番号を取得するには|line()|を使う。行番号と桁番号両方を取得す
+		るには|getpos()|を使う。
+		画面上の桁番号を取得するには|virtcol()|を使う。
+		Note 現在のファイルのマークしか使えないことに注意。
+		例: >
+			col(".")		カーソルの桁
+			col("$")		カレント行の長さ+1
+			col("'t")		マークtの桁
+			col("'" . markname)	マークmarknameの桁
+<		先頭の桁は1になる。戻り値0はエラーを意味する。
+		大文字のマークは他のバッファを指しているかもしれない。
+		'virtualedit' が有効なとき、カーソルが行末を越えていると、桁番
+		号は行の長さより1大きい値を返す。挿入モードで桁番号を取得する
+		には次のマップが使える: >
+			:imap <F2> <C-O>:let save_ve = &ve<CR>
+				\<C-O>:set ve=all<CR>
+				\<C-O>:echo col(".") . "\n" <Bar>
+				\let &ve = save_ve<CR>
+<
+complete({startcol}, {matches})			*complete()* *E785*
+		挿入モード補完の候補を設定する。
+		挿入モードでのみ使用できる。CTRL-R = (|i_CTRL-R| を参照)と組み
+		合わせてマッピングを作る必要がある。CTRL-Oの後や、<expr>マッピ
+		ングの中では正しく動作しない。
+		{startcol}は補完すべき単語の開始位置を示す、行内のバイトオフセッ
+		トである。その位置からカーソルまでのテキストが補完すべき単語と
+		なる。
+		{matches}はリスト|List|でなければならない。リストの各要素が1つ
+		の候補となる。この要素として許される値については
+		|complete-items|を参照。
+		Note この関数を呼んだ後は補完を停止させるようなテキストの挿入
+		をしないように注意しなければならない。
+		この関数で設定した候補は普通の挿入モード補完と同じ様にCTRL-Nと
+		CTRL-Pで選択できる。設定されていればポップアップメニューが表示
+		される。|ins-completion-menu|を参照。
+		例: >
+	inoremap <F5> <C-R>=ListMonths()<CR>
+	func! ListMonths()
+	  call complete(col('.'), ['January', 'February', 'March',
+		\ 'April', 'May', 'June', 'July', 'August', 'September',
+		\ 'October', 'November', 'December'])
+	  return ''
+	endfunc
+<		この例はそれほど役には立たないが、使い方を示している。Note 0が
+		挿入されてしまわないように空文字列を返していることに注意。
+
+complete_add({expr})				*complete_add()*
+		候補のリストに{expr}を追加する。'completefunc' で指定された関
+		数の中でのみ使われる。
+		失敗したときは0を返す(空文字列かメモリ不足)。候補が追加された
+		ときは1を返し、その候補が既にリストに存在するときは2を返す。
+		{expr}の説明については|complete-functions|を参照。'omnifunc'
+		が返すリストと同じである。
+
+complete_check()				*complete_check()*
+		補完候補を探している間にキーがタイプされたかどうか確認する。補
+		完の検索に時間がかかる場合に使われる。候補の検索を中断しようと
+		しているときは|TRUE|を返す。そうでないときは0を返す。
+		'completefunc' で指定された関数の中でのみ使われる。
+
+							*confirm()*
+confirm({msg} [, {choices} [, {default} [, {type}]]])
+		confirm()はユーザーに選択させるためのダイアログを提供する。戻
+		り値は選択した番号になる。最初の選択肢が1である。
+		Note: confirm()は、ダイアログサポートを有効にしてコンパイルし
+		た時にだけ動作する。|+dialog_con|と|+dialog_gui|を参照。
+
+		ダイアログには{msg}に加えて{choices}の選択肢が表示される。
+		{choices}が指定されない、または空の場合は選択肢 "&OK" が表示さ
+		れる(使用している言語に翻訳される)。
+		{msg}は文字列で '\n' を改行として使用できる。幾つかのシステム
+		では、長すぎる行は自動的に折り返される。
+
+		{choices}は文字列で、個々の選択肢は '\n' によって区切られる。
+		例: >
+			confirm("Save changes?", "&Yes\n&No\n&Cancel")
+<		'&' の後の文字は選択肢のショートカットキーになる。この場合
+		"Cancel" を選択するのに 'c' をタイプすることができる。ショート
+		カットキーは最初の文字である必要は無い: >
+			confirm("file has been modified", "&Save\nSave &All")
+<		コンソールでは、デフォルトのショートカットキーとして、各選択肢
+		の最初の文字が使われる。
+
+		省略可能な引数{default}は<CR>キーを叩いた時に選択される選択肢
+		の番号を指定する。最初の選択肢をデフォルトにするならば1を使用
+		する。デフォルトを設定したくないのならば0を使用する。
+		{default}を省略した場合、1が使用される。
+
+		省略可能な引数{type}はダイアログの種類を指定する。これは GTK,
+		Mac, Motif, Win32 の GUI でアイコンを指定するのに使われる。
+		"Error", "Question", "Info", "Warning", "Generic" のうちどれか
+		一つを指定する。以上のうちの先頭の文字だけで指定できる。{type}
+		が省略された場合、"Generic" が使用される。
+
+		ユーザーが<Esc>やCTRL-Cや、その他の割りこみキーでダイアログを
+		中断した場合、confirm()は0を返す。
+
+		例: >
+   :let choice = confirm("What do you want?", "&Apples\n&Oranges\n&Bananas", 2)
+   :if choice == 0
+   :	echo "make up your mind!"
+   :elseif choice == 3
+   :	echo "tasteful"
+   :else
+   :	echo "I prefer bananas myself."
+   :endif
+<		GUIのダイアログではボタンが使用される。ボタンの配置は
+		'guioptions' の 'v' フラグに依存する。もしも 'v' フラグが含ま
+		れているのなら、ボタンは常に垂直に配置される。そうでなければ水
+		平に配置しようと試みられる。水平配置がうまくマッチしない場合
+		は、垂直配置が使われる。幾つかのシステムでは常に水平配置が使わ
+		れる。
+
 							*copy()*
 copy({expr})	{expr}のコピーを作る。数値と文字列の場合は、{expr}そのものとコ
 		ピーの間に違いはない。
