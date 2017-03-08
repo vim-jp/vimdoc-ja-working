@@ -1,4 +1,4 @@
-*eval.txt*	For Vim version 8.0.  Last change: 2017 Jan 28
+*eval.txt*	For Vim version 8.0.  Last change: 2017 Mar 04
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -1329,7 +1329,8 @@ b:changedtick	The total number of changes to the current buffer.  It is
 		    :	let my_changedtick = b:changedtick
 		    :	call My_Update()
 		    :endif
-<
+<		You cannot change or delete the b:changedtick variable.
+
 						*window-variable* *w:var* *w:*
 A variable name that is preceded with "w:" is local to the current window.  It
 is deleted when the window is closed.
@@ -1788,8 +1789,11 @@ v:progpath	Contains the command with which Vim was invoked, including the
 		|--remote-expr|.
 		To get the full path use: >
 			echo exepath(v:progpath)
-<		NOTE: This does not work when the command is a relative path
-		and the current directory has changed.
+<		If the path is relative it will be expanded to the full path,
+		so that it still works after `:cd`. Thus starting "./vim"
+		results in "/home/user/path/to/vim/src/vim".
+		On MS-Windows the executable may be called "vim.exe", but the
+		".exe" is not added to v:progpath.
 		Read-only.
 
 					*v:register* *register-variable*
@@ -1980,19 +1984,20 @@ argidx()			Number	current index in the argument list
 arglistid([{winnr} [, {tabnr}]]) Number	argument list id
 argv({nr})			String	{nr} entry of the argument list
 argv()				List	the argument list
-assert_equal({exp}, {act} [, {msg}])     none  assert {exp} is equal to {act}
-assert_exception({error} [, {msg}])      none  assert {error} is in v:exception
-assert_fails({cmd} [, {error}])          none  assert {cmd} fails
-assert_false({actual} [, {msg}])         none  assert {actual} is false
+assert_equal({exp}, {act} [, {msg}])  none  assert {exp} is equal to {act}
+assert_exception({error} [, {msg}])   none  assert {error} is in v:exception
+assert_fails({cmd} [, {error}])	      none  assert {cmd} fails
+assert_false({actual} [, {msg}])      none  assert {actual} is false
 assert_inrange({lower}, {upper}, {actual} [, {msg}])
 				none	assert {actual} is inside the range
-assert_match({pat}, {text} [, {msg}])    none  assert {pat} matches {text}
+assert_match({pat}, {text} [, {msg}])	 none  assert {pat} matches {text}
 assert_notequal({exp}, {act} [, {msg}])  none  assert {exp} is not equal {act}
 assert_notmatch({pat}, {text} [, {msg}]) none  assert {pat} not matches {text}
-assert_true({actual} [, {msg}])          none  assert {actual} is true
+assert_true({actual} [, {msg}])		 none  assert {actual} is true
 asin({expr})			Float	arc sine of {expr}
 atan({expr})			Float	arc tangent of {expr}
 atan2({expr1}, {expr2})		Float	arc tangent of {expr1} / {expr2}
+balloon_show({msg})		none	show {msg} inside the balloon
 browse({save}, {title}, {initdir}, {default})
 				String	put up a file requester
 browsedir({title}, {initdir})	String	put up a directory requester
@@ -2357,6 +2362,7 @@ test_alloc_fail({id}, {countdown}, {repeat})
 test_autochdir()		none	enable 'autochdir' during startup
 test_disable_char_avail({expr}) none	test without typeahead
 test_garbagecollect_now()	none	free memory right now for testing
+test_ignore_error({expr})	none	ignore a specific error
 test_null_channel()		Channel	null value for testing
 test_null_dict()		Dict	null value for testing
 test_null_job()			Job	null value for testing
@@ -2617,6 +2623,28 @@ atan2({expr1}, {expr2})					*atan2()*
 <			2.356194
 		{only available when compiled with the |+float| feature}
 
+balloon_show({msg})					*balloon_show()*
+		Show {msg} inside the balloon.
+		Example: >
+			func GetBalloonContent()
+			   " initiate getting the content
+			   return ''
+			endfunc
+			set balloonexpr=GetBalloonContent()
+
+			func BalloonCallback(result)
+			  call balloon_show(a:result)
+			endfunc
+<
+		The intended use is that fetching the content of the balloon
+		is initiated from 'balloonexpr'.  It will invoke an
+		asynchronous method, in which a callback invokes
+		balloon_show().  The 'balloonexpr' itself can return an
+		empty string or a placeholder.
+
+		When showing a balloon is not possible nothing happens, no
+		error message.
+		{only available when compiled with the +balloon_eval feature}
 
 							*browse()*
 browse({save}, {title}, {initdir}, {default})
@@ -4371,8 +4399,8 @@ getfontname([{name}])					*getfontname()*
 		Only works when the GUI is running, thus not in your vimrc or
 		gvimrc file.  Use the |GUIEnter| autocommand to use this
 		function just after the GUI has started.
-		Note that the GTK 2 GUI accepts any font name, thus checking
-		for a valid name does not work.
+		Note that the GTK GUI accepts any font name, thus checking for
+		a valid name does not work.
 
 getfperm({fname})					*getfperm()*
 		The result is a String, which is the read, write, and execute
@@ -5848,9 +5876,13 @@ mode([expr])	Return a string that indicates the current mode.
 			S	Select by line
 			CTRL-S	Select blockwise
 			i	Insert
+			ic	Insert mode completion |compl-generic|
+			ix	Insert mode |i_CTRL-X| completion
 			R	Replace |R|
+			Rc	Replace mode completion |compl-generic|
 			Rv	Virtual Replace |gR|
-			c	Command-line
+			Rx	Replace mode |i_CTRL-X| completion
+			c	Command-line editing
 			cv	Vim Ex mode |gQ|
 			ce	Normal Ex mode |Q|
 			r	Hit-enter prompt
@@ -7779,6 +7811,15 @@ test_garbagecollect_now()			 *test_garbagecollect_now()*
 		internally, and |v:testing| must have been set before calling
 		any function.
 
+test_ignore_error({expr})			 *test_ignore_error()*
+		Ignore any error containing {expr}.  A normal message is given
+		instead.
+		This is only meant to be used in tests, where catching the
+		error with try/catch cannot be used (because it skips over
+		following code).
+		{expr} is used literally, not as a pattern.
+		There is currently no way to revert this.
+
 test_null_channel()					*test_null_channel()*
 		Return a Channel that is null. Only useful for testing.
 		{only available when compiled with the +channel feature}
@@ -7803,6 +7844,8 @@ test_settime({expr})					*test_settime()*
 		Set the time Vim uses internally.  Currently only used for
 		timestamps in the history, as they are used in viminfo, and
 		for undo.
+		Using a value of 1 makes Vim not sleep after a warning or
+		error message.
 		{expr} must evaluate to a number.  When the value is zero the
 		normal behavior is restored.
 
@@ -8459,6 +8502,7 @@ toolbar			Compiled with support for |gui-toolbar|.
 ttyin			input is a terminal (tty)
 ttyout			output is a terminal (tty)
 unix			Unix version of Vim.
+unnamedplus		Compiled with support for "unnamedplus" in 'clipboard'
 user_commands		User-defined commands.
 vertsplit		Compiled with vertically split windows |:vsplit|.
 vim_starting		True while initial source'ing takes place. |startup|
@@ -8962,6 +9006,11 @@ This does NOT work: >
 			value and the global value are changed.
 			Example: >
 				:let &path = &path . ',/usr/local/include'
+<			This also works for terminal codes in the form t_xx.
+			But only for alphanumerical names.  Example: >
+				:let &t_k1 = "\<Esc>[234;"
+<			When the code does not exist yet it will be created as
+			a terminal key code, there is no error.
 
 :let &{option-name} .= {expr1}
 			For a string option: Append {expr1} to the value.
@@ -9069,9 +9118,12 @@ This does NOT work: >
 				:lockvar v
 				:let v = 'asdf'		" fails!
 				:unlet v
-<							*E741*
+<							*E741* *E940*
 			If you try to change a locked variable you get an
-			error message: "E741: Value is locked: {name}"
+			error message: "E741: Value is locked: {name}".
+			If you try to lock or unlock a built-in variable you
+			get an error message: "E940: Cannot lock or unlock
+			variable {name}".
 
 			[depth] is relevant when locking a |List| or
 			|Dictionary|.  It specifies how deep the locking goes:
