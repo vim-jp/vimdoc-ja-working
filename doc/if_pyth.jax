@@ -17,7 +17,7 @@ VimのPythonインターフェイス				*python* *Python*
 9. 動的ローディング				|python-dynamic|
 10. Python 3					|python3|
 11. Python X					|python_x|
-12. Building with Python support		|python-building|
+12. Python 対応付きでビルドする			|python-building|
 
 {Vi にはこれらのコマンドはありません}
 
@@ -873,26 +873,27 @@ has() は 1 を返します。
 	endif
 
 ==============================================================================
-12. Building with Python support			*python-building*
+12. Python 対応付きでビルドする				*python-building*
 
-A few hints for building with Python 2 or 3 support.
+Python 2 または 3 対応付きでビルドするためのいくつかのヒントがあります。
 
 UNIX
 
-See src/Makefile for how to enable including the Python interface.
+Python インターフェイスを有効にする方法は src/Makefile を参照してください。
 
-On Ubuntu you will want to install these packages for Python 2:
+Ubuntu では Python 2 用にこれらのパッケージをインストールする必要があるでしょ
+う:
 	python
 	python-dev
-For Python 3:
+Python 3 用は:
 	python3
 	pytyon3-dev
-For Python 3.6:
+Python 3.6 用は:
 	python3.6
 	pytyon3.6-dev
 
-If you have more than one version of Python 3, you need to link python3 to the
-one you prefer, before running configure.
+もしも複数のバージョンの Python 3 がある場合は、configure を実行する前に
+python3 を望みのバージョンにリンクする必要があります。
 
 ==============================================================================
  vim:tw=78:ts=8:ft=help:norl:
