@@ -2434,7 +2434,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	|cscopequickfix|を参照。
 
 	        *'cscoperelative'* *'csre'* *'nocscoperelative'* *'nocsre'*
-'cscoperelative' 'csre' 切替 (既定は off)
+'cscoperelative' 'csre' 切替 (既定ではオフ)
 			グローバル
 			{Vimが|+cscope|機能つきでコンパイルされたときのみ利用
 			可能}
@@ -2913,7 +2913,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	を参照)。
 
 				     *'esckeys'* *'ek'* *'noesckeys'* *'noek'*
-'esckeys' 'ek'		(Vimの既定値: オン, Viの既定値: オフ)
+'esckeys' 'ek'		切替	(Vimの既定値: オン, Viの既定値: オフ)
 			グローバル
 			{Vi にはない}
 	オンのときは、<Esc> で始まるファンクションキーも挿入モードで認識される
@@ -3622,7 +3622,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 					i-ci:ver25-Cursor/lCursor,
 					r-cr:hor20-Cursor/lCursor,
 					sm:block-Cursor
-					-blinkwait175-blinkoff150-blinkon175")
+					-blinkwait175-blinkoff150-blinkon175",
 				MS-DOSとWin32コンソールでは:
 					"n-v-c:block,o:hor50,i-ci:hor15,
 					r-cr:hor30,sm:block") 
@@ -5527,7 +5527,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	れるので注意。
 
 							*'nrformats'* *'nf'*
-'nrformats' 'nf'	string	(default "bin,octal,hex",
+'nrformats' 'nf'	文字列	(default "bin,octal,hex",
 				|defaults.vim| 内で "bin,hex" に設定される)
 			バッファについてローカル
 			{Vi にはない}
@@ -6592,8 +6592,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 						*'shellcmdflag'* *'shcf'*
 'shellcmdflag' 'shcf'	文字列	(既定では: "-c"
-				 MS-DOS と Win32 で 'shell' に "sh" にが含まれ
-				 ないときは: "/c")
+				 MS-DOS と Win32 で 'shell' に "sh" が含まれな
+				 いときは: "/c")
 			グローバル
 			{Vi にはない}
 	"!" や ":!" 等のコマンドを実行するためにシェルに渡されるフラグ。例えば、
@@ -6743,7 +6743,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 						*'shellxquote'* *'sxq'*
 'shellxquote' 'sxq'	文字列	(既定では "";
 				 Win32 で 'shell' が cmd.exe なら: "("
-				 Win32で 'shell' に "sh" が含まるなら: "\""
+				 Win32 で 'shell' に "sh" が含まれるなら: "\""
 				 Unixで system() を使っているなら: "\"")
 			グローバル
 			{Vi にはない}
