@@ -1,5 +1,7 @@
 # vimdoc-ja-working
 
+[![Join the chat at https://gitter.im/vim-jp/vimdoc-ja-working](https://badges.gitter.im/vim-jp/vimdoc-ja-working.svg)](https://gitter.im/vim-jp/vimdoc-ja-working?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/vim-jp/vimdoc-ja-working.svg?branch=master)](https://travis-ci.org/vim-jp/vimdoc-ja-working)
 
 Vim 付属のヘルプを日本語に翻訳するためのプロジェクトです。
