@@ -126,7 +126,7 @@ Normal ハイライトグループにより決定されます。
 			入力ができなくなります。MS-Windows においては以下の
 			++eof オプションも参照してください。
 
-			カンマで分けられた2つの数字は "行数,桁数" のように利用
+			コンマで分けられた2つの数字は "行数,桁数" のように利用
 			されます。例えば `:24,80gdb` は 24 行かつ 80 桁の端末
 			を開きます。しかし端末ウィンドウが Vim のウィンドウを
 			またがる場合には、垂直分割は起こさずに Vim のウィンド
@@ -135,9 +135,9 @@ Normal ハイライトグループにより決定されます。
 			サポートされる [options] は以下の通り:
 			++close		ジョブが終了した際には自動的に端末ウィ
 					ンドウを閉じる。
-			++open		ジョブが終了しウィンドウが表示されな
-					かった場合でも、ウィンドウを表示する。
-					割り込みできることに注意。
+			++open		ジョブが終了した際にウィンドウが表示さ
+					れていない場合に、ウィンドウを表示す
+					る。割り込み的に発生しうることに留意。
 			++curwin	現在のウィンドウで端末を開き、現在の
 					ウィンドウを分割しない。現在のバッファ
 					を放棄( |abandon| )できない場合は失敗
@@ -161,41 +161,38 @@ Normal ハイライトグループにより決定されます。
 			より詳細なオプションを使いたいならば |term_start()| 関
 			数を使ってください。
 
-When the buffer associated with the terminal is unloaded or wiped out the job
-is killed, similar to calling `job_stop(job, "kill")`
+端末に関連付けられたバッファがアンロードもしくは削除された場合には、
+`job_stop(job, "kii")` を読んだのと同じようにそのジョブが殺されます。
 
-So long as the job is running the window behaves like it contains a modified
-buffer.  Trying to close the window with `CTRL-W :quit` fails.  When using
-`CTRL-W :quit!` the job is ended.  The text in the window is lost.  The buffer
-still exists, but getting it in a window with `:buffer` will show an empty
-buffer.
+ジョブが実行され続けるとウィンドウはそのバッファが変更されたかのように振る舞い
+ます。 `CTRL-W :quit` でウィンドウを閉じようとしても失敗します。 `CTRL-W :quit!`
+を使うとジョブは終了します。ウィンドウのテキストは失われます。バッファは依然存
+在しますが、 `:buffer` でウィンドウに割り当てても空のバッファが表示されます。
 
-Trying to close the window with `CTRL-W :close` also fails.   Using
-`CTRL-W :close!` will close the window and make the buffer hidden.
+`CTRL-W :close` で閉じようとしてもまた失敗します。 `CTRL-W :close!` はウィンドウを閉じ、バッファを隠し状態にします。
 
-You can use `CTRL-W :hide` to close the terminal window and make the buffer
-hidden, the job keeps running.  The `:buffer` command can be used to turn the
-current window into a terminal window.  If there are unsaved changes this
-fails, use !  to force, as usual.
+`CTRL-W :hide` を使うとジョブを実行したまま、端末ウィンドウを閉じバッファを隠
+し状態にできます。`:buffer` コマンドで現在のウィンドウを端末ウィンドウにするこ
+とができます。未保存の変更があった場合にはこれは失敗しますが、通常と同じように
+! で強制できます。
 
-To have a background job run without a window, and open the window when it's
-done, use options like this: >
+バックグラウンドジョブをウィンドウ無しで実行し、終了したらウィンドウに表示する
+には、次のようにオプションを指定します: >
 	:term ++hidden ++open make
-Note that the window will open at an unexpected moment, this will interrupt
-what you are doing.
+ウィンドウが予期せぬタイミングで開かれ、あなたが行っている操作に割り込む可能性
+があることに留意してください。
 
 							*E947* *E948*
-So long as the job is running, the buffer is considered modified and Vim
-cannot be quit easily, see |abandon|.
+ジョブが実行され続けると、バッファが変更されたとみなされ Vim を簡単には終了で
+きなくなります。 |abandon| を参照してください。
 
-When the job has finished and no changes were made to the buffer: closing the
-window will wipe out the buffer.
+ジョブが終了しバッファになんの変更も及ぼさなかった場合、そのウィンドウを閉じる
+とバッファは削除されます。
 
-Before changes can be made to a terminal buffer, the 'modifiable' option must
-be set.  This is only possible when the job has finished.  At the first change
-the buffer will become a normal buffer and the highlighting is removed.
-You may want to change the buffer name with |:file| to be able to write, since
-the buffer name will still be set to the command.
+端末バッファを変更するにはオプション 'modifiable' をセットする必要があります。
+これはジョブが終了した後にのみ行なえます。バッファを最初に変更した瞬間に普通の
+バッファになりハイライトは削除されます。バッファを保存可能にするために |:file|
+でバッファの名前を、コマンド名から変更することもできます。
 
 
 サイズ変更 ~
