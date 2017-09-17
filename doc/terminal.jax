@@ -27,36 +27,37 @@ WARNING: THIS IS ONLY PARTLY IMPLEMENTED, ANYTHING CAN STILL CHANGE
 ==============================================================================
 1. 基本的な使い方					*terminal-use*
 
-This feature is for running a terminal emulator in a Vim window.  A job can be
-started connected to the terminal emulator. For example, to run a shell: >
+これは Vim のウィンドウ内で端末エミュレーターを実行する機能です。端末エミュ
+レーターに接続すると1つのジョブが開始されます。例としてシェルを実行するならば
+以下のようになります: >
      :term bash
 
-Or to run build command: >
+またビルドコマンドを実行するにはこうなります: >
      :term make myprogram
 
-The job runs asynchronously from Vim, the window will be updated to show
-output from the job, also while editing in another window.
+ジョブはVimとは非同期的に動作し、他のウィンドウで編集中であってもジョブからの
+出力は随時端末ウィンドウに反映されます。
 
 
 キー入力 ~
 							*terminal-typing*
-When the keyboard focus is in the terminal window, typed keys will be sent to
-the job.  This uses a pty when possible.  You can click outside of the
-terminal window to move keyboard focus elsewhere.
+端末ウィンドウにキーボードのフォーカスがある時には、入力したキーはジョブに送ら
+れます。これには可能ならば pty を使用します。端末ウィンドウ外をクリックすれ
+ば、キーボードフォーカスを外に動かせます。
 
-CTRL-W can be used to navigate between windows and other CTRL-W commands, e.g.:
-	CTRL-W CTRL-W 	move focus to the next window
-	CTRL-W :	enter an Ex command
-See |CTRL-W| for more commands.
+ウィンドウや他の CTRL-W コマンドを操作するために CTRL-W を使えます。例えば:
+	CTRL-W CTRL-W 	次のウィンドウにフォーカスを移動する
+	CTRL-W :	Exコマンドに入る
+他のコマンドについては |CTRL-W| 参照してください。
 
-Special in the terminal window:			*CTRL-W_.*  *CTRL-W_N* 
-	CTRL-W .	send a CTRL-W to the job in the terminal
-	CTRL-W N	go to Terminal-Normal mode, see |Terminal-mode|
-	CTRL-\ CTRL-N   go to Terminal-Normal mode, see |Terminal-mode|
-	CTRL-W " {reg}  paste register {reg}		*CTRL-W_quote*
-			Also works with the = register to insert the result of
-			evaluating an expression.
-	CTRL-W CTRL-C	ends the job, see below |t_CTRL-W_CTRL-C|
+
+端末ウィンドウでの特別な操作:			*CTRL-W_.*  *CTRL-W_N* 
+	CTRL-W .	端末内のジョブに CTRL-W を送る
+	CTRL-W N	Terminal-Normal モードに移行, |Terminal-mode| を参照
+	CTRL-\ CTRL-N   Terminal-Normal モードに移行, |Terminal-mode| を参照
+	CTRL-W " {reg}  レジスタ {reg} の内容を貼り付け	*CTRL-W_quote*
+			式の評価結果を挿入するためのレジスタ = も機能する。
+	CTRL-W CTRL-C	ジョブを停止する, 下記の |t_CTRL-W_CTRL-C| を参照
 
 See option 'termkey' for specifying another key instead of CTRL-W that
 will work like CTRL-W.  However, typing 'termkey' twice sends 'termkey' to
@@ -282,31 +283,34 @@ This will open the file "some_file.c" and put the cursor on line 123.
 
 MS-Windows ~
 
-On MS-Windows winpty is used to make it possible to run all kind of commands.
+MS-Windows ではすべての種類のコマンドを実行可能とするために winpty を用いてい
+ます。
 Obviously, they must be commands that run in a terminal, not open their own
 window.
 
-You need the following two files from winpty:
+winpty 内の以下の2つのファイルが必要です:
 
     winpty.dll
     winpty-agent.exe
 
-You can download them from the following page:
+これらは以下のページからダウンロードできます:
 
     https://github.com/rprichard/winpty
 
-Just put the files somewhere in your PATH.  You can set the 'winptydll' option
-to point to the right file, if needed.  If you have both the 32-bit and 64-bit
-version, rename to winpty32.dll and winpty64.dll to match the way Vim was
-build.
+ファイルを環境変数 PATH のいずれかに置くだけです。必要ならばオプション
+'winptydll' でファイルの場所を指定できます。もしも32ビット版と64ビット版を同じ
+ディレクトリに置きたいのであれば、Vimのビルドに合わせてそれぞれを winpty32.dll
+もしくは winpty64.dll という名前に変更してください。
 
 ==============================================================================
 2. リモートテスト					*terminal-testing*
 
-Most Vim tests execute a script inside Vim.  For some tests this does not
-work, running the test interferes with the code being tested.  To avoid this
-Vim is executed in a terminal window.  The test sends keystrokes to it and
-inspects the resulting screen state.
+VimのほとんどのテストはVimのなかでスクリプトを実行しています。
+For some tests this does not
+work, running the test interferes with the code being tested.
+これを避けるために端末ウィンドウ内でVimが実行されます。
+そのテストではキーストロークを端末に送信し、
+その結果として端末画面の状態が変わるのを検査します。
 
 関数 ~
 
