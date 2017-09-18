@@ -197,96 +197,95 @@ Normal ハイライトグループにより決定されます。
 
 サイズ変更 ~
 
-The size of the terminal can be in one of three modes:
+端末のサイズは3つのモードのいずれか1つで決まります:
 
-1. The 'termsize' option is empty: The terminal size follows the window size.
-   The minimal size is 2 screen lines with 10 cells.
+1. オプション 'termsize' が空の場合: 端末サイズはウィンドウのサイズに従う。最
+   小で2行、10桁。
 
-2. The 'termsize' option is "rows*cols", where "rows" is the minimal number of
-   screen rows and "cols" is the minimal number of cells.
+2. オプション 'termsize' が "rows*cols" の場合、 "rows" を最小行数、 "cols" を
+   最小桁数とする。
 
-3. The 'termsize' option is "rowsXcols" (where the x is upper or lower case).
-   The terminal size is fixed to the specified number of screen lines and
-   cells.  If the window is bigger there will be unused empty space.
+3. オプション 'termsize' が "rowsXcols" ("X" は大文字小文字を問わない) の場合:
+   端末サイズは指定された行数と桁数で固定される。もしもウィンドウがそれよりも
+   大きい場合には、使用されない空の領域ができる。
 
-If the window is smaller than the terminal size, only part of the terminal can
-be seen (the lower-left part).
+ウィンドウサイズが端末サイズよりも小さい場合、端末の一部の領域(左下に相当する
+部分)のみが描画されます。
 
-The |term_getsize()| function can be used to get the current size of the
-terminal.  |term_setsize()| can be used only when in the first or second mode,
-not when 'termsize' is "rowsXcols".
+端末の現在のサイズを取得するのに関数 |term_getsize()| が使えます。
+|term_setsize()| は 1 か 2 のモードの時にだけ、すなわち 'termsize' が
+"rowsXcols" 形式ではない時に使えます。
 
 
 Terminal-Job と Terminal-Normal モード ~
 							*Terminal-mode*
-When the job is running the contents of the terminal is under control of the
-job.  That includes the cursor position.  Typed keys are sent to the job.
-The terminal contents can change at any time.  This is called Terminal-Job
-mode.
+ジョブが実行中には端末の内容はジョブの制御下にあります。それにはカーソルの位置
+も含まれます。入力したキーはジョブに送られます。端末の内容はいつでも更新されえ
+ます。これを Terminal-Job モードと呼びます。
 
-Use CTRL-W N (or 'termkey' N) to switch to Terminal-Normal mode.  Now the
-contents of the terminal window is under control of Vim, the job output is
-suspended.  CTRL-\ CTRL-N does the same.
+CTRL-W N (もしくは 'termkey' N) を入力すると Terminal-Normal モードに遷移しま
+す。このモードでは端末ウィンドウのコンテンツはVimの制御下に置かれ、ジョブの出
+力は一時保留されます。 CTRL-\ CTRL-N でも同じようになります。
 
-Terminal-Job mode is where |tmap| mappings are applied. Keys sent by
-|term_sendkeys()| are not subject to tmap, but keys from |feedkeys()| are.
+|tmap| のマッピングは Terminal-Job モードにおいて作用します。
+|term_sendkeys()| で送ったキーには tmap は適用されませんが、
+|feedkeys()| で送ったキーには適用されます。
 
 							*E946*
-In Terminal-Normal mode you can move the cursor around with the usual Vim
-commands, Visually mark text, yank text, etc.  But you cannot change the
-contents of the buffer.  The commands that would start insert mode, such as
-'i' and 'a', return to Terminal-Job mode.  The window will be updated to show
-the contents of the terminal.
+Terminal-Normal モードでは、Vimの普通のコマンドでカーソルを自由に動かせます。
+視覚的にテキストをマークしたり、テキストをヤンクしたり思いのままです。しかし
+バッファの内容を変更することはできません。 'i' や 'a' など挿入モードを開始する
+コマンドを使うと Terminal-Job モードに戻ります。結果としてウィンドウは端末のコ
+ンテンツを反映させるために更新されます。
 
-In Terminal-Normal mode the statusline and window title show "(Terminal)".  If
-the job ends while in Terminal-Normal mode this changes to
-"(Terminal-finished)".
+Terminal-Normal モードではステータスラインとウィンドウタイトルには
+"(Terminal)" と表示されます。 Terminal-Normal モード中にジョブが終了してしまっ
+た場合にはそれが "(Terminal-finished)" に変わります。
 
-It is not possible to enter Insert mode from Terminal-Job mode.
+Terminal-Job モードから挿入モードに移る方法はありません。
 
 
 カーソルスタイル ~
 
-By default the cursor in the terminal window uses a not blinking block.  The
-normal xterm escape sequences can be used to change the blinking state and the
-shape.  Once focus leaves the terminal window Vim will restore the original
-cursor.
+デフォルトでは端末ウィンドウのカーソルには点滅しないブロックが使われます。カー
+ソルの点滅状態や形を変更するのに、普通の xterm のエスケープシーケンスが使われ
+ます。端末ウィンドウからフォーカスが外れる際に Vim は元々のカーソルを復元しま
+す。
 
-An exception is when xterm is started with the "-bc" argument, or another way
-that causes the cursor to blink.  This actually means that the blinking flag
-is inverted.  Since Vim cannot detect this, the terminal window cursor
-blinking will also be inverted.
+xterm を "-bc" 引数で起動した場合、または他の方法でカーソルの点滅を発生させた
+場合、が1つの例外となります。それらにより点滅フラグが逆転したことが問題の引き
+金となります。なぜなら Vim はその逆転を検出できず、端末ウィンドウのカーソルの
+点滅も逆転します。
 
 
 Unix ~
 
-On Unix a pty is used to make it possible to run all kinds of commands.  You
-can even run Vim in the terminal!  That's used for debugging, see below.
+UNIX ではすべての種類のコマンドを実行可能とするために pty を用いています。端末
+内で Vim ですら実行できるのです! これは以下のようにデバッグに利用できます。
 
-Environment variables are used to pass information to the running job:
-    TERM		name of the terminal, 'term'
-    ROWS		number of rows in the terminal initially
-    LINES		same as ROWS
-    COLUMNS		number of columns in the terminal initially
-    COLORS		number of colors, 't_Co' (256*256*256 in the GUI)
+実行中のジョブに情報を伝えるのに以下の環境変数が利用できます:
+    TERM		端末の名前 'term'
+    ROWS		端末の初期行数
+    LINES		ROWS と同じ
+    COLUMNS		端末の初期桁数
+    COLORS		色数 't_Co' (GUIでは 256*256*256)
     VIM_SERVERNAME	v:servername
 
-The |client-server| feature can be used to communicate with the Vim instance
-where the job was started.  This only works when v:servername is not empty.
-If needed you can set it with: >
+ジョブを開始した Vim インスタンスと通信するのに |client-server| 機能を使えま
+す。この方法は v:servername が空ではないときのみ機能します。必要ならば次のよう
+にしてそれを設定できます: >
 	call remote_startserver('vim-server')
 
-In the job you can then do something like: >
+ジョブの中で以下の様なことができます: >
 	vim --servername $VIM_SERVERNAME --remote +123 some_file.c
-This will open the file "some_file.c" and put the cursor on line 123.
+これは "some_file.c" の 123 行目を開かせます。
 
 
 MS-Windows ~
 
 MS-Windows ではすべての種類のコマンドを実行可能とするために winpty を用いてい
-ます。
-Obviously, they must be commands that run in a terminal, not open their own
-window.
+ます。あたりまえのことですが、ここで実行するコマンドは端末の中で動くもので、独
+自のウィンドウを開くものであってはいけません。
 
 winpty 内の以下の2つのファイルが必要です:
 
