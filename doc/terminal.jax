@@ -404,7 +404,7 @@ communicate" です。このバッファは消さないでください。消し�
 gdb コマンド以外のデバッガを使うには、 `:Termdebug` を実行する前に
 "termdebugger" 変数を変更してください: >
 	let termdebugger = "mygdb"
-gdb と完全互換のあるデバッガのみが使えあmす。Vim は gdb の操作に GDB/MI イン
+gdb と完全互換のあるデバッガのみが使えます。Vim は gdb の操作に GDB/MI イン
 ターフェイスを利用しています。
 
 サインの色は以下のハイライトグループで調整できます:
