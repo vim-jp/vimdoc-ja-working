@@ -406,7 +406,7 @@ gdb コマンド以外のデバッガを使うには、 `:Termdebug` を実行�
 "termdebugger" 変数を変更してください: >
 	let termdebugger = "mygdb"
 gdb と完全互換のあるデバッガのみが使えあmす。Vim は gdb の操作に GDB/MI イン
-ターフェースを利用しています。
+ターフェイスを利用しています。
 
 サインの色は以下のハイライトグループで調整できます:
 - debugPC		現在の位置
