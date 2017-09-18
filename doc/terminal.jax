@@ -4,7 +4,7 @@
 		VIMリファレンスマニュアル    by Bram Moolenaar
 
 
-Terminal window support					*terminal*
+端末ウィンドウサポート					*terminal*
 
 
 WARNING: THIS IS ONLY PARTLY IMPLEMENTED, ANYTHING CAN STILL CHANGE
@@ -59,16 +59,13 @@ WARNING: THIS IS ONLY PARTLY IMPLEMENTED, ANYTHING CAN STILL CHANGE
 			式の評価結果を挿入するためのレジスタ = も機能する。
 	CTRL-W CTRL-C	ジョブを停止する, 下記の |t_CTRL-W_CTRL-C| を参照
 
-See option 'termkey' for specifying another key instead of CTRL-W that
-will work like CTRL-W.  However, typing 'termkey' twice sends 'termkey' to
-the job.  For example:
 CTRL-W の代わりに別のキーを使うにはオプション 'termkey' を参照してください。し
 かし 'termkey' を2回タイプすると 'termkey' が job へ送信されます。例:
 	'termkey' CTRL-W    次のウィンドウにフォーカスを移動する
 	'termkey' :	    Exコマンドに入る
 	'termkey' 'termkey' 端末内のジョブに 'termkey' を送信する
 	'termkey' .	    端末内のジョブに CTRL-W を送信する
-	'termkey' N  	    Terminal-Normal モードへ以降, 以下を参照
+	'termkey' N  	    Terminal-Normal モードへ移行、以下を参照
 	'termkey' CTRL-N    CTRL-W N と同じ
 	'termkey' CTRL-C    |t_CTRL-W_CTRL-C| と同じ
 							*t_CTRL-\_CTRL-N*
@@ -148,15 +145,16 @@ Normal ハイライトグループにより決定されます。
 					使う
 			++cols={width}  端末ウィンドウの幅として {window} を使
 					う
-			++eof={text}	when using [range]: text to send after
-					the last line was written. Cannot
-					contain white space.  A CR is
-					appended.  For MS-Windows the default
-					is to send CTRL-D.
-					E.g. for a shell use "++eof=exit" and
-					for Python "++eof=exit()".  Special
-					codes can be used like with `:map`,
-					e.g. "<C-Z>" for CTRL-Z.
+			++eof={text}	[range] を使った場合: 最後の行を送信し
+					たあとに指定したテキストが送られる。空
+					白を含むことはできない。 CR が 1 つ付
+					け加えられる。MS-Windows ではデフォル
+					トでは CTRL-D が送られる。
+					例: シェルには "++eof=exit" を、Python
+					には "++eof=exit()" を指定する。特殊
+					コードが `:map` と同様に利用できる。
+					例: "<C-Z>" は CTRL-Z を示す。
+
 
 			より詳細なオプションを使いたいならば |term_start()| 関
 			数を使ってください。
@@ -169,7 +167,8 @@ Normal ハイライトグループにより決定されます。
 を使うとジョブは終了します。ウィンドウのテキストは失われます。バッファは依然存
 在しますが、 `:buffer` でウィンドウに割り当てても空のバッファが表示されます。
 
-`CTRL-W :close` で閉じようとしてもまた失敗します。 `CTRL-W :close!` はウィンドウを閉じ、バッファを隠し状態にします。
+`CTRL-W :close` で閉じようとしてもまた失敗します。 `CTRL-W :close!` はウィンド
+ウを閉じ、バッファを隠し状態にします。
 
 `CTRL-W :hide` を使うとジョブを実行したまま、端末ウィンドウを閉じバッファを隠
 し状態にできます。`:buffer` コマンドで現在のウィンドウを端末ウィンドウにするこ
