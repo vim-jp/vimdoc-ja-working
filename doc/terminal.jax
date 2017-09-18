@@ -69,8 +69,8 @@ CTRL-W の代わりに別のキーを使うにはオプション 'termkey' を�
 	'termkey' CTRL-N    CTRL-W N と同じ
 	'termkey' CTRL-C    |t_CTRL-W_CTRL-C| と同じ
 							*t_CTRL-\_CTRL-N*
-他のモードと同じように、ノーマルモードへ移行するための特別なキーの組わせである
-CTRL-\ CTRL-N が利用できます。
+他のモードと同じように、ノーマルモードへ移行するための特別なキーの組み合わせで
+ある CTRL-\ CTRL-N が利用できます。
 							*t_CTRL-W_CTRL-C*
 ジョブを強制停止するのに CTRL-W CTRL-C を使えます。MS-Windowsでは CTRL-BREAK
 でも同様にジョブを停止できます。
