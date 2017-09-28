@@ -2038,7 +2038,7 @@ exp({expr})			浮動小数点数	{expr}の指数
 expand({expr} [, {nosuf} [, {list}]])
 				任意	{expr}内の特別なキーワードを展開
 feedkeys({string} [, {mode}])	数値	先行入力バッファにキーシーケンスを追加
-filereadable({file})		数値	{file}が読みこみ可能なら|TRUE|
+filereadable({file})		数値	{file}が読み込み可能なら|TRUE|
 filewritable({file})		数値	{file}が書き込み可能なら|TRUE|
 filter({expr1}, {expr2})	リスト/辞書  {expr2}が0となる要素を{expr1}から
 					とり除く
@@ -3670,7 +3670,7 @@ feedkeys({string} [, {mode}])				*feedkeys()*
 
 							*filereadable()*
 filereadable({file})
-		結果は数値で、{file}というファイルが存在し、読みこむことが可能
+		結果は数値で、{file}というファイルが存在し、読み込むことが可能
 		ならば|TRUE|となる。ファイル{file}が存在しないかディレクトリ
 		だった場合には、結果は|FALSE|となる。引数{file}は文字列として
 		使えればどのような表現でもよい。
