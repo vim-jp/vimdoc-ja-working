@@ -1453,8 +1453,9 @@ v:completed_item
 		|Dictionary|は空である。
 
 					*v:count* *count-variable*
-v:count		最後に実行されたノーマルモードコマンドに渡されたコマンドの実行
-		回数を返す。読出し専用。使用例: >
+v:count		最後に実行されたノーマルモードコマンドに渡されたカウント数。
+		マッピングの前のカウントを取得するのに使用できる。読出し専用。
+		使用例: >
 	:map _x :<C-U>echo "the count is " . v:count<CR>
 <		Note: <C-U>は、カウントの後に ':' をタイプした時に示される行範
 		囲指定を削除するために必要となる。
@@ -1464,8 +1465,8 @@ v:count		最後に実行されたノーマルモードコマンドに渡され�
 		また "count" は、以前の版のVimとの互換性の為に動作する。
 
 					*v:count1* *count1-variable*
-v:count1	"v:count" と同じように、しかしカウントが指定されなかった時の省
-		略値として存在する。
+v:count1	"v:count" と同じだが、カウントが指定されなかった時の既定値が 1
+		となる。
 
 						*v:ctype* *ctype-variable*
 v:ctype		文字に関する実行環境の現在のロケール設定。これを使えばVim
@@ -1841,8 +1842,8 @@ v:termresponse	termcapのエントリ|t_RV|で端末から返されるエスケ�
 		TermResponseが発生し、端末からの応答に反応することができる。
 		新しいxtermからの応答は次の形式である:
 		 "<Esc>[ Pp ; Pv ; Pc c"。ここでPpは端末のタイプ: 0ならvt100、
-		 1ならvt220。Pvはパッチレベル(パッチ95で導入されたため常
-		 に95以上)。Pcは常に0。
+		 1ならvt220。Pvはパッチレベル(パッチ95で導入されたため常に95以
+		 上)。Pcは常に0。
 		{Vimが|+termresponse|機能付きでコンパイルされたときのみ有効}
 
 					*v:testing* *testing-variable*
