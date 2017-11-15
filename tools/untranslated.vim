@@ -1,4 +1,5 @@
 let g:makehtml_external_taglinks = {
+  \ 'ft_rust.txt': 'http://vim-jp.org/vimdoc-ja/ft_rust.html',
   \ 'hebrew.txt': 'http://vim-jp.org/vimdoc-ja/hebrew.html',
   \ 'todo.txt': 'http://vim-jp.org/vimdoc-ja/todo.html',
   \ 'version5.txt': 'http://vim-jp.org/vimdoc-ja/version5.html',
