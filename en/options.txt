@@ -886,7 +886,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	'background' is not dark/light, 'background' will be set and the
 	screen is redrawn.  This may have side effects, make t_BG empty in
 	your .vimrc if you suspect this problem.  The response to |t_RB| can
-	be found in |v:termrgbresp|.
+	be found in |v:termrbgresp|.
 
 	When starting the GUI, the default value for 'background' will be
 	"light".  When the value is not set in the .gvimrc, and Vim detects
