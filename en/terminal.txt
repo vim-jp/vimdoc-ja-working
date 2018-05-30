@@ -327,8 +327,8 @@ Starting ~
 Load the plugin with this command: >
 	packadd termdebug
 <							*:Termdebug*
-To start debugging use `:TermDebug` folowed by the command name, for example: >
-	:TermDebug vim
+To start debugging use `:Termdebug` folowed by the command name, for example: >
+	:Termdebug vim
 
 This opens two windows:
 gdb window	A terminal window in which "gdb vim" is executed.  Here you
