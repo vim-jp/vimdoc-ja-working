@@ -1,4 +1,4 @@
-*index.txt*     For Vim version 8.0.  Last change: 2017 Aug 02
+*index.txt*     For Vim version 8.1.  Last change: 2018 Apr 19
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -959,7 +959,7 @@ tag		command	      note action in Visual mode	~
 |v_i{|		i{		   same as iB
 |v_i}|		i}		   same as iB
 |v_o|		o		   move cursor to other corner of area
-|v_r|		r		2  delete highlighted area and start insert
+|v_r|		r		2  replace highlighted area with a character
 |v_s|		s		2  delete highlighted area and start insert
 |v_u|		u		2  make highlighted area lowercase
 |v_v|		v		   make Visual mode characterwise or stop
@@ -1583,13 +1583,17 @@ tag	      command	      action ~
 |:tjump|	:tj[ump]	like ":tselect", but jump directly when there
 				is only one match
 |:tlast|	:tl[ast]	jump to last matching tag
+|:tmapclear|	:tmapc[lear]	remove all mappings for Terminal-Job mode
+|:tmap|		:tma[p]		like ":map" but for Terminal-Job mode
 |:tmenu|	:tm[enu]	define menu tooltip
 |:tnext|	:tn[ext]	jump to next matching tag
+|:tnoremap|	:tno[remap]	like ":noremap" but for Terminal-Job mode
 |:topleft|	:to[pleft]	make split window appear at top or far left
 |:tprevious|	:tp[revious]	jump to previous matching tag
 |:trewind|	:tr[ewind]	jump to first matching tag
 |:try|		:try		execute commands, abort on error or exception
 |:tselect|	:ts[elect]	list matching tags and select one
+|:tunmap|	:tunma[p]	like ":unmap" but for Terminal-Job mode
 |:tunmenu|	:tu[nmenu]	remove menu tooltip
 |:undo|		:u[ndo]		undo last change(s)
 |:undojoin|	:undoj[oin]	join next change with previous undo block
