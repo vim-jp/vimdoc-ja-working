@@ -1645,19 +1645,18 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:tjump|	:tj[ump]	":tselect" と同様、ただし一致したタグが1つし
 				かない場合、その場所へジャンプ
 |:tlast|	:tl[ast]	直前に一致したタグ位置へジャンプ
-|:tmapclear|	:tmapc[lear]	ターミナルジョブモードのすべてのマップを削除す
-				る。
-|:tmap|		:tma[p]		":map" と同様。ターミナルジョブモード用
+|:tmapclear|	:tmapc[lear]	Terminal-Jobモードのすべてのマップを削除する。
+|:tmap|		:tma[p]		":map" と同様。Terminal-Jobモード用
 |:tmenu|	:tm[enu]	ツールチップメニューを定義する
 |:tnext|	:tn[ext]	タグを前方検索し、ジャンプ
-|:tnoremap|	:tno[remap]	":noremap" と同様。ターミナルジョブモード用
+|:tnoremap|	:tno[remap]	":noremap" と同様。Terminal-Jobモード用
 |:tprevious|	:tp[revious]	タグを後方検索し、ジャンプ
 |:topleft|	:to[pleft]	ウィンドウが最も左もしくは最も上に分割されるよ
 				うにする
 |:trewind|	:tr[ewind]	最初に一致したタグ位置へジャンプ
 |:tselect|	:ts[elect]	一致したタグを一覧表示し、ジャンプ先のタグ
 				を選択
-|:tunmap|	:tunma[p]	":unmap" と同様。ターミナルジョブモード用
+|:tunmap|	:tunma[p]	":unmap" と同様。Terminal-Jobモード用
 |:tunmenu|	:tu[nmenu]	ツールチップメニューを削除
 |:try|		:try		コマンドを実行し発生したエラーや例外を処理する
 |:undo|		:u[ndo]		最後の変更を取り消す
