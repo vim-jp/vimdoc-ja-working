@@ -66,7 +66,7 @@ GetLatestVimScripts の動作には wget か curl が必要です。
 		mv GetLatestVimScripts.dist GetLatestVimScripts.dat
 		(GetLatestVimScripts.dat を編集して、インストールしたいプラグ
 		インの一覧を書いてください。|GetLatestVimScripts_dat| 参照)
-	
+
 	3. Windows:
 		vim getscript.vba
 		:so %
