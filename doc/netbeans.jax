@@ -1,4 +1,4 @@
-*netbeans.txt*  For Vim バージョン 8.0.  Last change: 2016 Jul 15
+*netbeans.txt*  For Vim バージョン 8.1.  Last change: 2016 Jul 15
 
 
 		  VIMリファレンスマニュアル    by Gordon Prieur et al.
@@ -119,7 +119,7 @@ NetBeans インターフェイスを有効にしたくない場合は、Makefile
 "--disable-netbeans" の行のコメントアウトを解除すれば無効にできます。
 
 現在 NetBeans インターフェイスは端末動作の Vim と GUI (GTK, GNOME, Windows,
-Athena, Motif) の GVim でのみサポートされています。
+Athena, Motif) の gvim でのみサポートされています。
 
 Motif をサポートするためには XPM ライブラリが必要です。XPM の最新バージョン
 を入手する方法については |workshop-xpm| を参照してください。
