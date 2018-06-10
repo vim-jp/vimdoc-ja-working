@@ -290,7 +290,7 @@ MzScheme インターフェイスを使うには MzScheme の DLL が検索パ�
 リが検索パスとなるか表示できます。
 
 MS-Windows では 'mzschemedll' および 'mzschemegcdll' オプションが読み込むライ
-ブラリの名前として使用されます。初期値はビルド時に明記されます。
+ブラリの名前として使用されます。初期値はビルド時に指定されます。
 
 DLL のバージョンは Vim をコンパイルした時の MzScheme のバージョンと一致しなけ
 ればなりません。MzScheme 209 用ならば "libmzsch209_000.dll" と
