@@ -47,8 +47,8 @@ MS-DOS と MS-Windows では次のどちらかです。
 	$HOME/_vimrc ~
 	$VIM/_vimrc ~
 
-もし初めて vimrc ファイルを作るのであれば、次の一行を先頭に記述するのがよいで
-しょう。
+もし初めて vimrc ファイルを作るのであれば、次の 1 行を先頭に記述するのがよいで
+しょう: >
 
 	source $VIMRUNTIME/defaults.vim
 
