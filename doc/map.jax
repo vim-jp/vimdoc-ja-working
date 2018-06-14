@@ -53,7 +53,7 @@
 :im[ap]	{lhs} {rhs}		|mapmode-i|		*:im* *:imap*
 :lm[ap]	{lhs} {rhs}		|mapmode-l|		*:lm* *:lmap*
 :cm[ap]	{lhs} {rhs}		|mapmode-c|		*:cm* *:cmap*
-:tma[p] {lhs} {rhs}		|mapmode-t|		*:tma* *:tmap*
+:tma[p]	{lhs} {rhs}		|mapmode-t|		*:tma* *:tmap*
 			キー入力 {lhs} を {rhs} に割り当てます。作成したマップ
 			は、マップコマンドに対応したモードで使用できます。マッ
 			プが使用されたときに {rhs} が調べられ、再マップされま
