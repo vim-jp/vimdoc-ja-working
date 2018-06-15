@@ -14580,7 +14580,7 @@ QuickFix の改善 (by Yegappan Lakshmanan): ~
 	QuickFixリストを新しく作成せずに、'errorformat' を利用してテキストを解
 	析する機能が追加されました。
 	QuickFixエントリに "module" 要素が追加され、長いファイル名の代わりに表
-	示名として使用されます。
+	示名として使用できます。
 	QuickFixリスト/ロケーションリストのスタックに含まれる、すべてのエラー
 	リストを解放する機能が追加されました。
 	:copen/:cwindow コマンドでQuickFixウィンドウを開く場合に、分割修飾子が
