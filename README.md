@@ -16,7 +16,7 @@ Vim 付属のヘルプを日本語に翻訳するためのプロジェクトで�
 
 GitHub のアカウントをお持ちでない場合は、次の方法による連絡も可能です。
 
-- メーリングリスト <http://groups.google.com/group/vimdoc-ja>
+- メーリングリスト <https://groups.google.com/group/vimdoc-ja>
 
 ### 姉妹プロジェクトがあります！
 
