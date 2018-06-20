@@ -20,8 +20,8 @@
       サイズ変更			|terminal-resizing|
       端末モード			|Terminal-mode|
       カーソルスタイル			|terminal-cursor-style|
-      特別なキー			|terminal-special-keys|
       セッション			|terminal-session|
+      特別なキー			|terminal-special-keys|
       Unix				|terminal-unix|
       MS-Windows			|terminal-ms-windows|
 2. 端末通信				|terminal-communication|
@@ -39,6 +39,7 @@
       コードをステップ実行する		|termdebug-stepping|
       変数を検査する			|termdebug-variables|
       その他のコマンド			|termdebug-commands|
+      プロンプトモード			|termdebug-prompt|
       通信				|termdebug-communication|
       カスタマイズ			|termdebug-customizing|
 
@@ -86,10 +87,11 @@
 CTRL-W の代わりに別のキーを使うにはオプション 'termwinkey' を参照してください。
 しかし 'termwinkey' を2回タイプすると 'termwinkey' が job へ送信されます。例:
 	'termwinkey' CTRL-W    次のウィンドウにフォーカスを移動する
-	'termwinkey' :	    Exコマンドに入る
+	'termwinkey' :         Exコマンドに入る
 	'termwinkey' 'termwinkey' 端末内のジョブに 'termwinkey' を送信する
-	'termwinkey' .	    端末内のジョブに CTRL-W を送信する
-	'termwinkey' N  	    端末ノーマルモードへ移行、以下を参照
+	'termwinkey' .	       端末内のジョブに 'termwinkey' を送信する
+	'termwinkey' CTRL-\    端末内のジョブに CTRL-\ を送信する
+	'termwinkey' N         端末ノーマルモードへ移行する。以下を参照
 	'termwinkey' CTRL-N    CTRL-W N と同じ
 	'termwinkey' CTRL-C    |t_CTRL-W_CTRL-C| と同じ
 							*t_CTRL-\_CTRL-N*
@@ -117,7 +119,10 @@ Esc を使うことができますが、他のキーが壊れないようにす�
 端末ウィンドウを開いて 'buftype' を "terminal" に設定すると、BufWinEnter 自動
 イベントコマンドが発生します。これにより、ウィンドウとバッファ専用のオプション
 を設定することが可能です。例: >
-   au BufWinEnter * if &buftype == 'terminal' | setlocal bufhidden=hide | endif
+   au TerminalOpen * if &buftype == 'terminal' | setlocal bufhidden=hide | endif
+<<abuf>は端末バッファに設定されていますが、ウィンドウが存在しない場合(隠された
+端末)は間違ったバッファにオプションが設定されるため、この例では &buftype の
+チェックが行われます。
 
 マウスイベント (クリックやドラッグ) は端末に渡されます。マウス移動イベントは
 Vim 自身が受け取ったときにのみ渡されます。'balloonevalterm' が有効になっている
@@ -617,6 +622,10 @@ Vim のウィンドウでソースコードを表示しながらプログラム�
 に、端末デバッグプラグインが利用できます。これは Vim の中だけで完結するので、
 SSH 接続が1つあればリモートで機能します。
 
+|+terminal| 機能がない場合、プラグインは可能であれば "prompt" バッファタイプを
+使用します。実行中のプログラムは、新しく開かれた端末ウィンドウを使用します。詳
+細は |termdebug-prompt| を参照してください。
+
 
 はじめに ~
 							*termdebug-starting*
@@ -694,10 +703,11 @@ Vim は programウィンドウで実行を開始します。そこにフォー�
 す: >
 	:help gui
 Gdbはex_helpブレークポイントまで実行します。sourceウィンドウにex_cmds.cファイ
-ルが表示されます。ブレークポイントが設定されている場所に ">>" マーカーが表示さ
-れます。デバッガが停止した行が強調表示されます。今すぐプログラムを進めることが
-できます。マウスを使いましょう: ウィンドウツールバーの "Next" ボタンをクリック
-してください。デバッガがソースコードの行を実行すると、強調表示が移動します。
+ルが表示されます。ブレークポイントが設定されている目印欄に赤い "1 " のマーカー
+が表示されます。デバッガが停止した行が強調表示されます。今すぐプログラムを進め
+ることができます。マウスを使いましょう: ウィンドウツールバーの "Next" ボタンを
+クリックしてください。デバッガがソースコードの行を実行すると、強調表示されま
+す。
 
 forループが強調表示されるまで、"Next" を数回クリックします。カーソルを
 "eap->arg" の最後に置き、ツールバーの "Eval" をクリックします。これが表示され
@@ -772,6 +782,14 @@ gdbがソース行で停止し、現在ソースコードを表示している�
 スコード用の新しいウィンドウが作成されます。これは、ソースコードウィンドウの
 バッファが変更され、破棄できない場合でも発生します。
 
+gdbは各ブレークポイントに番号を与えます。Vim内では、赤い背景で、目印欄に表示さ
+れます。次のgdbコマンドを使用できます。
+- info break	ブレークポイントの一覧
+- delete N	ブレークポイント N を削除
+また、カーソルがブレークポイントの行にある場合は `:Clear` コマンドを使うことが
+できます。または、右クリックのメニュー項目 "Clear breakpoint" を使用することも
+できます。
+
 
 変数を検査する ~
 					*termdebug-variables* *:Evaluate*
@@ -791,11 +809,36 @@ gdbがソース行で停止し、現在ソースコードを表示している�
  *:Source*     ソースコードウィンドウにジャンプする、ウィンドウがなければ作成する
 
 
+プロンプトモード ~
+						*termdebug-prompt*
+|+terminal| 機能がサポートされていない場合や MS-Windows上の場合、gdbは
+'buftype' が "prompt" に設定されたバッファで動作します。これは少し違った働きを
+します:
+- コマンドを入力している間、gdbウィンドウは挿入モードになります。 <Esc> でノー
+  マルモードにして、バッファ間を移動したり、コピー/ペーストなどをおこなうこと
+  ができます。 `a` や` i` のような挿入モードを開始するコマンドでgdbコマンドの
+  編集に戻ります。
+- デバッグ中のプログラムは別のウィンドウで実行されます。MS-Windowsでは、これは
+  新しいコンソールウィンドウです。Unixでは、 |+terminal| 機能が利用可能な場合、
+  ターミナルウィンドウが開いてデバッグされたプログラムを実行します。
+
+						*termdebug_use_prompt*
+プロンプトモードは、 |+terminal| 機能が有効な場合でも使用できます: >
+	let g:termdebug_use_prompt = 1
+
+
 通信 ~
 						*termdebug-communication*
 Vim が gdb と通信するために他に隠されたバッファを利用します。バッファ名は "gdb
 communicate" です。このバッファは消さないでください。消してしまうとデバッガが
 動作しなくなってしまうでしょう。
+
+gdb は奇妙な動作をしていますが、プラグインはその問題を回避するために最善を尽く
+しています。
+たとえば、gdbウィンドウで "continue" と入力した後に、CTRL-C を使用して実行中の
+プログラムを中断することができます。 しかし、MIコマンド "-exec-continue" を使
+用した後、CTRL-C を押しても中断しません。したがって、通信チャネルを使用する代
+わりに、`:Continue` コマンドに "continue" が使用されていることがわかります。
 
 
 カスタマイズ ~
@@ -825,6 +868,14 @@ gdb と完全互換のあるデバッガのみが使えます。Vim は gdb の�
 'background' オプションが "dark" の時は以下のとおりです:
   hi debugPC term=reverse ctermbg=darkblue guibg=darkblue
   hi debugBreakpoint term=reverse ctermbg=red guibg=red
+
+
+ショートカット						*termdebug_shortcuts*
+
+TermDebugSendCommand() 関数を使用して、任意のウィンドウで動作する gdb を制御す
+る独自のショートカット(マッピング)を定義できます。例: >
+	map ,w :call TermDebugSendCommand('where')<CR>
+引数は gdb コマンドです。
 
 
 ポップアップメニュー					*termdebug_popup*
