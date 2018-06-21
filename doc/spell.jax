@@ -1,4 +1,4 @@
-*spell.txt*	For Vim バージョン 8.0.  Last change: 2016 Jan 08
+*spell.txt*	For Vim バージョン 8.1.  Last change: 2018 Mar 29
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -725,7 +725,7 @@ Additionally the following items are recognized:
     =		Case must match exactly.
     ?		Rare word.
     !		Bad (wrong) word.
-    digit	A region in which the word is valid.  If no regions are
+    1 to 9	A region in which the word is valid.  If no regions are
 		specified the word is valid in all regions.
 
 Example:
@@ -909,9 +909,9 @@ when using "cp1250" on Unix.
 						*spell-LOW* *spell-UPP*
 Three lines in the affix file are needed.  Simplistic example:
 
-	FOL  aen ~
-	LOW  aen ~
-	UPP  AEN ~
+	FOL  áëñ ~
+	LOW  áëñ ~
+	UPP  ÁËÑ ~
 
 All three lines must have exactly the same number of characters.
 
@@ -926,9 +926,9 @@ The "UPP" line specifies the characters with upper-case.  That is, a character
 is upper-case where it's different from the character at the same position in
 "FOL".
 
-An exception is made for the German sharp s s.  The upper-case version is
+An exception is made for the German sharp s ß.  The upper-case version is
 "SS".  In the FOL/LOW/UPP lines it should be included, so that it's recognized
-as a word character, but use the s character in all three.
+as a word character, but use the ß character in all three.
 
 ASCII characters should be omitted, Vim always handles these in the same way.
 When the encoding is UTF-8 no word characters need to be specified.
@@ -1399,7 +1399,7 @@ suggestions would spend most time trying all kind of weird compound words.
 							*spell-SYLLABLE*
 The SYLLABLE item defines characters or character sequences that are used to
 count the number of syllables in a word.  Example:
-	SYLLABLE aaeeiioooouuuuy/aa/au/ea/ee/ei/ie/oa/oe/oo/ou/uu/ui ~
+	SYLLABLE aáeéiíoóöõuúüûy/aa/au/ea/ee/ei/ie/oa/oe/oo/ou/uu/ui ~
 
 Before the first slash is the set of characters that are counted for one
 syllable, also when repeated and mixed, until the next character that is not
@@ -1480,8 +1480,8 @@ alike.  This is mostly used for a letter with different accents.  This is used
 to prefer suggestions with these letters substituted.  Example:
 
 	MAP 2 ~
-	MAP eeeee ~
-	MAP uuuuu ~
+	MAP eéëêè ~
+	MAP uüùúû ~
 
 The first line specifies the number of MAP lines following.  Vim ignores the
 number, but the line must be there.
@@ -1616,7 +1616,7 @@ COMPOUNDSYLLABLE  (Hunspell)			*spell-COMPOUNDSYLLABLE*
 KEY		(Hunspell)				*spell-KEY*
 		Define characters that are close together on the keyboard.
 		Used to give better suggestions.  Not supported.
-		
+
 LANG		(Hunspell)				*spell-LANG*
 		This specifies language-specific behavior.  This actually
 		moves part of the language knowledge into the program,
