@@ -1,4 +1,4 @@
-*repeat.txt*    For Vim version 8.0.  Last change: 2017 Jun 10
+*repeat.txt*    For Vim version 8.1.  Last change: 2018 Mar 04
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -242,6 +242,10 @@ For writing a Vim script, see chapter 41 of the user manual |usr_41.txt|.
 			If the directory pack/*/opt/{name}/after exists it is
 			added at the end of 'runtimepath'.
 
+			If loading packages from "pack/*/start" was skipped,
+			then this directory is searched first:
+				pack/*/start/{name} ~
+
 			Note that {name} is the directory name, not the name
 			of the .vim file.  All the files matching the pattern
 				pack/*/opt/{name}/plugin/**/*.vim ~
@@ -261,6 +265,7 @@ For writing a Vim script, see chapter 41 of the user manual |usr_41.txt|.
 			loaded during initialization, see |load-plugins|.
 
 			Also see |pack-add|.
+			{only available when compiled with +eval}
 
 						*:packl* *:packloadall*
 :packl[oadall][!]	Load all packages in the "start" directory under each
@@ -284,6 +289,7 @@ For writing a Vim script, see chapter 41 of the user manual |usr_41.txt|.
 			An error only causes sourcing the script where it
 			happens to be aborted, further plugins will be loaded.
 			See |packages|.
+			{only available when compiled with +eval}
 
 :scripte[ncoding] [encoding]		*:scripte* *:scriptencoding* *E167*
 			Specify the character encoding used in the script.
@@ -801,6 +807,19 @@ DEFINING BREAKPOINTS
 			:breakadd file <cursor-line> <current-file>
 <		Note that this only works for commands that are executed when
 		sourcing the file, not for a function defined in that file.
+
+:breaka[dd] expr {expression}
+		Sets a breakpoint, that will break whenever the {expression}
+		evaluates to a different value. Example: >
+			:breakadd expr g:lnum
+
+<		Will break, whenever the global variable lnum changes.
+		Note if you watch a |script-variable| this will break
+		when switching scripts, since the script variable is only
+		valid in the script where it has been defined and if that
+		script is called from several other scripts, this will stop
+		whenever that particular variable will become visible or
+		unaccessible again.
 
 The [lnum] is the line number of the breakpoint.  Vim will stop at or after
 this line.  When omitted line 1 is used.
