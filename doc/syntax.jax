@@ -4536,7 +4536,7 @@ term={attr-list}			*attr-list* *highlight-term* *E418*
 	い。どちらも表示は同じになる。
 	"undercurl" は波線のこと。"undercurl" が使用できないときは "underline"
 	が使われる。一般的には "undercurl" および "strikethrough" はGUIでのみ
-	使用できる。その色は|highlight-guisp|で設定できる。
+	使用できる。その色は |highlight-guisp| で設定できる。
 
 start={term-list}				*highlight-start* *E422*
 stop={term-list}				*term-list* *highlight-stop*
@@ -4638,8 +4638,8 @@ ctermbg={color-nr}				*highlight-ctermbg*
 	例: >
 		:highlight Normal ctermfg=grey ctermbg=darkblue
 <	Normalグループに対して "ctermbg" を設定すると、その色が認識されてかつ
-	'background' が明示的に設定されていないという条件の下で、オプショ
-	ン'background' が自動的に調整される。これによって 'background' に依存
+	'background' が明示的に設定されていないという条件の下で、オプション
+	'background' が自動的に調整される。これによって 'background' に依存
 	するハイライトグループが変更される。そのため、まずNormalに対する色を設
 	定し、それから他の色を設定するべきである。
 	カラースキーム使用時に 'background' を変更するとカラースキームが再読み
@@ -4829,9 +4829,9 @@ StatusLineNC	非カレントウィンドウのステータスライン。
 		Note: これが "StatusLine" に等しい場合、カレントウィンドウのス
 		テータスラインに "^^^" が使われる。
 							*hl-StatusLineTerm*
-StatusLineTerm	|terminal|ウィンドウのカレントウィンドウのステータスライン
+StatusLineTerm	|terminal| ウィンドウのカレントウィンドウのステータスライン
 							*hl-StatusLineTermNC*
-StatusLineTermNC   |terminal|ウィンドウの非カレントウィンドウのステータスライ
+StatusLineTermNC   |terminal| ウィンドウの非カレントウィンドウのステータスライ
 		ン
 							*hl-TabLine*
 TabLine		タブページの行の、アクティブでないタブページのラベル
