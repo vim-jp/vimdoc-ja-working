@@ -980,9 +980,9 @@ TermChanged			オプション 'term' を変更した後。色やフォント等�
 				たバッファ全てで発生する。
 							*TerminalOpen*
 TerminalOpen			`:terminal` もしくは |term_start()| により端末
-				バッファが生成された直後。このイベント
-				は、++hidden オプションによってウィンドウなし
-				にバッファが生成された場合でも発生する。
+				バッファが生成された直後。このイベントは、
+				++hidden オプションによってウィンドウなしに
+				バッファが生成された場合でも発生する。
 							*TermResponse*
 TermResponse			|t_RV| に対する応答をターミナルから受け取った
 				とき。Vim変数 |v:termresponse| の値を使って、
