@@ -543,7 +543,8 @@ Javascript が挿入される (|g:html_dynamic_folds|)。javascript はウィン
 1 なら、Vim の動作と同じように折り畳みを開いたり閉じたりするための、javascript
 が生成される。
 
-この変数を 1 に設定すると、|g:html_use_css| の設定にかかわらず、2html.vim は常にCSS を使うようになる。
+この変数を 1 に設定すると、|g:html_use_css| の設定にかかわらず、2html.vim は常に
+CSS を使うようになる。
 
 この変数は |g:html_ignore_folding| が設定されているときは無視される。
 >
