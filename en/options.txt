@@ -7440,7 +7440,6 @@ A jump table for the options with a short description can be found at |Q_op|.
 	W F   Preview window flag, text is ",PRV".
 	y F   Type of file in the buffer, e.g., "[vim]".  See 'filetype'.
 	Y F   Type of file in the buffer, e.g., ",VIM".  See 'filetype'.
-	      {not available when compiled without |+autocmd| feature}
 	q S   "[Quickfix List]", "[Location List]" or empty.
 	k S   Value of "b:keymap_name" or 'keymap' when |:lmap| mappings are
 	      being used: "<keymap>"
@@ -7464,7 +7463,9 @@ A jump table for the options with a short description can be found at |Q_op|.
 	a S   Argument list status as in default title.  ({current} of {max})
 	      Empty if the argument file count is zero or one.
 	{ NF  Evaluate expression between '%{' and '}' and substitute result.
-	      Note that there is no '%' before the closing '}'.
+	      Note that there is no '%' before the closing '}'.  The
+	      expression cannot contain a '}' character, call a function to
+	      work around that.
 	( -   Start of item group.  Can be used for setting the width and
 	      alignment of a section.  Must be followed by %) somewhere.
 	) -   End of item group.  No width fields allowed.
@@ -7585,6 +7586,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	Also see |swap-file| and |'swapsync'|.
 	If you want to open a new buffer without creating a swap file for it,
 	use the |:noswapfile| modifier.
+	See 'directory' for where the swap file is created.
 
 	This option is used together with 'bufhidden' and 'buftype' to
 	specify special kinds of buffers.   See |special-buffers|.
@@ -7729,6 +7731,10 @@ A jump table for the options with a short description can be found at |Q_op|.
 	   tabs after the first non-blank inserted as spaces if you do this
 	   though.  Otherwise aligned comments will be wrong when 'tabstop' is
 	   changed.
+
+	If Vim is compiled with the |+vartabs| feature then the value of
+	'tabstop' will be ignored if |'vartabstop'| is set to anything other
+	than an empty string.
 
 			*'tagbsearch'* *'tbs'* *'notagbsearch'* *'notbs'*
 'tagbsearch' 'tbs'	boolean	(default on)
@@ -7931,46 +7937,71 @@ A jump table for the options with a short description can be found at |Q_op|.
 		:set encoding=utf-8
 <	You need to do this when your system has no locale support for UTF-8.
 
-						*'termguicolors'* *'tgc'*
+					*'termguicolors'* *'tgc'* *E954*
 'termguicolors' 'tgc'	boolean (default off)
 			global
 			{not in Vi}
 			{not available when compiled without the
 			|+termguicolors| feature}
 	When on, uses |highlight-guifg| and |highlight-guibg| attributes in
-	the terminal (thus using 24-bit color). Requires a ISO-8613-3
-	compatible terminal.
-	If setting this option does not work (produces a colorless UI)
-	reading |xterm-true-color| might help.
+	the terminal (thus using 24-bit color).
+
+	Requires a ISO-8613-3 compatible terminal.  If setting this option
+	does not work (produces a colorless UI) reading |xterm-true-color|
+	might help.
+
+	For Win32 console, Windows 10 version 1703 (Creators Update) or later
+	is required. Use this check to find out: >
+		if has('vcon')
+<	This requires Vim to be built with the |+vtp| feature.
+
 	Note that the "cterm" attributes are still used, not the "gui" ones.
 	NOTE: This option is reset when 'compatible' is set.
 
-						*'termkey'* *'tk'*
-'termkey' 'tk'		string	(default "")
+						*'termwinscroll'* *'twsl'*
+'termwinscroll' 'twsl'	number	(default 10000)
+			local to buffer
+			{not in Vi}
+			{not available when compiled without the
+			|+terminal| feature}
+	Number of scrollback lines to keep.  When going over this limit the
+	first 10% of the scrollback lines are deleted.  This is just to reduce
+	the memory usage.  See |Terminal-Normal|.
+
+						*'termwinkey'* *'twk'*
+'termwinkey' 'twk'	string	(default "")
 			local to window
 			{not in Vi}
 	The key that starts a CTRL-W command in a terminal window.  Other keys
 	are sent to the job running in the window.
 	The <> notation can be used, e.g.: >
-		:set termkey=<C-L>
+		:set termwinkey=<C-L>
 <	The string must be one key stroke but can be multiple bytes.
 	When not set CTRL-W is used, so that CTRL-W : gets you to the command
-	line.  If 'termkey' is set to CTRL-L then CTRL-L : gets you to the
+	line.  If 'termwinkey' is set to CTRL-L then CTRL-L : gets you to the
 	command line.
 
-						*'termsize'* *'tms'*
-'termsize' 'tms'	string	(default "")
+						*'termwinsize'* *'tws'*
+'termwinsize' 'tws'	string	(default "")
 			local to window
 			{not in Vi}
-	Size of the |terminal| window.  Format: {rows}x{columns}.
+	Size of the |terminal| window.  Format: {rows}x{columns} or
+	{rows}*{columns}.
 	- When empty the terminal gets the size from the window.
-	- When set (e.g., "24x80") the terminal size is not adjusted to the
-	  window size.  If the window is smaller only the top-left part is
-	  displayed.
-	  When rows is zero then use the height of the window.
-	  When columns is zero then use the width of the window.
-	  For example: "30x0" uses 30 rows with the current window width.
-	  Using "0x0" is the same as empty.
+	- When set with a "x" (e.g., "24x80") the terminal size is not
+	  adjusted to the window size.  If the window is smaller only the
+	  top-left part is displayed.
+	- When set with a "*" (e.g., "10*50") the terminal size follows the
+	  window size, but will not be smaller than the specified rows and/or
+	  columns.
+	- When rows is zero then use the height of the window.
+	- When columns is zero then use the width of the window.
+	- Using "0x0" or "0*0" is the same as empty.
+
+	Examples:
+	  "30x0" uses 30 rows and the current window width.
+	  "20*0" uses at least 20 rows and the current window width.
+	  "0*40" uses the current window height and at least 40 columns.
 	Note that the command running in the terminal window may still change
 	the size of the terminal.  In that case the Vim window will be
 	adjusted to that size, if possible.
@@ -8028,7 +8059,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	non-keyword characters (white space is preferred).  Maximum line
 	length is 510 bytes.
 	To obtain a file to be used here, check out this ftp site:
-	[Sorry this link doesn't work anymore, do you know the right one?] 
+	[Sorry this link doesn't work anymore, do you know the right one?]
 	ftp://ftp.ox.ac.uk/pub/wordlists/  First get the README file.
 	To include a comma in a file name precede it with a backslash.  Spaces
 	after a comma are ignored, otherwise spaces are included in the file
@@ -8335,7 +8366,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	number, more intelligent detection process runs.
 	The "xterm2" value will be set if the xterm version is reported to be
 	from 95 to 276.  The "sgr" value will be set if the xterm version is
-	277 or highter.
+	277 or higher and when Vim detects Mac Terminal.app or iTerm2.
 	If you do not want 'ttymouse' to be set to "xterm2" or "sgr"
 	automatically, set t_RV to an empty string: >
 		:set t_RV=
@@ -8450,6 +8481,44 @@ A jump table for the options with a short description can be found at |Q_op|.
 	written to disk (see |crash-recovery|).  Also used for the
 	|CursorHold| autocommand event.
 
+					*'varsofttabstop'* *'vsts'*
+'varsofttabstop' 'vsts'	string	(default "")
+			local to buffer
+			{only available when compiled with the |+vartabs|
+			feature}
+			{not in Vi}
+	A list of the number of spaces that a <Tab> counts for while editing,
+	such as inserting a <Tab> or using <BS>.  It "feels" like variable-
+	width <Tab>s are being inserted, while in fact a mixture of spaces
+	and <Tab>s is used.  Tab widths are separated with commas, with the
+	final value applying to all subsequent tabs.
+
+	For example, when editing assembly language files where statements
+	start in the 9th column and comments in the 41st, it may be useful
+	to use the following: >
+		:set varsofttabstop=8,32,8
+<	This will set soft tabstops with 8 and 8 + 32 spaces, and 8 more
+	for every column thereafter.
+
+	Note that the value of |'softtabstop'| will be ignored while
+	'varsofttabstop' is set.
+
+						*'vartabstop'* *'vts'*
+'vartabstop' 'vts'	string	(default "")
+			local to buffer
+			{only available when compiled with the |+vartabs|
+			feature}
+			{not in Vi}
+	A list of the number of spaces that a <Tab> in the file counts for,
+	separated by commas.  Each value corresponds to one tab, with the
+	final value applying to all subsequent tabs. For example: >
+		:set vartabstop=4,20,10,8
+<	This will make the first tab 4 spaces wide, the second 20 spaces,
+	the third 10 spaces, and all following tabs 8 spaces.
+
+	Note that the value of |'tabstop'| will be ignored while 'vartabstop'
+	is set.
+
 						*'verbose'* *'vbs'*
 'verbose' 'vbs'		number	(default 0)
 			global
@@ -8501,7 +8570,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	security reasons.
 
 						*'viewoptions'* *'vop'*
-'viewoptions' 'vop'	string	(default: "folds,options,cursor")
+'viewoptions' 'vop'	string	(default: "folds,options,cursor,curdir")
 			global
 			{not in Vi}
 			{not available when compiled without the |+mksession|
@@ -8519,6 +8588,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 			slashes
 	   unix		with Unix end-of-line format (single <NL>), even when
 			on Windows or DOS
+	   curdir	the window-local directory, if set with `:lcd`
 
 	"slash" and "unix" are useful on Windows when sharing view files
 	with Unix.  The Unix version of Vim cannot source dos format scripts,
