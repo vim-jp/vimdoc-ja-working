@@ -5689,8 +5689,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	の前に表示される。行番号に使われる強調表示グループについては
 	|hl-LineNr| と |hl-CursorLineNr| を参照。
 						*number_relativenumber*
-	'relativenumber' オプションは表示される番号をカーソルからの相対にす
-	る。'number' と共にこれら4つの組み合わせがある。 (カーソルは3行目):
+	'relativenumber' オプションは表示される番号をカーソルからの相対にする。
+	'number' と共にこれら4つの組み合わせがある。 (カーソルは3行目):
 
 		'nonu'          'nu'            'nonu'          'nu'
 		'nornu'         'nornu'         'rnu'           'rnu'
@@ -6249,8 +6249,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 'renderoptions' 'rop'	文字列  (既定では空)
 			グローバル
 			{Vi にはない}
-			{MS-Windows で GUI と DIRECTX 付きでコンパイルされたと
-			きのみ有効}
+			{Vim が MS-Windows で GUI と DIRECTX 付きでコンパイル
+			されたときのみ有効}
 	テキストレンダラの選択とそのオプションの設定。オプションはレンダラごと
 	に異なる。
 
