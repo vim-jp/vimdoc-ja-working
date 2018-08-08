@@ -46,9 +46,9 @@ Vim の中でコマンドを実行し結果を得る方法の一つに|:make|コ
 
 							*quickfix-ID*
 各QuickFixリストはQuickFix IDと呼ばれる一意な識別子を持ち、この番号はVimセッ
-ションの中で変わらない。getqflist()関数はリストに割り当てられた識別子を得るた
-めに使われる。10個以上のリストがQuickFixスタックに追加されるときはいつでも、変
-わるかもしれないQuickFixリスト番号もある。
+ションの中で変わらない。getqflist() 関数はリストに割り当てられた識別子の取得に
+使用できる。QuickFixリスト番号もある。この番号は、10個以上のリストがQuickFixス
+タックに追加されるたびに変更される可能性がある。
 
 						*location-list* *E776*
 ロケーションリストはウィンドウローカルなQuickFixリストである。`:vimgrep`,
@@ -66,9 +66,9 @@ Vim の中でコマンドを実行し結果を得る方法の一つに|:make|コ
 						*quickfix-changedtick*
 全てのQuickFixリストとロケーションリストはそのリストに行われた変更の総数を追跡
 する読み込み専用のchangedtick変数を持つ。QuickFixリストが変更されるたびに、こ
-の総数は増加される。そのリストが変更されたときにだけ、これはアクションを行うた
-めに使われる。getqflist()関数とgetloclist()関数はchangedtickの現在の値を問うた
-めに使われる。あなたはchangedtick変数を変えられない。
+の総数はインクリメントされる。これは、リストが変更されたときだけアクションを実
+行することに使用できる。getqflist() および getloclist() 関数は changedtick の
+現在の値を問い合わせるのに使用できる。changedtick変数を変更することはできない。
 
 以下のQuickFixコマンドが利用できる。ロケーションリストコマンドはQuickFixコマン
 ドに似ていて、QuickFixコマンドのプリフィックス 'c' が 'l' に置き換わっている。
@@ -334,12 +334,12 @@ QuickFixコマンド (':make', ':grep' など) を実行する前後に2つの�
 	echo getloclist(5, {'size' : 1})
 <
 							*quickfix-context*
-Vimの型はコンテキストのようにQuickFixリストまたはロケーションリストを結びつけ
-て考えられる。|setqflist()|関数と|setloclist()|関数はそれぞれQuickFixリストと
-ロケーションリストをコンテキストと結びつけて考えるために使われる。
-|getqflist()|関数と|getloclist()|関数はそれぞれQuickFixリストとロケーションリ
-ストのコンテキストを取り出すために使われる。これは複数のQuickFix/ロケーション
-リストを取り扱うVimプラグインにとって便利である。
+任意のVimの型はQuickFixリストまたはロケーションリストとのコンテキストとして関
+連付けることができる。|setqflist()| と |setloclist()| 関数はコンテキストを
+QuickFixとロケーションリストにそれぞれ関連付けることに使用できる。
+|getqflist()| と |getloclist()| 関数はそれぞれQuickFixとロケーションリストのコ
+ンテキストの取得に使用できる。これは複数のQuickFix/ロケーションリストを取り扱
+うVimプラグインにとって便利である。
 例: >
 
 	let somectx = {'name' : 'Vim', 'type' : 'Editor'}
@@ -351,13 +351,13 @@ Vimの型はコンテキストのようにQuickFixリストまたはロケーシ
 	echo getloclist(2, {'id' : qfid, 'context' : 1})
 <
 							*quickfix-parse*
-あなたは|getqflist()|関数を使用してQuickFixリストを作成または変更することなし
-に'errorformat'を使用しているlinesのリストの値をパースできる。例: >
+|getqflist()| 関数を使用してQuickFixリストを作成または変更せずに、
+'errorformat' を使用して行のリストをパースできる。例: >
 	echo getqflist({'lines' : ["F1:10:Line10", "F2:20:Line20"]})
 	echo getqflist({'lines' : systemlist('grep -Hn quickfix *')})
-これは'items'キーの値がlinesをパースしたQuickFix項目のリストの値から成る辞書を
-返す。下記はどのように'errorformat'オプションを変更することなしにlinesをパース
-するためにカスタム'errorformat'を使うべきかを示す。>
+これは 'items' キーに行からパースされたQuickFixの項目のリストが含まれている辞
+書を返す。以下は 'errorformat' オプションを変更せずにカスタム 'errorformat' を
+使って行をパースする方法を示している。 >
 	echo getqflist({'efm' : '%f#%l#%m', 'lines' : ['F1#10#Line']})
 <
 
