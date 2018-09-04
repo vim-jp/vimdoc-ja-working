@@ -4687,8 +4687,9 @@ SECTION 24 - 構文強調
 
     Vim.foreground:     Black
     Vim.backround:      Wheat
-    {訳注: Vim.background の間違い}
 <
+{訳注: Vim.background の間違い}
+
 また、コマンドライン引数"-foreground"と"-background"を指定して文字色と背景色
 を指定することもできます。これらの引数はMotifとAthena版でだけサポートされてい
 ます: >
