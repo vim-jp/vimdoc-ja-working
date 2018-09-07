@@ -9161,16 +9161,16 @@ persistent_undo		永続アンドゥをサポート
 postscript		PostScriptファイルの印刷をサポート
 printer			|:hardcopy| をサポート
 profile			|:profile| をサポート
-python			Python 2.x インタフェースが使用可能。|has-python|
-python_compiled		Python 2.x インタフェース付きでコンパイルされ
-			た。|has-python|
-python_dynamic		Python 2.x インタフェースが動的にロードされ
-			た。|has-python|
-python3			Python 3.x インタフェースが使用可能。|has-python|
-python3_compiled	Python 3.x インタフェース付きでコンパイルされ
-			た。|has-python|
-python3_dynamic		Python 3.x インタフェースが動的にロードされ
-			た。|has-python|
+python			Python 2.x インターフェイスが使用可能。|has-python|
+python_compiled		Python 2.x インターフェイス付きでコンパイルされた。
+			|has-python|
+python_dynamic		Python 2.x インターフェイスが動的にロードされた。
+			|has-python|
+python3			Python 3.x インターフェイスが使用可能。|has-python|
+python3_compiled	Python 3.x インターフェイス付きでコンパイルされた。
+			|has-python|
+python3_dynamic		Python 3.x インターフェイスが動的にロードされた。
+			|has-python|
 pythonx			Compiled with |python_x| interface. |has-pythonx|
 qnx			QNXバージョン
 quickfix		|quickfix|をサポート
