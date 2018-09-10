@@ -934,7 +934,7 @@ expr8[expr1]		文字列またはリストの要素	*expr-[]* *E111*
 expr8が数値か文字列ならば、この値は文字列 expr8 の第 expr1 番目のバイトからな
 る 1 バイトの文字列となる。expr8は文字列、expr1は数として扱われる。ただし
 expr8 がマルチバイト文字列である場合、この値は単なるバイトコードであり、1文字
-とはならないかもしれないことに注意。マルチバイト文字列に対する選択方式は
+とはならないかもしれないことに注意。マルチバイト文字列に対する代わりの方法は
 `byteidx()` を参照するか、`split()`を使って文字列を文字のリストに変換すれば良
 い。
 
@@ -1976,8 +1976,7 @@ assert_beeps({cmd})		数値	{cmd} がビープ音を鳴らすことをテスト�
 assert_equal({exp}, {act} [, {msg}])
 				数値	{exp}と{act}が等しいかどうかテストする
 assert_equalfile({fname-one}, {fname-two})
-				数値	ファイルコンテンツが等しいことをテスト
-					する
+				数値	ファイルの内容が等しいことをテストする
 assert_exception({error} [, {msg}])
 				数値	|v:exception|が{error}であるかテストする
 assert_fails({cmd} [, {error}])
@@ -2370,7 +2369,7 @@ stridx({haystack}, {needle} [, {start}])
 string({expr})			文字列	{expr}の値の文字列表現
 strlen({expr})			数値	文字列{expr}の長さ
 strpart({str}, {start} [, {len}])
-				文字列	{src}内{start}から長さ{len}の部分
+				文字列	{str}内{start}から長さ{len}の部分
 strridx({haystack}, {needle} [, {start}])
 				数値	{haystack}内の最後の{needle}のインデッ
 					クス
@@ -2765,14 +2764,14 @@ balloon_show({expr})					*balloon_show()*
 
 		バルーンを表示できないときは何も起こらず、エラーメッセージも表
 		示されない。
-		{Vimが |+balloon_eval| もしくは +balloon_eval_term 機能付きで
-		コンパイルされたときのみ有効}
+		{Vimが |+balloon_eval| もしくは |+balloon_eval_term| 機能付き
+		でコンパイルされたときのみ有効}
 
 balloon_split({msg})					*balloon_split()*
 		{msg} をバルーン内で表示される行に分割する。カレントウィンドウ
 		サイズ用に分割され、デバッガ出力を表示するために最適化される。
 		分割された行の |List| を返す。
-		{+balloon_eval_term 機能付きでコンパイルされたときのみ有効}
+		{|+balloon_eval_term| 機能付きでコンパイルされたときのみ有効}
 
 							*browse()*
 browse({save}, {title}, {initdir}, {default})
@@ -6075,7 +6074,7 @@ mkdir({name} [, {path} [, {prot}]])
 			:call mkdir($HOME . "/tmp/foo/bar", "p", 0700)
 <		|sandbox|の中ではこの関数は使用できない。
 		ディレクトリが既に存在して、かつフラグ "p" が渡された場合エラー
-		は発生しない (パッチ 8.0.1708 より。
+		は発生しない (パッチ 8.0.1708 より)。
 		システムによっては利用できない場合がある。これを確認するには次
 		のようにする: >
 			:if exists("*mkdir")
