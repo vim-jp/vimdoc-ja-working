@@ -6627,6 +6627,11 @@ _vimrcと_gvimrcは環境変数VIMで指定されたディレクトリの下に�
     WARNING: The file has been changed since reading it!!!
     Do you really want to write to it (y/n)?
 <
+{訳注: 日本語の警告メッセージは以下のようになる} >
+
+    警告: 読込んだ後にファイルに変更がありました!!!
+    本当に上書きしますか (y/n)?
+<
 
 MS-Windowsでのサマータイム(daylight saving time)が始まる日についてのバグに関係
 している可能性があります。Vimはファイルを書き込んだ後にそのタイムスタンプを記
