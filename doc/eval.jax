@@ -923,7 +923,7 @@ expr7							*expr7*
 expr8							*expr8*
 -----
 この式は |expr9|、もしくは連続する以下の選択方式であり、どんな順番でもよい。
-例として、これらはすべて考えられる:
+例として、これらはすべて可能である:
 	expr9[expr1].name
 	expr9.name[expr1]
 	expr9(expr1, ...)[expr1].name
