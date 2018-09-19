@@ -665,10 +665,8 @@ FileChangedRO			読み込み専用ファイルに最初の変更を加える前�
 				行数が変化した場合 undo のための保存は失敗し、
 				その変更は中止されるだろう。
                                                        *DiffUpdated*
-DiffUpdated                    After diffs have been updated.  Depending on
-                               what kind of diff is being used (internal or
-                               external) this can be triggered on every
-                               change or when doing |:diffupdate|.
+DiffUpdated                    差分が更新された後。  その差分が内部または外部
+で使用中であるか否かに関わらない。あらゆる変更で引き起こされる。|:diffupdate|.
 							*DirChanged*
 DirChanged			|:cd| もしくは |:lcd| コマンドによって、もしく
 				は 'autochdir' オプションの結果として作業ディ
