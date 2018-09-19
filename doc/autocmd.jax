@@ -664,6 +664,11 @@ FileChangedRO			読み込み専用ファイルに最初の変更を加える前�
 							*E881*
 				行数が変化した場合 undo のための保存は失敗し、
 				その変更は中止されるだろう。
+                                                       *DiffUpdated*
+DiffUpdated                    After diffs have been updated.  Depending on
+                               what kind of diff is being used (internal or
+                               external) this can be triggered on every
+                               change or when doing |:diffupdate|.
 							*DirChanged*
 DirChanged			|:cd| もしくは |:lcd| コマンドによって、もしく
 				は 'autochdir' オプションの結果として作業ディ
@@ -908,7 +913,7 @@ ShellFilterPost			":{range}!cmd", ":w !cmd", ":r !cmd"を使って
 SourcePre			Vim script を読み込む前。|:source|
 				<afile> は読み込まれるファイルの名前となる。
 							*SourceCmd*
-SourceCmd			Vim script を読み込むとき。|:source| 
+SourceCmd			Vim script を読み込むとき。|:source|
 				<afile>は読み込まれるファイルの名前となる。こ
 				の自動コマンドはこのファイルを読み込まねばなら
 				ない。
