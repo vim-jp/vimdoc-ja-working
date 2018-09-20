@@ -308,6 +308,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |FileChangedShellPost|	編集を始めた後にファイルが変更されたことに対処した後
 |FileChangedRO|		読み込み専用ファイルに対して最初に変更を加える前
 
+|DiffUpdated|		差分が更新された後
 |DirChanged|		作業ディレクトリが変更された後
 
 |ShellCmdPost|		シェルコマンドを実行した後
@@ -665,9 +666,9 @@ FileChangedRO			読み込み専用ファイルに最初の変更を加える前�
 				行数が変化した場合 undo のための保存は失敗し、
 				その変更は中止されるだろう。
                                                        *DiffUpdated*
-DiffUpdated			その差分が内部または外部で使用中であるか否かに
-				関わらず、差分が更新された後。あらゆる変更で発
-				生する。|:diffupdate|.
+DiffUpdated			差分が更新された後。内部または外部で実行される
+				diffコマンドの種類によって、すべての変更で発生
+				するか|:diffupdate|実行時に発生するかが決まる。
 							*DirChanged*
 DirChanged			|:cd| もしくは |:lcd| コマンドによって、もしく
 				は 'autochdir' オプションの結果として作業ディ
