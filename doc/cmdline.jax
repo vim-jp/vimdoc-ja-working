@@ -792,11 +792,12 @@ Note: "#<n" 以外は、ユーザーに打ち込まれた通りのファイル�
 	   \\#			\#
 |`=| も参照のこと。
 
-			       *:<cword>* *:<cWORD>* *:<cfile>* *<cfile>*
-			       *:<sfile>* *<sfile>* *:<afile>* *<afile>*
-			       *:<abuf>* *<abuf>* *:<amatch>* *<amatch>*
-			       *:<cexpr>* *<cexpr>*
-			       *<slnum>* *E495* *E496* *E497* *E499* *E500*
+			       *:<cword>* *<cword>* *:<cWORD>* *<cWORD>*
+			       *:<cexpr>* *<cexpr>* *:<cfile>* *<cfile>*
+			       *:<afile>* *<afile>* *:<abuf>* *<abuf>*
+			       *:<amatch>* *<amatch>*
+			       *:<sfile>* *<sfile>* *:<slnum>* *<slnum>*
+			       *:<sflnum>* *<sflnum>* *E499* *E500*
 Note: これらは文字通りに打ち込まれる、これらは特別なキーではない！
 	<cword>    カーソル下の word に置き換えられる (|star| と同様)
 	<cWORD>    カーソル下の WORD に置き換えられる (|WORD| を参照)
