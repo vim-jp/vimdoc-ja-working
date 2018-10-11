@@ -1967,7 +1967,6 @@ append({lnum}, {text})		数値	{lnum}行目に{text}を付け加える
 appendbufline({expr}, {lnum}, {text})
 				数値	バッファ{expr}の{lnum}行目に{text}を付
 					け加える
-					in buffer {expr}
 argc()				数値	引数内のファイルの数
 argidx()			数値	引数リスト内の現在のインデックス
 arglistid([{winnr} [, {tabnr}]])
