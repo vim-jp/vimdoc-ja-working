@@ -2445,7 +2445,7 @@ test_null_job()			ジョブ	テスト用のnull値
 test_null_list()		リスト	テスト用のnull値
 test_null_partial()		Funcref	テスト用のnull値
 test_null_string()		文字列	テスト用のnull値
-test_option_not_set({name})	なし	オプションが設定フラグをリセットする
+test_option_not_set({name})	なし	オプション設定フラグをリセットする
 test_override({expr}, {val})    なし	Vimの内部処理を置き換えてテストする
 test_scrollbar({which}, {value}, {dragging})
 				なし	GUIのスクロールのテスト用
