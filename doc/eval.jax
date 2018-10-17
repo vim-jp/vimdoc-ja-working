@@ -2446,7 +2446,7 @@ test_null_list()		リスト	テスト用のnull値
 test_null_partial()		Funcref	テスト用のnull値
 test_null_string()		文字列	テスト用のnull値
 test_option_not_set({name})	なし	オプション設定フラグをリセットする
-test_override({expr}, {val})    なし	Vimの内部処理を置き換えてテストする
+test_override({expr}, {val})	なし	Vimの内部処理を置き換えてテストする
 test_scrollbar({which}, {value}, {dragging})
 				なし	GUIのスクロールのテスト用
 test_settime({expr})		なし	テスト用に現在の時刻を設定する
@@ -8543,9 +8543,10 @@ test_scrollbar({which}, {value}, {dragging})		*test_scrollbar()*
 			right	カレントウィンドウの右スクロールバー
 			hor	水平スクロールバー
 
-		垂直スクロールバーの場合、{value} は1からバッファの行数になる。
-		水平スクロールバーの場合、'wrap' が設定されていないと仮定する
-		と、{value} は1から最大行の長さになる。
+		垂直スクロールバーの場合、{value} は1からバッファの行数までの
+		値を取りうる。水平スクロールバーの場合、'wrap' が設定されてい
+		ないと仮定すると、{value} は1から最大行の長さまでの値を取りう
+		る。
 
 		{dragging} がゼロ以外の場合は、スクロールバーをドラッグするの
 		と同じである。それ以外の場合は、スクロールバーをクリックするの
