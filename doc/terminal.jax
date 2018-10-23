@@ -115,8 +115,8 @@ Esc を使うことができますが、他のキーが壊れないようにす�
    tnoremap <Esc> <C-W>N
    set notimeout ttimeout timeoutlen=100
 
-端末モードマッピングと同様にメニューを作成することもできますが、|tmenu| ではな
-く |tlmenu| を使用する必要があります。
+端末モードマッピングと同様にメニューを作成することもできますが、|:tmenu| ではな
+く |:tlmenu| を使用する必要があります。
 
 <							*options-in-terminal*
 端末ウィンドウを開いて 'buftype' を "terminal" に設定すると、TerminalOpen 自動
