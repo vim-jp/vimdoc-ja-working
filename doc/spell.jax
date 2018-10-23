@@ -480,29 +480,28 @@ preferred method for scoring the suggestions.
 Vimはつづりのためのバイナリフォーマットを使用する。このことにより単語リストの
 読み込みを大幅に速くし、単語リストを小さく保つ。
 						    *.aff* *.dic* *Myspell*
- Myspellが使用する .aff と.dic ファイルからVimが使用するスペルファイルを生成することができます
- 。Myspellは OpenOffice.org と Mozillaによって使用されます。OpenOffice .oxtフ
- ァイルは .aff と .dic ファイルを含む zip ファイルです。
-You can create a Vim spell file from the .aff and .dic files that Myspell
-uses.  Myspell is used by OpenOffice.org and Mozilla. The OpenOffice .oxt
-files are zip files which contain the .aff and .dic files. You should be able
-to find them here:
+Myspellが使用する .aff と.dic ファイルからVimが使用するスペルファイルを生成す
+ることができます。Myspellは OpenOffice.org と Mozillaによって使用されます。
+OpenOffice .oxtファイルは .aff と .dic ファイルを含む zip ファイルです。これら
+はここから探すことができます。
 	http://extensions.services.openoffice.org/dictionary
-The older, OpenOffice 2 files may be used if this doesn't work:
+これが機能しない場合、以前の OpenOffice 2 のファイルが使用されることがあります
+。
 	http://wiki.services.openoffice.org/wiki/Dictionaries
-You can also use a plain word list.  The results are the same, the choice
-depends on what word lists you can find.
+加えて、プレインテキストの単語リストも使用できます。選択肢はあなたが見つけた単
+語のリストによって決まり、結果は同じです。
 
-If you install Aap (from www.a-a-p.org) you can use the recipes in the
-runtime/spell/??/ directories.  Aap will take care of downloading the files,
-apply patches needed for Vim and build the .spl file.
 
-Make sure your current locale is set properly, otherwise Vim doesn't know what
-characters are upper/lower case letters.  If the locale isn't available (e.g.,
-when using an MS-Windows codepage on Unix) add tables to the .aff file
-|spell-affix-chars|.  If the .aff file doesn't define a table then the word
-table of the currently active spelling is used.  If spelling is not active
-then Vim will try to guess.
+Aap (www.a-a-p.org ) をインストールしたのなら、runtime/spell/??/ ディレクトリ
+でレシピを使用することが可能です。 Aap はファイルをダウンロードし、 Vim に必
+要なパッチを適用し .spl ファイルをビルドします。
+
+現在のロケールが適切に設定されているか確認してください。適切に設定がなされてい
+ない場合、 Vim は 大文字と小文字の区別ができません。もしロケールが利用できない
+場合 (例えば Unix 上で MS-Windows コードページを使用している場合 ) は .aff フ
+ァイルにテーブルを追加してください。 |spell-affix-chars|. .aff ファイルがテー
+ブルを定義していないなら、現在有効なスペリングのテーブルが使われています。スペ
+リングが有効でないなら Vim はスペリングを推測しようとします。
 
 							*:mksp* *:mkspell*
 :mksp[ell][!] [-ascii] {outname} {inname} ...
