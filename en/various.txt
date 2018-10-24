@@ -453,6 +453,7 @@ N  *+timers*		the |timer_start()| function
 N  *+title*		Setting the window 'title' and 'icon'
 N  *+toolbar*		|gui-toolbar|
 N  *+user_commands*	User-defined commands. |user-commands|
+B  *+vartabs*		Variable-width tabstops. |'vartabstop'|
 N  *+viminfo*		|'viminfo'|
    *+vertsplit*		Vertically split windows |:vsplit|; Always enabled
 			since 8.0.1118.
@@ -460,7 +461,7 @@ N  *+viminfo*		|'viminfo'|
 N  *+virtualedit*	|'virtualedit'|
 S  *+visual*		Visual mode |Visual-mode| Always enabled since 7.4.200.
 N  *+visualextra*	extra Visual mode commands |blockwise-operators|
-N  *+vreplace*		|gR| and |gr|
+T  *+vreplace*		|gR| and |gr|
    *+vtp*		on MS-Windows console: support for 'termguicolors'
 N  *+wildignore*	|'wildignore'|
 N  *+wildmenu*		|'wildmenu'|
