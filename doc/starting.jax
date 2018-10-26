@@ -505,6 +505,9 @@ VMSでは全てのオプション引数は小文字であるとみなされる�
 							*--clean*
 --clean		"-u DEFAULTS -U NONE -i NONE" に類似している:
 		- ファイルや環境変数からの初期化はスキップされる。
+		- 'runtimepath' および 'packpath' は、ホームディレクトリのエン
+		  トリを除外するように設定されます (-u DEFAULTS では発生しませ
+		  ん)。
 		- |defaults.vim| スクリプトが読み込まれる。これは
 		  'nocompatible' を含む: Vim のデフォルトを使う。
 		- |gvimrc| スクリプトは読み込まれない。
