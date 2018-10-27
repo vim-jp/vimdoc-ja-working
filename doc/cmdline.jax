@@ -506,9 +506,45 @@ Exコマンドはいくつかの特徴を持っている。
 行の最初に '"' があると、その行全てが無視される。'"' がコマンドの後にあると、
 その行の残りの部分が無視される。これはコメントを加えるために使われる。例: >
 	:set ai		"set 'autoindent' option
-シェルコマンド ":!cmd", コマンド ":map" とその他いくつかのコマンドにはコメント
-を付けることができない。これらのコマンドは '"' を引数の一部として認識するから
-である。各コマンドの説明のところにその旨の注意がある。
+シェルコマンド ":!cmd", コマンド ":map" とその他いくつかのコマンド (主に式を期待するコマンド) にはコメントを付けることができない。これらのコマンドは '"' を引数の一部として認識するからである:
+
+    :argdo
+    :autocmd
+    :bufdo
+    :cexpr (and the like)
+    :call
+    :cdo (and the like)
+    :command
+    :cscope (and the like)
+    :debug
+    :display
+    :echo (and the like)
+    :elseif
+    :execute
+    :folddoopen
+    :folddoclosed
+    :for
+    :grep (and the like)
+    :help (and the like)
+    :if
+    :let
+    :make
+    :map (and the like including :abbrev commands)
+    :menu (and the like)
+    :mkspell
+    :normal
+    :ownsyntax
+    :popup
+    :promptfind (and the like)
+    :registers
+    :return
+    :sort
+    :syntax
+    :tabdo
+    :tearoff
+    :vimgrep (and the like)
+    :while
+    :windo
 
 							*:bar* *:\bar*
 '|' を使ってコマンドを区切ることができる。これにより一行に複数のコマンドを書き
