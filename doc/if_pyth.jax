@@ -182,7 +182,7 @@ vim.eval(str)						*python-eval*
 	    :py a_reg = vim.eval("@a") 
 	    :
 	    :" 結果は文字列であることに注意！数値に変換するには、string.atoi()
-	    :" を使うこと。
+	    :" を使います。
 	    :py str = vim.eval("12+12")
 
 	    :py tagList = vim.eval('taglist("eval_expr")')
@@ -198,19 +198,19 @@ vim.bindeval(str)					*python-bindeval*
 
 vim.strwidth(str)					*python-strwidth*
 	|strwidth()| と同じ。str の画面上の幅を数値で返す。タブ文字は 1 幅とし
-	てカウントされる。
+	てカウントされます。
 
 vim.foreach_rtp(callable)				*python-foreach_rtp*
-	'runtimepath' の各パスについてコーラブル (callable) を呼び出す。コーラ
-	ブルが None 以外の値を返すか、例外が発生するか、パスの最後まで処理が進
-	むと停止する。コーラブルが None 以外の値を返して停止した場合は、
-	vim.foreach_rtp 関数はその値を返す。
+	'runtimepath' の各パスについてコーラブル (callable) を呼び出します。
+	コーラブルが None 以外の値を返すか、例外が発生するか、パスの最後まで処
+	理が進むと停止します。コーラブルが None 以外の値を返して停止した場合
+	は、vim.foreach_rtp 関数はその値を返します。
 
 vim.chdir(*args, **kwargs)				*python-chdir*
 vim.fchdir(*args, **kwargs)				*python-fchdir*
-	os.chdir、os.fchdir を実行し、Vim にそのことを通知する。
-	Note: これらの関数は直接は使用しない。代わりに os.chdir と os.fchdir
-	      を使う。os.fchdir が存在しない場合の vim.fchdir の動作は未定義。
+	os.chdir、os.fchdir を実行し、Vim にそのことを通知します。Note: これら
+	の関数は直接は使用しません。代わりに os.chdir と os.fchdirを使います。
+	os.fchdir が存在しない場合の vim.fchdir の動作は未定義です。
 
 "vim" モジュールのエラーオブジェクト
 
