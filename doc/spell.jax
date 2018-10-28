@@ -38,12 +38,12 @@ vimspell" を実行することでそれについて調べることができる�
 
 Vim は単語の綴りのみをチェックし、文法はチェックしない。
 
-If the 'mousemodel' option is set to "popup" and the cursor is on a badly
-spelled word or it is "popup_setpos" and the mouse pointer is on a badly
-spelled word, then the popup menu will contain a submenu to replace the bad
-word.  Note: this slows down the appearance of the popup menu.  Note for GTK:
-don't release the right mouse button until the menu appears, otherwise it
-won't work.
+もし、 'mousemodel' オプションが "popup" にセットされてカーソルが間違った単語
+の上にあるか、 "popup_setpos" に設定されてマウスポインタが間違った単語の上にあ
+るなら、ポップアップメニューは間違った単語を置き換えるサブメニューが含まれるよ
+うになります。 Note: これはポップアップメニューの表示を遅くします。 Note: GTKに
+ついてはメニューが現れるまでマウスの右ボタンを離してはいけない。そうしなければ
+機能しません。
 
 次の綴りの間違った単語を探すには:
 
@@ -204,11 +204,10 @@ z=			カーソルの下や後の単語に対して正しい綴りの単語を提
 用せよ。また、'spelllang' が設定される時にどのように自動で設定されるのかについ
 ては |set-spc-auto| を参照せよ。
 
-Vim counts the number of times a good word is encountered.  This is used to
-sort the suggestions: words that have been seen before get a small bonus,
-words that have been seen often get a bigger bonus.  The COMMON item in the
-affix file can be used to define common words, so that this mechanism also
-works in a new or short file |spell-COMMON|.
+Vim は見つけた正しい単語の数を数えます。これは提案候補をソートするのに使用され
+ます。: 前に見つけた単語は小さな評価、よく見られる単語は大きな評価を得ます。添
+付ファイルに共通する要素は共通の単語を定義するのに使用することができます。その
+ため、この機構は新規もしくは小さいファイルでも機能します。 |spell-COMMON| 。
 
 ==============================================================================
 2. スペルチェックの注意点				*spell-remarks*
