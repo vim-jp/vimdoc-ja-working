@@ -41,9 +41,9 @@ Vim は単語の綴りのみをチェックし、文法はチェックしない�
 もし、 'mousemodel' オプションが "popup" にセットされてカーソルが間違った単語
 の上にあるか、 "popup_setpos" に設定されてマウスポインタが間違った単語の上にあ
 るなら、ポップアップメニューは間違った単語を置き換えるサブメニューが含まれるよ
-うになります。 Note: これはポップアップメニューの表示を遅くします。 Note: GTKに
-ついてはメニューが現れるまでマウスの右ボタンを離してはいけない。そうしなければ
-機能しません。
+うになる。 Note: これはポップアップメニューの表示を遅くする。 Note: GTKについ
+てはメニューが現れるまでマウスの右ボタンを離してはいけない。そうしなければ機能
+しない。
 
 次の綴りの間違った単語を探すには:
 
@@ -204,10 +204,10 @@ z=			カーソルの下や後の単語に対して正しい綴りの単語を提
 用せよ。また、'spelllang' が設定される時にどのように自動で設定されるのかについ
 ては |set-spc-auto| を参照せよ。
 
-Vim は見つけた正しい単語の数を数えます。これは提案候補をソートするのに使用され
-ます。: 前に見つけた単語は小さな評価、よく見られる単語は大きな評価を得ます。添
-付ファイルに共通する要素は共通の単語を定義するのに使用することができます。その
-ため、この機構は新規もしくは小さいファイルでも機能します。 |spell-COMMON| 。
+Vim は見つけた正しい単語の数を数える。これは提案候補をソートするのに使用される。
+前に見つけた単語は小さな評価、よく見られる単語は大きな評価を得ます。添付ファイル
+に共通する要素は共通の単語を定義するのに使用することができます。そのため、この機
+構は新規もしくは小さいファイルでも機能します。 |spell-COMMON| 。
 
 ==============================================================================
 2. スペルチェックの注意点				*spell-remarks*
@@ -243,9 +243,9 @@ Vim はオンザフライのスペルチェックをする。スペルチェッ�
 
 |zg| や他のコマンドで単語が追加された時、その単語は常に全ての地域に追加される。
 これは 'spellfile' を手動で編集することで変更できる。|spell-wordlist-format|
-を参照せよ。  Note that the regions as specified in the files in 'spellfile'
-are only used when all entries in 'spelllang' specify the same region (not
-counting files specified by their .spl name).
+を参照せよ。 Note  'spellfile' にあるファイル内で指定される地域は'spelllang'
+にあるすべてのエントリーが同じ地域( .spl の名前によって特定されるファイルは数
+えない)を指定するときにのみ使用されます。
 
 							*spell-german*
 特有の例外: ドイツ語ではこれらの特別な地域が使われる:
@@ -263,14 +263,15 @@ counting files specified by their .spl name).
 	ru_yo		"YO" letter spelling
 
 							*spell-yiddish*
-Yiddish requires using "utf-8" encoding, because of the special characters
-used.  If you are using latin1 Vim will use transliterated (romanized) Yiddish
-instead.  If you want to use transliterated Yiddish with utf-8 use "yi-tr".
-In a table:
+イディッシュ語は特有の文字を使用するため、 "utf-8" エンコーディングを使用する
+必要がある。もしラテン語を使っているのなら、Vim は代わりに字訳された(ローマ字
+化された)イディッシュ語を使用するだろう。もしあなたが字訳されたイディッシュ語
+を utf-8 で使用したいのなら、 "yi-tr" を使用せよ。
+一覧:
 	'encoding'	'spelllang'
-	utf-8		yi		Yiddish
-	latin1		yi		transliterated Yiddish
-	utf-8		yi-tr		transliterated Yiddish
+	utf-8		yi		イディッシュ語
+	latin1		yi		ローマ字化されたイディッシュ語
+	utf-8		yi-tr		ローマ字化されたイディッシュ語
 
 							*spell-cjk*
 中国語、日本語、あるいはその他の東アジアの文字に対するスペルチェックはサポート
@@ -308,11 +309,11 @@ LL.EEE.add.spl という名前のファイルが追加でロードされる。�
 例外:
 - Vim は、'encoding' が "iso-8859-15" のとき "latin1" を使う。ユーロマークは
   スペルチェックに影響しない。
-- When no spell file for 'encoding' is found "ascii" is tried.  This only
-  works for languages where nearly all words are ASCII, such as English.  It
-  helps when 'encoding' is not "latin1", such as iso-8859-2, and English text
-  is being edited.  For the ".add" files the same name as the found main
-  spell file is used.
+-  'encoding' 用のスペルファイルが見つからないときは "ascii" が試される。これ
+   は全ての単語が英語などの ASCII に近い言語に対してのみうまく働く。
+   'encoding' が iso-8859-2 のように "latin1" でないときや英文を編集していると
+   きに役に立つ。 ".add" ファイルのために見つかったメインのスペルファイルとし
+   て同じ名前のファイルが使用される。
 
 例えば、以下の値が設定されている場合:
 	'runtimepath' が "~/.vim,/usr/share/vim70,~/.vim/after"
@@ -336,8 +337,8 @@ Vim は以下を探す:
 5. /usr/share/vim70/spell/pl.ascii.spl
 6. ~/.vim/after/spell/pl.ascii.spl
 
-This assumes none of them are found (Polish doesn't make sense when leaving
-out the non-ASCII characters).
+これはこれらが見つからないことを想定する(ポーランド語は non-ASCII 文字を抜くと
+意味をなさない)。
 
 EBCDIC 向けのスペルチェックは現在サポートされていない。
 
@@ -380,19 +381,18 @@ The default is one second.
 
 単語
 
-Vim uses a fixed method to recognize a word.  This is independent of
-'iskeyword', so that it also works in help files and for languages that
-include characters like '-' in 'iskeyword'.  The word characters do depend on
-'encoding'.
+Vim は単語を認識するのに定型的な方法を使う。これは 'iskeyword' とは独立してい
+るので、ヘルプファイル内や 'iskeyword' 内に '-' のような文字を含む言語に対して
+も機能する。この単語の文字は 'encoding' に依存する。
 
-The table with word characters is stored in the main .spl file.  Therefore it
-matters what the current locale is when generating it!  A .add.spl file does
-not contain a word table though.
+単語の文字テーブルはメインの .spl ファイルに保存される。それゆえ .spl ファイル
+を生成するときの現在のロケールがなんであるかが重要である! 従って .add.spl ファ
+イルは単語テーブルを含まない。
 
-For a word that starts with a digit the digit is ignored, unless the word as a
-whole is recognized.  Thus if "3D" is a word and "D" is not then "3D" is
-recognized as a word, but if "3D" is not a word then only the "D" is marked as
-bad.  Hex numbers in the form 0x12ab and 0X12AB are recognized.
+数字で始まる単語に関しては、全体で単語であると認識するまで先頭の数字は無視され
+る。したがって、もし "3D" が一つの単語で "D" が単語でないのなら、 "3D" は単語
+として認識される。しかし、もし "3D" が単語で無ければ "D" は不正としてマークさ
+れる。 0x12ab や 0X12AB のような16進数は認識される。
 
 
 単語の組み合わせ
