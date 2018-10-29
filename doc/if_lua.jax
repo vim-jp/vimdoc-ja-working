@@ -136,7 +136,7 @@ Lua からは "vim" モジュールを使って Vim を操作します。範囲�
 				    :" 'say': 'hi'}
 <
 	vim.funcref({name})	関数 {name} への関数参照を返します (|Funcref|
-				を参照) 。その値は Vim の "function" と等価で
+				を参照) 。その値は Vim の function() と等価で
 				す。
 
 	vim.buffer([arg])	"arg" が数値ならバッファリストの "arg" 番の
