@@ -182,7 +182,7 @@ vim.eval(str)						*python-eval*
 	    :py a_reg = vim.eval("@a") 
 	    :
 	    :" 結果は文字列であることに注意！数値に変換するには、string.atoi()
-	    :" を使います。
+	    :" を使うこと。
 	    :py str = vim.eval("12+12")
 
 	    :py tagList = vim.eval('taglist("eval_expr")')
