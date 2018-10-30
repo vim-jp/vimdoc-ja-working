@@ -120,10 +120,10 @@ and the following arguments will be ignored.
 When 'verbose' is non-zero, displaying an option value will also tell where it
 was last set.  Example: >
 	:verbose set shiftwidth cindent?
-<	  shiftwidth=4 ~
-		  Last set from modeline ~
-	  cindent ~
-		  Last set from /usr/local/share/vim/vim60/ftplugin/c.vim ~
+<  shiftwidth=4 ~
+	  Last set from modeline line 1 ~
+  cindent ~
+	  Last set from /usr/local/share/vim/vim60/ftplugin/c.vim line 30 ~
 This is only done when specific option values are requested, not for ":verbose
 set all" or ":verbose set" without an argument.
 When the option was set by hand there is no "Last set" message.
@@ -132,7 +132,7 @@ autocommand, the script in which it was defined is reported.
 Note that an option may also have been set as a side effect of setting
 'compatible'.
 A few special texts:
-	Last set from modeline ~
+	Last set from modeline line 1 ~
 		Option was set in a |modeline|.
 	Last set from --cmd argument ~
 		Option was set with command line argument |--cmd| or +.
@@ -846,6 +846,8 @@ A jump table for the options with a short description can be found at |Q_op|.
 	'{A-Z0-9}, or `{A-Z0-9} command takes one to another file.
 	Note that for some commands the 'autowrite' option is not used, see
 	'autowriteall' for that.
+	Some buffers will not be written, specifically when 'buftype' is
+	"nowrite", "nofile", "terminal" or "prompt".
 
 			 *'autowriteall'* *'awa'* *'noautowriteall'* *'noawa'*
 'autowriteall' 'awa'	boolean	(default off)
@@ -1054,6 +1056,14 @@ A jump table for the options with a short description can be found at |Q_op|.
 	  name, precede it with a backslash.
 	- To include a comma in a directory name precede it with a backslash.
 	- A directory name may end in an '/'.
+	- For Unix and Win32, if a directory ends in two path separators "//",
+	  the swap file name will be built from the complete path to the file
+	  with all path separators changed to percent '%' signs. This will
+	  ensure file name uniqueness in the backup directory.
+	  On Win32, it is also possible to end with "\\".  However, When a
+	  separating comma is following, you must use "//", since "\\" will
+	  include the comma in the file name. Therefore it is recommended to
+	  use '//', instead of '\\'.
 	- Environment variables are expanded |:set_env|.
 	- Careful with '\' characters, type one before a space, type two to
 	  get one in the option (see |option-backslash|), for example: >
@@ -1989,8 +1999,8 @@ A jump table for the options with a short description can be found at |Q_op|.
 	displayed.  E.g., when moving vertically it may change column.
 
 
-'conceallevel' 'cole'		*'conceallevel'* *'cole'*
-			number (default 0)
+						*'conceallevel'* *'cole'*
+'conceallevel' 'cole'	number (default 0)
 			local to window
 			{not in Vi}
 			{not available when compiled without the |+conceal|
@@ -2087,10 +2097,10 @@ A jump table for the options with a short description can be found at |Q_op|.
 			See also |map_bar|.
 								*cpo-B*
 		B	A backslash has no special meaning in mappings,
-			abbreviations and the "to" part of the menu commands.
-			Remove this flag to be able to use a backslash like a
-			CTRL-V.  For example, the command ":map X \<Esc>"
-			results in X being mapped to:
+			abbreviations, user commands and the "to" part of the
+			menu commands.  Remove this flag to be able to use a
+			backslash like a CTRL-V.  For example, the command
+			":map X \<Esc>" results in X being mapped to:
 				'B' included:	"\^["	 (^[ is a real <Esc>)
 				'B' excluded:	"<Esc>"  (5 characters)
 				('<' excluded in both cases)
@@ -2599,13 +2609,13 @@ A jump table for the options with a short description can be found at |Q_op|.
 			{not in Vi}
 			{not available when compiled without the |+diff|
 			feature}
-	Expression which is evaluated to obtain an ed-style diff file from two
-	versions of a file.  See |diff-diffexpr|.
+	Expression which is evaluated to obtain a diff file (either ed-style
+	or unified-style) from two versions of a file.  See |diff-diffexpr|.
 	This option cannot be set from a |modeline| or in the |sandbox|, for
 	security reasons.
 
 						*'dip'* *'diffopt'*
-'diffopt' 'dip'		string	(default "filler")
+'diffopt' 'dip'		string	(default "internal,filler")
 			global
 			{not in Vi}
 			{not available when compiled without the |+diff|
@@ -2624,6 +2634,15 @@ A jump table for the options with a short description can be found at |Q_op|.
 				When omitted a context of six lines is used.
 				See |fold-diff|.
 
+		iblank		Ignore changes where lines are all blank.  Adds
+				the "-B" flag to the "diff" command if
+				'diffexpr' is empty.  Check the documentation
+				of the "diff" command for what this does
+				exactly.
+				NOTE: the diff windows will get out of sync,
+				because no differences between blank lines are
+				taken into account.
+
 		icase		Ignore changes in case of text.  "a" and "A"
 				are considered the same.  Adds the "-i" flag
 				to the "diff" command if 'diffexpr' is empty.
@@ -2634,6 +2653,18 @@ A jump table for the options with a short description can be found at |Q_op|.
 				of the "diff" command for what this does
 				exactly.  It should ignore adding trailing
 				white space, but not leading white space.
+
+		iwhiteall	Ignore all white space changes.  Adds
+				the "-w" flag to the "diff" command if
+				'diffexpr' is empty.  Check the documentation
+				of the "diff" command for what this does
+				exactly.
+
+		iwhiteeol	Ignore white space changes at end of line.
+				Adds the "-Z" flag to the "diff" command if
+				'diffexpr' is empty.  Check the documentation
+				of the "diff" command for what this does
+				exactly.
 
 		horizontal	Start diff mode with horizontal splits (unless
 				explicitly specified otherwise).
@@ -2647,11 +2678,31 @@ A jump table for the options with a short description can be found at |Q_op|.
 		foldcolumn:{n}	Set the 'foldcolumn' option to {n} when
 				starting diff mode.  Without this 2 is used.
 
-	Examples: >
+		internal	Use the internal diff library.  This is
+				ignored when 'diffexpr' is set.  *E960*
+				When running out of memory when writing a
+				buffer this item will be ignored for diffs
+				involving that buffer.  Set the 'verbose'
+				option to see when this happens.
 
-		:set diffopt=filler,context:4
+		indent-heuristic
+                                 Use the indent heuristic for the internal
+                                 diff library.
+
+                algorithm:{text} Use the specified diff algorithm with the
+				internal diff engine. Currently supported 
+				algorithms are:
+				myers      the default algorithm
+				minimal    spend extra time to generate the
+					   smallest possible diff
+				patience   patience diff algorithm
+				histogram  histogram diff algorithm
+
+	Examples: >
+		:set diffopt=internal,filler,context:4
 		:set diffopt=
-		:set diffopt=filler,foldcolumn:3
+		:set diffopt=internal,filler,foldcolumn:3
+		:set diffopt-=internal  " do NOT use the internal diff parser
 <
 				     *'digraph'* *'dg'* *'nodigraph'* *'nodg'*
 'digraph' 'dg'		boolean	(default off)
@@ -2680,12 +2731,14 @@ A jump table for the options with a short description can be found at |Q_op|.
 	- A directory starting with "./" (or ".\" for MS-DOS et al.) means to
 	  put the swap file relative to where the edited file is.  The leading
 	  "." is replaced with the path name of the edited file.
-	- For Unix and Win32, if a directory ends in two path separators "//"
-	  or "\\", the swap file name will be built from the complete path to
-	  the file with all path separators substituted to percent '%' signs.
-	  This will ensure file name uniqueness in the preserve directory.
-	  On Win32, when a separating comma is following, you must use "//",
-	  since "\\" will include the comma in the file name.
+	- For Unix and Win32, if a directory ends in two path separators "//",
+	  the swap file name will be built from the complete path to the file
+	  with all path separators substituted to percent '%' signs. This will
+	  ensure file name uniqueness in the preserve directory.
+	  On Win32, it is also possible to end with "\\".  However, When a
+	  separating comma is following, you must use "//", since "\\" will
+	  include the comma in the file name. Therefore it is recommended to
+	  use '//', instead of '\\'.
 	- Spaces after the comma are ignored, other spaces are considered part
 	  of the directory name.  To have a space at the start of a directory
 	  name, precede it with a backslash.
@@ -3842,8 +3895,8 @@ A jump table for the options with a short description can be found at |Q_op|.
 	screen.
 
 						*'guioptions'* *'go'*
-'guioptions' 'go'	string	(default "egmrLtT"   (MS-Windows, "t" is
-						   removed in |defaults.vim|),
+'guioptions' 'go'	string	(default "egmrLtT"   (MS-Windows,
+					   "t" is removed in |defaults.vim|),
 					 "aegimrLtT" (GTK, Motif and Athena),
 					 )
 			global
@@ -4363,7 +4416,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	methods.  Use 'imdisable' to disable XIM then.
 
 	You can set 'imactivatefunc' and 'imstatusfunc' to handle IME/XIM
-	via external command if vim is not compiled with the |+xim|,
+	via external command if Vim is not compiled with the |+xim|,
 	|+multi_byte_ime| or |global-ime|.
 
 						*'imsearch'* *'ims'*
@@ -4470,7 +4523,18 @@ A jump table for the options with a short description can be found at |Q_op|.
 	so far, matches.  The matched string is highlighted.  If the pattern
 	is invalid or not found, nothing is shown.  The screen will be updated
 	often, this is only useful on fast terminals.
-	Note that the match will be shown, but the cursor will return to its
+	Also applies to the pattern in commands: >
+		:global
+		:lvimgrep
+		:lvimgrepadd
+		:smagic
+		:snomagic
+		:sort
+		:substitute
+		:vglobal
+		:vimgrep
+		:vimgrepadd
+<	Note that the match will be shown, but the cursor will return to its
 	original position when no match is found and when pressing <Esc>.  You
 	still need to finish the search command with <Enter> to move the
 	cursor to the match.
@@ -4483,9 +4547,9 @@ A jump table for the options with a short description can be found at |Q_op|.
 	The highlighting can be set with the 'i' flag in 'highlight'.
 	When 'hlsearch' is on, all matched strings are highlighted too while
 	typing a search command. See also: 'hlsearch'.
-	If you don't want turn 'hlsearch' on, but want to highlight all matches
-	while searching, you can turn on and off 'hlsearch' with autocmd.
-	Example: >
+	If you don't want to turn 'hlsearch' on, but want to highlight all
+	matches while searching, you can turn on and off 'hlsearch' with
+	autocmd.  Example: >
 		augroup vimrc-incsearch-highlight
 		  autocmd!
 		  autocmd CmdlineEnter /,\? :set hlsearch
@@ -4655,7 +4719,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	Identifiers are used in recognizing environment variables and after a
 	match of the 'define' option.  It is also used for "\i" in a
 	|pattern|.  See 'isfname' for a description of the format of this
-	option.
+	option.  For '@' only characters up to 255 are used.
 	Careful: If you change this option, it might break expanding
 	environment variables.  E.g., when '/' is included and Vim tries to
 	expand "$HOME/.viminfo".  Maybe you should change 'iskeyword' instead.
@@ -4669,8 +4733,9 @@ A jump table for the options with a short description can be found at |Q_op|.
 			{not in Vi}
 	Keywords are used in searching and recognizing with many commands:
 	"w", "*", "[i", etc.  It is also used for "\k" in a |pattern|.  See
-	'isfname' for a description of the format of this option.  For C
-	programs you could use "a-z,A-Z,48-57,_,.,-,>".
+	'isfname' for a description of the format of this option.  For '@'
+	characters above 255 check the "word" character class.
+	For C programs you could use "a-z,A-Z,48-57,_,.,-,>".
 	For a help file it is set to all non-blank printable characters except
 	'*', '"' and '|' (so that CTRL-] on a command finds the help for that
 	command).
@@ -5381,7 +5446,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 		h	all previous modes when editing a help file
 		a	all previous modes
 		r	for |hit-enter| and |more-prompt| prompt
-	Normally you would enable the mouse in all four modes with: >
+	Normally you would enable the mouse in all five modes with: >
 		:set mouse=a
 <	When the mouse is not enabled, the GUI will still use the mouse for
 	modeless selection.  This doesn't move the text cursor.
@@ -5903,7 +5968,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	security reasons.
 
 						*'printencoding'* *'penc'*
-'printencoding' 'penc'	String	(default empty, except for some systems)
+'printencoding' 'penc'	string	(default empty, except for some systems)
 			global
 			{not in Vi}
 			{only available when compiled with the |+printer|
@@ -5912,7 +5977,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	See |penc-option|.
 
 						*'printexpr'* *'pexpr'*
-'printexpr' 'pexpr'	String	(default: see below)
+'printexpr' 'pexpr'	string	(default: see below)
 			global
 			{not in Vi}
 			{only available when compiled with the |+printer|
@@ -6640,7 +6705,8 @@ A jump table for the options with a short description can be found at |Q_op|.
 	   tabpages	all tab pages; without this only the current tab page
 			is restored, so that you can make a session for each
 			tab page separately
-	   terminal	include terminal windows where the command can be restored
+	   terminal	include terminal windows where the command can be
+			restored
 	   unix		with Unix end-of-line format (single <NL>), even when
 			on Windows or DOS
 	   winpos	position of the whole Vim window
@@ -6676,7 +6742,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	Example with escaped space (Vim will do this when initializing the
 	option from $SHELL): >
 		:set shell=/bin/with\\\ space/sh
-<	The resulting value of 'shell' is  "/bin/with\ space/sh", two
+<	The resulting value of 'shell' is "/bin/with\ space/sh", two
 	backslashes are consumed by `:set`.
 
 	Under MS-Windows, when the executable ends in ".com" it must be
@@ -7502,7 +7568,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	line is displayed.  The current buffer and current window will be set
 	temporarily to that of the window (and buffer) whose statusline is
 	currently being drawn.  The expression will evaluate in this context.
-	The variable "actual_curbuf" is set to the 'bufnr()' number of the
+	The variable "g:actual_curbuf" is set to the `bufnr()` number of the
 	real current buffer.
 
 	The 'statusline' option will be evaluated in the |sandbox| if set from
