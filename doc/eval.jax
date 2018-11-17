@@ -1967,7 +1967,7 @@ append({lnum}, {text})		数値	{lnum}行目に{text}を付け加える
 appendbufline({expr}, {lnum}, {text})
 				数値	バッファ{expr}の{lnum}行目に{text}を付
 					け加える
-argc( [{winid}])		数値	引数内のファイルの数
+argc([{winid}])			数値	引数内のファイルの数
 argidx()			数値	引数リスト内の現在のインデックス
 arglistid([{winnr} [, {tabnr}]])
 				数値	引数リストID
@@ -2345,7 +2345,7 @@ sha256({string})		文字列	{string}のSHA256チェックサム
 shellescape({string} [, {special}])
 				文字列	{string}をシェルコマンド引数として使う
 					ためにエスケープする。
-shiftwidth()			数値	実際に使用される 'shiftwidth' の値
+shiftwidth([{list}])		数値	実際に使用される 'shiftwidth' の値
 simplify({filename})		文字列	ファイル名を可能なかぎり簡略化する
 sin({expr})			浮動小数点数	{expr} の正弦(サイン)
 sinh({expr})			浮動小数点数	{expr}のハイパボリックサイン
@@ -7409,11 +7409,17 @@ shellescape({string} [, {special}])			*shellescape()*
 <		|::S| も参照のこと。
 
 
-shiftwidth()						*shiftwidth()*
+shiftwidth([{list}])						*shiftwidth()*
 		実際に使用される 'shiftwidth' の値を返す。'shiftwidth' がゼロ
 		以外の場合はその値が返る。ゼロの場合は 'tabstop' の値が返る。
 		この関数は2012年のパッチ 7.3.694 で導入されたので、現在では皆
 		使えるようになっているに違いない。
+
+		引数{list}があるとき、'shiftwidth' の値(実際には桁番号のみが関
+		連する)を返すための位置の |List| として使用される。これは、
+		'vartabstop' 機能のためのものである。{list}引数については、
+		|cursor()| 関数を参照。'vartabstop' 設定が有効で、{list}引数が
+		指定されていない場合、現在のカーソル位置が考慮される。
 
 
 simplify({filename})					*simplify()*
