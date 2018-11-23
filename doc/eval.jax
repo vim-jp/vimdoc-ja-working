@@ -7417,7 +7417,7 @@ shiftwidth([{col}])						*shiftwidth()*
 
 		引数{col}があるとき、'shiftwidth' の値を返す桁番号として使用さ
 		れる。これは、'vartabstop' 機能のためのものである。
-		'vartabstop' 設定が有効で、引数{col}が指定されていない場合、列
+		'vartabstop' 設定が有効で、引数{col}が指定されていない場合、桁
 		番号1だと仮定される。
 
 simplify({filename})					*simplify()*
