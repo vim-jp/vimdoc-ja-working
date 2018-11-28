@@ -440,7 +440,7 @@ Vim script
 'spellcapcheck' の自動設定				*set-spc-auto*
 
 'spelllang' オプションがうまく設定された後は、Vim は　'runtimepath' にある
-"spell/LANG.vim" ファイルを読み込む。"LANG" は 'spelllang' が初めのカンマ、ドッ
+"spell/LANG.vim" ファイルを読み込む。"LANG" は 'spelllang' が初めのコンマ、ドッ
 ト、またはアンダースコアーまでの値である。これは言語のための特別なオプション、
 とりわけ 'spellcapcheck' を設定するのに使われる。
 
@@ -674,102 +674,100 @@ Note SpellFileMissing 自動コマンドはユーザーが編集しているバ�
 
 これは単語リストを作成、管理する人が使うファイルのフォーマットである。
 
-Note that we avoid the word "dictionary" here.  That is because the goal of
-spell checking differs from writing a dictionary (as in the book).  For
-spelling we need a list of words that are OK, thus should not be highlighted.
-Person and company names will not appear in a dictionary, but do appear in a
-word list.  And some old words are rarely used while they are common
-misspellings.  These do appear in a dictionary but not in a word list.
+Note ここでは辞書 ("dictionary") という単語の使用を避ける。スペルチェックの目
+的は (本のような) 辞書を書くこととは違うからだ。スペリングのために、間違いのな
+い単語のリストが必要となる。それゆえ、ハイライトされるべきではない。人と会社の
+名前は辞書内に現れることはないが、単語リストには現れる。共通のミススペルとして
+まれに古い単語が使われる。これらは辞書には現れるが、単語リストには現れない。
 
-There are two formats: A straight list of words and a list using affix
-compression.  The files with affix compression are used by Myspell (Mozilla
-and OpenOffice.org).  This requires two files, one with .aff and one with .dic
-extension.
+2つのフォーマットがある: 単語の率直なリストと接辞圧縮を使ったリストである。接
+辞圧縮を使ったファイルは Myspell (Mozilla and OpenOffice.org) によって使われる。
+これは2つのファイルを必要とし、1つは .aff、もう1つは .dic の拡張子をもつファイ
+ルだ。
 
 
-FORMAT OF STRAIGHT WORD LIST				*spell-wordlist-format*
+率直な単語リストのフォーマット				*spell-wordlist-format*
 
-The words must appear one per line.  That is all that is required.
+単語は1行に1つずつ現れなければならない。これが必要とされることのすべてだ。
 
-Additionally the following items are recognized:
+加えて、次の項目が評価される:
 
-- Empty and blank lines are ignored.
+- 何もない、もしくは空行は無視される。
 
 	# comment ~
-- Lines starting with a # are ignored (comment lines).
+- # で始まる行は無視される (コメント行)。
 
 	/encoding=utf-8 ~
-- A line starting with "/encoding=", before any word, specifies the encoding
-  of the file.  After the second '=' comes an encoding name.  This tells Vim
-  to setup conversion from the specified encoding to 'encoding'.  Thus you can
-  use one word list for several target encodings.
+- どんな単語よりも前でにある "/encoding=" で始まる行はファイルのエンコーディン
+  グを指定する。'=' の後にはエンコーディング名がくる。これは Vim に指定された
+  エンコーディングから 'encoding' への変換のセットアップをするように伝える。そ
+  れゆえ1つの単語リストを複数のエンコーディング向けに使うことができる。
 
 	/regions=usca ~
-- A line starting with "/regions=" specifies the region names that are
-  supported.  Each region name must be two ASCII letters.  The first one is
-  region 1.  Thus "/regions=usca" has region 1 "us" and region 2 "ca".
-  In an addition word list the region names should be equal to the main word
-  list!
+- "/regions=" で始まる行はサポートする地域の名前を指定する。どの地域も2つの
+  ASCII 文字でなければならない。その1めは地域 1。それゆえ "/regions=usca" は地
+  域 1の "us" と地域 2の "ca" を持つ。加えて、単語リストの地域名は主となる単語
+  リストと同じでなければならない!
 
-- Other lines starting with '/' are reserved for future use.  The ones that
-  are not recognized are ignored.  You do get a warning message, so that you
-  know something won't work.
+- それ以外の '/' で始まる行は、今後使うために予約されている。評価されない行は
+  無視される。警告のメッセージを受け取るので、動作しないのが何かを知ることがで
+  きる。
 
-- A "/" may follow the word with the following items:
-    =		Case must match exactly.
-    ?		Rare word.
-    !		Bad (wrong) word.
-    1 to 9	A region in which the word is valid.  If no regions are
-		specified the word is valid in all regions.
+- "/" は下記の項目にある単語を伴うことができる。
+    =		ケースは正確にマッチしなければならない。
+    ?		珍しい単語
+    !		悪い (誤った) 単語
+    1 to 9	単語が有効である地域。地域が指定されていないならば、すべての地
+		域で単語が有効である。
 
-Example:
+例:
 
-	# This is an example word list		comment
-	/encoding=latin1			encoding of the file
-	/regions=uscagb				regions "us", "ca" and "gb"
-	example					word for all regions
-	blah/12					word for regions "us" and "ca"
-	vim/!					bad word
-	Campbell/?3				rare word in region 3 "gb"
-	's mornings/=				keep-case word
+	# 単語リストの例			コメント
+	/encoding=latin1			ファイルのエンコーディング
+	/regions=uscagb				地域 "us", "ca", "gb"
+	example					全ての地域の単語
+	blah/12					"us", "ca" 地域の単語
+	vim/!					誤った単語
+	Campbell/?3				地域 3 "gb" での珍しい単語
+	's mornings/=				ケースを伴った単語
 
-Note that when "/=" is used the same word with all upper-case letters is not
-accepted.  This is different from a word with mixed case that is automatically
-marked as keep-case, those words may appear in all upper-case letters.
+Note "/=" が使われたとき、すべてが大文字の同じ単語は受理されない。これは自動的
+にケースを保ったものとしてマークされた大文字小文字が混ざった単語とは異なる。こ
+れらの単語はすべての文字が大文字であるように見えるだろう。
 
 
-FORMAT WITH .AFF AND .DIC FILES				*aff-dic-format*
+.AFF と .DIC ファイルのフォーマット			*aff-dic-format*
 
-There are two files: the basic word list and an affix file.  The affix file
-specifies settings for the language and can contain affixes.  The affixes are
-used to modify the basic words to get the full word list.  This significantly
-reduces the number of words, especially for a language like Polish.  This is
-called affix compression.
+2つのファイルがある: 基本の単語のリストと接辞ファイルだ。接辞ファイルは言語の
+設定を指定し、接辞を含むことを可能にする。接辞は十分な単語リストを得るために、
+基本単語を修正するのに使われる。このことは特にポーランド語のような言語において
+著しく単語の数を減らす。これは接辞圧縮と呼ばれる。
 
-The basic word list and the affix file are combined with the ":mkspell"
-command and results in a binary spell file.  All the preprocessing has been
-done, thus this file loads fast.  The binary spell file format is described in
-the source code (src/spell.c).  But only developers need to know about it.
+基本の単語リストと接辞ファイルは ":mkspell" コマンドで結び付けられ、その成果は
+バイナリのスペルファイルになる。すべての前処理が完了すると、ファイルの読み込み
+は高速になる。バイナリのスペルファイルのフォーマットはソースコード
+(src/spell.c) に書き込まれている。しかし、このことについて知る必要があるのは開
 
-The preprocessing also allows us to take the Myspell language files and modify
-them before the Vim word list is made.  The tools for this can be found in the
-"src/spell" directory.
+前処理はまた 私達がMyspell 言語ファイルを取得し、Vim の単語リストが作られる前
+に変更することを許す。これらのツールは "src/spell" ディレクトリで見つけること
+ができる。
 
-The format for the affix and word list files is based on what Myspell uses
-(the spell checker of Mozilla and OpenOffice.org).  A description can be found
-here:
+接辞と単語リストファイルのフォーマットは Myspell が使用しているもの (Mozillaと
+OpenOffice.org のスペルチェッカー) に基づく。説明書は次の場所で見つけることが
+できる。
 	http://lingucomponent.openoffice.org/affix.readme ~
-Note that affixes are case sensitive, this isn't obvious from the description.
+Note 接辞は大文字小文字を区別することに注意。これは説明書からははっきりとわか
+らない。
 
-Vim supports quite a few extras.  They are described below |spell-affix-vim|.
-Attempts have been made to keep this compatible with other spell checkers, so
-that the same files can often be used.  One other project that offers more
-than Myspell is Hunspell ( http://hunspell.sf.net ).
+Vim は多数の拡張をサポートしている。これらは以下の |spell-affix-vim| で説明さ
+れている。他のスペルチェッカーと互換性を保つように作られているので、同じファイ
+ルがしばしば使われる。Myspell を超えるもう一つのプロジェクトの1つに　Hunspell
+( http://hunspell.sf.net ) がある。
 
 
-WORD LIST FORMAT				*spell-dic-format*
+単語リストのフォーマット			*spell-dic-format*
 
-A short example, with line numbers:
+行番号をつけた簡潔な例:
 
 	1	1234 ~
 	2	aan ~
@@ -778,30 +776,28 @@ A short example, with line numbers:
 	5	et al. ~
 	6	's-Gravenhage ~
 	7	's-Gravenhaags ~
-	8	# word that differs between regions ~
+	8	# 地域間で異なる単語~
 	9	kado/1 ~
 	10	cadeau/2 ~
 	11	TCP,IP ~
 	12	/the S affix may add a 's' ~
 	13	bedel/S ~
 
-The first line contains the number of words.  Vim ignores it, but you do get
-an error message if it's not there.  *E760*
+最初の行は単語の数が含まれている。Vim はこれを無視するが、ここにこれがない場合
+はエラーメッセージを受け取る。*E760*
 
-What follows is one word per line.  White space at the end of the line is
-ignored, all other white space matters.  The encoding is specified in the
-affix file |spell-SET|.
+これに続くのは、1行につき1つの単語。行末の空白は無視され、その他の空白は問題と
+なる。エンコーディングは接辞ファイル内で指定される |spell-SET|。
 
-Comment lines start with '#' or '/'.  See the example lines 8 and 12.  Note
-that putting a comment after a word is NOT allowed:
+コメント行は '#' か '/' で始まる。例の8行目と12行目を参照。Note 単語の後ろにコ
+メントを書くことは許可されていないことに注意:
 
 		someword   # comment that causes an error! ~
 
-After the word there is an optional slash and flags.  Most of these flags are
-letters that indicate the affixes that can be used with this word.  These are
-specified with SFX and PFX lines in the .aff file, see |spell-SFX| and
-|spell-PFX|.  Vim allows using other flag types with the FLAG item in the
-affix file |spell-FLAG|.
+単語の後にはオプションのスラッシュとフラグがある。フラグのほとんどは、その単語
+で使用できる接辞を示す文字である。.aff ファイルの SFX や PFX 行で指定されてい
+る。|spell-SFX| と |spell-PFX| を参照。Vim では接辞ファイルの FLAG 項目で、ほか
+の形式のフラグを使ってもよい |spell-FLAG|。
 
 When the word only has lower-case letters it will also match with the word
 starting with an upper-case letter.
