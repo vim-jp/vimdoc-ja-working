@@ -799,164 +799,158 @@ Vim は多数の拡張をサポートしている。これらは以下の |spell
 る。|spell-SFX| と |spell-PFX| を参照。Vim では接辞ファイルの FLAG 項目で、ほか
 の形式のフラグを使ってもよい |spell-FLAG|。
 
-When the word only has lower-case letters it will also match with the word
-starting with an upper-case letter.
+単語が小文字のみである場合、大文字で始まる単語にもマッチするだろう。
 
-When the word includes an upper-case letter, this means the upper-case letter
-is required at this position.  The same word with a lower-case letter at this
-position will not match. When some of the other letters are upper-case it will
-not match either.
+単語が大文字を含んでいる場合、その場所に大文字が必要とされていることを意味する。
+その場所が小文字である同じ単語はマッチしないだろう。他の文字が大文字である場合
+もマッチしない。
 
+すべてが大文字の単語はいつも OK になるだろう。
 The word with all upper-case characters will always be OK,
 
-	word list	matches			does not match ~
+	単語リスト	マッチする		マッチしない~
 	als		als Als ALS		ALs AlS aLs aLS
 	Als		Als  ALS		als ALs AlS aLs aLS
 	ALS		ALS			als Als ALs AlS aLs aLS
 	AlS		AlS ALS			als Als ALs aLs aLS
 
-The KEEPCASE affix ID can be used to specifically match a word with identical
-case only, see below |spell-KEEPCASE|.
+KEEPCASE の接辞 ID は特定のケースのマッチ指定に使うことができる。下記の
+|spell-KEEPCASE| を参照。
 
-Note: in line 5 to 7 non-word characters are used.  You can include any
-character in a word.  When checking the text a word still only matches when it
-appears with a non-word character before and after it.  For Myspell a word
-starting with a non-word character probably won't work.
+Note: 5 から 7 行目は単語ではない文字が使われていることに注意。単語にはどのよ
+うな文字でも含めることができる。テキストをチェックする際に、単語の前後に単語で
+はない文字が現れたときにのみマッチする。Myspell は単語ではない文字で始まる単語
+ではたぶん動作しないだろう。
 
-In line 12 the word "TCP/IP" is defined.  Since the slash has a special
-meaning the comma is used instead.  This is defined with the SLASH item in the
-affix file, see |spell-SLASH|.  Note that without this SLASH item the word
-will be "TCP,IP".
+12 行目に "TCP/IP" が定義されている。スラッシュには特別な意味があるので、代わ
+りにコンマが使われる。これは接辞ファイルの SLASH 要素に定義されている。
+|spell-SLASH| を参照。Note SLASH 要素なしでは、単語は "TCP,IP" となるだろう。
 
 
-AFFIX FILE FORMAT			*spell-aff-format* *spell-affix-vim*
+接辞ファイルフォーマット		*spell-aff-format* *spell-affix-vim*
 
 							*spell-affix-comment*
-Comment lines in the .aff file start with a '#':
+.aff ファイルのコメント行は '#' で始まる:
 
 	# comment line ~
 
-Items with a fixed number of arguments can be followed by a comment.  But only
-if none of the arguments can contain white space.  The comment must start with
-a "#" character.  Example:
+引数の固定された要素はコメントによって続けることができる。しかし、引数がない場
+合に限り空白を含むことができる。コメントは "#" 文字で始まらなければならない。
+例:
 
 	KEEPCASE =  # fix case for words with this flag ~
 
 
 エンコーディング						*spell-SET*
 
-The affix file can be in any encoding that is supported by "iconv".  However,
-in some cases the current locale should also be set properly at the time
-|:mkspell| is invoked.  Adding FOL/LOW/UPP lines removes this requirement
-|spell-FOL|.
+接辞ファイルは "iconv" によってサポートされているエンコーディングであれば、ど
+のようなものでもよい。しかしながら、いくつかの場合で現在のロケールはまた、プロ
+パティを |:mkspell| が呼び出された時に設定されるべきだ。加えて、 FOL/LOW/UPP
+行は |spell-FOL| の要求を削除する。
 
-The encoding should be specified before anything where the encoding matters.
-The encoding applies both to the affix file and the dictionary file.  It is
-done with a SET line:
+エンコーディングに関するものの何よりも前にエンコーディングは指定されるべきだ。
+エンコーディングは接辞ファイルと辞書ファイルの両方に適用される。これは SET 行
+において行われる。
 
 	SET utf-8 ~
 
-The encoding can be different from the value of the 'encoding' option at the
-time ":mkspell" is used.  Vim will then convert everything to 'encoding' and
-generate a spell file for 'encoding'.  If some of the used characters to not
-fit in 'encoding' you will get an error message.
+エンコーディングは ":mkspell" が使われた時に 'encoding' オプションにセットされ
+た値とは異なっていてもよい。Vim はすべてを 'encoding' に変換し、'encoding' に
+関係するスペルファイルを生成するだろう。もしも 'encoding' に適合していない文字
+が使われているなら、エラーメッセージを受け取るだろう。
 							*spell-affix-mbyte*
-When using a multi-byte encoding it's possible to use more different affix
-flags.  But Myspell doesn't support that, thus you may not want to use it
-anyway.  For compatibility use an 8-bit encoding.
+マルチバイトのエンコーディングが使われている場合、より多くの異なった接辞フラグ
+を使うことができる。しかし、Myspell はこれをサポートしないので、これをどのよう
+な方法でも使おうとはしないかもしれない。互換性のために 8-bit エンコーディング
+を使う。
 
 
 情報
 
-These entries in the affix file can be used to add information to the spell
-file.  There are no restrictions on the format, but they should be in the
-right encoding.
+接辞ファイルのエントリは、スペルファイルに情報を追加するのに使うことができる。
+フォーマットに制限はないが、正しいエンコーディングであるべきだ。
 
 				*spell-NAME* *spell-VERSION* *spell-HOME*
 				*spell-AUTHOR* *spell-EMAIL* *spell-COPYRIGHT*
-	NAME		Name of the language
+	NAME		言語名
 	VERSION		1.0.1  with fixes
 	HOME		http://www.myhome.eu
 	AUTHOR		John Doe
 	EMAIL		john AT Doe DOT net
 	COPYRIGHT	LGPL
 
-These fields are put in the .spl file as-is.  The |:spellinfo| command can be
-used to view the info.
+これらのフィールドは .spl ファイルにそのままの状態で置かれる。|:spellinfo| コ
+マンドは info を閲覧するために使われる。
 
 							*:spellinfo* *:spelli*
-:spelli[nfo]		Display the information for the spell file(s) used for
-			the current buffer.
+:spelli[nfo]		現在のバッファで使われているスペルファイルの情報を表示
+			する。
 
 
-CHARACTER TABLES
+文字テーブル
 							*spell-affix-chars*
-When using an 8-bit encoding the affix file should define what characters are
-word characters.  This is because the system where ":mkspell" is used may not
-support a locale with this encoding and isalpha() won't work.  For example
-when using "cp1250" on Unix.
+8-bit エンコーディングを使う場合、接辞ファイルは、単語の文字が何であるかを定義
+するべきだ。これはどうしてかというと、":mkspell" が使われたシステムはこのエン
+コーディングのロケールをサポートしていないかもしれないし、 isalpha() が動作し
+ないだろうからだ。例えば Unix 上で "cp1250" を使う場合である。
 						*E761* *E762* *spell-FOL*
 						*spell-LOW* *spell-UPP*
-Three lines in the affix file are needed.  Simplistic example:
+接辞ファイルの3行は必要だ。簡単な例:
 
 	FOL  áëñ ~
 	LOW  áëñ ~
 	UPP  ÁËÑ ~
 
-All three lines must have exactly the same number of characters.
+3 行すべては全く同じ文字番号を持っていなければいけない。
 
-The "FOL" line specifies the case-folded characters.  These are used to
-compare words while ignoring case.  For most encodings this is identical to
-the lower case line.
+"FOL" 行は case-folded 文字を指定する。これらは大文字小文字を区別しない単語の
+比較に使われる。ほとんどのエンコーディングでは、小文字の行と同じである。
 
-The "LOW" line specifies the characters in lower-case.  Mostly it's equal to
-the "FOL" line.
+"LOW 行は lower-case 文字を指定する。大部分は "FOL" 行に等しい。
 
-The "UPP" line specifies the characters with upper-case.  That is, a character
-is upper-case where it's different from the character at the same position in
-"FOL".
+"UPP" 行は upper-case 文字を指定する。これは "FOL" の同じ場所にある文字とは異
+なる大文字である。
 
 An exception is made for the German sharp s ß.  The upper-case version is
 "SS".  In the FOL/LOW/UPP lines it should be included, so that it's recognized
 as a word character, but use the ß character in all three.
 
-ASCII characters should be omitted, Vim always handles these in the same way.
-When the encoding is UTF-8 no word characters need to be specified.
+ASCII 文字は省略されるべきだ。Vim は常に同じ方法でこれらを扱う。エンコーディン
+グが UTF-8 である場合、単語文字の指定は必要ない。
 
 							*E763*
-Vim allows you to use spell checking for several languages in the same file.
-You can list them in the 'spelllang' option.  As a consequence all spell files
-for the same encoding must use the same word characters, otherwise they can't
-be combined without errors.
+Vim は同じファイルでいくつかの言語のスペルチェックを使うことを許可する。
+'spelllang' オプションでこれらを列記できる。結果として、同じエンコーディングに
+対するすべてのスペルファイルは同じ単語文字を使用しなければならない。そうでなけ
+れば、これらをエラーなしに結合できない。
 
-If you get an E763 warning that the word tables differ you need to update your
-".spl" spell files.  If you downloaded the files, get the latest version of
-all spell files you use.  If you are only using one, e.g., German, then also
-download the recent English spell files.  Otherwise generate the .spl file
-again with |:mkspell|.  If you still get errors check the FOL, LOW and UPP
-lines in the used .aff files.
+もし単語テーブルが異なるという警告 E763 を受け取ったのなら、".spl" スペルファ
+イルをアップデートする必要がある。ファイルをダウンロードした場合、使用している
+すべてのスペルファイルの最新版を取得しよう。もしも1つの言語だけを使っているな
+らば、例えばドイツ語、さらに最新の英語スペルファイルをダウンロードしよう。そう
+でなければ、再度 |:mkspell| で .spl ファイルを生成しよう。もしエラーを受け取っ
+たのであれば、 使用している .aff ファイルの FOL と LOW、UPP 行を確認しよう。
 
-The XX.ascii.spl spell file generated with the "-ascii" argument will not
-contain the table with characters, so that it can be combine with spell files
-for any encoding.  The .add.spl files also do not contain the table.
+"-ascii" 引数で生成される XX.ascii.spl スペルファイルは文字テーブルを含まない
+だろう。そのため、どんなエンコーディングのスペルファイルとも結合することができ
+る。加えて .add.spl ファイルはテーブルを含まない。
 
 
-MID-WORD CHARACTERS
+中間語の文字
 							*spell-midword*
-Some characters are only to be considered word characters if they are used in
-between two ordinary word characters.  An example is the single quote: It is
-often used to put text in quotes, thus it can't be recognized as a word
-character, but when it appears in between word characters it must be part of
-the word.  This is needed to detect a spelling error such as they'are.  That
-should be they're, but since "they" and "are" are words themselves that would
-go unnoticed.
+いくつかの文字は、普通の単語文字の間で使われているなら、単に単語文字だとみなさ
+れる。一例はシングルクォートだ: テキストを引用するのにしばしば使われる。それゆ
+えその単語は一語の文字として認識されない。しかし、単語文字の間に現れた場合、単
+語の一部にならなければならない。これは they'are のようなスペルミスを検出するた
+めに必要だ。they're になるべきだが、"they" と "are" はそれ自身が単語であるので、
+気づかれないだろう。
 
-These characters are defined with MIDWORD in the .aff file.  Example:
+これらの文字は .aff ファイルの MIDWORD で定義される。例:
 
 	MIDWORD	'- ~
 
 
-FLAG TYPES						*spell-FLAG*
+フラグタイプ						*spell-FLAG*
 
 Flags are used to specify the affixes that can be used with a word and for
 other properties of the word.  Normally single-character flags are used.  This
