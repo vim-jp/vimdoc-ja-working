@@ -1,4 +1,4 @@
-*pi_netrw.txt*  For Vim バージョン 8.0.  Last change: 2016 Apr 20
+*pi_netrw.txt*  For Vim バージョン 8.1.  Last change: 2017 Nov 03
 
 	    ------------------------------------------------
 	    NETRW REFERENCE MANUAL    by Charles E. Campbell
@@ -6,7 +6,7 @@
 Author:  Charles E. Campbell  <NdrOchip@ScampbellPfamily.AbizM>
 	  (まずメールアドレスから NOSPAM を削除してください)
 
-Copyright: Copyright (C) 2016 Charles E Campbell    *netrw-copyright*
+Copyright: Copyright (C) 2017 Charles E Campbell    *netrw-copyright*
 	The VIM LICENSE applies to the files in this package, including
 	netrw.vim, pi_netrw.txt, netrwFileHandlers.vim, netrwSettings.vim, and
 	syntax/netrw.vim.  Like anything else that's free, netrw.vim and its
@@ -73,7 +73,7 @@ Copyright: Copyright (C) 2016 Charles E Campbell    *netrw-copyright*
       ブラウジングを改善する..............................|netrw-ssh-hack|
       ブックマークと履歴を一覧表示する....................|netrw-qb|
       新しいディレクトリを作成する........................|netrw-d|
-      ブラウジングディレクトリをカレントディレクトリにする |netrw-c|
+      ブラウジングディレクトリをカレントディレクトリにする |netrw-cd|
       ファイルをマークする................................|netrw-mf|
       ファイルのマークを外す..............................|netrw-mF|
       ロケーションリストを使ってファイルをマークする.........|netrw-qL|
@@ -83,6 +83,7 @@ Copyright: Copyright (C) 2016 Charles E Campbell    *netrw-copyright*
       マークファイル: 一括シェルコマンド..................|netrw-mX|
       マークファイル: Vimコマンド.........................|netrw-mv|
       マークファイル: 引数リスト..........................|netrw-ma| |netrw-mA|
+      マークファイル: バッファリスト......................|netrw-cb| |netrw-cB|
       マークファイル: 圧縮と伸長..........................|netrw-mz|
       マークファイル: コピー..............................|netrw-mc|
       マークファイル: Diff................................|netrw-md|
@@ -156,7 +157,7 @@ Windows の ftp は .netrc をサポートしていません。しかし、.vimr
 
    let g:netrw_ftp_cmd= 'c:\Windows\System32\ftp -s:C:\Users\MyUserName\MACHINE'
 <
-netrw は、開こうとしている url からホストのマシン名を取得し、MACHINE に置き換
+netrw は、開こうとしている URL からホストのマシン名を取得し、MACHINE に置き換
 えます。これにより、c:\Users\MyUserName\MachineName にあるそれぞれのサイトごと
 の個別のファイルで以下の項目を指定できます: >
 	userid
@@ -212,7 +213,7 @@ scp や ftp 以外のプロトコルもサポートされています。次の�
           http:   g:netrw_http_cmd     = "fetch"      elseif fetch があるなら
 	  http:   *g:netrw_http_put_cmd* = "curl -T"
 	   rcp:   *g:netrw_rcp_cmd*      = "rcp"
-	 rsync:   *g:netrw_rsync_cmd*    = "rsync -a"
+	 rsync:   *g:netrw_rsync_cmd*    = "rsync"     (|g:netrw_rsync_sep| を参照)
 	   scp:   *g:netrw_scp_cmd*      = "scp -q"
 	  sftp:   *g:netrw_sftp_cmd*     = "sftp"
 	  file:   *g:netrw_file_cmd*     = "elinks" or "links"
@@ -223,7 +224,7 @@ scp や ftp 以外のプロトコルもサポートされています。次の�
 
 		    elinks : "-source >"
 		    links  : "-dump >"
-		    curl   : "-o"
+		    curl   : "-L -o"
 		    wget   : "-q -O"
 		    fetch  : "-o"
 <
@@ -239,7 +240,7 @@ scp や ftp 以外のプロトコルもサポートされています。次の�
 
 読み込み					*netrw-read* *netrw-nread* {{{2
 
-	通常のコマンドで url を使うことができます。例: >
+	通常のコマンドで URl を使うことができます。例: >
 
 		:e ftp://[user@]machine/path
 <
@@ -260,7 +261,7 @@ scp や ftp 以外のプロトコルもサポートされています。次の�
 
 書き込み				*netrw-write* *netrw-nwrite* {{{2
 
-	ファイルを保存するときにも url を使うことができます。例: >
+	ファイルを保存するときにも URL を使うことができます。例: >
 
 		:w ftp://[user@]machine/path
 <
@@ -280,7 +281,7 @@ scp や ftp 以外のプロトコルもサポートされています。次の�
 
 スクリプト実行					*netrw-source* {{{2
 
-	スクリプトを実行するときにも url を使うことができます。例: >
+	スクリプトを実行するときにも URL を使うことができます。例: >
 
 		:so ftp://[user@]machine/path
 <
@@ -713,10 +714,10 @@ netrw のようなプラグインの使用方法は |netrw-activate| を参照�
 一般的な読み込み/書き込みコマンドがサポートされています。それ以外のコマンドも
 いくつかあります。|netrw-transparent| で説明したように、通常はこれらのコマンド
 を使う必要はありません。次のように使ってください (|netrw-urls|参照): >
-  :e url
-  :r url
-  :w url
-以下の説明では、{netfile} はリモートファイルの url を示します。
+  :e URL
+  :r URL
+  :w URL
+以下の説明では、{netfile} はリモートファイルの URL を示します。
 
 						*:Nwrite*  *:Nw*
 :[range]Nw[rite]
@@ -848,7 +849,9 @@ netrw は複数のプロトコルをサポートしています。それぞれ�
     g:netrw_http_put_cmd 変数     ="curl -T"
     |g:netrw_list_cmd|   変数       ="ssh USEPORT HOSTNAME ls -Fa"
     g:netrw_rcp_cmd    変数       ="rcp"
-    g:netrw_rsync_cmd  変数       ="rsync -a"
+    g:netrw_rsync_cmd  変数       ="rsync"
+    *g:netrw_rsync_sep*  変数       ="/"            ファイルスペックからホスト
+                                                  名を分けるのに使われる
     g:netrw_scp_cmd    変数       ="scp -q"
     g:netrw_sftp_cmd   変数       ="sftp" >
     -------------------------------------------------------------------------
@@ -980,7 +983,7 @@ Netrw リモートディレクトリブラウザーを使うには、ファイ�
 	vim ftp://ftp.home.vim.org/pub/vim/
 <
 ローカルディレクトリの場合は末尾のスラッシュは必要ではありません。付け忘れがよ
-くあるのでもう一度言いますが、リモートディレクトリをブラウズするときは url の
+くあるのでもう一度言いますが、リモートディレクトリをブラウズするときは URL の
 末尾にスラッシュを付ける必要があります。
 
 ssh か scp でリモートディレクトリを表示するたびにパスワードを入力したくない場
@@ -1064,6 +1067,7 @@ QUICK HELP						*netrw-quickhelp* {{{2
 	   gf	取扱いをファイルに強制する                           |netrw-gf|
 	   gh	ドットファイルの表示/非表示を切り替える              |netrw-gh|
 	   i	表示方法を切り替える (thin, long, wide, tree)        |netrw-i|
+	   I	バナーの表示を切り替える                             |netrw-I|
 	   mb	カレントディレクトリをブックマークする               |netrw-mb|
 	   mc	マークしたファイルをターゲットディレクトリにコピー   |netrw-mc|
 	   md	マークしたファイルの差分を表示する (3ファイルまで)   |netrw-md|
@@ -1153,8 +1157,9 @@ QUICK HELP						*netrw-quickhelp* {{{2
 	mb
 <
 								*.netrwbook*
-ブックマークは $HOME/.netrwbook に保存されます。ブックマークは常にソートされま
-す。
+ブックマークは、Vim のセッションの間 .netrwbook というファイル内に |List| とし
+て保持されます。これは通常ユーザーの '|runtimepath|' の最初のディレクトリ内に
+格納され、エントリはソートされた順序に維持されます。
 
 もしマークされたファイル/ディレクトリが存在すれば、mb はそれらをブックマークに
 追加します。
@@ -1384,8 +1389,9 @@ Note: |netrw-qb| はブックマークと履歴を両方表示します。履歴
 
 ディレクトリを移動するとき (カレントセッションで新規の場合)、そのディレクトリ
 は、最近表示したディレクトリの履歴リストに保存されます (|g:netrw_dirhistmax|
-が 0 でない場合に限る。初期設定は 10)。"u" マップを使用すると、前のディレクト
-リに移動できます。反対に移動したい場合は |netrw-U| を参照。
+が 0 でない場合に限る。初期設定では 10 エントリが保持される)。"u" マップを使用
+すると、前のディレクトリに移動できます。反対に移動したい場合は |netrw-U| を参
+照。
 
 "u" マップはカウントを指定することができ、履歴の特定の位置に戻ることができま
 す。qb (|netrw-qb|を参照) の一覧で表示される履歴の番号はこのカウントとして使え
@@ -1428,10 +1434,10 @@ netrw (と vim) が起動されていない間、履歴を保持します。デ�
 
 NETRW CLEAN					*netrw-clean* *:NetrwClean* {{{2
 
-NetrwClean を使うと、ホームディレクトリから netrw を削除できます。正確には、
-|'runtimepath'| の最初のディレクトリから削除します。
+:NetrwClean を使うと、ホームディレクトリから netrw を削除できます。正確に
+は、|'runtimepath'| の最初のディレクトリから削除します。
 
-NetrwClean! を使うと、|'runtimepath'| のすべてのディレクトリから netrw を削除
+:NetrwClean! を使うと、|'runtimepath'| のすべてのディレクトリから netrw を削除
 しようと試みます。これを行うにはもちろん書込/削除権限が正しいものである必要が
 あります。
 
@@ -1462,7 +1468,7 @@ Netrw は次の方法で専用ハンドラを決定します:
     g:netrw_browsex_viewer が '-' のときは netrwFileHandler#Invoke() が最初に
     呼ばれます (|netrw_filehandler|参照)。
 
-  * Windows 32 or 64 では、url と FileProtocolHandler dll が使われます。
+  * Windows 32 or 64 では、URL と FileProtocolHandler dll が使われます。
   * Gnome (with gnome-open): gnome-open が使われます。
   * KDE (with kfmclient)   : kfmclient が使われます。
   * Mac OS X               : open が使われます。
@@ -1477,10 +1483,10 @@ gx マッピングはすべてのバッファに適用できます。カーソ�
 ファに対して行うように)。特別な処置を行うテキストをビジュアルモード
 (|visual-start| 参照) により選択することもできます。通常 gx はカーソル位置のテ
 キストを取得するのに expand("<cfile>") を使用しますが、|g:netrw_gx| 変数で
-|expand()| が使用する引数を変えることができます。また、代わりに gx で使用する
-テキストを最初にビジュアル選択を行っておくか、|'isfname'| オプション (グローバル
-なので netrw は変更しません) を変更することで選択することもできます
-(|visual-block| 参照)。
+|expand()| が使用する引数を変えることができます ("<cword>", "<cWORD>" を含むオ
+プション)。Note: expand("<cfile>") は |'isfname'| の設定に依存します。また、代
+わりに gx で使用するテキストをビジュアル選択を行っておき (|visual-block| 参
+照)、その後 gx を押す方法でもよいです。
 
 関連設定:
 	|g:netrw_gx|	gx がどのようにカーソル位置のテキストを取得するか制御
