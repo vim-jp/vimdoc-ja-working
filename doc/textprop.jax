@@ -58,10 +58,10 @@ THIS IS UNDER DEVELOPMENT - ANYTHING MAY STILL CHANGE  *E967*
 	"highlight"	使用するハイライトグループ名
 	"priority"	プロパティが重なるする場合は、優先度の高いものが使用さ
 			れます。
-	"start_incl"	TRUEの場合、開始位置に挿入するものがテキストプロパティ
-			に含まれます。
-	"end_incl"    	TRUEの場合、終了位置に挿入するものがテキストプロパティ
-			に含まれます。
+	"start_incl"	TRUEの場合、開始位置の挿入はテキストプロパティに含まれ
+			ます。
+	"end_incl"    	TRUEの場合、終了位置の挿入はテキストプロパティに含まれ
+			ます。
 
 
 例 ~
