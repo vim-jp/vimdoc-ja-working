@@ -952,104 +952,103 @@ Vim は同じファイルでいくつかの言語のスペルチェックを使�
 
 フラグタイプ						*spell-FLAG*
 
-Flags are used to specify the affixes that can be used with a word and for
-other properties of the word.  Normally single-character flags are used.  This
-limits the number of possible flags, especially for 8-bit encodings.  The FLAG
-item can be used if more affixes are to be used.  Possible values:
+フラグは単語と共に使われる接辞や単語の他の特徴を指定するために使われる。通常は
+シングルキャラクタのフラグが使われる。これは受け入れられるフラグの数、特に 8
+ビットエンコーディングで、制限する。より多くの接辞が使われるならば、フラグ項目
+は使われることがある。取りうる値:
 
-	FLAG long	use two-character flags
-	FLAG num	use numbers, from 1 up to 65000
-	FLAG caplong	use one-character flags without A-Z and two-character
-			flags that start with A-Z
+	FLAG long	2 文字フラグを使う
+	FLAG num	1 から 65000 までの数値を使う
+	FLAG caplong	A-Z を除く 1 文字フラグと A-Z で始まる 2 文字フラグを
+			使う
 
-With "FLAG num" the numbers in a list of affixes need to be separated with a
-comma: "234,2143,1435".  This method is inefficient, but useful if the file is
-generated with a program.
+接辞リストにおける "FLAG num" の値は、コンマで区切られている必要がある:
+"234,2143,1435"。この方式は非効率的だが、ファイルをプログラムで生成する場合に
+は便利である。
 
-When using "caplong" the two-character flags all start with a capital: "Aa",
-"B1", "BB", etc.  This is useful to use one-character flags for the most
-common items and two-character flags for uncommon items.
+"caplong" を使う場合、2 文字フラグは "Aa", "B1", "BB" などのようにすべて大文字
+で始まる。これは多くの共通項目に関する 1 文字フラグと 非共通項目に関する 2 文
+字フラグを使うのに便利である。
 
-Note: When using utf-8 only characters up to 65000 may be used for flags.
+Note: UTF-8 を使用している場合、65000 までの文字だけがフラグとして使われるだろ
+う。
 
-Note: even when using "num" or "long" the number of flags available to
-compounding and prefixes is limited to about 250.
+Note: "num" や "long" を使用している時でさえ、フラグの数値を混ぜることができ、
+接頭辞は約 250 に制限される。
 
 
-AFFIXES
+接辞
 					    *spell-PFX* *spell-SFX*
-The usual PFX (prefix) and SFX (suffix) lines are supported (see the Myspell
-documentation or the Aspell manual:
+PFX (接頭辞) と SFX (接尾辞) 行がサポートされている (Myspell のドキュメント、
+もしくは Aspell のマニュアルを参照:
 http://aspell.net/man-html/Affix-Compression.html).
 
-Summary:
+概要:
 	SFX L Y 2 ~
 	SFX L 0 re [^x] ~
 	SFX L 0 ro x ~
 
-The first line is a header and has four fields:
+最初の行はヘッダーで 4 つのフィールドを持つ:
 	SFX {flag} {combine} {count}
 
-{flag}		The name used for the suffix.  Mostly it's a single letter,
-		but other characters can be used, see |spell-FLAG|.
+{flag}		接尾辞に使われる名前。たいていは 1 文字だが、他の文字も使うこ
+		とができる。|spell-FLAG| を参照。
 
-{combine}	Can be 'Y' or 'N'.  When 'Y' then the word plus suffix can
-		also have a prefix.  When 'N' then a prefix is not allowed.
+{combine}	'Y' か 'N' である。'Y' の場合、単語 + 接尾辞はさらに接頭辞を持
+		つことができます。'N' の場合、接頭辞を持つことはできない。
 
-{count}		The number of lines following.  If this is wrong you will get
-		an error message.
+{count}		次に続いている行数。これが間違っている場合、エラーメッセージを
+		受け取るだろう。
 
-For PFX the fields are exactly the same.
+PFX のためのフィールドは全く同じである。
 
-The basic format for the following lines is:
+次に続いている行数の基本的なフォーマットは:
 	SFX {flag} {strip} {add} {condition} {extra}
 
-{flag}		Must be the same as the {flag} used in the first line.
+{flag}		最初の行で使われている {flag} と同じでなければならない。
 
-{strip}		Characters removed from the basic word.  There is no check if
-		the characters are actually there, only the length is used (in
-		bytes).  This better match the {condition}, otherwise strange
-		things may happen.  If the {strip} length is equal to or
-		longer than the basic word the suffix won't be used.
-		When {strip} is 0 (zero) then nothing is stripped.
+{strip}		基本単語から削除された文字。文字が実際にあるなら、チェックせず、
+		(バイトの) 長さだけが使われる。これは {condition} のより良いマッ
+		チで、これ以外の方法ではおかしなことが起こる。{strip} の長さが
+		基本語と等しいかそれ以上なら、接尾辞は使われないだろう。{strip}
+		が 0 (zero) の場合は何も取り除かない。
 
-{add}		Characters added to the basic word, after removing {strip}.
-		Optionally there is a '/' followed by flags.  The flags apply
-		to the word plus affix.  See |spell-affix-flags|
+{add}		{strip} を取り除いた後の基本単語に加えられた文字。オプションに
+		フラグに続く '/' がある。フラグは単語に接辞を付け加える。
+		|spell-affix-flags| を参照。
 
-{condition}	A simplistic pattern.  Only when this matches with a basic
-		word will the suffix be used for that word.  This is normally
-		for using one suffix letter with different {add} and {strip}
-		fields for words with different endings.
-		When {condition} is a . (dot) there is no condition.
-		The pattern may contain:
-		- Literal characters.
-		- A set of characters in []. [abc] matches a, b and c.
-		  A dash is allowed for a range [a-c], but this is
-		  Vim-specific.
-		- A set of characters that starts with a ^, meaning the
-		  complement of the specified characters. [^abc] matches any
-		  character but a, b and c.
+{condition}	単純なパターン。これが基本語とマッチした場合のみ、その単語に対
+		してのみ接尾辞が使われるだろう。通常、これは異なる
+		エンコーディングの単語のための {add} や {strip} フィールドと異
+		なり、接尾辞が使われる。
+		{condition} が . (ドット) である場合は条件はない。
+		パターンは次のものを含む:
+		- リテラル文字。
+		- [] 内の文字セット。[abc] は a, b, c にマッチする。[a-c] の範
+		  囲のためにダッシュが使えるが、これは Vim に特有のものである。
+		- ^ で始まる文字セットは特定の文字を補完することを意味する。
+		  [^abc] は a, b, c を除いた全ての文字にマッチする。
 
-{extra}		Optional extra text:
-		    # comment		Comment is ignored
-		    -			Hunspell uses this, ignored
+{extra}		オプションの特別なテキスト
+		    # comment		コメントは無視される
+		    -			Hunspell はこれを使い、無視される
 
-For PFX the fields are the same, but the {strip}, {add} and {condition} apply
-to the start of the word.
+PFX 向けにはフィールドは同じであるが、{strip}、{add}、{condition} は単語のはじ
+めに適用する。
 
-Note: Myspell ignores any extra text after the relevant info.  Vim requires
-this text to start with a "#" so that mistakes don't go unnoticed.  Example:
+Note: Myspell は関連情報の後にある特別なテキストはどんなものでも無視する。Vim
+は "#" で始まるこの行を必要とする。そのため、間違いは気づかれずには済まない。
+例:
 
 	SFX F 0 in   [^i]n      # Spion > Spionin  ~
 	SFX F 0 nen  in		# Bauerin > Bauerinnen ~
 
-However, to avoid lots of errors in affix files written for Myspell, you can
-add the IGNOREEXTRA flag.
+しかしながら、Myspell のために書かれた接辞ファイルの多くのエラーを回避するため
+に、IGNOREEXTRA フラグを加えることができる。
 
-Apparently Myspell allows an affix name to appear more than once.  Since this
-might also be a mistake, Vim checks for an extra "S".  The affix files for
-Myspell that use this feature apparently have this flag.  Example:
+明らかに Myspell は一度ならず何度も接辞名が現れることを許す。これは間違いかも
+しれないので、Vim は特別な "S" をチェックする。この機能を使う Myspell のための
+接辞ファイルは、明らかにこのフラグを持つ。例:
 
 	SFX a Y 1 S ~
 	SFX a 0 an . ~
@@ -1059,11 +1058,11 @@ Myspell that use this feature apparently have this flag.  Example:
 	SFX a 0 on . ~
 
 
-AFFIX FLAGS						*spell-affix-flags*
+接辞フラグ						*spell-affix-flags*
 
-This is a feature that comes from Hunspell: The affix may specify flags.  This
-works similar to flags specified on a basic word.  The flags apply to the
-basic word plus the affix (but there are restrictions).  Example:
+これは Hunspell 由来の機能: 接辞はフラグを明記するかもしれない。基本語を明示す
+るフラグと同じように動作する。フラグは基本語に接辞 (制限付きの) を加えるように
+適用する。例:
 
 	SFX S Y 1 ~
 	SFX S 0 s . ~
@@ -1071,173 +1070,170 @@ basic word plus the affix (but there are restrictions).  Example:
 	SFX A Y 1 ~
 	SFX A 0 able/S . ~
 
-When the dictionary file contains "drink/AS" then these words are possible:
+辞書ファイルが "drink/AS" を含む場合、これらの単語が適合する。
 
 	drink
-	drinks		uses S suffix
-	drinkable	uses A suffix
-	drinkables	uses A suffix and then S suffix
+	drinks		S suffix を使う
+	drinkable	A suffix を使う
+	drinkables	A suffix を使い、それから S suffix を使う
 
-Generally the flags of the suffix are added to the flags of the basic word,
-both are used for the word plus suffix.  But the flags of the basic word are
-only used once for affixes, except that both one prefix and one suffix can be
-used when both support combining.
+一般に、接尾辞のフラグは基本語のフラグに付加され、どちらのフラグも基本語に接尾
+辞を加えるために使われる。しかし、基本語のフラグが接辞尾のために使われるのは次
+を除いて 1 度だけである。その例外とは、双方が結合をサポートしている時に、双方
+の 1 つの接頭辞と 1 つの接尾辞が使われる場合である。
 
-Specifically, the affix flags can be used for:
-- Suffixes on suffixes, as in the example above.  This works once, thus you
-  can have two suffixes on a word (plus one prefix).
-- Making the word with the affix rare, by using the |spell-RARE| flag.
-- Exclude the word with the affix from compounding, by using the
-  |spell-COMPOUNDFORBIDFLAG| flag.
-- Allow the word with the affix to be part of a compound word on the side of
-  the affix with the |spell-COMPOUNDPERMITFLAG|.
-- Use the NEEDCOMPOUND flag: word plus affix can only be used as part of a
-  compound word. |spell-NEEDCOMPOUND|
-- Compound flags: word plus affix can be part of a compound word at the end,
-  middle, start, etc.  The flags are combined with the flags of the basic
-  word.  |spell-compound|
-- NEEDAFFIX: another affix is needed to make a valid word.
-- CIRCUMFIX, as explained just below.
+特に、接辞尾フラグは次のために使うことができる:
+- 上記の例と同じだが、接尾辞の接尾辞。これは一度だけ動作するので、1 つの単語は
+  2 つの接尾辞を持つことができる (それと 1 つの接頭辞)。
+- |spell-RARE| フラグを使って、珍しい接辞尾を持つ単語を作る。
+- |spell-COMPOUNDFORBIDFLAG| フラグを使って、複合語から接辞尾を持つ単語を除外
+  する。
+- 接辞を持つ単語が、|spell-COMPOUNDPERMITFLAG| を持つ接辞側の複合語の一部とな
+  ることを許す。
+- NEEDCOMPOUND フラグを使う: 接辞を加えた単語は複合語のいち部としてのみ使われ
+  る。|spell-NEEDCOMPOUND|
+- 複合語フラグ: 接辞を加えた単語は尾、中間、頭などで複合語の一部となることがで
+  きる。フラグは基本後のフラグと組み合わされる。|spell-compound|
+- NEEDAFFIX: その他のフラグは妥当な単語を作るのに必要とされる。
+- CIRCUMFIX は下記で説明される。
 
 
 IGNOREEXTRA						*spell-IGNOREEXTRA*
 
-Normally Vim gives an error for an extra field that does not start with '#'.
-This avoids errors going unnoticed.  However, some files created for Myspell
-or Hunspell may contain many entries with an extra field.  Use the IGNOREEXTRA
-flag to avoid lots of errors.
+通常、Vim は '#' で始まらない特別フィールドにエラーを与える。これは気づかれず
+に進行しているエラーを回避する。しかしながら、いくつかの Myspell か Hunspell の
+ために作られるファイルは特別なフィールドを持つエントリを多く含んでいるかも知れ
+ない。多くのエラーを回避するために IGNOREEXTRA フラグを使用する。
 
 
 CIRCUMFIX						*spell-CIRCUMFIX*
 
-The CIRCUMFIX flag means a prefix and suffix must be added at the same time.
-If a prefix has the CIRCUMFIX flag than only suffixes with the CIRCUMFIX flag
-can be added, and the other way around.
-An alternative is to only specify the suffix, and give the that suffix two
-flags: The required prefix and the NEEDAFFIX flag.  |spell-NEEDAFFIX|
+CIRCUMFIX フラグは同時に付加されなければならない接頭辞と接尾辞を意味する。もし
+も接頭辞が CIRCUMFIX フラグを持つのなら、CIRCUMFIX フラグを持つ接尾辞のみが追
+加される。そして、その反対も。
+代替としては、接尾辞を指定しその接尾辞に 2 つのフラグを与えることだけである。:
+それは必要とされる接頭辞と NEEDAFFIX フラグである。|spell-NEEDAFFIX|
 
 
 PFXPOSTPONE						*spell-PFXPOSTPONE*
 
-When an affix file has very many prefixes that apply to many words it's not
-possible to build the whole word list in memory.  This applies to Hebrew (a
-list with all words is over a Gbyte).  In that case applying prefixes must be
-postponed.  This makes spell checking slower.  It is indicated by this keyword
-in the .aff file:
+接辞ファイルが多くの単語に適用可能なたくさんの接辞を含む場合、全ての単語リスト
+をメモリ内でビルドすることはできない。これはヘブライ語 (全ての単語のリストはギ
+ガバイトを超える) に適用する。この場合、適用されている接辞は後回しにされなけれ
+ばならない。これはスペルチェックを遅くする。これは .aff ファイル内の次のキーワー
+ドによって示される:
 
 	PFXPOSTPONE ~
 
-Only prefixes without a chop string and without flags can be postponed.
-Prefixes with a chop string or with flags will still be included in the word
-list.  An exception if the chop string is one character and equal to the last
-character of the added string, but in lower case.  Thus when the chop string
-is used to allow the following word to start with an upper case letter.
+途切れた文字列やフラグなしの接頭辞だけ延期されることができる。途切れた文字列や
+フラグのある接頭辞は単語リストに含まれたままだろう。もしも途切れた文字列が 1
+文字で、加えられた文字列の最後の文字と等しいのならば、小文字を除いて例外である。
+それゆえ、途切れた文字列は大文字で始まる単語を続けることは認められている。
 
 
-WORDS WITH A SLASH					*spell-SLASH*
+スラッシュ付きの単語					*spell-SLASH*
 
-The slash is used in the .dic file to separate the basic word from the affix
-letters and other flags.  Unfortunately, this means you cannot use a slash in
-a word.  Thus "TCP/IP" is not a word but "TCP" with the flags "IP".  To include
-a slash in the word put a backslash before it: "TCP\/IP".  In the rare case
-you want to use a backslash inside a word you need to use two backslashes.
-Any other use of the backslash is reserved for future expansion.
+スラッシュは .dic ファイルで基本後と接頭語や他のフラグを区切ることに使われる。
+不幸なことに、これは単語中でスラッシュを使えないことを意味している。それゆえ、
+"TCP/IP" は単語ではなく、"IP" フラグをもつ "TCP" ということになる。単語中にス
+ラッシュを含むためには、その前にバックスラッシュを挿入する: "TCP\/IP"。単語中
+にバックスラッシュを使いたいというような稀な場合があるならバックスラッシュを 2
+つ続ける必要がある。それ以外のバックスラッシュの使用は将来の拡張のために予約さ
+れている。
 
 
-KEEP-CASE WORDS						*spell-KEEPCASE*
+大文字小文字を保つ単語					*spell-KEEPCASE*
 
-In the affix file a KEEPCASE line can be used to define the affix name used
-for keep-case words.  Example:
+接辞ファイル内の KEEPCASE 行は大文字小文字を保つ単語のために使われる接辞ファイ
+ルを定義するのに使われる。例:
 
 	KEEPCASE = ~
 
-This flag is not supported by Myspell.  It has the meaning that case matters.
-This can be used if the word does not have the first letter in upper case at
-the start of a sentence.  Example:
+このフラグは Myspell によってサポートされない。大文字小文字問題があることを意
+味する。もしも文章のはじめの単語が大文字で始まっていないのであれば、これを使う
+ことができる。例:
 
-    word list	    matches		    does not match ~
+    単語リスト	    マッチする		    マッチしない ~
     's morgens/=    's morgens		    'S morgens 's Morgens 'S MORGENS
     's Morgens	    's Morgens 'S MORGENS   'S morgens 's morgens
 
-The flag can also be used to avoid that the word matches when it is in all
-upper-case letters.
+フラグはまた、全てが大文字である場合に単語がマッチすることを回避するために使わ
+れる。
 
 
-RARE WORDS						*spell-RARE*
+稀な単語						*spell-RARE*
 
-In the affix file a RARE line can be used to define the affix name used for
-rare words.  Example:
+接辞ファイルで稀な単語のために使われる接辞名を定義するのに RARE 行は使われる。
+例:
 
 	RARE ? ~
 
-Rare words are highlighted differently from bad words.  This is to be used for
-words that are correct for the language, but are hardly ever used and could be
-a typing mistake anyway.  When the same word is found as good it won't be
-highlighted as rare.
+稀な単語は誤りの単語とは異なるハイライトをされる。これは言語向けの正しい単語の
+ために使われるのだが、めったに使われず、入力ミスとなる。同じ単語が正しい単語と
+して見つかると稀な単語としてはハイライトされないだろう。
 
-This flag can also be used on an affix, so that a basic word is not rare but
-the basic word plus affix is rare |spell-affix-flags|.  However, if the word
-also appears as a good word in another way (e.g., in another region) it won't
-be marked as rare.
+このフラグはさらに接辞に使われる。そのため、接辞の付いた基本語が稀な場合を除き、
+基本後は稀な単語ではない |spell-affix-flags| 。しかしながら、もしも単語が他の
+使い方 (例: 他の地域) で正しい単語として現れたのなら、稀な単語としてマークされな
+い。
 
 
-BAD WORDS						*spell-BAD*
+誤った単語						*spell-BAD*
 
-In the affix file a BAD line can be used to define the affix name used for
-bad words.  Example:
+接辞ファイル内の BAD 行は、誤った単語のために使われる接辞名を定義するのに使わ
+れる。例:
 
 	BAD ! ~
 
-This can be used to exclude words that would otherwise be good.  For example
-"the the" in the .dic file:
+これは他では正しいであろう単語を除外するのに使われる。例えば、.dic ファイル内
+の "the the" である。
 
 	the the/! ~
 
-Once a word has been marked as bad it won't be undone by encountering the same
-word as good.
+ひとたび誤った単語としてマークされると、同じ単語が正しいものであるとしてももと
+に戻すことはできない。
 
-The flag also applies to the word with affixes, thus this can be used to mark
-a whole bunch of related words as bad.
+フラグはまた単語に接辞を適用する。それゆえ、関連する単語群全体を誤ったものとし
+てマークするのに使われる。
 
 							*spell-FORBIDDENWORD*
-FORBIDDENWORD can be used just like BAD.  For compatibility with Hunspell.
+FORBIDDENWORD は BAD とほとんど同じように使うことができる。Hunspell と互換。
 
 							*spell-NEEDAFFIX*
-The NEEDAFFIX flag is used to require that a word is used with an affix.  The
-word itself is not a good word (unless there is an empty affix).  Example:
+NEEDAFFIX フラグは単語が接辞と共に使われることを要求するために使われる。単語そ
+れ自身は正しい単語ではない (接辞が空でない限り) 。例:
 
 	NEEDAFFIX + ~
 
 
-COMPOUND WORDS						*spell-compound*
+複合語							*spell-compound*
 
-A compound word is a longer word made by concatenating words that appear in
-the .dic file.  To specify which words may be concatenated a character is
-used.  This character is put in the list of affixes after the word.  We will
-call this character a flag here.  Obviously these flags must be different from
-any affix IDs used.
+複合語は .dic ファイル内にある単語を連結することによって作られた長い単語である。
+連結されているかもしれない単語を明示するために、文字が使われる。この文字は単語
+の後の接辞リストに書かれる。この文字をここではフラグと呼ぼう。明らかに、これら
+のフラグは接辞の IDs で使われているどんなものとも異なっていなければならない。
 
 							*spell-COMPOUNDFLAG*
-The Myspell compatible method uses one flag, specified with COMPOUNDFLAG.  All
-words with this flag combine in any order.  This means there is no control
-over which word comes first.  Example:
+Myspell 互換の方法は COMPOUNDFLAG で指定された 1 つのフラグを使う。このフラグ
+を持つ単語は全て任意の順番に結合する。これはどの単語が最初にくるのかを制御しな
+いことを意味する。例:
 	COMPOUNDFLAG c ~
 
 							*spell-COMPOUNDRULE*
-A more advanced method to specify how compound words can be formed uses
-multiple items with multiple flags.  This is not compatible with Myspell 3.0.
-Let's start with an example:
+複合語がどのように合成されるかを示すより進んだ方法は、複数のフラグを持った複数
+の要素を使うことである。これは Myspell 3.0 と互換性を持たない。次の例から始めよ
+う:
 	COMPOUNDRULE c+ ~
 	COMPOUNDRULE se ~
 
-The first line defines that words with the "c" flag can be concatenated in any
-order.  The second line defines compound words that are made of one word with
-the "s" flag and one word with the "e" flag.  With this dictionary:
+最初の行は "c" フラグを持つ単語が任意の順番で繋がれることを定義する。2 行目は
+"s" フラグを持つ単語 1 つと "e" フラグを持つ単語 1 つからなる複合語を定義して
+いる。次の内容の辞書からは:
 	bork/c ~
 	onion/s ~
 	soup/e ~
 
-You can make these words:
+これらの単語を作ることができる:
 	bork
 	borkbork
 	borkborkbork
@@ -1246,17 +1242,17 @@ You can make these words:
 	soup
 	onionsoup
 
-The COMPOUNDRULE item may appear multiple times.  The argument is made out of
-one or more groups, where each group can be:
+COMPOUNDRULE 要素は何度も目にするかもしれない。引数は 1 つもしくはそれ以上のグ
+ループを作り上げる。それぞれのグループは次のようになる:
 	one flag			e.g., c
 	alternate flags inside []	e.g., [abc]
-Optionally this may be followed by:
+任意に次の記号を続けられる:
 	*	the group appears zero or more times, e.g., sm*e
 	+	the group appears one or more times, e.g., c+
 	?	the group appears zero times or once, e.g., x?
 
-This is similar to the regexp pattern syntax (but not the same!).  A few
-examples with the sequence of word flags they require:
+これは正規表現の文法に似ている (しかし、同じではない!)。いくつかの必要な単語フ
+ラグの順の例:
     COMPOUNDRULE x+	    x xx xxx etc.
     COMPOUNDRULE yz	    yz
     COMPOUNDRULE x+z	    xz xxz xxxz etc.
@@ -1269,133 +1265,127 @@ examples with the sequence of word flags they require:
     COMPOUNDRULE sm*e	    se sme smme smmme etc.
     COMPOUNDRULE s[xyz]*e  se sxe sxye sxyxe sye syze sze szye szyxe  etc.
 
-A specific example: Allow a compound to be made of two words and a dash:
-	In the .aff file:
+特別な例: 2 つの単語とダッシュから作られる合成を許す:
+	.aff ファイル内で:
 	    COMPOUNDRULE sde ~
 	    NEEDAFFIX x ~
 	    COMPOUNDWORDMAX 3 ~
 	    COMPOUNDMIN 1 ~
-	In the .dic file:
+	.dic ファイル内で:
 	    start/s ~
 	    end/e ~
 	    -/xd ~
 
-This allows for the word "start-end", but not "startend".
+これは単語 "start-end" を許すが、"startend" は許可しない。
 
-An additional implied rule is that, without further flags, a word with a
-prefix cannot be compounded after another word, and a word with a suffix
-cannot be compounded with a following word.  Thus the affix cannot appear
-on the inside of a compound word.  This can be changed with the
-|spell-COMPOUNDPERMITFLAG|.
+さらに含まれるルールには次のようなものがある。これ以上のフラグなしで、接頭辞を
+持つ単語は他の単語の後ろに結合されない。接尾辞を持つ単語は単語の前に結合されな
+い。それゆえ、接辞は複合語の内側には現れない。これは
+|spell-COMPOUNDPERMITFLAG| で変更することができる。
 
 							*spell-NEEDCOMPOUND*
-The NEEDCOMPOUND flag is used to require that a word is used as part of a
-compound word.  The word itself is not a good word.  Example:
+NEEDCOMPOUND フラグは単語が複合語の一部として使われることを要求するのに使われ
+る。単語それ自身は正しい単語ではない。例:
 
 	NEEDCOMPOUND & ~
 
 							*spell-ONLYINCOMPOUND*
-The ONLYINCOMPOUND does exactly the same as NEEDCOMPOUND.  Supported for
-compatibility with Hunspell.
+ONLYINCOMPOUND は NEEDCOMPOUND とまったく同じである。Hunspell との互換性をサポー
+トする。
 
 							*spell-COMPOUNDMIN*
-The minimal character length of a word used for compounding is specified with
-COMPOUNDMIN.  Example:
+合成するのに使われる単語の最小文字数は COMPOUNDMIN で指定される。例:
 	COMPOUNDMIN 5 ~
 
-When omitted there is no minimal length.  Obviously you could just leave out
-the compound flag from short words instead, this feature is present for
-compatibility with Myspell.
+省略された時は最小値はない。それよりも、明らかに短い単語からの合成フラグを省く
+だけでよい。この機能は Myspell との互換性のためにある。
 
 							*spell-COMPOUNDWORDMAX*
-The maximum number of words that can be concatenated into a compound word is
-specified with COMPOUNDWORDMAX.  Example:
+複合語の中に結合されうる単語の最大値は COMPOUNDWORDMAX で指定される。例:
 	COMPOUNDWORDMAX 3 ~
 
-When omitted there is no maximum.  It applies to all compound words.
+省略されているときに最大値はない。すべての複合単語を適用する。
 
-To set a limit for words with specific flags make sure the items in
-COMPOUNDRULE where they appear don't allow too many words.
+特定のフラグをもつ単語の制限を設定するために、COMPOUNDRULE 内の項目を確認する。
+ここでは多すぎる単語を許可しないようだ。
 
 							*spell-COMPOUNDSYLMAX*
-The maximum number of syllables that a compound word may contain is specified
-with COMPOUNDSYLMAX.  Example:
+複合語が含まれているかもしれない音節の最大値は COMPOUNDSYLMAX で指定される。
+例:
 	COMPOUNDSYLMAX 6 ~
 
-This has no effect if there is no SYLLABLE item.  Without COMPOUNDSYLMAX there
-is no limit on the number of syllables.
+SYLLABLE 項目がなければ効果はない。COMPOUNDSYLMAX がないと、音節の数に制限はな
+い。
 
-If both COMPOUNDWORDMAX and COMPOUNDSYLMAX are defined, a compound word is
-accepted if it fits one of the criteria, thus is either made from up to
-COMPOUNDWORDMAX words or contains up to COMPOUNDSYLMAX syllables.
+COMPOUNDWORDMAX と COMPOUNDSYLMAX の双方が定義されているなら、基準の 1 つに適
+合している場合は複合語は認められる。それゆえ、COMPOUNDWORDMAX 単語まで作られた、
+もしくは COMPOUNDSYLMAX 音節までを含んでいるかのどちらかである。
 
 						    *spell-COMPOUNDFORBIDFLAG*
-The COMPOUNDFORBIDFLAG specifies a flag that can be used on an affix.  It
-means that the word plus affix cannot be used in a compound word.  Example:
-	affix file:
+COMPOUNDFORBIDFLAG は 1 つの接辞で使われるフラグを指定する。接辞を加える単語は
+複合語の中で使うことができないことを意味する。例:
+	接辞ファイル:
 		COMPOUNDFLAG c ~
 		COMPOUNDFORBIDFLAG x ~
 		SFX a Y 2 ~
 		SFX a 0 s   . ~
 		SFX a 0 ize/x . ~
-	dictionary:
+	辞書:
 		word/c ~
 		util/ac ~
 
-This allows for "wordutil" and "wordutils" but not "wordutilize".
-Note: this doesn't work for postponed prefixes yet.
+これは "wordutil" と "wordutils" は認めるが、"wordutilize" は認めない。
+Note: これは伸ばされた接頭辞にはまだ作用しない。
 
 						    *spell-COMPOUNDPERMITFLAG*
-The COMPOUNDPERMITFLAG specifies a flag that can be used on an affix.  It
-means that the word plus affix can also be used in a compound word in a way
-where the affix ends up halfway the word.  Without this flag that is not
-allowed.
-Note: this doesn't work for postponed prefixes yet.
+COMPOUNDPERMITFLAG は接辞に使われるフラグを明示する。接辞を加える単語はまた、
+接辞が単語の途中で終わるような複合語の中で使うことができることを意味する。この
+フラグなしでは、認められない。
+Note: これは伸ばされた接頭辞にはまだ作用しない。
 
 						    *spell-COMPOUNDROOT*
-The COMPOUNDROOT flag is used for words in the dictionary that are already a
-compound.  This means it counts for two words when checking the compounding
-rules.  Can also be used for an affix to count the affix as a compounding
-word.
+COMPOUNDROOT フラグはすでに合成される辞書の単語のために使われる。これは結合の
+ルールを確認したときに、2 つの単語を数えることを意味する。接辞を複合語として数
+えるための接辞として使うこともできる。
 
 						*spell-CHECKCOMPOUNDPATTERN*
-CHECKCOMPOUNDPATTERN is used to define patterns that, when matching at the
-position where two words are compounded together forbids the compound.
-For example:
+CHECKCOMPOUNDPATTERN はパターンを定義するのに使われる。そのパターンというのは
+2 つの単語がお互いに合成されている位置が一致しているときに結合を禁止するという
+ものだ。例:
 	CHECKCOMPOUNDPATTERN o e ~
 
-This forbids compounding if the first word ends in "o" and the second word
-starts with "e".
+これは、最初の単語が "o" で終わり、2 つ目の単語が "e" で始まる場合に結合を禁止
+するというものだ。
 
-The arguments must be plain text, no patterns are actually supported, despite
-the item name.  Case is always ignored.
+引数がプレーンテキストでなければならず、項目名にもかかわらず、実際にサポートさ
+れるパターンはない。事例は常に無視される。
 
-The Hunspell feature to use three arguments and flags is not supported.
+3 つの引数とフラグを使用する Hunspell 機能はサポートされない。
 
 							*spell-NOCOMPOUNDSUGS*
-This item indicates that using compounding to make suggestions is not a good
-idea.  Use this when compounding is used with very short or one-character
-words.  E.g. to make numbers out of digits.  Without this flag creating
-suggestions would spend most time trying all kind of weird compound words.
+この項目は、提案するために合成を使うことは良いアイディアではないことを示す。合
+成がとても短い、もしくは 1 文字の単語で使われる場合、これを使用する。例えば、
+桁外の数字を作るときである。このフラグがないと、提案を作るために奇妙な複合語の
+すべてを試す膨大な時間を費やすことになるだろう。
 
 	NOCOMPOUNDSUGS ~
 
 							*spell-SYLLABLE*
-The SYLLABLE item defines characters or character sequences that are used to
-count the number of syllables in a word.  Example:
+SYLLABLE 項目は、文字もしくは単語の音節の数字を数えるために使われる文字の並び
+を定義する。例:
 	SYLLABLE aáeéiíoóöõuúüûy/aa/au/ea/ee/ei/ie/oa/oe/oo/ou/uu/ui ~
 
-Before the first slash is the set of characters that are counted for one
-syllable, also when repeated and mixed, until the next character that is not
-in this set.  After the slash come sequences of characters that are counted
-for one syllable.  These are preferred over using characters from the set.
-With the example "ideeen" has three syllables, counted by "i", "ee" and "e".
+最初のスラッシュの前は 1 つの音節として数えられた文字セットで、また、繰り返し
+や混合された場合は、このセット内でない次の文字までになる。スラッシュの後には 1
+つの音節として数えられる文字列が来る。これらは、セットから文字を使うよりも望ま
+しい。例として、"ideeen" は 3 つの音節を持っていて、"i" と "ee" そして、"e" の
+ように数えられる。
 
-Only case-folded letters need to be included.
+折り畳まれたケースの文字だけが含まれる必要がある。
 
-Another way to restrict compounding was mentioned above: Adding the
-|spell-COMPOUNDFORBIDFLAG| flag to an affix causes all words that are made
-with that affix to not be used for compounding.
+合成を制限する他の方法は、上で述べられている: |spell-COMPOUNDFORBIDFLAG| フラ
+グを接辞に加えることは、その接辞から作られるすべての単語が合成のために使われな
+いことの原因となる。
 
 
 UNLIMITED COMPOUNDING					*spell-NOBREAK*
