@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.1.  Last change: 2018 Dec 13
+*eval.txt*	For Vim バージョン 8.1.  Last change: 2018 Dec 18
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2274,12 +2274,12 @@ prompt_setcallback({buf}, {expr}) なし	プロンプトコールバック関数
 prompt_setinterrupt({buf}, {text}) なし	プロンプト割り込み関数を設定する
 prompt_setprompt({buf}, {text}) なし	プロンプトテキストを設定する
 prop_add({lnum}, {col}, {props})  なし	テキストプロパティを追加
-prop_clear({lnum} [, {lnum_end} [, {bufnr}]])
+prop_clear({lnum} [, {lnum-end} [, {bufnr}]])
 				なし	全てのテキストプロパティを削除
 prop_find({props} [, {direction}])
 				辞書	テキストプロパティを検索する
 prop_list({lnum} [, {props})  	リスト	{lnum}行目のテキストプロパティを取得
-prop_remove({props} [, {lnum} [, {lnum_end}]])
+prop_remove({props} [, {lnum} [, {lnum-end}]])
 				数値	テキストプロパティを削除
 prop_type_add({name}, {props})	なし	新しいプロパティタイプを定義
 prop_type_change({name}, {props})
@@ -6503,7 +6503,7 @@ prop_add({lnum}, {col}, {props})
 			"end_lnum" - テキスト終端の行番号
 			"end_col"  - テキスト終端の列。"length" が与えられた場
 				     合は使用されない
-			"bufnr	   - プロパティを追加するバッファ。省略された
+			"bufnr"	   - プロパティを追加するバッファ。省略された
 				     場合、カレントバッファが使用される
 			"id"	   - プロパティのユーザー定義ID。 省略時は0が
 				     使われる
@@ -6524,9 +6524,9 @@ prop_add({lnum}, {col}, {props})
 		テキストプロパティについては、|text-properties| を参照。
 
 
-prop_clear({lnum} [, {lnum_end} [, {props}]])		*prop_clear()*
+prop_clear({lnum} [, {lnum-end} [, {props}]])		*prop_clear()*
 		{lnum}行からすべてのテキストプロパティを削除する。
-		{lnum_end}が指定された場合、{lnum}行から{lnum_end}(その行を含
+		{lnum-end}が指定された場合、{lnum}行から{lnum-end}(その行を含
 		む)行までのすべてのテキストプロパティを削除する。
 
 		{props}に "bufnr" 項目が含まれている場合はこのバッファを使用
@@ -6586,9 +6586,9 @@ prop_list({lnum} [, {props}]) 				*prop_list()*
 
 
 						*prop_remove()* *E968*
-prop_remove({props} [, {lnum} [, {lnum_end}]])
+prop_remove({props} [, {lnum} [, {lnum-end}]])
 		{lnum}行から一致するテキストプロパティを削除する。
-		{lnum_end}が指定された場合、{lnum}行から{lnum_end}(その行を含
+		{lnum-end}が指定された場合、{lnum}行から{lnum-end}(その行を含
 		む)までの一致するテキストプロパティを削除する。
 		{lnum}を省略した倍、一致するテキストプロパティをすべての行から
 		削除する。
