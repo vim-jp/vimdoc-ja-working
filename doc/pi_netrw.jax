@@ -1578,6 +1578,11 @@ gx マッピングはすべてのバッファに適用できます。カーソ�
       入力したパターンにマッチしたファイルがマークされるので、それから "D" を
       押す。
 
+Vim が 7.4 で patch#1107 が含まれていれば、|g:netrw_localrmdir| はディレクトリ
+を削除するのにはもう使用されません。代わりに Vim の |delete()| が "d" オプショ
+ン付きで使用されます。"D" マップでは空のディレクトリのみが削除されることに注意
+してください。通常のファイルも同様に |delete()| で削除されます。
+
 リモートのファイルとディレクトリの削除には、|g:netrw_rm_cmd|、
 |g:netrw_rmf_cmd|、|g:netrw_rmdir_cmd| 変数が使われます。|g:netrw_rm_cmd| は
 ファイルの削除に使われます。初期設定は次のとおり:
@@ -1643,13 +1648,14 @@ g:netrw_rmdir_cmd によるディレクトリの削除が失敗した場合は�
 	  この方法を好む人達はしばしばツリービューも好むでしょう。
 	  |g:netrw_liststyle|参照。
 
+:[N]Lexplore! [dir] は :Lexplore と似ていますが、縦一杯のエクスプローラーウィ
+	  ンドウを右側に開きます。その際、未初期化の |g:netrw_chgwin| は 1 に
+	  セットされます (例えばファイルを開くときには最も左のウィンドウが優先
+	  的に使用されます)。
+
 	  以下も参照: |netrw-C|           |g:netrw_browse_split|   |g:netrw_wiw|
 		      |netrw-p| |netrw-P|   |g:netrw_chgwin|
 		      |netrw-c-tab|       |g:netrw_winsize|
-
-:[N]Lexplore! は :Lexplore と似ていますが、縦一杯のエクスプローラーウィンドウ
-	  を左側に開きます。その際、未定義の |g:netrw_chgwin| は1にセットされ
-	  ます。
 
 						*netrw-:Sexplore*
 :[N]Sexplore は、常に新しいウィンドウを作成してローカルディレクトリブラウザー
@@ -1806,6 +1812,9 @@ For Unix: >
 こで [return] を押すと、netrw はそのコマンドと引数で |system()| を実行します。
 結果は |:echomsg| で表示されるので、|:messages| で再表示できます。Ansi エス
 ケープシーケンスは除去されます。
+
+指示のための引数の編集の仕方の更なる情報については |cmdline-window| を参照して
+ください。
 
 
 取扱いをファイルまたはディレクトリに強制する	*netrw-gd* *netrw-gf* {{{2
@@ -2024,7 +2033,7 @@ g:netrw_mkdir_cmd 変数に依存。ローカル操作は g:netrw_localmkdir に
 		|g:netrw_remote_mkdir| |netrw-%|
 
 
-ブラウジングディレクトリをカレントディレクトリにする	*netrw-c* {{{2
+ブラウジングディレクトリをカレントディレクトリにする	*netrw-cd* {{{2
 
 |g:netrw_keepdir| の初期設定は 1 です。この設定の場合、カレントディレクトリは
 ブラウジングディレクトリに合わせて変更されません。(v6 のファイルエクスプロー
@@ -2037,6 +2046,10 @@ g:netrw_keepdir が 1 のときは netrw のブラウジングディレクトリ
 クトリは別々です。二つのディレクトリを同じにするには "c" マップを使います (cを
 押すだけ)。このマップは Vim のカレントディレクトリを netrw のブラウジングディ
 レクトリに変更します。
+
+*netrw-c* : このマップ名は "c" から cd に変更されました (|netrw-cd| を参照)。
+          この変更は |netrw-cb| および |netrw-cB| を使えるようにするためのもの
+          です。
 
 関連設定: |g:netrw_keepdir|
 
@@ -2080,9 +2093,10 @@ netrw はファイルをマークする方法をいくつか提供していま�
     |netrw-mg|	マークしたファイルに vimgrep を適用する
     |netrw-mm|	マークしたファイルをターゲットに移動する
     |netrw-mp|	マークしたファイル印刷する
+    |netrw-ms|	Netrw がマークしたファイルを読み込む
     |netrw-mt|	|netrw-mm| または |netrw-mc| 用のターゲットを設定する
     |netrw-mT|	マークしたファイルのタグを生成する
-    |netrw-mv|  マークしたファイルにVimコマンドを適用する
+    |netrw-mv|	マークしたファイルにVimコマンドを適用する
     |netrw-mx|	マークしたファイルにシェルコマンドを適用する
     |netrw-mX|	マークしたファイルに一括でシェルコマンドを適用する
     |netrw-mz|	マークしたファイルを圧縮/伸長する
@@ -2153,6 +2167,9 @@ regexp: " というプロンプトが表示されるので、例えば *.c$ の�
 をマークします。将来的には glob() スタイルではなく |regexp| スタイルの正規表現
 を使えるようにする予定です (また別のオプションで)。
 
+指示のための正規表現の編集の仕方の更なる情報については |cmdline-window| を参照
+してください。
+
 
 マークファイル: Vimコマンド				*netrw-mv*  {{{2
 	     (マークの設定方法は |netrw-mf| と |netrw-mr| を参照)
@@ -2167,7 +2184,8 @@ regexp: " というプロンプトが表示されるので、例えば *.c$ の�
 	* sil! keepalt wq!
 
 あなたが実行したい vim コマンドを尋ねるため "Enter vim command: " というプロン
-プトが出ます。
+プトが出ます。指示のためのコマンドの編集の仕方の更なる情報については
+|cmdline-window| を参照してください。
 
 
 マークファイル: 任意のシェルコマンド				*netrw-mx* {{{2
@@ -2217,7 +2235,17 @@ regexp: " というプロンプトが表示されるので、例えば *.c$ の�
 ma を使うと、マークファイルリストを引数リストに移動します。
 mA を使うと、引数リストをマークファイルリストに移動します。
 
-参照: |netrw-qF| |argument-list| |:args|
+参照: |netrw-cb| |netrw-cB| |netrw-qF| |argument-list| |:args|
+
+
+マークファイル: バッファリスト				*netrw-cb* *netrw-cB*
+	     (マークの設定方法は |netrw-mf| と |netrw-mr| を参照)
+		     (グローバルマークファイルリスト使用)
+
+cb を使うと、ファイル名をマークファイルリストからバッファリストに移動します。
+cB を使うと、ファイル名をバッファリストからマークファイルリストにコピーします。
+
+参照: |netrw-ma| |netrw-mA| |netrw-qF| |buffer-list| |:buffers|
 
 
 マークファイル: 圧縮と伸長				*netrw-mz* {{{2
@@ -2251,8 +2279,8 @@ mt (|netrw-mt|) でコピー先ディレクトリを選択し、ファイルの�
 することもできます。
 
 関連設定:
-	|g:netrw_localcopycmd|
-	|g:netrw_localcopydircmd|
+	|g:netrw_localcopycmd|		|g:netrw_localcopycmdopt|
+	|g:netrw_localcopydircmd|	|g:netrw_localcopydircmdopt|
 	|g:netrw_ssh_cmd|
 
 マークファイル: DIFF						*netrw-md* {{{2
@@ -2392,9 +2420,9 @@ hdrtags は http://www.drchip.org/astronaut/src/index.html から入手できま
 リモートでタグファイルを生成した場合、タグファイルが "取得" されます。つまり、
 ローカルシステムにファイルがコピーされます。そして、ネットワーク越しのファイル
 にアクセスできるように、タグファイルが変更されます。変更されるのはタグファイル
-内のファイル名で、それぞれのファイル名の前に netrw で扱える形の url が挿入され
-ます (urlは元のタグファイルの場所に基づく)。タグ操作 (|tags|) を実行すると、
-netrw によって url が開かれ、タグに移動できます。
+内のファイル名で、それぞれのファイル名の前に netrw で扱える形の URL が挿入され
+ます (URLは元のタグファイルの場所に基づく)。タグ操作 (|tags|) を実行すると、
+netrw によって URL が開かれ、タグに移動できます。
 
 関連設定: |g:netrw_ctags| |g:netrw_ssh_cmd|
 

@@ -1617,6 +1617,11 @@ A further approach is to delete files which match a pattern.
       This will cause the matching files to be marked.  Then,
       press "D".
 
+If your vim has 7.4 with patch#1107, then |g:netrw_localrmdir| no longer
+is used to remove directories; instead, vim's |delete()| is used with
+the "d" option.  Please note that only empty directories may be deleted
+with the "D" mapping.  Regular files are deleted with |delete()|, too.
+
 The |g:netrw_rm_cmd|, |g:netrw_rmf_cmd|, and |g:netrw_rmdir_cmd| variables are
 used to control the attempts to remove remote files and directories.  The
 g:netrw_rm_cmd is used with files, and its default value is:
@@ -1680,16 +1685,17 @@ DIRECTORY EXPLORATION COMMANDS  {{{2
 	  The [N] specifies a |g:netrw_winsize| just for the new :Lexplore
 	  window.
 
-	  Those who like this method often also often like tree style displays;
+	  Those who like this method often also like tree style displays;
 	  see |g:netrw_liststyle|.
+
+:[N]Lexplore! [dir] is similar to :Lexplore, except that the full-height
+	  Explorer window will open on the right hand side and an
+	  uninitialized |g:netrw_chgwin| will be set to 1 (eg. edits will
+	  preferentially occur in the leftmost window).
 
 	  Also see: |netrw-C|           |g:netrw_browse_split|   |g:netrw_wiw|
 		    |netrw-p| |netrw-P|   |g:netrw_chgwin|
 		    |netrw-c-tab|       |g:netrw_winsize|
-
-:[N]Lexplore! is like :Lexplore, except that the full-height Explorer window
-	  will open on the right hand side and an uninitialized |g:netrw_chgwin|
-	  will be set to 1.
 
 						*netrw-:Sexplore*
 :[N]Sexplore will always split the window before invoking the local-directory
@@ -1852,9 +1858,11 @@ EXECUTING FILE UNDER CURSOR VIA SYSTEM()			*netrw-X* {{{2
 
 Pressing X while the cursor is atop an executable file will yield a prompt
 using the filename asking for any arguments.  Upon pressing a [return], netrw
-will then call |system()| with that command and arguments.  The result will
-be displayed by |:echomsg|, and so |:messages| will repeat display of the
-result.  Ansi escape sequences will be stripped out.
+will then call |system()| with that command and arguments.  The result will be
+displayed by |:echomsg|, and so |:messages| will repeat display of the result.
+Ansi escape sequences will be stripped out.
+
+See |cmdline-window| for directions for more on how to edit the arguments.
 
 
 FORCING TREATMENT AS A FILE OR DIRECTORY	*netrw-gd* *netrw-gf* {{{2
@@ -2077,7 +2085,7 @@ Associated setting variables:	|g:netrw_localmkdir|   |g:netrw_mkdir_cmd|
 				|g:netrw_remote_mkdir| |netrw-%|
 
 
-MAKING THE BROWSING DIRECTORY THE CURRENT DIRECTORY	*netrw-c* {{{2
+MAKING THE BROWSING DIRECTORY THE CURRENT DIRECTORY	*netrw-cd* {{{2
 
 By default, |g:netrw_keepdir| is 1.  This setting means that the current
 directory will not track the browsing directory. (done for backwards
@@ -2091,6 +2099,9 @@ maintains its own separate notion of the current directory, in order to make
 the two directories the same, use the "c" map (just type c).  That map will
 set Vim's notion of the current directory to netrw's current browsing
 directory.
+
+*netrw-c* : This map's name has been changed from "c" to cd (see |netrw-cd|).
+          This change was done to allow for |netrw-cb| and |netrw-cB| maps.
 
 Associated setting variable: |g:netrw_keepdir|
 
@@ -2136,6 +2147,7 @@ The following netrw maps make use of marked files:
     |netrw-mg|	Apply vimgrep to marked files
     |netrw-mm|	Move marked files to target
     |netrw-mp|	Print marked files
+    |netrw-ms|	Netrw will source marked files
     |netrw-mt|	Set target for |netrw-mm| and |netrw-mc|
     |netrw-mT|	Generate tags using marked files
     |netrw-mv|	Apply vim command to marked files
@@ -2210,6 +2222,9 @@ converts "*" into ".*" (see |regexp|) and marks files based on that.  In the
 future I may make it possible to use |regexp|s instead of glob()-style
 expressions (yet-another-option).
 
+See |cmdline-window| for directions on more on how to edit the regular
+expression.
+
 
 MARKED FILES, ARBITRARY VIM COMMAND				*netrw-mv*  {{{2
 	    (See |netrw-mf| and |netrw-mr| for how to mark files)
@@ -2223,8 +2238,9 @@ the local marked file list, individually:
 	* run vim command
 	* sil! keepalt wq!
 
-A prompt, "Enter vim command: ", will be issued to elicit the vim command
-you wish used.
+A prompt, "Enter vim command: ", will be issued to elicit the vim command you
+wish used.  See |cmdline-window| for directions for more on how to edit the
+command.
 
 
 MARKED FILES, ARBITRARY SHELL COMMAND				*netrw-mx* {{{2
@@ -2275,7 +2291,17 @@ MARKED FILES: ARGUMENT LIST				*netrw-ma* *netrw-mA*
 Using ma, one moves filenames from the marked file list to the argument list.
 Using mA, one moves filenames from the argument list to the marked file list.
 
-See Also: |netrw-qF| |argument-list| |:args|
+See Also: |netrw-cb| |netrw-cB| |netrw-qF| |argument-list| |:args|
+
+
+MARKED FILES: BUFFER LIST				*netrw-cb* *netrw-cB*
+	    (See |netrw-mf| and |netrw-mr| for how to mark files)
+		      (uses the global marked-file list)
+
+Using cb, one moves  filenames from the marked file list to the buffer list.
+Using cB, one copies filenames from the buffer list to the marked file list.
+
+See Also: |netrw-ma| |netrw-mA| |netrw-qF| |buffer-list| |:buffers|
 
 
 MARKED FILES: COMPRESSION AND DECOMPRESSION		*netrw-mz* {{{2
@@ -2311,8 +2337,8 @@ One may also copy directories and their contents (local only) to a target
 directory.
 
 Associated setting variables:
-	|g:netrw_localcopycmd|
-	|g:netrw_localcopydircmd|
+	|g:netrw_localcopycmd|		|g:netrw_localcopycmdopt|
+	|g:netrw_localcopydircmd|	|g:netrw_localcopydircmdopt|
 	|g:netrw_ssh_cmd|
 
 MARKED FILES: DIFF						*netrw-md* {{{2
@@ -2457,8 +2483,8 @@ When a remote set of files are tagged, the resulting tags file is "obtained";
 ie. a copy is transferred to the local system's directory.  The now local tags
 file is then modified so that one may use it through the network.  The
 modification made concerns the names of the files in the tags; each filename is
-preceded by the netrw-compatible url used to obtain it.  When one subsequently
-uses one of the go to tag actions (|tags|), the url will be used by netrw to
+preceded by the netrw-compatible URL used to obtain it.  When one subsequently
+uses one of the go to tag actions (|tags|), the URL will be used by netrw to
 edit the desired file and go to the tag.
 
 Associated setting variables: |g:netrw_ctags| |g:netrw_ssh_cmd|
