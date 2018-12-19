@@ -477,8 +477,8 @@ sound-folding は遅く、言語を知っている人は2種類の間違いを�
 Vimはつづりのためのバイナリフォーマットを使用する。このことにより単語リストの
 読み込みを大幅に速くし、単語リストを小さく保つ。
 						    *.aff* *.dic* *Myspell*
-Myspellが使用する .aff と .dic ファイルからVimが使用するスペルファイルを生成す
-ることができます。Myspell は OpenOffice.org と Mozilla によって使用されます。
+Myspell が使用する .aff と .dic ファイルからVimが使用するスペルファイルを生成
+することができます。Myspell は OpenOffice.org と Mozilla によって使用されます。
 OpenOffice の .oxt ファイルは .aff と .dic ファイルを含む zip ファイルです。こ
 れらはここから探すことができる。
 	http://extensions.services.openoffice.org/dictionary
