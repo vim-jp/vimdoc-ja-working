@@ -911,9 +911,9 @@ Note: 5 から 7 行目は単語ではない文字が使われていることに
 "UPP" 行は upper-case 文字を指定する。これは "FOL" の同じ場所にある文字とは異
 なる大文字である。
 
-An exception is made for the German sharp s ß.  The upper-case version is
-"SS".  In the FOL/LOW/UPP lines it should be included, so that it's recognized
-as a word character, but use the ß character in all three.
+例外はドイツ語の ß に役立っている。大文字の形は "SS" だ。FOL/LOW/UPP 行の中に
+含まれているべきであり、そのため、単語の文字として認識されるのだが、3 行すべて
+で ß 文字を使う。
 
 ASCII 文字は省略されるべきだ。Vim は常に同じ方法でこれらを扱う。エンコーディン
 グが UTF-8 である場合、単語文字の指定は必要ない。
@@ -1247,9 +1247,9 @@ COMPOUNDRULE 要素は何度も目にするかもしれない。引数は 1 つ�
 	one flag			e.g., c
 	alternate flags inside []	e.g., [abc]
 任意に次の記号を続けられる:
-	*	the group appears zero or more times, e.g., sm*e
-	+	the group appears one or more times, e.g., c+
-	?	the group appears zero times or once, e.g., x?
+	*	ゼロもしくはそれ以上現れる。例: sm*e
+	+	1 回もしくはそれ以上現れる。例: c+
+	?	ゼロもしくは 1 回のみ現れる。例: x?
 
 これは正規表現の文法に似ている (しかし、同じではない!)。いくつかの必要な単語フ
 ラグの順の例:
@@ -1388,46 +1388,45 @@ SYLLABLE 項目は、文字もしくは単語の音節の数字を数えるた�
 いことの原因となる。
 
 
-UNLIMITED COMPOUNDING					*spell-NOBREAK*
+制限の無い合成						*spell-NOBREAK*
 
-For some languages, such as Thai, there is no space in between words.  This
-looks like all words are compounded.  To specify this use the NOBREAK item in
-the affix file, without arguments:
+タイ語のようないくつかの言語では、分かち書きをしない。これはすべての単語が結合
+しているように見える。これを明示するために、接辞ファイルで NOBREAK 項目を引数
+無しで使う:
 	NOBREAK ~
 
-Vim will try to figure out where one word ends and a next starts.  When there
-are spelling mistakes this may not be quite right.
+Vim は単語の終わりと次の始まりがどこにあるかを見つけ出そうとする。スペルミスが
+あった場合、この動作は完全には正しく行われないだろう。
 
 
 							*spell-COMMON*
-Common words can be specified with the COMMON item.  This will give better
-suggestions when editing a short file.  Example:
+共通語は COMMON 項目で明示される。小さなファイルを編集している時ほど、より良い
+提案をしてくれるだろう。例:
 
 	COMMON  the of to and a in is it you that he was for on are ~
 
-The words must be separated by white space, up to 25 per line.
-When multiple regions are specified in a ":mkspell" command the common words
-for all regions are combined and used for all regions.
+単語は 1 行につき 25 個までで、かつ空白で区切られていなければならない。
+":mkspell" コマンドで複数の地域が指定されている場合、すべての地域の共通語は結
+合され、すべての範囲で使われる。
 
 							*spell-NOSPLITSUGS*
-This item indicates that splitting a word to make suggestions is not a good
-idea.  Split-word suggestions will appear only when there are few similar
-words.
+この項目は、提案を作るための単語の分割は良いアイデアでは無いことを示す。分割語
+の提案は、似たような単語がほとんどない場合のみ出現するだろう。
 
 	NOSPLITSUGS ~
 
 							*spell-NOSUGGEST*
-The flag specified with NOSUGGEST can be used for words that will not be
-suggested.  Can be used for obscene words.
+NOSUGGEST と共に使われるフラグは、提案されることがないであろう単語のために使わ
+れる。汚らしい単語のために使うことができる。
 
 	NOSUGGEST % ~
 
 
-REPLACEMENTS						*spell-REP*
+置換							*spell-REP*
 
-In the affix file REP items can be used to define common mistakes.  This is
-used to make spelling suggestions.  The items define the "from" text and the
-"to" replacement.  Example:
+接辞ファイルの REP 項目は共通の誤りを定義するのに使われる。これはスペルの提案
+を生成するのに使われる。次の項目は "from" のテキストと "to" の置換を定義する。
+例:
 
 	REP 4 ~
 	REP f ph ~
@@ -1435,191 +1434,183 @@ used to make spelling suggestions.  The items define the "from" text and the
 	REP k ch ~
 	REP ch k ~
 
-The first line specifies the number of REP lines following.  Vim ignores the
-number, but it must be there (for compatibility with Myspell).
+最初の行は REP 行が続く数を明示する。Vim はこの数字を無視するが、この数字はそ
+こになくてはならない (Myspell との互換性のため)。
 
-Don't include simple one-character replacements or swaps.  Vim will try these
-anyway.  You can include whole words if you want to, but you might want to use
-the "file:" item in 'spellsuggest' instead.
+簡易な 1 文字の置換や交換を含んではならない。Vim はこれらをどうにかして実行し
+ようとする。もしそうしたいのであれば、すべての単語を含めることができるが、代わ
+りに 'spellsuggest' の "file:" 項目を使いたいと思うかもしれない。
 
-You can include a space by using an underscore:
+アンダースコアを使ってスペースを含めることができる。
 
 	REP the_the the ~
 
 
-SIMILAR CHARACTERS					*spell-MAP* *E783*
+類義語							*spell-MAP* *E783*
 
-In the affix file MAP items can be used to define letters that are very much
-alike.  This is mostly used for a letter with different accents.  This is used
-to prefer suggestions with these letters substituted.  Example:
+接辞ファイルの MAP 項目は非常によく似た文字を定義するのに使うことができる。こ
+れは異なったアクセントの文字のために使われることがほとんどである。これはむしろ
+これらの文字を置換する提案に使われる。例:
 
 	MAP 2 ~
 	MAP eéëêè ~
 	MAP uüùúû ~
 
-The first line specifies the number of MAP lines following.  Vim ignores the
-number, but the line must be there.
+最初の行は MAP 行が続く数を明示する。Vim はこの数字を無視するが、この数字はそ
+こになくてはならない。
 
-Each letter must appear in only one of the MAP items.  It's a bit more
-efficient if the first letter is ASCII or at least one without accents.
+それぞれの文字は、MAP　項目中に 1 つのみでなければならない。最初の文字が ASCII
+であるか少なくともアクセント文字でなければ、少しばかり効率が良い。
 
 
-.SUG FILE						*spell-NOSUGFILE*
+.SUG ファイル						*spell-NOSUGFILE*
 
-When soundfolding is specified in the affix file then ":mkspell" will normally
-produce a .sug file next to the .spl file.  This file is used to find
-suggestions by their sound-a-like form quickly.  At the cost of a lot of
-memory (the amount depends on the number of words, |:mkspell| will display an
-estimate when it's done).
+soundfolding が接辞ファイルで明示されているとき、":mkspell" は通常、.spl ファ
+イルを、続いて .sug ファイルを生成する。このファイルは sound-a-like 形式によっ
+て、すばやく提案を見つけるために使われる。多くのメモリを犠牲にする (総量は単語
+の数に依存し、|:mkspell| は終了時に概算を表示するだろう)。
 
-To avoid producing a .sug file use this item in the affix file:
+.sug ファイルを生成しないようにするには affix ファイル中に次の項目を使う。
 
 	NOSUGFILE ~
 
-Users can simply omit the .sug file if they don't want to use it.
+使うことを望まないならば、ユーザーは .sug ファイルを簡単に取り除くことができる。
 
 
 SOUND-A-LIKE						*spell-SAL*
 
-In the affix file SAL items can be used to define the sounds-a-like mechanism
-to be used.  The main items define the "from" text and the "to" replacement.
-Simplistic example:
+接辞ファイルの SAL 項目は sounds-a-like の仕組みを定義するのに使われる。主な項
+目は "from" テキストと "to" 置換を定義する。簡単な例:
 
 	SAL CIA			 X ~
 	SAL CH			 X ~
 	SAL C			 K ~
 	SAL K			 K ~
 
-There are a few rules and this can become quite complicated.  An explanation
-how it works can be found in the Aspell manual:
+ここには少しのルールがあるが、非常に複雑になる。どのように動作するのかの説明は
+Aspell のマニュアルで見つけることができる:
 http://aspell.net/man-html/Phonetic-Code.html.
 
-There are a few special items:
+特別な項目がいくつかある:
 
 	SAL followup		true ~
 	SAL collapse_result	true ~
 	SAL remove_accents	true ~
 
-"1" has the same meaning as "true".  Any other value means "false".
+"1" は "true" と同じ意味である。他の値は "false" を意味する。
 
 
 SIMPLE SOUNDFOLDING				*spell-SOFOFROM* *spell-SOFOTO*
 
-The SAL mechanism is complex and slow.  A simpler mechanism is mapping all
-characters to another character, mapping similar sounding characters to the
-same character.  At the same time this does case folding.  You can not have
-both SAL items and simple soundfolding.
+SAL の仕組みは複雑で遅い。単純な仕組みはすべての文字を他の文字とマッピングし、
+似たように聞こえる文字を同じ文字とマッピングする。同時に、ケースフォールディン
+グをする。SAL 項目と単純な soundfolding の両方を持つことはできない。
 
-There are two items required: one to specify the characters that are mapped
-and one that specifies the characters they are mapped to.  They must have
-exactly the same number of characters.  Example:
+要求される 2 つの項目がある: 1 つはマップされた文字を明示し、もう 1 つはそれら
+がマップされている文字を明示するためのものだ。これらは厳密に文字の同じ番号を持っ
+ていなければならない。例:
 
     SOFOFROM abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ~
     SOFOTO   ebctefghejklnnepkrstevvkesebctefghejklnnepkrstevvkes ~
 
-In the example all vowels are mapped to the same character 'e'.  Another
-method would be to leave out all vowels.  Some characters that sound nearly
-the same and are often mixed up, such as 'm' and 'n', are mapped to the same
-character.  Don't do this too much, all words will start looking alike.
+例では、すべての母音は同じ文字 'e' にマップされている。もう 1 つのやり方ではす
+べての母音を除去するものである。いくつかの同じように聞こえ、しばしば混合される
+'m' や 'n' のような文字は、同じ文字にマップされている。やり過ぎないこと。すべ
+ての単語は同じように見えるだろう。
 
-Characters that do not appear in SOFOFROM will be left out, except that all
-white space is replaced by one space.  Sequences of the same character in
-SOFOFROM are replaced by one.
+SOFOFROM で現れない文字は、すべての空白が 1 つの空白に置き換えられることを除き、
+除去されるだろう。SOFOFROM の同じ文字の連続は 1 つに置き換えられる。
 
-You can use the |soundfold()| function to try out the results.  Or set the
-'verbose' option to see the score in the output of the |z=| command.
+結果を試すために |soundfold()| 関数を使うことができる。もしくは、|z=| コマンド
+の出力するスコアを見るために、'verbose' オプションを設定することができる。
 
 
-UNSUPPORTED ITEMS				*spell-affix-not-supported*
+サポートされていない項目				*spell-affix-not-supported*
 
-These items appear in the affix file of other spell checkers.  In Vim they are
-ignored, not supported or defined in another way.
+これらの項目は他のスペルチェッカーの接辞ファイルの中に現れる。Vim ではこれらは
+無視され、サポートされていない、もしくは他の方法で定義される。
 
 ACCENT		(Hunspell)				*spell-ACCENT*
-		Use MAP instead. |spell-MAP|
+		代わりに MAP を使う。|spell-MAP|
 
 BREAK		(Hunspell)				*spell-BREAK*
-		Define break points.  Unclear how it works exactly.
-		Not supported.
+		ブレークポイントを定義する。厳密にどのような動作をするのかははっ
+		きりしない。サポートされていない。
 
 CHECKCOMPOUNDCASE  (Hunspell)			*spell-CHECKCOMPOUNDCASE*
-		Disallow uppercase letters at compound word boundaries.
-		Not supported.
+		複合語の境界の文字について大文字を許さない。サポートされていな
+		い。
 
 CHECKCOMPOUNDDUP  (Hunspell)			*spell-CHECKCOMPOUNDDUP*
-		Disallow using the same word twice in a compound.  Not
-		supported.
+		複合語中で同じ単語を 2 回使うことを許さない。サポートされてい
+		ない。
 
 CHECKCOMPOUNDREP  (Hunspell)			*spell-CHECKCOMPOUNDREP*
-		Something about using REP items and compound words.  Not
-		supported.
+		REP 項目と複合語を使う何か。サポートされていない。
 
 CHECKCOMPOUNDTRIPLE  (Hunspell)			*spell-CHECKCOMPOUNDTRIPLE*
-		Forbid three identical characters when compounding.  Not
-		supported.
+		合成時に 3 つの同一の文字を禁止する。サポートされていない。
 
 COMPLEXPREFIXES  (Hunspell)				*spell-COMPLEXPREFIXES*
-		Enables using two prefixes.  Not supported.
+		2 つの接頭辞の使用を可能にする。サポートされていない。
 
 COMPOUND	(Hunspell)				*spell-COMPOUND*
-		This is one line with the count of COMPOUND items, followed by
-		that many COMPOUND lines with a pattern.
-		Remove the first line with the count and rename the other
-		items to COMPOUNDRULE |spell-COMPOUNDRULE|
+		COMPOUND 項目の総数を持つ 1 行で、多くの COMPOUND 行はパターン
+		を持つ。
+		総数を持つ最初の行は削除され、他の項目は COMPOUNDRULE にリネー
+		ムされる。|spell-COMPOUNDRULE|
 
 COMPOUNDFIRST	(Hunspell)				*spell-COMPOUNDFIRST*
-		Use COMPOUNDRULE instead. |spell-COMPOUNDRULE|
+		代わりに COMPOUNDRULE を使う。|spell-COMPOUNDRULE|
 
 COMPOUNDBEGIN	(Hunspell)				*spell-COMPOUNDBEGIN*
-		Use COMPOUNDRULE instead. |spell-COMPOUNDRULE|
+		代わりに COMPOUNDRULE を使う。|spell-COMPOUNDRULE|
 
 COMPOUNDEND	(Hunspell)				*spell-COMPOUNDEND*
-		Use COMPOUNDRULE instead. |spell-COMPOUNDRULE|
+		代わりに COMPOUNDRULE を使う。|spell-COMPOUNDRULE|
 
 COMPOUNDMIDDLE	(Hunspell)				*spell-COMPOUNDMIDDLE*
-		Use COMPOUNDRULE instead. |spell-COMPOUNDRULE|
+		代わりに COMPOUNDRULE を使う。|spell-COMPOUNDRULE|
 
 COMPOUNDRULES	(Hunspell)				*spell-COMPOUNDRULES*
-		Number of COMPOUNDRULE lines following.  Ignored, but the
-		argument must be a number.
+		COMPOUNDRULE 行の続く数。無視されるが、引数は 1 つの数値でなけ
+		ればならない。
 
 COMPOUNDSYLLABLE  (Hunspell)			*spell-COMPOUNDSYLLABLE*
-		Use SYLLABLE and COMPOUNDSYLMAX instead. |spell-SYLLABLE|
+		代わりに SYLLABLE と COMPOUNDSYLMAX を使う。|spell-SYLLABLE|
 		|spell-COMPOUNDSYLMAX|
 
 KEY		(Hunspell)				*spell-KEY*
-		Define characters that are close together on the keyboard.
-		Used to give better suggestions.  Not supported.
+		キーボード上で互いに近接する文字を定義する。よりよい提案を与え
+		るのに使われる。サポートされていない。
 
 LANG		(Hunspell)				*spell-LANG*
-		This specifies language-specific behavior.  This actually
-		moves part of the language knowledge into the program,
-		therefore Vim does not support it.  Each language property
-		must be specified separately.
+		language-specifies の挙動を明示する。これは実際に言語情報の一
+		部をプログラム中に移動する。それゆえ、Vim はサポートしていない。
+		それぞれの言語の特徴は個別に明示されていなければならない。
 
 LEMMA_PRESENT	(Hunspell)				*spell-LEMMA_PRESENT*
-		Only needed for morphological analysis.
+		形態素解析のためだけに必要とされる。
 
 MAXNGRAMSUGS	(Hunspell)				*spell-MAXNGRAMSUGS*
-		Set number of n-gram suggestions.  Not supported.
+		n-gram 提案の数を設定する。サポートされていない。
 
 PSEUDOROOT	(Hunspell)				*spell-PSEUDOROOT*
-		Use NEEDAFFIX instead. |spell-NEEDAFFIX|
+		代わりに NEEDAFFIX を使う。|spell-NEEDAFFIX|
 
 SUGSWITHDOTS	(Hunspell)				*spell-SUGSWITHDOTS*
-		Adds dots to suggestions.  Vim doesn't need this.
+		提案にドットを加える。Vim はこれを必要としない。
 
 SYLLABLENUM	(Hunspell)				*spell-SYLLABLENUM*
-		Not supported.
+		サポートされていない。
 
 TRY		(Myspell, Hunspell, others)		*spell-TRY*
-		Vim does not use the TRY item, it is ignored.  For making
-		suggestions the actual characters in the words are used, that
-		is much more efficient.
+		Vim は TRY 項目を使わず、無視する。提案を生成するために、実際
+		の単語の文字が使われる。これは非常に効率がよい。
 
 WORDCHARS	(Hunspell)				*spell-WORDCHARS*
-		Used to recognize words.  Vim doesn't need it, because there
-		is no need to separate words before checking them (using a
-		trie instead of a hashtable).
+		単語を評価するために使われる。Vim は必要としない。なぜなら、こ
+		れらをチェックする前に単語を分ける必要がないからである (ハッシュ
+		テーブルの代わりにトライを使っている)。
 
  vim:tw=78:sw=4:ts=8:noet:ft=help:norl:
