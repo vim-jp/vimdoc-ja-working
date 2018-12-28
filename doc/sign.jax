@@ -1,4 +1,4 @@
-*sign.txt*      For Vim バージョン 8.1.  Last change: 2018 Dec 21
+*sign.txt*      For Vim バージョン 8.1.  Last change: 2018 Dec 26
 
 
 		VIMリファレンスマニュアル    by Gordon Prieur
@@ -279,11 +279,15 @@ Netbeansは|netbeans|を参照。
 		バッファ{nr}に配置されているグループ{group}の目印を一覧表示す
 		る。
 
-:sign place	全てのファイルに設置されている全ての目印を一覧表示する。
+:sign place	全てのファイルに設置されている目印を一覧表示する。
+
+:sign place group=*
+		全てのファイルの全ての目印グループに設置されている目印を一覧表
+		示する。
 
 :sign place group={group}
-		全てのファイルの全ての目印グループに配置された目印を一覧表示す
-		る。
+		全てのファイルの目印グループ{group}に配置されている目印を一覧
+		表示する。
 
 
 (設置した)目印へ移動する				*:sign-jump* *E157*
