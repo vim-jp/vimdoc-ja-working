@@ -2586,8 +2586,8 @@ your browsing preferences.  (see also: |netrw-settings|)
 				    editing.  It will also use the specified tab
 				    and window numbers to perform editing
 				    (see |clientserver|, |netrw-ctrl-r|)
-				This option does not affect |:Lexplore|
-				windows.
+				This option does not affect the production of
+				|:Lexplore| windows.
 
 				Related topics:
 				    |g:netrw_alto|	|g:netrw_altv|
@@ -2746,6 +2746,7 @@ your browsing preferences.  (see also: |netrw-settings|)
   *g:netrw_home*		The home directory for where bookmarks and
 				history are saved (as .netrwbook and
 				.netrwhist).
+				Netrw uses |expand()|on the string.
 				 default: the first directory on the
 				         |'runtimepath'|
 
@@ -2766,7 +2767,7 @@ your browsing preferences.  (see also: |netrw-settings|)
 				 default: (if ssh is executable)
 				          "ssh HOSTNAME ls -FLa"
 
- *g:netrw_list_cmd_options*	If this variable exists, then its contents are
+  *g:netrw_list_cmd_options*	If this variable exists, then its contents are
 				appended to the g:netrw_list_cmd.  For
 				example, use "2>/dev/null" to get rid of banner
 				messages on unix systems.
@@ -2792,26 +2793,52 @@ your browsing preferences.  (see also: |netrw-settings|)
 				 let g:netrw_list_hide= netrw_gitignore#Hide().'.*\.swp$'
 				default: ""
 
-  *g:netrw_localcopycmd*	="cp" Linux/Unix/MacOS/Cygwin
-				="copy" Windows
+  *g:netrw_localcopycmd*	="cp"           Linux/Unix/MacOS/Cygwin
+				=expand("$COMSPEC")             Windows
 				Copies marked files (|netrw-mf|) to target
 				directory (|netrw-mt|, |netrw-mc|)
 
- *g:netrw_localcopydircmd*	="cp -R"	Linux/Unix/MacOS/Cygwin
-				="xcopy /e /c /h/ /i /k"	Windows
+  *g:netrw_localcopycmdopt*	=''             Linux/Unix/MacOS/Cygwin
+  				=' \c copy'                     Windows
+				Options for the |g:netrw_localcopycmd|
+
+  *g:netrw_localcopydircmd*	="cp"           Linux/Unix/MacOS/Cygwin
+ 				=expand("$COMSPEC")             Windows
 				Copies directories to target directory.
 				(|netrw-mc|, |netrw-mt|)
 
-  *g:netrw_localmkdir*		command for making a local directory
-				 default: "mkdir"
+  *g:netrw_localcopydircmdopt*	=" -R"          Linux/Unix/MacOS/Cygwin
+				=" /c xcopy /e /c /h/ /i /k"    Windows
+				Options for |g:netrw_localcopydircmd|
 
-  *g:netrw_localmovecmd*	="mv" Linux/Unix/MacOS/Cygwin
-				="move" Windows
+  *g:netrw_localmkdir*		="mkdir"        Linux/Unix/MacOS/Cygwin
+				=expand("$COMSPEC")             Windows
+                                command for making a local directory
+
+  *g:netrw_localmkdiropt*	=""             Linux/Unix/MacOS/Cygwin
+				=" /c mkdir"                    Windows
+				Options for |g:netrw_localmkdir|
+
+  *g:netrw_localmovecmd*	="mv"           Linux/Unix/MacOS/Cygwin
+				=expand("$COMSPEC")             Windows
 				Moves marked files (|netrw-mf|) to target
 				directory (|netrw-mt|, |netrw-mm|)
 
-  *g:netrw_localrmdir*		remove directory command (rmdir)
-				 default: "rmdir"
+  *g:netrw_localmovecmdopt*	=""             Linux/Unix/MacOS/Cygwin
+				=" /c move"                     Windows
+				Options for |g:netrw_localmovecmd|
+
+  *g:netrw_localrmdir*		="rmdir"        Linux/Unix/MacOS/Cygwin
+ 				=expand("$COMSPEC")             Windows
+				Remove directory command (rmdir)
+				This variable is only used if your vim is
+				earlier than 7.4 or if your vim doesn't
+				have patch#1107.  Otherwise, |delete()|
+				is used with the "d" option.
+
+  *g:netrw_localrmdiropt*	=""             Linux/Unix/MacOS/Cygwin
+				=" /c rmdir"                    Windows
+				Options for |g:netrw_localrmdir|
 
   *g:netrw_maxfilenamelen*	=32 by default, selected so as to make long
 				    listings fit on 80 column displays.
@@ -2924,17 +2951,23 @@ your browsing preferences.  (see also: |netrw-settings|)
 					netrwTilde   : *
 					netrwTmp     : tmp* *tmp
 
-				These syntax highlighting groups are linked
-				to Folded or DiffChange by default
-				(see |hl-Folded| and |hl-DiffChange|), but
-				one may put lines like >
+				In addition, those groups mentioned in
+				|'suffixes'| are also added to the special
+				file highlighting group.
+				 These syntax highlighting groups are linked
+				to netrwGray or Folded by default
+				(see |hl-Folded|), but one may put lines like >
 					hi link netrwCompress Visual
 <				into one's <.vimrc> to use one's own
 				preferences.  Alternatively, one may
-				put such specifications into
-				.vim/after/syntax/netrw.vim.
-
-				As an example, I myself use a dark-background
+				put such specifications into >
+					.vim/after/syntax/netrw.vim.
+<				 The netrwGray highlighting is set up by
+				netrw when >
+	       				* netrwGray has not been previously
+					  defined
+					* the gui is running
+<				 As an example, I myself use a dark-background
 				colorscheme with the following in
 				.vim/after/syntax/netrw.vim: >
 
@@ -3169,8 +3202,8 @@ If there are no marked files: (see |netrw-mf|)
 
     Renaming files and directories involves moving the cursor to the
     file/directory to be moved (renamed) and pressing "R".  You will then be
-    queried for what you want the file/directory to be renamed to  You may select
-    a range of lines with the "V" command (visual selection), and then
+    queried for what you want the file/directory to be renamed to.  You may
+    select a range of lines with the "V" command (visual selection), and then
     press "R"; you will be queried for each file as to what you want it
     renamed to.
 
@@ -3202,16 +3235,20 @@ If there are marked files:  (see |netrw-mf|)
 
     Note that moving files is a dangerous operation; copies are safer.  That's
     because a "move" for remote files is actually a copy + delete -- and if
-    the copy fails and the delete does not, you may lose the file.
+    the copy fails and the delete succeeds you may lose the file.
     Use at your own risk.
 
-The g:netrw_rename_cmd variable is used to implement remote renaming.  By
-default its value is:
+The *g:netrw_rename_cmd* variable is used to implement remote renaming.  By
+default its value is: >
 
 	ssh HOSTNAME mv
-
+<
 One may rename a block of files and directories by selecting them with
-V (|linewise-visual|) when using thin style
+V (|linewise-visual|) when using thin style.
+
+See |cmdline-editing| for more on how to edit the command line; in particular,
+you'll find <ctrl-f> (initiates cmdline window editing) and <ctrl-c> (uses the
+command line under the cursor) useful in conjunction with the R command.
 
 
 SELECTING SORTING STYLE			*netrw-s* *netrw-sort* {{{2

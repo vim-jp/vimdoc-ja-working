@@ -2519,8 +2519,8 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 				    編集に使われます。また、指定されたタブと
 				    ウィンドウも使われます (|clientserver|,
 				    |netrw-ctrl-r|参照)。
-				このオプションは |:Lexplore| のウィンドウには
-				影響を与えません。
+				このオプションは |:Lexplore| のウィンドウの生
+				成には影響を与えません。
 
 				関連項目:
 				    |g:netrw_alto|	|g:netrw_altv|
@@ -2671,6 +2671,8 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 
   *g:netrw_home*		ブックマークと履歴 (.netrwbook と .netrwhist)
 				を保存するホームディレクトリ。
+				Netrw は文字列に対して |expand()| を使用しま
+				す。
 				初期設定: |'runtimepath'| の最初のディレクトリ
 
   *g:netrw_keepdir*		=1 (初期設定) カレントディレクトリとブラウジン
@@ -2689,7 +2691,7 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 				 初期設定: (sshがあるなら)
 				          "ssh HOSTNAME ls -FLa"
 
- *g:netrw_list_cmd_options*	もしこの変数が存在するなら、値は
+  *g:netrw_list_cmd_options*	もしこの変数が存在するなら、値は
 				g:netrw_list_cmd に追加されます。例えば、
 				"2>/dev/null" はバナー用のメッセージを除去しま
 				す。
@@ -2716,25 +2718,51 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 				初期設定: ""
 
   *g:netrw_localcopycmd*	="cp" Linux/Unix/MacOS/Cygwin
-				="copy" Windows
+				=expand("$COMSPEC")             Windows
 				マークされたファイル (|netrw-mf|) をターゲット
 				ディレクトリにコピー (|netrw-mt|, |netrw-mc|)
 
- *g:netrw_localcopydircmd*	="cp -R"	Linux/Unix/MacOS/Cygwin
-				="xcopy /e /c /h/ /i /k"	Windows
+  *g:netrw_localcopycmdopt*	=''             Linux/Unix/MacOS/Cygwin
+				=' \c copy'                     Windows
+				|g:netrw_localcopycmd| 用のオプション
+
+  *g:netrw_localcopydircmd*	="cp"           Linux/Unix/MacOS/Cygwin
+				=expand("$COMSPEC")             Windows
 				ディレクトリをターゲットディレクトリに
 				コピーします (|netrw-mc|, |netrw-mt|)。
 
-  *g:netrw_localmkdir*		ローカルディレクトリ作成コマンド
-				 初期設定: "mkdir"
+  *g:netrw_localcopydircmdopt*	=" -R"          Linux/Unix/MacOS/Cygwin
+				=" /c xcopy /e /c /h/ /i /k"    Windows
+				|g:netrw_localcopydircmd| 用のオプション
 
-  *g:netrw_localmovecmd*	="mv" Linux/Unix/MacOS/Cygwin
-				="move" Windows
+  *g:netrw_localmkdir*		="mkdir"        Linux/Unix/MacOS/Cygwin
+				=expand("$COMSPEC")             Windows
+				ローカルディレクトリ作成コマンド
+
+  *g:netrw_localmkdiropt*	=""             Linux/Unix/MacOS/Cygwin
+				=" /c mkdir"                    Windows
+				|g:netrw_localmkdir| 用のオプション
+
+  *g:netrw_localmovecmd*	="mv"           Linux/Unix/MacOS/Cygwin
+				=expand("$COMSPEC")             Windows
 				マークされたファイル (|netrw-mf|) をターゲット
 				ディレクトリに移動 (|netrw-mt|, |netrw-mm|)
 
-  *g:netrw_localrmdir*		ディレクトリ削除コマンド (rmdir)
-				 初期設定: "rmdir"
+  *g:netrw_localmovecmdopt*	=""             Linux/Unix/MacOS/Cygwin
+				=" /c move"                     Windows
+				|g:netrw_localmovecmd| 用のオプション
+
+  *g:netrw_localrmdir*		="rmdir"        Linux/Unix/MacOS/Cygwin
+				=expand("$COMSPEC")             Windows
+				ディレクトリ削除コマンド (rmdir)
+				この変数は、Vim が 7.4 よりも古い場合、もしく
+				は patch#1107 を含んでいない場合のみに使用され
+				る。それ以外の場合は、|delete()| が "d" オプ
+				ション付きで使用される。
+
+  *g:netrw_localrmdiropt*	=""             Linux/Unix/MacOS/Cygwin
+				=" /c rmdir"                    Windows
+				|g:netrw_localrmdir| 用のオプション
 
   *g:netrw_maxfilenamelen*	初期設定は 32。long スタイルでの表示を 80 カ
 				    ラムのディスプレイに収められるような値。
@@ -2847,16 +2875,22 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 					netrwTilde   : *
 					netrwTmp     : tmp* *tmp
 
+				加えて、|'suffixes'| で言及されているグループ
+				も特別ファイルのハイライトグループに追加されま
+				す。
 				これらの構文ハイライトグループは、初期設定では
-				Folded か DiffChange へのリンクです。
-				(|hl-Folded| と |hl-DiffChange| 参照)
+				netrwGray か Folded へのリンクです。
+				(|hl-Folded| 参照)
 				例えば <.vimrc> で次のように設定することで >
 					hi link netrwCompress Visual
 <				好みの配色を設定できます。あるいは、このような
 				設定を .vim/after/syntax/netrw.vim に書く方法
 				もあります。
-
-				例として、私自身は暗背景カラースキームを使って
+				netrwGray のハイライトは、netrw によって以下の
+				場合に設定されます。 >
+					* netrwGray がまだ定義されていない
+					* gui が起動している
+<				例として、私自身は暗背景カラースキームを使って
 				いて .vim/after/syntax/netrw.vim で以下のよう
 				設定しています: >
 
@@ -3119,13 +3153,18 @@ netrw を次のように設定すると便利かもしれません: >
     が失敗して削除が成功するとファイルが失われます。
     自己責任で使ってください。
 
-g:netrw_rename_cmd 変数でリモートの名前変更のコマンドを指定できます。初期設定
-は次のとおり:
+*g:netrw_rename_cmd* 変数でリモートの名前変更のコマンドを指定できます。初期設定
+は次のとおり: >
 
 	ssh HOSTNAME mv
+<
+Thin 形式を使用している場合は、V (|linewise-visual|) で選択することで複数のファ
+イル/ディレクトリを名前変更できます。
 
-V (|linewise-visual|) で選択することで複数のファイル/ディレクトリを名前変更で
-きます。
+コマンドラインの編集方法の更なる情報については |cmdline-editing| を参照してく
+ださい。特に、R コマンドと組み合わせた <ctrl-f> (コマンドラインウィンドウの編
+集を開始する) と <ctrl-c> (カーソルの下でコマンドラインを使用する) が便利であ
+ることに気付くでしょう。
 
 
 ソートの種類を変更する			*netrw-s* *netrw-sort* {{{2
