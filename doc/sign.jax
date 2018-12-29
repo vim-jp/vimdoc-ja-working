@@ -184,7 +184,7 @@ Netbeansは|netbeans|を参照。
 		これは既に設置された目印を動かすことなく変更するのに使われる。
 		(例: デバッガがブレークポイントで停止した時)
 
-		任意の "group={group}" 属性を "file ="の前に使用して、特定のグ
+		任意の "group={group}" 属性を "file="の前に使用して、特定のグ
 		ループの目印を選択することができる。
 
 :sign place {id} name={name} buffer={nr}
@@ -253,7 +253,6 @@ Netbeansは|netbeans|を参照。
 		グローバルグループの設置された全ての目印を解除する。
 
 :sign unplace * group=*
-		Remove all placed signs in all the groups.
 		全てのグループの設置された全ての目印を解除する。
 
 :sign unplace
