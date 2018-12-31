@@ -3181,14 +3181,14 @@ Thin 形式を使用している場合は、V (|linewise-visual|) で選択す�
 				*netrw-editwindow* *netrw-C* *netrw-:NetrwC*
 
 ファイルを開くウィンドウを指定するには、netrw ウィンドウで "C" マップを押す
-か、g:netrw_chgwin にウィンドウ番号を設定します。ファイルを開く (|netrw-cr|)
-と、指定されたウィンドウが使われます。
+か、:NetrwC [win#] コマンドを使うか、g:netrw_chgwin にウィンドウ番号を設定しま
+す。続いてファイルを開く (|netrw-cr|) と、指定されたウィンドウが使われます。
 
-	* C だけを押すと |netrw-cr| でファイルを開くときにカレントウィン
-	  ドウが使われます。
+	* C だけを押すと、続いて |netrw-cr| でファイルを開くときにカレントウィ
+	  ンドウが使われます。
 
-	* [count]C カウントを指定すると |netrw-cr| でファイルを開くときに指定
-	  された番号のウィンドウが使用されます。
+	* [count]C カウントを指定すると、続いて |netrw-cr| でファイルを開くと
+	  きに指定された番号のウィンドウが使用されます。
 
 	* :NetrwC は |g:netrw_chgwin| をカレントウィンドウにセットします。
 
@@ -3198,7 +3198,7 @@ Thin 形式を使用している場合は、V (|linewise-visual|) で選択す�
 次のように設定すると >
 	let g:netrw_chgwin= -1
 デフォルトの動作に戻すことができます
-(つまり、カレントウィンドウを使う)。
+(つまり、続くファイル選択動作でカレントウィンドウを使う)。
 
 関連項目:			|netrw-cr| |g:netrw_browse_split|
 関連設定:			|g:netrw_chgwin|
@@ -3220,8 +3220,8 @@ netrw ウィンドウ/エクスプローラーウィンドウを拡大・縮小�
 
 もし |g:netrw_usetab| が存在し 非0 の場合、もしくはすでに <c-tab> にマッピング
 が存在するなら、<c-tab> はマッピングされません。もし <c-tab> 以外にマップされ
-ていた場合も同様です: (しかしその場合も g:netrw_usetab をセットしている必要が
-あります) >
+ていた場合も同様です: (しかしその場合も |g:netrw_usetab| をセットしている必要
+があります)。 >
 
 	nmap <unique> (whatever)	<Plug>NetrwShrink
 <
@@ -3257,6 +3257,7 @@ netrw が netrw バッファ用のマップを設定する時、もし |g:Netrw_
 もしそれがローカルディレクトリの呼び出しなら a:islocal は 1、
 もしそれがリモートディレクトリの呼び出しなら a:islocal は 0 になります。
 
+			        *netrw-call*  *netrw-expose*  *netrw-modify*
 netrw#Expose("varname")              netrw の (スクリプトローカルな)
 				     内部変数にアクセスできます。
 netrw#Modify("varname",newvalue)     netrw の内部変数を変更できます。
@@ -3743,6 +3744,102 @@ netrw かあるいは関与している他のプラグインと衝突してい�
 ==============================================================================
 12. 変更履歴						*netrw-history* {{{1
 
+	v162:	Sep 19, 2016	* (haya14busa) pointed out two syntax errors
+				  with a patch; these are now fixed.
+		Oct 26, 2016	* I started using mate-terminal and found that
+				  x and gx (|netrw-x| and |netrw-gx|) were no
+				  longer working.  Fixed (using atril when
+				  $DESKTOP_SESSION is "mate").
+		Nov 04, 2016	* (Martin Vuille) pointed out that @+ was
+				  being restored with keepregstar rather than
+				  keepregplus.
+		Nov 09, 2016	* Broke apart the command from the options,
+				  mostly for Windows.  Introduced new netrw
+				  settings: |g:netrw_localcopycmdopt|
+				  |g:netrw_localcopydircmdopt| |g:netrw_localmkdiropt|
+				  |g:netrw_localmovecmdopt| |g:netrw_localrmdiropt|
+		Nov 21, 2016	* (mattn) provided a patch for preview; swapped
+				  winwidth() with winheight()
+		Nov 22, 2016	* (glacambre) reported that files containing
+				  spaces weren't being obtained properly via
+				  scp.  Fix: apparently using single quotes
+				  such as with 'file name' wasn't enough; the
+				  spaces inside the quotes also had to be
+				  escaped (ie. 'file\ name').
+				* Also fixed obtain (|netrw-O|) to be able to
+				  obtain files with spaces in their names
+		Dec 20, 2016	* (xc1427) Reported that using "I" (|netrw-I|)
+				  when atop "Hiding" in the banner also caused
+				  the active-banner hiding control to occur
+		Jan 03, 2017	* (Enno Nagel) reported that attempting to
+				  apply netrw to a directory that was without
+				  read permission caused a syntax error.
+		Jan 13, 2017	* (Ingo Karkat) provided a patch which makes
+				  using netrw#Call() better.  Now returns
+				  value of internal routines return, for example.
+		Jan 13, 2017	* (Ingo Karkat) changed netrw#FileUrlRead to
+				  use |:edit| instead of |:read|.  I also
+				  changed the routine name to netrw#FileUrlEdit.
+		Jan 16, 2017	* (Sayem) reported a problem where :Lexplore
+				  could generate a new listing buffer and
+				  window instead of toggling the netrw display.
+				  Unfortunately, the directions for eliciting
+				  the problem weren't complete, so I may or
+				  may not have fixed that issue.
+		Feb 06, 2017	* Implemented cb and cB.  Changed "c" to "cd".
+				  (see |netrw-cb|, |netrw-cB|, and |netrw-cd|)
+		Mar 21, 2017	* previously, netrw would specify (safe) settings
+				  even when the setting was already safe for
+				  netrw.  Netrw now attempts to leave such
+				  already-netrw-safe settings alone.
+				  (affects s:NetrwOptionRestore() and
+				  s:NetrwSafeOptions(); also introduced
+				  s:NetrwRestoreSetting())
+		Jun 26, 2017	* (Christian Brabandt) provided a patch to
+				  allow curl to follow redirects (ie. -L
+				  option)
+		Jun 26, 2017	* (Callum Howard) reported a problem with
+				  :Lexpore not removing the Lexplore window
+				  after a change-directory
+		Aug 30, 2017	* (Ingo Karkat) one cannot switch to the
+				  previously edited file (e.g. with CTRL-^)
+				  after editing a file:// URL.  Patch to
+				  have a "keepalt" included.
+		Oct 17, 2017	* (Adam Faryna) reported that gn (|netrw-gn|)
+				  did not work on directories in the current
+				  tree
+	v157:	Apr 20, 2016	* (Nicola) had set up a "nmap <expr> ..." with
+				  a function that returned a 0 while silently
+				  invoking a shell command.  The shell command
+				  activated a ShellCmdPost event which in turn
+				  called s:LocalBrowseRefresh().  That looks
+				  over all netrw buffers for changes needing
+				  refreshes.  However, inside a |:map-<expr>|,
+				  tab and window changes are disallowed.  Fixed.
+				  (affects netrw's s:LocalBrowseRefresh())
+				* |g:netrw_localrmdir| not used any more, but
+				  the relevant patch that causes |delete()| to
+				  take over was #1107 (not #1109).
+				* |expand()| is now used on |g:netrw_home|;
+				  consequently, g:netrw_home may now use
+				  environment variables
+				* s:NetrwLeftmouse and s:NetrwCLeftmouse will
+				  return without doing anything if invoked
+				  when inside a non-netrw window
+		Jun 15, 2016	* gx now calls netrw#GX() which returns
+				  the word under the cursor.  The new
+				  wrinkle: if one is in a netrw buffer,
+				  then netrw's s:NetrwGetWord().
+		Jun 22, 2016	* Netrw was executing all its associated
+				  Filetype commands silently; I'm going
+				  to try doing that "noisily" and see if
+				  folks have a problem with that.
+		Aug 12, 2016	* Changed order of tool selection for
+				  handling http://... viewing.
+				  (Nikolay Aleksandrovich Pavlov)
+		Aug 21, 2016	* Included hiding/showing/all for tree
+				  listings
+				* Fixed refresh (^L) for tree listings
 	v156:	Feb 18, 2016	* Changed =~ to =~# where appropriate
 		Feb 23, 2016	* s:ComposePath(base,subdir) now uses
 				  fnameescape() on the base portion
@@ -3774,9 +3871,9 @@ netrw かあるいは関与している他のプラグインと衝突してい�
 				  tell me how they're useful and should be
 				  retained?
 		Nov 20, 2015	* Added |netrw-ma| and |netrw-mA| support
-		Nov 20, 2015	* gx (|netrw-gx|) on an url downloaded the
+		Nov 20, 2015	* gx (|netrw-gx|) on a URL downloaded the
 				  file in addition to simply bringing up the
-				  url in a browser.  Fixed.
+				  URL in a browser.  Fixed.
 		Nov 23, 2015	* Added |g:netrw_sizestyle| support
 		Nov 27, 2015	* Inserted a lot of <c-u>s into various netrw
 				  maps.
