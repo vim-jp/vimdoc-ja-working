@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.1.  Last change: 2018 Dec 27
+*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Jan 01
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -6505,20 +6505,18 @@ prompt_setprompt({buf}, {text})				*prompt_setprompt()*
 <
 						*prop_add()* *E965*
 prop_add({lnum}, {col}, {props})
-		{lnum}行{col}桁の位置にテキストプロパティを付加する。最初の桁
-		は1を使用する。
+		{lnum}行{col}桁の位置にテキストプロパティを付加する。{col}はバ
+		イト数でカウントされる。最初の桁は1を使用する。
 		{lnum}が無効な場合、エラーが発生する。*E966*
 		{col}が無効な場合、エラーが発生する。*E964*
 
 		{props}は次のフィールドを持つ辞書である:
-		   length	length of text in characters, can only be used
-				for a property that does not continue in
-				another line
-		   length	テキストの文字の長さ。別の行に続かないプロパ
-				ティに対してのみ使用できる
+		   length	テキストの長さ(バイト)。別の行に続かないプロパ
+				ティに対してのみ使用できる。0指定可能。
 		   end_lnum	テキスト終端の行番号
-		   end_col	テキストの最後の桁。"length" が与えられた場合
-				は使用されない
+		   end_col	テキストの直後の桁。"length" が与えられた場合
+				は使用されない。{col}と "end_col" が等しい場
+				合、これは幅ゼロのテキストプロパティである。
 		   bufnr	プロパティを追加するバッファ。省略された場合、
 				カレントバッファが使用される
 		   id		プロパティのユーザー定義ID。 省略時は0が使われ
@@ -6526,12 +6524,13 @@ prop_add({lnum}, {col}, {props})
 		   type		テキストプロパティ名
 		"type" を除くすべてのフィールドは任意である。
 
-		"length" と "end_lnum" または "end_col" の両方が渡されるとエ
+		"length" と "end_lnum" または "end_col" の両方が与えられるとエ
 		ラーになる。1行内のプロパティに "length" または "end_col" を使
 		用するか、複数の行にまたがるプロパティに対して "end_lnum" と
 		"end_col" を使用する。
-		"length" または "end_col" のどちらも渡されない場合、プロパティ
-		は1文字に適用される。
+		"length" または "end_col" のどちらも与えられない場合、プロパ
+		ティは幅ゼロになる。これは、強調表示されないが、テキストと共に
+		マークのように移動することを意味する。
 		プロパティは、テキストの最後の文字、またはその直後で終わらせる
 		ことができる。最後のケースでは、テキストが行に追加されると、プ
 		ロパティタイプに "end_incl" が設定されていない場合にも、テキス
@@ -6588,7 +6587,7 @@ prop_list({lnum} [, {props}]) 				*prop_list()*
 		プロパティは、開始桁と優先順位によって順序付けられる。
 		各プロパティは、次のエントリを持つ辞書である:
 		   col		開始桁
-		   length	バイト長{訳注: 文字の長さでは?}
+		   length	バイト長。改行が含まれる場合は1以上。
 		   id		プロパティID
 		   type		プロパティタイプ名。タイプが削除された場合は省
 				略される
