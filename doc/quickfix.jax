@@ -1,4 +1,4 @@
-*quickfix.txt*  For Vim バージョン 8.1.  Last change: 2018 Dec 27
+*quickfix.txt*  For Vim バージョン 8.1.  Last change: 2019 Jan 09
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -55,6 +55,7 @@ Vim の中でコマンドを実行し結果を得る方法の一つに|:make|コ
 `:grep`, `:helpgrep`, `:make` などのコマンドはQuickFixリストを作成するが、それ
 らに対応する `:lvimgrep`, `:lgrep`, `:lhelpgrep`, `:lmake` などのコマンドを使
 うことでロケーションリストを得ることができる。
+						*location-list-file-window*
 ロケーションリストはウィンドウに関連付けられていて、各ウィンドウが別々のロケー
 ションリストを持つことができる。ロケーションリストは1個のウィンドウにだけ関連
 付けることができる。ロケーションリストはQuickFixリストとは独立している。
@@ -331,6 +332,22 @@ QuickFixコマンド (':make', ':grep' など) を実行する前後に2つの�
 	echo getqflist({'title' : 1})
 	call setloclist(3, [], 'a', {'title' : 'Cmd output'})
 	echo getloclist(3, {'title' : 1})
+<
+							*quickfix-index*
+いずれかのquickfixコマンド(例えば |cc|, |cnext|, |cprev| 等)を使用して
+quickfix/location リストエントリに移動すると、そのエントリが現在選択されている
+エントリになる。quickfix/locationリストで現在選択されているエントリのインデッ
+クスは、getqflist()/getloclist()関数を使って取得できる。例: >
+	echo getqflist({'idx' : 0}).idx
+	echo getqflist({'id' : qfid, 'idx' : 0}).idx
+	echo getloclist(2, {'idx' : 0}).idx
+<
+新しいquickfixリストの場合、最初のエントリが選択され、インデックスは1になる。
+すべてのquickfix/locationリスト内のすべてのエントリは、setqflist()関数を使用し
+て現在選択されているエントリとして設定できる。例: >
+	call setqflist([], 'a', {'idx' : 12})
+	call setqflist([], 'a', {'id' : qfid, 'idx' : 7})
+	call setloclist(1, [], 'a', {'idx' : 7})
 <
 							*quickfix-size*
 あなたはQuickFixリストとロケーションリストの中の項目の数をそれぞれ
@@ -615,6 +632,9 @@ Note: QuickFixウィンドウ内で変更を加えてもエラーのリストに
 
     " 3番目のウィンドウのロケーションリストのウィンドウIDを取得する
     :echo getloclist(3, {'winid' : 0}).winid
+
+    " ロケーションリストウィンドウ(winnr: 4)のファイルウィンドウIDを取得する
+    :echo getloclist(4, {'filewinid' : 0}).filewinid
 <
 							*setqflist-examples*
 |setqflist()| 関数と |setloclist()| 関数は、それぞれQuickFixとロケーションリス
@@ -627,6 +647,9 @@ Note: QuickFixウィンドウ内で変更を加えてもエラーのリストに
 
     " 現在のQuickFixリストのtitleを設定する
     :call setqflist([], 'a', {'title' : 'Mytitle'})
+
+    " 識別子により指定されたQuickFixリストの現在のエントリを変更する
+    :call setqflist([], 'a', {'id' : qfid, 'idx' : 10})
 
     " 識別子により指定されたQuickFixリストのcontextを設定する
     :call setqflist([], 'a', {'id' : qfid, 'context' : {'val' : 100}})
