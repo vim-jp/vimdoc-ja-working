@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Jan 06
+*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Jan 11
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2278,7 +2278,7 @@ prop_clear({lnum} [, {lnum-end} [, {props}]])
 				なし	全てのテキストプロパティを削除
 prop_find({props} [, {direction}])
 				辞書	テキストプロパティを検索する
-prop_list({lnum} [, {props})  	リスト	{lnum}行目のテキストプロパティを取得
+prop_list({lnum} [, {props})	リスト	{lnum}行目のテキストプロパティを取得
 prop_remove({props} [, {lnum} [, {lnum-end}]])
 				数値	テキストプロパティを削除
 prop_type_add({name}, {props})	なし	新しいプロパティタイプを定義
@@ -2371,6 +2371,8 @@ sign_define({name} [, {dict}])	数値	目印を定義または更新する
 sign_getdefined([{name}])	リスト	定義されている目印のリストを取得する
 sign_getplaced([{expr} [, {dict}]])
 				リスト	設置されている目印のリストを取得する
+sign_jump({id}, {group}, {expr})
+				数値	目印に移動する
 sign_place({id}, {group}, {name}, {expr} [, {dict}])
 				数値	目印を設置する
 sign_undefine([{name}])		数値	目印を削除する
@@ -4686,7 +4688,7 @@ getloclist({nr} [, {what}])				*getloclist()*
 		{what} が 'filewinid' を含む場合、ロケーションリスト中のファイ
 		ルを表示するのに使われているウィンドウの ID を返す。このフィー
 		ルドはロケーションリストウィンドウから呼び出されたときのみ適用
-		される。
+		される。詳細は |location-list-file-window| を参照。
 
 getmatches()						*getmatches()*
 		|matchadd()| と |:match| により定義された全てのマッチの |List|
@@ -4774,7 +4776,9 @@ getqflist([{what}])					*getqflist()*
 			id	|quickfix-ID|に対応するquickfixリストの情報を
 				取得。0 は現在のリストもしくは "nr" で指定され
 				たリストのidを意味する
-			idx	リスト内の現在のエントリのインデックス
+			idx	'id' または 'nr' で指定されたquickfixリスト内
+				の現在のエントリのインデックス。
+				|quickfix-index| を参照
 			items	quickfixリストのエントリ
 			lines	'efm' を使用して行のリストをパースし、結果のエ
 				ントリを返す。|List| 型のみを受け付ける。現在
@@ -6586,7 +6590,7 @@ prop_find({props} [, {direction}])
 		テキストプロパティについては、|text-properties| を参照。
 
 
-prop_list({lnum} [, {props}]) 				*prop_list()*
+prop_list({lnum} [, {props}])				*prop_list()*
 		{lnum}行のすべてのテキストプロパティを持つリストを返す。
 
 		{props}に "bufnr" 項目が含まれている場合は、カレントバッファの
@@ -7467,16 +7471,22 @@ setqflist({list} [, {action} [, {what}]])		*setqflist()*
 		    efm		"lines" からテキストをパースするときに使うエ
 				ラーフォーマット。存在しない場合はオプション
 				'errorformat' の値が使用される。
+				|quickfix-parse| を参照
 		    id		quickfix リスト識別子 |quickfix-ID|
+		    idx		'id' または 'nr' で指定されたquickfixリスト内
+				の現在のエントリのインデックス。'$' に設定する
+				と、リストの最後のエントリが現在のエントリとし
+				て設定される。|quickfix-index| を参照。
 		    items	quickfix エントリのリスト。引数 {list} と同じ。
 		    lines	行のリストをパースするのに 'errorformat' を使
 				用し、結果のエントリを quickfix リスト {nr} も
 				しくは {id} に加える。|List| 値だけがサポート
-				される。
+				される。|quickfix-parse| を参照
 		    nr		quickfix スタックでのリスト番号; 0 は現在の
 				quickfix リストを意味し、"$" は最後の quickfix
-				リストを意味する
-		    title	quickfix リストのタイトルテキスト
+				リストを意味する。
+		    title	quickfix リストのタイトルテキスト。
+				|quickfix-title| を参照
 		{what} 内でのサポートされていないキーは無視される。
 		"nr" 番目のアイテムが提供されていない場合は現在の quickfix リ
 		ストが変更される。新しい quickfix リストを作成するときは、"nr"
@@ -7759,6 +7769,20 @@ sign_getplaced([{expr} [, {dict}]])			*sign_getplaced()*
 			" 設置されているすべての目印のリストを取得する
 			echo sign_getplaced()
 <
+							*sign_jump()*
+sign_jump({id}, {group}, {expr})
+		バッファ{expr}を開くか、{expr}を含むウィンドウに移動して、グ
+		ループ{group}の目印{id}にカーソルを置く。これは |:sign-jump|
+		コマンドに似ている。
+
+		{expr}の使い方については |bufname()| を参照。
+
+		目印の行番号を返す。引数が無効な場合は -1 を返す。
+
+		例: >
+			" 現在のバッファの目印ID 10 へ移動する
+			call sign_jump(10, '', '')
+<
 							*sign_place()*
 sign_place({id}, {group}, {name}, {expr} [, {dict}])
 		{name}として定義された目印をファイル{expr}の行{lnum}に設置し、
@@ -7769,8 +7793,8 @@ sign_place({id}, {group}, {name}, {expr} [, {dict}])
 		外の場合は、指定された番号が使用される。{group}は目印グループ
 		名である。グローバルサイングループを使用するには、空の文字列を
 		使用する。{group}は{id}の名前空間として機能するため、2つのグ
-		ループが同じIDを使用できる。詳細については|sign-identifier| を
-		参照。
+		ループが同じIDを使用できる。詳細については |sign-identifier|
+		と |sign-group| を参照。
 
 		{name}は定義済みの目印を参照する。
 		{expr}はバッファの名前か番号を参照する。許容値については、
@@ -9783,8 +9807,9 @@ vim_starting		Vimの初期化プロセス中は真となる。|startup|
 			*vim_starting*
 viminfo			viminfoをサポート
 virtualedit		オプション 'virtualedit' をサポート
-visual			ビジュアルモードをサポート
-visualextra		拡張ビジュアルモードをサポート |blockwise-operators|
+visual			ビジュアルモードをサポート (常に true)
+visualextra		拡張ビジュアルモードをサポート (常に true)
+			|blockwise-operators|
 vms			VMSバージョン
 vreplace		コマンド|gR|と|gr|をサポート
 vtp			vcon をサポート |+vtp| (現在のコンソール内で機能するか
