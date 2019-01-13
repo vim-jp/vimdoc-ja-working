@@ -920,9 +920,9 @@ SourcePre			Vim script を読み込む前。|:source|
 				<afile> は読み込まれるファイルの名前となる。
 							*SourcePost*
 SourcePost			Vim scriptを読み込んだ後。|:source|
-				<afile>は読み込んだファイルの名前です。読み込
-				みが中断された場合はトリガーされない。
-				SourceCmdオートコマンドがトリガーされた後にも
+				<afile>は読み込んだファイルの名前となる。読み
+				込みが中断された場合はトリガーされない。
+				自動コマンド SourceCmd がトリガーされた後にも
 				トリガーされる。
 							*SourceCmd*
 SourceCmd			Vim script を読み込むとき。|:source|
