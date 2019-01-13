@@ -69,6 +69,11 @@ Funcref		関数への参照 |Funcref|。
 
 チャネル	チャネルに使われる。|ch_open()|を参照。 *Channel* *Channels*
 
+								*Blob*
+Blob		バイナリラージオブジェクト。任意のバイトシーケンスを格納する。
+		例: 0zFF00ED015DAF
+		0z は空のBlobである。
+
 数値と文字列は文脈に応じて相互に変換される。
 
 数値から文字列への変換は数字のASCII表現によって行われる。例:
@@ -118,7 +123,8 @@ Note: " " と "0" も空文字列ではないので、TRUE と見なされる。
 または Float は数値または文字列ではないため、FALSE と評価される。
 
 		*E745* *E728* *E703* *E729* *E730* *E731* *E908* *E910* *E913*
-リスト、辞書、Funcref、ジョブ、チャネルは自動的に変換されない。
+		*E974* *E975* *E976*
+リスト、辞書、Funcref、ジョブ、チャネル、Blobは自動的に変換されない。
 
 							*E805* *E806* *E808*
 数値と浮動小数点数をまぜると浮動小数点数になる。それ以外には浮動小数点数への自
@@ -978,12 +984,19 @@ expr1aが省略されたときは0となる。expr1bが省略されたときは�
 	:let s = s[:-3]			" 最後の2文字を削除する
 <
 							*slice*
-expr8がリストならば、インデックスexpr1aとexpr1bの間の要素からなる新しいリスト
+expr8が |List| ならば、インデックスexpr1aとexpr1bの間の要素からなる新しい |List|
 となる。すぐ上で説明した文字列の場合と同様である。部分リスト|sublist|も参照の
 こと。例: >
 	:let l = mylist[:3]		" 最初の4個の要素
 	:let l = mylist[4:4]		" 1個の要素からなるリスト
 	:let l = mylist[:]		" リストの浅いコピー
+
+expr8が |Blob| ならば、インデックスexpr1aとexpr1bのバイト数を含む新しい |Blob|
+となる。
+例: >
+	:let b = 0zDEADBEEF
+	:let bs = b[1:2]		" 0zADBE
+	:let bs = b[]			" 0zDEADBEEF のコピー
 
 |Funcref|に対してexpr8[expr1]やexpr8[expr1a : expr1b]を使うとエラーになる。
 
@@ -1113,6 +1126,14 @@ Note "\xff" は値255の1バイトとなる。これはエンコーディング�
 もしれない。現在の 'encoding' の値に応じた文字255を得るには "\u00ff" を使う。
 
 Note "\000" と "\x00" は強制的に文字列の終端として扱われる。
+
+
+blobリテラル				*blob-literal* *E973* *E977* *E978*
+------------
+
+0zまたは0Zで始まる任意のバイト数の16進数。
+シーケンスは偶数個の16進数文字でなければならない。例:
+	:let b = 0zFF00ED015DAF
 
 
 リテラル文字列						*literal-string* *E115*
@@ -1856,6 +1877,8 @@ v:t_none	特殊値型の値。読出し専用。 参照: |type()|
 v:t_number	数値型の値。読出し専用。 参照: |type()|
 					*v:t_string* *t_string-variable*
 v:t_string	文字列型の値。読出し専用。 参照: |type()|
+					*v:t_blob* *t_blob-variable*
+v:t_blob	Blob型の値。読出し専用。 参照: |type()|
 
 				*v:termresponse* *termresponse-variable*
 v:termresponse	termcapのエントリ|t_RV|で端末から返されるエスケープシーケン
@@ -2044,12 +2067,14 @@ ch_logfile({fname} [, {mode}])	なし	チャネルの挙動ログ出力を開始
 ch_open({address} [, {options}])
 				チャネル	{address} へのチャネルを開く
 ch_read({handle} [, {options}]) 文字列	{handle} から読み込む
+ch_readblob({handle} [, {options}])
+				Blob	{handle} からBlobを読み込む
 ch_readraw({handle} [, {options}])
 				文字列	{handle} から生の文字列を読み込む
 ch_sendexpr({handle}, {expr} [, {options}])
 				任意	{expr}をJSONチャネル{handle}に送る
-ch_sendraw({handle}, {string} [, {options}])
-				任意	{string}をrawチャネル{handle}に送る
+ch_sendraw({handle}, {expr} [, {options}])
+				任意	{expr}をrawチャネル{handle}に送る
 ch_setoptions({handle}, {options})
 				なし	{handle}にオプションを設定する
 ch_status({handle} [, {options}])
@@ -2194,8 +2219,8 @@ hlID({name})			数値	highlight group {name}のID
 hostname()			文字列	vimが動作しているマシンの名前
 iconv({expr}, {from}, {to})	文字列	{expr}のエンコーディングを変換する
 indent({lnum})			文字列	行{lnum}のインデントを取得
-index({list}, {expr} [, {start} [, {ic}]])
-				数値	{list}中に{expr}が現れる位置
+index({object}, {expr} [, {start} [, {ic}]])
+				数値	{object}中に{expr}が現れる位置
 input({prompt} [, {text} [, {completion}]])
 				文字列	ユーザーからの入力を取得
 inputdialog({prompt} [, {text} [, {completion}]])
@@ -2204,7 +2229,8 @@ inputlist({textlist})		数値	ユーザーに選択肢から選ばせる
 inputrestore()			数値	先行入力を復元する
 inputsave()			数値	先行入力を保存し、クリアする
 inputsecret({prompt} [, {text}]) 文字列	input()だがテキストを隠す
-insert({list}, {item} [, {idx}]) リスト	{list}に要素{item}を挿入 [{idx}の前]
+insert({object}, {item} [, {idx}])
+				リスト	{object}に要素{item}を挿入 [{idx}の前]
 invert({expr})			数値	ビット反転
 isdirectory({directory})	数値	{directory}がディレクトリならば|TRUE|
 islocked({expr})		数値	{expr}がロックされているなら|TRUE|
@@ -2295,7 +2321,7 @@ py3eval({expr})			任意	|python3| の式を評価する
 pyxeval({expr})			任意	|python_x| の式を評価する
 range({expr} [, {max} [, {stride}]])
 				リスト	{expr}から{max}までの要素のリスト
-readfile({fname} [, {binary} [, {max}]])
+readfile({fname} [, {type} [, {max}]])
 				リスト	ファイル{fname}から行のリストを取得
 reg_executing()			文字列	実行中のレジスタ名を取得する
 reg_recording()			文字列	記録中のレジスタ名を取得する
@@ -2524,8 +2550,9 @@ winrestview({dict})		なし	現在のウィンドウのビューを復元
 winsaveview()			辞書	現在のウィンドウのビューを保存
 winwidth({nr})			数値	ウィンドウ{nr}の幅を取得
 wordcount()			辞書	バイト/文字/単語の統計情報を取得
-writefile({list}, {fname} [, {flags}])
-				数値	行のリストをファイル{fname}に書き込む
+writefile({object}, {fname} [, {flags}])
+				数値	行の |Blob| または |list| をファイルに
+					書き込む
 xor({expr}, {expr})		数値	ビット排他的論理和
 
 
@@ -3155,6 +3182,12 @@ ch_read({handle} [, {options}])					*ch_read()*
 		|channel-more| を参照。
 		{|+channel| 機能付きでコンパイルされたときのみ有効}
 
+ch_readblob({handle} [, {options}])			*ch_readblob()*
+		ch_read() と同様に動作するが、バイナリデータを読み込んでBlobを
+		返す。
+		|channel-more| を参照。
+		{|+channel| 機能付きでコンパイルされたときのみ有効}
+
 ch_readraw({handle} [, {options}])			*ch_readraw()*
 		ch_read() と同様に動作するが JS や JSON の場合でもメッセージは
 		デコードされない。NL チャネルの場合、NL を受信するまで待つこと
@@ -3171,8 +3204,8 @@ ch_sendexpr({handle}, {expr} [, {options}])			*ch_sendexpr()*
 
 		{|+channel| 機能付きでコンパイルされたときのみ有効}
 
-ch_sendraw({handle}, {string} [, {options}])		*ch_sendraw()*
-		{handle} を {string} に送る。
+ch_sendraw({handle}, {expr} [, {options}])		*ch_sendraw()*
+		文字列またはBlob {expr} を {handle} に送る。
 		|ch_sendexpr()| と同様に動作するが、リクエストをエンコードした
 		り応答をデコードしたりはしない。呼び出しは正しいコンテンツで
 		ある事が保証される。また NL モードでは改行が行われるが、ここ
@@ -5247,17 +5280,31 @@ indent({lnum})	カレントバッファの{lnum}行目のインデント量を�
 		{lnum}が無効なときは-1を返す。
 
 
-index({list}, {expr} [, {start} [, {ic}]])			*index()*
-		リスト|List| {list}の中で、{expr}に等しい要素の最小のインデッ
+index({object}, {expr} [, {start} [, {ic}]])			*index()*
+		If {object} is a |List| return the lowest index where the item
+		has a value equal to {expr}.  There is no automatic
+		conversion, so the String "4" is different from the Number 4.
+		And the number 4 is different from the Float 4.0.  The value
+		of 'ignorecase' is not used here, case always matters.
+
+		If {object} is |Blob| return the lowest index where the byte
+		value is equal to {expr}.
+
+index({object}, {expr} [, {start} [, {ic}]])			*index()*
+		{object}が |List| の場合は、{expr}に等しい要素の最小のインデッ
 		クスを返す。自動的な変換は行われないので、文字列の "4" は数値
 		の 4 とは異なると判定される。そして数値の 4 は浮動小数点数の
 		4.0 とも異なる。'ignorecase' はここでは適用されず、常に大文字・
 		小文字は区別される。
+
+		{object}が |Blob| の場合は、{expr}に等しいバイト値の最小のイン
+		デックスを返す。
+
 		{start}が指定された場合はインデックス{start}から要素の検索を始
 		める(負数を指定すると末尾からの相対位置となる)。
 		{ic}に|TRUE|が指定された場合、大文字・小文字は区別されない。
 		そうでない場合は区別される。
-		{list}の中に{expr}が見つからない場合は-1を返す。
+		{object}の中に{expr}が見つからない場合は-1を返す。
 		例: >
 			:let idx = index(words, "the")
 			:if index(numbers, 123) >= 0
@@ -5358,13 +5405,16 @@ inputsecret({prompt} [, {text}])			*inputsecret()*
 		ユーザーの入力内容を文字列として返す。
 		NOTE: コマンドライン補完には対応していない。
 
-insert({list}, {item} [, {idx}])			*insert()*
-		リスト|List| {list}の初めに{item}を挿入する。
+insert({object}, {item} [, {idx}])			*insert()*
+		{object}が |List| か |Blob| の場合、それの先頭に{item}を挿入す
+		る。
+
 		{idx}が指定されたときはインデックス{idx}の要素の前に{item}を挿
 		入する。{idx}が0のときは{idx}を省略した場合と同じ様に最初の要
 		素の前に挿入する。{idx}は負数でもよい(|list-index|参照)。-1を
 		指定すると最後の要素の前に挿入する。
-		挿入した結果のリストを返す。例: >
+
+		挿入した結果の |List| か |Blob| を返す。例: >
 			:let mylist = insert([2, 3, 5], 1)
 			:call insert(mylist, 4, -1)
 			:call insert(mylist, 6, len(mylist))
@@ -5590,8 +5640,9 @@ json_decode({string})					*json_decode()*
 		- 配列やオブジェクトの末尾コンマは無視される、例えば
 		  "[1, 2, ]" と "[1, 2]" は同じである。
 		- 多くの浮動小数点数を認識する。例えば "1." は "1.0" となり、
-		  "001.2" は "1.2" となる。特別な浮動小数点の値、"Infinity" お
-		  よび "NaN" (大文字は無視される) は受け付けられる。
+		  "001.2" は "1.2" となる。特別な浮動小数点の値、"Infinity",
+		  "-Infinity" および "NaN" (大文字は無視される) は受け付けられ
+		  る。
 		- 整数値の先頭に付く 0 は無視される、例えば "012" は "12" とな
 		  り、"-012" は "-12" となる。
 		- null、true および false の大文字は無視される、例えば "NULL"
@@ -5621,12 +5672,14 @@ json_encode({expr})					*json_encode()*
 		   浮動小数点数		浮動小数点数
 		   浮動小数点数 nan	"NaN"
 		   浮動小数点数 inf	"Infinity"
+		   浮動小数点数 -inf	"-Infinity"
 		   文字列		ダブルクォートで括られた文字列(null可)
 		   Funcref		不可、エラー
 		   リスト		配列(null可)
 					再帰的に使用された場合: []
 		   辞書			オブジェクト(null可)
 					再帰的に使用された場合: {}
+		   Blob			個々のバイト配列
 		   v:false		"false"
 		   v:true		"true"
 		   v:none		"null"
@@ -6753,16 +6806,18 @@ range({expr} [, {max} [, {stride}]])				*range()*
 			range(2, 0)		" エラー!
 <
 							*readfile()*
-readfile({fname} [, {binary} [, {max}]])
+readfile({fname} [, {type} [, {max}]])
 		ファイル{fname}を読み込み、各行を要素とするリスト|List|を返す。
 		行はNL文字で終わるものとする。改行文字がCRであるMacintoshのファ
 		イルは単一の長い行となる(どこかにNLが現れない限り)。
 		すべての NUL 文字は NL 文字に置換される。
-		{binary}が "b" を含む場合、次のようにバイナリモードになる:
+		{type}が "b" を含む場合、次のようにバイナリモードになる:
 		- 最後の行がNLで終わるときは、リストの末尾に余分な空文字列が追
 		  加される。
 		- CR文字を除去しない。
-		バイナリモードでない場合:
+		{type}が "B" を含む場合、ファイルのバイナリデータは変更せずに
+		|Blob| が返される。
+		その他の場合:
 		- NLの前に現れるCR文字を除去する。
 		- 最後の行がNLで終わるかどうかは関係ない。
 		- 'encoding' がUnicodeのときは UTF-8 のバイトオーダーマークは
@@ -6928,6 +6983,16 @@ remove({list}, {idx} [, {end}])				*remove()*
 		例: >
 			:echo "last item: " . remove(mylist, -1)
 			:call remove(mylist, 0, 9)
+remove({blob}, {idx} [, {end}])
+		{end}を指定しなかった場合: |Blob| {blob}から{idx}位置のバイト
+		を削除し、そのバイトを返す。
+		{end}を指定した場合: {idx}から{end}まで(両端を含む)のバイトを
+		削除し、それらのバイトを |Blob| で返す。{idx}と{end}が同じバイ
+		トを指す場合、1個のバイトからなる |Blob| が返る。
+		{end}が{idx}より前になる場合、エラーとなる。
+		例: >
+			:echo "last byte: " . remove(myblob, -1)
+			:call remove(mylist, 0, 9)
 remove({dict}, {key})
 		{dict}からキー{key}を持つ要素を削除する。例: >
 			:echo "removed " . remove(dict, "one")
@@ -6965,9 +7030,11 @@ resolve({filename})					*resolve()* *E655*
 		にする。
 
 							*reverse()*
-reverse({list})	{list}の要素の順序をその場で(in-place)反転させる。{list}そのも
-		のを返す。
-		リストを変更させないでおくには、最初にコピーを作る: >
+reverse({object})
+		{object}の要素の順序をその場で(in-place)反転させる。
+		{object}は |List| または |Blob| である。
+		{object}そのものを返す。
+		オブジェクトを変更させないでおくには、最初にコピーを作る: >
 			:let revlist = reverse(copy(mylist))
 
 round({expr})							*round()*
@@ -9248,6 +9315,7 @@ type({expr})	{expr}の型を示す数値を返す。
 			特殊値:	      7  |v:t_none| (v:null と v:none)
 			ジョブ:	      8  |v:t_job|
 			チャネル:     9  |v:t_channel|
+			Blob:	     10  |v:t_blob|
 		後方互換性のためには、次のような使い方ができる: >
 			:if type(myvar) == type(0)
 			:if type(myvar) == type("")
@@ -9582,12 +9650,17 @@ wordcount()						*wordcount()*
 					(ビジュアルモードのみ)
 
 							*writefile()*
-writefile({list}, {fname} [, {flags}])
-		|List| {list}をファイル{fname}に書き込む。リストの各要素は改行
-		文字(NL)で区切られる。各要素は文字列か数値でなければならない。
+writefile({object}, {fname} [, {flags}])
+		{object}が |List| の場合、それをファイル{fname}に書き込む。リ
+		ストの各要素は改行文字(NL)で区切られる。各要素は文字列か数値で
+		なければならない。
 		{flags}が "b" を含むときはバイナリモードとなり、最後の要素の後
 		にNLが追加されない。最後の要素が空であると、ファイルの最後の行
 		がNLで終わるようになる。
+
+		{object}が |Blob| の場合、バイトを変更せずにファイル{fname}に
+		書き込む。
+
 		{flags}が "a" を含むときは追記モードとなり、ファイルに行が追記
 		される。 >
 			:call writefile(["foo"], "event.log", "a")
@@ -10256,7 +10329,8 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 			文字列の i バイト目をセットするためにも使えない。それ
 			には次のようにする: >
 				:let var = var[0:2] . 'X' . var[4:]
-<
+<			{var-name}が |Blob| の場合、{idx}はblobの長さになる。
+			この場合、1バイトが追加される。
 
 							*E711* *E719*
 :let {var-name}[{idx1}:{idx2}] = {expr1}		*E708* *E709* *E710*
