@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Jan 11
+*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Jan 13
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2500,6 +2500,7 @@ test_autochdir()		なし	起動時に 'autochdir' を有効にする
 test_feedinput({string})	なし	キー入力を入力バッファに追加する
 test_garbagecollect_now()	なし	テスト用に直ちにメモリを解放する
 test_ignore_error({expr})	なし	特定のエラーを無視する
+test_null_blob()		Blob	テスト用のnull値
 test_null_channel()		チャネル	テスト用のnull値
 test_null_dict()		辞書	テスト用のnull値
 test_null_job()			ジョブ	テスト用のnull値
@@ -3090,7 +3091,7 @@ ch_evalraw({handle}, {string} [, {options}])		*ch_evalraw()*
 		では改行が付与されない。NL は応答から削除される。
 		Note: Vim は Raw チャネル上で受け取るテキストがいつ完了するの
 		か分からない。最初の部分だけを返す可能性もあり、残りを取り出す
-		ために ch_readraw() を使う必要がある。
+		ために |ch_readraw()| を使う必要がある。
 		|channel-use| を参照。
 
 		{|+channel| 機能付きでコンパイルされたときのみ有効}
@@ -9091,25 +9092,28 @@ test_ignore_error({expr})			 *test_ignore_error()*
 		{expr} が文字列 "RESET" の場合、無視されるエラーのリストは空に
 		なる。
 
+test_null_blob()					*test_null_blob()*
+		null の |Blob| を返す。これはテストのみに使われる。
+
 test_null_channel()					*test_null_channel()*
-		null の Channel を返す。これはテストのみに使われる。
+		null の |Channel| を返す。これはテストのみに使われる。
 		{|+channel| 機能つきでコンパイルされたときのみ有効}
 
 test_null_dict()					*test_null_dict()*
-		null の Dict を返す。これはテストのみに使われる。
+		null の |Dict| を返す。これはテストのみに使われる。
 
 test_null_job()						*test_null_job()*
-		null の Job を返す。これはテストのみに使われる。
+		null の |Job| を返す。これはテストのみに使われる。
 		{|+job| 機能つきでコンパイルされたときのみ有効}
 
 test_null_list()					*test_null_list()*
-		null の List を返す。これはテストのみに使われる。
+		null の |List| を返す。これはテストのみに使われる。
 
 test_null_partial()					*test_null_partial()*
-		null の Partial を返す。これはテストのみに使われる。
+		null の |Partial| を返す。これはテストのみに使われる。
 
 test_null_string()					*test_null_string()*
-		null の String を返す。これはテストのみに使われる。
+		null の |String| を返す。これはテストのみに使われる。
 
 test_option_not_set({name})				*test_option_not_set()*
 		オプション {name} が設定されたことを示すフラグをリセットする。
