@@ -5282,16 +5282,6 @@ indent({lnum})	カレントバッファの{lnum}行目のインデント量を�
 
 
 index({object}, {expr} [, {start} [, {ic}]])			*index()*
-		If {object} is a |List| return the lowest index where the item
-		has a value equal to {expr}.  There is no automatic
-		conversion, so the String "4" is different from the Number 4.
-		And the number 4 is different from the Float 4.0.  The value
-		of 'ignorecase' is not used here, case always matters.
-
-		If {object} is |Blob| return the lowest index where the byte
-		value is equal to {expr}.
-
-index({object}, {expr} [, {start} [, {ic}]])			*index()*
 		{object}が |List| の場合は、{expr}に等しい要素の最小のインデッ
 		クスを返す。自動的な変換は行われないので、文字列の "4" は数値
 		の 4 とは異なると判定される。そして数値の 4 は浮動小数点数の
