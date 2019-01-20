@@ -1,4 +1,4 @@
-*quickfix.txt*  For Vim バージョン 8.1.  Last change: 2019 Jan 09
+*quickfix.txt*  For Vim バージョン 8.1.  Last change: 2019 Jan 13
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -106,12 +106,12 @@ Vim の中でコマンドを実行し結果を得る方法の一つに|:make|コ
 :[count]lne[xt][!]	":cnext" と同様だが、QuickFixリストでなくカレントウィ
 			ンドウのロケーションリストが使われる。
 
-:[count]cN[ext][!]			*:cp* *:cprevious* *:cN* *:cNext*
+:[count]cN[ext][!]		*:cp* *:cprevious*  *:cprev* *:cN* *:cNext*
 :[count]cp[revious][!]	ファイル名を含むエラーリストで[count]個前のエラーを表
 			示する。ファイル名が無かった場合[count]個前のエラーに
 			移動する。[!]と 'switchbuf' については|:cc|を参照。
 
-:[count]lN[ext][!]			*:lp* *:lprevious* *:lN* *:lNext*
+:[count]lN[ext][!]		*:lp* *:lprevious* *:lprev* *:lN* *:lNext*
 :[count]lp[revious][!]	":cNext" と ":cprevious" と同様だが、QuickFixリストで
 			なく、カレントウィンドウのロケーションリストが使われる。
 
@@ -334,7 +334,7 @@ QuickFixコマンド (':make', ':grep' など) を実行する前後に2つの�
 	echo getloclist(3, {'title' : 1})
 <
 							*quickfix-index*
-いずれかのquickfixコマンド(例えば |cc|, |cnext|, |cprev| 等)を使用して
+いずれかのquickfixコマンド(例えば |:cc|, |:cnext|, |:cprev| 等)を使用して
 quickfix/location リストエントリに移動すると、そのエントリが現在選択されている
 エントリになる。quickfix/locationリストで現在選択されているエントリのインデッ
 クスは、getqflist()/getloclist()関数を使って取得できる。例: >
