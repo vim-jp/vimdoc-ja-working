@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Jan 15
+*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Jan 17
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -102,7 +102,7 @@ Blob		バイナリラージオブジェクト。任意のバイトシーケン�
 先頭の0によって8進数とみなされるのを防いだり、異なる基数を使うには|str2nr()|を
 使う。
 
-							*TRUE* *FALSE*
+						*TRUE* *FALSE* *Boolean*
 ブール(真理値)演算には数値が使われる。0は偽を意味し、非0は真を表す。また、
 |v:false| と |v:true| を使うこともできる。関数から真が返されたときは数値の 1
 であり、偽が返されたときは数値の 0 である。
@@ -126,7 +126,8 @@ Note: " " と "0" も空文字列ではないので、TRUE と見なされる。
 
 		*E745* *E728* *E703* *E729* *E730* *E731* *E908* *E910* *E913*
 		*E974* *E975* *E976*
-リスト、辞書、Funcref、ジョブ、チャネル、Blobは自動的に変換されない。
+リスト |List|, 辞書 |Dictionary|, |Funcref|, ジョブ |Job|, チャネル |Channel|
+および |Blob| は自動的に変換されない。
 
 							*E805* *E806* *E808*
 数値と浮動小数点数をまぜると浮動小数点数になる。それ以外には浮動小数点数への自
@@ -650,6 +651,7 @@ Blobの一部 ~
 Blobの一部は、角括弧内のコロンで区切られた最初と最後のインデックスを指定するこ
 とによって取得できる: >
 	:let myblob = 0z00112233
+	:let shortblob = myblob[1:2]	" 0z1122 を取得
 	:let shortblob = myblob[2:-1]	" 0z2233 を取得
 
 最初のインデックスを省略することはゼロと同じである。最後のインデックスを省略す
@@ -658,8 +660,9 @@ Blobの一部は、角括弧内のコロンで区切られた最初と最後の�
 	:let shortblob = myblob[2:2]	" 1バイトのBlob: 0z22
 	:let otherblob = myblob[:]	" Blobのコピーを作成
 
-最初のインデックスがBlobの最後のバイトを超えている場合、または2番目のバイトが
-最初のバイトより前にある場合、結果は空のリストになる。エラーメッセージはない。
+最初のインデックスがBlobの最後のバイトを超えている場合、または2番目のインデッ
+クスが最初のバイトより前にある場合、結果は空のリストになる。エラーメッセージは
+ない。
 
 2番目のインデックスがリストの長さ以上の場合、長さから 1 を引いたものが使用され
 る: >
@@ -676,11 +679,11 @@ Blobの特定のバイトを変更するには、 |:let| を使用する: >
 
 バイトシーケンスを変更するには、[:] 表記が使用できる: >
 	let blob[1:3] = 0z445566
-置き換えられたバイトの長さは、提供された値とまったく同じである。 *E972*
+置き換えられたバイトの長さは、提供された値と丁度同じでなければならない。*E972*
 
-Blobの一部を変更するには、変更する最初と最後のバイトを指定する。値は少なくとも
-範囲内のバイト数でなければならない: >
-	:let blob[3:5] = [3, 4, 5]
+Blobの一部を変更するには、変更する最初と最後のバイトを指定する。値の範囲内のバ
+イト数は同じでなければならない: >
+	:let blob[3:5] = 0z334455
 
 関数 |add()|, |remove()| および |insert()| も使用できる。
 
@@ -766,7 +769,7 @@ MY_VAR_6		viminfoファイル
 	expr5 isnot expr5	異なる |List| のインスタンス
 
 |expr5|	expr6
-	expr6 +	 expr6 ..	足し算またはリストの連結
+	expr6 +	 expr6 ..	足し算、リストまたはBlobの連結
 	expr6 -	 expr6 ..	引き算
 	expr6 .	 expr6 ..	文字列の連結
 
@@ -1112,7 +1115,7 @@ expr8が |Blob| ならば、インデックスexpr1aとexpr1bのバイト数を�
 例: >
 	:let b = 0zDEADBEEF
 	:let bs = b[1:2]		" 0zADBE
-	:let bs = b[]			" 0zDEADBEEF のコピー
+	:let bs = b[:]			" 0zDEADBEEF のコピー
 
 |Funcref|に対してexpr8[expr1]やexpr8[expr1a : expr1b]を使うとエラーになる。
 
@@ -1819,7 +1822,7 @@ v:mouse_col	|getchar()|でマウスクリックイベントが発生したとき
 		|virtcol()|と同じく画面上の桁番号。マウスがクリックされていな
 		いときは0となる。
 
-					*v:none* *none-variable*
+					*v:none* *none-variable* *None*
 v:none		空の文字列。JSONでは空の要素として使われる。
 		|json_encode()|を参照。
 		数値として使われた時、これは 0 として評価される。
@@ -1974,27 +1977,27 @@ v:swapcommand	ファイルを開いた後に実行するノーマルモードコ
 		する。":edit +cmd file" を実行させるには ":cmd\r" を代入する。
 
 				*v:t_TYPE* *v:t_bool* *t_bool-variable*
-v:t_bool	真偽値型の値。読出し専用。 参照: |type()|
+v:t_bool	真偽値 |Boolean| 型の値。読出し専用。 参照: |type()|
 					*v:t_channel* *t_channel-variable*
-v:t_channel	チャネル型の値。読出し専用。 参照: |type()|
+v:t_channel	チャネル |Channel| 型の値。読出し専用。 参照: |type()|
 					*v:t_dict* *t_dict-variable*
-v:t_dict	辞書型の値。読出し専用。 参照: |type()|
+v:t_dict	辞書 |Dictionary| 型の値。読出し専用。 参照: |type()|
 					*v:t_float* *t_float-variable*
-v:t_float	浮動小数点数型の値。読出し専用。 参照: |type()|
+v:t_float	浮動小数点数 |Float| 型の値。読出し専用。 参照: |type()|
 					*v:t_func* *t_func-variable*
-v:t_func	Funcref型の値。読出し専用。 参照: |type()|
+v:t_func	|Funcref| 型の値。読出し専用。 参照: |type()|
 					*v:t_job* *t_job-variable*
-v:t_job		ジョブ型の値。読出し専用。 参照: |type()|
+v:t_job		ジョブ |Job| 型の値。読出し専用。 参照: |type()|
 					*v:t_list* *t_list-variable*
-v:t_list	リスト型の値。読出し専用。 参照: |type()|
+v:t_list	リスト |List| 型の値。読出し専用。 参照: |type()|
 					*v:t_none* *t_none-variable*
-v:t_none	特殊値型の値。読出し専用。 参照: |type()|
+v:t_none	特殊値 |None| 型の値。読出し専用。 参照: |type()|
 					*v:t_number* *t_number-variable*
-v:t_number	数値型の値。読出し専用。 参照: |type()|
+v:t_number	数値 |Number| 型の値。読出し専用。 参照: |type()|
 					*v:t_string* *t_string-variable*
-v:t_string	文字列型の値。読出し専用。 参照: |type()|
+v:t_string	文字列 |String| 型の値。読出し専用。 参照: |type()|
 					*v:t_blob* *t_blob-variable*
-v:t_blob	Blob型の値。読出し専用。 参照: |type()|
+v:t_blob	|Blob| 型の値。読出し専用。 参照: |type()|
 
 				*v:termresponse* *termresponse-variable*
 v:termresponse	termcapのエントリ|t_RV|で端末から返されるエスケープシーケン
@@ -3302,8 +3305,8 @@ ch_read({handle} [, {options}])					*ch_read()*
 		{|+channel| 機能付きでコンパイルされたときのみ有効}
 
 ch_readblob({handle} [, {options}])			*ch_readblob()*
-		ch_read() と同様に動作するが、バイナリデータを読み込んでBlobを
-		返す。
+		ch_read() と同様に動作するが、バイナリデータを読み込んで
+		|Blob| を返す。
 		|channel-more| を参照。
 		{|+channel| 機能付きでコンパイルされたときのみ有効}
 
@@ -3324,7 +3327,7 @@ ch_sendexpr({handle}, {expr} [, {options}])			*ch_sendexpr()*
 		{|+channel| 機能付きでコンパイルされたときのみ有効}
 
 ch_sendraw({handle}, {expr} [, {options}])		*ch_sendraw()*
-		文字列またはBlob {expr} を {handle} に送る。
+		文字列 |String| または |Blob| {expr} を {handle} に送る。
 		|ch_sendexpr()| と同様に動作するが、リクエストをエンコードした
 		り応答をデコードしたりはしない。呼び出しは正しいコンテンツで
 		ある事が保証される。また NL モードでは改行が行われるが、ここ
@@ -3726,9 +3729,9 @@ empty({expr})						*empty()*
 		- 数値と浮動小数点数は値が0のとき空とみなされる。
 		- |v:false|, |v:none|, |v:null| は空であり、|v:true| は空では
 		  ない。
-		- ジョブは開始に失敗したときは空である。
-		- チャネルは閉じられていると空である。
-		- Blobはその長さが0のときは空である。
+		- ジョブ |Job|  は開始に失敗したときは空である。
+		- チャネル |Channel| は閉じられていると空である。
+		- |Blob| はその長さが0のときは空である。
 
 		長いリストに対しては長さを0と比較するよりこちらの方がずっと高
 		速である。
@@ -4602,7 +4605,8 @@ getcharsearch()						*getcharsearch()*
 		現在の文字検索の情報である{dict}を返し、この辞書は下記のエント
 		リを持つ:
 
-		    char	文字検索(|t|, |f|, |T|, |F|)で以前に使われた文字。
+		    char	文字検索(|t|, |f|, |T|, |F|)で以前に使われた文
+				字。
 				もし文字検索が実行されていないなら空文字列。
 		    forward	文字検索の方向。1は前方、0は後方。
 		    until	文字検索の種類。1は|t|もしくは|T|の文字検索、0は
@@ -5754,6 +5758,8 @@ json_decode({string})					*json_decode()*
 		デコードは寛容である:
 		- 配列やオブジェクトの末尾コンマは無視される、例えば
 		  "[1, 2, ]" と "[1, 2]" は同じである。
+		- 整数のキーはオブジェクト内で受け入れられる。例えば、{1:2} は
+		  {'1':2} と同じである。
 		- 多くの浮動小数点数を認識する。例えば "1." は "1.0" となり、
 		  "001.2" は "1.2" となる。特別な浮動小数点の値、"Infinity",
 		  "-Infinity" および "NaN" (大文字は無視される) は受け付けられ
@@ -5783,18 +5789,18 @@ json_encode({expr})					*json_encode()*
 		このエンコード方式の詳細はここに記載されている:
 		https://tools.ietf.org/html/rfc7159.html
 		Vimの値は以下の通りに変換される:
-		   数値			10進数
-		   浮動小数点数		浮動小数点数
+		   数値 |Number|	10進数
+		   浮動小数点数 |Float|	浮動小数点数
 		   浮動小数点数 nan	"NaN"
 		   浮動小数点数 inf	"Infinity"
 		   浮動小数点数 -inf	"-Infinity"
-		   文字列		ダブルクォートで括られた文字列(null可)
-		   Funcref		不可、エラー
-		   リスト		配列(null可)
+		   文字列 |String|	ダブルクォートで括られた文字列(null可)
+		   |Funcref|		不可、エラー
+		   リスト |List|	配列(null可)
 					再帰的に使用された場合: []
-		   辞書			オブジェクト(null可)
+		   辞書 |Dict|		オブジェクト(null可)
 					再帰的に使用された場合: {}
-		   Blob			個々のバイト配列
+		   |Blob|		個々のバイト配列
 		   v:false		"false"
 		   v:true		"true"
 		   v:none		"null"
@@ -5809,8 +5815,9 @@ keys({dict})						*keys()*
 							*len()* *E701*
 len({expr})	結果は数値で、引数{expr}の長さ。{expr}が文字列または数値のとき
 		は|strlen()|と同じようにバイト単位での長さを返す。
-		{expr}がリストのときは要素数を返す。
-		{expr}が辞書のときは要素数を返す。
+		{expr}がリスト |List| のときは要素数を返す。
+		{expr}が |Blob| の場合、バイト数を返す。
+		{expr}が辞書 |Dictionary| のときは要素数を返す。
 		それ以外のときはエラーとなる。
 
 						*libcall()* *E364* *E368*
@@ -9968,7 +9975,7 @@ spell			スペルチェックをサポート |spell|
 startuptime		|--startuptime| をサポート
 statusline		'statusline', 'rulerformat' そして 'titlestring' と
 			'iconstring' の特殊フォーマットをサポート
-sun_workshop		Sun |workshop|をサポート
+sun_workshop		Sun |workshop| のサポートは削除された
 syntax			構文ハイライトをサポート
 syntax_items		現在のバッファに有効なシンタックスが設定されている
 system			fork()/exec()の代わりにsystem()が使用されている
