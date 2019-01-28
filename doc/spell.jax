@@ -1550,7 +1550,7 @@ CHECKCOMPOUNDTRIPLE  (Hunspell)			*spell-CHECKCOMPOUNDTRIPLE*
 
 CHECKSHARPS  (Hunspell))			*spell-CHECKSHARPS*
 		大文字の(ドイツ語)単語のSS文字のペアは大文字のシャープ s (ß)
-		かもしれない。 サポートされていない。
+		かもしれない。サポートされていない。
 
 COMPLEXPREFIXES  (Hunspell)				*spell-COMPLEXPREFIXES*
 		2 つの接頭辞の使用を可能にする。サポートされていない。
