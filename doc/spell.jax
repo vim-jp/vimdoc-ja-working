@@ -1565,19 +1565,20 @@ COMPOUNDFIRST	(Hunspell)				*spell-COMPOUNDFIRST*
 		代わりに COMPOUNDRULE を使う。|spell-COMPOUNDRULE|
 
 COMPOUNDBEGIN	(Hunspell)				*spell-COMPOUNDBEGIN*
-		COMPOUNDBEGIN で署名された単語は、複合語の最初の要素になる。
+		COMPOUNDBEGIN の印が付けられた単語は、複合語の最初の要素にな
+		る。
 		代わりに COMPOUNDRULE を使う。|spell-COMPOUNDRULE|
 
 COMPOUNDLAST	(Hunspell)				*spell-COMPOUNDLAST*
-		COMPOUNDLAST で署名された単語は、複合語の最後の要素になる。
+		COMPOUNDLAST の印が付けられた単語は、複合語の最後の要素になる。
 		代わりに COMPOUNDRULE を使う。|spell-COMPOUNDRULE|
 
 COMPOUNDEND	(Hunspell)				*spell-COMPOUNDEND*
 		おそらく COMPOUNDLAST と同じ
 
 COMPOUNDMIDDLE	(Hunspell)				*spell-COMPOUNDMIDDLE*
-		COMPOUNDMIDDLE で署名された単語は、複合語の中間要素になること
-		がある。
+		COMPOUNDMIDDLE の印が付けられた単語は、複合語の中間要素になる
+		ことがある。
 		代わりに COMPOUNDRULE を使う。|spell-COMPOUNDRULE|
 
 COMPOUNDRULES	(Hunspell)				*spell-COMPOUNDRULES*
