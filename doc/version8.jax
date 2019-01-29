@@ -14562,26 +14562,26 @@ MS-Windows XP 以降のみがサポートされます。
 さまざまなシンタックス、インデント、その他プラグインが追加されました。
 
 Quickfix の改善 (by Yegappan Lakshmanan): ~
-	quickfixリスト/locationリストのスタックに含まれる、あらゆるリストを変
-	更する機能が追加されました。
-	すべてのquickfixリスト/locationリストに固有識別子が追加されました。
-	任意の Vim の型をコンテキスト情報としてquickfixリスト/locationリストに
-	関連付ける機能が追加されました。
+	quickfix/locationリストのスタックに含まれる、あらゆるリストを変更する
+	機能が追加されました。
+	すべてのquickfix/locationリストに固有識別子が追加されました。
+	任意の Vim の型をコンテキスト情報としてquickfix/locationリストに関連付
+	ける機能が追加されました。
 	getqflist(), getloclist(), setqflist() および setloclist() が拡張され、
-	quickfixリスト/locationリストのさまざまな属性情報の取得、設定が可能に
-	なりました。
+	quickfix/locationリストのさまざまな属性情報の取得、設定が可能になりま
+	した。
 	quickfixウィンドウの現在行を強調する QuickFixLine ハイライトグループが
 	追加されました。
 	quickfixリストのバッファの b:changedtick 変数が、そのリストが変更され
 	るたびにインクリメントされます。
-	quickfixリスト/locationリストに changedtick 変数が追加され、そのリスト
-	が変更されるたびにインクリメントされます。
+	quickfix/locationリストに changedtick 変数が追加され、そのリストが変更
+	されるたびにインクリメントされます。
 	quickfixリストを新しく作成せずに、'errorformat' を利用してテキストを解
 	析する機能が追加されました。
 	quickfixエントリに "module" 要素が追加され、長いファイル名の代わりに表
 	示名として使用できます。
-	quickfixリスト/locationリストのスタックに含まれる、すべてのリストを解
-	放する機能が追加されました。
+	quickfix/locationリストのスタックに含まれる、すべてのリストを解放する
+	機能が追加されました。
 	:copen/:cwindow コマンドでquickfixウィンドウを開く場合に、分割修飾子が
 	適用されます。
 
