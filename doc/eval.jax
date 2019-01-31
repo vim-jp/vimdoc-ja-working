@@ -650,8 +650,6 @@ Blobの繰り返し ~
 これは、0x11, 0x22 および 0x33 で Doit() を呼び出す。
 
 
-
-
 Blobの連結 ~
 
 2つのBlobは "+" 演算子で連結できる: >
@@ -5625,6 +5623,11 @@ job_info([{job}])					*job_info()*
 		   "exitval"	"status" が "dead" のときのみ有効
 		   "exit_cb"	終了時に呼び出される関数
 		   "stoponexit"	|job-stoponexit|
+
+		   Unixのみ:
+		   "termsig"	プロセスを終了させたシグナル
+				(値については |job_stop()| を参照)
+				"status"が "dead" の場合にのみ有効である
 
 		引数なしの場合、すべてのジョブオブジェクトのリストを返す。
 

@@ -696,6 +696,7 @@ similar to -1. >
 	:let otherblob = myblob[:]	" make a copy of the Blob
 
 If the first index is beyond the last byte of the Blob or the second index is
+before the first index, the result is an empty list.  There is no error
 message.
 
 If the second index is equal to or greater than the length of the list the
@@ -5743,6 +5744,11 @@ job_info([{job}])					*job_info()*
 		   "exitval"	only valid when "status" is "dead"
 		   "exit_cb"	function to be called on exit
 		   "stoponexit"	|job-stoponexit|
+
+		   Only in Unix:
+		   "termsig"	the signal which terminated the process
+				(See |job_stop()| for the values)
+				only valid when "status" is "dead"
 
 		Without any arguments, returns a List with all Job objects.
 
