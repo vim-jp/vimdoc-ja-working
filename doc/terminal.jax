@@ -1,4 +1,4 @@
-*terminal.txt*	For Vim バージョン 8.1.  Last change: 2018 May 17
+*terminal.txt*	For Vim バージョン 8.1.  Last change: 2019 Feb 03
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -231,7 +231,9 @@ Normal ハイライトグループにより決定されます。
 					には "++eof=exit()" を指定する。特殊
 					コードが `:map` と同様に利用できる。
 					例: "<C-Z>" は CTRL-Z を示す。
-
+			++winpty	仮想コンソールとしてwinptyを使用する。
+			++conpty	仮想コンソールとして |ConPTY| を使用す
+					る。
 			より詳細なオプションを使いたいならば |term_start()| 関
 			数を使ってください。
 			ウィンドウを縦分割するには、次のようにします: >
@@ -409,6 +411,14 @@ winpty 内の以下の2つのファイルが必要です:
 'winptydll' でファイルの場所を指定できます。もしも32ビット版と64ビット版を同じ
 ディレクトリに置きたいのであれば、Vimのビルドに合わせてそれぞれを winpty32.dll
 もしくは winpty64.dll という名前に変更してください。
+
+							*ConPTY*
+MS-Windows 10の最新バージョン("October 2018 Update" 以降)では、winptyは必要な
+くなった。それらのバージョンでは、|:terminal| はターミナルアプリケーションをホ
+ストするためのWindowsの組み込みサポート "ConPTY" を使用する。ConPTY が使用され
+ていると、あいまいな幅の文字に関するレンダリングアーティファクトが発生する可能
+性がある。そのような問題に遭遇した場合は、'termmode' をwinptyに設定すること(イ
+ンストールしておく必要がある)。
 
 環境変数は実行中のジョブに情報を渡すために使用されます:
     VIM_SERVERNAME	v:servername
