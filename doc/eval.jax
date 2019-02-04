@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Jan 29
+*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Feb 03
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -9217,6 +9217,9 @@ term_start({cmd}, {options})				*term_start()*
 				     を定義する 16 個のカラー名もしくは 16 進
 				     数コード。|g:terminal_ansi_colors| を参
 				     照。
+		   "term_mode"	     (MS-Windowsのみ): 使用する pty を指定する:
+					"winpty": winpty を使う
+					"conpty": ConPTY を使う(使用可能な場合)
 
 		{|+terminal| 機能付きでコンパイルされたときのみ有効}
 
@@ -9911,9 +9914,10 @@ cmdline_hist		|cmdline-history| コマンドライン履歴をサポート
 cmdline_info		'showcmd' と 'ruler' をサポート
 comments		|'comments'| をサポート
 compatible		Vi互換度を非常に高めてコンパイルされている
+conpty			|ConPTY| を使用できるプラットフォームである
 cryptv			暗号化をサポート |encryption|
 cscope			|cscope|をサポート
-cursorbind		|cursorbind| をサポート (常に true)
+cursorbind		|'cursorbind'| をサポート (常に true)
 debug			デバッグバージョンである
 dialog_con		コンソールダイアログのサポート
 dialog_gui		GUIダイアログのサポート
