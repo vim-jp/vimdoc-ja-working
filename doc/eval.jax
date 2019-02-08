@@ -5628,6 +5628,11 @@ job_info([{job}])					*job_info()*
 		   "termsig"	プロセスを終了させたシグナル
 				(値については |job_stop()| を参照)
 				"status"が "dead" の場合にのみ有効である
+		   MS-Windowsのみ:
+		   "tty_type"	使用している仮想コンソールのタイプ。
+				値は "winpty" または "conpty"。
+				'termwintype' を参照。
+
 
 		引数なしの場合、すべてのジョブオブジェクトのリストを返す。
 
@@ -9217,9 +9222,8 @@ term_start({cmd}, {options})				*term_start()*
 				     を定義する 16 個のカラー名もしくは 16 進
 				     数コード。|g:terminal_ansi_colors| を参
 				     照。
-		   "term_mode"	     (MS-Windowsのみ): 使用する pty を指定する:
-					"winpty": winpty を使う
-					"conpty": ConPTY を使う(使用可能な場合)
+		   "tty_type"	     (MS-Windowsのみ): 使用する pty を指定す
+				     る。値については 'termwintype' を参照。
 
 		{|+terminal| 機能付きでコンパイルされたときのみ有効}
 
