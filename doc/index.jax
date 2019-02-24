@@ -170,7 +170,7 @@ CTRL-X サブモードで使用するコマンド			*i_CTRL-X_index*
 
 補完モードのコマンド(|popupmenu-keys| を参照)
 
-|complete_CTRL-E| CTRL-E	補完を中止しもとのテキストに戻す
+|complete_CTRL-E| CTRL-E	補完を中止し元のテキストに戻す
 |complete_CTRL-Y| CTRL-Y	選択した候補を受け入れて補完を中止する
 		CTRL-L		現在の候補から1文字を挿入する
 		<CR>		現在の選択した候補を挿入する
