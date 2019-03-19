@@ -470,7 +470,7 @@ quickfixリストやlocationリスト中のバッファに対してコマンド�
 			は関数により変更されるたびに、|b:changedtick| 変数はイ
 			ンクリメントされる。このバッファにおける変数の値は
 			getqflist() や getloclist() 関数を用い 'qfbufnr'
-			アイテムを通して取得できる。 locationリストの場合は、
+			アイテムを通して取得できる。locationリストの場合は、
 			locationリストが削除されるときに、このバッファも削除さ
 			れる。
 

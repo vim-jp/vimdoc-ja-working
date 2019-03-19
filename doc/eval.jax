@@ -4979,7 +4979,7 @@ getqflist([{what}])					*getqflist()*
 				quickfixリストを意味し、"$" は最後のquickfixリ
 				ストを意味する
 			qfbufnr quickfixウィンドウに表示されているバッファの番
-				号。quickfixバッファが存在しないなら0 が返る。
+				号。quickfixバッファが存在しないなら 0 が返る。
 				|quickfix-buffer| を参照。
 			size	quickfixリスト内のエントリの数
 			title	リストタイトルを取得 |quickfix-title|
