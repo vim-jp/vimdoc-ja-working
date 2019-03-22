@@ -1125,7 +1125,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |t_CTRL-W_quote|	CTRL-W " {0-9a-z"%#*:=}
 				端末内でレジスタをペーストする
 |t_CTRL-W_CTRL-C| CTRL-W CTRL-C	ジョブを強制停止する
-|t_CTRL-W_CTRL-W| CTRL-W CTRL-W   次のウィンドウにフォーカスを移動する
+|t_CTRL-W_CTRL-W| CTRL-W CTRL-W	次のウィンドウにフォーカスを移動する
 |t_CTRL-W_gt|	CTRL-W gt	次のタブページに移動する。`gt` と同じ
 |t_CTRL-W_gT|	CTRL-W gT	前のタブページに移動する。`gT` と同じ
 
