@@ -3531,7 +3531,7 @@ complete_info([{what}])
 		   "tags"	     タグ |i_CTRL-X_CTRL-]|
 		   "path_defines"    定義補完 |i_CTRL-X_CTRL-D|
 		   "path_patterns"   インクルード補完 |i_CTRL-X_CTRL-I|
-		   "dictionary"	     'dictionary' |i_CTRL-X_CTRL-K|
+		   "dictionary"	     辞書 |i_CTRL-X_CTRL-K|
 		   "thesaurus"	     同義語 |i_CTRL-X_CTRL-T|
 		   "cmdline"	     Vim コマンドライン |i_CTRL-X_CTRL-V|
 		   "function"	     ユーザー定義補完 |i_CTRL-X_CTRL-U|
