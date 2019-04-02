@@ -3513,8 +3513,7 @@ complete_info([{what}])
 				値は |completion_info_mode| を参照。
 		   pum_visible	ポップアップメニューが表示されているなら |TRUE|
 				|pumvisible()| を参照。
-		   items
-				補完マッチのリスト。各要素は "word", "abbr",
+		   items 	補完マッチのリスト。各要素は "word", "abbr",
 				"menu", "kind", "info", "user_data" を含む辞書。
 				|complete-items| を参照。
 		   selected	選択された補完候補のインデックス。最初のインデッ
