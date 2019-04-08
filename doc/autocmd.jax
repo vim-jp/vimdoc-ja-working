@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 8.1.  Last change: 2019 Mar 13
+*autocmd.txt*   For Vim バージョン 8.1.  Last change: 2019 Apr 04
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -51,15 +51,19 @@
 2. 自動コマンドの定義					*autocmd-define*
 
 							*:au* *:autocmd*
-:au[tocmd] [group] {event} {pat} [nested] {cmd}
+:au[tocmd] [group] {event} {pat} [++once] [++nested] {cmd}
 			{pat} |autocmd-patterns| に一致するファイルで、{event}
 			のときに自動的に実行するコマンドのリストに、{cmd} を加
 			える。
 			Note: クォートは :autocmd への引数と見なされ、コメント
 			を開始しない。
 			{cmd} は常に既存の自動コマンドの後に追加されるので、
-			自動コマンドは指定された順に実行される。 [nested] につ
-			いては|autocmd-nested| を参照。
+			自動コマンドは指定された順に実行される。
+			[nested] については|autocmd-nested| を参照。後方互換性
+			のために、"nested" (++ なし)も使用できる。
+							*autocmd-once*
+			[++once] が指定されている場合、コマンドは1回実行される
+			と削除される("one shot")。
 
 特殊なパターン<buffer>や<buffer=N>はバッファローカルな自動コマンドを定義する。
 |autocmd-buflocal|を参照。
@@ -128,10 +132,11 @@ Note [group] はあらかじめ定義されていなければならないこと�
 ==============================================================================
 3. 自動コマンドの除去					*autocmd-remove*
 
-:au[tocmd]! [group] {event} {pat} [nested] {cmd}
+:au[tocmd]! [group] {event} {pat} [++once] [++nested] {cmd}
 			{event} と {pat} に関連づけられた全ての自動コマンドを
-			除去し、コマンド {cmd} を加える。 [nested] については
-			|autocmd-nested| を参照。
+			除去し、コマンド {cmd} を加える。
+			[++once] については |autocmd-once|を参照。
+			[++nested] については |autocmd-nested| を参照。
 
 :au[tocmd]! [group] {event} {pat}
 			{event} と {pat} に関連づけられた全ての自動コマンドを
@@ -1454,7 +1459,7 @@ VimLeave によって実行された自動コマンドは、バッファの被�
 内で ":e" や ":w" を使っても、これらに対してはイベント BufRead や BufWrite に
 よる自動コマンドは実行されない。もしこれを実行してほしいなら、ネストしてほしい
 コマンド内でフラグ "nested" を使うこと。例: >
-	:autocmd FileChangedShell *.c nested e!
+  :autocmd FileChangedShell *.c ++nested e!
 再帰的ループを避けるために、ネストは10段階までに制限されている。
 
 自動コマンドの中でコマンド ":au" を使うこともできる。これは自己修正的 {訳注:
