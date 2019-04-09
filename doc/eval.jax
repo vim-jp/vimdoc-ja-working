@@ -8511,8 +8511,8 @@ str2list({expr} [, {utf8}])				*str2list()*
 			str2list("ABC")		returns [65, 66, 67]
 <		|list2str()| は反対のことをする。
 
-		{utf8}が省略されているかゼロの場合、現在の 'encoding'が使用さ
-		れる。{utf8}が1の場合は、常にUTF-8文字列を返す。
+		{utf8}が省略されているかゼロの場合、現在の 'encoding' が使用さ
+		れる。{utf8}が1の場合は、常にutf-8文字列を返す。
 		utf-8の合成文字は正しく処理される: >
 			str2list("á")		returns [97, 769]
 
