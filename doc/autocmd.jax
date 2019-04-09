@@ -374,6 +374,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |SessionLoadPost|	セッションファイルを読み込んだ後
 
 |MenuPopup|		ポップアップメニューを表示する直前
+|CompleteChanged|	挿入モード補完メニューが変更されたとき
 |CompleteDone|		挿入モード補完が完了したとき
 
 |User|			":doautocmd"との組合せで使われる
@@ -587,7 +588,22 @@ ColorSchemePre			カラースキームを読み込む前。|:colorscheme|
 				あるカラースキームが読み込まれる前に、それ以前
 				に別のカラースキームによって追加されたものを取
 				り除くのに便利。
+CompleteChanged 					*CompleteChanged*
+				挿入モード補完メニューが変更される度。ポップ
+				アップメニューが非表示時には発生しない。そのた
+				めには |CompleteDone| を使用すること。再帰的に
+				発生することはない。
 
+				これらの |v:event| キーを設定する:
+				    completed_item	補完された項目
+				    height		表示項目数
+				    width		画面セル数
+				    row			画面上端の行
+				    col			画面最左の桁
+				    size		全項目数
+				    scrollbar		表示時 TRUE
+
+				テキストの |textlock| を変更することはできない。
 							*CompleteDone*
 CompleteDone			挿入モード補完が完了したとき。補完が実行されて
 				も中止されても発行される。 |ins-completion|
