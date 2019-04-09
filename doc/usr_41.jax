@@ -1,4 +1,4 @@
-*usr_41.txt*	For Vim バージョン 8.1.  Last change: 2019 Mar 29
+*usr_41.txt*	For Vim バージョン 8.1.  Last change: 2019 Apr 06
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -752,6 +752,7 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	systemlist()		シェルコマンドを実行し、その結果をリストで得る
 	hostname()		システムの名称を得る
 	readfile()		ファイルを読み込み、行のリストを得る
+	readdir()		ディレクトリ内のファイル名のリストを得る
 	writefile()		行のリストまたは Blob をファイルに書き込む
 
 日付と時刻:				*date-functions* *time-functions*
