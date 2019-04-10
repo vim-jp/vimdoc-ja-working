@@ -595,7 +595,7 @@ CompleteChanged 					*CompleteChanged*
 				発生することはない。
 
 				これらの |v:event| キーを設定する:
-				    completed_item	補完された項目
+				    completed_item	|complete-items| 参照
 				    height		表示項目数
 				    width		画面セル数
 				    row			画面上端の行
