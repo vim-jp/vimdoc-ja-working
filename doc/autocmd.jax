@@ -59,14 +59,14 @@
 			を開始しない。
 			{cmd} は常に既存の自動コマンドの後に追加されるので、
 			自動コマンドは指定された順に実行される。
-			[nested] については|autocmd-nested| を参照。後方互換性
-			のために、"nested" (++ なし)も使用できる。
+			[nested] については |autocmd-nested| を参照。後方互換
+			性のために、"nested" (++ なし)も使用できる。
 							*autocmd-once*
 			[++once] が指定されている場合、コマンドは1回実行される
 			と削除される("one shot")。
 
 特殊なパターン<buffer>や<buffer=N>はバッファローカルな自動コマンドを定義する。
-|autocmd-buflocal|を参照。
+|autocmd-buflocal| を参照。
 
 Note: '|' が {cmd} の前にある場合、":autocmd" コマンドの後には別のコマンドを続
 けることができる。これは動作する: >
@@ -135,7 +135,7 @@ Note [group] はあらかじめ定義されていなければならないこと�
 :au[tocmd]! [group] {event} {pat} [++once] [++nested] {cmd}
 			{event} と {pat} に関連づけられた全ての自動コマンドを
 			除去し、コマンド {cmd} を加える。
-			[++once] については |autocmd-once|を参照。
+			[++once] については |autocmd-once| を参照。
 			[++nested] については |autocmd-nested| を参照。
 
 :au[tocmd]! [group] {event} {pat}
