@@ -1,4 +1,4 @@
-*eval.txt*	For Vim version 8.1.  Last change: 2019 Apr 06
+*eval.txt*	For Vim version 8.1.  Last change: 2019 Apr 21
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -1688,7 +1688,8 @@ v:count		The count given for the last Normal mode command.  Can be used
 		When there are two counts, as in "3d2w", they are multiplied,
 		just like what happens in the command, "d6w" for the example.
 		Also used for evaluating the 'formatexpr' option.
-		"count" also works, for backwards compatibility.
+		"count" also works, for backwards compatibility, unless
+		|scriptversion| is 3 or higher.
 
 					*v:count1* *count1-variable*
 v:count1	Just like "v:count", but defaults to one when no count is
@@ -1720,7 +1721,8 @@ v:errmsg	Last given error message.  It's allowed to set this variable.
 	:silent! next
 	:if v:errmsg != ""
 	:  ... handle error
-<		"errmsg" also works, for backwards compatibility.
+<		"errmsg" also works, for backwards compatibility, unless
+		|scriptversion| is 3 or higher.
 
 				*v:errors* *errors-variable* *assert-return*
 v:errors	Errors found by assert functions, such as |assert_true()|.
@@ -2023,7 +2025,8 @@ v:shell_error	Result of the last shell command.  When non-zero, the last
 	:if v:shell_error
 	:  echo 'could not rename "foo" to "bar"!'
 	:endif
-<		"shell_error" also works, for backwards compatibility.
+<		"shell_error" also works, for backwards compatibility, unless
+		|scriptversion| is 3 or higher.
 
 					*v:statusmsg* *statusmsg-variable*
 v:statusmsg	Last given status message.  It's allowed to set this variable.
@@ -2123,7 +2126,8 @@ v:testing	Must be set before using `test_garbagecollect_now()`.
 v:this_session	Full filename of the last loaded or saved session file.  See
 		|:mksession|.  It is allowed to set this variable.  When no
 		session file has been saved, this variable is empty.
-		"this_session" also works, for backwards compatibility.
+		"this_session" also works, for backwards compatibility, unless
+		|scriptversion| is 3 or higher
 
 					*v:throwpoint* *throwpoint-variable*
 v:throwpoint	The point where the exception most recently caught and not
@@ -2154,7 +2158,7 @@ v:val		Value of the current item of a |List| or |Dictionary|.  Only
 v:version	Version number of Vim: Major version number times 100 plus
 		minor version number.  Version 5.0 is 500.  Version 5.1 (5.01)
 		is 501.  Read-only.  "version" also works, for backwards
-		compatibility.
+		compatibility, unless |scriptversion| is 3 or higher.
 		Use |has()| to check if a certain patch was included, e.g.: >
 			if has("patch-7.4.123")
 <		Note that patch numbers are specific to the version, thus both
@@ -2675,7 +2679,7 @@ term_setkill({buf}, {how})	none	set signal to stop job in terminal
 term_setrestore({buf}, {command}) none	set command to restore terminal
 term_setsize({buf}, {rows}, {cols})
 				none	set the size of a terminal
-term_start({cmd}, {options})	Number	open a terminal window and run a job
+term_start({cmd} [, {options}])	Number	open a terminal window and run a job
 term_wait({buf} [, {time}])	Number  wait for screen to be updated
 test_alloc_fail({id}, {countdown}, {repeat})
 				none	make memory allocation fail
@@ -9436,6 +9440,7 @@ term_getcursor({buf})					*term_getcursor()*
 				is not blinking.
 		   "shape"	1 for a block cursor, 2 for underline and 3
 				for a vertical bar.
+		   "color"	color of the cursor, e.g. "green"
 
 		{buf} must be the buffer number of a terminal window. If the
 		buffer does not exist or is not a terminal window, an empty
@@ -9606,7 +9611,7 @@ term_setsize({buf}, {rows}, {cols})		*term_setsize()* *E955*
 		exist or is not a terminal window, an error is given.
 		{only available when compiled with the |+terminal| feature}
 
-term_start({cmd}, {options})				*term_start()*
+term_start({cmd} [, {options}])			*term_start()*
 		Open a terminal window and run {cmd} in it.
 
 		{cmd} can be a string or a List, like with |job_start()|. The
@@ -10555,6 +10560,7 @@ vim_starting		True while initial source'ing takes place. |startup|
 viminfo			Compiled with viminfo support.
 vimscript-1		Compiled Vim script version 1 support
 vimscript-2		Compiled Vim script version 2 support
+vimscript-3		Compiled Vim script version 3 support
 virtualedit		Compiled with 'virtualedit' option. (always true)
 visual			Compiled with Visual mode. (always true)
 visualextra		Compiled with extra Visual mode commands. (always
@@ -12692,7 +12698,7 @@ code can be used: >
 
 ==============================================================================
 10. Vim script versions		*vimscript-version* *vimscript-versions*
-
+							*scriptversion*
 Over time many features have been added to Vim script.  This includes Ex
 commands, functions, variable types, etc.  Each individual feature can be
 checked with the |has()| and |exists()| functions.
@@ -12713,9 +12719,14 @@ instead of failing in mysterious ways. >
 < 	String concatenation with "." is not supported, use ".." instead.
 	This avoids the ambiguity using "." for Dict member access and
 	floating point numbers.  Now ".5" means the number 0.5.
-	Test for support with: >
-		has('vimscript-2')
+>
+ :scriptversion 3
+<	All |vim-variable|s must be prefixed by "v:".  E.g. "version" doesn't
+	work as |v:version| anymore, it can be used as a normal variable.
+	Same for some obvious names as "count" and others.
 
+	Test for support with: >
+		has('vimscript-3')
 
 ==============================================================================
 11. No +eval feature				*no-eval-feature*
