@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Apr 21
+*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Apr 27
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2357,8 +2357,8 @@ globpath({path}, {expr} [, {nosuf} [, {list} [, {alllinks}]]])
 has({feature})			数値	機能{feature}がサポートならば|TRUE|
 has_key({dict}, {key})		数値	{dict}が要素{key}を持つなら|TRUE|
 haslocaldir([{winnr} [, {tabnr}]])
-				数値	現在のウィンドウで|:lcd|が実行された
-					なら|TRUE|
+				数値	現在のウィンドウで |:lcd| か |:tcd| が
+					実行されたなら|TRUE|
 hasmapto({what} [, {mode} [, {abbr}]])
 				数値	{what}のマッピングが存在するなら|TRUE|
 histadd({history}, {item})	文字列	ヒストリに追加
@@ -4831,8 +4831,26 @@ getcwd([{winnr} [, {tabnr}]])
 
 		{winnr}と{tabnr}が指定された場合、{tabnr}のタブページ内の
 		{winnr}のウィンドウのローカルカレントディレクトリを返す。
+		{winnr}が -1 の場合、タブページの作業ディレクトリを返す。
+		{winnr}が 0 の場合、カレントウィンドウを使用し、{tabnr}が 0 の
+		場合はカレントタブページを使用する。
+		引数なしの場合は、カレントウィンドウの作業ディレクトリを返す。
 		もし引数が不正の場合、空文字列を返す。
 
+		例: >
+			" カレントウィンドウの作業ディレクトリを取得
+			:echo getcwd()
+			:echo getcwd(0)
+			:echo getcwd(0, 0)
+			" タブページ2のウィンドウ3の作業ディレクトリを取得
+			:echo getcwd(3, 2)
+			" グローバル作業ディレクトリを取得
+			:echo getcwd(-1)
+			" タブページ3の作業ディレクトリを取得
+			:echo getcwd(-1, 3)
+			" カレントタブページの作業ディレクトリを取得
+			:echo getcwd(-1, 0)
+<
 getfsize({fname})					*getfsize()*
 		結果は数値で、{fname}で指定されるファイルのサイズをバイト単位
 		で返す。
@@ -5369,8 +5387,12 @@ has_key({dict}, {key})					*has_key()*
 		ら1、持たないなら0となる。
 
 haslocaldir([{winnr} [, {tabnr}]])			*haslocaldir()*
-		結果は数値でウィンドウが|:lcd|によってローカルなカレントディレ
-		クトリを持つようセットされているなら1、そうでないなら0となる。
+		結果は数値である:
+		    1   ウィンドウが |:lcd| によってローカルディレクトリを設定
+			している時
+		    2   タブページが |:tcd| によってローカルディレクトリを設定
+			している時
+		    0   その他
 
 		引数が指定されない場合、現在のウィンドウを対象とする。
 		{winnr}が指定された場合、現在のタブページ内の{winnr}のウィンド
@@ -5378,8 +5400,30 @@ haslocaldir([{winnr} [, {tabnr}]])			*haslocaldir()*
 		{winnr}と{tabnr}が指定された場合、{tabnr}のタブページ内の
 		{winnr}のウィンドウを対象とする。
 		{winnr} にはウィンドウ番号または|window-ID|が使える。
+		{winnr}が -1 の場合は無視され、タブページのみが使用される。
 		もし引数が不正の場合、0 を返す。
 
+		例: >
+			if haslocaldir() == 1
+			  " ウィンドウローカルディレクトリの場合
+			elseif haslocaldir() == 2
+			  " タブページローカルディレクトリの場合
+			else
+			  " グローバルディレクトリの場合
+			endif
+
+			" カレントウィンドウ
+			:echo haslocaldir()
+			:echo haslocaldir(0)
+			:echo haslocaldir(0, 0)
+			" カレントタブページのウィンドウn
+			:echo haslocaldir(n)
+			:echo haslocaldir(n, 0)
+			" タブページmのウィンドウn
+			:echo haslocaldir(n, m)
+			" タブページm
+			:echo haslocaldir(-1, m)
+<
 hasmapto({what} [, {mode} [, {abbr}]])			*hasmapto()*
 		結果は数値。右辺側(マップした先)の一部分に{what}を含むマッピン
 		グが存在し、それが{mode}で指定されたモードのいずれかで定義され
@@ -9508,6 +9552,7 @@ test_override({name}, {val})				*test_override()*
 		starting     "starting" 変数を初期化する、以下を参照
 		nfa_fail     古い正規表現エンジンに戻すために、NFA regexp エン
 			     ジンを失敗させる
+		no_query_mouse  "dec" 端末のマウス位置を問い合わせない
 		ALL	     すべての置き換えをクリアする ({val} は使われない)
 
 		"starting" は、起動が完了したようにテストが振る舞うべきときに
@@ -10265,7 +10310,7 @@ ttyin			入力が端末 (tty) である
 ttyout			出力が端末 (tty) である
 unix			Vim の Unix バージョン。*+unix*
 unnamedplus		'clipboard' に "unnamedplus" をサポート
-user_commands		ユーザー定義コマンドをサポート
+user_commands		ユーザー定義コマンドをサポート (常に true)
 vcon			Win32: 仮想コンソールサポートが機能していて、
 			'termguicolors' を使用することができる。|+vtp| も参照。
 vertsplit		ウィンドウの垂直分割をサポート |:vsplit| (常に true)
