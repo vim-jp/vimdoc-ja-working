@@ -1,4 +1,4 @@
-*map.txt*       For Vim バージョン 8.1.  Last change: 2018 Dec 18
+*map.txt*       For Vim バージョン 8.1.  Last change: 2019 Apr 25
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -1179,9 +1179,10 @@ non-id	  マッチした場所の前がスペース、タブ、行頭、挿入�
 
 :com[mand]						*:com* *:command*
 			すべてのユーザー定義コマンドを一覧表示します。表示中の
-			行頭の2文字は次の意味です
+			行頭の文字列は次の意味です:
 			    !	-bang 属性を持つコマンド
 			    "	-register 属性を持つコマンド
+			    |	-bar 属性を持つコマンド
 			    b	カレントバッファのローカルコマンド
 			(属性に関する詳細は下記参照)
 			一覧は |:filter| を用いてコマンド名でフィルタできま
@@ -1376,14 +1377,16 @@ Note: -range=Nと-count=Nは相互に排他的であるということに注意�
 バッファ全体を表します。これらは引数、(ロードされた)バッファ、ウィンドウ及び
 タブページに関連付けすることができます。
 
-次の値を利用できます:
-	-addr=lines		行 (デフォルト)
-	-addr=arguments		引数
-	-addr=buffers		バッファ (ロードされていないバッファも)
-	-addr=loaded_buffers	ロードされたバッファ
-	-addr=windows		ウィンドウ
-	-addr=tabs		タブページ
-	-addr=other		他の種類の範囲
+次の値を利用できます (2列目は一覧表示で使われる短い名前です):
+    -addr=lines		  	行 (デフォルト)
+    -addr=arguments	  arg	引数
+    -addr=buffers	  buf	バッファ (ロードされていないバッファも)
+    -addr=loaded_buffers  load	ロードされたバッファ
+    -addr=windows	  win	ウィンドウ
+    -addr=tabs		  tab	タブページ
+    -addr=quickfix	  qf	quickfix のエントリ
+    -addr=other		  ?	他の種類の範囲
+
 
 特殊なケース ~
 					*:command-bang* *:command-bar*
