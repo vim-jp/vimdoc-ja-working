@@ -1,4 +1,4 @@
-*gui.txt*       For Vim バージョン 8.1.  Last change: 2019 Jan 06
+*gui.txt*       For Vim バージョン 8.1.  Last change: 2019 Apr 28
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -11,8 +11,9 @@ Vimのグラフィカルユーザーインターフェイス		*gui* *GUI*
 3. マウス制御			|gui-mouse|
 4. GUI選択の作成		|gui-selections|
 5. メニュー			|menus|
-6. 付記				|gui-extras|
-7. シェルコマンド		|gui-shell|
+6. フォント			|gui-font|
+7. 付記				|gui-extras|
+8. シェルコマンド		|gui-shell|
 
 他のGUIドキュメント:
 |gui_x11.txt|	X11 GUIに特有の項目について。
@@ -1048,7 +1049,137 @@ Note: GUI では、:popup コマンドは選択がなされる前に直ちに終
 Note: ']' で始まるメニュー項目はメニューバーに表示されない。
 
 ==============================================================================
-6. 付記							*gui-extras*
+6. フォント
+
+このセクションではフォント関連のオプションについて説明する。
+
+GUIFONT							*gui-font*
+
+'guifont' はどのフォントを使うかをVimに指示するオプションである。最も単純な形
+式は、フォント名のみである。コンマで区切られたフォント名のリストにすることもで
+きる。最初の有効なフォントが使用される。有効なフォントが見つからない場合は、エ
+ラーメッセージが表示される。
+
+'guifontset' がサポートされているシステム(X11)で、かつ 'guifontset' が空ではな
+い時は、'guifont' は使用されない。|xfontset| を参照。
+
+Note: GTKのGUIに関しては、無効な名前に対してエラーが発生することはなく、リスト
+の最初の要素は常に選択されて利用される。これは、与えられた名前をフォントで識別
+するのではなく、GTKのGUIがそれを使用してパターンを作成し、使用可能なフォントの
+中でパターンに最も一致するフォントを検索しようとするためである。名前以外の多く
+のフォントプロパティでマッチングが行われるため、無効な名前は問題にならない。
+
+コンマの後のスペースは無視される。フォント名にコンマを含めるには、その前にバッ
+クスラッシュを付ける。オプションを設定するには、スペースとバックスラッシュの前
+に追加のバックスラッシュが必要である。|option-backslash| も参照。例: >
+    :set guifont=Screen15,\ 7x13,font\\,with\\,commas
+Vimは最初に "Screen15" というフォントを使おうとし、失敗した場合は "7x13"、そし
+て次に "font,with,commas" を使おうとする。
+
+どのフォントもロードできない場合、Vimは現在の設定を保持する。空のフォントリス
+トが与えられた場合、Vimは他のリソース設定(Xの場合は Vim.font リソースを使用す
+る)を試してみて、最後に常にあるはずの組み込みデフォルト(Xの場合は"7x13")を試
+す。与えられたフォント名は "normal" フォントであるべきである。Vimは関連する太
+字と斜体のフォントを見つけようとする。
+
+Win32, GTK, Motif, Mac OS および Photon の場合: >
+    :set guifont=*
+望むフォントを選ぶことができるところで、フォントリクエスタを起動するだろう。
+
+フォント名は使用されるGUIによって異なる。さまざまなシステムに 'guifont' を設定
+する方法については |setting-guifont| を参照。
+
+GTK+ 2および3のGUIでは、フォント名は次のようになる: >
+    :set guifont=Andale\ Mono\ 11
+それがすべてだ。XLFDは使用されない。中国語の場合、これはうまく機能すると報告さ
+れている: >
+    if has("gui_gtk2")
+      set guifont=Bitstream\ Vera\ Sans\ Mono\ 12,Fixed\ 12
+      set guifontwide=Microsoft\ Yahei\ 12,WenQuanYi\ Zen\ Hei\ 12
+    endif
+<
+(GTK+ 3 GUIの場合は gui_gtk2 を gui_gtk3 に置き換える)
+
+Mac OSXの場合は、次のように使用できる: >
+    :set guifont=Monaco:h10
+'macatsui' も参照、ディスプレイの問題を解決するのに役立つ。
+							*E236*
+Note フォントは等幅である必要がある(すべての文字が同じ幅)。例外はGTK: すべての
+フォントが受け入れられるが、等幅フォントは最もよく見える。
+
+X11 でフォントをプレビューするには、"xfontsel" プログラムを使用することができ
+る。
+"xlsfonts" プログラムはすべての利用可能なフォントのリストを与える。
+
+Win32 GUIの場合						*E244* *E245*
+- フォント名にこれらのオプションを取る(オプションを区切るには ':' を使用するこ
+  と)。
+	hXX - 高さ XX (ポイント、浮動小数点数にすることができる)
+	wXX - 幅 XX (ポイント、浮動小数点数にすることができる)
+	WXX - ウェイトはXX (下記のウェイトに関する Note を参照)
+	b   - 太字。これは、ウェイトを 700 に設定するのと同じである。
+	i   - 斜体
+	u   - 下線付き
+	s   - 取り消し線付き
+	cXX - 文字セット XX.  有効な文字セットは: ANSI, ARABIC, BALTIC,
+	      CHINESEBIG5, DEFAULT, EASTEUROPE, GB2312, GREEK, HANGEUL,
+	      HEBREW, JOHAB, MAC, OEM, RUSSIAN, SHIFTJIS, SYMBOL, THAI,
+	      TURKISH, VIETNAMESE ANSI および BALTIC である。通常は "cDEFAULT"
+	      を使用する。
+	qXX - 品質 XX.  有効な品質名は: PROOF, DRAFT, ANTIALIASED,
+	      NONANTIALIASED, CLEARTYPE, DEFAULT である。通常は "qDEFAULT" を
+	      使用する。
+	      いくつかの品質値はレガシーなOSではサポートされていない。
+- スペースの代わりに '_' を使用できるので、スペースをエスケープするためにバッ
+  クスラッシュを使用する必要はない。
+例: >
+    :set guifont=courier_new:h12:w5:b:cRUSSIAN
+    :set guifont=Andale_Mono:h7.5:w4.5
+
+|font-sizes| も参照。
+
+ウェイトに関する Note:
+フォントにはさまざまなウェイトがある。Windowsの "標準" ウェイトは 400 の値を持
+ち、未指定のままである。これは、フォントを検索するときに使用される値である。
+Windowsは多くの場合、フォント名よりも高い優先順位でフォントのウェイトに基づい
+てフォントを照合する。つまり、Light または ExtraLight 異体を指定しても、Book
+または Medium 異体を意味するフォント名が使用されることがある。 あなたがより重
+いウェイト置換を経験しているならば、より低いウェイト値を明示的に設定することは
+この望まれない置換に対して軽減するかもしれない。
+
+
+GUIFONTWIDE						*gui-fontwide*
+
+空でない場合、'guifontwide' は、全角文字に使用されるフォントのコンマ区切りリス
+トを指定する。ロードできる最初のフォントが使用される。
+
+Note: これらのフォントのサイズは 'guifont' で指定されたものの2倍の幅かつ同じ高
+さでなければならない。不一致があると、テキストは正しく描画されない。
+
+GTK+ 以外のすべてのGUIバージョン:
+
+'guifontwide' は、'encoding' が "utf-8" に設定されていて、かつ 'guifontset' が
+空または無効の場合にのみ使用される。
+'guifont' が設定されていて、その中に有効なフォントが見つかり、'guifontwide' が
+空の場合、Vimは一致する倍幅フォントを見つけようと試み、それに 'guifontwide' を
+設定する。
+
+GTK+ GUIのみ:  			    	*guifontwide_gtk*
+
+設定されていて有効であれば、'encoding' が "utf-8"に設定されていなくて
+も、'guifontwide' は常に倍幅文字に使用される。
+Vimは 'guifontwide' に適切な値を自動的に見つけようとはしない。'guifontwide' が
+空の場合、Pango/Xft は'guifont' で使用できない文字のフォントを選択する。した
+がって、Pango/Xftによる選択を上書きしたくない限り、 'guifontwide' を設定する必
+要はまったくない。
+
+Windows +multibyteのみ:		*guifontwide_win_mbyte*
+
+設定されていて有効であれば、'guifont' の代わりに 'guifontwide' がIMEに使用され
+る。
+
+==============================================================================
+7. 付記							*gui-extras*
 
 このセクションではGUIに関連したその他の特徴を説明する。
 
@@ -1096,7 +1227,7 @@ Note: ']' で始まるメニュー項目はメニューバーに表示されな�
 http://www.lexikan.com/mincho.htm
 
 ==============================================================================
-7. シェルコマンド					*gui-shell*
+8. シェルコマンド					*gui-shell*
 
 X11 GUIでは外部プログラムはgvimウィンドウの中で実行される。
 |gui-pty|を参照。
