@@ -1378,7 +1378,7 @@ Note: -range=Nと-count=Nは相互に排他的であるということに注意�
 タブページに関連付けすることができます。
 
 次の値を利用できます (2列目は一覧表示で使われる短い名前です):
-    -addr=lines		  	行 (デフォルト)
+    -addr=lines			行 (デフォルト)
     -addr=arguments	  arg	引数
     -addr=buffers	  buf	バッファ (ロードされていないバッファも)
     -addr=loaded_buffers  load	ロードされたバッファ
