@@ -457,7 +457,8 @@ N  *+textprop*		|text-properties|
 N  *+timers*		|timer_start()| 関数
 N  *+title*		ウィンドウタイトルとアイコン設定 |'title'| |'icon'|
 N  *+toolbar*		|gui-toolbar|
-N  *+user_commands*	ユーザー定義コマンド |user-commands|
+T  *+user_commands*	ユーザー定義コマンド |user-commands|
+			8.1.1210 からは常に有効。
 B  *+vartabs*		可変幅のタブストップ |'vartabstop'|
 N  *+viminfo*		|'viminfo'|
    *+vertsplit*		ウィンドウの垂直分割 |:vsplit|; 8.0.1118 からは常に
@@ -574,6 +575,19 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 			マンドだけがフィルタリングをサポートしているので、サ
 			ポートしているかどうかは実際に試してみてください。フィ
 			ルタリングをサポートするコマンドの一部:
+			   |:#|          - 行全体をフィルタ
+			   |:clist|      - ファイル名かモジュール名でフィルタ
+			   |:command|    - コマンド名でフィルタ
+			   |:files|      - ファイル名でフィルタ
+			   |:highlight|  - ハイライトグループでフィルタ
+			   |:jumps|      - ファイル名でフィルタ
+			   |:let|        - 変数名でフィルタ
+			   |:list|       - 行全体をフィルタ
+			   |:llist|      - ファイル名かモジュール名でフィルタ
+			   |:marks|      - 現在のファイル内のテキストか他のファ
+			   		   イルのファイル名でフィルタ
+			   |:oldfiles|   - ファイル名でフィルタ
+			   |:set|        - 変数名でフィルタ
                           |:#|          - 行全体をフィルタ
                           |:command|    - コマンド名でフィルタ
                           |:files|      - ファイル名でフィルタ
