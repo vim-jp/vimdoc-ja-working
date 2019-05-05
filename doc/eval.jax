@@ -2675,6 +2675,7 @@ test_override({expr}, {val})	なし	Vimの内部処理を置き換えてテス�
 test_refcount({expr})		数値	{expr}の参照カウントを取得
 test_scrollbar({which}, {value}, {dragging})
 				なし	GUIのスクロールのテスト用
+test_setmouse({row}, {col})	なし	テスト用にマウス位置を設定する
 test_settime({expr})		なし	テスト用に現在の時刻を設定する
 timer_info([{id}])		リスト	タイマーに関する情報
 timer_pause({id}, {pause})	なし	タイマーの一時停止または一時停止解除
@@ -9587,6 +9588,13 @@ test_scrollbar({which}, {value}, {dragging})		*test_scrollbar()*
 		{which} スクロールバーが実際に存在し、GUIを使用している場合に
 		のみ動作する。
 
+test_setmouse({row}, {col})				*test_setmouse()*
+		次のマウス操作に使用するマウス位置を設定する。
+		{row} と {col} は 1ベースである。
+		例: >
+			call test_setmouse(4, 20)
+			call feedkeys("\<LeftMouse>", "xt")
+
 test_settime({expr})					*test_settime()*
 		Vim が内部的に用いる時間を設定する。現在は history のタイムス
 		タンプ、viminfo のタイムスタンプ、undo に使用されている。
@@ -10239,6 +10247,7 @@ modify_fname		ファイル名変換子をサポート |filename-modifiers|
 mouse			マウスをサポート
 mouse_dec		DECのターミナルマウスをサポート
 mouse_gpm		gpmをサポート (Linuxのコンソールマウス)
+mouse_gpm_enabled	GPMマウスが動作している
 mouse_netterm		nettermのマウスをサポート
 mouse_pterm		qnx ptermのマウスをサポート
 mouse_sysmouse		sysmouse (*BSD コンソールマウス)をサポート
