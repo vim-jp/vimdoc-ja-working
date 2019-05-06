@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Apr 27
+*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 May 05
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -32,8 +32,6 @@ Vim script の利用についてはユーザーマニュアルの41章|usr_41.tx
 12. サンドボックス		|eval-sandbox|
 13. テキストロック		|textlock|
 14. テスト			|testing|
-
-{Vi にはこれらのコマンドはない}
 
 ==============================================================================
 1. 変数							*variables*
@@ -7039,6 +7037,9 @@ prop_type_add({name}, {props})		*prop_type_add()* *E969* *E970*
 		   priority	文字に複数のテキストプロパティがある場合は、優
 				先度が最も高いものが使用される。負の値を使用で
 				きる。デフォルトの優先順位は0である
+		   combine	TRUEの場合、ハイライトを任意の構文ハイライトと
+				結び付ける。省略するかFALSEの場合は構文ハイラ
+				イトは使用されない
 		   start_incl	TRUEの場合、開始位置の挿入はテキストプロパティ
 				に含まれる
 		   end_incl	TRUEの場合、終了位置の挿入はテキストプロパティ
