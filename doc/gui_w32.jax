@@ -1,4 +1,4 @@
-*gui_w32.txt*   For Vim バージョン 8.1.  Last change: 2019 Apr 28
+*gui_w32.txt*   For Vim バージョン 8.1.  Last change: 2019 May 05
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -19,7 +19,6 @@ Win32でのVimのグラフィカルユーザーインターフェイス	*gui-w32
 |gui.txt|	GUIの一般的な要素。
 |os_win32.txt|	Win32特有の要素。
 
-{Vi にはWindowsのGUIは無い}
 
 ==============================================================================
 1. GUIを始める						*gui-w32-start*
@@ -417,7 +416,7 @@ Vimのウィンドウに1つもしくは複数のファイルをドラッグ&ド
 
 							*:simalt* *:sim*
 :sim[alt] {key}		Alt と {key} の同時押しをシミュレートする。
-			{Vi にはない} {Win32バージョンだけの機能}
+			{Win32バージョンだけの機能}
 			Note: ":si" は "i" フラグ付きの ":s" になる。
 
 通常、Vimでは使用可能なマッピングを増やすために、Alt-<Key>の全ての組み合わせを
