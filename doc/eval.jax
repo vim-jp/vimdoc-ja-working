@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 May 05
+*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 May 09
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1332,6 +1332,12 @@ Note シングルクォートが使われていることに注意。
 $VAR			環境変数
 
 環境変数の文字列。定義されていない環境変数を指定した場合、結果は空文字列。
+
+`getenv()` と `setenv()` 関数も使用でき、英数字以外の名前を持つ環境変数に対し
+て機能する。
+`environ()` 関数は、すべての環境変数を含む辞書を取得するために使用できる。
+
+
 							*expr-env-expand*
 Note $VARを直接使用した場合とexpand("$VAR")を使用した場合では、動作に違いがあ
 ることに注意。直接使用した場合には、現在のVimのセッション中で既知の値に展開さ
@@ -2177,6 +2183,7 @@ asin({expr})			浮動小数点数	{expr}のアークサイン
 atan({expr})			浮動小数点数	{expr}のアークタンジェント
 atan2({expr}, {expr})		浮動小数点数	{expr1} / {expr2} のアークタン
 						ジェント
+balloon_gettext()		文字列	バルーン内のカレントテキストを得る
 balloon_show({expr})		なし	{expr} をバルーン内に表示
 balloon_split({msg})		リスト	{msg} をバルーンで使われるように分割す
 					る
@@ -2229,6 +2236,7 @@ ch_status({handle} [, {options}])
 				文字列	チャネル{handle}の状態
 changenr()			数値	現在の変更番号
 char2nr({expr} [, {utf8}])	数値	{expr}の先頭文字のASCII/UTF8コード
+chdir({dir})			文字列	現在の作業ディレクトリを変更する
 cindent({lnum})			数値	{lnum}行目のCインデント量
 clearmatches([{win}])		なし	全マッチをクリアする
 col({expr})			数値	カーソルかマークのカラム番号
@@ -2257,6 +2265,7 @@ did_filetype()			数値	FileTypeのautocommandが実行されたか?
 diff_filler({lnum})		数値	差分モードで{lnum}に挿入された行
 diff_hlID({lnum}, {col})	数値	差分モードで{lnum}/{col}位置の強調
 empty({expr})			数値	{expr}が空なら|TRUE|
+environ()			辞書	すべての環境変数を得る
 escape({string}, {chars})	文字列	{string}内の{chars}を '\' でエスケープ
 eval({string})			任意	{string}を評価し、値を得る
 eventhandler()			数値	イベントハンドラの内側なら|TRUE|
@@ -2316,6 +2325,7 @@ getcompletion({pat}, {type} [, {filtered}])
 				リスト	コマンドライン補完にマッチするリスト
 getcurpos()			リスト	カーソルの位置
 getcwd([{winnr} [, {tabnr}]])	文字列	現在の作業ディレクトリを取得
+getenv({name})			文字列	環境変数を取得
 getfontname([{name}])		文字列	使用しているフォントの名前
 getfperm({fname})		文字列	ファイル{fname}の許可属性を取得
 getfsize({fname})		数値	ファイル{fname}のバイト数を取得
@@ -2529,6 +2539,7 @@ setbufvar({expr}, {varname}, {val})	バッファ{expr}内の変数{varname}に{v
 					をセット
 setcharsearch({dict})		辞書	文字検索を{dict}に設定
 setcmdpos({pos})		数値	コマンドライン内のカーソル位置を設定
+setenv({name}, {val})		なし	環境変数を設定する
 setfperm({fname}, {mode})	数値	ファイル {fname} のパーミッションを
 					{mode} に設定
 setline({lnum}, {line})		数値	行{lnum}に{line}(文字列)をセット
@@ -2982,14 +2993,19 @@ atan2({expr1}, {expr2})					*atan2()*
 <			2.356194
 		{|+float| 機能を有効にしてコンパイルしたときのみ有効}
 
+balloon_gettext()					*balloon_gettext()*
+		バルーン内の現在のテキストを返す。文字列に対してのみ使用され、
+		リストには使用されない。
+
 balloon_show({expr})					*balloon_show()*
 		{expr} をバルーン内に表示する。GUI では {expr} は文字列として
 		扱われる。端末では {expr} をバルーンの行を含むリストとしてもよ
 		い。{expr} がリストでない場合、|balloon_split()| で分割される。
+		{expr} が空文字列の場合、既存のバルーンは削除される。
 
 		例: >
 			func GetBalloonContent()
-			   " 内容の取得を開始
+			   " ... 内容の取得を開始
 			   return ''
 			endfunc
 			set balloonexpr=GetBalloonContent()
@@ -3432,6 +3448,27 @@ char2nr({expr} [, {utf8}])					*char2nr()*
 		    let list = map(split(str, '\zs'), {_, val -> char2nr(val)})
 <		結果: [65, 66, 67]
 
+chdir({dir})						*chdir()*
+		現在の作業ディレクトリを {dir} に変更する。ディレクトリの変更
+		範囲は、カレントウィンドウのディレクトリによって異なる:
+			- カレントウィンドウにウィンドウローカルディレクトリ
+			  (|:lcd|)がある場合は、ウィンドウローカルディレクトリ
+			  を変更する。
+			- それ以外の場合、カレントタブページにローカルディレク
+			  トリ(|:tcd|)がある場合は、タブページのローカルディレ
+			  クトリを変更する。
+			- それ以外の場合、グローバルディレクトリを変更する。
+		成功した場合は、前の作業ディレクトリを返す。これを別の chdir()
+		に渡してディレクトリを復元する。
+		失敗した場合は、空の文字列を返す。
+
+		例: >
+			let save_dir = chdir(newdir)
+			if save_dir
+			   " ... いくつかの作業をおこなう
+			   call chdir(save_dir)
+			endif
+<
 cindent({lnum})						*cindent()*
 		'cindent' で使われるのと同じC言語用のインデント規則に従った場
 		合の{lnum}行目のインデント量を返す。
@@ -3819,6 +3856,14 @@ diff_hlID({lnum}, {col})				*diff_hlID()*
 		先頭の桁の{col}は1となり、最初の行の{lnum}は1となる。
 		ハイライトIDは|synIDattr()|を使って構文情報を得るために使える。
 
+environ()						*environ()*
+		すべての環境変数を辞書として返す。このように環境変数が存在する
+		かどうかを確認できる: >
+			:echo has_key(environ(), 'HOME')
+<		Note 変数名はキャメルケース(CamelCase)でも構わない。 大文字と
+		小文字を区別しないためにこれを使用すること: >
+			:echo index(keys(environ()), 'HOME', 0, 1) != -1
+
 empty({expr})						*empty()*
 		{expr}が空なら1を、そうでなければ0を返す。
 		- リスト|List|または辞書|Dictionary|は要素を1個も持たないとき
@@ -4143,6 +4188,8 @@ feedkeys({string} [, {mode}])				*feedkeys()*
 		使う(|expr-quote|を参照)。例えば、feedkeys("\<CR>")は<Enter>
 		キーの押下をシミュレートする。しかしfeedkeys('\<CR>')とすると、
 		この文字の通り5文字を挿入する。
+		役に立つかもしれない特別なコードは <Ignore> だ。それは何もせず
+		に文字の待機を終了する。  *<Ignore>*
 
 		{mode}は以下の文字フラグを含む文字列:
 		'm'	キーをマップ展開する。これが既定である。{mode}が省略さ
@@ -4850,12 +4897,11 @@ getcwd([{winnr} [, {tabnr}]])
 			" カレントタブページの作業ディレクトリを取得
 			:echo getcwd(-1, 0)
 <
-getfsize({fname})					*getfsize()*
-		結果は数値で、{fname}で指定されるファイルのサイズをバイト単位
-		で返す。
-		{fname}がディレクトリのときは0を返す。
-		ファイル{fname}が見つからないときは-1を返す。
-		{fname} のサイズが |Number| の範囲外の場合は -2 を返す。
+getenv({name})						*getenv()*
+		環境変数{name}の値を返す。
+		変数が存在しない場合は |v:null| が返される。これは、空の文字列
+		に設定された変数とは異なる。
+		|expr-env| も参照。
 
 getfontname([{name}])					*getfontname()*
 		引数なしで使われた場合には現在の通常のフォント名を返す。ハイラ
@@ -4885,6 +4931,13 @@ getfperm({fname})					*getfperm()*
 		ば) "rw-r--r--" あるいは "rw-------" と表示する。
 
 		許可属性を設定するには|setfperm()|を使用する。
+
+getfsize({fname})					*getfsize()*
+		結果は数値で、{fname}で指定されるファイルのサイズをバイト単位
+		で返す。
+		{fname}がディレクトリのときは0を返す。
+		ファイル{fname}が見つからないときは-1を返す。
+		{fname} のサイズが |Number| の範囲外の場合は -2 を返す。
 
 							*getftime()*
 getftime({fname})
@@ -7767,6 +7820,11 @@ setcmdpos({pos})					*setcmdpos()*
 		小さいときの結果は未定義である。
 		成功なら0、コマンドラインを編集しているとき以外には1を返す。
 
+setenv({name}, {val})						*setenv()*
+		環境変数{name} に {val} を設定する。
+		{val} が |v:null| の場合は、環境変数は削除される。
+		|expr-env| も参照。
+
 setfperm({fname}, {mode})				*setfperm()* *chmod*
 		{fname} のファイル許可属性を {mode} に設定する。
 		{mode} は9文字の文字列でなければならない。形式は "rwxrwxrwx"
@@ -10560,13 +10618,53 @@ a: のスコープとこれらの変数は固定されており、変更でき�
 を変更できる。よって関数にリスト|List|を渡し、そこに要素を追加させることができ
 る。関数にリストや辞書を変更させたくない場合は|:lockvar|を使うこと。
 
-"..." が使われていない時は、関数呼び出しの時の引数の数は名前付きの引数の数と一
-致していなければならない。"..." を使った時には引数の数は大きくなるだろう。
-
 関数を引数無しで定義することも可能である。その時でも()は付けなければならない。
 
 関数の中で別の関数を定義することも可能である。
 
+
+						*optional-function-argument*
+名前付き固定引数にデフォルト値を指定できる。これにより、関数呼び出しではオプ
+ションになる。呼び出し時に固定引数が指定されていない場合は、デフォルトの式を使
+用して初期化される。これは |function| で宣言された関数に対してのみ機能し、ラム
+ダ式 |expr-lambda| には機能しない。
+
+例: >
+  function Something(key, value = 10)
+     echo a:key .. ": " .. value
+  endfunction
+  call Something('empty')	"empty: 10"
+  call Something('key, 20)	"key: 20"
+
+引数のデフォルト式は、定義時ではなく関数呼び出し時に評価される。したがって、関
+数が定義された瞬間に無効な式を使用することが可能である。式はまた、呼び出し中に
+引数が指定されていない場合にのみ評価される。
+
+デフォルトの式を使うために |v:none| を渡すことができる。Note これは、引数にデ
+フォルトの式がある場合、v:none を通常の値として渡すことを意味する。
+
+例: >
+  function Something(a = 10, b = 20, c = 30)
+  endfunction
+  call Something(1, v:none, 3)	    " b = 20
+<
+								*E989*
+デフォルト式を持つオプション引数は、必須引数の後になければならない。 オプショ
+ンの名前付き引数すべての後に "..." を使用できる。
+
+後の引数のデフォルトが前の引数を参照することは可能だが、その逆はできない。すべ
+ての引数と同様に、それらには "a:" を前に付ける必要がある。
+
+動作する例: >
+  :function Okay(mandatory, optional = a:mandatory)
+  :endfunction
+動作しない例: >
+  :function NoGood(first = a:second, second = 10)
+  :endfunction
+<
+"..." が使われていない時は、関数呼び出しの時の引数の数は必須の名前付きの引数の
+数と一致していなければならない。"..." を使った時には引数の数は大きくなるだろ
+う。
 
 							*local-variables*
 関数の中でローカル変数を使うこともできる。これらは関数から戻ると消滅する。
