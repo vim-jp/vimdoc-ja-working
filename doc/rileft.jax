@@ -12,7 +12,6 @@ Vimにおける "右左" 書きとヘブライマッピング			*rileft*
     E-mail: alottem@iil.intel.com
     Phone:  +972-4-8307322
 
-
 								*E26*
 {Vim が |+rightleft| 機能付きでコンパイルされたときのみ有効}
 
