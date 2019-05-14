@@ -2542,7 +2542,7 @@ setbufvar({expr}, {varname}, {val})	バッファ{expr}内の変数{varname}に{v
 					をセット
 setcharsearch({dict})		辞書	文字検索を{dict}に設定
 setcmdpos({pos})		数値	コマンドライン内のカーソル位置を設定
-setenv({name}, {val})		なし	環境変数を設
+setenv({name}, {val})		なし	環境変数を設定
 setfperm({fname}, {mode})	数値	ファイル {fname} のパーミッションを
 					{mode} に設定
 setline({lnum}, {line})		数値	行{lnum}に{line}(文字列)をセット
@@ -6216,7 +6216,7 @@ listener_add({callback} [, {buf}])			*listener_add()*
 		    col		変更した最初の桁または 1
 
 		エントリは変更が行われた順になっているため、最新の変更は最後に
-		なる。テキストの現在の状態で行番号を計算するには、最初から最後
+		なる。テキストの現在の状態で行番号を計算するには、最後から最初
 		までリストをたどる必要がある。
 
 		同じ関数を複数のバッファに使用する場合は、|Partial| を使用して
