@@ -1120,12 +1120,12 @@ Win32 GUIの場合						*E244* *E245*
 	i   - 斜体
 	u   - 下線付き
 	s   - 取り消し線付き
-	cXX - 文字セット XX.  有効な文字セットは: ANSI, ARABIC, BALTIC,
+	cXX - 文字セット XX。有効な文字セットは: ANSI, ARABIC, BALTIC,
 	      CHINESEBIG5, DEFAULT, EASTEUROPE, GB2312, GREEK, HANGEUL,
 	      HEBREW, JOHAB, MAC, OEM, RUSSIAN, SHIFTJIS, SYMBOL, THAI,
 	      TURKISH, VIETNAMESE ANSI および BALTIC である。通常は "cDEFAULT"
 	      を使用する。
-	qXX - 品質 XX.  有効な品質名は: PROOF, DRAFT, ANTIALIASED,
+	qXX - 品質 XX。有効な品質名は: PROOF, DRAFT, ANTIALIASED,
 	      NONANTIALIASED, CLEARTYPE, DEFAULT である。通常は "qDEFAULT" を
 	      使用する。
 	      いくつかの品質値はレガシーなOSではサポートされていない。
@@ -1142,9 +1142,9 @@ Win32 GUIの場合						*E244* *E245*
 ち、未指定のままである。これは、フォントを検索するときに使用される値である。
 Windowsは多くの場合、フォント名よりも高い優先順位でフォントのウェイトに基づい
 てフォントを照合する。つまり、Light または ExtraLight 異体を指定しても、Book
-または Medium 異体を意味するフォント名が使用されることがある。 あなたがより重
-いウェイト置換を経験しているならば、より低いウェイト値を明示的に設定することは
-この望まれない置換に対して軽減するかもしれない。
+または Medium 異体を意味するフォント名が使用されることがある。あなたがより重い
+ウェイト置換を経験しているならば、より低いウェイト値を明示的に設定することはこ
+の望まれない置換に対して軽減するかもしれない。
 
 
 GUIFONTWIDE						*gui-fontwide*
@@ -1165,11 +1165,11 @@ GTK+ 以外のすべてのGUIバージョン:
 
 GTK+ GUIのみ:  			    	*guifontwide_gtk*
 
-設定されていて有効であれば、'encoding' が "utf-8"に設定されていなくて
-も、'guifontwide' は常に倍幅文字に使用される。
+設定されていて有効であれば、'encoding' が "utf-8" に設定されていなくても、
+'guifontwide' は常に倍幅文字に使用される。
 Vimは 'guifontwide' に適切な値を自動的に見つけようとはしない。'guifontwide' が
-空の場合、Pango/Xft は'guifont' で使用できない文字のフォントを選択する。した
-がって、Pango/Xftによる選択を上書きしたくない限り、 'guifontwide' を設定する必
+空の場合、Pango/Xft は 'guifont' で使用できない文字のフォントを選択する。した
+がって、Pango/Xftによる選択を上書きしたくない限り、'guifontwide' を設定する必
 要はまったくない。
 
 Windows +multibyteのみ:		*guifontwide_win_mbyte*
