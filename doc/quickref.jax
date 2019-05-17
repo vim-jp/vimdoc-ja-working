@@ -786,7 +786,7 @@
 'keywordprg'	  'kp'      |K|で使う外部プログラム
 'langmap'	  'lmap'    他の言語モードでの文字
 'langmenu'	  'lm'      メニュー表示用言語
-'langnoremap'	  'lnr'	    マップされた文字に 'langmap' を適用しない
+'langnoremap'	  'lnr'	    マッピングされた文字に 'langmap' を適用しない
 'langremap'	  'lrm'	    マッピングされた文字に 'langmap' を適用する
 'laststatus'	  'ls'      最下ウィンドウにいつステータス行を表示するか
 'lazyredraw'	  'lz'      マクロ実行中に表示を更新しない
