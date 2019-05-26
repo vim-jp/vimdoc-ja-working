@@ -1168,8 +1168,8 @@ GTK+ 以外のすべてのGUIバージョン:
 
 GTK+ GUIのみ:  			    	*guifontwide_gtk*
 
-設定されており、それが適切な値であるとき、'encoding' が "utf-8"でなくても常に2
-倍幅文字に対して 'guifontwide' が使われる。Vimは自動的に 'guifontwide' に適合
+設定されており、それが適切な値であるとき、'encoding' が "utf-8" でなくても常に
+2倍幅文字に対して 'guifontwide' が使われる。Vimは自動的に 'guifontwide' に適合
 する値を探そうとはしない。'guifontwide' が空ならばPango/Xftが 'guifont' で利用
 できない文字に対するフォントを選ぶ。そのため、Pango/Xftが選んだ値を上書きした
 いのでない限り、'guifontwide' を設定する必要はまったくない。
