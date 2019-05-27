@@ -1,4 +1,4 @@
-*vi_diff.txt*   For Vim バージョン 8.1.  Last change: 2019 May 07
+*vi_diff.txt*   For Vim バージョン 8.1.  Last change: 2019 May 13
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -883,7 +883,7 @@ VimはほとんどすべてのViコマンドを大半は同じやり方でサポ
 		`:set all&`, `:set option+=value`, `:set option^=value`
 		`:set option-=value` `:set option<` はない
 `:shell`	シェルを実行する
-`:source`	Vim or Ex コマンドをファイルから読み込む
+`:source`	Vi or Ex コマンドをファイルから読み込む
 `:stop`		エディタをサスペンドするかシェルにエスケープする
 `:substitute`	テキストの検索と置換。Vi: '&', 'i', 's', 'r' または 'I' フラグ,
 		確認プロンプトは 'y' と 'n' のみサポート, ハイライトなし
@@ -918,6 +918,9 @@ VimはほとんどすべてのViコマンドを大半は同じやり方でサポ
 
 以下のノーマルモードコマンドはViでサポートされています: ~
 
+note: 説明文中のWORD、N、Nmoveなどの意味については、|normal-index| の先頭を参
+照してください。
+
 |CTRL-B|	N 画面後方にスクロールする
 |CTRL-C|	現在の(検索)コマンドを中断する
 |CTRL-D|	N 行(デフォルト: 画面の半分の行数)下にスクロールする。Vimは
@@ -937,7 +940,9 @@ VimはほとんどすべてのViコマンドを大半は同じやり方でサポ
 |CTRL-P|	"k" と同じ
 |CTRL-R|	一部のViバージョン: CTRL-L と同じ
 |CTRL-T|	タグリストの N 個古いタグにジャンプする
-|CTRL-U|	N 行上へスクロールする (デフォルト: 画面の半分の行数)
+|CTRL-U|	N 行上へスクロールする (デフォルト: 画面の半分の行数) {Vi は
+		ファイル行を使っていたが、Vimは 'scroll' 画面の行をスクロール
+		する。行が折り返されると違いが出る}
 |CTRL-Y|	N 行下へスクロールする
 |CTRL-Z|	プログラムを中断する(または新しいシェルを起動する)
 |CTRL-]|	カーソル下の識別子で :ta する {Vi: カーソルの後の識別子}
