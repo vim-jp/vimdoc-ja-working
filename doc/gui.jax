@@ -1,4 +1,4 @@
-*gui.txt*       For Vim バージョン 8.1.  Last change: 2019 May 05
+*gui.txt*       For Vim バージョン 8.1.  Last change: 2019 May 20
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1195,7 +1195,8 @@ Windows +multibyteのみ:			*guifontwide_win_mbyte*
        入力される。Shiftキーなら "<S-Del>"。}
 
 - GUIでは、修飾キーのSHIFT、CTRL、ALT(META)は特殊キーやマウスイベントのマッピ
-  ングで使用できる。例えば、:map <M-LeftDrag> <LeftDrag>
+  ングで使用できる。
+  例えば、:map <M-LeftDrag> <LeftDrag>
 
 - GUIでは、いくつかの普通のキーにマッピング等で修飾キーを付けて使用できる。そ
   のようなキーは<Space>、<Tab>、<NL>、<CR>、<Esc>である。
