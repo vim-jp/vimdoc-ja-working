@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 8.1.  Last change: 2019 May 23
+*options.txt*	For Vim バージョン 8.1.  Last change: 2019 May 25
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -5015,13 +5015,6 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 <	安全上の理由から、このオプションをモードライン|modeline|やサンドボック
 	ス|sandbox|の中で設定することはできない。
 
-						*'makespellmem'* *'msm'*
-'makespellmem' 'msm'	文字列	(既定では "460000,2000,500")
-			グローバル
-	スペルファイルを圧縮するときにだけ関連する値。 |spell| を参照。
-	'modelineexpr' がオフの場合は、モードラインでこのオプションを設定する
-	ことはできない。
-
 						*'matchpairs'* *'mps'*
 'matchpairs' 'mps'	文字列	(既定では "(:),{:},[:]")
 			バッファについてローカル
@@ -5167,6 +5160,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 		:set mkspellmem=900000,3000,800
 <	512 Mbyte より少ないメモリしか持っていないなら、'mkspellmem' がどんな
 	値であっても、ある言語に対しては |:mkspell|が失敗するかもしれない。
+
+	このオプションを |modeline| または |sandbox| 内で設定することはできな
+	い。
 
 				   *'modeline'* *'ml'* *'nomodeline'* *'noml'*
 'modeline' 'ml'		切替	(Vimの既定値はオン (rootの場合はオフ)、
