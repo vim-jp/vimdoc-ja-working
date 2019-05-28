@@ -4646,8 +4646,8 @@ cterm={attr-list}					*highlight-cterm*
 	のターミナルではコメントにアンダーラインを引き、カラーターミナルではコ
 	メントを青色で表示することができる。
 	Note: DOSコンソールなどいくつかのターミナルでは色づけの際にこれらの属
-	性を混在させることはできない。移植性を重視するには、"cterm="
-	か"ctermfg=" が "ctermbg=" のどれか1つだけを使うこと。
+	性を混在させることはできない。移植性を重視するには、"cterm=" か
+	"ctermfg=" が "ctermbg=" のどれか1つだけを使うこと。
 
 ctermfg={color-nr}				*highlight-ctermfg* *E421*
 ctermbg={color-nr}				*highlight-ctermbg*
