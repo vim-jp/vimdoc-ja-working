@@ -4645,9 +4645,9 @@ cterm={attr-list}					*highlight-cterm*
 	色を使う場合、引数 "cterm" は "term" と異なる結果になる。例えば、通常
 	のターミナルではコメントにアンダーラインを引き、カラーターミナルではコ
 	メントを青色で表示することができる。
-	Note:DOSコンソールなどいくつかのターミナルでは色づけの際にこれらの属性
-	を混在させることはできない。移植性を重視するには、"cterm=" か
-	"ctermfg=" が "ctermbg=" のどれか1つだけを使うこと。
+	Note: DOSコンソールなどいくつかのターミナルでは色づけの際にこれらの属
+	性を混在させることはできない。移植性を重視するには、"cterm="
+	か"ctermfg=" が "ctermbg=" のどれか1つだけを使うこと。
 
 ctermfg={color-nr}				*highlight-ctermfg* *E421*
 ctermbg={color-nr}				*highlight-ctermbg*
