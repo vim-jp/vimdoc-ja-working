@@ -864,32 +864,31 @@ CTRL-W d		新しいウィンドウを開き、カーソルの下にあったキ�
   'i'		挿入モードで、ユーザーはタグを補完していた(|i_CTRL-X_CTRL-]|
 		で)
 
-Note that when 'tagfunc' is set, the priority of the tags described in
-|tag-priority| does not apply.  Instead, the priority is exactly as the
-ordering of the elements in the list returned by the function.
+Note 'tagfunc' が設定されている場合、|tag-priority| に記述されているタグの優先
+順位は適用されない。代わりに、優先順位は、関数によって返されるリスト内の要素の
+順序とまったく同じである。
 								*E987*
-The function should return a List of Dict entries.  Each Dict must at least
-include the following entries and each value must be a string:
-	name		Name of the tag.
-	filename	Name of the file where the tag is defined.  It is
-			either relative to the current directory or a full path.
-	cmd		Ex command used to locate the tag in the file.  This
-			can be either an Ex search pattern or a line number.
-Note that the format is similar to that of |taglist()|, which makes it possible
-to use its output to generate the result.
-The following fields are optional:
-	kind		Type of the tag.
-	user_data	String of custom data stored in the tag stack which
-			can be used to disambiguate tags between operations.
+関数は辞書エントリのリストを返すべきである。各辞書は少なくとも次のエントリを含
+み、各値は文字列でなければならない:
+	name		タグ名。
+	filename	タグが定義されているファイルの名前。カレントディレクト
+			リからの相対パスか、フルパスのどちらかである。
+	cmd		ファイル内のタグを見つけるために使用されるExコマンド。
+			これはEx検索パターンまたは行番号のどちらかである。
+Note フォーマットは |taglist()| のものと似ており、これにより、結果を生成するた
+めにその出力を使用することが可能になる。
+以下のフィールドはオプションである:
+	kind		タグの種類。
+	user_data	オペレーション間でタグの曖昧さを解消するために使用でき
+			る、タグスタックに格納されたカスタムデータの文字列。
 
-If the function returns |v:null| instead of a List, a standard tag lookup will
-be performed instead.
+関数がリストの代わりに、|v:null| を返した場合、標準のタグ検索が代わりに実行さ
+れる。
 
-It is not allowed to change the tagstack from inside 'tagfunc'.  *E986* 
+タグスタックを 'tagfunc' の内部から変更することはできない。  *E986*
 
-The following is a hypothetical example of a function used for 'tagfunc'.  It
-uses the output of |taglist()| to generate the result: a list of tags in the
-inverse order of file names.
+以下は、'tagfunc' に使用される関数の仮定の例である。結果(ファイル名の逆順のタ
+グのリスト)を生成するために |taglist()| の出力を使用している。
 >
 	function! TagFunc(pattern, flags, info)
 	  function! CompareFilenames(item1, item2)
