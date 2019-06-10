@@ -66,27 +66,26 @@ THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
 で制限できる。幅を広げるためにスペースを使うか、または、"minwidth" プロパティ
 を使うことができる。
 
-By default the 'wrap' option is set, so that no text disappears.  Otherwise,
-if there is not enough space then the window is shifted left in order to
-display more text. This can be disabled with the "fixed" property. Also
-disabled when right-aligned.
+デフォルトでは 'wrap'オプションが設定されているのでテキストは消えない。または、
+十分なスペースがない場合、ウィンドウは左に移動してテキストをさらに表示する。こ
+れは "fixed" プロパティで無効にすることができる。右寄せの場合も無効になる。
 
-Vim tries to show the popup in the location you specify.  In some cases, e.g.
-when the popup would go outside of the Vim window, it will show it somewhere
-else.  E.g. if you use `popup_atcursor()` the popup normally shows just above
-the current cursor position, but if the cursor is close to the top of the Vim
-window it will be placed below the cursor position.
+Vimは指定した場所にポップアップを表示しようとする。場合によっては、ポップアッ
+プがVimのウィンドウの外側に出ると、他の場所に表示される。例えば、
+`popup_atcursor()` を使用すると、ポップアップは現在のカーソル位置のすぐ上に表
+示されるが、カーソルがVimのウィンドウの最上部に近い場合は、カーソル位置の下に
+配置される。
 
 
 
 TODO:
 
-Scrolling: When the screen scrolls up for output of an Ex command, what
-happens with popups?
-1. Stay where they are.  Problem: listed text may go behind and can't be read.
-2. Scroll with the page.  What if they get updated?  Either postpone, or take
-   the scroll offset into account.
-Probably 2. is the best choice.
+スクロール: Exコマンドの出力のために画面がスクロールアップするとき、ポップアッ
+プはどうなるか？
+1. そこに留まる。問題: リストされたテキストが隠れて読めなくなるかもしれない。
+2. ページをスクロールする。更新されたらどうなる？延期するか、スクロールオフセッ
+トを考慮に入れる。
+おそらく 2. がベストな選択。
 
 
 IMPLEMENTATION:
@@ -113,53 +112,55 @@ IMPLEMENTATION:
 2. 関数							*popup-functions*
 
 THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE  
+{これは設計中だ - まだ変更が行われる可能性がある}
 
-[functions to be moved to eval.txt later, keep overview of functions here]
+[後で eval.txt に移動する関数は、ここで関数の概要を保持すること]
 
 popup_create({text}, {options})				*popup_create()*
-		Open a popup window showing {text}, which is either:
-		- a string
-		- a list of strings
-		- a list of text lines with text properties
+		次のどれかである {text} を見せるポップアップウィンドウを開く:
+		- 文字列
+		- 文字列のリスト
+		- テキストプロパティを持つテキスト行のリスト
 
-		{options} is a dictionary with many possible entries.
-		See |popup_create-usage| for details.
+		{options} は多くのエントリがある辞書である。
+		詳細は |popup_create-usage| を参照。
 
-		Returns a window-ID, which can be used with other popup
-		functions.  Use `winbufnr()` to get the number of the buffer
-		in the window: >
+		ウィンドウIDを返す。これは他のポップアップ関数で使用できる。
+		ウィンドウ内のバッファの番号を取得するには `winbufnr()` を使用
+		すること: >
 			let winid = popup_create('hello', {})
 			let bufnr = winbufnr(winid)
 			call setbufline(bufnr, 2, 'second line')
-<		In case of failure zero is returned.
+<		失敗した場合はゼロが返される。
 
 
 popup_close({id} [, {result}])				*popup_close()*
-		Close popup {id}.  The window and the associated buffer will
-		be deleted.
+		ポップアップ {id} を閉じる。ウィンドウと関連するバッファは削除
+		される。
 
-		If the popup has a callback it will be called just before the
-		popup window is deleted.  If the optional {result} is present
-		it will be passed as the second argument of the callback.
-		Otherwise zero is passed to the callback.
+		ポップアップがコールバックを持つ場合は、ポップアップウィンドウ
+		が削除される直前に呼び出される。オプションの {result} が存在す
+		る場合、それはコールバックの2番目の引数として渡される。そうで
+		なければ、ゼロがコールバックに渡される。
 
 
 popup_dialog({text}, {options})				*popup_dialog()*
 	  	{not implemented yet}
-		Just like |popup_create()| but with these default options: >
+		|popup_create()| と同じだが、これらのデフォルトのオプションに
+		なる: >
 			call popup_create({text}, {
 				\ 'pos': 'center',
 				\ 'zindex': 200,
 				\ 'border': [],
 				\ 'padding': [],
 				\})
-<		Use {options} to change the properties.
+<		プロパティを変更するには{options}を使用する。
 
 
 popup_notification({text}, {options})			 *popup_notification()*
 	  	{not implemented yet}
-		Show the {text} for 3 seconds at the top of the Vim window.
-		This works like: >
+		Vimのウィンドウの上部に {text} を3秒間表示する。これは次のよ
+		うに動作する: >
 			call popup_create({text}, {
 				\ 'line': 1,
 				\ 'col': 10,
@@ -169,27 +170,27 @@ popup_notification({text}, {options})			 *popup_notification()*
 				\ 'highlight': 'WarningMsg',
 				\ 'border': [],
 				\ })
-<		Use {options} to change the properties.
+<		プロパティを変更するには{options}を使用する。
 
 
 popup_atcursor({text}, {options})			 *popup_atcursor()*
-		Show the {text} above the cursor, and close it when the cursor
-		moves.  This works like: >
+		カーソルの上に {text} を表示し、カーソルが移動したら閉じる。こ
+		れは次のように動作する: >
 			call popup_create({text}, {
 				\ 'pos': 'botleft',
 				\ 'line': 'cursor-1',
 				\ 'col': 'cursor',
 				\ 'moved': 'WORD',
 				\ })
-<		Use {options} to change the properties.
+<		プロパティを変更するには{options}を使用する。
 
 
 popup_menu({text}, {options})				 *popup_menu()*
 	  	{not implemented yet}
-		Show the {text} near the cursor, handle selecting one of the
-		items with cursorkeys, and close it an item is selected with
-		Space or Enter. {text} should have multiple lines to make this
-		useful.  This works like: >
+		カーソルの近くに{text}を表示し、カーソルキーで項目の1つを選択
+		して処理し、それを閉じるには、SpaceまたはEnterで項目を選択しま
+		す。 これを有効にするには、{text} に複数の行が必要です。これは
+		次のように機能します: >
 			call popup_create({text}, {
 				\ 'pos': 'center',
 				\ 'zindex': 200,
@@ -197,8 +198,8 @@ popup_menu({text}, {options})				 *popup_menu()*
 				\ 'border': [],
 				\ 'filter': 'popup_filter_menu',
 				\ })
-<		Use {options} to change the properties.  Should at least set
-		"callback" to a function that handles the selected item.
+<		プロパティを変更するには{options}を使用する。少なくとも
+		"callback" を選択された項目を扱う関数に設定するべきである。
 
 
 popup_hide({id})						*popup_hide()*
