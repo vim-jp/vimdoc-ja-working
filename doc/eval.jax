@@ -8649,7 +8649,7 @@ sound_playfile({name} [, {callback}])
 
 sound_stop({id})					*sound_stop()*
 		サウンド {id} の再生を停止する。{id} は、事前に
-		`sound_playevent()`または `sound_playfile()` によって返された
+		`sound_playevent()` または `sound_playfile()` によって返された
 		ものでなければならない。
 		{|+sound| 機能つきでコンパイルされたときのみ有効}
 
