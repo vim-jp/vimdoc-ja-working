@@ -1,4 +1,4 @@
-*popup.txt*  For Vim バージョン 8.1.  Last change: 2019 Jun 02
+*popup.txt*  For Vim バージョン 8.1.  Last change: 2019 Jun 10
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -76,28 +76,21 @@ Vimは指定した場所にポップアップを表示しようとする。場�
 示されるが、カーソルがVimのウィンドウの最上部に近い場合は、カーソル位置の下に
 配置される。
 
+Exコマンドの出力のために画面がスクロールアップすると、ポップアップも移動するの
+で、ポップアップは出力を隠さない。
 
 
-TODO:
-
-スクロール: Exコマンドの出力のために画面がスクロールアップするとき、ポップアッ
-プはどうなるか？
-1. そこに留まる。問題: リストされたテキストが隠れて読めなくなるかもしれない。
-2. ページをスクロールする。更新されたらどうなる？延期するか、スクロールオフセッ
-トを考慮に入れる。
-おそらく 2. がベストな選択。
 
 
 IMPLEMENTATION:
-- Code is in popupwin.c
+- buffers remain after a popup was deleted.
 - Why does 'nrformats' leak from the popup window buffer???
-- Make redrawing more efficient and avoid flicker.
-    First draw popups, creating a mask, use the mask in screen_line() when
-    drawing other windows and stuff.  Mask contains zindex of popups.
-    Keep mask until next update_screen(), use when drawing status lines.
-    Remove update_popup() calls after draw_tabline()/updating statusline
-    Fix redrawing problem with completion.
-    Fix redrawing problem when scrolling non-current window
+- Add 'balloonpopup': instead of showing text, let the callback open a popup
+  window and return the window ID.   The popup will then be closed when the
+  mouse moves, except when it moves inside the popup.
+- For the "moved" property also include mouse movement?
+- Make redrawing more efficient and avoid flicker:
+    - put popup menu also put in popup_mask?
 - Disable commands, feedkeys(), CTRL-W, etc. in a popup window.
   Use NOT_IN_POPUP_WINDOW for more commands.
 - Invoke filter with character before mapping?
@@ -111,10 +104,37 @@ IMPLEMENTATION:
 ==============================================================================
 2. 関数							*popup-functions*
 
-THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE  
+THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
 {これは設計中だ - まだ変更が行われる可能性がある}
 
 [後で eval.txt に移動する関数は、ここで関数の概要を保持すること]
+
+popup_atcursor({text}, {options})			 *popup_atcursor()*
+		カーソルの上に {text} を表示し、カーソルが移動したら閉じる。こ
+		れは次のように動作する: >
+			call popup_create({text}, {
+				\ 'pos': 'botleft',
+				\ 'line': 'cursor-1',
+				\ 'col': 'cursor',
+				\ 'moved': 'WORD',
+				\ })
+<		プロパティを変更するには{options}を使用する。
+
+
+							*popup_clear()*
+popup_clear()	不作法にふるまうプラグインに対する緊急の解決策: すべてのポップ
+		アップウィンドウを閉じる。
+
+
+popup_close({id} [, {result}])				*popup_close()*
+		ポップアップ {id} を閉じる。ウィンドウと関連するバッファは削除
+		される。
+
+		ポップアップがコールバックを持つ場合は、ポップアップウィンドウ
+		が削除される直前に呼び出される。オプションの {result} が存在す
+		る場合、それはコールバックの2番目の引数として渡される。そうで
+		なければ、ゼロがコールバックに渡される。
+
 
 popup_create({text}, {options})				*popup_create()*
 		次のどれかである {text} を見せるポップアップウィンドウを開く:
@@ -134,18 +154,8 @@ popup_create({text}, {options})				*popup_create()*
 <		失敗した場合はゼロが返される。
 
 
-popup_close({id} [, {result}])				*popup_close()*
-		ポップアップ {id} を閉じる。ウィンドウと関連するバッファは削除
-		される。
-
-		ポップアップがコールバックを持つ場合は、ポップアップウィンドウ
-		が削除される直前に呼び出される。オプションの {result} が存在す
-		る場合、それはコールバックの2番目の引数として渡される。そうで
-		なければ、ゼロがコールバックに渡される。
-
-
 popup_dialog({text}, {options})				*popup_dialog()*
-	  	{not implemented yet}
+		{未実装} {not implemented yet}
 		|popup_create()| と同じだが、これらのデフォルトのオプションに
 		なる: >
 			call popup_create({text}, {
@@ -157,36 +167,70 @@ popup_dialog({text}, {options})				*popup_dialog()*
 <		プロパティを変更するには{options}を使用する。
 
 
-popup_notification({text}, {options})			 *popup_notification()*
-	  	{not implemented yet}
-		Vimのウィンドウの上部に {text} を3秒間表示する。これは次のよ
-		うに動作する: >
-			call popup_create({text}, {
-				\ 'line': 1,
-				\ 'col': 10,
-				\ 'time': 3000,
-				\ 'tab': -1,
-				\ 'zindex': 200,
-				\ 'highlight': 'WarningMsg',
-				\ 'border': [],
-				\ })
-<		プロパティを変更するには{options}を使用する。
+popup_filter_menu({id}, {key})				*popup_filter_menu()*
+		{未実装} {not implemented yet}
+		Filter that can be used for a popup. It handles the cursor
+		keys to move the selected index in the popup. Space and Enter
+		can be used to select an item.  Invokes the "callback" of the
+		popup menu with the index of the selected line as the second
+		argument.
 
 
-popup_atcursor({text}, {options})			 *popup_atcursor()*
-		カーソルの上に {text} を表示し、カーソルが移動したら閉じる。こ
-		れは次のように動作する: >
-			call popup_create({text}, {
-				\ 'pos': 'botleft',
-				\ 'line': 'cursor-1',
-				\ 'col': 'cursor',
-				\ 'moved': 'WORD',
-				\ })
-<		プロパティを変更するには{options}を使用する。
+popup_filter_yesno({id}, {key})				*popup_filter_yesno()*
+		{未実装} {not implemented yet}
+		Filter that can be used for a popup. It handles only the keys
+		'y', 'Y' and 'n' or 'N'.  Invokes the "callback" of the
+		popup menu with the 1 for 'y' or 'Y' and zero for 'n' or 'N'
+		as the second argument.  Pressing Esc and CTRL-C works like
+		pressing 'n'.
+
+
+popup_getoptions({id})					*popup_getoptions()*
+		popup {id} の {options} を辞書で返す。
+		ゼロ値はオプションが設定されなかったことを意味する。 "zindex"
+		の場合、デフォルト値が返される。ゼロではない。
+
+		"highlight" エントリは省略されているので、'wincolor' オプショ
+		ンを使用すること: >
+			let hl = getwinvar(winid, '&wincolor')
+
+<		ポップアップウィンドウ {id} が見つからない場合は空の辞書が返さ
+		れる。
+
+
+popup_getpos({id})					*popup_getpos()*
+		ポップアップ {id} の位置とサイズを返す。これらのエントリを持つ
+		辞書を返す:
+		    col		ポップアップの画面の桁、1から始まる
+		    line	ポップアップの画面の行、1から始まる
+		    width	画面セル内のポップアップ全体の幅
+		    height	画面セル内のポップアップ全体の高さ
+		    core_col	テキストボックスの画面の桁
+		    core_line	テキストボックスの画面の行
+		    core_width	画面セル内のテキストボックスの幅
+		    core_height	画面セル内のテキストボックスの高さ
+		    visible	ポップアップが表示されている場合は 1、非表示の
+				場合は 0
+		Note これらは実際の画面位置である。適用されるサイズと位置のメ
+		カニズムに関して `popup_getoptions()` の値とは異なる。
+
+		"core_" 値はパディングとボーダーを除外している。
+
+		ポップアップウィンドウ {id} が見つからない場合は空の辞書が返さ
+		れる。
+
+
+popup_hide({id})						*popup_hide()*
+		{id} がポップアップ表示されている場合、それを非表示にする。ポッ
+		プアップがフィルタを持っている場合は、ポップアップが非表示に
+		なっている限り呼び出されない。
+		ウィンドウ {id} が存在しない場合は何も起こらない。ウィンドウ
+		{id} が存在するがポップアップウィンドウではない場合、エラーが
+		発生する。 *E993*
 
 
 popup_menu({text}, {options})				 *popup_menu()*
-	  	{not implemented yet}
+		{未実装} {not implemented yet}
 		カーソルの近くに{text}を表示し、カーソルキーで項目の1つを選択
 		して処理し、それを閉じるには、SpaceまたはEnterで項目を選択しま
 		す。 これを有効にするには、{text} に複数の行が必要です。これは
@@ -202,83 +246,38 @@ popup_menu({text}, {options})				 *popup_menu()*
 		"callback" を選択された項目を扱う関数に設定するべきである。
 
 
-popup_hide({id})						*popup_hide()*
-		If {id} is a displayed popup, hide it now. If the popup has a
-		filter it will not be invoked for so long as the popup is
-		hidden.
-		If window {id} does not exist nothing happens.  If window {id}
-		exists but is not a popup window an error is given. *E993*
+popup_move({id}, {options})					*popup_move()*
+		ポップアップ {id} を {options} で指定された位置に移動する。
+		{options} にはポップアップ位置を指定する |popup_create()| 由来
+		の項目を含むことができる: "line"、 "col"、 "pos"、
+		"maxheight"、 "minheight"、 "maxwidth" および "minwidth"。
+		{id} については `popup_hide()` を参照。
+
+
+popup_notification({text}, {options})			 *popup_notification()*
+		{未実装} {not implemented yet}
+		Vimのウィンドウの上部に {text} を3秒間表示する。これは次のよ
+		うに動作する: >
+			call popup_create({text}, {
+				\ 'line': 1,
+				\ 'col': 10,
+				\ 'time': 3000,
+				\ 'tab': -1,
+				\ 'zindex': 200,
+				\ 'highlight': 'WarningMsg',
+				\ 'border': [],
+				\ })
+<		プロパティを変更するには{options}を使用する。
+
 
 popup_show({id})						*popup_show()*
-		If {id} is a hidden popup, show it now.
-		For {id} see `popup_hide()`.
-
-popup_move({id}, {options})					*popup_move()*
-		Move popup {id} to the position speficied with {options}.
-		{options} may contain the items from |popup_create()| that
-		specify the popup position: "line", "col", "pos", "maxheight",
-		"minheight", "maxwidth" and "minwidth".
-		For {id} see `popup_hide()`.
-
-
-popup_filter_menu({id}, {key})				*popup_filter_menu()*
-	  	{not implemented yet}
-		Filter that can be used for a popup. It handles the cursor
-		keys to move the selected index in the popup. Space and Enter
-		can be used to select an item.  Invokes the "callback" of the
-		popup menu with the index of the selected line as the second
-		argument.
-
-
-popup_filter_yesno({id}, {key})				*popup_filter_yesno()*
-	  	{not implemented yet}
-		Filter that can be used for a popup. It handles only the keys
-		'y', 'Y' and 'n' or 'N'.  Invokes the "callback" of the
-		popup menu with the 1 for 'y' or 'Y' and zero for 'n' or 'N'
-		as the second argument.  Pressing Esc and CTRL-C works like
-		pressing 'n'.
+		{id} が非表示のポップアップの場合は、それを表示する。
+		{id} については `popup_hide()` を参照。
 
 
 popup_setoptions({id}, {options})			*popup_setoptions()*
-	  	{not implemented yet}
+		{未実装} {not implemented yet}
 		Override options in popup {id} with entries in {options}.
-
-
-popup_getoptions({id})					*popup_getoptions()*
-		Return the {options} for popup {id} in a Dict.
-		A zero value means the option was not set.  For "zindex" the
-		default value is returned, not zero.
-
-		The "highlight" entry is omitted, use the 'wincolor' option
-		for that: >
-			let hl = getwinvar(winid, '&wincolor')
-
-<		If popup window {id} is not found an empty Dict is returned.
-
-popup_getpos({id})					*popup_getpos()*
-		Return the position and size of popup {id}.  Returns a Dict
-		with these entries:
-		    col		screen column of the popup, one-based
-		    line	screen line of the popup, one-based
-		    width	width of the whole popup in screen cells
-		    height	height of the whole popup in screen cells
-		    core_col	screen column of the text box
-		    core_line	screen line of the text box
-		    core_width	width of the text box in screen cells
-		    core_height	height of the text box in screen cells
-		    visible 	one if the popup is displayed, zero if hidden
-		Note that these are the actual screen positions.  They differ
-		from the values in `popup_getoptions()` for the sizing and
-		positioning mechanism applied.
-
-		The "core_" values exclude the padding and border.
-
-		If popup window {id} is not found an empty Dict is returned.
-
-
-							*:popupclear* *:popupc*
-:popupc[lear]	Emergency solution to a misbehaving plugin: close all popup
-		windows.
 
 
 POPUP BUFFER AND WINDOW					*popup-buffer*
@@ -287,7 +286,7 @@ A new buffer is created to hold the text and text properties of the popup
 window.  The buffer is always associated with the popup window and
 manipulation is restricted:
 - the buffer has no name
-- 'buftype' is "popup" 
+- 'buftype' is "popup"
 - 'swapfile' is off
 - 'bufhidden' is "hide"
 - 'buflisted' is off
@@ -354,7 +353,7 @@ The second argument of |popup_create()| is a dictionary with options:
 			to the cursor, flip to below or above the cursor to
 			avoid overlap with the |popupmenu-completion| or
 			another popup with a higher "zindex".
-			{not implemented yet}
+			{未実装} {not implemented yet}
 	maxheight	Maximum height of the contents, excluding border and
 			padding.
 	minheight	Minimum height of the contents, excluding border and
@@ -365,7 +364,7 @@ The second argument of |popup_create()| is a dictionary with options:
 			padding.
 	hidden		When TRUE the popup exists but is not displayed; use
 			`popup_show()` to unhide it.
-			{not implemented yet}
+			{未実装} {not implemented yet}
 	tab		When -1: display the popup on all tabs.
 			When 0 (the default): display the popup on the current
 			tab.
@@ -375,7 +374,7 @@ The second argument of |popup_create()| is a dictionary with options:
 	title		Text to be displayed above the first item in the
 			popup, on top of any border.  If there is no top
 			border on line of padding is added to put the title on.
-			{not implemented yet}
+			{未実装} {not implemented yet}
 	wrap		TRUE to make the lines wrap (default TRUE).
 	highlight	Highlight group name to use for the text, stored in
 			the 'wincolor' option.
@@ -407,7 +406,8 @@ The second argument of |popup_create()| is a dictionary with options:
 			By default a double line is used all around when
 			'encoding' is "utf-8", otherwise ASCII characters are
 			used.
-	zindex		Priority for the popup, default 50.
+	zindex		Priority for the popup, default 50.  Mininum value is
+			1, maximum value is 32000.
 	time		Time in milliseconds after which the popup will close.
 			When omitted |popup_close()| must be used.
 	moved		Specifies to close the popup if the cursor moved:
@@ -418,7 +418,7 @@ The second argument of |popup_create()| is a dictionary with options:
 			  {start} or after {end}
 			The popup also closes if the cursor moves to another
 			line or to another window.
-	filter		A callback that can filter typed characters, see 
+	filter		A callback that can filter typed characters, see
 			|popup-filter|.
 	callback	A callback that is called when the popup closes, e.g.
 			when using |popup_filter_menu()|, see |popup-callback|.
@@ -454,7 +454,7 @@ So we get:
 	transparent	do not show these characters, show the text under it;
 			if there is a border character to the right or below
 			it will be made transparent as well
-			{not implemented yet}
+			{未実装} {not implemented yet}
 
 
 POPUP FILTER						*popup-filter*
@@ -480,7 +480,7 @@ key, e.g.: >
 	    return 1
 	  endif
 	  return 0
-  	endfunc
+	endfunc
 
 Currently the key is what results after any mapping.  This may change...
 
@@ -498,7 +498,7 @@ Vim provides standard filters |popup_filter_menu()| and
 
 Note that "x" is the normal way to close a popup.  You may want to use Esc,
 but since many keys start with an Esc character, there may be a delay before
-Vim recognizes the Esc key.  If you do use Esc, it is reecommended to set the
+Vim recognizes the Esc key.  If you do use Esc, it is recommended to set the
 'ttimeoutlen' option to 100 and set 'timeout' and/or 'ttimeout'.
 
 
