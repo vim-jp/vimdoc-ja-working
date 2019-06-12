@@ -290,7 +290,7 @@ popup_setoptions({id}, {options})			*popup_setoptions()*
 - 'swapfile' は off
 - 'bufhidden' は "hide"
 - 'buflisted' は off
-- 'undolevels' は -1: アンドゥは出来ない
+- 'undolevels' は -1: アンドゥはできない
 - 他のすべてのバッファローカルおよびウィンドウローカルオプションはVimのデフォ
   ルト値に設定されている。
 
