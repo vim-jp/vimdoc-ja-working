@@ -169,20 +169,19 @@ popup_dialog({text}, {options})				*popup_dialog()*
 
 popup_filter_menu({id}, {key})				*popup_filter_menu()*
 		{未実装} {not implemented yet}
-		Filter that can be used for a popup. It handles the cursor
-		keys to move the selected index in the popup. Space and Enter
-		can be used to select an item.  Invokes the "callback" of the
-		popup menu with the index of the selected line as the second
-		argument.
+		ポップアップに使用できるフィルタ。カーソルキーを操作して、ポッ
+		プアップで選択したインデックスを移動する。Space と Enterを使っ
+		て項目を選択できる。2番目の引数として選択された行のインデック
+		スを使用してポップアップメニューの "callback" を呼び出す。
 
 
 popup_filter_yesno({id}, {key})				*popup_filter_yesno()*
 		{未実装} {not implemented yet}
-		Filter that can be used for a popup. It handles only the keys
-		'y', 'Y' and 'n' or 'N'.  Invokes the "callback" of the
-		popup menu with the 1 for 'y' or 'Y' and zero for 'n' or 'N'
-		as the second argument.  Pressing Esc and CTRL-C works like
-		pressing 'n'.
+		ポップアップに使用できるフィルタ。キー 'y'、'Y' および 'n' ま
+		たは 'N' のみを処理する。2番目の引数として 'y' または 'Y' に
+		1、'n' または 'N' に 0 を指定して、ポップアップメニューの
+		"callback" を呼び出す。Esc と CTRL-C を押すと、'n' を押すのと
+		同じように機能する。
 
 
 popup_getoptions({id})					*popup_getoptions()*
@@ -277,55 +276,55 @@ popup_show({id})						*popup_show()*
 
 popup_setoptions({id}, {options})			*popup_setoptions()*
 		{未実装} {not implemented yet}
-		Override options in popup {id} with entries in {options}.
+		ポップアップ {id} のオプションを {options} のエントリで上書き
+		する。
 
 
-POPUP BUFFER AND WINDOW					*popup-buffer*
+ポップアップバッファとウィンドウ			*popup-buffer*
 
-A new buffer is created to hold the text and text properties of the popup
-window.  The buffer is always associated with the popup window and
-manipulation is restricted:
-- the buffer has no name
-- 'buftype' is "popup"
-- 'swapfile' is off
-- 'bufhidden' is "hide"
-- 'buflisted' is off
-- 'undolevels' is -1: no undo at all
-- all other buffer-local and window_local options are set to their Vim default
-  value.
+ポップアップウィンドウのテキストとテキストプロパティを保持するための新しいバッ
+ファが作成される。バッファは常にポップアップウィンドウに関連付けられており、操
+作は制限されている:
+- 無名バッファ
+- 'buftype' は "popup"
+- 'swapfile' は off
+- 'bufhidden' は "hide"
+- 'buflisted' は off
+- 'undolevels' は -1: アンドゥは出来ない
+- 他のすべてのバッファローカルおよびウィンドウローカルオプションはVimのデフォ
+  ルト値に設定されている。
 
-It is possible to change the specifically mentioned options, but anything
-might break then, so better leave them alone.
+具体的に言及されたオプションを変更することは可能だが、何かが壊れてしまう可能性があるので、それらを放っておいて欲しい。
 
-The window does have a cursor position, but the cursor is not displayed.
+ウィンドウにはカーソル位置があるが、カーソルは表示されない。
 
-To execute a command in the context of the popup window and buffer use
-`win_execute()`.  Example: >
+ポップアップウィンドウとバッファのコンテキストでコマンドを実行するには
+`win_execute()` を使用すること。例: >
 	call win_execute(winid, 'syntax enable')
 
-Options can be set on the window with `setwinvar()`, e.g.: >
+オプションは `setwinvar()` を使ってウィンドウ上で設定できる。例: >
 	call setwinvar(winid, '&wrap', 0)
-And options can be set on the buffer with `setbufvar()`, e.g.: >
+そしてオプションは `setbufvar()` を使ってバッファに設定することができる。例: >
 	call setbufvar(winbufnr(winid), '&filetype', 'java')
-Note that this does not trigger autocommands.  Use `win_execute()` if you do
-need them.
+Note これはオートコマンドをトリガーしない。必要ならば `win_execute()` を使用す
+ること。
 
 
-POPUP_CREATE() ARGUMENTS				*popup_create-usage*
+POPUP_CREATE() の引数					*popup_create-usage*
 
-The first argument of |popup_create()| specifies the text to be displayed, and
-optionally text properties.  It is in one of three forms:
-- a string
-- a list of strings
-- a list of dictionaries, where each dictionary has these entries:
-	text		String with the text to display.
-	props		A list of text properties.  Optional.
-			Each entry is a dictionary, like the third argument of
-			|prop_add()|, but specifying the column in the
-			dictionary with a "col" entry, see below:
+|popup_create()| の最初の引数は表示されるテキストと、オプションでテキストプロ
+パティを指定する。それは3つの形式のうちの1つである:
+- 文字列
+- 文字列のリスト
+- 辞書のリスト。各辞書は次のエントリを持つ:
+	text		表示するテキストを含む文字列。
+	props		テキストプロパティのリスト。任意。
+			各エントリは |prop_add()| の3番目の引数のような辞書だ
+			が、辞書の "col" エントリを使って桁を指定する。以下を
+			参照:
 			|popup-props|.
 
-The second argument of |popup_create()| is a dictionary with options:
+|popup_create()| の2番目の引数は任意の辞書である:
 	line		Screen line where to position the popup.  Can use a
 			number or "cursor", "cursor+1" or "cursor-1" to use
 			the line of the cursor and add or subtract a number of
