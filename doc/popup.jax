@@ -1,4 +1,4 @@
-*popup.txt*  For Vim バージョン 8.1.  Last change: 2019 Jun 10
+*popup.txt*  For Vim バージョン 8.1.  Last change: 2019 Jun 12
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -37,7 +37,7 @@ THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
 	hi MyPopupColor ctermbg=lightblue guibg=lightblue
 	call setwinvar(winid, '&wincolor', 'MyPopupColor')
 
-'hlsearch' とマッチハイライトはポップアップウィンドウに表示されない。
+'hlsearch' ハイライトはポップアップウィンドウに表示されない。
 
 ポップアップウィンドウは他のウィンドウと同様にウィンドウIDを持つが、動作が異な
 る。サイズはVimウィンドウ全体に及ぶことがあり、それは他のウィンドウと重なる。
@@ -63,8 +63,8 @@ THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
 "minheight" プロパティを使うことができる。
 
 ウィンドウの幅は、通常、バッファ内の最長の行と同じである。"maxwidth" プロパティ
-で制限できる。幅を広げるためにスペースを使うか、または、"minwidth" プロパティ
-を使うことができる。
+で制限できる。スペースを使って幅を広げるか、または、"minwidth" プロパティを使
+うことができる。
 
 デフォルトでは 'wrap'オプションが設定されているのでテキストは消えない。または、
 十分なスペースがない場合、ウィンドウは左に移動してテキストをさらに表示する。こ
@@ -79,24 +79,30 @@ Vimは指定した場所にポップアップを表示しようとする。場�
 Exコマンドの出力のために画面がスクロールアップすると、ポップアップも移動するの
 で、ポップアップは出力を隠さない。
 
+現在のカーソル位置はポップアップウィンドウの下にあっても表示される。この方法で
+は、テキストが表示されていない場合でも、その場所を確認できる。
 
 
 
 IMPLEMENTATION:
-- buffers remain after a popup was deleted.
 - Why does 'nrformats' leak from the popup window buffer???
+- Disable commands, feedkeys(), CTRL-W, etc. in a popup window.
+  Use NOT_IN_POPUP_WINDOW for more commands.
 - Add 'balloonpopup': instead of showing text, let the callback open a popup
   window and return the window ID.   The popup will then be closed when the
   mouse moves, except when it moves inside the popup.
 - For the "moved" property also include mouse movement?
+- When selecting text in the popup with modeless selection, do not select
+  outside of the popup and don't select the border or padding.
+- Allow the user to drag the popup window when the "dragging" property is set.
 - Make redrawing more efficient and avoid flicker:
     - put popup menu also put in popup_mask?
-- Disable commands, feedkeys(), CTRL-W, etc. in a popup window.
-  Use NOT_IN_POPUP_WINDOW for more commands.
 - Invoke filter with character before mapping?
 - Figure out the size and position better.
     if wrapping splits a double-wide character
     if wrapping inserts indent
+- When drawing on top half a double-wide character, display ">" or "<" in the
+  incomplete cell.
 - Can the buffer be re-used, to avoid using up lots of buffer numbers?
 - Implement all the unimplemented options and features.
 
@@ -107,7 +113,34 @@ IMPLEMENTATION:
 THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
 {これは設計中だ - まだ変更が行われる可能性がある}
 
-[後で eval.txt に移動する関数は、ここで関数の概要を保持すること]
+ポップアップウィンドウを作成:
+	|popup_create()|	画面の中央に
+	|popup_atcursor()|	カーソル位置のすぐ上に。カーソルが移動すると閉
+				じる
+	|popup_notifiation()|	3秒間通知を表示する
+	|popup_dialog()|	パディングとボーダーありで中央に
+	|popup_menu()|		リストから項目を選択するためのプロンプト
+
+ポップアップウィンドウの操作:
+	|popup_hide()|		ポップアップを一時的に隠す
+	|popup_show()|		以前に隠されたポップアップを表示する
+	|popup_move()|		ポップアップの位置とサイズを変更する
+	|popup_setoptions()|	ポップアップのオプションを上書きする
+
+ポップアップウィンドウを閉じる:
+	|popup_close()|		1つのポップアップを閉じる
+	|popup_clear()|		すべてのポップアップを閉じる
+
+フィルタ関数:
+	|popup_filter_menu()|	アイテムのリストから選択する
+	|popup_filter_yesno()|	'y' または 'n' が押されるまでブロックする
+
+その他:
+	|popup_getoptions()|	ポップアップの現在のオプションを取得する
+	|popup_getpos()|	ポップアップの実際の位置とサイズを取得する
+
+
+[後で eval.txt に移動する関数]
 
 popup_atcursor({text}, {options})			 *popup_atcursor()*
 		カーソルの上に {text} を表示し、カーソルが移動したら閉じる。こ
@@ -164,7 +197,8 @@ popup_dialog({text}, {options})				*popup_dialog()*
 				\ 'border': [],
 				\ 'padding': [],
 				\})
-<		プロパティを変更するには{options}を使用する。
+<		プロパティを変更するには{options}を使用する。例: 値
+		'popup_filter_yesno' を持つ 'filter' オプションを追加する。
 
 
 popup_filter_menu({id}, {key})				*popup_filter_menu()*
@@ -181,7 +215,7 @@ popup_filter_yesno({id}, {key})				*popup_filter_yesno()*
 		たは 'N' のみを処理する。2番目の引数として 'y' または 'Y' に
 		1、'n' または 'N' に 0 を指定して、ポップアップメニューの
 		"callback" を呼び出す。Esc と CTRL-C を押すと、'n' を押すのと
-		同じように機能する。
+		同じように機能する。他のキーは無視される。
 
 
 popup_getoptions({id})					*popup_getoptions()*
@@ -254,7 +288,6 @@ popup_move({id}, {options})					*popup_move()*
 
 
 popup_notification({text}, {options})			 *popup_notification()*
-		{未実装} {not implemented yet}
 		Vimのウィンドウの上部に {text} を3秒間表示する。これは次のよ
 		うに動作する: >
 			call popup_create({text}, {
@@ -265,8 +298,10 @@ popup_notification({text}, {options})			 *popup_notification()*
 				\ 'zindex': 200,
 				\ 'highlight': 'WarningMsg',
 				\ 'border': [],
+				\ 'padding': [0,1,0,1],
 				\ })
-<		プロパティを変更するには{options}を使用する。
+<		他の通知と重ならないように位置が調整される。
+		プロパティを変更するには{options}を使用する。
 
 
 popup_show({id})						*popup_show()*
@@ -361,6 +396,9 @@ POPUP_CREATE() の引数					*popup_create-usage*
 			padding.
 	minwidth	Minimum width of the contents, excluding border and
 			padding.
+	firstline	First buffer line to display.  When larger than one it
+			looks like the text scrolled up.  When out of range
+			the last buffer line will at the top of the window.
 	hidden		When TRUE the popup exists but is not displayed; use
 			`popup_show()` to unhide it.
 			{未実装} {not implemented yet}
