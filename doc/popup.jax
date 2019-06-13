@@ -360,33 +360,32 @@ POPUP_CREATE() の引数					*popup_create-usage*
 			|popup-props|.
 
 |popup_create()| の2番目の引数は任意の辞書である:
-	line		Screen line where to position the popup.  Can use a
-			number or "cursor", "cursor+1" or "cursor-1" to use
-			the line of the cursor and add or subtract a number of
-			lines.  If omitted the popup is vertically centered.
-			The first line is 1.
-	col		Screen column where to position the popup.  Can use a
-			number or "cursor" to use the column of the cursor,
-			"cursor+9" or "cursor-9" to add or subtract a number
-			of columns.  If omitted the popup is horizontally
-			centered.  The first column is 1.
-	pos		"topleft", "topright", "botleft" or "botright":
-			defines what corner of the popup "line" and "col" are
-			used for.  When not set "topleft" is used.
-			Alternatively "center" can be used to position the
-			popup in the center of the Vim window, in which case
-			"line" and "col" are ignored.
-	fixed		When FALSE (the default), and:
-			 - "pos" is "botleft" or "topleft", and
-			 - "wrap" is off, and
-			 - the popup would be truncated at the right edge of
-			   the screen, then
-			the popup is moved to the left so as to fit the
-			contents on the screen.  Set to TRUE to disable this.
-	flip		When TRUE (the default) and the position is relative
-			to the cursor, flip to below or above the cursor to
-			avoid overlap with the |popupmenu-completion| or
-			another popup with a higher "zindex".
+	line		ポップアップを配置する画面の行。数値または、カーソルの
+			行を使用して行数を加算または減算するには、"cursor"、
+			"cursor+1"、または "cursor-1" を使用できる。省略した場
+			合、ポップアップは垂直方向の中央に配置される。最初の行
+			は1である。
+	col		ポップアップを配置する画面の桁。数値または、カーソルの
+			桁を使用するには "cursor" を使用し、桁を加算または減算
+			するには"cursor+9" または "cursor-9" が使用できる。省
+			略した場合、ポップアップは水平方向の中央に配置される。
+			最初の桁は1である。
+	pos		"topleft"、"topright"、"botleft" または "botright":
+			ポップアップのどのコーナーに "line" と "col" が使われ
+			るかを定義する。設定されていない場合は "topleft" が使
+			用される。 あるいは "center" を使ってポップアップをVim
+			のウィンドウの中央に配置することもできる。その場合は
+			"line" と "col" は無視される。
+	fixed		FALSE (デフォルト)の場合は:
+			 - "pos" は "botleft" または "topleft" で、
+			 - "wrap" はオフで、
+			 - ポップアップは画面の右端で切り捨てられ、
+			 ポップアップは画面の内容に合うように左に移動される。
+			 これを無効にするには、TRUEに設定する。
+	flip		TRUE (デフォルト)かつ位置がカーソルからの相対位置であ
+			る場合は、|popupmenu-completion| または、より高い
+			"zindex" を持つ別のポップアップと重ならないようにカー
+			ソルの下または上に動かす。
 			{未実装} {not implemented yet}
 	maxheight	Maximum height of the contents, excluding border and
 			padding.
