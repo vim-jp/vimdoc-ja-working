@@ -388,99 +388,90 @@ POPUP_CREATE() の引数					*popup_create-usage*
 			"zindex" を持つ別のポップアップと重ならないようにカー
 			ソルの下または上に動かす。
 			{未実装} {not implemented yet}
-	maxheight	Maximum height of the contents, excluding border and
-			padding.
-	minheight	Minimum height of the contents, excluding border and
-			padding.
-	maxwidth	Maximum width of the contents, excluding border and
-			padding.
-	minwidth	Minimum width of the contents, excluding border and
-			padding.
-	firstline	First buffer line to display.  When larger than one it
-			looks like the text scrolled up.  When out of range
-			the last buffer line will at the top of the window.
-	hidden		When TRUE the popup exists but is not displayed; use
-			`popup_show()` to unhide it.
+	maxheight	コンテンツの最大高さ (ボーダーとパディングを除く)
+	minheight	コンテンツの最小高さ (ボーダーとパディングを除く)
+	maxwidth	コンテンツの最大幅 (ボーダーとパディングを除く)
+	minwidth	コンテンツの最小幅 (ボーダーとパディングを除く)
+	firstline	表示する最初のバッファ行。1より大きい場合は、テキスト
+			が上にスクロールしたように見える。範囲外の場合、最後の
+			バッファ行はウィンドウの最上部に表示される。
+	hidden		TRUEの場合、ポップアップは存在しますが表示されない。表
+			示するには `popup_show()` を使う。
 			{未実装} {not implemented yet}
-	tab		When -1: display the popup on all tabs.
-			When 0 (the default): display the popup on the current
-			tab.
-			Otherwise the number of the tab page the popup is
-			displayed on; when invalid the current tab is used.
-			{only -1 and 0 are implemented}
-	title		Text to be displayed above the first item in the
-			popup, on top of any border.  If there is no top
-			border one line of padding is added to put the title
-			on.
+	tab		-1の場合: すべてのタブページにポップアップを表示する。
+			0 (デフォルト)の場合: カレントタブページにポップアップ
+			を表示する。
+			それ以外の場合は、ポップアップが表示されるタブページの
+			番号。無効な場合はカレントタブページが使用される。
+			{-1と0のみ実装} {only -1 and 0 are implemented}
+	title		ポップアップの最初の項目の上、ボーダーの上に表示される
+			テキスト。上枠がない場合は、タイトルを付けるために1行
+			のパディングが追加される。
 			{未実装} {not implemented yet}
-	wrap		TRUE to make the lines wrap (default TRUE).
-	drag		TRUE to allow the popup to be dragged with the mouse
-			by grabbing at at the border.  Has no effect if the
-			popup does not have a border.
-	highlight	Highlight group name to use for the text, stored in
-			the 'wincolor' option.
-	padding		List with numbers, defining the padding
-			above/right/below/left of the popup (similar to CSS).
-			An empty list uses a padding of 1 all around.  The
-			padding goes around the text, inside any border.
-			Padding uses the 'wincolor' highlight.
-			Example: [1, 2, 1, 3] has 1 line of padding above, 2
-			columns on the right, 1 line below and 3 columns on
-			the left.
-	border		List with numbers, defining the border thickness
-			above/right/below/left of the popup (similar to CSS).
-			Only values of zero and non-zero are recognized.
-			An empty list uses a border all around.
-	borderhighlight	List of highlight group names to use for the border.
-			When one entry it is used for all borders, otherwise
-			the highlight for the top/right/bottom/left border.
-			Example: ['TopColor', 'RightColor', 'BottomColor,
-			'LeftColor']
-	borderchars	List with characters, defining the character to use
-			for the top/right/bottom/left border.  Optionally
-			followed by the character to use for the
-			topleft/topright/botright/botleft corner.
-			Example: ['-', '|', '-', '|', '┌', '┐', '┘', '└']
-			When the list has one character it is used for all.
-			When the list has two characters the first is used for
-			the border lines, the second for the corners.
-			By default a double line is used all around when
-			'encoding' is "utf-8", otherwise ASCII characters are
-			used.
-	zindex		Priority for the popup, default 50.  Minimum value is
-			1, maximum value is 32000.
-	time		Time in milliseconds after which the popup will close.
-			When omitted |popup_close()| must be used.
-	moved		Specifies to close the popup if the cursor moved:
-			- "any": if the cursor moved at all
-			- "word": if the cursor moved outside |<cword>|
-			- "WORD": if the cursor moved outside |<cWORD>|
-			- [{start}, {end}]: if the cursor moved before column
-			  {start} or after {end}
-			The popup also closes if the cursor moves to another
-			line or to another window.
-	filter		A callback that can filter typed characters, see
-			|popup-filter|.
-	callback	A callback that is called when the popup closes, e.g.
-			when using |popup_filter_menu()|, see |popup-callback|.
+	wrap		行を折り返す場合はTRUE(デフォルトはTRUE)。
+	drag		ボーダーを掴んでマウスでポップアップをドラッグできるよ
+			うにする場合はTRUE。ポップアップにボーダーがない場合は
+			効果がない。
+	highlight	'wincolor' オプションに格納されている、テキストに使用
+			するハイライトグループ名。
+	padding		ポップアップの上/右/下/左のパディングを定義する数値の
+			リスト(CSSと同様)。空のリストは、すべて 1 のパディング
+			を使用する。パディングは、テキストをボーダーの内側で囲
+			む。パディングは 'wincolor' ハイライトを使う。
+			例: [1, 2, 1, 3] は上に1行、右に2桁、下に1行、左に3桁
+			のパディングにする。
+	border		ポップアップの上/右/下/左のボーダーの太さを定義する数
+			値のリスト(CSSと同様)。ゼロとゼロ以外の値のみが認識さ
+			れる。空のリストは、周囲にボーダーを使用する。
+	borderhighlight	ボーダーに使用するハイライトグループ名のリスト。1つの
+			エントリの場合はそれがすべてのボーダーに使用される、そ
+			れ以外の場合は上/右/下/左のボーダーのハイライトになる。
+			例:['TopColor', 'RightColor', 'BottomColor, 'LeftColor']
+	borderchars	上/右/下/左のボーダーに使用する文字を定義する、文字の
+			リスト。左上/右上/右下/左下の隅に使用する文字が任意で
+			続く。
+			例: ['-', '|', '-', '|', '┌', '┐', '┘', '└']
+			リストに1文字が含まれている場合は、それがすべてに使用
+			される。リストに2文字が含まれている場合、最初の文字は
+			ボーダーに使用され、2番目の文字はコーナーに使用される。
+			'encoding' が "utf-8" のときはデフォルトで2重線が使わ
+			れる。それ以外の場合はASCII文字が使われる。
+	zindex		ポップアップの優先度。デフォルトは50。最小値は1、最大
+			値は32000。
+	time		ポップアップが閉じるまでの時間(msec)。省略した場合は
+			|popup_close()| を使用する必要がある。
+	moved		カーソルが移動した場合にポップアップを閉じるように指定
+			する:
+			- "any": 少しでもカーソルが移動した場合
+			- "word": カーソルが |<cword>| の外側に移動した場合
+			- "WORD": カーソルが |<cWORD>| の外側に移動した場合
+			- [{start}, {end}]: カーソルが桁 {start} の前、または
+			  {end} の後に移動した場合
+			カーソルが別の行または別のウィンドウに移動した場合も
+			ポップアップは閉じる。
+	filter		入力した文字をフィルタ処理できるコールバック。
+			|popup-filter| を参照。
+	callback	ポップアップが閉じたときに呼び出されるコールバック。
+			例えば、|popup_filter_menu()| を使用する場合、
+			|popup-callback| を参照。
 
-Depending on the "zindex" the popup goes under or above other popups.  The
-completion menu (|popup-menu|) has zindex 100.  For messages that occur for a
-short time the suggestion is to use zindex 1000.
+"zindex" に応じて、ポップアップは他のポップアップの下または上に移動する。補完
+メニュー(|popup-menu|)は zindex 100 である。短時間表示されるメッセージについて
+は、zindex 1000 を使用することを薦める。
 
-By default text wraps, which causes a line in {lines} to occupy more than one
-screen line.  When "wrap" is FALSE then the text outside of the popup or
-outside of the Vim window will not be displayed, thus truncated.
+デフォルトではテキストは折り返され、それによって {lines} の行が複数の画面行を
+占めるようになる。"wrap" がFALSEの場合、ポップアップの外側またはVimのウィンド
+ウの外側のテキストは、表示されずに切り捨てられる。
 
 
-POPUP TEXT PROPERTIES					*popup-props*
+ポップアップテキストプロパティ				*popup-props*
 
-These are similar to the third argument of |prop_add()| except:
-- "lnum" is always the current line in the list
-- "bufnr" is always the buffer of the popup
-- "col" is in the Dict instead of a separate argument
-- "transparent" is extra
-So we get:
+これらは |prop_add()| の3番目の引数と同じである。ただし:
+- "lnum" は常にリストの現在の行である
+- "bufnr" は常にポップアップのバッファである
+- "col" は別の引数ではなく辞書にある
+- "transparent" は余分である
+そういうわけで、以下を取得する:
 	col		starting column, counted in bytes, use one for the
 			first column.
 	length		length of text in bytes; can be zero
@@ -498,7 +489,7 @@ So we get:
 			{未実装} {not implemented yet}
 
 
-POPUP FILTER						*popup-filter*
+ポップアップフィルタ					*popup-filter*
 
 A callback that gets any typed keys while a popup is displayed.  The filter is
 not invoked when the popup is hidden.
@@ -543,7 +534,7 @@ Vim recognizes the Esc key.  If you do use Esc, it is recommended to set the
 'ttimeoutlen' option to 100 and set 'timeout' and/or 'ttimeout'.
 
 
-POPUP CALLBACK						*popup-callback*
+ポップアップコールバック				*popup-callback*
 
 A callback that is invoked when the popup closes.  Used by
 |popup_filter_menu()|.
