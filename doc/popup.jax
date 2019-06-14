@@ -32,7 +32,7 @@ THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
 ポップアップウィンドウのテキストは |text-properties| で色付けできる。構文ハイ
 ライトを使用することもできる。
 
-デフォルトの色は "Pmenu" である。他の何かを好むならば、 "highlight" 引数または
+デフォルトの色は "Pmenu" である。他の何かを好むならば、"highlight" 引数または
 'wincolor' オプションを使用すること。例: >
 	hi MyPopupColor ctermbg=lightblue guibg=lightblue
 	call setwinvar(winid, '&wincolor', 'MyPopupColor')
@@ -220,7 +220,7 @@ popup_filter_yesno({id}, {key})				*popup_filter_yesno()*
 
 popup_getoptions({id})					*popup_getoptions()*
 		popup {id} の {options} を辞書で返す。
-		ゼロ値はオプションが設定されなかったことを意味する。 "zindex"
+		ゼロ値はオプションが設定されなかったことを意味する。"zindex"
 		の場合、デフォルト値が返される。ゼロではない。
 
 		"highlight" エントリは省略されているので、'wincolor' オプショ
@@ -264,10 +264,10 @@ popup_hide({id})						*popup_hide()*
 
 popup_menu({text}, {options})				 *popup_menu()*
 		{未実装} {not implemented yet}
-		カーソルの近くに{text}を表示し、カーソルキーで項目の1つを選択
-		して処理し、それを閉じるには、SpaceまたはEnterで項目を選択しま
-		す。 これを有効にするには、{text} に複数の行が必要です。これは
-		次のように機能します: >
+		カーソルの近くに {text} を表示し、カーソルキーで項目の1つを選
+		択して処理し、それを閉じるには、SpaceまたはEnterで項目を選択す
+		る。これを有効にするには、{text} に複数の行が必要である。これ
+		は次のように機能する: >
 			call popup_create({text}, {
 				\ 'pos': 'center',
 				\ 'zindex': 200,
@@ -275,15 +275,15 @@ popup_menu({text}, {options})				 *popup_menu()*
 				\ 'border': [],
 				\ 'filter': 'popup_filter_menu',
 				\ })
-<		プロパティを変更するには{options}を使用する。少なくとも
+<		プロパティを変更するには {options} を使用する。少なくとも
 		"callback" を選択された項目を扱う関数に設定するべきである。
 
 
 popup_move({id}, {options})					*popup_move()*
 		ポップアップ {id} を {options} で指定された位置に移動する。
 		{options} にはポップアップ位置を指定する |popup_create()| 由来
-		の項目を含むことができる: "line"、 "col"、 "pos"、
-		"maxheight"、 "minheight"、 "maxwidth" および "minwidth"。
+		の項目を含むことができる: "line"、"col"、"pos"、"maxheight"、
+		"minheight"、"maxwidth" および "minwidth"。
 		{id} については `popup_hide()` を参照。
 
 
@@ -374,7 +374,7 @@ POPUP_CREATE() の引数					*popup_create-usage*
 	pos		"topleft"、"topright"、"botleft" または "botright":
 			ポップアップのどのコーナーに "line" と "col" が使われ
 			るかを定義する。設定されていない場合は "topleft" が使
-			用される。 あるいは "center" を使ってポップアップをVim
+			用される。あるいは "center" を使ってポップアップをVim
 			のウィンドウの中央に配置することもできる。その場合は
 			"line" と "col" は無視される。
 	fixed		FALSE (デフォルト)の場合は:
@@ -469,39 +469,34 @@ POPUP_CREATE() の引数					*popup_create-usage*
 これらは |prop_add()| の3番目の引数と同じである。ただし:
 - "lnum" は常にリストの現在の行である
 - "bufnr" は常にポップアップのバッファである
-- "col" は別の引数ではなく辞書にある
-- "transparent" は余分である
-そういうわけで、以下を取得する:
-	col		starting column, counted in bytes, use one for the
-			first column.
-	length		length of text in bytes; can be zero
-	end_lnum	line number for the end of the text
-	end_col		column just after the text; not used when "length" is
-			present; when {col} and "end_col" are equal, this is a
-			zero-width text property
-	id		user defined ID for the property; when omitted zero is
-			used
-	type		name of the text property type, as added with
-			|prop_type_add()|
-	transparent	do not show these characters, show the text under it;
-			if there is a border character to the right or below
-			it will be made transparent as well
+- "col" は別の引数ではなく辞書内にある
+- "transparent" が追加
+そういうわけで、以下が得られる:
+	col		開始桁(バイト単位)。最初の桁には1を使用する
+	length		テキストの長さ(バイト)。ゼロ指定可能
+	end_lnum	テキストの終わりの行番号
+	end_col		テキストの直後の桁。"length" が与えられた場合は使用さ
+			れない。{col} と "end_col" が等しい場合、これは幅ゼロ
+			のテキストプロパティである
+	id		プロパティのユーザー定義ID。省略時はゼロが使用される
+	type		|prop_type_add()| で追加されたテキストプロパティタイプ
+			の名前
+	transparent	これらの文字を表示せず、その下のテキストを表示する。右
+			または下にボーダー文字がある場合は、それも透明になる
 			{未実装} {not implemented yet}
 
 
 ポップアップフィルタ					*popup-filter*
 
-A callback that gets any typed keys while a popup is displayed.  The filter is
-not invoked when the popup is hidden.
+ポップアップが表示されている間にタイプされたキーを取得するコールバック。ポップ
+アップが非表示になっていると、フィルタは呼び出されない。
 
-The filter can return TRUE to indicate the key has been handled and is to be
-discarded, or FALSE to let Vim handle the key as usual in the current state.
-In case it returns FALSE and there is another popup window visible, that
-filter is also called.  The filter of the popup window with the highest zindex
-is called first.
+フィルタは、キーが処理されて破棄されることを示すためにTRUEを返すか、または現在
+の状態でVimに通常通りキーを処理させるためにFALSEを返す。FALSEが返され、別のポッ
+プアップウィンドウが表示されている場合は、そのフィルタも呼び出される。最も高い
+zindex を持つポップアップウィンドウのフィルタが最初に呼び出される。
 
-The filter function is called with two arguments: the ID of the popup and the
-key, e.g.: >
+フィルタ関数は2つの引数、ポップアップIDとキーで呼び出される。例: >
 	func MyFilter(winid, key)
 	  if a:key == "\<F2>"
 	    " do something
@@ -514,44 +509,44 @@ key, e.g.: >
 	  return 0
 	endfunc
 
-Currently the key is what results after any mapping.  This may change...
+現在のキーは、マッピング後に得られるものである。これは変わるかもしれない...
 
-Some common key actions:
-	x		close the popup (see note below)
-	cursor keys	select another entry
-	Tab		accept current suggestion
+いくつかの共通のキー動作:
+	x		ポップアップを閉じる(下記の note を参照)
+	cursor keys	別のエントリを選択
+	Tab		現在の提案を受け入れる
 
-A mouse click arrives as <LeftMouse>.  The coordinates are in
-v:mouse_popup_col and v:mouse_popup_row.  The top-left screen cell of the
-popup is col 1, row 1 (not counting the border).
+マウスクリックは <LeftMouse> として届く。座標は v:mouse_popup_col および
+v:mouse_popup_row である。ポップアップの左上の画面セルは、桁 1、行 1である(ボー
+ダーはカウントしない)。
 
-Vim provides standard filters |popup_filter_menu()| and
-|popup_filter_yesno()|.
+Vimは標準のフィルタ |popup_filter_menu()| と |popup_filter_yesno()| を提供す
+る。
 
-Note that "x" is the normal way to close a popup.  You may want to use Esc,
-but since many keys start with an Esc character, there may be a delay before
-Vim recognizes the Esc key.  If you do use Esc, it is recommended to set the
-'ttimeoutlen' option to 100 and set 'timeout' and/or 'ttimeout'.
+Note "x" はポップアップを閉じる通常の方法である。Escを使いたくなるかもしれない
+が、多くのキーはEsc文字で始まるので、VimがEscキーを認識するまでに時間がかかる
+ことがある。Escを使用する場合は、'ttimeoutlen' オプションを 100 に設定し、
+'timeout' または 'ttimeout'、あるいはその両方を設定することを薦める。
 
 
 ポップアップコールバック				*popup-callback*
 
-A callback that is invoked when the popup closes.  Used by
-|popup_filter_menu()|.
+ポップアップが閉じたときに呼び出されるコールバック。|popup_filter_menu()| に
+よって使用される。
 
-The callback is invoked with two arguments: the ID of the popup window and the
-result, which could be an index in the popup lines, or whatever was passed as
-the second argument of `popup_close()`.
+コールバックは2つの引数で呼び出される: ポップアップウィンドウIDと結果、それは
+ポップアップ行のインデックスか、あるいは `popup_close()` の2番目の引数として渡
+されたものである。
 
-If the popup is closed because the cursor moved, the number -1 is passed to
-the callback.
+カーソルが移動したためにポップアップが閉じられた場合、-1 がコールバックに渡さ
+れる。
 
 ==============================================================================
 3. 例							*popup-examples*
 
 TODO
 
-Prompt the user to press y/Y or n/N: >
+ユーザーに y/Y か n/N を押すように促す: >
 
 	func MyDialogHandler(id, result)
 	   if a:result
