@@ -14,7 +14,7 @@ THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
 3. 例				|popup-examples|
 
 
-{|+textprop| 機能無効でコンパイルされたときはテキストプロパティを使用できない}
+{|+textprop| 機能無効でコンパイルされたときは使用できない}
 
 ==============================================================================
 1. 前書き						*popup-intro*
