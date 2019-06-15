@@ -41,14 +41,15 @@ THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
 
 ポップアップウィンドウは他のウィンドウと同様にウィンドウIDを持つが、動作が異な
 る。サイズはVimウィンドウ全体に及ぶことがあり、それは他のウィンドウと重なる。
-ポップアップウィンドウも互いに重なり合うことがある。
+ポップアップウィンドウも互いに重なり合うことがある。"zindex" プロパティは、何
+の上に何があるかを指定する。
 
 ポップアップウィンドウにはバッファがあり、そのバッファは常にポップアップウィン
-ドウに関連付けられている。このウィンドウはノーマル、ビジュアル、挿入モードでは
-使用できない。キーボードフォーカスは得られない。`setbufline()` のような関数を
-使ってバッファ内のテキストを変更することができる。このウィンドウとバッファが通
-常のウィンドウとバッファと比較してどのように振る舞うかとの違いはもっとたくさん
-ある。|popup-buffer| を参照。
+ドウに関連付けられている。このウィンドウはノーマル、ビジュアル、挿入モードには
+できない。キーボードフォーカスは得られない。`setbufline()` のような関数を使っ
+てバッファ内のテキストを変更することができる。このウィンドウとバッファが通常の
+ウィンドウとバッファと比較してどのように振る舞うかとの違いはもっとたくさんあ
+る。|popup-buffer| を参照。
 
 これがあなたが探しているものではない場合は、他のポップアップ機能をチェックして
 みて欲しい。
@@ -84,17 +85,16 @@ Exコマンドの出力のために画面がスクロールアップすると、
 
 
 
-IMPLEMENTATION:
+TODO:
 - Why does 'nrformats' leak from the popup window buffer???
 - Disable commands, feedkeys(), CTRL-W, etc. in a popup window.
   Use NOT_IN_POPUP_WINDOW for more commands.
 - Add 'balloonpopup': instead of showing text, let the callback open a popup
   window and return the window ID.   The popup will then be closed when the
   mouse moves, except when it moves inside the popup.
+- For notifications use the PopupNotification highlight group, fall back to
+  WarningMsg if it isn't defined.
 - For the "moved" property also include mouse movement?
-- When selecting text in the popup with modeless selection, do not select
-  outside of the popup and don't select the border or padding.
-- Add test for dragging the popup window.
 - Make redrawing more efficient and avoid flicker:
     - put popup menu also put in popup_mask?
 - Invoke filter with character before mapping?
@@ -104,7 +104,17 @@ IMPLEMENTATION:
 - When drawing on top half a double-wide character, display ">" or "<" in the
   incomplete cell.
 - Can the buffer be re-used, to avoid using up lots of buffer numbers?
-- Implement all the unimplemented options and features.
+- Implement:
+	popup_dialog({text}, {options})
+	popup_filter_menu({id}, {key})
+	popup_filter_yesno({id}, {key})
+	popup_menu({text}, {options})
+	popup_setoptions({id}, {options})
+	flip option
+	hidden option
+	tabpage option with number
+	title option
+	transparent text property
 
 
 ==============================================================================
@@ -140,7 +150,7 @@ THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
 	|popup_getpos()|	ポップアップの実際の位置とサイズを取得する
 
 
-[後で eval.txt に移動する関数]
+[後で eval.txt に移動する関数のヘルプ]
 
 popup_atcursor({text}, {options})			 *popup_atcursor()*
 		カーソルの上に {text} を表示し、カーソルが移動したら閉じる。こ
@@ -294,7 +304,7 @@ popup_notification({text}, {options})			 *popup_notification()*
 				\ 'line': 1,
 				\ 'col': 10,
 				\ 'time': 3000,
-				\ 'tab': -1,
+				\ 'tabpage': -1,
 				\ 'zindex': 200,
 				\ 'drag': 1,
 				\ 'highlight': 'WarningMsg',
@@ -398,7 +408,7 @@ POPUP_CREATE() の引数					*popup_create-usage*
 	hidden		TRUEの場合、ポップアップは存在しますが表示されない。表
 			示するには `popup_show()` を使う。
 			{未実装} {not implemented yet}
-	tab		-1の場合: すべてのタブページにポップアップを表示する。
+	tabpage		-1の場合: すべてのタブページにポップアップを表示する。
 			0 (デフォルト)の場合: カレントタブページにポップアップ
 			を表示する。
 			それ以外の場合は、ポップアップが表示されるタブページの
