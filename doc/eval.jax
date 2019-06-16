@@ -11277,14 +11277,11 @@ text...
 			システムが環境変数の削除をサポートしていない場合は空に
 			する。
 
-                                                 *:cons* *:const* *E996*
+							*:cons* *:const* *E996*
 :cons[t] {var-name} = {expr1}
 :cons[t] [{name1}, {name2}, ...] = {expr1}
 :cons[t] [{name1}, {name2}, ...] .= {expr1}
 :cons[t] [{name}, ..., ; {lastname}] = {expr1}
-:cons[t] {var-name} =<< [trim] {marker}
-text...
-text...
 :cons[t] {var-name} =<< [trim] {marker}
 text...
 text...
@@ -11298,7 +11295,7 @@ text...
 				:let x = 1
 				:lockvar 1 x
 <			これは、変数が変更されないことを確実にしたいときに便利である。
-								*E995*
+							*E995*
 			|:const|は変数の変更をすることができない。 >
 				:let x = 1
 				:const x = 2  " エラー!
