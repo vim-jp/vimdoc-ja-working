@@ -111,7 +111,6 @@ TODO:
 	popup_filter_menu({id}, {key})
 	popup_menu({text}, {options})
 	popup_setoptions({id}, {options})
-	flip option
 	hidden option
 	tabpage option with number
 	title option
