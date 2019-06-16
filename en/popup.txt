@@ -103,16 +103,19 @@ TODO:
 - When drawing on top half a double-wide character, display ">" or "<" in the
   incomplete cell.
 - Can the buffer be re-used, to avoid using up lots of buffer numbers?
+- Use a popup window for the "info" item of completion instead of using a
+  preview window.  Ideas in issue #4544.
+  How to add highlighting?
+- When the lines do not fit show a scrollbar (like in the popup menu).
+  Use the mouse wheel for scrolling.
 - Implement:
-	popup_dialog({text}, {options})
 	popup_filter_menu({id}, {key})
-	popup_filter_yesno({id}, {key})
 	popup_menu({text}, {options})
 	popup_setoptions({id}, {options})
-	flip option
 	hidden option
 	tabpage option with number
 	title option
+	flip option
 	transparent text property
 
 
@@ -134,6 +137,7 @@ Manipulating a popup window:
 	|popup_show()|		show a previously hidden popup
 	|popup_move()|		change the position and size of a popup
 	|popup_setoptions()|	override options of a popup
+	|popup_settext()|	replace the popup buffer contents
 
 Closing popup windows:
 	|popup_close()|		close one popup
@@ -196,16 +200,23 @@ popup_create({text}, {options})				*popup_create()*
 
 
 popup_dialog({text}, {options})				*popup_dialog()*
-		{not implemented yet}
 		Just like |popup_create()| but with these default options: >
 			call popup_create({text}, {
 				\ 'pos': 'center',
 				\ 'zindex': 200,
+				\ 'drag': 1,
 				\ 'border': [],
 				\ 'padding': [],
 				\})
 <		Use {options} to change the properties. E.g. add a 'filter'
-		option with value 'popup_filter_yesno'.
+		option with value 'popup_filter_yesno'.  Example: >
+			call popup_create('do you want to quit (Yes/no)?', {
+				\ 'filter': 'popup_filter_yesno',
+				\ 'callback': 'QuitCallback',
+				\ })
+
+<		By default the dialog can be dragged, so that text below it
+		can be read if needed.
 
 
 popup_filter_menu({id}, {key})				*popup_filter_menu()*
@@ -218,12 +229,12 @@ popup_filter_menu({id}, {key})				*popup_filter_menu()*
 
 
 popup_filter_yesno({id}, {key})				*popup_filter_yesno()*
-		{not implemented yet}
 		Filter that can be used for a popup. It handles only the keys
 		'y', 'Y' and 'n' or 'N'.  Invokes the "callback" of the
 		popup menu with the 1 for 'y' or 'Y' and zero for 'n' or 'N'
-		as the second argument.  Pressing Esc and CTRL-C works like
-		pressing 'n'.  Other keys are ignored.
+		as the second argument.  Pressing Esc and 'x' works like
+		pressing 'n'.  CTRL-C invokes the callback with -1.  Other
+		keys are ignored.
 
 
 popup_getoptions({id})					*popup_getoptions()*
@@ -301,7 +312,7 @@ popup_notification({text}, {options})			 *popup_notification()*
 				\ 'minwidth': 20,
 				\ 'time': 3000,
 				\ 'tabpage': -1,
-				\ 'zindex': 200,
+				\ 'zindex': 300,
 				\ 'drag': 1,
 				\ 'highlight': 'WarningMsg',
 				\ 'border': [],
@@ -323,6 +334,11 @@ popup_setoptions({id}, {options})			*popup_setoptions()*
 		{not implemented yet}
 		Override options in popup {id} with entries in {options}.
 
+popup_settext({id}, {text})				*popup_settext()*
+		Set the text of the buffer in poup win {id}. {text} is the
+		same as supplied to |popup_create()|.
+		Does not change the window size or position, other than caused
+		by the different text.
 
 
 POPUP BUFFER AND WINDOW					*popup-buffer*
@@ -358,8 +374,9 @@ need them.
 
 POPUP_CREATE() ARGUMENTS				*popup_create-usage*
 
-The first argument of |popup_create()| specifies the text to be displayed, and
-optionally text properties.  It is in one of three forms:
+The first argument of |popup_create()| (and the second argument to
+|popup_setttext()|) specifies the text to be displayed, and optionally text
+properties.  It is in one of three forms:
 - a string
 - a list of strings
 - a list of dictionaries, where each dictionary has these entries:
@@ -397,7 +414,9 @@ The second argument of |popup_create()| is a dictionary with options:
 	flip		When TRUE (the default) and the position is relative
 			to the cursor, flip to below or above the cursor to
 			avoid overlap with the |popupmenu-completion| or
-			another popup with a higher "zindex".
+			another popup with a higher "zindex".  When there is
+			no space above/below the cursor then show the popup to
+			the side of the popup or popup menu.
 			{not implemented yet}
 	maxheight	Maximum height of the contents, excluding border and
 			padding.
@@ -427,7 +446,9 @@ The second argument of |popup_create()| is a dictionary with options:
 	wrap		TRUE to make the lines wrap (default TRUE).
 	drag		TRUE to allow the popup to be dragged with the mouse
 			by grabbing at at the border.  Has no effect if the
-			popup does not have a border.
+			popup does not have a border. As soon as dragging
+			starts and "pos" is "center" it is changed to
+			"topleft".
 	highlight	Highlight group name to use for the text, stored in
 			the 'wincolor' option.
 	padding		List with numbers, defining the padding
@@ -521,7 +542,7 @@ filter is also called.  The filter of the popup window with the highest zindex
 is called first.
 
 The filter function is called with two arguments: the ID of the popup and the
-key, e.g.: >
+key as a string, e.g.: >
 	func MyFilter(winid, key)
 	  if a:key == "\<F2>"
 	    " do something
@@ -556,15 +577,14 @@ Vim recognizes the Esc key.  If you do use Esc, it is recommended to set the
 
 POPUP CALLBACK						*popup-callback*
 
-A callback that is invoked when the popup closes.  Used by
-|popup_filter_menu()|.
+A callback that is invoked when the popup closes.
 
 The callback is invoked with two arguments: the ID of the popup window and the
 result, which could be an index in the popup lines, or whatever was passed as
 the second argument of `popup_close()`.
 
-If the popup is closed because the cursor moved, the number -1 is passed to
-the callback.
+If the popup is force-closed, e.g. because the cursor moved or CTRL-C was
+pressed, the number -1 is passed to the callback.
 
 ==============================================================================
 3. Examples						*popup-examples*

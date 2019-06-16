@@ -102,16 +102,20 @@ TODO:
 - When drawing on top half a double-wide character, display ">" or "<" in the
   incomplete cell.
 - Can the buffer be re-used, to avoid using up lots of buffer numbers?
+- Use a popup window for the "info" item of completion instead of using a
+  preview window.  Ideas in issue #4544.
+  How to add highlighting?
+- When the lines do not fit show a scrollbar (like in the popup menu).
+  Use the mouse wheel for scrolling.
 - Implement:
-	popup_dialog({text}, {options})
 	popup_filter_menu({id}, {key})
-	popup_filter_yesno({id}, {key})
 	popup_menu({text}, {options})
 	popup_setoptions({id}, {options})
 	flip option
 	hidden option
 	tabpage option with number
 	title option
+	flip option
 	transparent text property
 
 
@@ -134,6 +138,7 @@ THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
 	|popup_show()|		以前に隠されたポップアップを表示する
 	|popup_move()|		ポップアップの位置とサイズを変更する
 	|popup_setoptions()|	ポップアップのオプションを上書きする
+	|popup_settext()|	ポップバッファの内容を置き換える
 
 ポップアップウィンドウを閉じる:
 	|popup_close()|		1つのポップアップを閉じる
@@ -173,8 +178,8 @@ popup_close({id} [, {result}])				*popup_close()*
 
 		ポップアップがコールバックを持つ場合は、ポップアップウィンドウ
 		が削除される直前に呼び出される。オプションの {result} が存在す
-		る場合、それはコールバックの2番目の引数として渡される。そうで
-		なければ、ゼロがコールバックに渡される。
+		る場合、それはコールバックの第2引数として渡される。そうでなけ
+		れば、ゼロがコールバックに渡される。
 
 
 popup_create({text}, {options})				*popup_create()*
@@ -196,34 +201,42 @@ popup_create({text}, {options})				*popup_create()*
 
 
 popup_dialog({text}, {options})				*popup_dialog()*
-		{未実装} {not implemented yet}
 		|popup_create()| と同じだが、これらのデフォルトのオプションに
 		なる: >
 			call popup_create({text}, {
 				\ 'pos': 'center',
 				\ 'zindex': 200,
+				\ 'drag': 1,
 				\ 'border': [],
 				\ 'padding': [],
 				\})
 <		プロパティを変更するには{options}を使用する。例: 値
 		'popup_filter_yesno' を持つ 'filter' オプションを追加する。
+		例: >
+			call popup_create('do you want to quit (Yes/no)?', {
+				\ 'filter': 'popup_filter_yesno',
+				\ 'callback': 'QuitCallback',
+				\ })
+
+<		デフォルトではダイアログはドラッグすることができるので、必要で
+		あればその下のテキストを読むことができる。
 
 
 popup_filter_menu({id}, {key})				*popup_filter_menu()*
 		{未実装} {not implemented yet}
 		ポップアップに使用できるフィルタ。カーソルキーを操作して、ポッ
 		プアップで選択したインデックスを移動する。Space と Enterを使っ
-		て項目を選択できる。2番目の引数として選択された行のインデック
-		スを使用してポップアップメニューの "callback" を呼び出す。
+		て項目を選択できる。第2引数として選択された行のインデックスを
+		使用してポップアップメニューの "callback" を呼び出す。
 
 
 popup_filter_yesno({id}, {key})				*popup_filter_yesno()*
-		{未実装} {not implemented yet}
 		ポップアップに使用できるフィルタ。キー 'y'、'Y' および 'n' ま
-		たは 'N' のみを処理する。2番目の引数として 'y' または 'Y' に
-		1、'n' または 'N' に 0 を指定して、ポップアップメニューの
-		"callback" を呼び出す。Esc と CTRL-C を押すと、'n' を押すのと
-		同じように機能する。他のキーは無視される。
+		たは 'N' のみを処理する。第2引数として 'y' または 'Y' に1、'n'
+		または 'N' に 0 を指定して、ポップアップメニューの"callback"
+		を呼び出す。Esc と 'x' を押すと、'n' を押すのと同じように機能
+		する。CTRL-C は -1 でコールバックを呼び出す。他のキーは無視さ
+		れる。
 
 
 popup_getoptions({id})					*popup_getoptions()*
@@ -304,7 +317,7 @@ popup_notification({text}, {options})			 *popup_notification()*
 				\ 'minwidth': 20,
 				\ 'time': 3000,
 				\ 'tabpage': -1,
-				\ 'zindex': 200,
+				\ 'zindex': 300,
 				\ 'drag': 1,
 				\ 'highlight': 'WarningMsg',
 				\ 'border': [],
@@ -326,6 +339,11 @@ popup_setoptions({id}, {options})			*popup_setoptions()*
 		ポップアップ {id} のオプションを {options} のエントリで上書き
 		する。
 
+popup_settext({id}, {text})				*popup_settext()*
+		ポップアップウィンドウ {id} でバッファのテキストを設定する。
+		{text} は |popup_create()| に提供されるものと同じである。
+		テキストの違いが生じる以外の、ウィンドウのサイズや位置は変わら
+		ない。
 
 ポップアップバッファとウィンドウ			*popup-buffer*
 
@@ -359,19 +377,19 @@ Note これはオートコマンドをトリガーしない。必要ならば `w
 
 POPUP_CREATE() の引数					*popup_create-usage*
 
-|popup_create()| の最初の引数は表示されるテキストと、オプションでテキストプロ
-パティを指定する。それは3つの形式のうちの1つである:
+|popup_create()| の最初の引数(と |popup_setttext()| の第2引数)は表示されるテキ
+ストと、オプションでテキストプロパティを指定する。それは3つの形式のうちの1つで
+ある:
 - 文字列
 - 文字列のリスト
 - 辞書のリスト。各辞書は次のエントリを持つ:
 	text		表示するテキストを含む文字列。
 	props		テキストプロパティのリスト。任意。
-			各エントリは |prop_add()| の3番目の引数のような辞書だ
-			が、辞書の "col" エントリを使って桁を指定する。以下を
-			参照:
+			各エントリは |prop_add()| の第3引数のような辞書だが、
+			辞書の "col" エントリを使って桁を指定する。以下を参照:
 			|popup-props|.
 
-|popup_create()| の2番目の引数は任意の辞書である:
+|popup_create()| の第2引数は任意の辞書である:
 	line		ポップアップを配置する画面の行。数値または、カーソルの
 			行を使用して行数を加算または減算するには、"cursor"、
 			"cursor+1"、または "cursor-1" を使用できる。省略した場
@@ -398,6 +416,8 @@ POPUP_CREATE() の引数					*popup_create-usage*
 			る場合は、|popupmenu-completion| または、より高い
 			"zindex" を持つ別のポップアップと重ならないようにカー
 			ソルの下または上に動かす。
+			カーソルの上/下にスペースがない場合は、ポップアップま
+			たはポップアップメニューの横にポップアップを表示する。
 			{未実装} {not implemented yet}
 	maxheight	コンテンツの最大高さ (ボーダーとパディングを除く)
 	minheight	コンテンツの最小高さ (ボーダーとパディングを除く)
@@ -422,7 +442,8 @@ POPUP_CREATE() の引数					*popup_create-usage*
 	wrap		行を折り返す場合はTRUE(デフォルトはTRUE)。
 	drag		ボーダーを掴んでマウスでポップアップをドラッグできるよ
 			うにする場合はTRUE。ポップアップにボーダーがない場合は
-			効果がない。
+			効果がない。"pos" が "center" の場合は、ドラッグが始ま
+			るとすぐに "topleft" に変更される。
 	highlight	'wincolor' オプションに格納されている、テキストに使用
 			するハイライトグループ名。
 	padding		ポップアップの上/右/下/左のパディングを定義する数値の
@@ -477,7 +498,7 @@ POPUP_CREATE() の引数					*popup_create-usage*
 
 ポップアップテキストプロパティ				*popup-props*
 
-これらは |prop_add()| の3番目の引数と同じである。ただし:
+これらは |prop_add()| の第3引数と同じである。ただし:
 - "lnum" は常にリストの現在の行である
 - "bufnr" は常にポップアップのバッファである
 - "col" は別の引数ではなく辞書内にある
@@ -507,7 +528,8 @@ POPUP_CREATE() の引数					*popup_create-usage*
 プアップウィンドウが表示されている場合は、そのフィルタも呼び出される。最も高い
 zindex を持つポップアップウィンドウのフィルタが最初に呼び出される。
 
-フィルタ関数は2つの引数、ポップアップIDとキーで呼び出される。例: >
+フィルタ関数は2つの引数、ポップアップIDと文字列としてのキーで呼び出される。
+例: >
 	func MyFilter(winid, key)
 	  if a:key == "\<F2>"
 	    " do something
@@ -542,15 +564,14 @@ Note "x" はポップアップを閉じる通常の方法である。Escを使�
 
 ポップアップコールバック				*popup-callback*
 
-ポップアップが閉じたときに呼び出されるコールバック。|popup_filter_menu()| に
-よって使用される。
+ポップアップが閉じたときに呼び出されるコールバック。
 
 コールバックは2つの引数で呼び出される: ポップアップウィンドウIDと結果、それは
-ポップアップ行のインデックスか、あるいは `popup_close()` の2番目の引数として渡
-されたものである。
+ポップアップ行のインデックスか、あるいは `popup_close()` の第2引数として渡され
+たものである。
 
-カーソルが移動したためにポップアップが閉じられた場合、-1 がコールバックに渡さ
-れる。
+ポップアップが強制終了された場合、例えば、カーソルが移動したかCTRL-Cが押された
+場合、-1 がコールバックに渡される。
 
 ==============================================================================
 3. 例							*popup-examples*
