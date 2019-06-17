@@ -123,7 +123,7 @@ THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
 	|popup_create()|	画面の中央に
 	|popup_atcursor()|	カーソル位置のすぐ上に。カーソルが移動すると閉
 				じる
-	|popup_notifiation()|	3秒間通知を表示する
+	|popup_notification()|	3秒間通知を表示する
 	|popup_dialog()|	パディングとボーダーありで中央に
 	|popup_menu()|		リストから項目を選択するためのプロンプト
 
