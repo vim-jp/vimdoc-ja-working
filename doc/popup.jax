@@ -436,7 +436,7 @@ POPUP_CREATE() の引数					*popup_create-usage*
 			は1である。
 	col		ポップアップを配置する画面の桁。数値または、カーソルの
 			桁を使用するには "cursor" を使用し、桁を加算または減算
-			するには"cursor+9" または "cursor-9" が使用できる。省
+			するには "cursor+9" または "cursor-9" が使用できる。省
 			略した場合、ポップアップは水平方向の中央に配置される。
 			最初の桁は1である。
 	pos		"topleft"、"topright"、"botleft" または "botright":
@@ -497,7 +497,8 @@ POPUP_CREATE() の引数					*popup_create-usage*
 	borderhighlight	ボーダーに使用するハイライトグループ名のリスト。1つの
 			エントリの場合はそれがすべてのボーダーに使用される、そ
 			れ以外の場合は上/右/下/左のボーダーのハイライトになる。
-			例:['TopColor', 'RightColor', 'BottomColor, 'LeftColor']
+			例:['TopColor', 'RightColor', 'BottomColor,
+			'LeftColor']
 	borderchars	上/右/下/左のボーダーに使用する文字を定義する、文字の
 			リスト。左上/右上/右下/左下の隅に使用する文字が任意で
 			続く。
