@@ -379,7 +379,6 @@ popup_setoptions({id}, {options})			*popup_setoptions()*
 			filter
 			callback
 		|popup_move()| からのオプションも使用できる。
-		The options from |popup_move()| can also be used.
 		"hidden" のために |popup_hide()| と |popup_show()| を使用する。
 		"tabpage" は変更できない。
 
