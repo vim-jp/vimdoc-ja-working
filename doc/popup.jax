@@ -217,7 +217,6 @@ popup_dialog({text}, {options})				*popup_dialog()*
 
 
 popup_filter_menu({id}, {key})				*popup_filter_menu()*
-		{未実装} {not implemented yet}
 		ポップアップに使用できるフィルタ。カーソルキーを操作して、ポッ
 		プアップで選択したインデックスを移動する。Space と Enterを使っ
 		て項目を選択できる。第2引数として選択された行のインデックスを
@@ -242,7 +241,7 @@ popup_filter_menu({id}, {key})				*popup_filter_menu()*
 popup_filter_yesno({id}, {key})				*popup_filter_yesno()*
 		ポップアップに使用できるフィルタ。キー 'y'、'Y' および 'n' ま
 		たは 'N' のみを処理する。第2引数として 'y' または 'Y' に1、'n'
-		または 'N' に 0 を指定して、ポップアップメニューの"callback"
+		または 'N' に 0 を指定して、ポップアップメニューの "callback"
 		を呼び出す。Esc と 'x' を押すと、'n' を押すのと同じように機能
 		する。CTRL-C は -1 でコールバックを呼び出す。他のキーは無視さ
 		れる。
@@ -402,7 +401,8 @@ popup_settext({id}, {text})				*popup_settext()*
 - 他のすべてのバッファローカルおよびウィンドウローカルオプションはVimのデフォ
   ルト値に設定されている。
 
-具体的に言及されたオプションを変更することは可能だが、何かが壊れてしまう可能性があるので、それらを放っておいて欲しい。
+具体的に言及されたオプションを変更することは可能だが、何かが壊れてしまう可能性
+があるので、そのままにしておくのが望ましい。
 
 ウィンドウにはカーソル位置があるが、カーソルは表示されない。
 
@@ -414,8 +414,8 @@ popup_settext({id}, {text})				*popup_settext()*
 	call setwinvar(winid, '&wrap', 0)
 そしてオプションは `setbufvar()` を使ってバッファに設定することができる。例: >
 	call setbufvar(winbufnr(winid), '&filetype', 'java')
-Note これはオートコマンドをトリガーしない。必要ならば `win_execute()` を使用す
-ること。
+Note これは自動コマンドをトリガーしない。必要ならば `win_execute()` を使用する
+こと。
 
 
 POPUP_CREATE() の引数					*popup_create-usage*
@@ -469,8 +469,8 @@ POPUP_CREATE() の引数					*popup_create-usage*
 	firstline	表示する最初のバッファ行。1より大きい場合は、テキスト
 			が上にスクロールしたように見える。範囲外の場合、最後の
 			バッファ行はウィンドウの最上部に表示される。
-	hidden		TRUEの場合、ポップアップは存在しますが表示されない。表
-			示するには `popup_show()` を使う。
+	hidden		TRUEの場合、ポップアップは存在するが表示されない。表示
+			するには `popup_show()` を使う。
 			{未実装} {not implemented yet}
 	tabpage		-1の場合: すべてのタブページにポップアップを表示する。
 			0 (デフォルト)の場合: カレントタブページにポップアップ
