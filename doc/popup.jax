@@ -497,7 +497,7 @@ POPUP_CREATE() の引数					*popup_create-usage*
 	borderhighlight	ボーダーに使用するハイライトグループ名のリスト。1つの
 			エントリの場合はそれがすべてのボーダーに使用される、そ
 			れ以外の場合は上/右/下/左のボーダーのハイライトになる。
-			例:['TopColor', 'RightColor', 'BottomColor,
+			例: ['TopColor', 'RightColor', 'BottomColor,
 			'LeftColor']
 	borderchars	上/右/下/左のボーダーに使用する文字を定義する、文字の
 			リスト。左上/右上/右下/左下の隅に使用する文字が任意で
