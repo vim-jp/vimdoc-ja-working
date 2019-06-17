@@ -88,7 +88,7 @@ Exコマンドの出力のために画面がスクロールアップすると、
 TODO:
 - Why does 'nrformats' leak from the popup window buffer???
 - Disable commands, feedkeys(), CTRL-W, etc. in a popup window.
-  Use NOT_IN_POPUP_WINDOW for more commands.
+  Use ERROR_IF_POPUP_WINDOW for more commands.
 - Add 'balloonpopup': instead of showing text, let the callback open a popup
   window and return the window ID.   The popup will then be closed when the
   mouse moves, except when it moves inside the popup.
@@ -108,12 +108,7 @@ TODO:
 - When the lines do not fit show a scrollbar (like in the popup menu).
   Use the mouse wheel for scrolling.
 - Implement:
-	popup_filter_menu({id}, {key})
-	popup_menu({text}, {options})
-	popup_setoptions({id}, {options})
-	hidden option
 	tabpage option with number
-	title option
 	flip option
 	transparent text property
 
@@ -228,6 +223,21 @@ popup_filter_menu({id}, {key})				*popup_filter_menu()*
 		て項目を選択できる。第2引数として選択された行のインデックスを
 		使用してポップアップメニューの "callback" を呼び出す。
 
+		ポップアップに使用できるフィルタ。これらのキーが使用できる:
+		    j <Down>		下の項目を選択する
+		    k <Up>		上の項目を選択する
+		    <Space> <Enter>	現在の選択を受け入れる
+		    x Esc CTRL-C	メニューをキャンセルする
+		他のキーは無視される。
+
+		行をハイライトするためにマッチがセットされる。|popup_menu()|
+		を参照。
+
+		現在の選択が受け入れられると、選択された行のインデックスを第2
+		引数としてポップアップメニューの "callback" が呼び出される。最
+		初のエントリのインデックスは 1 である。メニューをキャンセルす
+		ると、-1 でコールバックが呼び出される。
+
 
 popup_filter_yesno({id}, {key})				*popup_filter_yesno()*
 		ポップアップに使用できるフィルタ。キー 'y'、'Y' および 'n' ま
@@ -243,11 +253,15 @@ popup_getoptions({id})					*popup_getoptions()*
 		ゼロ値はオプションが設定されなかったことを意味する。"zindex"
 		の場合、デフォルト値が返される。ゼロではない。
 
-		"highlight" エントリは省略されているので、'wincolor' オプショ
-		ンを使用すること: >
-			let hl = getwinvar(winid, '&wincolor')
+		"moved" エントリは、最小桁と最大桁のリストで、未設定時は [0, 0]
+		である。
 
-<		ポップアップウィンドウ {id} が見つからない場合は空の辞書が返さ
+		すべての値がゼロの場合、"border" と "padding" は含まれない。す
+		べての値が 1 の場合、空のリストが含まれる。
+
+		すべての値が空の場合、"borderhighlight" は含まれない。
+
+		ポップアップウィンドウ {id} が見つからない場合は空の辞書が返さ
 		れる。
 
 
@@ -283,7 +297,6 @@ popup_hide({id})						*popup_hide()*
 
 
 popup_menu({text}, {options})				 *popup_menu()*
-		{未実装} {not implemented yet}
 		カーソルの近くに {text} を表示し、カーソルキーで項目の1つを選
 		択して処理し、それを閉じるには、SpaceまたはEnterで項目を選択す
 		る。これを有効にするには、{text} に複数の行が必要である。これ
@@ -291,20 +304,33 @@ popup_menu({text}, {options})				 *popup_menu()*
 			call popup_create({text}, {
 				\ 'pos': 'center',
 				\ 'zindex': 200,
+				\ 'drag': 1,
 				\ 'wrap': 0,
 				\ 'border': [],
+				\ 'padding': [],
 				\ 'filter': 'popup_filter_menu',
 				\ })
-<		プロパティを変更するには {options} を使用する。少なくとも
+<		現在行は、PopupSelected を使用してマッチでハイライトされる。
+		PopupSelected が未定義の場合は、|PmenuSel| が使われる。
+
+		プロパティを変更するには {options} を使用する。少なくとも
 		"callback" を選択された項目を扱う関数に設定するべきである。
 
 
 popup_move({id}, {options})					*popup_move()*
 		ポップアップ {id} を {options} で指定された位置に移動する。
 		{options} にはポップアップ位置を指定する |popup_create()| 由来
-		の項目を含むことができる: "line"、"col"、"pos"、"maxheight"、
-		"minheight"、"maxwidth" および "minwidth"。
+		の項目を含むことができる:
+			line
+			col
+			pos
+			maxheight
+			minheight
+			maxwidth
+			minwidth
+			fixed
 		{id} については `popup_hide()` を参照。
+		その他のオプションについては |popup_setoptions()| を参照。
 
 
 popup_notification({text}, {options})			 *popup_notification()*
@@ -334,9 +360,28 @@ popup_show({id})						*popup_show()*
 
 
 popup_setoptions({id}, {options})			*popup_setoptions()*
-		{未実装} {not implemented yet}
 		ポップアップ {id} のオプションを {options} のエントリで上書き
 		する。
+		これらのオプションが設定できる:
+			flip
+			firstline
+			title
+			wrap
+			drag
+			highlight
+			padding
+			border
+			borderhighlight
+			borderchars
+			zindex
+			time
+			moved
+			filter
+			callback
+		|popup_move()| からのオプションも使用できる。
+		The options from |popup_move()| can also be used.
+		"hidden" のために |popup_hide()| と |popup_show()| を使用する。
+		"tabpage" は変更できない。
 
 popup_settext({id}, {text})				*popup_settext()*
 		ポップアップウィンドウ {id} でバッファのテキストを設定する。
@@ -436,8 +481,8 @@ POPUP_CREATE() の引数					*popup_create-usage*
 			{-1と0のみ実装} {only -1 and 0 are implemented}
 	title		ポップアップの最初の項目の上、ボーダーの上に表示される
 			テキスト。上枠がない場合は、タイトルを付けるために1行
-			のパディングが追加される。
-			{未実装} {not implemented yet}
+			のパディングが追加される。最初と最後に1つ以上のスペー
+			スをパディングとして追加することを薦める。
 	wrap		行を折り返す場合はTRUE(デフォルトはTRUE)。
 	drag		ボーダーを掴んでマウスでポップアップをドラッグできるよ
 			うにする場合はTRUE。ポップアップにボーダーがない場合は
