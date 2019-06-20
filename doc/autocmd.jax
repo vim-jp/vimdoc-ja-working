@@ -868,33 +868,29 @@ OptionSet			オプションが設定された後。パターンは長い(短縮
 				|<amatch>| は対象のオプション名が設定される。
 
 				|v:option_type| はオプションの変更のスコープが
-				グローバルかローカルかが格納される。
-				|v:option_command| はどのコマンドで値が設
+				グローバルかローカルかが格納され
+				る。|v:option_command| はどのコマンドで値が設
 				定されたかが格納される。(タグのジャンプ先にあ
-				る表を参照)
-				|v:option_new| は新しく設定された値が格納され
-				る。
-				|v:option_oldlocal| は変更前のローカルの値が格
-				納される。
-				|v:option_oldglobal|は変更前のグローバルの値が
-				格納される。
-				|v:option_old| は変更前の値が格納される。
+				る表を参照) |v:option_new| は新しく設定された
+				値が格納される。|v:option_oldlocal| は変更前の
+				ローカルの値が格納される。|v:option_oldglobal|
+				は変更前のグローバルの値が格納され
+				る。|v:option_old| は変更前の値が格納される。
 
-				|v:option_oldlocal| には |:set|
-				か |:setlocal|、|modeline| のいずれかが使用され
-				た場合に値が格納される。同様
-				に |v:option_oldglobal| には |:set|
-				か |:setglobal| が使用された場合に値が格納され
-				る。
+				|v:option_oldlocal| には |:set|か
+				|:setlocal|、|modeline| のいずれかが使用された
+				場合に値が格納される。同様に
+				|v:option_oldglobal| には |:set|か
+				|:setglobal| が使用された場合に値が格納される。
 
 				|global-local| なオプションと |:set| を利用し
 				て文字列をセットした場合、|v:option_old| には
-				古いグローバルの値が格納されるが、それ以外の場合
-				(例えばローカルな文字列や |global-local| な数
-				値、等) は古いローカルの値が格納されるので注
+				古いグローバルの値が格納されるが、それ以外の場
+				合(例えばローカルな文字列や |global-local| な
+				数値、等) は古いローカルの値が格納されるので注
 				意。
 
-				OptionSetは 起動時と 'key' の変更の際にはあえ
+				OptionSet は起動時と 'key' の変更の際にはあえ
 				てイベントが発生しないようにしている。
 
 				使用例: 'backupdir' や 'undodir' で指定された
