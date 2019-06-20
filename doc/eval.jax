@@ -1892,16 +1892,16 @@ v:option_new    オプションに設定された新しい値。自動コマン�
 						    *v:option_old*
 v:option_old    オプションの以前の値。自動コマンド |OptionSet| を実行している
 		間のみ有効。設定に使用されたコマンドおよびオプションの種類に
-		よって、ローカルの古い値またはグローバルの古い値のどちらかにな
-		る。
+		よって、ローカルの以前の値またはグローバルの以前の値のどちらか
+		になる。
 						    *v:option_oldlocal*
 v:option_oldlocal
-		オプションの古いローカル値。|OptionSet| 自動コマンドの実行中に
-		有効である。
+		オプションの以前のローカル値。|OptionSet| 自動コマンドの実行中
+		に有効である。
 						    *v:option_oldglobal*
 v:option_oldglobal
-		オプションの古いグローバル値。|OptionSet| 自動コマンドの実行中
-		に有効である。
+		オプションの以前のグローバル値。|OptionSet| 自動コマンドの実行
+		中に有効である。
 						    *v:option_type*
 v:option_type   set コマンドのスコープ。自動コマンド |OptionSet| を実行している
 		間のみ有効。"global" もしくは "local" のどちらかとなる。
