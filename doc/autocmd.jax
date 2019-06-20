@@ -876,7 +876,7 @@ OptionSet			オプションが設定された後。パターンは長い(短縮
 				る。
 				|v:option_oldlocal| は変更前のローカルの値が格
 				納される。
-				|v:option_oldglobal|は変更前のグローバルの値が
+				|v:option_oldglobal| は変更前のグローバルの値が
 				格納される。
 				|v:option_old| は変更前の値が格納される。
 
