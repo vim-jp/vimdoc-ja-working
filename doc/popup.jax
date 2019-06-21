@@ -663,7 +663,7 @@ popup_filter_menu() をショートカットで拡張できるようにする: >
 	     return 1
 	  endif
 
-	  " ショートカットキーじゃない場合は通常のフィルタに渡す
+	  " ショートカットキーではない場合は通常のフィルタに渡す
 	  return popup_filter_menu(a:id, a:key)
 	endfunc
 <
