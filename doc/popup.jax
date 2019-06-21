@@ -235,7 +235,7 @@ popup_filter_menu({id}, {key})				*popup_filter_menu()*
 		ると、-1 でコールバックが呼び出される。
 
 		ショートカットキーを追加する場合
-		|popup_menu-shortcut-exsample| を参照。
+		|popup_menu-shortcut-example| を参照。
 
 popup_filter_yesno({id}, {key})				*popup_filter_yesno()*
 		ポップアップに使用できるフィルタ。キー 'y'、'Y' および 'n' ま
@@ -261,7 +261,7 @@ popup_getoptions({id})					*popup_getoptions()*
 		すべての値が空の場合、"borderhighlight" は含まれない。
 
 		グローバルポップアップの場合 "tabpage" には -1 が設定され、
-		カレントタブページの場合は正の整数、別のタブページの場合は負の
+		カレントタブページの場合は 0 、別のタブページの場合は正の
 		整数が設定される。
 
 		ポップアップウィンドウ {id} が見つからない場合は空の辞書が返さ
@@ -641,7 +641,7 @@ TODO
 		\ })
 <
 					*popup_menu-shortcut-example*
-Extend popup_filter_menu() with shortcut keys: >
+popup_filter_menu() をショートカットで拡張できるようにする: >
 
 	call popup_menu('Save', 'Cancel', 'Discard'], {
 		\ 'filter': 'MyMenuFilter',
@@ -649,7 +649,7 @@ Extend popup_filter_menu() with shortcut keys: >
 		\ })
 
 	func MyMenuFilter(id, key)
-	  " Handle shortcuts
+	  " ショートカットキーをハンドリングする
 	  if a:key == 'S'
 	     call popup_close(a:id, 1)
 	     return 1
@@ -663,7 +663,7 @@ Extend popup_filter_menu() with shortcut keys: >
 	     return 1
 	  endif
 
-	  " No shortcut, pass to generic filter
+	  " ショートカットキーじゃない場合は通常のフィルタに渡す
 	  return popup_filter_menu(a:id, a:key)
 	endfunc
 <
