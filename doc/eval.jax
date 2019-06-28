@@ -2714,7 +2714,7 @@ test_alloc_fail({id}, {countdown}, {repeat})
 test_autochdir()		なし	起動時に 'autochdir' を有効にする
 test_feedinput({string})	なし	キー入力を入力バッファに追加する
 test_garbagecollect_now()	なし	テスト用に直ちにメモリを解放する
-test_garbagecollect_soon()	なし	テスト用にすぐににメモリを解放する
+test_garbagecollect_soon()	なし	テスト用にすぐにメモリを解放する
 test_getvalue({string})		任意	内部変数の値を取得する
 test_ignore_error({expr})	なし	特定のエラーを無視する
 test_null_blob()		Blob	テスト用のnull値
@@ -9755,8 +9755,8 @@ test_garbagecollect_now()			 *test_garbagecollect_now()*
 		数を呼び出す前に |v:testing| を設定する必要がある。
 
 test_garbagecollect_soon()			 *test_garbagecollect_soon()*
-		ガーベッジコレクトをメインループの中に呼び出すようにフラグを設
-		定する。テストでのみ使用される。
+		あたかもメインループの中にいるように、ガーベッジコレクトを呼び
+		出すためのフラグを設定する。テストでのみ使用される。
 
 test_getvalue({name})					*test_getvalue()*
 		内部変数の値を取得する。{name} のこれらの値がサポートされてい
@@ -11246,22 +11246,23 @@ text...
 			{marker} が指定されていない場合は、"." がデフォルトの
 			マーカーとして使用される。
 
-			テキスト行内の空白文字は "trim" せずに保持される。もし
-			{marker} の前に "trim" が指定されている場合、インデン
-			トが取り除かれるため以下を実行できる: >
+			"trim" がない場合は、テキスト行内の全ての空白文字は保
+			持される。もし{marker} の前に "trim" が指定されている
+			場合、インデントが取り除かれるため以下を実行できる: >
 				let text =<< trim END
 				  if ok
 				    echo 'done'
 				  endif
 				END
 <			結果: ["if ok", "  echo 'done'", "endif"]
-			マーカーは "let" と全ての行から取り除かれた最初の行の
-			インデントと並ばなければいけない。具体例: 最初のからで
-			ない先頭のインデントと完全に一致する全ての先頭のインデ
-			ントは入力行から削除される。`let` の前の先頭のインデン
-			トと完全に一致する先頭のインデントはすべて入力行と
-			{marker} を含む行から削除される。Note スペースとタブの
-			違いが重要であることに注意すること。
+			マーカーは "let" のインデントと並ばなければならず、最
+			初の行のインデントは全てのテキスト行から取り除かれる。
+			具体例: 最初の空でないテキスト行の先頭のインデントと完
+			全に一致する全ての先頭のインデントは入力行から削除され
+			る。`let `の前の先頭のインデントと完全に一致する先頭の
+			インデントはすべて {marker} を含む行から削除される。
+			Note スペースとタブの違いが重要であることに注意するこ
+			と。
 
 			{var-name} がまだ存在しない場合は作成される。
 			他のコマンドを続けることはできないが、コメントを続ける
