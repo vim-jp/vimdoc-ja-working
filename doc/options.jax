@@ -997,7 +997,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	    となっているとき、ファイルlを編集して:wすると、
 
 	    backupcopy=auto の場合:
-	    -rw-r--r--  1 ao  ao  24  9 17 12:26 l~ 
+	    -rw-r--r--  1 ao  ao  24  9 17 12:26 l~
 	    lrwxr-xr-x  1 ao  ao   6  9 17 12:29 l@ -> hontai
 	    -rw-r--r--  1 ao  ao  27  9 17 12:31 hontai
 
@@ -3021,7 +3021,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	われていない。
 
 					*'fileencodings'* *'fencs'*
-'fileencodings' 'fencs'	文字列 (既定値: "ucs-bom", 
+'fileencodings' 'fencs'	文字列 (既定値: "ucs-bom",
 				'encoding' の値がUnicodeに設定されたときは
 				"ucs-bom,utf-8,default,latin1")
 			グローバル
@@ -3227,7 +3227,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 		*'fixendofline'* *'fixeol'* *'nofixendofline'* *'nofixeol'*
 'fixendofline' 'fixeol'	切替	(既定ではオン)
 			バッファについてローカル
-	このオプションがオンの時にファイルを書き込むとファイル末尾に <EOL> 
+	このオプションがオンの時にファイルを書き込むとファイル末尾に <EOL>
 	が無い場合に復元される。もしオリジナルのファイルのまま維持したいのであ
 	ればこのオプションをオフに切り替える。
 	'binary' オプションが設定されているときはこのオプションは意味を成さな
