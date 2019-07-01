@@ -9821,8 +9821,8 @@ test_override({name}, {val})				*test_override()*
 		nfa_fail     古い正規表現エンジンに戻すために、NFA regexp エン
 			     ジンを失敗させる
 		no_query_mouse  "dec" 端末のマウス位置を問い合わせない
-		no_wait_return  "no_wait_return" フラグを設定する。"ALL" と共
-				には復元されない
+		no_wait_return  "no_wait_return" フラグを設定する。"ALL" では
+				復元されない
 		ALL	     すべての置き換えをクリアする ({val} は使われない)
 
 		"starting" は、起動が完了したようにテストが振る舞うべきときに
