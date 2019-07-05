@@ -67,16 +67,17 @@ Vim のページには Vim についての最新情報が載っています。�
 	Vim FAQ:		https://vimhelp.org/vim_faq.txt.html
 	ダウンロード:		https://www.vim.org/download.php
 
+
 質問がある場合、答えはこのサイトを参照: https://vi.stackexchange.com/
-" Vi and Vim Stack Exchange はViとVimを使っている人のための共通の質疑応答サイ
-トです "
+"Vi and Vim Stack Exchange はViとVimを使っている人のための共通の質疑応答サイ
+トです"
 
 
 Vim について討論している Usenet News グループ		*news* *usenet*
 	comp.editors
 このグループでは他のエディタについても話し合われています。Vim について書く場合
 は、そのことを必ず明記してください。
-あなたはここにアクセスできます:
+あなたはここでアクセスできます:
 https://groups.google.com/forum/#!topic/comp.editors
 
 						*mail-list* *maillist*
