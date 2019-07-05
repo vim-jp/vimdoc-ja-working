@@ -3149,7 +3149,7 @@ bufload({expr})						*bufload()*
 		はない。
 		バッファのファイルに対して既存のスワップファイルがある場合、ダ
 		イアログなしで、バッファはロードされる。
-		{expr}引数は|bufexists()|と同じように扱われる。
+		引数{expr}は|bufexists()|と同じように扱われる。
 
 							*bufloaded()*
 bufloaded({expr})
