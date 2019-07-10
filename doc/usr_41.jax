@@ -697,7 +697,7 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	cursor()		カーソルを指定した位置に移動させる
 	screencol()		カーソルのスクリーン列を取得する
 	screenrow()		カーソルのスクリーン行を取得する
-	screenpos()		スクリーン行とテキスト文字の列
+	screenpos()		テキスト文字のスクリーン行と列
 	getcurpos()		カーソルの位置を取得する
 	getpos()		カーソルやマークなどの位置を取得する
 	setpos()		カーソルやマークなどの位置を設定する
@@ -726,7 +726,7 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	getcharsearch()		文字検索情報を返す
 	setcharsearch()		文字検索情報を設定する
 
-カレントバッファ以外で動作するもの:
+他のバッファのテキストで動作するもの:
 	getbufline()		指定したバッファから行のリストを得る
 	setbufline()		指定したバッファ内の行を置き換える
 	appendbufline()		指定したバッファに行のリストを追加する
@@ -787,7 +787,7 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	bufadd()		バッファのリストにファイルを追加する
 	bufexists()		バッファの存在をチェックする
 	buflisted()		バッファが存在し、リストされているかどうか
-	bufload()		バッファがロードされているか確認する
+	bufload()		バッファがロードされていることを保証する
 	bufloaded()		バッファが存在し、ロードされているかどうか
 	bufname()		バッファの名前を得る
 	bufnr()			バッファの番号を得る
@@ -1027,18 +1027,18 @@ Vimサーバー:					*server-functions*
 	popup_create()		画面中央にポップアップを作成する
 	popup_atcursor()	カーソル位置のすぐ上にポップアップを作成する、
 				カーソルが離れると閉じる
-	popup_beval()		v:beval_variables によって示される位置、
+	popup_beval()		v:beval_変数 によって示される位置、
 				マウスが動くと閉じる
 	popup_notification()	3秒間通知を表示する
-	popup_dialog()		パディングとボーダーを中心にポップアップを作成
-				する
+	popup_dialog()		パディングとボーダー付きで中央にポップアップを
+				作成する
 	popup_menu()		リストから項目を選択するためのプロンプト
 	popup_hide()		ポップアップを一時的に隠す
 	popup_show()		以前に隠されたポップアップを表示する
 	popup_move()		ポップアップの位置とサイズを変更する
 	popup_setoptions()	ポップアップのオプションを上書きする
 	popup_settext()		ポップアップバッファの内容を置き換える
-	popup_close()		一つのポップアップを閉じる
+	popup_close()		1つのポップアップを閉じる
 	popup_clear()		全てのポップアップを閉じる
 	popup_filter_menu()	リストの項目から選択する
 	popup_filter_yesno()	'y' か 'n' が押されるまでブロックする
