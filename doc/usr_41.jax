@@ -1028,7 +1028,7 @@ Vimサーバー:					*server-functions*
 	popup_atcursor()	カーソル位置のすぐ上にポップアップを作成する、
 				カーソルが離れると閉じる
 	popup_beval()		v:beval_ 変数によって示される位置、
-				マウスが動くと閉じる
+				マウスが離れると閉じる
 	popup_notification()	3秒間通知を表示する
 	popup_dialog()		パディングとボーダー付きで中央にポップアップを
 				作成する
