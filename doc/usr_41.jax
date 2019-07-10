@@ -1023,7 +1023,7 @@ Vimサーバー:					*server-functions*
 	term_setrestore()	端末を復元させるためのコマンドを設定する
 	term_setsize()		端末のサイズを設定する
 
-ポップアップウインドウ:				*popup-window-functions*
+ポップアップウィンドウ:				*popup-window-functions*
 	popup_create()		画面中央にポップアップを作成する
 	popup_atcursor()	カーソル位置のすぐ上にポップアップを作成する、
 				カーソルが離れると閉じる
