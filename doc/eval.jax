@@ -2222,8 +2222,11 @@ balloon_split({msg})		リスト	{msg} をバルーンで使われるように分
 browse({save}, {title}, {initdir}, {default})
 				文字列	ファイル選択ダイアログを表示
 browsedir({title}, {initdir})	文字列	ディレクトリ選択ダイアログを表示
+bufadd({name})			数値	バッファリストにバッファを追加する
 bufexists({expr})		数値	バッファ{expr}が存在すれば|TRUE|
 buflisted({expr})		数値	バッファ{expr}がリストにあるなら|TRUE|
+bufload({expr})			数値	まだバッファ{expr}がロードされていなけ
+					ればバッファをロードする
 bufloaded({expr})		数値	バッファ{expr}がロード済みなら|TRUE|
 bufname({expr})			文字列	バッファ{expr}の名前
 bufnr({expr} [, {create}])	数値	バッファ{expr}の番号
@@ -3102,6 +3105,14 @@ browsedir({title}, {initdir})
 		ダイアログがキャンセルされるか、何かエラーがあるか、もしくはブ
 		ラウジングが不可能ならば、空文字列が戻ってくる。
 
+bufadd({name})						*bufadd()*
+		バッファリストに {name} という名前でバッファを追加する。
+		もし、ファイル {name} 用のバッファが既に存在した場合、そのバッ
+		ファの番号を返す。そうでなければ、新しく作られたバッファの番号
+		を返す。{name} が空の文字列だったときは新しいバッファが常に作
+		成される。
+		バッファには 'buflisted' が設定されない。
+
 							*bufexists()*
 bufexists({expr})
 		結果は数値で、{expr}と呼ばれるバッファが存在すれば|TRUE|とな
@@ -3130,6 +3141,15 @@ buflisted({expr})					*buflisted()*
 		戻り値は数値で、{expr}と呼ばれるバッファが存在しリストされてい
 		る ('buflisted' オプションがオンになっている) ならば結果は
 		|TRUE|となる。引数{expr}は|bufexists()|と同じように扱われる。
+
+bufload({expr})						*bufload()*
+		バッファ{expr}がロードされていることを保証する。バッファの名前
+		が既存のファイルを参照しているときは、そのファイルが読み込まれ
+		る。そうでなければバッファは空になる。もし既にバッファが読み込
+		まれていれば、変更はない。
+		バッファのファイルに対して既存のスワップファイルがある場合、ダ
+		イアログなしで、バッファはロードされる。
+		引数{expr}は|bufexists()|と同じように扱われる。
 
 							*bufloaded()*
 bufloaded({expr})
