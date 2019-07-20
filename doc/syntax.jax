@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim バージョン 8.1.  Last change: 2019 Jun 13
+*syntax.txt*	For Vim バージョン 8.1.  Last change: 2019 Jun 15
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2527,7 +2527,6 @@ doctest とその中のコードのハイライト: >
 
 Note: 変数が定義されているかどうかが意味を持つ。値は関係ない。設定値は 1 以外
       でも構わない。
-
 
 QUAKE						*quake.vim* *ft-quake-syntax*
 
