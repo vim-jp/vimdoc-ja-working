@@ -1,4 +1,4 @@
-*usr_41.txt*	For Vim バージョン 8.1.  Last change: 2019 Jul 04
+*usr_41.txt*	For Vim バージョン 8.1.  Last change: 2019 Jul 06
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -990,11 +990,13 @@ Vimサーバー:					*server-functions*
 目印:						*sign-functions*
 	sign_define()		目印を定義または更新する
 	sign_getdefined()	定義されている目印のリストを取得する
-	sign_getplaced()	配置されている目印のリストを取得する
+	sign_getplaced()	設置されている目印のリストを取得する
 	sign_jump()		目印へ移動する
-	sign_place()		目印を配置する
+	sign_place()		目印を設置する
+	sign_placelist()	目印のリストを設置する
 	sign_undefine()		定義された目印を削除する
 	sign_unplace()		設置された目印を解除する
+	sign_unplacelist()	設置された目印のリストを解除する
 
 端末ウィンドウ:					*terminal-functions*
 	term_start()		端末ウィンドウを開いてジョブを開始する
