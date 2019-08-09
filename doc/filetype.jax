@@ -640,7 +640,7 @@ QF QUICKFIX					    *qf.vim* *ft-qf-plugin*
 "qf" ファイルタイプは quickfix ウィンドウに使用される。|quickfix-window| を参
 照。
 
-QuickFix ファイルタイププラグインは quickfix リストを生成したコマンドを
+quickfix ファイルタイププラグインは quickfix リストを生成したコマンドを
 |status-line| に表示するための設定を含む。この設定を無効にするには、以下のよう
 に設定する: >
        :let g:qf_disable_statusline = 1
