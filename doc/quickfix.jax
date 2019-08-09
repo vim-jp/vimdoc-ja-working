@@ -424,7 +424,8 @@ quickfixリストとlocationリストの中の項目の数をそれぞれ |getqf
 	echo getloclist(2, {'id' : qfid, 'context' : 1})
 <
 							*quickfix-parse*
-|getqflist()| 関数を使用してquickfixリストを作成または変更せずに、'errorformat' を使用して行のリストをパースできる。例: >
+|getqflist()| 関数を使用してquickfixリストを作成または変更せずに、'errorformat'
+を使用して行のリストをパースできる。例: >
 	echo getqflist({'lines' : ["F1:10:Line10", "F2:20:Line20"]})
 	echo getqflist({'lines' : systemlist('grep -Hn quickfix *')})
 これは 'items' キーに行からパースされたquickfixの項目のリストが含まれている辞
