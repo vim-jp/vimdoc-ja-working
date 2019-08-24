@@ -50,7 +50,7 @@ Racket 5.x (5.3.1も含む) の futures と places は Vim から作成された
 			できません。
 
 			"<<" の後の [endmarker] を省略した場合は |:append| や
-			|:insert| コマンドのようにドット "." で {script} を閉
+			|:insert| コマンドのようにドット '.' で {script} を閉
 			じます。
 
 							*:mzfile* *:mzf*

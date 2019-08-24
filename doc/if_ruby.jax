@@ -36,7 +36,7 @@ Rubyのホームページは http://www.ruby-lang.org/ である。ここでRuby
 			行させてはいけない。
 
 			[endpattern]が省略された場合、|:append|や|:insert|コマ
-			ンド同様に '.' (ドット)がデフォルトである。
+			ンド同様にドット '.' がデフォルトである。
 
 			この形式の|:ruby|コマンドは主にVim scriptにRubyコード
 			を埋め込むのに便利である。

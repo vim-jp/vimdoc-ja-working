@@ -44,8 +44,8 @@ Python 3 インターフェイスは Vim が |+python3| 機能付きでコンパ
 
 {script}の下の{endmarker}の前に空白を置かないでください。
 
-"<<" の後に [endmarker] を省略した時は |:append| や |:insert| のように '.' が
-使われます。
+"<<" の後に [endmarker] を省略した時は |:append| や |:insert| のようにドット
+'.' が使われます。
 
 この形の |:python| コマンドはVim scriptにPythonコードを埋め込むのに特に便利で
 す。

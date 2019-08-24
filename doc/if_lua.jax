@@ -42,7 +42,7 @@ Vim の Lua インターフェイス				*lua* *Lua*
 {endmarker} の前には空白を入れることはできません。
 
 "<<" の後の [endmarker] を省略した場合は |:append| や |:insert| コマンドのよう
-にドット "." で {script} を閉じます。
+にドット '.' で {script} を閉じます。
 
 |:lua| コマンドのこの書式は主に Vim script の中に Lua コードを埋め込むときに便
 利です。
