@@ -1,4 +1,4 @@
-*starting.txt*  For Vim バージョン 8.1.  Last change: 2019 Jun 02
+*starting.txt*  For Vim バージョン 8.1.  Last change: 2019 Jul 30
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1149,6 +1149,9 @@ Unixでコンパイル時に$VIMRUNTIMEの初期値を設定した場合(":versi
 リプトなど)は、次のようにすれば得られる: >
 
 	VIMRUNTIME=`vim -e -T dumb --cmd 'exe "set t_cm=\<C-M>"|echo $VIMRUNTIME|quit' | tr -d '\015' `
+
+$VIMRUNTIME を空の値に設定してはならない。いくつかの機能が動作しなくなる場合が
+ある。
 
 ==============================================================================
 6. サスペンド						*suspend*
