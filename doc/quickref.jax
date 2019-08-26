@@ -1,4 +1,4 @@
-*quickref.txt*  For Vim バージョン 8.1.  Last change: 2019 Jul 18
+*quickref.txt*  For Vim バージョン 8.1.  Last change: 2019 Aug 20
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -666,6 +666,8 @@
 'complete'	  'cpt'     挿入モードでの補完の動きを指定する
 'completefunc'	  'cfu'     挿入モードでの補完に使われる関数
 'completeopt'	  'cot'     挿入モードでの補完のオプション
+'completepopup'	  'cpp'     挿入モード補完情報ポップアップのオプション
+'completeslash'	  'csl'	    補完用の 'shellslash' のようなもの
 'concealcursor'	  'cocu'    カーソル行の Conceal テキストを表示するかどうか
 'conceallevel'	  'cole'    Conceal テキストを表示するかどうか
 'confirm'	  'cf'      未保存ファイル、リードオンリーファイルの確認方法
