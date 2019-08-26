@@ -1188,17 +1188,17 @@ expr8(expr1, ...)	|Funcref| 関数呼び出し
 expr8が|Funcref|型の変数のとき、その参照する関数を呼び出す。
 
 
-expr8->name([args])	method call			*method*
+expr8->name([args])	メソッド呼び出し		*method*
 
 グローバル関数としても利用可能なメソッドの場合、これは次と同じである: >
     name(expr8 [, args])
 これらは "expr8" 専用としても利用できる
 
-"->name(" 空白を含めることができない。空白は "->" の前と "(" の後に含むことが
+"->name(" に空白を含めることができない。空白は "->" の前と "(" の後に含むことが
 できる。
 
 これは変更を許し、メソッドを返す型として使われる: >
-    mylist->filter(filterexpr)->map(mapexpr)->sort()-join()
+    mylist->filter(filterexpr)->map(mapexpr)->sort()->join()
 <
 
 							*expr9*
@@ -3250,10 +3250,6 @@ ceil({expr})							*ceil()*
 			echo ceil(4.0)
 <			4.0
 		{|+float| 機能つきでコンパイルされたときのみ有効}
-
-		こと。
-
-		{|+channel| 機能付きでコンパイルされたときのみ有効}
 
 
 ch_ 関数はここに文書化されている: |channel-functions-details|
@@ -5688,7 +5684,7 @@ items({dict})						*items()*
 <		|method|として使用することもできる: >
 			mydict->items()
 
-Job_ 関数はここに文書化されている: |job-functions-details|
+job_ 関数はここに文書化されている: |job-functions-details|
 
 join({list} [, {sep}])					*join()*
 		リスト{list}の要素を連結し、1個の文字列にして返す。
@@ -6785,7 +6781,7 @@ prompt_setprompt({buf}, {text})				*prompt_setprompt()*
 		見える。例: >
 			call prompt_setprompt(bufnr(''), 'command: ')
 <
-prop_ 関数はここに文書化されている: |text-prop-functions|
+prop_ 関数群はここに文書化されている: |text-prop-functions|
 
 pumvisible()						*pumvisible()*
 		ポップアップメニューが表示されているときには非0を返す。表示さ
@@ -8761,8 +8757,8 @@ timer_stop({timer})					*timer_stop()*
 
 timer_stopall()						*timer_stopall()*
 		全てのタイマーを停止する。タイマーのコールバックは以降呼び出さ
-		れない。タイマーがご動作している場合に便利である。タイマーが存
-		在しなかった場合でもエラーは発生しない。
+		れない。タイマーが不作法に振る舞う場合に便利である。タイマーが
+		存在しなかった場合でもエラーは発生しない。
 
 		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
 
@@ -10232,13 +10228,13 @@ text...
 :eval {expr}		{expr} を評価し結果を破棄する。例: >
 				:eval Getlist()->Filter()->append('$')
 <
-			結果の値は使用されないため、式には塾作用があると想定さ
+			結果の値は使用されないため、式には副作用があると想定さ
 			れる。この例では、`append()` 呼び出しはテキスト付きリ
-			ストをバッファに追加する。これは `:call()` に似ている
+			ストをバッファに追加する。これは `:call` に似ている
 			が、どの式でも動作する。
 
 			このコマンドは `:ev` や `:eva` に短縮できるが、これら
-			は認識しにくいため、使用できない。
+			は認識しにくいため、使用するべきでない。
 
 :if {expr1}			*:if* *:end* *:endif* *:en* *E171* *E579* *E580*
 :en[dif]		{expr1}が非ゼロと評価された場合に、対応する ":else" か
