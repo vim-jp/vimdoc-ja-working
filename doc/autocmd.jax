@@ -603,6 +603,10 @@ CompleteChanged 					*CompleteChanged*
 				    scrollbar		表示時 TRUE
 
 				テキストの |textlock| を変更することはできない。
+
+				ポップアップのサイズと位置は、|pum_getpos()|
+				を呼び出すことでも得られます。
+
 							*CompleteDone*
 CompleteDone			挿入モード補完が完了したとき。補完が実行されて
 				も中止されても発行される。 |ins-completion|
