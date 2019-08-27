@@ -32,7 +32,7 @@ Vim script の利用についてはユーザーマニュアルの41章|usr_41.tx
 12. サンドボックス		|eval-sandbox|
 13. テキストロック		|textlock|
 
-Testのサポートは |testing.txt|を参照。
+testのサポートは |testing.txt|を参照。
 プロファイリングは |profiling| に記録されている。
 
 ==============================================================================
@@ -2965,7 +2965,7 @@ argv([{nr} [, {winid}])
 
 		引数{winid} はウィンドウIDを指定する。
 
-assert_ 関数はここに文書化されている: |assert-functions-details|
+assert_ 関数群はここに文書化されている: |assert-functions-details|
 
 asin({expr})						*asin()*
 		{expr} の逆正弦 (アークサイン) をラジアンで返す。
@@ -3252,7 +3252,7 @@ ceil({expr})							*ceil()*
 		{|+float| 機能つきでコンパイルされたときのみ有効}
 
 
-ch_ 関数はここに文書化されている: |channel-functions-details|
+ch_ 関数群はここに文書化されている: |channel-functions-details|
 
 
 changenr()						*changenr()*
@@ -5684,7 +5684,7 @@ items({dict})						*items()*
 <		|method|として使用することもできる: >
 			mydict->items()
 
-job_ 関数はここに文書化されている: |job-functions-details|
+job_ 関数群はここに文書化されている: |job-functions-details|
 
 join({list} [, {sep}])					*join()*
 		リスト{list}の要素を連結し、1個の文字列にして返す。
@@ -6546,7 +6546,7 @@ perleval({expr})					*perleval()*
 <			[1, 2, 3, 4]
 		{|+perl| 機能付きでコンパイルされたときのみ利用可能}
 
-popup_ 関数はここに文書化されている: |popup-functions|
+popup_ 関数群はここに文書化されている: |popup-functions|
 
 pow({x}, {y})						*pow()*
 		{x} の {y} 乗を |Float| で返す。{x} と {y} は |Float| または
@@ -7849,7 +7849,7 @@ shiftwidth([{col}])						*shiftwidth()*
 		'vartabstop' 設定が有効で、引数{col}が指定されていない場合、桁
 		番号1だと仮定される。
 
-sign_ 関数はここに文書化されている: |sign-functions-details|
+sign_ 関数群はここに文書化されている: |sign-functions-details|
 
 simplify({filename})					*simplify()*
 		ファイル名を、意味を変えずにできるだけ簡略化する。MS-Windowsで
@@ -8678,9 +8678,9 @@ tempname()
 		MS-Windowsでは、'shellslash' がオンのときか 'shellcmdflag' が
 		'-' で始まるときはスラッシュが使われる。
 
-term_ 関数はここに文書化されている: |terminal-function-details|
+term_ 関数群はここに文書化されている: |terminal-function-details|
 
-test_ 関数はここに文書化されている: |test-functions-details|
+test_ 関数群はここに文書化されている: |test-functions-details|
 
 							*timer_info()*
 timer_info([{id}])
