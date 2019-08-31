@@ -24,7 +24,7 @@
       特別なキー			|terminal-special-keys|
       Unix				|terminal-unix|
       MS-Windows			|terminal-ms-windows|
-2. 端末関数				|terminal-functions|
+2. 端末関数				|terminal-function-details|
 3. 端末通信				|terminal-communication|
       Vim からジョブへ: term_sendkeys()	|terminal-to-job|
       ジョブから Vim へ: JSON API	|terminal-api|
@@ -427,7 +427,7 @@ MS-Windows 10の最新バージョン("October 2018 Update" 以降)では、winp
 
 
 ==============================================================================
-2. 端末関数群					*terminal-function-details*
+2. 端末関数					*terminal-function-details*
 
 term_dumpdiff({filename}, {filename} [, {options}])
 		2 つのファイルの差分を表示する新しいウィンドウを開く。これらの
