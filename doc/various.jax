@@ -1,4 +1,4 @@
-*various.txt*   For Vim バージョン 8.1.  Last change: 2019 Aug 12
+*various.txt*   For Vim バージョン 8.1.  Last change: 2019 Aug 21
 
 
 		VIM リファレンスマニュアル    by Bram Moolenaar
@@ -334,7 +334,7 @@ N  *+cindent*		|'cindent'|, C言語インデント
 N  *+clientserver*	UnixとWin32: リモート呼び出し |clientserver|
    *+clipboard*		|clipboard| サポートコンパイル済み
    *+clipboard_working*	|clipboard| サポートコンパイル済みかつ動作中
-N  *+cmdline_compl*	コマンドライン補完 |cmdline-completion|
+T  *+cmdline_compl*	コマンドライン補完 |cmdline-completion|
 S  *+cmdline_hist*	コマンドライン履歴 |cmdline-history|
 N  *+cmdline_info*	|'showcmd'| と |'ruler'|
 N  *+comments*		|'comments'| サポート
@@ -372,7 +372,7 @@ N  *+gettext*		メッセージの翻訳 |multi-lang|
 m  *+hangul_input*	ハングル入力サポート |hangul|
    *+iconv*		iconv() 関数が組み込まれている
    *+iconv/dyn*		|iconv-dynamic| |/dyn| と同じ
-N  *+insert_expand*	|insert_expand| 挿入モード補完
+T  *+insert_expand*	|insert_expand| 挿入モード補完
 m  *+job*		job の開始と停止 |job|
 S  *+jumplist*		|jumplist|
 B  *+keymap*		|'keymap'|
