@@ -1,4 +1,4 @@
-*windows.txt*   For Vim バージョン 8.1.  Last change: 2019 Aug 04
+*windows.txt*   For Vim バージョン 8.1.  Last change: 2019 Aug 18
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -894,6 +894,7 @@ CTRL-W gT						*CTRL-W_gT*
 である:
 	height		ポップアップの最大高さ
 	width		ポップアップの最大幅
+	highlight	ポップアップのハイライトグループ(デフォルトは Pmenu)
 例: >
 	:set previewpopup=height:10,width:60
 
