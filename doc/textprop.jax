@@ -1,4 +1,4 @@
-*textprop.txt*  For Vim バージョン 8.1.  Last change: 2019 Aug 25
+*textprop.txt*  For Vim バージョン 8.1.  Last change: 2019 Sep 04
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -158,6 +158,9 @@ prop_add({lnum}, {col}, {props})
 
 		テキストプロパティについては、|text-properties| を参照。
 
+		|method| としても使用できる: >
+			GetLnum()->prop_add(col, props)
+
 
 prop_clear({lnum} [, {lnum-end} [, {props}]])		*prop_clear()*
 		{lnum}行からすべてのテキストプロパティを削除する。
@@ -169,6 +172,9 @@ prop_clear({lnum} [, {lnum-end} [, {props}]])		*prop_clear()*
 
 		テキストプロパティについては、|text-properties| を参照。
 
+		|method| としても使用できる: >
+			GetLnum()->prop_clear()
+<
 							*prop_find()*
 prop_find({props} [, {direction}])
 		まだ実装されていない。 {not implemented yet}
@@ -217,6 +223,9 @@ prop_list({lnum} [, {props}])				*prop_list()*
 
 		テキストプロパティについては、|text-properties| を参照。
 
+		|method| としても使用できる: >
+			GetLnum()->prop_list()
+<
 
 						*prop_remove()* *E968*
 prop_remove({props} [, {lnum} [, {lnum-end}]])
@@ -242,6 +251,9 @@ prop_remove({props} [, {lnum} [, {lnum-end}]])
 
 		テキストプロパティについては、|text-properties| を参照。
 
+		|method| としても使用できる: >
+			GetProps()->prop_remove()
+
 
 prop_type_add({name}, {props})		*prop_type_add()* *E969* *E970*
 		テキストプロパティタイプ{name}を追加する。この名前のプロパティ
@@ -264,6 +276,8 @@ prop_type_add({name}, {props})		*prop_type_add()* *E969* *E970*
 
 		テキストプロパティについては、|text-properties| を参照。
 
+		|method| としても使用できる: >
+			GetPropName()->prop_type_add(props)
 
 prop_type_change({name}, {props})			*prop_type_change()*
 		既存のテキストプロパティタイプのプロパティを変更する。この名前
@@ -272,6 +286,8 @@ prop_type_change({name}, {props})			*prop_type_change()*
 
 		テキストプロパティについては、|text-properties| を参照。
 
+		|method| としても使用できる: >
+			GetPropName()->prop_type_change(props)
 
 prop_type_delete({name} [, {props}])			*prop_type_delete()*
 		テキストプロパティタイプ{name}を削除する。{name}型を使用するテ
@@ -287,6 +303,8 @@ prop_type_delete({name} [, {props}])			*prop_type_delete()*
 
 		テキストプロパティについては、|text-properties| を参照。
 
+		|method| としても使用できる: >
+			GetPropName()->prop_type_delete()
 
 prop_type_get([{name} [, {props}])			*prop_type_get()*
 		プロパティタイプ{name}のプロパティを返す。これは、
@@ -299,6 +317,8 @@ prop_type_get([{name} [, {props}])			*prop_type_get()*
 
 		テキストプロパティについては、|text-properties| を参照。
 
+		|method| としても使用できる: >
+			GetPropName()->prop_type_get()
 
 prop_type_list([{props}])				*prop_type_list()*
 		すべてのプロパティタイプ名のリストを返す。
