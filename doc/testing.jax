@@ -44,6 +44,8 @@ test_alloc_fail({id}, {countdown}, {repeat})		*test_alloc_fail()*
 		{repeat} 回のメモリの割り当ての失敗を発生させる。{repeat} が1
 		未満の場合は、失敗を1回のみ発生させる。
 
+		|method| としても使用できる: >
+			GetAllocId()->test_alloc_fail()
 
 test_autochdir()					*test_autochdir()*
 		Vimの起動が完了する前に 'autochdir' の効果を有効にするためのフ
@@ -55,6 +57,8 @@ test_feedinput({string})				*test_feedinput()*
 		する。これは低レベル入力バッファを使用する。この関数は |+unix|
 		もしくは GUI で動作しているときに機能する。
 
+		|method| としても使用できる: >
+			GetText()->test_feedinput()
 
 test_garbagecollect_now()			 *test_garbagecollect_now()*
 		garbagecollect() とほぼ同じであるが、この関数はガーベッジコレ
@@ -73,6 +77,8 @@ test_getvalue({name})					*test_getvalue()*
 		る:
 			need_fileinfo
 
+		|method| としても使用できる: >
+			GetName()->test_getvalue()
 
 test_ignore_error({expr})			 *test_ignore_error()*
 		{expr} を含むすべてのエラーを無視する。代わりに通常メッセージ
@@ -84,6 +90,8 @@ test_ignore_error({expr})			 *test_ignore_error()*
 		{expr} が文字列 "RESET" の場合、無視されるエラーのリストは空に
 		なる。
 
+		|method| としても使用できる: >
+			GetErrorText()->test_ignore_error()
 
 test_null_blob()					*test_null_blob()*
 		null の |Blob| を返す。これはテストのみに使われる。
@@ -125,6 +133,9 @@ test_option_not_set({name})				*test_option_not_set()*
 		ないかのように振舞う。
 		テストにのみ使用する！
 
+		|method| としても使用できる: >
+			GetOptionName()->test_option_not_set()
+
 
 test_override({name}, {val})				*test_override()*
 		テストを実行できるようにするため、Vimの内部処理の特定の部分を
@@ -155,10 +166,15 @@ test_override({name}, {val})				*test_override()*
 <		"starting" の値が保存される。次のようにして復元される: >
 			call test_override('starting', 0)
 
+<		|method| としても使用できる: >
+			GetOverrideVal()-> test_override('starting')
 
 test_refcount({expr})					*test_refcount()*
 		{expr} の参照カウントを返す。{expr} が参照カウントを持たない型
 		の場合は、-1 を返す。この関数はテスト用。
+
+		|method| としても使用できる: >
+			GetVarname()->test_refcount()
 
 
 test_scrollbar({which}, {value}, {dragging})		*test_scrollbar()*
@@ -179,6 +195,8 @@ test_scrollbar({which}, {value}, {dragging})		*test_scrollbar()*
 		{which} スクロールバーが実際に存在し、GUIを使用している場合に
 		のみ動作する。
 
+		|method| としても使用できる: >
+			GetValue()->test_scrollbar('right', 0)
 
 test_setmouse({row}, {col})				*test_setmouse()*
 		次のマウス操作に使用するマウス位置を設定する。
@@ -195,6 +213,9 @@ test_settime({expr})					*test_settime()*
 		なる。
 		{expr} は、数値として評価されなければならない。0 を渡せば、Vim
 		の内部時間は通常動作に戻る。
+
+		|method| としても使用できる: >
+			GetTime()->test_settime()
 
 ==============================================================================
 3. Assert関数					*assert-functions-details*
