@@ -1,4 +1,4 @@
-*various.txt*   For Vim バージョン 8.1.  Last change: 2019 Aug 21
+*various.txt*   For Vim バージョン 8.1.  Last change: 2019 Sep 04
 
 
 		VIM リファレンスマニュアル    by Bram Moolenaar
@@ -388,7 +388,7 @@ m  *+lua*		|Lua| インターフェイス
 m  *+lua/dyn*		|Lua| インターフェイス |/dyn|
 N  *+menu*		|:menu|
 N  *+mksession*		|:mksession|
-N  *+modify_fname*	|filename-modifiers|
+T  *+modify_fname*	|filename-modifiers|
 N  *+mouse*		マウス操作 |mouse-using|
 N  *+mouseshape*	|'mouseshape'|
 B  *+mouse_dec*		Unix のみ: Dec端末マウス操作 |dec-mouse|
