@@ -1,4 +1,4 @@
-*sign.txt*      For Vim バージョン 8.1.  Last change: 2019 Jul 21
+*sign.txt*      For Vim バージョン 8.1.  Last change: 2019 Sep 06
 
 
 		VIMリファレンスマニュアル    by Gordon Prieur
@@ -390,6 +390,9 @@ sign_define({list})
 				\  'text' : '!!'}
 				\ ])
 <
+		|method| としても使用できる: >
+			GetSignList()->sign_define()
+
 sign_getdefined([{name}])				*sign_getdefined()*
 		定義済みの目印とその属性のリストを取得する。
 		これは |:sign-list| コマンドに似ている。
@@ -415,6 +418,9 @@ sign_getdefined([{name}])				*sign_getdefined()*
 			" mySignという名前の目印の属性を取得する
 			echo sign_getdefined("mySign")
 <
+		|method| としても使用できる: >
+			GetSignList()->sign_getdefined()
+
 sign_getplaced([{expr} [, {dict}]])			*sign_getplaced()*
 		バッファまたはすべてのバッファに設置されている目印のリストを返
 		す。これは |:sign-place-list| コマンドに似ている。
@@ -476,6 +482,9 @@ sign_getplaced([{expr} [, {dict}]])			*sign_getplaced()*
 			" 設置されているすべての目印のリストを取得する
 			echo sign_getplaced()
 <
+		|method| としても使用できる: >
+			GetBufname()->sign_getplaced()
+<
 							*sign_jump()*
 sign_jump({id}, {group}, {expr})
 		バッファ{expr}を開くか、{expr}を含むウィンドウに移動して、グ
@@ -490,7 +499,9 @@ sign_jump({id}, {group}, {expr})
 			" 現在のバッファの目印ID 10 へ移動する
 			call sign_jump(10, '', '')
 <
-
+		|method| としても使用できる: >
+			GetSignid()->sign_jump()
+<
 							*sign_place()*
 sign_place({id}, {group}, {name}, {expr} [, {dict}])
 		{name}として定義された目印をファイルまたはバッファ{expr}の行
@@ -541,7 +552,9 @@ sign_place({id}, {group}, {name}, {expr} [, {dict}])
 			call sign_place(10, 'g3', 'sign4', 'json.c',
 					\ {'lnum' : 40, 'priority' : 90})
 <
-
+		|method| としても使用できる: >
+			GetSignid()->sign_place(group, name, expr)
+<
 							*sign_placelist()*
 sign_placelist({list})
 		1つ以上の目印を設置する。これは |sign_place()| 関数に似ている。
@@ -598,6 +611,8 @@ sign_placelist({list})
 				\  'lnum' : 50}
 				\ ])
 <
+		|method| としても使用できる: >
+			GetSignlist()->sign_placelist()
 
 sign_undefine([{name}])					*sign_undefine()*
 sign_undefine({list})
@@ -621,6 +636,8 @@ sign_undefine({list})
 			" すべての目印を削除する
 			call sign_undefine()
 <
+		|method| としても使用できる: >
+			GetSignlist()->sign_undefine()
 
 sign_unplace({group} [, {dict}])			*sign_unplace()*
 		設置済みの1つ以上のバッファ内の目印を解除する。これは
@@ -665,6 +682,9 @@ sign_unplace({group} [, {dict}])			*sign_unplace()*
 
 			" すべてのバッファからすべての目印を解除する
 			call sign_unplace('*')
+
+<		|method| としても使用できる: >
+			GetSigngroup()->sign_unplace()
 <
 sign_unplacelist({list})				*sign_unplacelist()*
 		1つ以上のバッファから以前に設置された目印を削除する。これは
@@ -692,6 +712,9 @@ sign_unplacelist({list})				*sign_unplacelist()*
 				\ {'id' : 10, 'buffer' : "a.vim"},
 				\ {'id' : 20, 'buffer' : 'b.vim'},
 				\ ])
+<
+		|method| としても使用できる: >
+			GetSignlist()->sign_unplacelist()
 <
 
  vim:tw=78:ts=8:noet:ft=help:norl:
