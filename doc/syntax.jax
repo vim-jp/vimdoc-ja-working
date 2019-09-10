@@ -302,7 +302,7 @@ Vimは初期化の時に、ランタイムファイルの在り処を自動的�
     |	|
     |	+-  構文ハイライトの色を設定する。カラースキームが定義されている場合は
     |	|   ":colors {name}" で再度読込む。そうでない場合は
-    |	|   ":runtime!  syntax/syncolor.vim" が使用される。":syntax on" は既存
+    |	|   ":runtime! syntax/syncolor.vim" が使用される。":syntax on" は既存
     |	|   の色設定を上書設定し、":syntax enable" はまだ設定されていないグルー
     |	|   プのみを設定する。
     |	|
