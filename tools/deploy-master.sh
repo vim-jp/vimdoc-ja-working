@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+set -ex
 
 dir=$1 ; shift
 
