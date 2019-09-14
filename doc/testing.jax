@@ -1,4 +1,4 @@
-*testing.txt*	For Vim バージョン 8.1.  Last change: 2019 Aug 21
+*testing.txt*	For Vim バージョン 8.1.  Last change: 2019 Sep 08
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -295,7 +295,7 @@ assert_false({actual} [, {msg}])				*assert_false()*
 		う形式のメッセージが生成される。
 
 		|method| としても使用できる: >
-			GetCmd()->assert_fails('E99:')
+			GetResult()->assert_false()
 
 assert_inrange({lower}, {upper}, {actual} [, {msg}])	 *assert_inrange()*
 		これは数値または |Float| の値をテストする。{actual}が{lower}よ
