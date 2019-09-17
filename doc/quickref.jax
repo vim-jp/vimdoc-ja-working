@@ -687,6 +687,7 @@
 		            ソルを移動させる
 'cursorcolumn'	  'cuc'     カーソルがある桁を強調表示する
 'cursorline'	  'cul'	    カーソルがある行を強調表示する
+'cursorlineopt'	  'culopt'  'cursorline' のための設定
 'debug'			    "msg" と設定すると全てのエラーが表示される
 'define'	  'def'     マクロ定義検索パターン
 'delcombine'	  'deco'    合成文字の削除時に構成要素を全て消す
