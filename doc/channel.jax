@@ -1,4 +1,4 @@
-*channel.txt*      For Vim バージョン 8.1.  Last change: 2019 Aug 22
+*channel.txt*      For Vim バージョン 8.1.  Last change: 2019 Sep 11
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -509,6 +509,9 @@ ch_evalexpr({handle}, {expr} [, {options}])			*ch_evalexpr()*
 
 		ch_evalexpr() は応答を待ち、式をデコードした物が返される。エ
 		ラーもしくはタイムアウトの場合は空文字列が返る。
+
+		Note 応答を待っている間、Vimは他のメッセージを処理する。これが
+		トラブルを引き起こさないことを確認する必要がある。
 
 		|method| としても使用できる: >
 			GetChannel()->ch_evalexpr(expr)
