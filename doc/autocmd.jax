@@ -363,7 +363,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |TextYankPost|		テキストがヤンクもしくは削除された後
 
 |SafeState|		保留中のものはなく、ユーザーの文字入力を待つとき
-|SafeStateAgain|	繰り返される SafeState
+|SafeStateAgain|	繰り返された SafeState
 
 |ColorSchemePre|	カラースキームを読み込む前
 |ColorScheme|		カラースキームを読み込んだ後
@@ -606,7 +606,7 @@ CompleteChanged 					*CompleteChanged*
 				テキストの |textlock| を変更することはできない。
 
 				ポップアップのサイズと位置は、|pum_getpos()|
-				を呼び出すことでも得られます。
+				を呼び出すことでも得られる。
 
 							*CompleteDone*
 CompleteDone			挿入モード補完が完了したとき。補完が実行されて
@@ -956,7 +956,7 @@ RemoteReply			サーバーとして働くVimからの応答を受け取ったと
 				に注意。
 							*SafeState*
 SafeState			何も保留されておらず、ユーザーの文字入力を待つ
-				とき
+				とき。
 				次の場合はトリガーされない:
 				- オペレータ待機中
 				- レジスタが "r で入力された
