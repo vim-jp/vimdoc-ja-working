@@ -1,4 +1,4 @@
-*terminal.txt*	For Vim バージョン 8.1.  Last change: 2019 Jul 04
+*terminal.txt*	For Vim バージョン 8.1.  Last change: 2019 Sep 20
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -476,6 +476,9 @@ term_dumpdiff({filename}, {filename} [, {options}])
 		"s" キーを押すと、先頭部分と末尾部分が入れ替わる。これにより差
 		分を簡単に確認することができる。
 
+		|method| としても使用できる: >
+			GetFilename()->term_dumpdiff(otherfile)
+<
 							*term_dumpload()*
 term_dumpload({filename} [, {options}])
 		{filename} の内容を表示する新しいウィンドウを開く。このファイ
@@ -485,6 +488,9 @@ term_dumpload({filename} [, {options}])
 
 		{options} については |term_dumpdiff()| を参照。
 
+		|method| としても使用できる: >
+			GetFilename()->term_dumpload()
+<
 							*term_dumpwrite()*
 term_dumpwrite({buf}, {filename} [, {options}])
 		ファイル {filename} に、{buf} の端末画面の内容をダンプする。こ
@@ -498,10 +504,16 @@ term_dumpwrite({buf}, {filename} [, {options}])
 			"rows"		ダンプする行の最大値
 			"columns"	ダンプする列の最大値
 
+		|method| としても使用できる、ベースはファイル名に使用される: >
+			GetFilename()->term_dumpwrite(bufnr)
+
 term_getaltscreen({buf})				*term_getaltscreen()*
 		{buf} の端末が代替スクリーンを使用している場合 1 を返す。
 		{buf} の扱いについては |term_getsize()| と同じ。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_getaltscreen()
+
 
 term_getansicolors({buf})				*term_getansicolors()*
 		端末 {buf} で使用されている ANSI カラーパレットを取得する。
@@ -513,8 +525,12 @@ term_getansicolors({buf})				*term_getansicolors()*
 		{buf} の扱いについては |term_getsize()| と同じ。バッファが存在
 		しない、もしくは端末ウィンドウでない場合は、空リストが返され
 		る。
-		{|+terminal| 機能付きで、GUI が有効もしくは |+termguicolors|
-		機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_getansicolors()
+
+<		{GUI が有効もしくは |+termguicolors| 機能付きでコンパイルされ
+		たときのみ有効}
 
 term_getattr({attr}, {what})				*term_getattr()*
 		term_scrape() で返された項目 "attr" の値である {attr} につい
@@ -525,7 +541,10 @@ term_getattr({attr}, {what})				*term_getattr()*
 			underline
 			strike
 			reverse
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetAttr()->term_getattr()
+
 
 term_getcursor({buf})					*term_getcursor()*
 		端末 {buf} のカーソル位置を取得する。2 つの数値と辞書から構成
@@ -544,13 +563,18 @@ term_getcursor({buf})					*term_getcursor()*
 		{buf} は端末ウィンドウのバッファ番号でなければならない。バッ
 		ファが存在しない、もしくは端末ウィンドウでない場合は、空リスト
 		が返される。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_getcursor()
 
 term_getjob({buf})					*term_getjob()*
 		端末ウィンドウ {buf} に関連付いたジョブを取得する。
 		{buf} の扱いについては |term_getsize()| と同じ。
 		ジョブが存在しないときには |v:null| を返す。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_getjob()
+
 
 term_getline({buf}, {row})				*term_getline()*
 		端末ウィンドウ {buf} から行のテキストを取得する。
@@ -560,7 +584,10 @@ term_getline({buf}, {row})				*term_getline()*
 		使われる。{row} が無効のときは空文字列が返される。
 
 		各文字の属性を取得するには |term_scrape()| を使用する。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_getline(row)
+
 
 term_getscrolled({buf})					*term_getscrolled()*
 		端末 {buf} の先頭から上方にスクロールされた行の数を返す。これ
@@ -572,7 +599,10 @@ term_getscrolled({buf})					*term_getscrolled()*
 <		(もしその行が存在していれば)。
 
 		{buf} の扱いについては |term_getsize()| と同じ。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_getscrolled()
+
 
 term_getsize({buf})					*term_getsize()*
 		端末 {buf} のサイズを取得する。2 つの数値を含むリストを返す:
@@ -582,7 +612,10 @@ term_getsize({buf})					*term_getsize()*
 		{buf} は端末ウィンドウのバッファ番号でなければならない。現在の
 		バッファには空文字列を使用する。バッファが存在しない、もしくは
 		端末ウィンドウでない場合は、空リストが返される。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_getsize()
+
 
 term_getstatus({buf})					*term_getstatus()*
 		端末 {buf} のステータスを取得する。これらの項目をコンマで区切っ
@@ -595,7 +628,10 @@ term_getstatus({buf})					*term_getstatus()*
 		{buf} は端末ウィンドウのバッファ番号でなければならない。バッ
 		ファが存在しない、もしくは端末ウィンドウでない場合は、空リスト
 		が返される。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_getstatus()
+
 
 term_gettitle({buf})					*term_gettitle()*
 		端末 {buf} のタイトルを取得する。これは端末内でジョブが設定し
@@ -604,7 +640,10 @@ term_gettitle({buf})					*term_gettitle()*
 		{buf} は端末ウィンドウのバッファ番号でなければならない。バッ
 		ファが存在しない、もしくは端末ウィンドウでない場合は、空リスト
 		が返される。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_gettitle()
+
 
 term_gettty({buf} [, {input}])				*term_gettty()*
 		端末ウィンドウ {buf} に関連付けられた制御端末の名前を取得する。
@@ -613,11 +652,14 @@ term_gettty({buf} [, {input}])				*term_gettty()*
 		{input} が省略されたもしくは 0 のとき、書き込み (stdout) の名
 		前を返す。{input} が 1 のとき、読み込み (stdin) の名前を返す。
 		UNIX では両方で同じ名前が返る。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_gettty()
+
 
 term_list()						*term_list()*
 		すべての端末ウィンドウのバッファのバッファ番号のリストを返す。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
 
 term_scrape({buf}, {row})				*term_scrape()*
 		端末スクリーン {buf} の {row} にある内容を取得する。
@@ -633,7 +675,10 @@ term_scrape({buf}, {row})				*term_scrape()*
 		    "attr"	セルの属性、個々のフラグを取得するには
 				|term_getattr()| を使用する
 		    "width"	セルの幅: 1 もしくは 2
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_scrape(row)
+
 
 term_sendkeys({buf}, {keys})				*term_sendkeys()*
 		端末 {buf} にキー入力 {keys} を送る。
@@ -641,7 +686,10 @@ term_sendkeys({buf}, {keys})				*term_sendkeys()*
 
 		{keys} はキーシーケンスとして解釈される。例えば、"\<c-x>" は
 		文字 CTRL-X を意味する。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_sendkeys(keys)
+
 
 term_setansicolors({buf}, {colors})			*term_setansicolors()*
 		端末 {buf} で使用される ANSI カラーパレットを設定する。
@@ -672,8 +720,12 @@ term_setansicolors({buf}, {colors})			*term_setansicolors()*
 		きの端末内で使用される。GUI カラーを使用しないとき (GUI モード
 		もしくは 'termguicolors')、端末ウィンドウは、常に基となる端末
 		の 16 ANSI カラーを使用する。
-		{|+terminal| 機能付きで、GUI が有効もしくは |+termguicolors|
-		機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_sendkeys(keys)
+
+<		{GUI が有効もしくは |+termguicolors| 機能付きでコンパイルされ
+		たときのみ有効}
 
 term_setkill({buf}, {how})				*term_setkill()*
 		Vim が終了するもしくは何らかの方法で端末ウィンドウを閉じようと
@@ -687,6 +739,10 @@ term_setkill({buf}, {how})				*term_setkill()*
 		シグナルを送ったあと、Vim はジョブが実際に停止したか確認するた
 		めに 1 秒待つ。
 
+		|method| としても使用できる: >
+			GetBufnr()->term_setkill(how)
+
+
 term_setrestore({buf}, {command})			*term_setrestore()*
 		この端末内のジョブを復元するためのセッションファイルを書き込む
 		コマンドを設定する。セッションファイル内に書き込まれる行は以下
@@ -696,7 +752,10 @@ term_setrestore({buf}, {command})			*term_setrestore()*
 
 		'shell' を実行するには空の {command} を使用する。
 		このウィンドウを復元しないためには "NONE" を使用する。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_setrestore(command)
+
 
 term_setsize({buf}, {rows}, {cols})		*term_setsize()* *E955*
 		端末 {buf} のサイズを設定する。端末を含むウィンドウのサイズが
@@ -706,7 +765,10 @@ term_setsize({buf}, {rows}, {cols})		*term_setsize()* *E955*
 		{buf} は端末ウィンドウのバッファ番号でなければならない。現在の
 		バッファには空文字列を使用する。バッファが存在しない、もしくは
 		端末ウィンドウでない場合は、空リストが返される。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_setsize(rows, cols)
+
 
 term_start({cmd} [, {options}])			*term_start()*
 		端末ウィンドウを開き、その中で {cmd} を実行する。
@@ -775,14 +837,18 @@ term_start({cmd} [, {options}])			*term_start()*
 		   "tty_type"	     (MS-Windowsのみ): 使用する pty を指定す
 				     る。値については 'termwintype' を参照。
 
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+		|method| としても使用できる: >
+			GetCommand()->term_start()
+
 
 term_wait({buf} [, {time}])					*term_wait()*
 		{buf} で保留となっている更新が処理されるのを待つ。
 		{buf} の扱いについては |term_getsize()| と同じ。
 		{time} は更新が届くのを待つ、ミリ秒単位での長さ。設定されてい
 		ない場合は 10 ミリ秒が使用される。
-		{|+terminal| 機能付きでコンパイルされたときのみ有効}
+
+		|method| としても使用できる: >
+			GetBufnr()->term_wait()
 
 ==============================================================================
 3. 端末通信					 *terminal-communication*
@@ -1145,8 +1211,10 @@ gdb ウィンドウにフォーカスを移しコマンドを入力します。�
 ソースコードを表示するウィンドウで、これらのコマンドをgdbの制御に使用できます:
  `:Run` [args]	    [args] または以前の引数でプログラムを実行する
  `:Arguments` {args}  次の `:Run` のために引数を設定する
- *:Break*	現在の行にブレークポイントを設定する。サインが表示される
- *:Clear*	現在の行のブレークポイントを削除する
+ *:Break*	カーソル位置にブレークポイントを設定する。
+ *:Break* {position}
+		指定位置にブレークポイントを設定する。
+ *:Clear*	カーソル位置のブレークポイントを削除する
  *:Step*	gdb の "step" コマンドを実行する
  *:Over*	gdb の "next" コマンドを実行する
 		(`:Next` だと Vim のコマンドとかぶるので)
