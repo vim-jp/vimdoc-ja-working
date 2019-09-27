@@ -1,4 +1,4 @@
-*popup.txt*  For Vim バージョン 8.1.  Last change: 2019 Sep 08
+*popup.txt*  For Vim バージョン 8.1.  Last change: 2019 Sep 25
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -140,7 +140,7 @@ Exコマンドの出力のために画面がスクロールアップすると、
 	call setwinvar(winid, '&wrap', 0)
 そしてオプションは `setbufvar()` を使ってバッファに設定することができる。例: >
 	call setbufvar(winbufnr(winid), '&filetype', 'java')
-Note これは自動コマンドをトリガーしない。必要ならば `win_execute()` を使用する
+":setlocal" コマンドを `win_execute()` で使用することもできる。
 
 
 ==============================================================================
@@ -543,6 +543,10 @@ POPUP_CREATE() の引数				 *popup_create-arguments*
 			各エントリは |prop_add()| の第3引数のような辞書だが、
 			辞書の "col" エントリを使って桁を指定する。以下を参照:
 			|popup-props|.
+
+自分で新しいバッファを作成したい場合は、|bufadd()| を使用して、バッファ番号を
+popup_create() に渡す。
+端末ウィンドウのバッファを使用することはできない。 *E278*
 
 |popup_create()| の第2引数は任意の辞書である:
 	line		ポップアップを配置する画面の行。数値または、カーソルの
