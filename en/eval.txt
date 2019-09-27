@@ -3674,6 +3674,9 @@ confirm({msg} [, {choices} [, {default} [, {type}]]])
 		don't fit, a vertical layout is used anyway.  For some systems
 		the horizontal layout is always used.
 
+		Can also be used as a |method|in: >
+			BuildMessage()->confirm("&Yes\n&No")
+
 							*copy()*
 copy({expr})	Make a copy of {expr}.  For Numbers and Strings this isn't
 		different from using {expr} directly.
@@ -3694,6 +3697,10 @@ cos({expr})						*cos()*
 <			0.862319 >
 			:echo cos(-4.01)
 <			-0.646043
+
+		Can also be used as a |method|: >
+			Compute()->cos()
+<
 		{only available when compiled with the |+float| feature}
 
 
@@ -3706,6 +3713,10 @@ cosh({expr})						*cosh()*
 <			1.127626 >
 			:echo cosh(-0.5)
 <			-1.127626
+
+		Can also be used as a |method|: >
+			Compute()->cosh()
+<
 		{only available when compiled with the |+float| feature}
 
 
@@ -3721,9 +3732,10 @@ count({comp}, {expr} [, {ic} [, {start}]])			*count()*
 		When {comp} is a string then the number of not overlapping
 		occurrences of {expr} is returned. Zero is returned when
 		{expr} is an empty string.
+
 		Can also be used as a |method|: >
 			mylist->count(val)
-
+<
 							*cscope_connection()*
 cscope_connection([{num} , {dbpath} [, {prepend}]])
 		Checks for the existence of a |cscope| connection.  If no
@@ -3794,11 +3806,17 @@ cursor({list})
 		position within a <Tab> or after the last character.
 		Returns 0 when the position could be set, -1 otherwise.
 
+		Can also be used as a |method|: >
+			GetCursorPos()->cursor()
+
 debugbreak({pid})					*debugbreak()*
 		Specifically used to interrupt a program being debugged.  It
 		will cause process {pid} to get a SIGTRAP.  Behavior for other
 		processes is undefined. See |terminal-debugger|.
 		{only available on MS-Windows}
+
+		Can also be used as a |method|: >
+			GetPid()->debugbreak()
 
 deepcopy({expr} [, {noref}])				*deepcopy()* *E698*
 		Make a copy of {expr}.  For Numbers and Strings this isn't
@@ -3821,6 +3839,9 @@ deepcopy({expr} [, {noref}])				*deepcopy()* *E698*
 		{noref} set to 1 will fail.
 		Also see |copy()|.
 
+		Can also be used as a |method|: >
+			GetObject()->deepcopy()
+
 delete({fname} [, {flags}])					*delete()*
 		Without {flags} or with {flags} empty: Deletes the file by the
 		name {fname}.  This also works when {fname} is a symbolic link.
@@ -3842,6 +3863,9 @@ delete({fname} [, {flags}])					*delete()*
 		To delete a line from the buffer use |:delete| or
 		|deletebufline()|.
 
+		Can also be used as a |method|: >
+			GetName()->delete()
+
 deletebufline({expr}, {first} [, {last}])		*deletebufline()*
 		Delete lines {first} to {last} (inclusive) from buffer {expr}.
 		If {last} is omitted then delete line {first} only.
@@ -3852,6 +3876,9 @@ deletebufline({expr}, {first} [, {last}])		*deletebufline()*
 		{first} and {last} are used like with |getline()|. Note that
 		when using |line()| this refers to the current buffer. Use "$"
 		to refer to the last line in buffer {expr}.
+
+		Can also be used as a |method|: >
+			GetBuffer()->deletebufline(1)
 
 							*did_filetype()*
 did_filetype()	Returns |TRUE| when autocommands are being executed and the
@@ -3874,6 +3901,9 @@ diff_filler({lnum})					*diff_filler()*
 		line, "'m" mark m, etc.
 		Returns 0 if the current window is not in diff mode.
 
+		Can also be used as a |method|: >
+			GetLnum()->diff_filler()
+
 diff_hlID({lnum}, {col})				*diff_hlID()*
 		Returns the highlight ID for diff mode at line {lnum} column
 		{col} (byte index).  When the current line does not have a
@@ -3885,6 +3915,8 @@ diff_hlID({lnum}, {col})				*diff_hlID()*
 		The highlight ID can be used with |synIDattr()| to obtain
 		syntax information about the highlighting.
 
+		Can also be used as a |method|: >
+			GetLnum()->diff_hlID(col)
 environ()						*environ()*
 		Return all of environment variables as dictionary. You can
 		check if an environment variable exists like this: >
@@ -3906,6 +3938,7 @@ empty({expr})						*empty()*
 
 		For a long |List| this is much faster than comparing the
 		length with zero.
+
 		Can also be used as a |method|: >
 			mylist->empty()
 
@@ -3917,6 +3950,9 @@ escape({string}, {chars})				*escape()*
 			c:\\program\ files\\vim
 <		Also see |shellescape()| and |fnameescape()|.
 
+		Can also be used as a |method|: >
+			GetText()->escape(' \')
+<
 							*eval()*
 eval({string})	Evaluate {string} and return the result.  Especially useful to
 		turn the result of |string()| back into the original value.
@@ -3958,6 +3994,9 @@ executable({expr})					*executable()*
 			-1	not implemented on this system
 		|exepath()| can be used to get the full path of an executable.
 
+		Can also be used as a |method|: >
+			GetCommand()->executable()
+
 execute({command} [, {silent}])					*execute()*
 		Execute an Ex command or commands and return the output as a
 		string.
@@ -3987,6 +4026,9 @@ execute({command} [, {silent}])					*execute()*
 		When used recursively the output of the recursive call is not
 		included in the output of the higher level call.
 
+		Can also be used as a |method|: >
+			GetCommand()->execute()
+
 exepath({expr})						*exepath()*
 		If {expr} is an executable and is either an absolute path, a
 		relative path or found in $PATH, return the full path.
@@ -3995,6 +4037,9 @@ exepath({expr})						*exepath()*
 			echo exepath(v:progpath)
 <		If {expr} cannot be found in $PATH or is not executable then
 		an empty string is returned.
+
+		Can also be used as a |method|: >
+			GetCommand()->exepath()
 
 							*exists()*
 exists({expr})	The result is a Number, which is |TRUE| if {expr} is defined,
@@ -4081,6 +4126,9 @@ exists({expr})	The result is a Number, which is |TRUE| if {expr} is defined,
 <		This doesn't check for existence of the "bufcount" variable,
 		but gets the value of "bufcount", and checks if that exists.
 
+		Can also be used as a |method|: >
+			Varname()->exists()
+
 exp({expr})						*exp()*
 		Return the exponential of {expr} as a |Float| in the range
 		[0, inf].
@@ -4090,6 +4138,10 @@ exp({expr})						*exp()*
 <			7.389056 >
 			:echo exp(-1)
 <			0.367879
+
+		Can also be used as a |method|: >
+			Compute()->exp()
+<
 		{only available when compiled with the |+float| feature}
 
 
@@ -4177,6 +4229,9 @@ expand({expr} [, {nosuf} [, {list}]])				*expand()*
 		See |glob()| for finding existing files.  See |system()| for
 		getting the raw output of an external command.
 
+		Can also be used as a |method|: >
+			Getpattern()->expand()
+
 expandcmd({expr})					*expandcmd()*
 		Expand special items in {expr} like what is done for an Ex
 		command such as `:edit`.  This expands special keywords, like
@@ -4184,6 +4239,9 @@ expandcmd({expr})					*expandcmd()*
 		{expr}.  Returns the expanded string.
 		Example: >
 			:echo expandcmd('make %<.o')
+
+<		Can also be used as a |method|: >
+			GetCommand()->expandcmd()
 <
 extend({expr1}, {expr2} [, {expr3}])			*extend()*
 		{expr1} and {expr2} must be both |Lists| or both
@@ -4273,6 +4331,9 @@ feedkeys({string} [, {mode}])				*feedkeys()*
 
 		Return value is always 0.
 
+		Can also be used as a |method|: >
+			GetInput()->feedkeys()
+
 filereadable({file})					*filereadable()*
 		The result is a Number, which is |TRUE| when a file with the
 		name {file} exists, and can be read.  If {file} doesn't exist,
@@ -4285,6 +4346,9 @@ filereadable({file})					*filereadable()*
 			0
 			echo filereadable(expand('~/.vimrc'))
 			1
+
+<		Can also be used as a |method|: >
+			GetName()->filereadable()
 <							*file_readable()*
 		Obsolete name: file_readable().
 
@@ -4294,6 +4358,9 @@ filewritable({file})					*filewritable()*
 		name {file} exists, and can be written.  If {file} doesn't
 		exist, or is not writable, the result is 0.  If {file} is a
 		directory, and we can write to it, the result is 2.
+
+		Can also be used as a |method|: >
+			GetName()->filewriteable()
 
 
 filter({expr1}, {expr2})				*filter()*
@@ -4360,6 +4427,9 @@ finddir({name} [, {path} [, {count}]])				*finddir()*
 		{only available when compiled with the |+file_in_path|
 		feature}
 
+		Can also be used as a |method|: >
+			GetName()->finddir()
+
 findfile({name} [, {path} [, {count}]])				*findfile()*
 		Just like |finddir()|, but find a file instead of a directory.
 		Uses 'suffixesadd'.
@@ -4367,6 +4437,9 @@ findfile({name} [, {path} [, {count}]])				*findfile()*
 			:echo findfile("tags.vim", ".;")
 <		Searches from the directory of the current file upwards until
 		it finds the file "tags.vim".
+
+		Can also be used as a |method|: >
+			GetName()->findfile()
 
 float2nr({expr})					*float2nr()*
 		Convert {expr} to a Number by omitting the part after the
@@ -4388,6 +4461,10 @@ float2nr({expr})					*float2nr()*
 <			-2147483647 (or -9223372036854775807) >
 			echo float2nr(1.0e-100)
 <			0
+
+		Can also be used as a |method|: >
+			Compute()->float2nr()
+<
 		{only available when compiled with the |+float| feature}
 
 
@@ -4402,6 +4479,10 @@ floor({expr})							*floor()*
 <			-6.0  >
 			echo floor(4.0)
 <			4.0
+
+		Can also be used as a |method|: >
+			Compute()->floor()
+<
 		{only available when compiled with the |+float| feature}
 
 
@@ -4418,6 +4499,10 @@ fmod({expr1}, {expr2})					*fmod()*
 <			0.13 >
 			:echo fmod(-12.33, 1.22)
 <			-0.13
+
+		Can also be used as a |method|: >
+			Compute()->fmod(1.22)
+<
 		{only available when compiled with |+float| feature}
 
 
@@ -4435,6 +4520,9 @@ fnameescape({string})					*fnameescape()*
 			:exe "edit " . fnameescape(fname)
 <		results in executing: >
 			edit \+some\ str\%nge\|name
+<
+		Can also be used as a |method|: >
+			GetName()->fnameescape()
 
 fnamemodify({fname}, {mods})				*fnamemodify()*
 		Modify file name {fname} according to {mods}.  {mods} is a
@@ -4447,15 +4535,24 @@ fnamemodify({fname}, {mods})				*fnamemodify()*
 <		Note: Environment variables don't work in {fname}, use
 		|expand()| first then.
 
+		Can also be used as a |method|: >
+			GetName()->fnamemodify(':p:h')
+
 foldclosed({lnum})					*foldclosed()*
 		The result is a Number.  If the line {lnum} is in a closed
 		fold, the result is the number of the first line in that fold.
 		If the line {lnum} is not in a closed fold, -1 is returned.
 
+		Can also be used as a |method|: >
+			GetLnum()->foldclosed()
+
 foldclosedend({lnum})					*foldclosedend()*
 		The result is a Number.  If the line {lnum} is in a closed
 		fold, the result is the number of the last line in that fold.
 		If the line {lnum} is not in a closed fold, -1 is returned.
+
+		Can also be used as a |method|: >
+			GetLnum()->foldclosedend()
 
 foldlevel({lnum})					*foldlevel()*
 		The result is a Number, which is the foldlevel of line {lnum}
@@ -4466,6 +4563,9 @@ foldlevel({lnum})					*foldlevel()*
 		returned for lines where folds are still to be updated and the
 		foldlevel is unknown.  As a special case the level of the
 		previous line is usually available.
+
+		Can also be used as a |method|: >
+			GetLnum()->foldlevel()
 
 							*foldtext()*
 foldtext()	Returns a String, to be displayed for a closed fold.  This is
@@ -4494,6 +4594,10 @@ foldtextresult({lnum})					*foldtextresult()*
 		Useful when exporting folded text, e.g., to HTML.
 		{not available when compiled without the |+folding| feature}
 
+
+		Can also be used as a |method|: >
+			GetLnum()->foldtextresult()
+<
 							*foreground()*
 foreground()	Move the Vim window to the foreground.  Useful when sent from
 		a client to a Vim server. |remote_send()|
@@ -4513,6 +4617,9 @@ funcref({name} [, {arglist}] [, {dict}])
 		Also for autoloaded functions. {name} cannot be a builtin
 		function.
 
+		Can also be used as a |method|: >
+			GetFuncname()->funcref([arg])
+<
 					*function()* *E700* *E922* *E923*
 function({name} [, {arglist}] [, {dict}])
 		Return a |Funcref| variable that refers to function {name}.
@@ -4534,14 +4641,23 @@ function({name} [, {arglist}] [, {dict}])
 		the Funcref and will be used when the Funcref is called.
 
 		The arguments are passed to the function in front of other
-		arguments.  Example: >
+		arguments, but after any argument from |method|.  Example: >
 			func Callback(arg1, arg2, name)
 			...
-			let Func = function('Callback', ['one', 'two'])
+			let Partial = function('Callback', ['one', 'two'])
 			...
-			call Func('name')
+			call Partial('name')
 <		Invokes the function as with: >
 			call Callback('one', 'two', 'name')
+
+<		With a |method|: >
+			func Callback(one, two, three)
+			...
+			let Partial = function('Callback', ['two'])
+			...
+			eval 'one'->Partial('three')
+<		Invokes the function as with: >
+			call Callback('one', 'two', 'three')
 
 <		The function() call can be nested to add more arguments to the
 		Funcref.  The extra arguments are appended to the list of
@@ -4579,6 +4695,9 @@ function({name} [, {arglist}] [, {dict}])
 			call Func(500)
 <		Invokes the function as with: >
 			call context.Callback('one', 500)
+<
+		Can also be used as a |method|: >
+			GetFuncname()->function([arg])
 
 
 garbagecollect([{atexit}])				*garbagecollect()*
