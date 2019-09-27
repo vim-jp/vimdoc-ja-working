@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Sep 19
+*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Sep 26
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2806,6 +2806,8 @@ term_gettty({buf}, [{input}])	文字列	端末の tty 名を取得する
 term_list()			リスト	端末バッファのリストを取得する
 term_scrape({buf}, {row})	リスト	端末スクリーンの行を取得する
 term_sendkeys({buf}, {keys})	なし	キー入力を端末に送信する
+term_setapi({buf}, {expr})	なし	|terminal-api| の関数名プリフィックス
+					を設定する
 term_setansicolors({buf}, {colors})
 				なし	GUI カラーモードでの ANSI パレットを設
 					定する
@@ -3245,9 +3247,14 @@ bufname([{expr}])					*bufname()*
 bufnr([{expr} [, {create}]])
 		結果はバッファの番号。バッファ番号はコマンド ":ls" で表示され
 		るものと同様。{expr}の使い方は前述の |bufname()| を参照。バッ
+
 		ファが存在しない場合-1が返される。ただし、{create}が与えられて
 		0でないときは、バッファリストに載せない新しいバッファを作成し
-		その番号を返す。
+		その番号を返す。例: >
+			let newbuf = bufnr('Scratch001', 1)
+<		空の名前を使用すると、カレントバッファが使用される。空の名前で
+		新しいバッファを作成するには、|bufadd()| を使用する。
+
 		bufnr("$")は最後のバッファを意味する: >
 			:let last_buffer = bufnr("$")
 <		結果は存在しているバッファのうちで、もっとも大きなバッファ番号
