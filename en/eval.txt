@@ -3389,6 +3389,10 @@ ceil({expr})							*ceil()*
 <			-5.0  >
 			echo ceil(4.0)
 <			4.0
+
+		Can also be used as a |method|: >
+			Compute()->ceil()
+<
 		{only available when compiled with the |+float| feature}
 
 
@@ -3419,6 +3423,9 @@ char2nr({expr} [, {utf8}])					*char2nr()*
 		    let list = map(split(str, '\zs'), {_, val -> char2nr(val)})
 <		Result: [65, 66, 67]
 
+		Can also be used as a |method|: >
+			GetChar()->char2nr()
+
 chdir({dir})						*chdir()*
 		Change the current working directory to {dir}.  The scope of
 		the directory change depends on the directory of the current
@@ -3439,6 +3446,9 @@ chdir({dir})						*chdir()*
 			   " ... do some work
 			   call chdir(save_dir)
 			endif
+
+<		Can also be used as a |method|: >
+			GetDir()->chdir()
 <
 cindent({lnum})						*cindent()*
 		Get the amount of indent for line {lnum} according the C
@@ -3449,12 +3459,18 @@ cindent({lnum})						*cindent()*
 		feature, -1 is returned.
 		See |C-indenting|.
 
+		Can also be used as a |method|: >
+			GetLnum()->cindent()
+
 clearmatches([{win}])					*clearmatches()*
 		Clears all matches previously defined for the current window
 		by |matchadd()| and the |:match| commands.
 		If {win} is specified, use the window with this number or
 		window ID instead of the current window.
 
+		Can also be used as a |method|: >
+			GetWin()->clearmatches()
+<
 							*col()*
 col({expr})	The result is a Number, which is the byte index of the column
 		position given with {expr}.  The accepted positions are:
@@ -3490,6 +3506,9 @@ col({expr})	The result is a Number, which is the byte index of the column
 				\<C-O>:set ve=all<CR>
 				\<C-O>:echo col(".") . "\n" <Bar>
 				\let &ve = save_ve<CR>
+
+<		Can also be used as a |method|: >
+			GetPos()->col()
 <
 
 complete({startcol}, {matches})			*complete()* *E785*
@@ -3521,6 +3540,10 @@ complete({startcol}, {matches})			*complete()* *E785*
 <		This isn't very useful, but it shows how it works.  Note that
 		an empty string is returned to avoid a zero being inserted.
 
+		Can also be used as a |method|, the second argument is passed
+		in: >
+			GetMatches()->complete(col('.'))
+
 complete_add({expr})				*complete_add()*
 		Add {expr} to the list of matches.  Only to be used by the
 		function specified with the 'completefunc' option.
@@ -3529,6 +3552,9 @@ complete_add({expr})				*complete_add()*
 		the list.
 		See |complete-functions| for an explanation of {expr}.  It is
 		the same as one item in the list that 'omnifunc' would return.
+
+		Can also be used as a |method|: >
+			GetMoreMatches()->complete_add()
 
 complete_check()				*complete_check()*
 		Check for a key typed while looking for completion matches.
@@ -3579,6 +3605,10 @@ complete_info([{what}])
 		the items listed in {what} are returned.  Unsupported items in
 		{what} are silently ignored.
 
+		To get the position and size of the popup menu, see
+		|pum_getpos()|. It's also available in |v:event| during the
+		|CompleteChanged| event.
+
 		Examples: >
 			" Get all items
 			call complete_info()
@@ -3586,6 +3616,9 @@ complete_info([{what}])
 			call complete_info(['mode'])
 			" Get only 'mode' and 'pum_visible'
 			call complete_info(['mode', 'pum_visible'])
+
+<		Can also be used as a |method|: >
+			GetItems()->complete_info()
 <
 						*confirm()*
 confirm({msg} [, {choices} [, {default} [, {type}]]])
