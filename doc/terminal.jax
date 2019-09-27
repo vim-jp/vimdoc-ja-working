@@ -696,7 +696,7 @@ term_sendkeys({buf}, {keys})				*term_sendkeys()*
 
 
 term_setapi({buf}, {expr})				*term_setapi()*
-		端末 {buf} 内で |terminal-api| 機能に使用する関数名のプレフィッ
+		端末 {buf} 内で |terminal-api| 機能に使用する関数名のプリフィッ
 		クスを設定する。例: >
 		    :call term_setapi(buf, "Myapi_")
 		    :call term_setapi(buf, "")
@@ -849,7 +849,7 @@ term_start({cmd} [, {options}])			*term_start()*
 				     照。
 		   "tty_type"	     (MS-Windowsのみ): 使用する pty を指定す
 				     る。値については 'termwintype' を参照。
-		   "term_api"	     |terminal-api| 機能の関数名プレフィック
+		   "term_api"	     |terminal-api| 機能の関数名プリフィック
 				     ス。|term_setapi()| を参照。
 
 		|method| としても使用できる: >
