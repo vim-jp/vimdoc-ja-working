@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Sep 26
+*eval.txt*	For Vim バージョン 8.1.  Last change: 2019 Sep 27
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -9380,8 +9380,14 @@ systemlist({expr} [, {input}])				*systemlist()*
 		|system()| と同じだが行のリスト (|List|) を返す。行は NL 文字
 		で区切られ、NUL 文字は NL 文字に変換される。出力は
 		|readfile()| の {binary} 引数に "b" を指定したのと同様である。
-		MS-Windows では末尾の CR 文字がつくかもしれないことに注意。
+		ただし、結果が NL で終わる場合、余分な空の項目はない。
+		Note MS-Windows では末尾の CR 文字がつくかもしれないことに注
+		意。
 
+		"echo hello" と "echo -n hello" の違いを確認するには、
+		|system()| および |split()| を使用する: >
+			echo system('echo hello')->split('\n', 1)
+<
 		エラー時には空文字列が返る。
 
 		|method| としても使用できる: >
