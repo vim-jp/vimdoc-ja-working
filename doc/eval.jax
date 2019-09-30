@@ -5129,7 +5129,7 @@ getftype({fname})					*getftype()*
 			GetFilename()->getftype()
 
 getimstatus()						*getimstatus()*
-		結果は数値で、IMEステータスがアクティブの場合は |TRUE| です。
+		結果は数値で、IMEステータスがアクティブの場合は |TRUE| である。
 		'imstatusfunc' を参照。
 
 getjumplist([{winnr} [, {tabnr}]])			*getjumplist()*
