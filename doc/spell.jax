@@ -131,13 +131,13 @@ zuG			|zW| や |zG| をundoして、内部単語リストからその単語を
 			これらは非常に珍しいコマンドであり、このための直感的な
 			コマンドは既に使われているため、単語を稀とマークする
 			ノーマルモードのコマンドは無い。必要に応じて次のように
-			マッピングできる 例: >
+			マッピングを追加できる 例: >
 		    nnoremap z? :exe ':spellrare  ' . expand('<cWORD>')<CR>
 		    nnoremap z/ :exe ':spellrare! ' . expand('<cWORD>')<CR>
 <			|:spelllundo|、|zuw|、または |zuW| はこれをもとに戻す
 			ことができる。
 
-:spellr[rare]! {word} 	|zW| と同様に、{word} を稀な単語として内部単語リストに
+:spellr[rare]! {word}	|zW| と同様に、{word} を稀な単語として内部単語リストに
 			追加する。
 
 :[count]spellu[ndo] {word}				*:spellu* *:spellundo*
