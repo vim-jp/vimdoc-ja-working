@@ -2862,25 +2862,25 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
   *g:netrw_special_syntax*	true なら、特定の種類のファイルが特別な色(シン
 				タックス)で表示されます:
 
-                                        netrwBak     : *.bak
-                                        netrwCompress: *.gz *.bz2 *.Z *.zip
-                                        netrwCoreDump: core.\d\+
-                                        netrwData    : *.dat
-                                        netrwDoc     : *.doc,*.txt,*.pdf,
-                                                       *.pdf,*.docx
-                                        netrwHdr     : *.h
-                                        netrwLex     : *.l *.lex
-                                        netrwLib     : *.a *.so *.lib *.dll
-                                        netrwMakefile: [mM]akefile *.mak
-                                        netrwObj     : *.o *.obj
-                                        netrwPix     : *.bmp,*.fit,*.fits,*.gif,
-                                                       *.jpg,*.jpeg,*.pcx,*.ppc
-                                                       *.pgm,*.png,*.psd,*.rgb
-                                                       *.tif,*.xbm,*.xcf
-                                        netrwTags    : tags ANmenu ANtags
-                                        netrwTilde   : *
-                                        netrwTmp     : tmp* *tmp
-                                        netrwYacc    : *.y
+					netrwBak     : *.bak
+					netrwCompress: *.gz *.bz2 *.Z *.zip
+					netrwCoreDump: core.\d\+
+					netrwData    : *.dat
+					netrwDoc     : *.doc,*.txt,*.pdf,
+					               *.pdf,*.docx
+					netrwHdr     : *.h
+					netrwLex     : *.l *.lex
+					netrwLib     : *.a *.so *.lib *.dll
+					netrwMakefile: [mM]akefile *.mak
+					netrwObj     : *.o *.obj
+					netrwPix     : *.bmp,*.fit,*.fits,*.gif,
+					               *.jpg,*.jpeg,*.pcx,*.ppc
+					               *.pgm,*.png,*.psd,*.rgb
+					               *.tif,*.xbm,*.xcf
+					netrwTags    : tags ANmenu ANtags
+					netrwTilde   : *
+					netrwTmp     : tmp* *tmp
+					netrwYacc    : *.y
 
 				加えて、|'suffixes'| で言及されているグループ
 				も特別ファイルのハイライトグループに追加されま
@@ -3751,15 +3751,15 @@ netrw かあるいは関与している他のプラグインと衝突してい�
 ==============================================================================
 12. 変更履歴						*netrw-history* {{{1
 
-        v163:   Dec 05, 2017    * (Cristi Balan) reported that a setting ('sel')
-                                  was left changed
-                                * (Holger Mitschke) reported a problem with
-                                  saving and restoring history.  Fixed.
-                                * Hopefully I fixed a nasty bug that caused a
-                                  file rename to wipe out a buffer that it
-                                  should not have wiped out.
-                                * (Holger Mitschke) amended this help file
-                                  with additional |g:netrw_special_syntax|
+	v163:   Dec 05, 2017    * (Cristi Balan) reported that a setting ('sel')
+				  was left changed
+				* (Holger Mitschke) reported a problem with
+				  saving and restoring history.  Fixed.
+				* Hopefully I fixed a nasty bug that caused a
+				  file rename to wipe out a buffer that it
+				  should not have wiped out.
+				* (Holger Mitschke) amended this help file
+				  with additional |g:netrw_special_syntax|
                                   items
 	v162:	Sep 19, 2016	* (haya14busa) pointed out two syntax errors
 				  with a patch; these are now fixed.
