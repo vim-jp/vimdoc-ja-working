@@ -6,24 +6,22 @@
 
 フローティングウィンドウにテキストを表示する。	*popup* *popup-window*
 
-THIS IS UNDER DESIGN - ANYTHING MAY STILL CHANGE
-{これは設計中だ - まだ変更が行われる可能性がある}
 
-1. 前書き			|popup-intro|
-   ウィンドウ位置とサイズ	|popup-position|
+1. 前書き				|popup-intro|
+   ウィンドウ位置とサイズ		|popup-position|
    ポップアップウィンドウを閉じる	|popup-close|
    ポップアップバッファとウィンドウ	|popup-buffer|
-2. 関数				|popup-functions|
-   詳細				|popup-function-details|
-3. 使用方法			|popup-usage|
-   popup_create() 引数		|popup_create-arguments|
+2. 関数					|popup-functions|
+   詳細					|popup-function-details|
+3. 使用方法				|popup-usage|
+   popup_create() 引数			|popup_create-arguments|
    ポップアップテキストプロパティ	|popup-props|
-   ポップアップとtextpropの位置	|popup-textprop-pos|
-   ポップアップフィルタ		|popup-filter|
-   ポップアップコールバック	|popup-callback|
-   ポップアップスクロールバー	|popup-scrollbar|
-   ポップアップマスク		|popup-mask|
-3. 例				|popup-examples|
+   ポップアップとtextpropの位置		|popup-textprop-pos|
+   ポップアップフィルタ			|popup-filter|
+   ポップアップコールバック		|popup-callback|
+   ポップアップスクロールバー		|popup-scrollbar|
+   ポップアップマスク			|popup-mask|
+3. 例					|popup-examples|
 
 
 {|+textprop| 機能無効でコンパイルされたときは使用できない}
