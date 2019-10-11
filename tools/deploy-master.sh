@@ -7,7 +7,7 @@ dir=$1 ; shift
 git clone -b master --depth 1 "git@github.com:${DEPLOY_REPO_SLUG}.git" "$dir"
 
 # Create tags
-vim -es -c "helptags doc" -c "qall!"
+vim -eu tools/maketags.vim
 
 # install
 rsync -rlptD --delete-after doc/ ${dir}/doc

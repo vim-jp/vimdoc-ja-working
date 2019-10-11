@@ -4,6 +4,7 @@ all:
 
 check:
 	nvcheck doc/*.jax vim_faq/*.jax
+	vim -eu tools/maketags.vim
 
 replace:
 	nvcheck -i doc/*.jax vim_faq/*.jax
