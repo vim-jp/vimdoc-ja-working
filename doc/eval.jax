@@ -5602,7 +5602,6 @@ glob2regpat({expr})					 *glob2regpat()*
 		|method| としても使用できる: >
 			GetExpr()->glob2regpat()
 <								*globpath()*
-								*globpath()*
 globpath({path}, {expr} [, {nosuf} [, {list} [, {alllinks}]]])
 		{path}の中の全ディレクトリで {expr} に対して|glob()|を実行し、
 		結果を連結する。例: >
