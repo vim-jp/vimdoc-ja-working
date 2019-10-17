@@ -11085,7 +11085,7 @@ text...
 			例: >
 				let var1 =<< END
 				Sample text 1
-				Sample text 2
+				    Sample text 2
 				Sample text 3
 				END
 
