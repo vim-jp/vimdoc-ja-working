@@ -477,6 +477,8 @@ popup_notification({what}, {options})			 *popup_notification()*
 popup_show({id})						*popup_show()*
 		{id} が非表示のポップアップの場合は、それを表示する。
 		{id} については `popup_hide()` を参照。
+		{id} が情報ポップアップの場合、現在のポップアップメニュー項目
+		の隣に配置される。
 
 
 popup_setoptions({id}, {options})			*popup_setoptions()*
@@ -674,8 +676,12 @@ popup_create() に渡す。
 			- "expr": カーソルが |<cexpr>| の外側に移動した場合
 			- [{start}, {end}]: カーソルが桁 {start} の前、または
 			  {end} の後に移動した場合
+			- [{lnum}, {start}, {end}]: カーソルが行 {lnum} の桁
+			  {start} の前、または {end} の後に移動した場合
 			カーソルが別の行または別のウィンドウに移動した場合も
 			ポップアップは閉じる。
+	mousemoved	"moved" に似ているが、マウスポインターの位置を参照す
+			る。
 	cursorline	非0: カーソル行をハイライトする。また、テキストをスク
 			     ロールしてこの行を表示する( 'wrap' がオフの場合の
 			     み適切に機能する)。
