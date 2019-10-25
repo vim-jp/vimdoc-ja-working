@@ -1965,9 +1965,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 		    {|+textprop| 機能付きでコンパイルされたときのみ有効}
 
 	   popuphidden
-		    "popup" と同様だが、最初はポップアップを非表示にす
-		    る。|CompleteChanged| 自動コマンドを使用して情報を取得し、
-		    ポップアップがいっぱいになると |popup_show()| を呼び出す。
+		    "popup" と同様だが、最初はポップアップを非表示にする。
+		    |CompleteChanged| 自動コマンドを使用して情報を取得し、ポッ
+		    プアップがいっぱいになれば |popup_show()| を呼び出す。
 		    |complete-popuphidden| の例を参照。
 		    {|+textprop| 機能付きでコンパイルされたときのみ有効}
 
