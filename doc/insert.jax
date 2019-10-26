@@ -1074,8 +1074,8 @@ CTRL-P			カーソルの直前と同じキーワードで始まる単語を、
 き、プロパティは |popup_setoptions()| で変更できる。
 
 						*complete-popuphidden*
-ポップアップの情報が非同期で取得される場合は、'completeopt' で "popuphidden"
-を使用する。情報ポップアップは最初は非表示になり、情報が埋まれば
+ポップアップの情報が非同期で得られる場合は、'completeopt' で "popuphidden" を
+使用すること。情報ポップアップは最初は非表示になり、情報が埋まれば
 |popup_show()| を呼び出す必要がある。これは、|CompleteChanged| 自動コマンドを
 使用して次のように実行できる: >
 	set completeopt+=popuphidden
