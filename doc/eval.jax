@@ -4711,6 +4711,11 @@ getbufinfo([{dict}])
 			changed		バッファが変更されている場合はTRUE。
 			changedtick	バッファに加えられた変更の数。
 			hidden		バッファが隠されている場合はTRUE。
+			lastused	バッファが最後に使用されたときの
+					|localtime()| のような秒単位のタイムス
+					タンプ。
+					{|+viminfo| 機能付きでコンパイルされた
+					ときのみ有効}
 			listed		バッファがリストされている場合はTRUE。
 			lnum		バッファ内の現在の行番号。
 			loaded		バッファがロードされている場合はTRUE。
