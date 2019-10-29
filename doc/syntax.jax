@@ -4883,6 +4883,12 @@ IncSearch	'incsearch' のハイライト; ":s///c" で置換されたテキス�
 LineNr		":number" と ":#" コマンドの行番号。'number' オプションか
 		'relativenumber' オプションが設定されているときにはその表示に
 		も使われる。
+							*hl-LineNrAbove*
+LineNrAbove	'relativenumber' オプションが設定されているときのカーソル行の
+		上の行番号。
+							*hl-LineNrBelow*
+LineNrBelow	'relativenumber' オプションが設定されているときのカーソル行の
+		下の行番号。
 							*hl-CursorLineNr*
 CursorLineNr	LineNr と同じだが 'cursorline' が設定され、'cursorlineopt' が
 		"number" または "both" に設定されるか、"relativenumber" が設定
