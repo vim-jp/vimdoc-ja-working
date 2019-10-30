@@ -1,4 +1,4 @@
-.PHONY: all html htmlbatch clean
+.PHONY: all check replace html clean
 
 all:
 
