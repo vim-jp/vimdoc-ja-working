@@ -1,4 +1,4 @@
-*usr_41.txt*	For Vim バージョン 8.1.  Last change: 2019 Nov 21
+*usr_41.txt*	For Vim バージョン 8.2.  Last change: 2019 Nov 21
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -1739,7 +1739,7 @@ MS-DOS、Windows、OS/2 などでは <CR><LF> が使われます。末尾が <CR
 い。これらのコマンドは行末か '|' までのすべての文字を使います。そのため、意図
 せずに末尾に空白を入れてしまうかもしれません: >
 
-	:map <F4> o#include  
+	:map <F4> o#include
 
 vimrc を編集するときに 'list' オプションをオンに設定しておくと、この問題が発見
 しやすくなります。
@@ -1761,7 +1761,7 @@ Unix では特別なコメント書式を使って Vim script を実行形式に
 次の例には大きな問題があります: >
 
 	:map ,ab o#include
-	:unmap ,ab 
+	:unmap ,ab
 
 この unmap コマンドはうまく動きません。なぜなら ",ab " を unmap しようとしてい
 るからです。そのようなマップは存在しません。エラーが表示されますが、スペースは
