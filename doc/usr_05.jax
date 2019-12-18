@@ -489,7 +489,7 @@ Vim を起動すると、自動的にいくつものグローバルプラグイ�
 
 	system		plugin directory ~
 	Unix		~/.vim/plugin/
-	PC や OS/2	$HOME/vimfiles/plugin or $VIM/vimfiles/plugin
+	PC		$HOME/vimfiles/plugin or $VIM/vimfiles/plugin
 	Amiga		s:vimfiles/plugin
 	Macintosh	$VIM:vimfiles:plugin
 	Mac OS X	~/.vim/plugin/
