@@ -25818,18 +25818,18 @@ Files:      src/terminal.c
 ボップアップウィンドウ				*new-popup-window*
 ----------------------
 
-Popup windows can be used to display text on top of other windows.  This can
-be for a simple message such as "Build finished successfully", showing a
-function prototype while editing a function call, a flexible popup menu and
-many other purposes.  See |popup-window|.
+ポップアップウィンドウは他のウィンドウの上にテキストを表示するために使えます。
+これは、「ビルドが正常に終了しました」のような単純なメッセージを表示したり、関
+数呼び出しを編集中に関数プロトタイプを表示したり、柔軟なポップアップメニューや
+他の多くの用途に使えます。|popup-window| を参照してください。
 
-Popup windows are very flexible: they can be positioned relative to text, an
-absolute position or just in the middle of the screen.  The size can be fixed
-or adjusts to fit the text.  A "zindex" value specifies what popup window goes
-on top of others.
+ポップアップウィンドウはとても柔軟です: テキストとの相対位置に配置したり、絶対
+位置に配置したり、あるいは単に画面の中央に配置することができます。サイズは固定
+することもテキストに合わせることもできます。"zindex" の値はどのポップアップウィ
+ンドウを他のものの上に持ってくるかを指定します。
 
-The new 'wincolor' option allows for setting the color for the whole popup
-window.  This also works for normal windows.
+新しい 'wincolor' オプションはポップアップウィンドウ全体の色を設定することがで
+きます。これは通常のウィンドウにも作用します。
 
 
 テキストプロパティ				*new-text-properties*
