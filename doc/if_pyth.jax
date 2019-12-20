@@ -768,7 +768,7 @@ Vim をコンパイルする時に用いた Python 2.x または Python 3 のバ
 :[range]python3 << [endmarker]
 {script}
 {endmarker}
-	|:py3| コマンドと |:python3| コマンドは |:python| と同様に機能します。
+	`:py3` コマンドと `:python3` コマンドは `:python` と同様に機能します。
 	`:py3` コマンドが機能するか簡単にチェックするには: >
 		:py3 print("Hello")
 <
