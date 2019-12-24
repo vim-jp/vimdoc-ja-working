@@ -2666,7 +2666,8 @@ readlineライブラリは主としてBASHシェルで使われ、BASHはかな�
 REGO						*rego.vim* *ft-rego-syntax*
 
 Rego は Styra が開発したクエリ言語である。主に kubernetes のポリシー言語として
-使用される。次の拡張子のファイルが rego ファイルとして認識される: .rego
+使用されるが、ほぼ全てのアプリケーションに適用できる。次の拡張子のファイルが
+rego ファイルとして認識される: .rego
 
 
 RESTRUCTURED TEXT			*rst.vim* *ft-rst-syntax*
