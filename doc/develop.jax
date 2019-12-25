@@ -205,7 +205,7 @@ C COMPILER				*style-compiler* *ANSI-C* *C89* *C99*
 	 * The "foo" argument does something useful.
 	 * Return OK or FAIL.
 	 */
-新しいコードもしくは変更する行のコードについては、// コメント を使うことが好ま
+新しいコードもしくは変更するコードの行については、// コメント を使うことが好ま
 れる。特にコードの後ろに続くコメントなど:
 	int some_var;  // single line comment useful here
 
