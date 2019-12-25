@@ -200,14 +200,13 @@ C COMPILER				*style-compiler* *ANSI-C* *C89* *C99*
 コメント ~
 
 慣習的に Vim では /* コメント */ を使用する。ファイルや関数のヘッダ、コードの
-大きめなブロックに関してはこれを維持するつもりであり、例えば:
+大きめなブロックに関してはこれを維持するつもりである。例:
 	/*
 	 * The "foo" argument does something useful.
 	 * Return OK or FAIL.
 	 */
-新しいコードもしくは変わる行のコードについては、// コメント を使うことが好まれ
-る。
-特にコードの後ろに続くコメントなど:
+新しいコードもしくは変更する行のコードについては、// コメント を使うことが好ま
+れる。特にコードの後ろに続くコメントなど:
 	int some_var;  // single line comment useful here
 
 列挙型 (Enums) ~
