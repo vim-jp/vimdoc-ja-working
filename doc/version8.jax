@@ -25849,34 +25849,34 @@ See |listener_add()|.
 Vim script の改良点				*new-vimscript-8.2*
 -------------------
 
-Functions can now be called in a chain, using "->": >
+関数は、"->" を使って連鎖で呼び出すことができるようになりました: >
 	mylist->filter(filterexpr)->map(mapexpr)->sort()->join()
-The new `:eval` command can be used if the chain has no result.
+連鎖が結果を持たない場合には新しい `:eval` コマンドが使えます。
 
-Function arguments can be made optional by giving them a default value
+関数引数はデフォルト値を渡すことでオプショナルにすることができます
 |optional-function-argument|: >
        function Something(key, value = 10)
 
-The `:scriptversion` command was added to allow for changes that are not
-backwards compatible. E.g. to only use ".." for string concatenation, so that
-"." can be used to access a dictionary member consistently.
+後方互換性の無い変更を許可するために `:scriptversion` コマンドが追加されまし
+た。例: "." を一貫して辞書メンバーへのアクセスに使えるようにするため、文字列結
+合には ".." のみを使用する。
 
-`:const` was added to allow for declaring a variable that cannot change: >
+変更できない変数を宣言できるようにするため `:const` が追加されました: >
 	const TIMER_DELAY = 400
 
-A heredoc-style assignment was added to easily assign a list of lines to a
-variable without quoting or line continuation: >
+行のリストを引用符や行結合を使わずに簡単に変数に代入できるようにするため、
+heredoc スタイルの代入が追加されました: >
 	let lines =<< trim END
 	   line one
 	   line two
 	END
 
-The |Blob| type was added. This makes it easy to deal with binary data.
+|Blob| 型が追加されました。これはバイナリデータを扱いやすくします。
 
-The /= and %= assignment operators were added.
+/= と %= の代入演算子が追加されました。
 
-A Dictionary can be defined with literal keys using #{}.  This avoids having
-to use a lot of quotes:  >
+辞書は #{} を使ってリテラルキーで定義できるようになりました。これでたくさんの
+引用符を使うことを避けられます: >
 	let options = #{width: 30, height: 24}
 
 
