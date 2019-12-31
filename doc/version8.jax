@@ -25835,15 +25835,16 @@ Files:      src/terminal.c
 テキストプロパティ				*new-text-properties*
 ------------------
 
-Text properties give a plugin author flexibility about what to highlight.
-This can be used with an external asynchronous parser to do syntax
-highlighting.  Or to highlight text in a popup window.  The text properties
-stick with the text when characters are deleted or inserted, which makes them
-also useful as text markers. See |text-properties|.
+テキストプロパティはプラグインの作者に何をハイライトするかについての柔軟性を与
+えます。これは外部の非同期パーサーによってシンタックスハイライトを行うために使
+うことができます。あるいはポップアップウィンドウのテキストをハイライトするのに
+も使います。テキストプロパティは文字が削除や挿入されたときでもテキストにくっつ
+いて離れず、これによりテキストマーカーとしても役立ちます。|text-properties| を
+参照してください。
 
-The listener functions have been added to report text changes to a server so
-that it can dynamically update highlighting, mark syntax errors and the like.
-See |listener_add()|.
+ハイライトを動的に更新したり、シンタックスエラーなどをマークしたりできるよう
+に、テキストの変更をサーバーに通知するためのリスナー関数が追加されました。
+|listener_add()| を参照してください。
 
 
 Vim script の改良点				*new-vimscript-8.2*
