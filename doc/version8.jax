@@ -25884,11 +25884,12 @@ heredoc スタイルの代入が追加されました: >
 その他の改良点						*new-other-8.2*
 --------------
 
-- When 'incsearch' is set it also applies to `:substitute`.
-- |modifyOtherKeys| was added to allow mapping more key combinations.
-- ConPTY support was added for Windows 10, supports full color in the terminal.
-- The MS-Windows installer supports translations, silent install and looks
-  much better.
+- 'incsearch' がセットされているとき `:substitute` にも適用されます。
+- より多くのキーの組み合わせがマッピングできるように |modifyOtherKeys| が追加
+  されました。
+- Windows 10 用に ConPTY 対応が追加され、端末でフルカラーをサポートしました。
+- MS-Windows インストーラは翻訳やサイレントインストールに対応し、見栄えもよく
+  なりました。
 
 
 変更点							*changed-8.2*
