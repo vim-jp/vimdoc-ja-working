@@ -25895,30 +25895,31 @@ heredoc スタイルの代入が追加されました: >
 変更点							*changed-8.2*
 ------
 
-The xdiff library was included to avoid the need for an external diff program
-and to make updating diffs much faster.
+外部 diff プログラムの必要を避け、差分の更新をより高速化するために、xdiff ライ
+ブラリが取り込まれました。
 
-The code is using a few more modern C features, such as // comments.
+コードは、// コメントのようなさらにいくつかの現代的な C の機能を使っています。
 
-Support for old compilers has been dropped: Borland C++, MSVC 2008.
+古いコンパイラの対応が削除されました: Borland C++, MSVC 2008
 
-Hangul input support was removed, it actually didn't work anymore.
+ハングル入力対応が削除されました。実際はもはや動いていませんでした。
 
-Makefiles for old Amiga compilers were removed: Dice, Manx and SAS.
+古い Amiga コンパイラ向けのメイクファイルが削除されました: Dice, Manx と SAS
 
-If a swap file is found without any changes it is automatically deleted.
+変更のないスワップファイルが見つかったときは自動的に削除されます。
 
-The FEAT_TAG_OLDSTATIC code was removed, it slowed down tag searches.
-The FEAT_TAG_ANYWHITE code was removed, it was not enabled in any build.
-The UNICODE16 code was removed, it was not useful.
-Workshop support was removed, nobody was using it.
-The Aap build files were removed, they were outdated.
-Farsi support was removed, it was outdated and unused.
+FEAT_TAG_OLDSTATIC コードは削除されました。それはタグの検索を遅くしていました。
+FEAT_TAG_ANYWHITE コードは削除されました。それはどのビルドでも有効化されていま
+せんでした。
+UNICODE16 コードは削除されました。それは有用ではありませんでした。
+Workshop 対応は削除されました。誰もそれを使っていませんでした。
+Aap ビルドファイルは削除されました。それらは古くなっていました。
+ペルシア語対応は削除されました。それは古くなり使われていませんでした。
 
-VIMDLL was re-implemented, this shares the common parts between vim and gvim
-to reduce the total install size.
+VIMDLL は再実装されました。これはインストールサイズを減らすために vim と gvim
+の共通部分を 1 つにまとめます。
 
-The following features are now included in all versions: |+multi_byte|,
+以下の機能は今では全てのバージョンに含まれています: |+multi_byte|,
 |+virtualedit|, |+vreplace|, |+localmap|, |+cmdline_hist|, |+cmdline_compl|,
 |+insert_expand|, |+modify_fname|, |+comments|
 
