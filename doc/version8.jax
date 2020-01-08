@@ -25856,16 +25856,16 @@ Vim script の改良点				*new-vimscript-8.2*
 
 関数引数はデフォルト値を渡すことでオプショナルにすることができます
 |optional-function-argument|: >
-       function Something(key, value = 10)
+	function Something(key, value = 10)
 
 後方互換性の無い変更を許可するために `:scriptversion` コマンドが追加されまし
 た。例: "." を一貫して辞書メンバーへのアクセスに使えるようにするため、文字列結
-合には ".." のみを使用する。
+合には ".." のみを使用します。
 
 変更できない変数を宣言できるようにするため `:const` が追加されました: >
 	const TIMER_DELAY = 400
 
-行のリストを引用符や行結合を使わずに簡単に変数に代入できるようにするため、
+行のリストを引用符や行継続を使わずに簡単に変数に代入できるようにするため、
 heredoc スタイルの代入が追加されました: >
 	let lines =<< trim END
 	   line one
