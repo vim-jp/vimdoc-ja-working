@@ -294,7 +294,7 @@ Win32の例:
 	<shell> -c "command name >file"
 DOS 32ビットでは、DJGPPが内部的にどうにかして処理する。
 
-起動時にVimは "sh" が 'shell' オプション内のどこにあるかをチェックする。存在す
+起動時にVimは "sh" が 'shell' オプション内のどこかにあるかチェックする。存在す
 るならば、Vimは 'shellcmdflag' と 'shellquote' または 'shellxquote' オプション
 を上記のように設定するだろう。
 
