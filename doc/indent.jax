@@ -1,4 +1,4 @@
-*indent.txt*    For Vim バージョン 8.1.  Last change: 2019 Aug 01
+*indent.txt*    For Vim バージョン 8.2.  Last change: 2019 Dec 07
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -539,7 +539,7 @@ CTRL-TやCTRL-Dを使用してインデントを変更した後では、Vimは�
 			that: this,
 			some: ok,
 		    },
-		    "bar":{ 
+		    "bar":{
 			a : 2,
 			b: "123abc",
 			x: 4,
@@ -795,6 +795,16 @@ HTML				*ft-html-indent* *html-indent* *html-indenting*
       <style>  : {カスタマイズ可}   ブロックの最初の号
 	       : GetCSSIndent()	    その他
       <!-- --> : -1
+
+
+MATLAB                 *ft-matlab-indent* *matlab-indent* *matlab-indenting*
+
+MATLAB エディター/デバッガーの言語設定におけるの関数のインデント書式の設定。以
+下に対応する: >
+    :let g:MATLAB_function_indent = {0, 1 or 2 (default)}
+
+0 の場合はクラシック、1 は入れ子関数のインデント、2 はすべての関数のインデント
+である。
 
 
 PHP				*ft-php-indent* *php-indent* *php-indenting*
