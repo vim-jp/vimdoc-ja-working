@@ -799,8 +799,8 @@ HTML				*ft-html-indent* *html-indent* *html-indenting*
 
 MATLAB                 *ft-matlab-indent* *matlab-indent* *matlab-indenting*
 
-MATLAB エディター/デバッガーの言語設定におけるの関数のインデント書式の設定。以
-下に対応する: >
+MATLAB エディタ/デバッガの言語設定における関数のインデント書式の設定。以下に対
+応する: >
     :let g:MATLAB_function_indent = {0, 1 or 2 (default)}
 
 0 の場合はクラシック、1 は入れ子関数のインデント、2 はすべての関数のインデント
