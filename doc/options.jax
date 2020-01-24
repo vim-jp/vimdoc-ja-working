@@ -43,12 +43,12 @@ Vimには、特別な働きをさせるための多くの内部変数とスイ�
 
 							*:se* *:set*
 :se[t][!]		既定値と違う値のオプションを全て表示する。
-			When [!] is present every option is on a separate
-			line.
+			[!] がある場合、それぞれのオプションは独立した行に表示
+			される。
 
 :se[t][!] all		ターミナルオプション以外の全てのオプションを表示する。
-			When [!] is present every option is on a separate
-			line.
+			[!] がある場合、それぞれのオプションは独立した行に表示
+			される。
 
 :se[t] termcap		ターミナルオプションを全て表示する。Note GUIバージョン
 			では、キーコードは表示されないので注意。なぜなら、キー
@@ -538,13 +538,8 @@ Note 展開されるオプションの値の長さ制限に注意。システム
 モードラインには2つの形式がある。1つ目の形式は次の通りである。
 	[text{white}]{vi:|vim:|ex:}[white]{options}
 
-{訳注: 旧訳
-[text]			任意のテキスト、なくても良い
-{white}			1個以上の余白 (<Space> または <Tab>)
-}
-[text{white}]		empty or any text followed by at least one blank
-			character (<Space> or <Tab>); "ex:" always requires at
-			least one blank character
+[text{white}]		空または、1個以上の余白 (<Space> または <Tab>) が続く
+			任意のテキスト; "ex:" は常に少なくとも1個の空白が必要
 {vi:|vim:|ex:}		"vi:" か "vim:" か "ex:" という文字列
 [white]			空白、なくても良い
 {options}		オプション設定が、空白か ':' で区切られて並んだもので、
@@ -558,13 +553,8 @@ Note 展開されるオプションの値の長さ制限に注意。システム
 
 	[text{white}]{vi:|vim:|Vim:|ex:}[white]se[t] {options}:[text]
 
-{訳注: 旧訳
-[text]			任意のテキスト、なくても良い
-{white}			1個以上の余白 (<Space> または <Tab>)
-}
-[text{white}]		empty or any text followed by at least one blank
-			character (<Space> or <Tab>); "ex:" always requires at
-			least one blank character
+[text{white}]		空または、1個以上の余白 (<Space> または <Tab>) が続く
+			任意のテキスト; "ex:" は常に少なくとも1個の空白が必要
 {vi:|vim:|Vim:|ex:}	"vi:" か "vim:" か "Vim:" か "ex:" という文字列
 [white]			空白、なくても良い
 se[t]			"set " または "se " という文字列 (終わりの空白に注意);
@@ -626,13 +616,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 コマンド "set" の引数に ':' を含めたいときは、その前に '\' を置くこと。':' の
 前の '\' は取り除かれる。例:
    /* vi:set fillchars=stl\:^,vert\:\|: */ ~
-{訳注: 旧訳
-これはオプション 'dir' を "c:\tmp" に変更する。':' の前に '\' が置かれたとき、
-取り除かれるのは1個だけである。だからオプションの値に "\:" を含めたいなら
-"\\:" を指定すること。
-}
-This sets the 'fillchars' option to "stl:^,vert:\|".  Only a single backslash
-before the ':' is removed.  Thus to include "\:" you have to specify "\\:".
+これはオプション 'fillchars' を "stl:^,vert:\|" に変更する。':' の前に '\' が
+置かれたとき、取り除かれるのは1個だけである。だからオプションの値に "\:" を含
+めたいなら "\\:" を指定すること。
 							*E992*
 安全上の理由から、コマンド "set" 以外は使用できない (誰かがテキストファイルで
 「トロイの木馬」を作るかもしれないから)。また、すべてのオプションを設定できる
@@ -2687,11 +2673,11 @@ before the ':' is removed.  Thus to include "\:" you have to specify "\\:".
 		vertical	(他に明示的に指定されない限り)ウィンドウを垂直
 				分割して差分モードを開始する。
 
-		closeoff	When a window is closed where 'diff' is set
-				and there is only one window remaining in the
-				same tab page with 'diff' set, execute
-				`:diffoff` in that window.  This undoes a
-				`:diffsplit` command.
+		closeoff	'diff' が設定されたウィンドウが閉じられ、同じ
+				タブページに 'diff' が設定されたウィンドウが
+				1 つだけ残っているとき、そのウィンドウで
+				`:diffoff` を実行する。これは `:diffsplit` コ
+				マンドを取り消す。
 
 		hiddenoff	バッファが隠れバッファになるときに差分モードを
 				使用しない。
@@ -2979,9 +2965,9 @@ before the ':' is removed.  Thus to include "\:" you have to specify "\\:".
 	とに注意。
 	NOTE: このオプションは、'compatible' がオンになるとViの既定値に、オフ
 	になるとVimの既定値になるので注意。
-	NOTE: when this option is off then the |modifyOtherKeys| functionality
-	is disabled while in Insert mode to avoid ending Insert mode with any
-	key that has a modifier.
+	NOTE: このオプションがオフのとき、挿入モードでは |modifyOtherKeys| 機
+	能は無効化される。修飾子付きのキーが入力されたときに挿入モードが終了す
+	るのを防ぐためである。
 
 						*'eventignore'* *'ei'*
 'eventignore' 'ei'	文字列	(既定では "")
@@ -5302,8 +5288,8 @@ before the ':' is removed.  Thus to include "\:" you have to specify "\\:".
 	ウスカーソルはキーボードフォーカスと共に移動する。既定ではオフだが、こ
 	れはマウスカーソルを動かして予期しないウィンドウをアクティブにしてしま
 	うことがあるため、プルダウンメニューの利用を少し面倒にするからである。
-	MS-Windows: Also see 'scrollfocus' for what window is scrolled when
-	using the mouse scroll whel.
+	MS-Windows: マウスのスクロールホイールを使ったときにどのウィンドウがス
+	クロールされるかについては 'scrollfocus' も参照。
 
 			*'mousehide'* *'mh'* *'nomousehide'* *'nomh'*
 'mousehide' 'mh'	切替	(既定ではオン)
@@ -6321,13 +6307,14 @@ before the ':' is removed.  Thus to include "\:" you have to specify "\\:".
 	scroll-binding を設定するが、":split file" はそうならない。
 
 			*'scrollfocus'* *'scf'* *'noscrollfocus'* *'noscf'*
-'scrollfocus' 'scf'	boolean  (default off)
-			global
-			{only for MS-Windows GUI}
-	When using the scroll wheel and this option is set, the window under
-	the mouse pointer is scrolled.  With this option off the current
-	window is scrolled.
-	Systems other than MS-Windows always behave like this option is on.
+'scrollfocus' 'scf'	切替	(既定ではオフ)
+			グローバル
+			{Vim の MS-Windows GUI 版のみで有効}
+	スクロールホイールが使われてこのオプションがオンのとき、マウスポインタ
+	の下のウィンドウがスクロールされる。このオプションがオフのとき、現在の
+	ウィンドウがスクロールされる。
+	MS-Windows 以外のシステムではこのオプションが常にオンであるかのように
+	ふるまう。
 
 						*'scrolljump'* *'sj'*
 'scrolljump' 'sj'	数値	(既定では 1)
@@ -6812,8 +6799,9 @@ before the ':' is removed.  Thus to include "\:" you have to specify "\\:".
 	ので注意。
 	'showbreak' の文字列を行番号の間に表示したいときは、'cpoptions' にフラ
 	グ "n" を加えること。
-	A window-local value overrules a global value.  If the global value is
-	set and you want no value in the current window use NONE: >
+	ウィンドウローカルの値がグローバルな値を上書きする。もし、グローバルな
+	値が設定されており、現在のウィンドウでは値を設定したくないときは NONE
+	を使う: >
 		:setlocal showbreak=NONE
 <
 				     *'showcmd'* *'sc'* *'noshowcmd'* *'nosc'*
@@ -7315,20 +7303,12 @@ before the ':' is removed.  Thus to include "\:" you have to specify "\\:".
 <	気をつけてほしいのは、expression はステータス行が表示されるたびに評価
 	されるということだ。
 				*stl-%{* *g:actual_curbuf* *g:actual_curwin*
-{訳注: 旧訳
-	あるバッファまたはウィンドウのステータス行が描画されている最中は、一時
-	的にそのバッファまたはウィンドウがカレントバッファまたはカレントウィン
-	ドウに設定され、そこで expression が評価される。変数 "g:actual_curbuf"
-	は、本当のカレントバッファで関数 `bufnr()` が返す値に設定され、
-	"g:actual_curwin" は実際のカレントウィンドウの |window-ID| に設定され
-	る。これらの値は文字列である。
-}
-	While evaluating %{} the current buffer and current window will be set
-	temporarily to that of the window (and buffer) whose statusline is
-	currently being drawn.  The expression will evaluate in this context.
-	The variable "g:actual_curbuf" is set to the `bufnr()` number of the
-	real current buffer and "g:actual_curwin" to the |window-ID| of the
-	real current window.  These values are strings.
+	%{} を評価する際、あるバッファまたはウィンドウのステータス行が描画され
+	ている最中は、一時的にそのバッファまたはウィンドウがカレントバッファま
+	たはカレントウィンドウに設定され、そこで expression が評価される。変数
+	"g:actual_curbuf" は、本当のカレントバッファで関数 `bufnr()` が返す値
+	に設定され、"g:actual_curwin" は実際のカレントウィンドウの |window-ID|
+	に設定される。これらの値は文字列である。
 
 	このオプションがモードラインで設定されたときは、式はサンドボックス
 	(|sandbox|) の中で評価される。|sandbox-option| を参照。
@@ -7457,8 +7437,8 @@ before the ':' is removed.  Thus to include "\:" you have to specify "\\:".
 	   vsplit	"split" と同様だが、垂直に分割する。
 	   newtab	"split" と同様だが、新しいタブページを開く。"split" と
 			両方指定された場合はこちらが優先される。
-	   uselast	If included, jump to the previously used window when
-			jumping to errors with |quickfix| commands.
+	   uselast	これが含まれていると、|quickfix| コマンドでエラーにジャ
+			ンプするときに、前に使われたウィンドウにジャンプする。
 
 						*'synmaxcol'* *'smc'*
 'synmaxcol' 'smc'	数値	(既定では 3000)
@@ -8967,8 +8947,8 @@ before the ':' is removed.  Thus to include "\:" you have to specify "\\:".
 	了してはならない)。
 	他の説明は |backup-table| を参照。
 	'backupskip' のパターンがマッチしたら、バックアップは作られない。
-	Depending on 'backupcopy' the backup is a new file or the original
-	file renamed (and a new file is written).
+	バックアップが新しいファイルになるか、元のファイルがリネームされる (そ
+	して新しいファイルが書かれる) かは 'backupcopy' に依存する。
 	NOTE: このオプションは、'compatible' がオンになると既定値に設定される
 	ので注意。
 
