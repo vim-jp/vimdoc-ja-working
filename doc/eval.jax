@@ -2438,7 +2438,7 @@ getline({lnum})			文字列	現在のバッファから行の内容を取得
 getline({lnum}, {end})		リスト	カレントバッファの{lnum}から{end}行目
 getloclist({nr} [, {what}])	リスト	locationリストの要素のリスト
 getmatches([{win}])		リスト	現在のマッチのリスト
-getmousepos()			Dict	last known mouse position
+getmousepos()			辞書	マウスの最新の位置
 getpid()			数値	Vim のプロセス ID
 getpos({expr})			リスト	カーソル・マークなどの位置を取得
 getqflist([{what}])		リスト	quickfix要素のリスト
@@ -2492,7 +2492,7 @@ inputsave()			数値	先行入力を保存し、クリアする
 inputsecret({prompt} [, {text}]) 文字列	input()だがテキストを隠す
 insert({object}, {item} [, {idx}])
 				リスト	{object}に要素{item}を挿入 [{idx}の前]
-interrupt()			none	interrupt script execution
+interrupt()			なし	スクリプトの実行を中断する
 invert({expr})			数値	ビット反転
 isdirectory({directory})	数値	{directory}がディレクトリならば|TRUE|
 isinf({expr})			数値	{expr}が無限大の値(正または負)かどうか
@@ -2625,7 +2625,7 @@ pumvisible()			数値	ポップアップメニューが表示されているか
 pyeval({expr})			任意	|Python| の式を評価する
 py3eval({expr})			任意	|python3| の式を評価する
 pyxeval({expr})			任意	|python_x| の式を評価する
-rand([{expr}])			Number	get pseudo-random number
+rand([{expr}])			数値	疑似乱数を取得する
 range({expr} [, {max} [, {stride}]])
 				リスト	{expr}から{max}までの要素のリスト
 readdir({dir} [, {expr}])	リスト	{expr}によって選択された{dir}内のファ
@@ -2743,7 +2743,7 @@ spellsuggest({word} [, {max} [, {capital}]])
 split({expr} [, {pat} [, {keepempty}]])
 				リスト	{expr}を{pat}で区切ってリストを作る
 sqrt({expr})			浮動小数点数	{expr} の平方根
-srand([{expr}])			List	get seed for |rand()|
+srand([{expr}])			リスト	|rand()| 用の種を取得する
 state([{what}])			文字列	Vimの現在の状態
 str2float({expr})		浮動小数点数	文字列を浮動小数点数に変換する
 str2list({expr} [, {utf8}])	リスト	{expr}の各文字をASCII / UTF8値に変換する
@@ -2764,7 +2764,8 @@ strlen({expr})			数値	文字列{expr}の長さ
 strpart({str}, {start} [, {len}])
 				文字列	{str}内{start}から長さ{len}の部分
 strptime({format}, {timestring})
-				Number	Convert {timestring} to unix timestamp
+				数値	{timestring} を unix タイムスタンプに
+					変換
 strridx({haystack}, {needle} [, {start}])
 				数値	{haystack}内の最後の{needle}のインデッ
 					クス
@@ -4733,8 +4734,8 @@ getbufinfo([{dict}])
 					ときのみ有効}
 			listed		バッファがリストされている場合はTRUE。
 			lnum		バッファ内の現在の行番号。
-			linecount	number of lines in the buffer (only
-					valid when loaded)
+			linecount	バッファ内の行数 (ロードされているとき
+					のみ有効)
 			loaded		バッファがロードされている場合はTRUE。
 			name		バッファ内のファイルへのフルパス。
 			signs		バッファに設置された目印のリスト。
@@ -4983,7 +4984,7 @@ getcompletion({pat}, {type} [, {filtered}])		*getcompletion()*
 		command		Exコマンド (および引数)
 		compiler	コンパイラ
 		cscope		|:cscope|のサブオプション
-		diff_buffer     |:diffget| and |:diffput| completion
+		diff_buffer     |:diffget| と |:diffput| の補完
 		dir		ディレクトリ名
 		environment	環境変数名
 		event		自動コマンドのイベント
@@ -5256,33 +5257,33 @@ getmatches([{win}])					*getmatches()*
 			:unlet m
 <
 getmousepos()						*getmousepos()*
-		Returns a Dictionary with the last known position of the
-		mouse.  This can be used in a mapping for a mouse click or in
-		a filter of a popup window.  The items are:
-			screenrow	screen row
-			screencol	screen column
-			winid		Window ID of the click
-			winrow		row inside "winid"
-			wincol		column inside "winid"
-			line		text line inside "winid"
-			column		text column inside "winid"
-		All numbers are 1-based.
+		マウスの最新の位置を示す辞書を返す。マウスクリックのマッピング
+		やポップアップウィンドウのフィルターで使うことができる。辞書の
+		要素は:
+			screenrow	画面行
+			screencol	画面桁
+			winid		クリックされたウィンドウ ID
+			winrow		"winid" 内の行
+			wincol		"winid" 内の桁
+			line		"winid" 内のテキスト行
+			column		"winid" 内のテキスト桁
+		全ての数値は 1 ベースである。
 
-		If not over a window, e.g. when in the command line, then only
-		"screenrow" and "screencol" are valid, the others are zero.
+		ウィンドウの上ではない場合、例えばコマンドラインの中などでは
+		"screenrow" と "screencol" のみが有効で、残りは 0 になる。
 
-		When on the status line below a window or the vertical
-		separater right of a window, the "line" and "column" values
-		are zero.
+		ウィンドウの下のステータスラインやウィンドウの右の垂直セパレー
+		ターの場合、"line" と "column" は 0 になる。
 
-		When the position is after the text then "column" is the
-		length of the text in bytes.
+		位置がテキストより後の場合、"column" はテキストのバイト長にな
+		る。
 
-		If the mouse is over a popup window then that window is used.
+		マウスがポップアップウィンドウの上の場合、そのウィンドウが使わ
+		れる。
 
 
-		When using |getchar()| the Vim variables |v:mouse_lnum|,
-		|v:mouse_col| and |v:mouse_winid| also provide these values.
+		|getchar()| を使ったとき、Vim 変数 |v:mouse_lnum|,
+		|v:mouse_col| と |v:mouse_winid| もこれらの値を提供する。
 
 							*getpid()*
 getpid()	Vim のプロセス ID を数値で返す。Unix と MS-Windows では Vim が
@@ -6079,10 +6080,10 @@ insert({object}, {item} [, {idx}])			*insert()*
 			mylist->insert(item)
 
 interrupt()						*interrupt()*
-		Interrupt script execution.  It works more or less like the
-		user typing CTRL-C, most commands won't execute and control
-		returns to the user.  This is useful to abort execution
-		from lower down, e.g. in an autocommand.  Example: >
+		スクリプトの実行を中断する。これは多かれ少なかれ、ユーザーが
+		CTRL-C をタイプしたように動作する。多くのコマンドが実行されず、
+		制御がユーザーに戻される。これは、自動コマンドの中など下位から
+		実行を中断するのに有用である。例: >
 		:function s:check_typoname(file)
 		:   if fnamemodify(a:file, ':t') == '['
 		:       echomsg 'Maybe typo'
@@ -7471,14 +7472,14 @@ range({expr} [, {max} [, {stride}]])				*range()*
 <
 
 rand([{expr}])						*rand()*
-		Return a pseudo-random Number generated with an xoshiro128**
-		algorithm using seed {expr}.  The returned number is 32 bits,
-		also on 64 bits systems, for consistency.
-		{expr} can be initialized by |srand()| and will be updated by
-		rand().  If {expr} is omitted, an internal seed value is used
-		and updated.
+		種 {expr} を使い、xoshiro128** アルゴリズムで生成された疑似乱
+		数を返す。返される数値は一貫性のため、64 ビットシステム上であ
+		っても 32 ビットである。
+		{expr} は |srand()| で初期化することができ、rand() で更新され
+		る。{expr} が省略されたときは内部的な種の値が用いられ、更新さ
+		れる。
 
-		Examples: >
+		例: >
 			:echo rand()
 			:let seed = srand()
 			:echo rand(seed)
@@ -8548,26 +8549,20 @@ settagstack({nr}, {dict} [, {action}])			*settagstack()*
 		{nr}にはウィンドウ番号または |window-ID| を指定できる。
 
 		{dict}でサポートされている項目のリストについては、
-		|gettagstack()| を参照。"curidx" takes effect before changing
-		the tag stack.
+		|gettagstack()| を参照。"curidx" はタグスタックを変更する前に
+		効果を生じる。
 							*E962*
-{訳注: 旧訳
-		{action}が与えられないか 'r' に設定されている場合、タグスタッ
-		クは置き換えられる。{action}が 'a' に設定されている場合、{dict}
-		の新しいエントリはタグスタックにプッシュされる。
-}
-		How the tag stack is modified depends on the {action}
-		argument:
-		- If {action} is not present or is set to 'r', then the tag
-		  stack is replaced.
-		- If {action} is set to 'a', then new entries from {dict} are
-		  pushed (added) onto the tag stack.
-		- If {action} is set to 't', then all the entries from the
-		  current entry in the tag stack or "curidx" in {dict} are
-		  removed and then new entries are pushed to the stack.
+		どのようにタグスタックが更新されるかは {action} 引数に依存する:
+		- {action} が与えられないか 'r' に設定されている場合、タグス
+		  タックは置き換えられる。
+		- {action} が 'a' に設定されている場合、{dict} の新しいエント
+		  リはタグスタックにプッシュされる。
+		- {action} が 't' に設定されている場合、タグスタックの現在のエ
+		  ントリあるいは {dict} の "curidx" からすべてのエントリが削除
+		  され、新しいエントリがスタックにプッシュされる。
 
-		The current index is set to one after the length of the tag
-		stack after the modification.
+		タグスタックの変更後、現在のインデックスはスタックの長さの 1
+		つ後に設定される。
 
 		成功の場合は 0 を返し、失敗の場合は -1 を返す。
 
@@ -8930,15 +8925,15 @@ sqrt({expr})						*sqrt()*
 
 
 srand([{expr}])						*srand()*
-		Initialize seed used by |rand()|:
-		- If {expr} is not given, seed values are initialized by
-		  reading from /dev/urandom, if possible, or using time(NULL)
-		  a.k.a. epoch time otherwise; this only has second accuracy.
-		- If {expr} is given it must be a Number.  It is used to
-		  initialize the seed values.  This is useful for testing or
-		  when a predictable sequence is intended.
+		|rand()| で使われる種を初期化する:
+		- {expr} が与えられない場合、種は可能ならば /dev/urandom を読
+		  むことで初期化され、そうでなければ time(NULL)、すなわちエポッ
+		  クタイム (これは秒の正確度しかないが) で初期化される。
+		- {expr} が与えられる場合、数値でなければならない。これは種の
+		  値を初期化するのに用いられる。これはテストや、予期可能な数列
+		  を意図しているときに有用である。
 
-		Examples: >
+		例: >
 			:let seed = srand()
 			:let seed = srand(userinput)
 			:echo rand(seed)
@@ -9187,22 +9182,19 @@ strpart({src}, {start} [, {len}])			*strpart()*
 			GetText()->strpart(5)
 
 strptime({format}, {timestring})				*strptime()*
-		The result is a Number, which is a unix timestamp representing
-		the date and time in {timestring}, which is expected to match
-		the format specified in {format}.
+		結果は数値で、{format} で指定した書式に一致する {timestring} が
+		表す日付と時刻の unix タイムスタンプを返す。
 
-		The accepted {format} depends on your system, thus this is not
-		portable!  See the manual page of the C function strptime()
-		for the format.  Especially avoid "%c".  The value of $TZ also
-		matters.
+		受け入れられる {format} はシステムに依存するため、これは移植可
+		能ではない! 書式は C 関数 strptime() のマニュアルページを参照
+		すること。特に "%c" は避けること。$TZ の値も影響する。
 
-		If the {timestring} cannot be parsed with {format} zero is
-		returned.  If you do not know the format of {timestring} you
-		can try different {format} values until you get a non-zero
-		result.
+		{timestring} が {format} でパースできないときは 0 が返される。
+		{timestring} の書式が分からないときは、非 0 の値が返るまで、異
+		なった {format} の値を試してみるとよい。
 
-		See also |strftime()|.
-		Examples: >
+		|strftime()| も参照。
+		例: >
 		  :echo strptime("%Y %b %d %X", "1997 Apr 27 11:49:23")
 <		  862156163 >
 		  :echo strftime("%c", strptime("%y%m%d %T", "970427 11:53:55"))
@@ -9210,7 +9202,7 @@ strptime({format}, {timestring})				*strptime()*
 		  :echo strftime("%c", strptime("%Y%m%d%H%M%S", "19970427115355") + 3600)
 <		  Sun Apr 27 12:53:55 1997
 
-		Not available on all systems.  To check use: >
+		全システムで使用可能ではない。調べるにはこれを使う: >
 			:if exists("*strptime")
 
 
@@ -10096,7 +10088,7 @@ win_splitmove({nr}, {target} [, {options}])		*win_splitmove()*
 		を閉じることに似ている。
 
 		{nr} と {target} の両方とも、ウィンドウ番号または |window-ID|
-		である。Both must be in the current tab page.
+		である。両方とも現在のタブページになければならない。
 
 		成功時は 0、失敗時は非0 を返す。
 
@@ -10130,10 +10122,9 @@ wincol()	結果は数値で、ウィンドウの中でカーソルがある位�
 
 							*windowsversion()*
 windowsversion()
-		The result is a String.  For MS-Windows it indicates the OS
-		version.  E.g, Windows 10 is "10.0", Windows 8 is "6.2",
-		Windows XP is "5.1".  For non-MS-Windows systems the result is
-		an empty string.
+		文字列を返す。MS-Windows では OS のバージョンを示す。例えば、
+		Windows 10 は "10.0"、Windows 8 は "6.2"、Windows XP は "5.1"
+		である。MS-Windows 以外のシステムでは、結果は空文字列である。
 
 winheight({nr})						*winheight()*
 		結果は数値で、{nr}で示されるウィンドウの高さ(行数)を示す。
@@ -10541,7 +10532,7 @@ ttyout			出力が端末 (tty) である
 unix			Vim の Unix バージョン。 *+unix*
 unnamedplus		'clipboard' に "unnamedplus" をサポート
 user_commands		ユーザー定義コマンドをサポート (常に true)
-vartabs			Compiled with variable tabstop support |'vartabstop'|.
+vartabs			可変タブストップをサポート |'vartabstop'|.
 vcon			Win32: 仮想コンソールサポートが機能していて、
 			'termguicolors' を使用することができる。|+vtp| も参照。
 vertsplit		ウィンドウの垂直分割をサポート |:vsplit| (常に true)
