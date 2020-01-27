@@ -5540,7 +5540,7 @@ getwininfo([{winid}])					*getwininfo()*
 
 		各Listアイテムは次のエントリを持つ辞書である:
 			botline		最後に表示されたバッファ行
-			bufnr		ウィンドウ内のバッファ数
+			bufnr		ウィンドウ内のバッファ番号
 			height		ウィンドウの高さ (winbarを除く)
 			loclist		locationリストを表示してる場合は1
 					{Vimが|+quickfix|機能付きでコンパイルさ
