@@ -119,7 +119,7 @@ XmNballoonEvalBackground, XmNballoonEvalForeground)。
     メッセージフッター				FEAT_FOOTER
     バルーンウィンドウ				FEAT_BEVAL
 
-Sun Visual WorkShop が存在しないため、サポートは削除されました。
+Sun Visual WorkShop は既に存在しないため、この製品特有のサポートは削除された。
 
 SunのNetBeansのサポートについては|netbeans|を参照。
 
