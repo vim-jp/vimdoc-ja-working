@@ -12,6 +12,9 @@ Vim script の利用についてはユーザーマニュアルの41章|usr_41.tx
 注意: Vim script はコンパイル時に無効化できる。もしそうなっているとこのド
 キュメントに書かれている事は有効ではない。|+eval|と|no-eval-feature|を参照。
 
+このファイルは後方互換の Vim script について書かれている。より高速で、型チェッ
+クや多くの機能に対応する Vim9 script については |vim9.txt| を参照のこと。
+
 1.  変数			|variables|
     1.1 変数の型
     1.2 関数への参照			|Funcref|
@@ -2471,8 +2474,8 @@ haslocaldir([{winnr} [, {tabnr}]])
 					実行されたなら|TRUE|
 hasmapto({what} [, {mode} [, {abbr}]])
 				数値	{what}のマッピングが存在するなら|TRUE|
-histadd({history}, {item})	文字列	ヒストリに追加
-histdel({history} [, {item}])	文字列	ヒストリからitemを削除
+histadd({history}, {item})	数値	ヒストリに追加
+histdel({history} [, {item}])	数値	ヒストリからitemを削除
 histget({history} [, {index}])	文字列	ヒストリから{index}アイテムを取得
 histnr({history})		数値	ヒストリの数
 hlexists({name})		数値	highlight group {name}が存在したら|TRUE|
@@ -10596,6 +10599,9 @@ x11			X11をサポート
 ユーザーは自分で新しい関数を定義することができる。その関数は組込み関数とまった
 く同じように呼び出せる。関数は一連のExコマンドを実行する。ノーマルモードコマン
 ドはコマンド|:normal|によって実行できる。
+
+この節は旧来の関数についてである。より高速で、型チェックや多くの機能に対応する
+Vim9 関数については |vim9.txt| を参照のこと。
 
 関数名は組込み関数との混同を避ける為、大文字で始まらなければならない。他のスク
 リプトで同じ関数名を使用してしまうことを避ける為に、露骨に短い名前は避けるべき
