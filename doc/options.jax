@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 8.2.  Last change: 2020 Jan 18
+*options.txt*	For Vim バージョン 8.2.  Last change: 2020 Jan 24
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -6233,6 +6233,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	  compiler/	コンパイラ定義ファイル |:compiler|
 	  doc/		ヘルプドキュメント |write-local-help|
 	  ftplugin/	ファイルタイププラグイン |write-filetype-plugin|
+	  import/	`:import` によって探されるファイル
 	  indent/	インデントスクリプト |indent-expression|
 	  keymap/	キーマップ定義ファイル |mbyte-keymap|
 	  lang/		翻訳版メニュー |:menutrans|
