@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2020 Jan 19
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2020 Feb 03
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1758,9 +1758,10 @@ v:errors	|assert_true()|のような、テスト用関数によって見つか�
 		き)される。
 
 					*v:event* *event-variable*
-v:event		現在の |autocommand| に関する情報を含む辞書。この辞書は
-		|autocommand| が終了したときに空にされる。独立したコピーの取得
-		方法については |dict-identity| を参照。
+v:event		現在の |autocommand| に関する情報を含む辞書。辞書に何が入るか
+		は個々のイベントを参照。
+		この辞書は |autocommand| が終了したときに空にされる。独立した
+		コピーの取得方法については |dict-identity| を参照。
 
 					*v:exception* *exception-variable*
 v:exception	最も直近に捕捉され、まだ終了していない例外の値。
@@ -3420,6 +3421,7 @@ char2nr({expr} [, {utf8}])					*char2nr()*
 			GetChar()->char2nr()
 
 chdir({dir})						*chdir()*
+		{dir}は文字列でなければならない。
 		現在の作業ディレクトリを {dir} に変更する。ディレクトリの変更
 		範囲は、カレントウィンドウのディレクトリによって異なる:
 			- カレントウィンドウにウィンドウローカルディレクトリ
@@ -10181,7 +10183,7 @@ winline()	結果は数値で、ウィンドウの最上行から数えた行番�
 
 							*winnr()*
 winnr([{arg}])	結果は現在のウィンドウを示す数値。最上位のウィンドウは1であ
-		る。
+		る。ポップアップウィンドウは0を返す。
 
 		省略可能な引数{arg}は以下の値をサポートする:
 			$	最後のウィンドウの番号(ウィンドウ数)
