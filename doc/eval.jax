@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2020 Feb 03
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2020 Feb 14
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2367,6 +2367,7 @@ deletebufline({expr}, {first} [, {last}])
 did_filetype()			数値	FileTypeのautocommandが実行されたか?
 diff_filler({lnum})		数値	差分モードで{lnum}に挿入された行
 diff_hlID({lnum}, {col})	数値	差分モードで{lnum}/{col}位置の強調
+echoraw({expr})			なし	{expr} をそのまま出力する
 empty({expr})			数値	{expr}が空なら|TRUE|
 environ()			辞書	すべての環境変数を返す
 escape({string}, {chars})	文字列	{string}内の{chars}を '\' でエスケープ
@@ -2890,6 +2891,7 @@ win_screenpos({nr})		リスト	ウィンドウ {nr} のスクリーン位置を�
 win_splitmove({nr}, {target} [, {options}])
 				数値	ウィンドウ {nr} を {target} の分割へ移
 					動
+win_gettype([{nr}])		文字列	ウィンドウ{nr}の種別
 winbufnr({nr})			数値	ウィンドウ{nr}のバッファ番号
 wincol()			数値	カーソル位置のウィンドウ桁
 winheight({nr})			数値	ウィンドウ{nr}の高さ
@@ -3893,6 +3895,16 @@ diff_hlID({lnum}, {col})				*diff_hlID()*
 
 		|method| としても使用できる: >
 			GetLnum()->diff_hlID(col)
+
+echoraw({expr})						*echoraw()*
+		{expr}を表示不可能な文字を含み、そのまま出力する。これは端末
+		コードを出力するために使える。例えば、modifyOtherKeysを無効に
+		するためには: >
+			call echoraw(&t_TE)
+<		さらに再度有効にするためには: >
+			call echoraw(&t_TI)
+<		この方法でターミナルを壊すことができるため、気を付けて取り扱う
+		こと
 
 empty({expr})						*empty()*
 		{expr}が空なら1を、そうでなければ0を返す。
@@ -10051,6 +10063,23 @@ win_getid([{win} [, {tab}]])				*win_getid()*
 
 		|method| としても使用できる: >
 			GetWinnr()->win_getid()
+
+
+win_gettype([{nr}])					*win_gettype()*
+		ウィンドウの種別を返す:
+			"popup"		ポップアップウィンドウ |popup|
+			"command"	コマンドラインウィンドウ |cmdwin|
+			(empty)		通常のウィンドウ
+			"unknown"	ウィンドウ{nr}が見付からない
+
+		{nr} を省略した場合は現在のウィンドウの種別を返す。
+		{nr} が与えられた場合はそのウィンドウ番号または |window-ID| の
+		種別を返す。
+
+		'buftype' オプションも参照すること。ポップアップウィンドウ上で
+		ターミナルが起動している場合、'buftype' は "terminal" であり、
+		win_gettype() は "popup" を返す。
+
 
 win_gotoid({expr})					*win_gotoid()*
 		{expr} の ID で示されるウィンドウへ移動する。これは現在のタブ
