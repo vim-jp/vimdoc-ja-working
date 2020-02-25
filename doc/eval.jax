@@ -3904,7 +3904,7 @@ echoraw({expr})						*echoraw()*
 <		さらに再度有効にするためには: >
 			call echoraw(&t_TI)
 <		この方法でターミナルを壊すことができるため、気を付けて取り扱う
-		こと
+		こと。
 
 empty({expr})						*empty()*
 		{expr}が空なら1を、そうでなければ0を返す。
@@ -10138,6 +10138,7 @@ win_splitmove({nr}, {target} [, {options}])		*win_splitmove()*
 		|method| としても使用できる: >
 			GetWinid()->win_splitmove(target)
 <
+
 							*winbufnr()*
 winbufnr({nr})	結果は数値で、{nr}番目のウィンドウに関連付けられているバッファ
 		の番号。{nr} にはウィンドウ番号または|window-ID|が使える。
