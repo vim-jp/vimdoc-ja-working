@@ -1,52 +1,52 @@
-*os_haiku.txt*	For Vim version 8.2.  Last change: 2020 Feb 26
+*os_haiku.txt*	For Vim バージョン 8.2.  Last change: 2020 Feb 26
 
 
-		  VIM REFERENCE MANUAL    by Bram Moolenaar
+		  VIMリファレンスマニュアル    by Bram Moolenaar
 
 
 							*Haiku*
-This file contains the particularities for the Haiku version of Vim.  For
-matters not discussed in this file, Vim behaves very much like the Unix
-|os_unix.txt| version.
+このファイルは Haiku version の Vim 特有の事柄に関して記述されています。この
+ファイルで説明されていない事項について、Vimの挙動はUnix |os_unix.txt| version
+と非常に良く似ています。
 
-Haiku is an open-source operating system inspired by BeOS, that specifically
-targets personal computing.
+Haiku はBeOSに触発されたオープンソースのオペレーティングシステムで、パーソナル
+コンピューターをターゲットとしています。
 
- 1. General			|haiku-general|
- 2. Compiling Vim		|haiku-compiling|
- 3. The Haiku GUI		|haiku-gui|
- 4. The $VIM directory		|haiku-vimdir|
- 5. The $BE_USER_SETTINGS
-    directory			|haiku-user-settings-dir|
- 6. Drag & Drop			|haiku-dragndrop|
- 7. Single Launch vs. Multiple
-    Launch			|haiku-launch|
- 8. Fonts			|haiku-fonts|
- 9. The meta key modifier	|haiku-meta|
-10. Mouse key mappings		|haiku-mouse|
-11. Color names			|haiku-colors|
-12. Credits			|haiku-support-credits|
-13. Bugs & things To Do		|haiku-bugs|
-
-
-1. General						*haiku-general*
-
-The default syntax highlighting mostly works with different foreground colors
-to highlight items.  This works best if you set your Terminal window to a
-darkish background and light letters.  Some middle-grey background (for
-instance (r,g,b)=(168,168,168)) with black letters also works nicely.
+ 1. 全般			|haiku-general|
+ 2. Vimのコンパイル		|haiku-compiling|
+ 3. HaikuのGUI			|haiku-gui|
+ 4. $VIMディレクトリ		|haiku-vimdir|
+ 5. $BE_USER_SETTINGSディレクトリ
+				|haiku-user-settings-dir|
+ 6. ドラッグ&ドロップ		|haiku-dragndrop|
+ 7. 複数同時起動不可と複数起動可能
+				|haiku-launch|
+ 8. フォント			|haiku-fonts|
+ 9. Metaキー			|haiku-meta|
+10. マウスのキーマッピング	|haiku-mouse|
+11. 色名			|haiku-colors|
+12. クレジット			|haiku-support-credits|
+13. バグとToDo的な事柄		|haiku-bugs|
 
 
-2. Compiling Vim					*haiku-compiling*
+1. 全般							*haiku-general*
 
-Vim can be compiled using the standard configure/make approach. Running
-./configure without any arguments or passing --enable-gui=haiku, will compile
-vim with the Haiku GUI support.  Run ./configure --help , to find out other
-features you can enable/disable.
+デフォルトのシンタックスハイライトは異なる前景色のハイライトアイテムについて多
+くの場合動作します。もっとも良く動作させるには暗めの背景色と明るい文字をターミ
+ナルウィンドウに設定します。いくつかの中間的なグレーの背景色 (例えば
+(r,g,b)=(168,168,168)) と黒の文字でもまた良く動くでしょう。
 
-Now you should use "make" to compile Vim, then "make install" to install it.
-For seamless integration into the Haiku the GUI-less vim binary should be
-additionally installed over the GUI version. Typical build commands are: >
+
+2. Vimのコンパイル					*haiku-compiling*
+
+Vimは標準的なconfigure/make手法を用いてコンパイルすることができま す。
+./configureを引数無しか--enable-gui=haikuでHaikuのGUIをサポートしてコンパイル
+できます。./configure --helpを走らせることで、あなたが他にenable/disableで
+きる機能を見付けることができるでしょう。
+
+"make"でVimをコンパイルでき、次いで"install"でインストールすることができます。
+GUI版で追加的にGUIレスのvimバイナリもインストールされ、Haikuにシームレスに統合
+されます。
 
   ./configure --prefix=`finddir B_SYSTEM_NONPACKAGED_DIRECTORY` \
     --datarootdir=`finddir B_SYSTEM_NONPACKAGED_DATA_DIRECTORY` \
@@ -62,36 +62,35 @@ additionally installed over the GUI version. Typical build commands are: >
   make install
 
 
-3. The Haiku GUI					*haiku-gui*
+3. HaikuのGUI						*haiku-gui*
 
-Normally Vim starts with the GUI if you start it as gvim or vim -g.  The vim
-version with GUI tries to determine if it was started from the Tracker instead
-of the Terminal, and if so, uses the GUI anyway. However, the current detection
-scheme is fooled if you use the command "vim - </dev/null".
+通常、起動をgvimかvim -gで行なうとGUIのVimが起動します。GUI付き版のvimはターミ
+ナルからではなくトラッカーからの起動であるかどうかを判定しようとします、そして
+そうだった場合GUIを使います。しかしながら、現在の判定スキームは
+"vim - </dev/null" を使うと失敗します。
 
-Stuff that does not work yet:
+まだ動作しないもの:
 
-- Mouse up events are not generated when outside the window. This may be a bug in
-  Haiku. You can notice this when selecting text and moving the cursor outside
-  the window, then letting go of the mouse button.  Another way is when you
-  drag the scrollbar and do the same thing.  Because Vim still thinks you are
-  still playing with the scrollbar it won't change it itself. I provided a
-  workaround which kicks in when the window is activated or deactivated (so it
-  works best with focus- follows-mouse turned on).
-- The cursor does not flash (very low priority; I'm not sure I even like it
-  when it flashes)
+- ウィンドウ外でのマウスのUpイベントが生成されません。これはおそらくHaikuのバ
+  グです。文字列の選択後にウィンドウ外へとカーソル移動させ、マウスボタンを離す
+  と分ります。他の方法として、スウクロールバーをドラッグして同じ操作するという
+  のもあります。なのでVimはあなたがスクロールバーを操作しても変化しないように
+  しました。この回避策はウィンドウがアクティブ/非アクティブが切り替るまで提供
+  されます (そしてマウスのフォーカスがOnになるまで適切に動作します)。
+- カーソルはフラッシュされません(とても低優先; 点滅するのが好ましいとは思えな
+  いので)。
 
 
-4. The $VIM directory					*haiku-vimdir*
+4. $VIMディレクトリ					*haiku-vimdir*
 
-$VIM is the symbolic name for the place where Vims support files are stored.
-The default value for $VIM is set at compile time and can be determined with >
+$VIMはVimのサポートファイルを保存している場所へのシンボル名です。
+$VIMのデフォルト値はコンパイル時にセットされ、次のコマンドで確認でき >
 
   :version
 
-The normal value is /boot/common/data/vim.  If you don't like it you can
-set the VIM environment variable to override this, or set 'helpfile' in your
-.vimrc: >
+通常は /boot/common/data/vim になっています。この値が好ましくなく変更したいな
+ら、環境変数 VIM に値を設定することで上書きでき、あるいは(訳註:ヘルプファ
+イルなら)あなたの.vimrcで'helpfile'を設定してもできます: >
 
   :if version >= 500
   :    set helpfile=~/vim/runtime/doc/help.txt
@@ -99,127 +98,130 @@ set the VIM environment variable to override this, or set 'helpfile' in your
   :endif
 
 
-5. The $USER_SETTINGS_DIR directory		*haiku-user-settings-dir*
+5. $BE_USER_SETTINGSディレクトリ			*haiku-user-settings-dir*
 
-$USER_SETTINGS_DIR is the symbolic name for the place where Haiku
-configuration and settings files are stored.
+$USER_SETTINGS_DIRはHaikuの設定とコンフィグファイルを保存している場所へのシン
+ボル名です。
 
-The normal value is /boot/home/config/settings.
-
-
-6. Drag & Drop						*haiku-dragndrop*
-
-You can drop files and directories on either the Vim icon (starts a new Vim
-session, unless you use the File Types application to set Vim to be "Single
-Launch") or on the Vim window (starts editing the files).  Dropping a folder
-sets Vim's current working directory. |:cd| |:pwd| If you drop files or
-folders with either SHIFT key pressed, Vim changes directory to the folder
-that contains the first item dropped.  When starting Vim, there is no need to
-press shift: Vim behaves as if you do.
-
-Files dropped set the current argument list. |argument-list|
+通常は /boot/home/config/settings になっています。
 
 
-7. Single Launch vs. Multiple Launch			*haiku-launch*
+6. ドラッグ&ドロップ					*haiku-dragndrop*
 
-As distributed Vim's Application Flags (as seen in the FileTypes preference)
-are set to Multiple Launch.  If you prefer, you can set them to Single Launch
-instead.  Attempts to start a second copy of Vim will cause the first Vim to
-open the files instead.  This works from the Tracker but also from the command
-line.  In the latter case, non-file (option) arguments are not supported.
-Another drawback of the Single Launch is silent ignore of "Open With ..."
-requests by vim instance that running as non-GUI application even GUI support
-was compiled in. Vim instance running with GUI has no such problems.
+Vimのアイコン(ドロップするファイルのアプリケーションがVimの"複数同時起動不
+可"に設定されていなければ新しいVimのセッションを開始します)、もしくはVimのウィ
+ンドウ(ファイルの編集を始めます)にファイル(複数)もしくはディレクトリ(複数)をド
+ロップすることができます。フォルダをドロップした場合はVimのカレントワーキング
+ディレクトリを設定します。|:cd| |:pwd|
+もしSHIFTキーを押しながら、ファイルもしくはフォルダをドロップしたなら、Vimは最
+初にドロップされたアイテムが含まれるディレクトリに(訳註:カレントワーキングディ
+レクトリを)変更します。Vimを起動するときはShiftキーを押す必要はなく: Vimは、
+(Shiftキーを押したときと) 同じように動作します。
 
-NB: Only the GUI version has a BApplication (and hence Application Flags).
-This section does not apply to the GUI-less version, should you compile one.
+ファイルのドロップは引数リストを設定します。 |argument-list|
 
 
-8. Fonts						*haiku-fonts*
+7. 複数同時起動不可と複数起動可能			*haiku-launch*
 
-Set fonts with >
+配布されているVimのアプリケーションフラグ(ファイルタイプの設定で確認できる)は
+複数起動可能に設定されています。もし望むなら代りに複数同時起動不可をセットする
+こともできます。2つめのVimのコピーが起動するとき最初のVimでファイルを代りに開
+くよう試みます。これはコマンドラインからではなくトラッカーから開いたときに働き
+ます。後者のケースでは、ノンファイル(オプション)引数はサポートされません。
+別の複数同時起動不可での後退点はVimのインスタンスがGUIサポートでコンパイルされ
+ていても非GUIアプリケーションとして動作するとき、"Open With ..."での要求を無言
+で無視してしまうことです。VimインスタンスがGUIありで動作するときはこの問題はあ
+りません。
+
+注意: GUIバージョンだけがBApplicationです (そしてその為にアプリケーションフラ
+グがある)。
+この章はGUIレスバージョンについては適用されず、そのようにコンパイル
+する必要があります。
+
+
+8. フォント						*haiku-fonts*
+
+フォントを設定 >
 
   :set guifont=DejaVu_Sans_Mono/Book/12
 
-where the first part is the font family, the second part the style, and the
-third part the size.  You can use underscores instead of spaces in family and
-style.
+最初の部分はフォントファミリー、次の部分はスタイル、三番目はサイズです。(フォ
+ント)ファミリーとスタイルのスペースはアンダースコアに置き換えられます。
 
-Best results are obtained with monospaced fonts.  Vim attempts to use all
-fonts in B_FIXED_SPACING mode but apparently this does not work for
-proportional fonts (despite what the BeBook says).
+等幅フォントで最良の結果を得るなら。Vimは全てのフォントについて、
+B_FIXED_SPACINGモードを適用しようとしますが、どうやらプロポーショナルフォント
+については働かないようです(BeBookと呼ばれているにもかかわらずです)。
 
-To verify which encodings are supported by the current font give the >
+現在のフォントでサポートしているエンコーディングを検証したいなら >
 
   :digraphs
 
-command, which lists a bunch of characters with their ISO Latin 1 encoding.
-If, for instance, there are "box" characters among them, or the last character
-isn't a dotted-y, then for this font the encoding does not work.
+コマンドが提供されており、ISO Latin 1 の文字の集合のリストです。もし、例え
+ば、"ボックス"文字で囲われた、もしくは最後がドットyではない場合は、フォントエ
+ンコーディングは動かない。(訳註:意味が謎なので確認 TODO:)
 
-If the font you specify is unavailable, you get the system fixed font.
+もし指定したフォントが無いなら、システムの固定フォントが得られます。
 
-GUI Font Selection Dialog is available at giving the >
+GUIでのフォント選択ダイアログが存在し、次のようにして >
 
   :set guifont=*
 
-command.
+コマンドで得られます。
 
 
-9. The meta key modifier				*haiku-meta*
+9. Metaキー						*haiku-meta*
 
-The META key modifier is obtained by the left or right OPTION keys.  This is
-because the ALT (aka COMMAND) keys are not passed to applications.
+META修飾キーは左もしくは右のOPTIONキーによって得られます。これはALT(もしくは
+COMMAND)キーがアプリケーションに通知されないことを意味します。
 
 
-10. Mouse key mappings					*haiku-mouse*
+10. マウスのキーマッピング				*haiku-mouse*
 
-Vim calls the various mouse buttons LeftMouse, MiddleMouse and RightMouse.  If
-you use the default Mouse preference settings these names indeed correspond to
-reality.  Vim uses this mapping:
+Vimは大多数のマウスのボタンの呼び方として LeftMouse, MiddleMouse そして
+RightMouseがあります。デフォルトのマウスの設定を使用するなら、これらの名前が実
+際のボタンに対応します。Vimは次のマッピングを使用します:
 
     Button 1 -> LeftMouse,
     Button 2 -> RightMouse,
     Button 3 -> MiddleMouse.
 
-If your mouse has fewer than 3 buttons you can provide your own mapping from
-mouse clicks with modifier(s) to other mouse buttons.  See the file
-$VIM/macros/swapmous.vim for an example.		|gui-mouse-mapping|
+もし、あなたのマウスが3ボタンより少ないなら、修飾キーとマウスの他のボタンを組
+み合せてマウスクリックをマッピングすることができます。例として
+$VIM/macros/swapmous.vim ファイルを見てください。	|gui-mouse-mapping|
 
 
-11. Color names						*haiku-colors*
+11. 色名						*haiku-colors*
 
-Vim has a number of color names built-in.  Additional names are read from the
-file $VIMRUNTIME/rgb.txt, if present.  This file is basically the color
-database from X.  Names used from this file are cached for efficiency.
-
-
-12. GUI Toolbar Images					*haiku-toolbar-images*
-
-Alternative set of toolbar images should be the PNG image of any height you
-like. Image width is calculated to contain at least 32 buttons in one-row
-cells.
-The image should be stored under the name $VIRUNTIME/bitmaps/builtin-tools.png
-More info about the buttons assignment are at |builtin-tools|.
+Vimは多数の色名を内蔵しています。追加の名前については $VIMRUNTIME/rgb.txt があ
+れば、それから読み込みます。このファイルは基本的にはXの色データベースです。名
+前を使う時に効率的にするため、このファイルはキャッシュされます。
 
 
-13. Credits						*haiku-support-credits*
+12. GUIツールバーイメージ				*haiku-toolbar-images*
 
-Haiku port is based on work done for BeOS version by many people
- - BeBox GUI support Copyright 1998 by Olaf Seibert;
- - Ported to R4 by Richard Offer <richard@whitequeen.com> Jul 99;
- - Those who contributed, not listed above but not forgotten;
- - Haiku support by Siarzhuk Zharski <imker@gmx.li> Apr-Mai 2009.
-
-All the changes and patches released under vim-license.
-
-Thank you, all!
+ツールバー画像の代替セットは任意の高さのPNG画像でなくてなはならない。画像幅は1
+行のセルに最低32個のボタンが入るように計算される。画像は
+ $VIRUNTIME/bitmaps/builtin-tools.png という名前で保存すること。ボタンの割り当
+てについての情報は|builtin-tools|を参照のこと。
 
 
-13. Bugs & things To Do					*haiku-bugs*
+13. クレジット						*haiku-support-credits*
 
-The port is under development now and far away from the perfect state. Bug
-reports, patches and wishes are welcome.
+多数の人の手によりHaiku版はBeOS verson をベースとして移植されました
+ - BeBox GUI サポート Copyright 1998 by Olaf Seibert;
+ - R4への移植4 by Richard Offer <richard@whitequeen.com> Jul 99;
+ - 上記に含まれないが忘れられたわけではない多数の人の提供;
+ - Haiku サポート by Siarzhuk Zharski <imker@gmx.li> Apr-Mai 2009.
+
+すべての変更とパッチはvim-license下で提供されます。
+
+みんなありがとう!
+
+
+13. バグとToDo的な事柄					*haiku-bugs*
+
+この移植は開発中で完全な状態から遠く離れています。バグレポート、パッチ、そして
+要望を歓迎します。
 
 
  -Siarzhuk Zharski <imker@gmx.li>
