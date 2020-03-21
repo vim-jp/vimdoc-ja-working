@@ -1434,6 +1434,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 	このオプションはオプション 'bufhidden' や 'swapfile' と共に使われ、特
 	殊な用途のバッファを指定する。|special-buffers| を参照。
+	Also see |win_gettype()|, which returns the type of the window.
 
 	このオプションの変更には十分注意すること。多くの副作用が起こるかもしれ
 	ない！
@@ -3793,8 +3794,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	  'e'	'showtabline' で指定されたタイミングでタブを追加する。
 		'guitablabel' を使うとタブのラベルのテキストを変更することがで
 		きる。'e' がないと非GUIのタブページラインが使われる。GUIのタブ
-		はいくつかのシステム上(現在はGTK, Motif, Mac OS/X, MS-Windows)
-		でのみサポートされている。
+		はいくつかのシステム上(現在はGTK, Motif, Mac OS/X,Haiku,
+		MS-Windows) でのみサポートされている。
 								*'go-f'*
 	  'f'	フォアグラウンド (foreground): シェルからGUIを開始し、そのシェ
 		ルからgVimを独立させる際に関数 fork() を使わない。これはエディ
@@ -4695,6 +4696,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	でマッピングを行う。
 	また 'langmap' の文字がマッピングの結果として適用されない様に
 	'langremap' をリセットすることも考慮する。
+	(replace)
+	Also consider setting 'langremap' to off, to prevent 'langmap' from
+	applying to characters resulting from a mapping.
 	このオプションはセキュリティ上の理由で、|modeline| からや |sandbox| の
 	中で設定することはできない。
 
@@ -4762,6 +4766,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 			*'langremap'* *'lrm'* *'nolangremap'* *'nolrm'*
 'langremap' 'lrm'	切替 (既定ではオン、|defaults.vim| 内でオフに設定される)
+							(set to off : OK)
 			グローバル
 			{|+langmap| 機能付きでコンパイルされたときのみ有効}
 	オフの場合、'langmap' の文字がマッピングの結果として適用されない様に
@@ -6218,6 +6223,11 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 					Macintosh: "$VIM:vimfiles,
 						$VIMRUNTIME,
 						$VIM:vimfiles:after"
+					Haiku: "$BE_USER_SETTINGS/vim,
+						$VIM/vimfiles,
+						$VIMRUNTIME,
+						$VIM/vimfiles/after,
+						$BE_USER_SETTINGS/vim/after")
 					VMS: "sys$login:vimfiles,
 						$VIM/vimfiles,
 						$VIMRUNTIME,
@@ -7686,6 +7696,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 				       GUI版では: "builtin_gui"
 				       Amigaでは: "amiga"
 					BeOSでは: "beos-ansi"
+				       Haikuでは: "xterm"
 					 Macでは: "mac-ansi"
 					MiNTでは: "vt52"
 					Unixでは: "ansi"

@@ -1,4 +1,4 @@
-*cmdline.txt*   For Vim バージョン 8.2.  Last change: 2020 Feb 15
+*cmdline.txt*   For Vim バージョン 8.2.  Last change: 2020 Feb 29
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -452,6 +452,10 @@ tcshのautolist補完が好みなら、オプション 'wildmode' を使って�
 	:set wildmode=longest,list
 これは、最初の 'wildchar' で最長のマッチを見つけ、次はマッチするファイルを全て
 一覧表示する。
+
+					*complete-script-local-functions*
+When completing user function names, prepend "s:" to find script-local
+functions.
 
 							*suffixes*
 ファイル名補完では、オプション 'suffixes' を使い、ほぼ同じ名前のファイル名に優
