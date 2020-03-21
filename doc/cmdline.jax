@@ -454,8 +454,8 @@ tcshのautolist補完が好みなら、オプション 'wildmode' を使って�
 一覧表示する。
 
 					*complete-script-local-functions*
-When completing user function names, prepend "s:" to find script-local
-functions.
+ユーザー関数名を補完した時、スクリプトローカル関数では "s:" を先頭に追加しま
+す。
 
 							*suffixes*
 ファイル名補完では、オプション 'suffixes' を使い、ほぼ同じ名前のファイル名に優

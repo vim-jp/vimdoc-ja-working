@@ -1434,7 +1434,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 	このオプションはオプション 'bufhidden' や 'swapfile' と共に使われ、特
 	殊な用途のバッファを指定する。|special-buffers| を参照。
-	Also see |win_gettype()|, which returns the type of the window.
+	戻り値がどのウィンドウのタイプか、 |win_gettype()| もまた参照。
 
 	このオプションの変更には十分注意すること。多くの副作用が起こるかもしれ
 	ない！
@@ -4694,11 +4694,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	行するためにキーボードモードを変更しなくともよいということである。
 	このオプションは 'keymap' と正反対のものである。'keymap' は挿入モード
 	でマッピングを行う。
-	また 'langmap' の文字がマッピングの結果として適用されない様に
-	'langremap' をリセットすることも考慮する。
-	(replace)
-	Also consider setting 'langremap' to off, to prevent 'langmap' from
-	applying to characters resulting from a mapping.
+	また 'langmap' のマッピングの結果の文字が適用されない様に保護するた
+	め、'langremap' をオフにすることも考慮する。
 	このオプションはセキュリティ上の理由で、|modeline| からや |sandbox| の
 	中で設定することはできない。
 

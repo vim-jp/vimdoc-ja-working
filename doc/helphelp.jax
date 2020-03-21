@@ -366,14 +366,13 @@ Vim ヘルプファイルでは以下のものがそれぞれハイライトさ�
 詳細は $VIMRUNTIME/syntax/help.vim を見てください。
 
 							*inclusion*
-Some people make a big deal about using "his" when referring to the user,
-thinking it means we assume the user is male.  That is of course not the case,
-it's just a habit of writing help text, which quite often is many years old.
-Also, a lot of the text is written by contributors for who English is not
-their first language.  We do not make any assumptions about the gender of the
-user, no matter how the text is phrased.  And we do not want to waste time on
-this discussion.  The goal is that the reader understands how Vim works, the
-exact wording is secondary.
+ユーザーに言及するときに、 利用者が男性であることを前提にしているのだと考え
+「彼の」を使うことにこだわる人たちもいます。もちろんそういう意図ではありませ
+ん、ヘルプテキストを書く際の習慣になっているだけで、多くの場合、何年も昔からそ
+う書かれてます。また、多くの文章は、英語が第一言語{訳注: 母語のこと}ではない投
+稿者によって書かれています。私たちはユーザーの性別がどうかについて指定すること
+をしません。そのような相談に時間を無駄にしたくありません。目標は、読者が Vim
+がどのように動くかの仕組みを理解し、 正確な表現は二の次です。
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:
