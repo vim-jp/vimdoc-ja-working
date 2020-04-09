@@ -45,7 +45,7 @@ Vim は標準的な configure/make 手法を用いてコンパイルすること
 きる機能を見付けることができるでしょう。
 
 Haiku は端末ライブラリとして "ncurses6" を利用しており、そのため Haiku でビル
-ドにあたってのコンフィグのために  "ncurses6_devel" を HaikuDepot からインストー
+ドにあたってのコンフィグのために "ncurses6_devel" を HaikuDepot からインストー
 ルする必要があります。そして初回ビルド前の ./configure コマンドに
 "--with-tlib=ncurses6" を追加します。
 
@@ -92,7 +92,7 @@ $VIM のデフォルト値はコンパイル時にセットされ、次のコマ
 
   :version
 
-通常は /boot/common/data/vim の Haiku移植のバージョン、
+通常は /boot/common/data/vim の Haiku 移植のバージョン、
 /boot/system/non-packaged/data/vim の手動ビルドの値になっています。 この値が好
 ましくなく変更したいなら、環境変数 VIM に値を設定することで上書きでき、あるい
 は {訳註:ヘルプファイルなら} あなたの .vimrc で 'helpfile' を設定してもできま
