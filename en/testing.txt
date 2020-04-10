@@ -1,4 +1,4 @@
-*testing.txt*	For Vim version 8.2.  Last change: 2020 Feb 08
+*testing.txt*	For Vim version 8.2.  Last change: 2020 Feb 22
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -106,6 +106,10 @@ test_null_dict()					*test_null_dict()*
 		Return a |Dict| that is null. Only useful for testing.
 
 
+test_null_function()					*test_null_function()*
+		Return a |FuncRef| that is null. Only useful for testing.
+
+
 test_null_job()						*test_null_job()*
 		Return a |Job| that is null. Only useful for testing.
 		{only available when compiled with the +job feature}
@@ -121,6 +125,13 @@ test_null_partial()					*test_null_partial()*
 
 test_null_string()					*test_null_string()*
 		Return a |String| that is null. Only useful for testing.
+
+
+test_unknown()						*test_unknown()*
+		Return a value with unknown type. Only useful for testing.
+
+test_void()						*test_void()*
+		Return a value with void type. Only useful for testing.
 
 
 test_option_not_set({name})				*test_option_not_set()*
