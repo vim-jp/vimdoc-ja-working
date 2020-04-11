@@ -128,11 +128,11 @@ test_null_string()					*test_null_string()*
 
 
 test_unknown()						*test_unknown()*
-		型が不明な値を返す。これはテストのみに使われる。
+		unknown型の値を返す。これはテストのみに使われる。
 
 
 test_void()						*test_void()*
-		型がvoidのものを返す。これはテストのみに使われる。
+		void型の値を返す。これはテストのみに使われる。
 
 
 test_option_not_set({name})				*test_option_not_set()*
