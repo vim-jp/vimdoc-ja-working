@@ -1,5 +1,6 @@
 *popup.txt*  For Vim バージョン 8.2.  Last change: 2020 Mar 21
 
+
 		  VIMリファレンスマニュアル    by Bram Moolenaar
 
 
@@ -148,16 +149,15 @@ Exコマンドの出力のために画面がスクロールアップすると、
 - ポップアップウィンドウは常にフォーカスを持ち、別のウィンドウに切り替えること
   はできない。
 - ジョブが終了すると、ポップアップウィンドウは閉じられる。
-- The popup window can be closed with `popup_close()`, the terminal buffer
-  then becomes hidden.
-- Pmenu の既定の色は、枠とパディングのみに用いられる。To change
-  the color of the terminal itself set the Terminal highlight group before
-  creating the terminal.  Setting 'wincolor' later can work but requires the
-  program in the terminal to redraw everything.
-- The default minimal size is 5 lines of 20 characters; Use the "minwidth" and
-  "minheight" parameters to set a different value.
-- The terminal size will grow if the program running in the terminal writes
-  text.  Set "maxheight" and "maxwidth" to restrict the size.
+- ポップアップウィンドウは `popup_close()` で閉じることができ、端末バッファで
+  あれば隠した状態になる。
+- Pmenu の既定の色は、枠とパディングのみに用いられる。 端末自身の色を変えるに
+  は端末のハイライトグループを端末作成前に設定する。 'wincolor' を設定した後端
+  末内のプログラムによる再描画があればそれごとに作用する。
+- 初期値の最小サイズは20文字5行; "minwidth" と "minheight" パラメータを使うこ
+  とで異なる値に設定できる
+- 端末のサイズはプログラムが動作して端末にテキストを書き出すことで拡大す
+  る。"maxheight" と "maxwidth" を設定してサイズを制限する。
 
 端末をポップアップウィンドウ内で実行するには、まず端末を隠した状態で作成する。
 次にバッファ番号を popup_create() に渡す。例: >
@@ -414,7 +414,8 @@ popup_hide({id})						*popup_hide()*
 		ウィンドウ {id} が存在しない場合は何も起こらない。ウィンドウ
 		{id} が存在するがポップアップウィンドウではない場合、エラーが
 		発生する。 *E993*
-		If popup window {id} contains a terminal an error is given.
+		もしポップアップウィンドウ {id} に端末が含まれる場合にこのエ
+		ラーになる。
 
 		|method| としても使用できる: >
 			GetPopup()->popup_hide()
@@ -575,9 +576,8 @@ POPUP_CREATE() の引数				 *popup_create-arguments*
 
 自分で新しいバッファを作成したい場合は、|bufadd()| を使用して、バッファ番号を
 popup_create() に渡す。
-端末ウィンドウのバッファを使用することはできない。 *E278*
-You CAN
-create a hidden terminal buffer and use that one in a popup window.
+端末ウィンドウのバッファを使用することはできない。 *E278* 隠した状態の端末バッ
+ファを作ることができ、ポップアップウィンドウに使える。
 
 |popup_create()| の第2引数は任意の辞書である:
 	line		ポップアップを配置する画面の行。数値または、カーソルの
