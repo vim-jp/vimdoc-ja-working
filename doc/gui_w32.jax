@@ -462,7 +462,7 @@ XPM サポートが動作するか試すには、以下を行うこと: >
 	:exe 'sign define vimxpm icon=' .. runtime .. '\\vim16x16.xpm'
 	:exe 'sign place 1 line=1 name=vimxpm file=' .. expand('%:p')
 <
-github から vim16x16.xpm ファイルを入手する必要があるかもしれません:
+github から vim16x16.xpm ファイルを入手する必要があるかもしれない:
 https://github.com/vim/vim/blob/master/runtime/vim16x16.xpm
 
 
