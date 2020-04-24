@@ -852,7 +852,7 @@ term_start({cmd} [, {options}])			*term_start()*
 				     "10split|buffer %d": 指定されていない場合
 				     は "botright sbuf %d" が使用される。
 		   "term_highlight"  "Terminal" の代わりにハイライトグループと
-				     して使えます。
+				     して使える
 		   "eof_chars"	     すべてのバッファ行が書き込まれた後に端末
 				     に送られるテキスト。設定されていないとき
 				     は MS-Windows では CTRL-D が使用される。
