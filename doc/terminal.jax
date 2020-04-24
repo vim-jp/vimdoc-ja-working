@@ -825,14 +825,14 @@ term_start({cmd} [, {options}])			*term_start()*
 
 		追加のオプションは以下のとおり:
 		   "term_name"	     (コマンド名の代わりに使用される)バッファ
-				     名に使用する名前
+				     名に使用する名前。
 		   "term_rows"	     ('termwinsize' の代わりに使用される) 端末
 				     の垂直サイズ
 		   "term_cols"	     ('termwinsize' の代わりに使用される) 端末
 				     の水平サイズ
 		   "vertical"	     ウィンドウを垂直に分割する。Note: 他のウィ
 				     ンドウの位置は、|:belowright| のようなコマ
-				     ンド修飾子によって決められる
+				     ンド修飾子によって決められる。
 		   "curwin"	     ウィンドウを分割せず現在のウィンドウを使
 				     用する、現在のバッファが放棄 (|abandon|)
 				     不可の場合は失敗する
@@ -850,7 +850,7 @@ term_start({cmd} [, {options}])			*term_start()*
 				     ウを開くために使用されるコマンド: バッファ
 				     番号が入る "%d" を含む必要がある、例
 				     "10split|buffer %d": 指定されていない場合
-				     は "botright sbuf %d" が使用される。
+				     は "botright sbuf %d" が使用される
 		   "term_highlight"  "Terminal" の代わりにハイライトグループと
 				     して使える
 		   "eof_chars"	     すべてのバッファ行が書き込まれた後に端末
