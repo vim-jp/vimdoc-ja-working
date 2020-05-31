@@ -1,4 +1,4 @@
-*testing.txt*	For Vim バージョン 8.2.  Last change: 2020 Feb 22
+*testing.txt*	For Vim バージョン 8.2.  Last change: 2020 Apr 10
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -107,7 +107,7 @@ test_null_dict()					*test_null_dict()*
 
 
 test_null_function()					*test_null_function()*
-		null の |FuncRef| を返す。これはテストのみに使われる。
+		null の |Funcref| を返す。これはテストのみに使われる。
 
 
 test_null_job()						*test_null_job()*
