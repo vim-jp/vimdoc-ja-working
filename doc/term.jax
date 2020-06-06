@@ -320,6 +320,7 @@ termcap コードに対応するオプションを設定することによって
 	t_ZR	斜体終了					*t_ZR* *'t_ZR'*
 
 Vim 独自のもの (標準的なコードはないもの):
+	t_AU	下線色を設定する (ANSI)				*t_AU* *'t_AU'*
 	t_Ce	下波線終了					*t_Ce* *'t_Ce'*
 	t_Cs	下波線モード					*t_Cs* *'t_Cs'*
 	t_Te	取り消し線終了					*t_Te* *'t_Te'*
@@ -348,6 +349,7 @@ Vim 独自のもの (標準的なコードはないもの):
 		|xterm-true-color|
 	t_8b	背景色を設定する (R, G, B)			*t_8b* *'t_8b'*
 		|xterm-true-color|
+	t_8u	下線色を設定する (R, G, B)			*t_8u* *'t_8u'*
 	t_BE	bracketed paste モードを有効化する		*t_BE* *'t_BE'*
 		|xterm-bracketed-paste|
 	t_BD	bracketed paste モードを無効化する		*t_BD* *'t_BD'*
