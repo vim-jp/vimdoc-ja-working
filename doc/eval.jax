@@ -1235,7 +1235,7 @@ number			数定数				*expr-number*
 				*hex-number* *octal-number* *binary-number*
 
 10進数、16進数(0xか0Xで始まる)、2進数(0bか0Bで始まる)、もしくは8進数(0か0oか0O
-で始まる) の数定数。
+で始まる)の数定数。
 
 						*floating-point-format*
 浮動小数点数は次の2つの形式で書ける:
@@ -2928,7 +2928,7 @@ win_splitmove({nr}, {target} [, {options}])
 winbufnr({nr})			数値	ウィンドウ{nr}のバッファ番号
 wincol()			数値	カーソル位置のウィンドウ桁
 winheight({nr})			数値	ウィンドウ{nr}の高さ
-windowsversion()		文字列	MS-Windows OS バージョン
+windowsversion()		文字列	MS-Windows OS のバージョン
 winlayout([{tabnr}])		リスト	タブ {tabnr} 内のウィンドウの配置
 winline()			数値	カーソル位置のウィンドウ行
 winnr([{expr}])			数値	現在のウィンドウの番号
