@@ -552,7 +552,7 @@ popup_setoptions({id}, {options})			*popup_setoptions()*
 			zindex
 		|popup_move()| からのオプションも使用できる。
 		一般的に、設定のオプション値がゼロもしくは空文字列だと値をデ
-		フォルト値にリセットするが、しかし例外になる。
+		フォルト値にリセットするが、例外がある。
 		"hidden" のために |popup_hide()| と |popup_show()| を使用する。
 		"tabpage" は変更できない。
 
