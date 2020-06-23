@@ -184,12 +184,12 @@ FuncAの呼び出し部分の上でCTRL-]を使うことによって、mainか�
 							*tagstack-examples*
 ちょうど `:tag` でタグスタックを書き込んだかの様に動く jumper#jump_to_tag 関数
 をユーザー定義するなら: >
-	" Store where we're jumping from before we jump.
+	" ジャンプする前にジャンプ元の位置を保存する。
 	let tag = expand('<cword>')
 	let pos = [bufnr()] + getcurpos()[1:]
 	let item = {'bufnr': pos[0], 'from': pos, 'tagname': tag}
 	if jumper#jump_to_tag(tag)
-		" Jump was successful, write previous location to tag stack.
+		" ジャンプに成功だったら、前の位置をタグスタックに書き込む。
 		let winid = win_getid()
 		let stack = gettagstack(winid)
 		let stack['items'] = [item]
