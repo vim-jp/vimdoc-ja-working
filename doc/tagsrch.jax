@@ -189,7 +189,7 @@ FuncAの呼び出し部分の上でCTRL-]を使うことによって、mainか�
 	let pos = [bufnr()] + getcurpos()[1:]
 	let item = {'bufnr': pos[0], 'from': pos, 'tagname': tag}
 	if jumper#jump_to_tag(tag)
-		" ジャンプに成功だったら、前の位置をタグスタックに書き込む。
+		" ジャンプが成功だったら、前の位置をタグスタックに書き込む。
 		let winid = win_getid()
 		let stack = gettagstack(winid)
 		let stack['items'] = [item]
