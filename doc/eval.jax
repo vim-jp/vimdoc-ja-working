@@ -47,7 +47,7 @@ Vim script の利用についてはユーザーマニュアルの41章|usr_41.tx
 
 							*Number* *Integer*
 数値		32ビットまたは64ビットの符号有整数。|expr-number|
-		数値のビット数について有効な値が |v:numbersize| に保持される。
+		ビット数は |v:numbersize| で得られる。
 		例:  -123  0x10  0177  0b1011
 
 浮動小数点数	浮動小数点数。|floating-point-format| *Float*
@@ -91,7 +91,7 @@ Blob		バイナリラージオブジェクト。任意のバイトシーケン�
 	数値 -1		-->	文字列 "-1" ~
 							*octal*
 文字列から数値への変換は最初の数字を用いて数値に変換する。16進表記 "0xf9" や 8
-進表記 "017" もしくは "0o17"、2進数表記の "0b10" も認識される。(NOTE:
+進表記 "017" もしくは "0o17"、2進表記の "0b10" も認識される。(NOTE:
 |scriptversion-4| を使用する場合、先頭が "0" の8進数は認識されない)。文字列が
 数字で始まらない場合結果は0となる。
 例:
@@ -1319,9 +1319,9 @@ number			数定数				*expr-number*
 	ダブルクォート文字を使う場合はエスケープしなければならない: "<M-\">"
 	utf-8 文字を得るためには <Char-xxxx> を使わずに、上述の \uxxxx を使う
 	こと。
-\<*xxx>	 \<xxx> と同じように、しかし文字に含む代わりに修飾を付加する。
-	たとえば、"\<C-w>" は 0x17 の1文字だが、 "\<*C-w>" は 4バイトになる: 3
-	は修飾の CTRL で、その後に文字の "W" 。
+\<*xxx>	 \<xxx> と同じように、しかし文字に修飾子を含むのではなくそれを前に付加
+	する。 たとえば、"\<C-w>" は 0x17 の1文字だが、 "\<*C-w>" は 4バイトに
+	なる: 3は CTRL 修飾子で、その後に文字の "W" 。
 
 Note "\xff" は値255の1バイトとなる。これはエンコーディングによっては無効な値か
 もしれない。現在の 'encoding' の値に応じた文字255を得るには "\u00ff" を使う。
@@ -1768,9 +1768,9 @@ v:errors	|assert_true()|のような、テスト用関数によって見つか�
 v:event		現在の |autocommand| に関する情報を含む辞書。辞書に何が入るか
 		は個々のイベントを参照。
 		この辞書は |autocommand| が終了したときに空にされる。独立した
-		コピーの取得方法については |dict-identity| を参照。
-		イベントトリガー後の情報を保持したいのであれば |deepcopy()| を
-		使ってください。例: >
+		コピーの取得方法については |dict-identity| を参照。イベントト
+		リガー後の情報を保持したいのであれば |deepcopy()| を使うこと。
+		例: >
 			au TextYankPost * let g:foo = deepcopy(v:event)
 <
 					*v:exception* *exception-variable*
@@ -2556,7 +2556,7 @@ maparg({name} [, {mode} [, {abbr} [, {dict}]]])
 mapcheck({name} [, {mode} [, {abbr}]])
 				文字列	{name}にマッチするマッピングを確認
 mapset({mode}, {abbr}, {dict})
-				なし	|maparg()| の結果からマッピングを復旧
+				なし	|maparg()| の結果からマッピングを復元
 					する
 match({expr}, {pat} [, {start} [, {count}]])
 				数値	{expr}内で{pat}がマッチする位置
@@ -5789,8 +5789,7 @@ has({feature} [, {check}])
 		る場合1、そうでない場合0となる。これは {feature} のタイポ{訳註:
 		誤字}のチェックとデッドコードの検知に便利。古いバージョンの
 		Vim は後で追加される機能のことは知らず、現在のバージョンの Vim
-		は放棄された機能のことを知らないということを覚えておく必要があ
-		る。
+		は放棄された機能のことを知らないということに注意。
 
 		|exists()|も参照。
 
@@ -6741,7 +6740,7 @@ maparg({name} [, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 		  "rhs"		マッピングの {rhs} (入力されたまま)
 		  "silent"	|:map-silent| マッピングなら 1。そうでなければ
 				0。
-		  "noremap"	マッピングの {rhs} が再マップ可能なら 1。
+		  "noremap"	マッピングの {rhs} が再マップ可能でないなら 1。
 		  "script"	マッピングが <script> でなされていたら 1。
 		  "expr"	式マッピング (|:map-<expr>|) なら 1。
 		  "buffer"	バッファローカルマッピング (|:map-local|) なら
@@ -6803,19 +6802,19 @@ mapcheck({name} [, {mode} [, {abbr}]])			*mapcheck()*
 			GetKey()->mapcheck('n')
 
 mapset({mode}, {abbr}, {dict})				*mapset()*
-		|maparg()| が返す辞書からマッピングを復旧する。
+		|maparg()| が返す辞書からマッピングを復元する。
 		{mode} と {abbr} は |maparg()| を呼ぶのと同じ値である必要があ
 		る。 *E460*
 		{mode} はマッピングをセットするモードを定義するのに使い、{dict}
 		の "mode" エントリは使われない。
-		マッピングの保存と復旧の例: >
+		マッピングの保存と復元の例: >
 			let save_map = maparg('K', 'n', 0, 1)
 			nnoremap K somethingelse
 			...
 			call mapset('n', 0, save_map)
-<		Note いくつかのモードのマップを置き換えようとする場合の覚え書
-		き、たとえば `:map!` とともに実施するとき、違いがある可能性が
-		あるので、全部のマッピングを保存する必要がある。
+<		いくつかのモードのマップを置き換えようとする場合の注意、た
+		とえば `:map!` とともに実施するとき、違いがある可能性があるの
+		で、全部のマッピングを保存する必要がある。
 
 match({expr}, {pat} [, {start} [, {count}]])			*match()*
 		{expr}がリストの場合は、{pat}にマッチする最初の要素のインデッ
@@ -6877,7 +6876,7 @@ match({expr}, {pat} [, {start} [, {count}]])			*match()*
 		'magic' をオン、'cpoptions' を空にした状態で行われる。
 		Note マッチの開始が一致することが望しく、パターンで "*" (任意
 		の数のマッチ) を使う場合、テキストにある次のマッチ数ではなく、
-		0になる傾向がある。
+		0になる傾向があるので注意。
 
 		|method| としても使用できる: >
 			GetList()->match('word')
@@ -7098,7 +7097,7 @@ menu_info({name} [, {mode}])				*menu_info()*
 			"t"	端末ジョブ
 			""	ノーマル、ビジュアル、オペレータ待機
 			"!"	挿入、コマンドライン
-		{mode} を設定していないときは、モードとして "" が使用される。
+		{mode} を指定していないときは、モードとして "" が使用される。
 
 		戻り値の辞書|Dictionary| は以下の項目が含まれる:
 		  accel		メニュー項目のアクセラレータテキスト |menu-text|
@@ -7120,15 +7119,15 @@ menu_info({name} [, {mode}])				*menu_info()*
 				列を返す。
 				メニュー項目の {rhs} が空の場合、"<Nop>" を返
 				す。
-		  script	{rhs}がスクリプトローカルの再マップができるな
+		  script	{rhs} がスクリプトローカルの再マップができるな
 				ら v:true、そうでないなら v:false。
 				|:menu-script| を参照。
-		  shortcut	ショートカットキー (メニュー項目名の'&'後にあ
-				る文字) |menu-shortcut|
+		  shortcut	ショートカットキー (メニュー項目名の '&' 後に
+				ある文字) |menu-shortcut|
 		  silent	メニュー項目が <silent> 付きで作られていたら
 				v:true |:menu-silent|
-		  submenus	名前のあるサブメニューすべてが含まれたリス
-				ト|List|。メニュー項目がサブメニューを持つ場合
+		  submenus	名前のあるサブメニューすべてが含まれたリスト
+				|List|。メニュー項目がサブメニューを持つ場合
 				のみ存在する。
 
 		メニュー項目が見付からない場合は空の辞書を返す。
@@ -7754,7 +7753,7 @@ readdirex({directory} [, {expr}])			*readdirex()*
 		{expr} を評価するごとに、|v:val| にそのエントリの辞書を設定す
 		る。
 		{expr} が関数の場合はエントリが引数として与えられる。
-		例として、末尾が ".txt"のファイルリストを得る場合: >
+		例として、末尾が ".txt" のファイルリストを得る場合: >
 		  readdirex(dirname, {e -> e.name =~ '.txt$'})
 <
 		|method| としても使用できる: >
@@ -7802,7 +7801,8 @@ reduce({object}, {func} [, {initial}])			*reduce()* *E998*
 
 		{initial} は初期結果値。もし無いなら、最初の {object} の項目を
 		使い {func} の最初の呼び出しは2つ目の項目から行う。{initial}
-		が与えられず {object} の計算の結果なくが空の場合、E998 となる。
+		が与えられず {object} が空の場合、結果が計算できずエラー E998
+		となる。
 
 		例: >
 			echo reduce([1, 3, 5], { acc, val -> acc + val })
@@ -8258,12 +8258,12 @@ search({pattern} [, {flags} [, {stopline} [, {timeout}]]])	*search()*
 			GetPattern()->search()
 
 searchcount([{options}])					*searchcount()*
-		'shortmess' で "S" 無しで表示されるような、最後の検索数の取得
-		もしくは更新をする。'shortmess' で "S" ありの場合でも動作す
-		る。
+		最後の検索数の取得もしくは更新をする。'shortmess' で "S" 無し
+		で表示されるのと同等の結果が得られる。'shortmess' で "S" あり
+		の場合でも動作する。
 
 		辞書を返す。この辞書は前の{訳註:検索}パターンが設定されてなく、
-		{訳註:オプショナル引数の辞書の}"pattern" が指定されてないと空
+		{訳註:オプショナル引数の辞書の} "pattern" が指定されてないと空
 		になる。
 
 		  キー		型		意味 ~
@@ -8274,7 +8274,7 @@ searchcount([{options}])					*searchcount()*
 		  total		|Number|	見付けたマッチのトータル数
 		  incomplete	|Number|	0: 検索が完了した
 						1: 再計算がタイムアウトした
-						2: 最大値を超えた
+						2: 最大数を超えた
 
 		{options} についてはさらに以下を参照。
 
@@ -8282,7 +8282,7 @@ searchcount([{options}])					*searchcount()*
 		関数を `recompute: 0` で呼ぶ。|n| と |N| の最大カウントが 99
 		であるため、時として正しくない情報を返すことがある。もし 99 を
 		超える時は結果が最大カウント+1(100)でなくてはならない。もし正
-		しい情報を習得したいのであれば、`recompute: 1` を指定する: >
+		しい情報を取得したいのであれば、`recompute: 1` を指定する: >
 
 			" 多量にマッチする場合、 result == maxcount + 1 (100)
 			" になる
@@ -8297,9 +8297,9 @@ searchcount([{options}])					*searchcount()*
 			  if empty(result)
 			    return ''
 			  endif
-			  if result.incomplete ==# 1     " timed out
+			  if result.incomplete ==# 1     " タイムアウト
 			    return printf(' /%s [?/??]', @/)
-			  elseif result.incomplete ==# 2 " max count exceeded
+			  elseif result.incomplete ==# 2 " 最大数を超過
 			    if result.total > result.maxcount &&
 			    \  result.current > result.maxcount
 			      return printf(' /%s [>%d/>%d]', @/,
@@ -8314,13 +8314,13 @@ searchcount([{options}])					*searchcount()*
 			endfunction
 			let &statusline .= '%{LastSearchCount()}'
 
-			" もしくは 'hlsearch' のときにカウントを表示したいので
-			" あれば
+			" もしくは 'hlsearch' がオンのときのみカウントを表示し
+			" たいのであれば
 			" let &statusline .=
 			" \   '%{v:hlsearch ? LastSearchCount() : ""}'
 <
-		もしまた検索カウントを更新したいのであれば、|CursorMoved| か
-		|CursorMovedI| の autocommand を使うのが便利です: >
+		もし検索カウントの更新もしたいのであれば、|CursorMoved| か
+		|CursorMovedI| の自動コマンドを使うのが便利である: >
 
 			autocmd CursorMoved,CursorMovedI *
 			  \ let s:searchcount_timer = timer_start(
@@ -8334,14 +8334,13 @@ searchcount([{options}])					*searchcount()*
 			endfunction
 <
 		また、カレントバッファで "pattern" を使い指定パターンにマッチ
-		したテキストのカウントを使いたいなら:  >
+		したテキストのカウントを使いたいのならば:  >
 
 			" このバッファでの '\<foo\>' のカウント
-			" (Note 検索カウントもまた更新されます)
+			" (Note 検索カウントもまた更新される)
 			let result = searchcount(#{pattern: '\<foo\>'})
 
-			" 古いパターンの古い検索カウントに戻すには再度検索しま
-			" す
+			" 古いパターンの古い検索カウントに戻すには再度検索する
 			call searchcount()
 <
 		{options} は辞書でなくてはならない。これらを含められる:
@@ -10579,8 +10578,6 @@ winlayout([{tabnr}])					*winlayout()*
 			:echo winlayout(2)
 			['col', [['leaf', 1002], ['row', [['leaf', 1003],
 					    ['leaf', 1001]]], ['leaf', 1000]]]
-			" 水平に分割された 3 つのウィンドウで、かつ真ん中の
-			" ウィンドウが 2 つのウィンドウに垂直に分割されている
 <
 		|method| としても使用できる: >
 			GetTabnr()->winlayout()
@@ -10842,7 +10839,7 @@ gui_gnome		Gnomeサポート(gui_gtkも定義される)
 gui_gtk			GTK+のGUIが有効である
 gui_gtk2		GTK+ 2のGUIが有効である (gui_gtkも定義される)
 gui_gtk3		GTK+ 3のGUIが有効である (gui_gtkも定義される)
-gui_haiku		Haiku のGUIが有効である
+gui_haiku		HaikuのGUIが有効である
 gui_mac			マッキントッシュのGUIが有効である
 gui_motif		MotifのGUIが有効である
 gui_photon		PhotonのGUIが有効である
@@ -12060,7 +12057,7 @@ text...
 			は認識しにくいため、使用するべきでない。
 
 			このコマンドでは、"|" は式の一部として扱われるため、
-			"|" と他のコマンドを扱えない。
+			"|" と他のコマンドを後ろに置けない。
 
 							*:exe* *:execute*
 :exe[cute] {expr1} ..	{expr1}の評価結果の文字列をExコマンドとして実行する。
