@@ -1,8 +1,8 @@
-*usr_45.txt*	For Vim バージョン 8.2.  Last change: 2008 Nov 15
+*usr_45.txt*	For Vim バージョン 8.2.  Last change: 2020 Jun 11
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
-				言語を選択する
+			  言語を選択する (ロケール)
 
 
 Vim のメッセージは言語を変更できます。本章では、言語を変更する方法を説明しま
