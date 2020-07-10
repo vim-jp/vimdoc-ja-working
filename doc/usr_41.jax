@@ -1079,6 +1079,13 @@ Vimサーバー:					*server-functions*
 	popup_filter_yesno()	'y' か 'n' が押されるまでブロックする
 	popup_getoptions()	ポップアップの現在のオプションを取得する
 	popup_getpos()		ポップアップの実際の位置とサイズを取得する
+	popup_findinfo()	ポップアップ情報ウィンドウのウィンドウIDを取得
+				する
+	popup_findpreview()	ポップアッププレビューウィンドウのウィンドウID
+				を取得する
+	popup_list()		全ポップアップのウィンドウIDのリストを取得する
+	popup_locate()		スクリーン上の指定の位置にあるポップアップの
+				ウィンドウIDを取得する
 
 タイマー:					*timer-functions*
 	timer_start()		タイマーを作る
