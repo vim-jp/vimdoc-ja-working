@@ -1190,7 +1190,7 @@ X- で始まらない非標準の拡張子のハイライトの設定 >
 Note これは悪いハイライトの原因になる。
 KDEが予約している機能のハイライトの設定 >
 	let g:desktop_enable_kde = 1
-g:desktop_enable_kde が提供していない場合、 g:desktop_enable_nonstd に従う
+g:desktop_enable_kde を提供していない場合、 g:desktop_enable_nonstd に従う
 
 
 DIFF							*diff.vim*
@@ -4705,8 +4705,8 @@ term={attr-list}			*attr-list* *highlight-term* *E418*
 	が使われる。一般的には "undercurl" および "strikethrough" はGUIといく
 	つかの端末で使用できる。
 	その色は |highlight-guisp| か |highlight-ctermul| で設定できる。
-	端末で波下線を動かせるようにするにはこれらの termcap エントリを試して
-	みるとよい: >
+	端末で波下線が動くようにするにはこれらの termcap エントリを試してみる
+	とよい: >
 	    let &t_Cs = "\e[4:3m"
 	    let &t_Ce = "\e[4:0m"
 

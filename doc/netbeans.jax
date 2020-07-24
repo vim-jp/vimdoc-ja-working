@@ -55,7 +55,7 @@ NetBeans プロトコルを使っているか使っていたプロジェクト:
 	http://pyclewn.sourceforge.net/
 - VimWrapper, Vim と IDE を簡単に統合するためのライブラリ:
 	http://www.freehackers.org/VimWrapper
-時代送れになったプロジェクト (リンクは働きません):
+時代遅れになったプロジェクト (リンクは機能しません):
 - VimPlugin, Eclipse の内部に Vim を取り込む:
 	http://vimplugin.sourceforge.net/wiki/pmwiki.php
 - PIDA, Python で書かれた IDE:
