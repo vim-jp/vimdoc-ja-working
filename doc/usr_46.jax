@@ -52,7 +52,7 @@ Vim9 script は大きな Vim script を容易に書けるようにデザイン�
 	  endif
 	enddef
 
-`vim9script` コマンドはファイルのごく最初のコマンドとして置かれなくてはいけま
+`vim9script` コマンドはファイルの最も最初のコマンドとして置かれなくてはいけま
 せん。これがないと Vim は旧来のスクリプトの文法であると見なします。
 
 `export def GetMessage(): string` の行は `export` から始まっており、この関数は
