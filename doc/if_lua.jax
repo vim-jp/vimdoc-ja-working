@@ -1,4 +1,4 @@
-*if_lua.txt*    For Vim バージョン 8.2.  Last change: 2020 May 17
+*if_lua.txt*    For Vim バージョン 8.2.  Last change: 2020 Jun 28
 
 
 		  VIMリファレンスマニュアル    by Luis Carvalho
@@ -213,15 +213,25 @@ List ユーザーデータは vim のリストを表します。Vim のリスト
 ようになっています。リストはオブジェクトなので、Lua 内で参照しているリストを変
 更すると、それは Vim 内にも影響します。逆も同様です。リスト "l" は以下のプロパ
 ティとメソッドを持っています:
+NOTE: パッチ 8.2.1066 にて、配列のインデックスが 0 基準から 1 基準に変更になっ
+ている。チェックするなら: >
+	    if has("patch-8.2.1066")
 
 プロパティ
 ----------
 	o "#l" はリスト "l" の要素数。Vim の "len(l)" と同じ。
-	o "l[k]" は "l" の k 個目の要素を返す。"l" のインデックスは Vim と同じ
-	  で、0 を基準とする。
-	  k 個目の要素を変更するには、単に "l[k] = newitem" とする。
-	  "l[k] = nil" で k 個目の要素を "l" から削除できる。
+	o "l[k]" は "l" の k 個目の要素を返す。"l" のインデックスは Lua と同じ
+	    で、1 を基準とする。
+	    k 個目の要素を変更するには、単に "l[k] = newitem" とする。
+	    "l[k] = nil" で k 個目の要素を "l" から削除できる。"l[#l + 1] =
+	    newitem" として要素をリストの終端に追加できる。
 	o "l()" は "l" のイテレータを返す。
+	o "table.insert(l, newitem)" でリストの終端に要素を挿入できる。
+	    (Lua 5.3 もしくはそれ以上のみ)
+	o "table.insert(l, position, newitem)" でリストの特定の位置に要素を挿
+	    入できる。"position" は 1 基準。 (Lua 5.3 もしくはそれ以上のみ)
+	o "table.remove(l, position)" でリストの指定の位置から要素を除去する。
+	    "position" は 1 基準。
 
 メソッド
 --------
@@ -234,13 +244,16 @@ List ユーザーデータは vim のリストを表します。Vim のリスト
 	:let l = [1, 'item']
 	:lua l = vim.eval('l') -- same 'l'
 	:lua l:add(vim.list())
-	:lua l[0] = math.pi
+	:lua l[1] = math.pi
 	:echo l[0] " 3.141593
-	:lua l[0] = nil -- remove first item
+	:lua l[1] = nil -- remove first item
 	:lua l:insert(true, 1)
-	:lua print(l, #l, l[0], l[1], l[-1])
+	:lua print(l, #l, l[1], l[2])
+	:lua l[#l + 1] = 'value'
+	:lua table.insert(l, 100)
+	:lua table.insert(l, 2, 200)
+	:lua table.remove(l, 1)
 	:lua for item in l() do print(item) end
-<
 
 ==============================================================================
 4. Dict ユーザーデータ					*lua-dict*
@@ -330,6 +343,14 @@ Funcref ユーザーデータは Vim における関数参照変数を表しま�
 	:lua l = d.len -- assign d as 'self'
 	:lua print(l())
 <
+Lua の関数とクロージャは自動的に Vim の |Funcref| に変換されて Vim script から
+アクセスできます。例:
+>
+	lua <<EOF
+	vim.fn.timer_start(1000, function(timer)
+	    print('timer callback')
+	end)
+	EOF
 
 ==============================================================================
 7. バッファユーザーデータ				*lua-buffer*
