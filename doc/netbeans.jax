@@ -467,7 +467,7 @@ insertDone starteol readonly
 		とを通知します。これにより、ファイル読み込みのメッセージが表示
 		されます。最後の行に EOL がない場合は "starteol" が "F" になり
 		ます。ファイルが readonly としてマークされていると "readonly"
-		が "T" になります。2.3 より前では、ファイルを開いた後にメッセー
+		が "T" になります。version 2.3 より前では、ファイルを開いた後にメッセー
 		ジが表示されませんでした。version 2.3 から。
 
 moveAnnoToFront serNum
