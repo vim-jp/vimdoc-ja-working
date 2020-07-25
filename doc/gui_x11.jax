@@ -364,7 +364,7 @@ http://developer.gnome.org/doc/API/2.0/gtk/gtk-Resource-Files.html
 を参照。
 							*gtk3-slow*
 もしあなたが GTK3 を利用しており Vim の速度低下が見られる場合、環境変数
-$GDK_RENDERING を "image" に設定するのを試してみる。
+$GDK_RENDERING を "image" に設定するのを試してみること。
 
 
 ツールチップの色 ~
