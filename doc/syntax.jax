@@ -1190,7 +1190,7 @@ X- で始まらない非標準の拡張子のハイライトの設定 >
 Note これは悪いハイライトの原因になる。
 KDEが予約している機能のハイライトの設定 >
 	let g:desktop_enable_kde = 1
-g:desktop_enable_kde を提供していない場合、 g:desktop_enable_nonstd に従う
+g:desktop_enable_kde が与えられていない場合、g:desktop_enable_nonstd に従う
 
 
 DIFF							*diff.vim*
@@ -3527,7 +3527,7 @@ ZSH						    *zsh.vim* *ft-zsh-syntax*
 	start:		行の先頭を含むアイテムのレベルを使う。
 	minimum:	行の項目の最小の局所レベルの最低値を使う。
 
-	デフォルトは 'start'。'minimum' を使うと行内でより高いレベルに包括され
+	デフォルトは "start"。"minimum" を使うと行内でより高いレベルに包括され
 	ている最低レベルを水平方向に探す。これにより、構文アイテムが行内で水平
 	方向に開閉する場合に、より自然な折りたたみが生成される。
 
