@@ -263,7 +263,7 @@ assert_equal({expected}, {actual} [, {msg}])
 <		以下の結果が|v:errors|に追加される:
 	test.vim line 12: Expected 'foo' but got 'bar' ~
 
-		|method| としても使用でき、ベースは第２引数として渡される: >
+		|method| としても使用でき、ベースは第2引数として渡される: >
 			mylist->assert_equal([1, 2, 3])
 
 <							*assert_equalfile()*
