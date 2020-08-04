@@ -16,7 +16,7 @@
 7. エラーフォーマット			|error-file-format|
 8. ディレクトリスタック			|quickfix-directory-stack|
 9. 具体的なエラーファイルフォーマット	|errorformats|
-10. QuickFix ウィンドウのカスタマイズ	|quickfix-window-function|
+10. Quickfix ウィンドウのカスタマイズ	|quickfix-window-function|
 
 コンパイル時に|+quickfix|機能が無効にされた場合は、quickfixコマンドは使えない。
 
@@ -1845,7 +1845,7 @@ $VIMRUNTIME/tools にefm_perl.plスクリプトがある。これはPerlのエ�
 と)
 
 =============================================================================
-10. QuickFix ウィンドウのカスタマイズ		*quickfix-window-function*
+10. Quickfix ウィンドウのカスタマイズ		*quickfix-window-function*
 
 quickfix ウィンドウおよび location リストウィンドウ内で各行を表示するデフォル
 トのフォーマットは:
