@@ -227,9 +227,9 @@ NOTE: パッチ 8.2.1066 にて、配列のインデックスが 0 基準から 
 	    newitem" として要素をリストの終端に追加できる。
 	o "l()" は "l" のイテレータを返す。
 	o "table.insert(l, newitem)" でリストの終端に要素を挿入できる。
-	    (Lua 5.3 もしくはそれ以上のみ)
+	    (Lua 5.3 以降のみ)
 	o "table.insert(l, position, newitem)" でリストの特定の位置に要素を挿
-	    入できる。"position" は 1 基準。 (Lua 5.3 もしくはそれ以上のみ)
+	    入できる。"position" は 1 基準。 (Lua 5.3 以降のみ)
 	o "table.remove(l, position)" でリストの指定の位置から要素を除去する。
 	    "position" は 1 基準。
 
