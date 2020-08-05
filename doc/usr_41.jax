@@ -1134,7 +1134,7 @@ Vimサーバー:					*server-functions*
 	eventhandler()		イベントハンドラによって起動されたかどうか
 	getpid()		Vim のプロセスIDを得る
 	getimstatus()		IME のステータスがアクティブかをチェック
-	interrupt()		スクリプト実行に割り込む
+	interrupt()		スクリプトの実行を中断する
 	windowsversion()	MS-Windows バージョンの取得
 	terminalprops()		端末の属性
 
