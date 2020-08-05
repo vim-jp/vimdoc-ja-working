@@ -1,4 +1,4 @@
-*spell.txt*	For Vim バージョン 8.2.  Last change: 2020 Jun 10
+*spell.txt*	For Vim バージョン 8.2.  Last change: 2020 Jul 10
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -649,10 +649,12 @@ Myspell ファイルが更新されたとき、差異をマージすることが
 'runtimepath' 内に書き込み可能なディレクトリがなければならない)。
 
 プラグインは、Vim ftp サーバー上にスペルファイルを探すデフォルトの場所を持つ。
-他の場所や他のプロトコルを使用したいならば、スペルファイルが存在するディレクト
-リに対して、g:spellfile_URL を設定する。|netrw| プラグインはファイルを取得する
-ために使われ、そこに URL の特定の構文があるかを調べる。例: >
-	let g:spellfile_URL = 'http://ftp.vim.org/vim/runtime/spell'
+使用されるプロトコルはセキュリティのために SSL (https://) となる。他の場所や他
+のプロトコルを使用したいならば、スペルファイルが存在するディレクトリに対して、
+g:spellfile_URL を設定する。http:// か ftp:// を使えるが、その場合はセキュリ
+ティリスクを負うことになる。|netrw| プラグインはファイルを取得するために使わ
+れ、そこに URL の特定の構文があるかを調べる。例: >
+	let g:spellfile_URL = 'https://ftp.nluug.nl/vim/runtime/spell'
 特殊文字をエスケープする必要があるかもしれない。
 
 このプラグインは一度、ある 1 つの言語をダウンロードすることについてのみ質問する
