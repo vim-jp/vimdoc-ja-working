@@ -1105,8 +1105,8 @@ Vimサーバー:					*server-functions*
 	prompt_setprompt()	バッファのプロンプトテキストを設定する
 
 テキストプロパティ:				*text-property-functions*
-	prop_add()		その位置にプロパティを付ける
-	prop_clear()		その複数行からプロパティをすべて取り除く
+	prop_add()		指定位置にプロパティを付加する
+	prop_clear()		指定行からプロパティをすべて削除する
 	prop_find()		プロパティを検索する
 	prop_list()		その行の全プロパティのリストを返す
 	prop_remove()		その行からプロパティを取り除く
