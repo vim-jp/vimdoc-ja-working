@@ -1113,8 +1113,8 @@ Vimサーバー:					*server-functions*
 	prop_type_add()		プロパティタイプの追加/定義
 	prop_type_change()	プロパティタイプの変更
 	prop_type_delete()	テキストのプロパティタイプの削除
-	prop_type_get()		プロパティのタイプを返す
-	prop_type_list()	プロパティの全タイプをリストで返す
+	prop_type_get()		プロパティタイプのプロパティを返す
+	prop_type_list()	すべてのプロパティタイプをリストで返す
 
 サウンド:					*sound-functions*
 	sound_clear()		再生している全サウンドを停止する
