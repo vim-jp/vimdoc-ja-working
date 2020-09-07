@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim バージョン 8.2.  Last change: 2020 Jun 01
+*syntax.txt*	For Vim バージョン 8.2.  Last change: 2020 Jul 28
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -3661,7 +3661,7 @@ SYNTAX ISKEYWORD SETTING				*:syn-iskeyword*
 
 	例 (文字定数にマッチする): >
   :syntax match Character /'.'/hs=s+1,he=e-1
-< 
+<
 
 リージョンの定義	*:syn-region* *:syn-start* *:syn-skip* *:syn-end*
 							*E398* *E399*
@@ -3671,11 +3671,11 @@ SYNTAX ISKEYWORD SETTING				*:syn-iskeyword*
 		[keepend]
 		[extend]
 		[excludenl]
-		start={start_pattern} ..
-		[skip={skip_pattern}]
-		end={end_pattern} ..
+		start={start-pattern} ..
+		[skip={skip-pattern}]
+		end={end-pattern} ..
 		[{options}]
-	
+
 	リージョンを定義する。複数行にわたってもよい。
 
 	{group-name}		"Comment" のような構文グループ名。
@@ -3695,11 +3695,11 @@ SYNTAX ISKEYWORD SETTING				*:syn-iskeyword*
 				る。終了パターンに対してのみ使い道がある。適用
 				するパターンの前に置かねばならない。
 				|:syn-excludenl|
-	start={start_pattern}	リージョンの開始を定義する検索パターン。後述の
+	start={start-pattern}	リージョンの開始を定義する検索パターン。後述の
 				|:syn-pattern|を参照。
-	skip={skip_pattern}	その中ではリージョンの終了を探さないテキストを
+	skip={skip-pattern}	その中ではリージョンの終了を探さないテキストを
 				定義する検索パターン。|:syn-pattern|を参照。
-	end={end_pattern}	リージョンの終了を定義する検索パターン。
+	end={end-pattern}	リージョンの終了を定義する検索パターン。
 				後述の|:syn-pattern|を参照。
 
 	例: >
