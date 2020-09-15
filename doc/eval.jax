@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2020 Aug 15
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2020 Sep 06
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -114,9 +114,10 @@ Blob		バイナリラージオブジェクト。任意のバイトシーケン�
 使う。
 
 						*TRUE* *FALSE* *Boolean*
-ブール(真理値)演算には数値が使われる。0は偽を意味し、非0は真を表す。また、
-|v:false| と |v:true| を使うこともできる。関数から真が返されたときは数値の 1
-であり、偽が返されたときは数値の 0 である。
+ブール(真理値)演算には数値が使われる。0は偽を意味し、非0は真を表す。ま
+た、|v:false| と |v:true| を使うこともできる。Vim9 script では |false| と
+|true| になる。
+関数から真が返されたときは数値の 1 であり、偽が返されたときは数値の 0 である。
 
 Note 次のコマンドをみると >
 	:if "foo"
@@ -1136,7 +1137,7 @@ expr8がリスト|List|ならばインデックスexpr1の要素が返る。取�
 
 expr8[expr1a : expr1b]	部分文字列または部分リスト	*expr-[:]*
 
-expr8が文字列ならば、expr1aバイトからexpr1bバイトまでの部分文字列となる
+expr8が文字列ならば、バイトか文字数でexpr1aからexpr1bまでの部分文字列となる
 (両端を含む)。expr8は文字列として扱われ、expr1aとexpr1bは数値として扱われる。
 
 旧来の Vim script ではインデックスはバイトインデックスとなる。マルチバイトのエ
@@ -1156,6 +1157,7 @@ expr1aが省略されたときは0となる。expr1bが省略されたときは�
 
 例: >
 	:let c = name[-1:]		" 文字列の最後のバイト
+	:let c = name[0:-1]		" 文字列全体
 	:let c = name[-2:-2]		" 文字列の最後から2バイト目
 	:let s = line(".")[4:]		" 5バイト目から末尾まで
 	:let s = s[:-3]			" 最後の2文字を削除する
@@ -2304,7 +2306,7 @@ assert_equalfile({fname-one}, {fname-two} [, {msg}])
 				数値	ファイルの内容が等しいことをテストする
 assert_exception({error} [, {msg}])
 				数値	|v:exception|が{error}であるかテストする
-assert_fails({cmd} [, {error} [, {msg}]])
+assert_fails({cmd} [, {error} [, {msg} [, {lnum} [, {context}]]]])
 				数値	{cmd}が失敗するかどうかテストする
 assert_false({actual} [, {msg}])
 				数値	{actual}がfalseかどうかテストする
@@ -2378,6 +2380,7 @@ ch_status({handle} [, {options}])
 				文字列	チャネル{handle}の状態
 changenr()			数値	現在の変更番号
 char2nr({expr} [, {utf8}])	数値	{expr}の先頭文字のASCII/UTF8コード
+charclass({string})		数値	{string} の文字クラス
 chdir({dir})			文字列	現在の作業ディレクトリを変更する
 cindent({lnum})			数値	{lnum}行目のCインデント量
 clearmatches([{win}])		なし	全マッチをクリアする
@@ -2501,6 +2504,7 @@ gettabvar({nr}, {varname} [, {def}])
 gettabwinvar({tabnr}, {winnr}, {name} [, {def}])
 				任意	タブページ{tabnr}の{winnr}の{name}
 gettagstack([{nr}])		辞書	ウィンドウ{nr}のタグスタックを取得
+gettext({text})			文字列	{text} の翻訳の検索
 getwininfo([{winid}])		リスト	各ウィンドウに関する情報のリスト
 getwinpos([{timeout}])		リスト	Vim ウィンドウのピクセルでの X および
 					Y 座標
@@ -2598,6 +2602,8 @@ matcharg({nr})			リスト	|:match|の引数
 matchdelete({id} [, {win}])	数値	{id} で指定されるマッチを削除する
 matchend({expr}, {pat} [, {start} [, {count}]])
 				数値	{expr}内で{pat}が終了する位置
+matchfuzzy({list}, {str})	リスト	{list} 内について {str} でのファジー
+					マッチ
 matchlist({expr}, {pat} [, {start} [, {count}]])
 				リスト	{expr}内の{pat}のマッチと部分マッチ
 matchstr({expr}, {pat} [, {start} [, {count}]])
@@ -2658,6 +2664,7 @@ popup_show({id})		なし	ポップアップウィンドウ {id} を再表示す
 pow({x}, {y})			浮動小数点数	{x} の {y} 乗
 prevnonblank({lnum})		数値	{lnum}行目以前の空行でない行の行番号
 printf({fmt}, {expr1}...)	文字列	文字列を組み立てる
+prompt_getprompt({buf})		文字列	プロンプト文字列の取得
 prompt_setcallback({buf}, {expr}) なし	プロンプトコールバック関数を設定する
 prompt_setinterrupt({buf}, {text}) なし	プロンプト割り込み関数を設定する
 prompt_setprompt({buf}, {text}) なし	プロンプトテキストを設定する
@@ -2749,6 +2756,7 @@ setbufline({expr}, {lnum}, {text})
 					を設定する
 setbufvar({expr}, {varname}, {val})	バッファ{expr}内の変数{varname}に{val}
 					をセット
+setcellwidths({list})		なし	文字のセル幅の上書き設定
 setcharsearch({dict})		辞書	文字検索を{dict}に設定
 setcmdpos({pos})		数値	コマンドライン内のカーソル位置を設定
 setenv({name}, {val})		なし	環境変数を設定
@@ -2821,8 +2829,8 @@ str2list({expr} [, {utf8}])	リスト	{expr}の各文字をASCII / UTF8値に変
 str2nr({expr} [, {base} [, {quoted}]])
 				数値	文字列を数値に変換する
 strcharpart({str}, {start} [, {len}])
-				文字列	{str} の {start} から長さ {len} の文字
-					列を得る
+				文字列	{str} 内 {start} 文字目 から {len} 文
+					字分
 strchars({expr} [, {skipcc}])	数値	文字列{expr}の文字の数
 strdisplaywidth({expr} [, {col}]) 数値	文字列{expr}の表示幅
 strftime({format} [, {time}])	文字列	指定されたフォーマットで時刻を書式化
@@ -2832,9 +2840,9 @@ stridx({haystack}, {needle} [, {start}])
 				数値	{haystack}内の{needle}のインデックス
 string({expr})			文字列	{expr}の値の文字列表現
 strlen({expr})			数値	文字列{expr}の長さ
-strpart({str}, {start} [, {len}])
-				文字列	{str}内{start}バイト目から{len}バイトの
-					部分
+strpart({str}, {start} [, {len} [, {chars}]])
+				文字列	{str}内{start}バイトから{len}バイト/
+					文字分
 strptime({format}, {timestring})
 				数値	{timestring} を unix タイムスタンプに
 					変換
@@ -3349,7 +3357,7 @@ bufnr([{expr} [, {create}]])
 		るものと同様。{expr}の使い方は前述の |bufname()| を参照。
 
 		バッファが存在しない場合-1が返される。ただし、{create}が与えら
-		れて0でないときは、バッファリストに載せない新しいバッファを作
+		れて真であるときは、バッファリストに載せない新しいバッファを作
 		成し、その番号を返す。例: >
 			let newbuf = bufnr('Scratch001', 1)
 <		空の名前を使用すると、カレントバッファが使用される。空の名前で
@@ -3407,10 +3415,10 @@ byte2line({byte})					*byte2line()*
 <		{|+byte_offset| 機能付きでコンパイルされたときのみ有効}
 
 byteidx({expr}, {nr})					*byteidx()*
-		文字列{expr}の{nr}番目の文字のバイトインデックスを返す。
-		最初の文字の{nr}は0であり、戻り値は0となる。この関数はマルチバ
-		イト文字が存在するときのみ有用であり、そうでなければこの関数が
-		返す値は{nr}に等しい。
+		文字列{expr}の{nr}番目の文字のバイトインデックスを返す。最初の
+		文字の{nr}は0であり、そして戻り値は0となる。
+		この関数はマルチバイト文字が存在するときのみ有用であり、そうで
+		なければこの関数が返す値は{nr}に等しい。
 		合成文字はまとめて計算される。合成文字のバイト数はそれが合成さ
 		れているベース文字のバイト数に合算される。合成文字を別々に数え
 		るには |byteidxcomp()| を参照。
@@ -3487,7 +3495,7 @@ char2nr({expr} [, {utf8}])					*char2nr()*
 		用される。"utf-8" の場合の例: >
 			char2nr("á")		returns 225
 			char2nr("á"[0])		returns 195
-<		{utf8} に 1 を指定すると、常に utf-8 文字として扱われる。
+<		{utf8} に真を指定すると、常に utf-8 文字として扱われる。
 		合成文字は個別の文字として扱われる。
 		|nr2char()| はこの逆を行う。
 		文字列を文字の番号のリストに変換するには: >
@@ -3497,6 +3505,18 @@ char2nr({expr} [, {utf8}])					*char2nr()*
 
 		|method| としても使用できる: >
 			GetChar()->char2nr()
+
+
+charclass({string})					*charclass()*
+		{string} 内の最初の文字の文字クラスを返す。
+		次のいずれかの文字クラス:
+			0	空白
+			1	区切り文字
+			2	単語文字
+			3	絵文字
+			その他	Unicode 固有のクラス
+		クラスはパターンと単語単位の移動で使う。
+
 
 chdir({dir})						*chdir()*
 		{dir}は文字列でなければならない。
@@ -5370,7 +5390,7 @@ getloclist({nr} [, {what}])				*getloclist()*
 					詳細は |location-list-file-window| を
 					参照。
 
-		空の辞書を返すのは、ウィンドウ{nr}にlocationリストがないか、
+		空の辞書を返すのは、ウィンドウ {nr} にlocationリストがないか、
 		ウィンドウが存在しない場合。
 
 		例 (|getqflist-examples| もまた参照): >
@@ -5616,6 +5636,7 @@ getreginfo([{regname}])					*getreginfo()*
 		{regname} が不正なジレスタ名もしくは未設定の場合、空の辞書が返
 		される。
 		{regname} が未指定の場合、|v:register| が使われる。
+		戻り値の辞書は |setreg()| に渡すことができる。
 
 		|method| としても使用できる: >
 			GetRegname()->getreginfo()
@@ -5717,6 +5738,17 @@ gettagstack([{nr}])					*gettagstack()*
 
 		|method| としても使用できる: >
 			GetWinnr()->gettagstack()
+
+
+gettext({text})						*gettext()*
+		可能であれば {text} を翻訳する。
+		これは主に配布する Vim スクリプトで使う。
+		xgettext から抽出された {text} を翻訳したメッセージを生成する
+		時に、翻訳者が .po ファイルで翻訳済みメッセージを追加でき Vim
+		が gettext() を呼んだ時に翻訳を検索できる。
+		{text} はダブルクオートの文字列が望しい、なぜなら xgettext は
+		シングルクォートの文字列でのエスケープを理解しないため。
+
 
 getwininfo([{winid}])					*getwininfo()*
 		ウィンドウに関する情報を、辞書のリスト |List| として返す。
@@ -7134,6 +7166,29 @@ matchend({expr}, {pat} [, {start} [, {count}]])			*matchend()*
 		|method| としても使用できる: >
 			GetText()->matchend('word')
 
+
+matchfuzzy({list}, {str})			*matchfuzzy()*
+		{list} について {str} でファジーマッチした全文字列のリストを返
+		す。戻り値のリストの文字列はマッチしたスコアを基準としてソート
+		される。{str} はリテラルの文字列として扱われ、マッチ用の正規表
+		現はサポートされない。
+		{str} の長さは最大256までサポートされる。
+
+		マッチする文字列がないかエラーとなった場合、空のリストが返され
+		る。{str} の長さが256かそれ以上であるなら、空のリストを返す。
+
+
+		例: >
+		   :echo matchfuzzy(["clay", "crow"], "cay")
+<		["clay"]を返す。 >
+		   :echo getbufinfo()->map({_, v -> v.name})->matchfuzzy("ndl")
+<		結果は "ndl" とファジーマッチしたバッファ名のリストになる。 >
+		   :echo v:oldfiles->matchfuzzy("test")
+<		結果は "test" とファジーマッチしたファイル名のリストになる。 >
+		   :let l = readfile("buffer.c")->matchfuzzy("str")
+<		結果は "str" とファジーマッチした "buffer.c" 内の行のリストになる。
+
+
 matchlist({expr}, {pat} [, {start} [, {count}]])		*matchlist()*
 		|match()| と同じだがリストを返す。リストの最初の要素は、
 		matchstr()が返すのと同じマッチした文字列。それ以降の要素は
@@ -7628,6 +7683,17 @@ printf({fmt}, {expr1} ...)				*printf()*
 		{expr1}以降の引数の数と "%" 変換指示子の個数がちょうど一致しな
 		ければならない。そうでない場合はエラーとなる。引数は最大18個ま
 		で使える。
+
+
+prompt_getprompt({buf})					*prompt_getprompt()*
+		バッファ {buf} で使われているプロンプトテキストを返す。{buf}
+		はバッファ名もしくは番号が使える。|prompt-buffer|
+
+		バッファが存在しないもしくはプロンプトがバッファにないなら、空
+		文字列を返す。
+
+		|method| としても使用できる: >
+			GetBuffer()->prompt_getprompt()
 
 
 prompt_setcallback({buf}, {expr})			*prompt_setcallback()*
@@ -8729,6 +8795,31 @@ setbufvar({expr}, {varname}, {val})			*setbufvar()*
 		|method| としても使用でき、ベースは第3引数として渡される: >
 			GetValue()->setbufvar(buf, varname)
 
+
+setcellwidths({list})					*setcellwidths()*
+		Specify overrides for cell widths of character ranges.  This
+		tells Vim how wide characters are, counted in screen cells.
+		This overrides 'ambiwidth'.  Example: >
+		   setcellwidths([[0xad, 0xad, 1],
+		   		\ [0x2194, 0x2199, 2]])
+
+<					*E1109* *E1110* *E1111* *E1112* *E1113*
+		The {list} argument is a list of lists with each three
+		numbers. These three numbers are [low, high, width].  "low"
+		and "high" can be the same, in which case this refers to one
+		character. Otherwise it is the range of characters from "low"
+		to "high" (inclusive).  "width" is either 1 or 2, indicating
+		the character width in screen cells.
+		An error is given if the argument is invalid, also when a
+		range overlaps with another.
+		Only characters with value 0x100 and higher can be used.
+
+		To clear the overrides pass an empty list: >
+		   setcellwidths([]);
+<		You can use the script $VIMRUNTIME/tools/emoji_list.vim to see
+		the effect for known emoji characters.
+
+
 setcharsearch({dict})					*setcharsearch()*
 		現在の文字検索の情報を{dict}に設定する。
 		この辞書は下記のエントリを1以上持つ:
@@ -9710,10 +9801,15 @@ strlen({expr})	結果は数値で、文字列{expr}のバイト単位での長�
 		|method| としても使用できる: >
 			GetString()->strlen()
 
-strpart({src}, {start} [, {len}])			*strpart()*
+strpart({src}, {start} [, {len} [, {chars}]])			*strpart()*
 		結果は文字列で、{src}の{start}番目の文字から始まる、長さ{len}
 		の部分文字列。
-		バイト数ではなく文字数で数えるには |strcharpart()| を用いる。
+		引数 {chars} が存在し真であれば {len} は文字の位置の数字 (合成
+		文字は分割して数えない、そして "1" は基底文字1つとそれに続く合
+		成文字を意味する)。
+		{start} からバイト数ではなく文字数で数えるには |strcharpart()|
+		を用いる。
+
 		存在しない文字を含むように範囲を指定しても、エラーにはならな
 		い。単に文字が省略されるだけである。
 		{len}を省略すると、{start}から{src}の末尾までの部分文字列を返
@@ -9723,8 +9819,8 @@ strpart({src}, {start} [, {len}])			*strpart()*
 			strpart("abcdefg", 5, 4)    == "fg"
 			strpart("abcdefg", 3)       == "defg"
 <		Note: 文字列の最初の文字を指定するためには、{start}は0でなけれ
-		ばならない。カーソルのある位置から3文字を取得する例: >
-			strpart(getline("."), col(".") - 1, 3)
+		ばならない。カーソルのある位置の文字を取得する例: >
+			strpart(getline("."), col(".") - 1, 1, v:true)
 <
 		|method| としても使用できる: >
 			GetText()->strpart(5)
@@ -10691,7 +10787,8 @@ win_screenpos({nr})					*win_screenpos()*
 		ウィンドウ {nr} のスクリーン位置を 2 つの数値のリストで返す:
 		[row, col]。タブラインがない限り先頭のウィンドウは常に [1, 1]
 		の位置となり、タブラインがある場合は [2, 1] となる。
-		{nr} にはウィンドウ番号もしくは |window-ID| を指定する。
+		{nr} にはウィンドウ番号もしくは |window-ID| を指定する。現在の
+		ウィンドウには0を使う。
 		現在のタブページに対象のウィンドウが見つからない場合、[0, 0]を
 		返す。
 
