@@ -5633,7 +5633,7 @@ getreginfo([{regname}])					*getreginfo()*
 					ルドは "1" となりレジスタには削除した
 					テキストになる。
 
-		{regname} が不正なジレスタ名もしくは未設定の場合、空の辞書が返
+		{regname} が不正なレジスタ名もしくは未設定の場合、空の辞書が返
 		される。
 		{regname} が未指定の場合、|v:register| が使われる。
 		戻り値の辞書は |setreg()| に渡すことができる。
@@ -5742,11 +5742,11 @@ gettagstack([{nr}])					*gettagstack()*
 
 gettext({text})						*gettext()*
 		可能であれば {text} を翻訳する。
-		これは主に配布する Vim スクリプトで使う。
+		これは主に配布する Vim script で使う。
 		xgettext から抽出された {text} を翻訳したメッセージを生成する
 		時に、翻訳者が .po ファイルで翻訳済みメッセージを追加でき Vim
 		が gettext() を呼んだ時に翻訳を検索できる。
-		{text} はダブルクオートの文字列が望しい、なぜなら xgettext は
+		{text} はダブルクォートの文字列が望しい、なぜなら xgettext は
 		シングルクォートの文字列でのエスケープを理解しないため。
 
 
@@ -10201,7 +10201,7 @@ tabpagebuflist([{arg}])					*tabpagebuflist()*
 		|method| としても使用できる: >
 			GetTabpage()->tabpagebuflist()
 
-tabpagenm([{arg}])					*tabpagenr()*
+tabpagenr([{arg}])					*tabpagenr()*
 		結果は数値で、カレントタブページの番号。最初のタブページの番号
 		は1となる。
 
@@ -11764,8 +11764,8 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 ==============================================================================
 7. コマンド						*expression-commands*
 
-Note: Vim9 script では `:let` 変数の宣言で使い、代入しない。代入は `:let` から
-除外された。 |vim9-declaration|
+Note: Vim9 script では `:let` は変数の宣言で使い、代入はしない。代入は `:let`
+から除外された。 |vim9-declaration|
 
 :let {var-name} = {expr1}				*:let* *E18*
 			内部変数{var-name}に式{expr1}の結果をセットする。変数
