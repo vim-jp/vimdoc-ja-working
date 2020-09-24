@@ -4527,9 +4527,9 @@ findfile({name} [, {path} [, {count}]])				*findfile()*
 			GetName()->findfile()
 
 flatten({list} [, {maxdepth}])					*flatten()*
-		リスト {list} を {maxdepth} の深さまで平坦化する。 {maxdepth}
-		が無い場合の結果は {maxdepth} が非常に巨大な数であるのよう
-		に、リスト |List| からネストを除去する。
+		リスト {list} を {maxdepth} の深さまで平坦化する。{maxdepth}
+		が無い場合の結果は {maxdepth} が非常に巨大な数であるのように、
+		リスト |List| からネストを除去する。
 		{list} は変更が入るので、それを望まないなら最初にコピーを作る
 		こと。
 								*E900*
