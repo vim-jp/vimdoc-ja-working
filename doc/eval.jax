@@ -8797,27 +8797,26 @@ setbufvar({expr}, {varname}, {val})			*setbufvar()*
 
 
 setcellwidths({list})					*setcellwidths()*
-		Specify overrides for cell widths of character ranges.  This
-		tells Vim how wide characters are, counted in screen cells.
-		This overrides 'ambiwidth'.  Example: >
+		指定した文字のレンジのセル幅を上書きする。これは Vim が文字列
+		の幅がいくつになるか、画面のセル数をカウントするのに使う。
+		これは 'ambiwidth' を上書きする。例: >
 		   setcellwidths([[0xad, 0xad, 1],
 		   		\ [0x2194, 0x2199, 2]])
 
 <					*E1109* *E1110* *E1111* *E1112* *E1113*
-		The {list} argument is a list of lists with each three
-		numbers. These three numbers are [low, high, width].  "low"
-		and "high" can be the same, in which case this refers to one
-		character. Otherwise it is the range of characters from "low"
-		to "high" (inclusive).  "width" is either 1 or 2, indicating
-		the character width in screen cells.
-		An error is given if the argument is invalid, also when a
-		range overlaps with another.
-		Only characters with value 0x100 and higher can be used.
+		引数 {list} は3つの数字を持つリストのリスト。3つの数字は[low,
+		high, width]。"low" と "high" は同じ値にでき、その場合はある一
+		文字を参照する。そうでないなら、"low" から "high" まで(両方を
+		含む)の文字のレンジになる。"width" は1か2で、文字の画面上のセ
+		ル幅を示す。
+		与えられた引数が不正、もしくは範囲が他と被る場合はエラーにな
+		る。
+		文字の値は 0x100 かそれ以上の値だけが使える。
 
-		To clear the overrides pass an empty list: >
+		空のリストを渡すことで上書きがクリアされる: >
 		   setcellwidths([]);
-<		You can use the script $VIMRUNTIME/tools/emoji_list.vim to see
-		the effect for known emoji characters.
+<		既知の絵文字への効果を確認するのに
+		$VIMRUNTIME/tools/emoji_list.vim スクリプトが使える。
 
 
 setcharsearch({dict})					*setcharsearch()*
