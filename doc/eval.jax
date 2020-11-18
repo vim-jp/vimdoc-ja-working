@@ -12169,7 +12169,7 @@ text...
 <			は、以下と同義である: >
 				:let x = 1
 				:lockvar! x
-<			NOTE: Vim9 script では `:const` 異なった動きをする、
+<			NOTE: Vim9 script では `:const` とは異なった動きをする、
 			|vim9-const| を参照。
 			これは、変数が変更されないことを確実にしたいときに便利
 			である。
