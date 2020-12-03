@@ -7028,6 +7028,7 @@ mapset({mode}, {abbr}, {dict})					*mapset()*
 		たとえば `:map!` とともに実施するとき、違いがある可能性がある
 		ので、全部のマッピングを保存する必要がある。
 
+
 match({expr}, {pat} [, {start} [, {count}]])			*match()*
 		{expr}がリストの場合は、{pat}にマッチする最初の要素のインデッ
 		クスを返す。各要素は文字列として扱われる。リストと辞書はechoし
@@ -7804,7 +7805,7 @@ printf({fmt}, {expr1} ...)				*printf()*
 
 prompt_getprompt({buf})					*prompt_getprompt()*
 		バッファ {buf} で使われているプロンプトテキストを返す。{buf}
-		はバッファ名もしくは番号が使える。|prompt-buffer|を参照。
+		はバッファ名もしくは番号が使える。|prompt-buffer| を参照。
 
 		バッファが存在しないもしくはプロンプトがバッファにないなら、空
 		文字列を返す。
