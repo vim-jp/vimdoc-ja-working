@@ -7007,8 +7007,8 @@ mapcheck({name} [, {mode} [, {abbr}]])			*mapcheck()*
 
 
 mapnew({expr1}, {expr2})					*mapnew()*
-		|map()| と同様だが {expr1} の要素を置き換えた新しいリストか辞
-		書をかわりに作り返す。{expr1} は変更されない。
+		|map()| と同様だが、{expr1} の要素を置き換える代わりに、新しい
+		リストまたは辞書が作成されて返される。{expr1} は変更されない。
 
 
 mapset({mode}, {abbr}, {dict})					*mapset()*
