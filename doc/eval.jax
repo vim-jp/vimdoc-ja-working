@@ -6862,9 +6862,9 @@ luaeval({expr} [, {expr}])					*luaeval()*
 map({expr1}, {expr2})					*map()*
 		{expr1}はリスト|List|、|Blob|または辞書|Dictionary|。
 		{expr1}の各要素を、{expr2}を評価した結果で置き換える。|Blob|
-		の場合各バイトを置き換える。
-		もし要素の型を変更したいなら |mapnew()| を使って新しいリス
-		トか辞書を作る。これには Vim9 script の利用が必要。
+		の場合、各バイトを置き換える。
+		要素の型を変更したい場合は、|mapnew()| を使って新しいリストか
+		辞書を作る。これは、Vim9 script を使用する場合に必要である。
 
 		{expr2}は文字列|string|または関数参照|Funcref|でなければならな
 		い。
