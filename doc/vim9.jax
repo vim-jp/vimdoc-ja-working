@@ -134,7 +134,7 @@ Vim9 関数 ~
 - 関数に対してコマンド `:disassemble` が実行されたとき
 - コンパイルされた関数から呼び出されたり、関数リファレンスとして使用されたとき
 
-`:def` で定義する関数には `:function` の "range"、"abort"、"dict" や "closure"
+`:def` には `:function` の "range"、"abort"、"dict" や "closure"
 といったオプションがありません。`:def` で定義する関数は常にエラー時は処理を中
 断 (abort) し、範囲を受け取らず、辞書関数にすることはできません。
 
