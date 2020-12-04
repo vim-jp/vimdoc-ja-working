@@ -71,32 +71,31 @@ Vim9 スクリプトと 古い Vim スクリプトは同時に利用できます
 注意: この内容は開発中の内容を含んでいます。予告なく破壊的変更が行われるおそれ
 があります。
 
-Overview ~
+概要 ~
 
-Brief summary of the differences you will most often encounter when using Vim9
-script and `:def` functions; details are below:
-- Comments start with #, not ": >
-  	echo "hello"   # comment
-- Using a backslash for line continuation is hardly ever needed: >
+Vim9 スクリプトと `:def` 関数を使用する際に最もよく遭遇する変更点を簡単にまと
+めると以下のとおりです。
+- コメントは " ではなく # で始めます。 >
+  	echo "hello"   # コメント
+- 行継続文字 (\) はほとんどの場合、必要ありません。 >
   	echo "hello "
 	     .. yourName
 	     .. ", how are you?"
-- White space is required in many places.
-- Assign values without `:let`, declare variables with `:var`: >
+- 多くの場所に空白が必要になります。
+- 値の代入には `:let` を使用せず、変数の宣言には `:var` を使用します。 >
   	var count = 0
 	count += 3
-- Constants can be declared with `:final` and `:const`: >
+- `:final` と `:const` を使用して、定数を宣言できます。 >
   	final matches = []		  # add matches
 	const names = ['Betty', 'Peter']  # cannot be changed
-- `:final` cannot be used as an abbreviation of `:finally`.
-- Variables and functions are script-local by default.
-- Functions are declared with argument types and return type: >
+- `:final` は `:finally` の略語として使用することはできません。
+- 変数と関数のスコープは、明示しない限りスクリプトローカルです。
+- 関数を引数の型、戻り値の型とともに宣言します。 >
 	def CallMe(count: number, message: string): bool
-- Call functions without `:call`: >
+- 関数は `:call` なしで呼び出します。 >
   	writefile(['done'], 'file.txt')
-- You cannot use `:xit`, `:t`, `:append`, `:change`, `:insert` or curly-braces
-  names.
-- A range before a command must be prefixed with a colon: >
+- `:xit`、`:t`、`:append`、`:change`、`:insert`と波括弧変数は使用できません。
+- コマンドの前に範囲指定を置くときは、コロン (:) を前置しなくてはなりません。 >
   	:%s/this/that
 
 
