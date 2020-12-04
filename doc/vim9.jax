@@ -62,7 +62,7 @@ Vim9 スクリプトファイルの中でコマンド `:function` で関数を�
 
 Vim9 script と 古い Vim script は同時に利用できます。古いスクリプトを書
 き換えなくとも、以前と同様に実行することが可能です。高速化が必要なコードには、
-`:def` 関数を使ったほうが良いかもしれません。
+`:def` で定義する関数を使ったほうが良いかもしれません。
 
 ==============================================================================
 
@@ -73,9 +73,9 @@ Vim9 script と 古い Vim script は同時に利用できます。古いスク�
 
 概要 ~
 
-Vim9 script と `:def` 関数を使用する際に最もよく遭遇する変更点を簡単にまと
-めると以下のとおりです。
-- コメントは " ではなく # で始めます。 >
+Vim9 script と `:def` で定義する関数を使用する際に最もよく遭遇する変更点を簡単
+にまとめると以下のとおりです。
+- コメントはダブルクォーテーション (") ではなく、ハッシュ (#) で始めます。 >
   	echo "hello"   # コメント
 - 行継続文字 (\) はほとんどの場合、必要ありません。 >
   	echo "hello "
@@ -99,56 +99,55 @@ Vim9 script と `:def` 関数を使用する際に最もよく遭遇する変更
   	:%s/this/that
 
 
-Comments starting with # ~
+ハッシュ (#) から始まるコメント ~
 
-In legacy Vim script comments start with double quote.  In Vim9 script
-comments start with #. >
+古い Vim script のコメントは、ダブルクォーテーション (") で始めます。Vim9
+scriptのコメントはハッシュ (#) で始めます。 >
 	# declarations
 	var count = 0  # number of occurrences
 
-The reason is that a double quote can also be the start of a string. In many
-places, especially halfway through an expression with a line break, it's hard
-to tell what the meaning is, since both a string and a comment can be followed
-by arbitrary text.  To avoid confusion only # comments are recognized.  This
-is the same as in shell scripts and Python programs.
+これは、ダブルクォーテーションは文字列の開始を表す文字でもあるからです。多くの
+場所、特に改行を含む式の途中では、文字列とコメントの両方が現れるため、どちらを
+意味しているのかわかりにくくなってしまいます。この混乱を避けるために、Vim9
+script では、ハッシュ (#) のみをコメントとして認識します。このコメント形式はシ
+ェルスクリプトやPythonのコードと同じです。
 
-In Vi # is a command to list text with numbers.  In Vim9 script you can use
-`:number` for that. >
+Vi においてハッシュ (#) は行番号付きでテキストを表示します。Vim9 script では、
+代わりに `:number` を使用します。 >
 	101 number
 
-To improve readability there must be a space between a command and the #
-that starts a comment.
+可読性を向上するために、コマンドとハッシュ (#)、コメント文の間にはスペースをお
+いてください。
 
 
-Vim9 functions ~
+Vim9 関数 ~
 
-A function defined with `:def` is compiled.  Execution is many times faster,
-often 10x to 100x times.
+`:def` で定義された関数はコンパイルされます。処理の実行は多くの場合、通常の関
+数に比べて10倍から100倍ほど速くなります。
 
-Many errors are already found when compiling, before the function is executed.
-The syntax is strict, to enforce code that is easy to read and understand.
+多くのエラーは関数が実行される前に、コンパイルされる段階で検出されます。読みや
+すく理解しやすいコードを強制するために、構文は厳密に定められています。
 
-Compilation is done when:
-- the function is first called
-- when the `:defcompile` command is encountered in the script where the
-  function was defined
-- `:disassemble` is used for the function.
-- a function that is compiled calls the function or uses it as a function
-  reference
+コンパイルは以下のタイミングで実行されます。
+- 関数が最初に呼び出されるとき
+- 関数の定義されたスクリプトの中で、コマンド `:defcompile` に出会ったとき
+- 関数に対してコマンド `:disassemble` が実行されたとき
+- コンパイルされた関数から呼び出されたり、関数リファレンスとして使用されたとき
 
-`:def` has no options like `:function` does: "range", "abort", "dict" or
-"closure".  A `:def` function always aborts on an error, does not get a range
-passed and cannot be a "dict" function.
+`:def` で定義する関数には `:function` の "range"、"abort"、"dict" や "closure"
+といったオプションがありません。`:def` で定義する関数は常にエラー時は処理を中
+断 (abort) し、範囲を受け取らず、辞書関数にすることはできません。
 
-The argument types and return type need to be specified.  The "any" type can
-be used, type checking will then be done at runtime, like with legacy
-functions.
+引数の型と戻り値の型を指定する必要があります。型には "any" を指定することがで
+き、型のチェックは古い関数と同様に実行時に行われます。
 
 Arguments are accessed by name, without "a:", just like any other language.
-There is no "a:" dictionary or "a:000" list.
+引数を参照する際は、他のプログラミング言語と同様、"a:" をつけずに名前だけで指定
+することができます。
+引数辞書 "a:" と 引数リスト "a:000" はありません。
 
-Variable arguments are defined as the last argument, with a name and have a
-list type, similar to TypeScript.  For example, a list of numbers: >
+可変長引数を定義する場合は TypeScript のように、最後の引数として名前とlist型で
+定義します。たとえば、数値の可変長引数の例は以下のとおりです。 >
 	def MyFunc(...itemlist: list<number>)
 	   for item in itemlist
 	     ...
