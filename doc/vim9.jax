@@ -326,38 +326,39 @@ Vim9ではこのどちらも定義することができます。
 
 function() は不要に ~
 
-A user defined function can be used as a function reference in an expression
-without `function()`. The argument types and return type will then be checked.
-The function must already have been defined. >
+ユーザー定義の関数は、 `function()` を使わずとも関数リファレンスとして使用する
+ことができます。引数の型と戻り値の型がチェックされます。関数はすでに定義されて
+いる必要があります。 >
 
 	var Funcref = MyFunction
 
-When using `function()` the resulting type is "func", a function with any
-number of arguments and any return type.  The function can be defined later.
+`function()` を使って "func" 型のリファレンスを得た場合、その関数は任意の個数
+の引数と任意の戻り値の型を持つものとされます。この場合、関数は後から宣言できま
+す。
 
 
-Automatic line continuation ~
+自動行継続 ~
 
-In many cases it is obvious that an expression continues on the next line.  In
-those cases there is no need to prefix the line with a backslash
-|line-continuation|.  For example, when a list spans multiple lines: >
+多くの場合、式が次の行に続くことは明らかです。継続業の先頭に行継続のためのバッ
+クスラッシュ |line-continuation| を置く必要はありません。たとえば、複数行にま
+たぐリストの場合: >
 	var mylist = [
 		'one',
 		'two',
 		]
-And when a dict spans multiple lines: >
+辞書の場合: >
 	var mydict = {
 		one: 1,
 		two: 2,
 		}
-Function call: >
+関数の呼び出し: >
 	var result = Func(
 			arg1,
 			arg2
 			)
 
-For binary operators in expressions not in [], {} or () a line break is
-possible just before or after the operator.  For example: >
+角カッコ []、波カッコ {}、または丸カッコの中‘以外で’二項演算子御使用する場合、
+その前後で改行することができます。例: >
 	var text = lead
 		   .. middle
 		   .. end
@@ -368,8 +369,8 @@ possible just before or after the operator.  For example: >
 			? PosFunc(arg)
 			: NegFunc(arg)
 
-For a method call using "->" and a member using a dot, a line break is allowed
-before it: >
+"->" を使用したメソッド呼び出し、そしてドット (.) を使用したメンバー参照の場合、
+その前に改行を置くことができます。 >
 	var result = GetBuilder()
 			->BuilderSetWidth(333)
 			->BuilderSetHeight(777)
