@@ -193,13 +193,13 @@ script でのスクリプトローカル関数は、スクリプトが読み込�
 れたきり、削除や置き換えはできません。
 
 
-Variable declarations with :var, :final and :const ~
+:var、:final や :const で定義する変数 ~
 						*vim9-declaration* *:var*
-Local variables need to be declared with `:var`.  Local constants need to be
-declared with `:final` or `:const`.  We refer to both as "variables" in this
-section.
+ローカル変数は `:var` で定義する必要があります。ローカル定数は `:final` または
+`:const` で定義する必要があります。このセクションでは、両者を "変数" と呼ぶこ
+とにします。
 
-Variables can be local to a script, function or code block: >
+変数はスクリプトローカルや、関数、コードブロックのスコープで定義できます。 >
 	vim9script
 	var script_var = 123
 	def SomeFunc()
@@ -208,8 +208,8 @@ Variables can be local to a script, function or code block: >
 	    var block_var = func_var
 	  ...
 
-The variables are only visible in the block where they are defined and nested
-blocks.  Once the block ends the variable is no longer accessible: >
+変数は、定義されたコードブロックか、ネストされた配下のブロックで参照することが
+できます。コードブロックが終わったあとの処理から参照することはできません。 >
 	if cond
 	   var inner = 5
 	else
@@ -217,7 +217,7 @@ blocks.  Once the block ends the variable is no longer accessible: >
 	endif
 	echo inner  # Error!
 
-The declaration must be done earlier: >
+参照したい場合には、ブロックよりも前で宣言しなくてはなりません。 >
 	var inner: number
 	if cond
 	   inner = 5
@@ -226,62 +226,61 @@ The declaration must be done earlier: >
 	endif
 	echo inner
 
-To intentionally hide a variable from code that follows, a block can be
-used: >
+意図的に続く処理から変数を隠したいとき、ブロックを使うことができます。 >
 	{
 	   var temp = 'temp'
 	   ...
 	}
 	echo temp  # Error!
 
-Declaring a variable with a type but without an initializer will initialize to
-zero, false or empty.
+変数を型つきで、かつ初期値なしで宣言した場合、その値はゼロ、False、または空で
+初期化されます。
 
-In Vim9 script `:let` cannot be used.  An existing variable is assigned to
-without any command.  The same for global, window, tab, buffer and Vim
-variables, because they are not really declared.  They can also be deleted
-with `:unlet`.
+Vim9 script では `:let` は使用できません。すでに存在する変数に題してはコマンド
+を使用せずに代入します。グローバル変数、ウィンドウ変数、タブ変数、バッファ変数、
+そして Vim 変数についてもどうようです。
+変数は `:unlet` によって削除することもできます。
 
-Variables and functions cannot shadow previously defined or imported variables
-and functions.
-Variables may shadow Ex commands, rename the variable if needed.
+変数と関数は、すでに定義された、またはインポートされた変数と関数をシャドーイン
+グすることはできません。一方で変数は Ex コマンドをシャドーイングするので、必要
+であれば変数の名前を変更してください。
 
-Global variables and user defined functions must be prefixed with "g:", also
-at the script level. >
+グローバル変数やユーザ定義関数の前には、スクリプトレベルでも "g: "を付けなけれ
+ばなりません。 >
 	vim9script
 	var script_local = 'text'
 	g:global = 'value'
 	var Funcref = g:ThatFunction
 
-Since `&opt = value` is now assigning a value to option "opt", ":&" cannot be
-used to repeat a `:substitute` command.
+現在、`&opt = value` は "opt" オプションに値を設定する目的で使用されているため、
+`:substitute` コマンドをリピートする目的 ":&" を使用することはできません。
 
 
-Constants ~
+定数 ~
 						*vim9-const* *vim9-final*
-How constants work varies between languages.  Some consider a variable that
-can't be assigned another value a constant.  JavaScript is an example.  Others
-also make the value immutable, thus when a constant uses a list, the list
-cannot be changed.  In Vim9 we can use both.
+定数の働きは言語によって異なります。別の値を代入できない変数を定数とする場合も
+あります。JavaScript がその一例です。また、値そのものを不変にすることもあり、
+たとえばリスト定数の内容を変更することができないとしている場合もあります。
+Vim9ではこのどちらも定義することができます。
 
-`:const` is used for making both the variable and the value a constant.  Use
-this for composite structures that you want to make sure will not be modified.
-Example: >
+変数とその値、両方を定数とするには、`:const` を使用します。何らかの複合的な値が
+変更できないようにする際に使用します。例: >
 	const myList = [1, 2]
 	myList = [3, 4]		# Error!
 	myList[0] = 9		# Error!
 	muList->add(3)		# Error!
 <							*:final*
-`:final` is used for making only the variable a constant, the value can be
-changed.  This is well known from Java.  Example: >
+変数の変更のみを禁止するには、`:final` を使用します。この場合は、中の値自体を
+変えることはできます。Java でよく知られるものです。例: >
 	final myList = [1, 2]
 	myList = [3, 4]		# Error!
 	myList[0] = 9		# OK
 	muList->add(3)		# OK
 
-It is common to write constants as ALL_CAPS, but you don't have to.
+一般に、定数はすべて大文字 (例: ALL_CAPS) で書かれますが、必ずしもそうしなくて
+も構いません。
 
-The constant only applies to the value itself, not what it refers to. >
+定数宣言は値そのものにのみ適用され、参照先の変数には影響しません。 >
 	final females = ["Mary"]
 	const NAMES = [["John", "Peter"], females]
 	NAMES[0] = ["Jack"]     # Error!
@@ -290,21 +289,20 @@ The constant only applies to the value itself, not what it refers to. >
 	Names[1][0] = "Emma"    # OK, now females[0] == "Emma"
 
 <							*E1092*
-Declaring more than one variable at a time, using the unpack notation, is
-currently not supported: >
+変数を複数一度に宣言し、同時にアンパックする記法は現在サポートされていません。
+>
 	var [v1, v2] = GetValues()  # Error!
-That is because the type needs to be inferred from the list item type, which
-isn't that easy.
+これは、リストの要素から型を推定せねばならず、現在はそれが容易ではないからです。
 
 
-Omitting :call and :eval ~
+:call と :eval は不要に ~
 
-Functions can be called without `:call`: >
+関数は `:call` なしで呼ぶことができます。 >
 	writefile(lines, 'file')
-Using `:call` is still possible, but this is discouraged.
+`:call` は引き続き使用できますが。やめたほうが良いでしょう。
 
-A method call without `eval` is possible, so long as the start is an
-identifier or can't be an Ex command.  Examples: >
+メソッド呼び出しには `eval` は必要ありません。Exコマンドと同名の識別子ではない
+かぎり、直接に識別子から呼び出すことができます。例: >
 	myList->add(123)
 	g:myList->add(123)
 	[1, 2, 3]->Process()
@@ -314,21 +312,19 @@ identifier or can't be an Ex command.  Examples: >
 	'foobar'->Process()
 	('foobar')->Process()
 
-In the rare case there is ambiguity between a function name and an Ex command,
-prepend ":" to make clear you want to use the Ex command.  For example, there
-is both the `:substitute` command and the `substitute()` function.  When the
-line starts with `substitute(` this will use the function. Prepend a colon to
-use the command instead: >
+一部の関数と Ex コマンドが紛らわしい場合、コロン (:) を前置することでそれが Ex コマ
+ンドであることを明示することができます。たとえば、`:substitute` コマンドと
+`substitute()` が該当します。`substitute(` で始まる場合は関数呼び出しですが、
+コロンを前置することでコマンドを代わりに使用することができます。 >
 	:substitute(pattern (replacement (
 
-Note that while variables need to be defined before they can be used,
-functions can be called before being defined.  This is required to allow
-for cyclic dependencies between functions.  It is slightly less efficient,
-since the function has to be looked up by name.  And a typo in the function
-name will only be found when the function is called.
+注意: 変数は使用する前に宣言する必要がありますが、関数は宣言するより前に使用で
+きる点に注意してください。これは関数の循環参照を可能にするためです。関数を名前
+で探さなければならないので、少し効率が悪いです。また、関数名のタイプミスは、関
+数が呼び出されるときまで見つかりません。
 
 
-Omitting function() ~
+function() は不要に ~
 
 A user defined function can be used as a function reference in an expression
 without `function()`. The argument types and return type will then be checked.
