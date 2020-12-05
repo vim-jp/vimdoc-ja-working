@@ -81,7 +81,7 @@ Vim9 script と `:def` で定義する関数を使用する際に最もよく遭
   	echo "hello "
 	     .. yourName
 	     .. ", how are you?"
-- 多くの場所に空白が必要になります。
+- 多くの場所にスペースが必要になります。
 - 値の代入には `:let` を使用せず、変数の宣言には `:var` を使用します。 >
   	var count = 0
 	count += 3
@@ -339,7 +339,7 @@ function() は不要に ~
 
 自動行継続 ~
 
-多くの場合、式が次の行に続くことは明らかです。継続業の先頭に行継続のためのバッ
+多くの場合、式が次の行に続くことは明らかです。継続行の先頭に行継続のためのバッ
 クスラッシュ |line-continuation| を置く必要はありません。たとえば、複数行にま
 たぐリストの場合: >
 	var mylist = [
@@ -379,111 +379,107 @@ function() は不要に ~
 			.member
 
 <							*E1050*
-To make it possible for the operator at the start of the line to be
-recognized, it is required to put a colon before a range.  This will add
-"start" and print: >
+行頭の演算子と識別できるようにするために、範囲指定の前にはコロンを置きます。
+"start" と "print" をつなげる例: >
 	var result = start
 	+ print
-Like this: >
+これは以下の記述と同じです。 >
 	var result = start + print
 
-This will assign "start" and print a line: >
+次のように書くと、 "start" を代入して、1行表示します。 >
 	var result = start
 	:+ print
 
-Note that the colon is not required for the |+cmd| argument: >
+|+cmd| の引数にはコロンは不要な点に注意してください。 >
 	edit +6 fname
 
-It is also possible to split a function header over multiple lines, in between
-arguments: >
+関数の定義部においても、引数の間で改行をおくことができます。 >
 	def MyFunc(
 		text: string,
 		separator = '-'
 		): string
 
-Notes:
-- "enddef" cannot be used at the start of a continuation line, it ends the
-  current function.
-- No line break is allowed in the LHS of an assignment.  Specifically when
-  unpacking a list |:let-unpack|. This is OK: >
+注意:
+- "enddef" は継続行の先頭に置くことはできません。それは関数の終端を意味します。
+- 代入式の左辺を複数の行に分割できません。特にリストのアンパック |:let-unpack|
+  を使用する場合は注意が必要です。以下は問題のない例です。 >
 	[var1, var2] =
 		Func()
-<  This does not work: >
+<  以下のように記述することはできません。 >
 	[var1,
 	    var2] =
 		Func()
-- No line break is allowed in between arguments of an `:echo`, `:execute` and
-  similar commands.  This is OK: >
+- `:echo` や `:execute` のようなコマンドの引数は複数の行に分割できません。以下
+  は問題のない例です。 >
 	echo [1,
 		2] [3,
 			4]
-<  This does not work: >
+<  以下のように記述することはできません。 >
 	echo [1, 2]
 		[3, 4]
-- No line break is allowed in the arguments of a lambda, between the "{" and
-  "->".  This is OK: >
+- ラムダ関数の引数、"{" と "->" の間は複数の行に分割できません。以下は問題のな
+  い例です。 >
 	filter(list, {k, v ->
 			v > 0})
-<  This does not work: >
+<  以下のように記述することはできません。 >
 	filter(list, {k,
 			v -> v > 0})
 
 
-No curly braces expansion ~
+波括弧変数の廃止 ~
 
-|curly-braces-names| cannot be used.
+波括弧変数 |curly-braces-names| は使用できません。
 
 
-Dictionary literals ~
+辞書リテラル ~
 
-Traditionally Vim has supported dictionary literals with a {} syntax: >
+従来、 Vim は波括弧 {} で辞書リテラルの表記をサポートしてきました。 >
 	let dict = {'key': value}
 
-Later it became clear that using a simple key name is very common, thus
-literally dictionaries were introduced in a backwards compatible way: >
+後に、辞書にシンプルなキーを使用することが非常に一般的であることが明らかになっ
+たため、キーをクォーテーションなしで指定できる表記が後方互換的に導入されました。
+>
 	let dict = #{key: value}
 
-However, this #{} syntax is unlike any existing language.  As it appears that
-using a literal key is much more common than using an expression, and
-considering that JavaScript uses this syntax, using the {} form for dictionary
-literals was considered a much more useful syntax.  In Vim9 script the {} form
-uses literal keys: >
+しかし、この #{} という表記は他の言語に比べて異色なものです。キーには式よりも
+リテラルを使うほうが一般的で、JavaScript が使っている構文を考えると、辞書リテ
+ラルに {} の表記を使うほうがずっと便利です。 >
 	let dict = {key: value}
 
-In case an expression needs to be used for the key, square brackets can be
-used, just like in JavaScript: >
+キーに式を使用する必要がある場合は、JavaScript と同様に角括弧を使用することが
+できます。 >
 	let dict = {["key" .. nr]: value}
 
 
-No :xit, :t, :append, :change or :insert ~
+:xit、:t、:append、:change、:insert の廃止 ~
 
-These commands are too easily confused with local variable names.
-Instead of `:x` or `:xit` you can use `:exit`.
-Instead of `:t` you can use `:copy`.
-
-
-Comparators ~
-
-The 'ignorecase' option is not used for comparators that use strings.
+これらのコマンドは容易にローカル変数の名前と混同します。
+`:x` や `:xit` の代わりに `:exit` を使用できます。
+`:t` の代わりに `:copy` を使用できます。
 
 
-White space ~
+比較 ~
 
-Vim9 script enforces proper use of white space.  This is no longer allowed: >
+オプション 'ignorecase' は文字列の比較には作用しません。
+
+
+スペース ~
+
+Vim9 script ではスペースの適切な使用を推奨しています。以下のような記述はできま
+せん。 >
 	var name=234	# Error!
 	var name= 234	# Error!
 	var name =234	# Error!
-There must be white space before and after the "=": >
+"=" の前後にはスペースを置く必要があります。 >
 	var name = 234	# OK
-White space must also be put before the # that starts a comment after a
-command: >
+コメント先頭のハッシュ (#) の前にもスペースが必要です。 >
 	var name = 234# Error!
 	var name = 234 # OK
 
-White space is required around most operators.
+多くの演算子の前後にはスペースが必要です。
 
-White space is not allowed:
-- Between a function name and the "(": >
+スペースをおいてはいけない場合:
+- 関数の名前と "(" の間: >
 	call Func (arg)	   # Error!
 	call Func
 	     \ (arg)	   # Error!
