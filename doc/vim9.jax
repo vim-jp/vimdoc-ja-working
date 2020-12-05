@@ -152,42 +152,45 @@ Vim9 関数 ~
 	     ...
 
 
-Functions and variables are script-local by default ~
+明示しない限りスクリプトローカルになる変数と関数のスコープ ~
 							*vim9-scopes*
-When using `:function` or `:def` to specify a new function at the script level
-in a Vim9 script, the function is local to the script, as if "s:" was
-prefixed.  Using the "s:" prefix is optional.  To define a global function or
-variable the "g:" prefix must be used.  For functions in an autoload script
-the "name#" prefix is sufficient. >
+Vim9 script でスクリプト直下に `:function` や `:def` を使って関数を定義すると、
+関数はプレフィックス "s:" をつけた際のように、スクリプトローカルで定義されます。
+"s:" を明示することもできます。グローバルスコープの関数や変数を定義するにはプ
+レフィックス "g:" をつける必要があります。autoload scriptで定義する場合は、
+"name#" をつけます。 >
 	def ThisFunction()          # script-local
 	def s:ThisFunction()        # script-local
 	def g:ThatFunction()        # global
 	def scriptname#function()   # autoload
 
-When using `:function` or `:def` to specify a nested function inside a `:def`
-function, this nested function is local to the code block it is defined in.
-In a `:def` function it is not possible to define a script-local function.  It
-is possible to define a global function by using the "g:" prefix.
+`:def` で定義した関数の中で `:function` や `:def` でネストした関数を定義するこ
+とができ、定義されたブロックローカルのスコープになります。
+`:def` で定義した関数の中では、スクリプトのスコープで関数を定義することはでき
+ません。プレフィックス "g:" を使ってグローバルスコープの関数を定義することはで
+きます。
 
-When referring to a function and no "s:" or "g:" prefix is used, Vim will
-search for the function:
-- in the function scope, in block scopes
-- in the script scope, possibly imported
-- in the list of global functions
-However, it is recommended to always use "g:" to refer to a global function
-for clarity.
+関数をプレフィックス "s:" や "g:" をつけずに参照した場合、Vim は関数を次のよう
+に探します:
+- 同じ関数の中、ブロックスコープの中
+- スクリプトスコープの中、インポートされたもの
+- グローバル関数のリスト
+しかし、明瞭にするためにもグローバル関数を参照する際はプレフィックス "g:" を付
+けることを推奨します。
 
-In all cases the function must be defined before used.  That is when it is
-called, when `:defcompile` causes it to be compiled, or when code that calls
-it is being compiled (to figure out the return type).
+いずれの場合でも、関数は使用されるよりも前に定義されていなくてはなりません。
+使用されるタイミングは、コマンド `:defcompile` によってコンパイルされるとき、ま
+たは同コマンドを呼び出す関数がコンパイルされているとき（戻り値の型を確認するた
+め）です。
 
-The result is that functions and variables without a namespace can usually be
-found in the script, either defined there or imported.  Global functions and
-variables could be defined anywhere (good luck finding out where!).
+その結果として、名前空間を持たない関数や変数は通常、スクリプト内で定義されてい
+るか、インポートされたものかのどちらかで見つけることができます。グローバルな関
+数や変数はどこでも定義できます（どこで定義されているか、見つかるといいです
+ね！）。
 
-Global functions can still be defined and deleted at nearly any time.  In
-Vim9 script script-local functions are defined once when the script is sourced
-and cannot be deleted or replaced.
+グローバル関数は引き続き、ほとんどいつでも定義し、削除することができます。Vim9
+script でのスクリプトローカル関数は、スクリプトが読み込まれたときに一度定義さ
+れたきり、削除や置き換えはできません。
 
 
 Variable declarations with :var, :final and :const ~
