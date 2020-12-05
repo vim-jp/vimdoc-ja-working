@@ -491,10 +491,10 @@ Vim9 script ではスペースの適切な使用を推奨しています。以�
 	     \ )
 
 
-Conditions and expressions ~
+条件と式 ~
 
-Conditions and expressions are mostly working like they do in other languages.
-Some values are different from legacy Vim script:
+条件と式は、他の言語とおよそ同じように扱われます。いくつかの値は古い Vim
+script と扱いが異なります。
 	value		legacy Vim script	Vim9 script ~
 	0		falsy			falsy
 	1		truthy			truthy
@@ -503,11 +503,11 @@ Some values are different from legacy Vim script:
 	"99"		truthy			Error!
 	"text"		falsy			Error!
 
-For the "??" operator and when using "!" then there is no error, every value
-is either falsy or truthy.  This is mostly like JavaScript, except that an
-empty list and dict is falsy:
+"??" 演算子か "!" を使用している場合はエラーとなることはなく、すべての値は真ま
+たは偽として評価されます。真偽の評価方法は JavaScripot とほぼ同じですが、空のリ
+ストと辞書は偽として評価されます。
 
-	type		truthy when ~
+	型		真と評価される値 ~
 	bool		v:true or 1
 	number		non-zero
 	float		non-zero
@@ -522,8 +522,7 @@ empty list and dict is falsy:
 	class		when not NULL
 	object		when not NULL (TODO: when isTrue() returns v:true)
 
-The boolean operators "||" and "&&" expect the values to be boolean, zero or
-one: >
+真偽値演算子 "||" と "&&" は、値が真偽値、ゼロまたは1であることを期待します。 >
 	1 || false   == true
 	0 || 1       == true
 	0 || false   == false
@@ -533,36 +532,38 @@ one: >
 	'yes' && 0   Error!
 	[] || 99     Error!
 
-When using "!" for inverting, there is no error for using any type and the
-result is a boolean.  "!!" can be used to turn any value into boolean: >
+"!" を使って論理否定をすると、どのような方に対しても結果は真偽値になります。
+"!!" と二重論理否定をすることで、あらゆる型を真偽値に変換することができます。 >
 	!'yes'	    		== false
 	!![]			== false
 	!![1, 2, 3]    		== true
 
-When using "`.."` for string concatenation arguments of simple types are
-always converted to string: >
+文字列の結合に `..` を使用すると、すべての単純型の被演算子は常に文字列に変換さ
+れます。 >
 	'hello ' .. 123  == 'hello 123'
 	'hello ' .. v:true  == 'hello v:true'
 
-Simple types are string, float, special and bool.  For other types |string()|
-can be used.
+単純型とは、文字列 (string)、数値 (float)、special {訳注: このspecialが何を指し
+ているのか不明} と真偽値 (bool) です。他の型では |string()| が使用できます。
+
 							*false* *true*
-In Vim9 script one can use "true" for v:true and "false" for v:false.
+Vim9 script では "true" を v:true として、"false" を v:false として使うことが
+できます。
 
-Indexing a string with [idx] or [idx, idx] uses character indexes instead of
-byte indexes. Example: >
+文字列に対してインデックス [idx] や [idx, idx] を使用すると、バイト単位ではなく
+文字単位のインデックスとして扱われます。例: >
 	echo 'bár'[1]
-In legacy script this results in the character 0xc3 (an illegal byte), in Vim9
-script this results in the string 'á'.
+古い Vim script ではこれは文字 0xc3 (不正な文字) となりますが、Vim9 script では
+文字列 'á' が得られます。
 
 
-What to watch out for ~
+気をつけるべきこと ~
 							*vim9-gotchas*
-Vim9 was designed to be closer to often used programming languages, but at the
-same time tries to support the legacy Vim commands.  Some compromises had to
-be made.  Here is a summary of what might be unexpected.
+Vim9 は、一般的なプログラミング言語に近づくように設計されていますが、同時にレガ
+シーな Vim コマンドをサポートしようとしています。そのため、いくつかの妥協をしな
+ければなりませんでした。ここでは、意外と知られていないことをまとめてみました。
 
-Ex command ranges need to be prefixed with a colon. >
+Exコマンドの範囲指定にはコロンを前置する必要があります。 >
 	->		# legacy Vim: shifts the previous line to the right
 	->func()	# Vim9: method call in continuation line
 	:->		# Vim9: shifts the previous line to the right
@@ -574,27 +575,27 @@ Ex command ranges need to be prefixed with a colon. >
 	'text'->func()	# Vim9: method call
 	:'t		# legacy Vim: jump to mark m
 
-Some Ex commands can be confused with assignments in Vim9 script: >
+いくつかのExコマンドは Vim9 script の代入式と紛らわしくなります。 >
 	g:name = value  # assignment
 	g:pattern:cmd	# invalid command - ERROR
 	:g:pattern:cmd	# :global command
 
-Functions defined with `:def` compile the whole function.  Legacy functions
-can bail out, and the following lines are not parsed: >
+`:def` で定義した関数はすべてコンパイルされます。古い関数によってベイルアウト
+することができ、以下の行はコンパイルされません。 >
 	func Maybe()
 	  if !has('feature')
 	    return
 	  endif
 	  use-feature
 	endfunc
-Vim9 functions are compiled as a whole: >
+Vim9 関数はすべてコンパイルされます。 >
 	def Maybe()
 	  if !has('feature')
 	    return
 	  endif
 	  use-feature  # May give compilation error
 	enddef
-For a workaround, split it in two functions: >
+応急的に、2つの関数に分けることができます。 >
 	func Maybe()
 	  if has('feature')
 	    call MaybyInner()
@@ -605,15 +606,15 @@ For a workaround, split it in two functions: >
 	    use-feature
 	  enddef
 	endif
-Or put the unsupported code inside an `if` with a constant expression that
-evaluates to false: >
+また、偽として評価される定数式の条件をもった `if` の配下でにサポート外のコード
+を置くことができます。 >
 	def Maybe()
 	  if has('feature')
 	    use-feature
 	  endif
 	enddef
-Note that for unrecognized commands there is no check for "|" and a following
-command.  This will give an error for missing `endif`: >
+認識されていないコマンドを "|" でつなぐと、その後のコマンドは認識されないこと
+に注意してください。次のような記述は `endif` がないというエラーになります。 >
 	def Maybe()
 	  if has('feature') | use-feature | endif
 	enddef
