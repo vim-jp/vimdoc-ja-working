@@ -8154,8 +8154,8 @@ reg_recording()						*reg_recording()*
 reltime([{start} [, {end}]])				*reltime()*
 		時刻値を表す値を返す。この値はリストで項目の形式はシステムに依
 		存する。Vim 9 script では list<any> が使われる。
-		この値を |reltimestr()| に渡すと文字列に変換で
-		き、|reltimefloat()| に渡すと浮動小数点数に変換できる。
+		この値を |reltimestr()| に渡すと文字列に変換でき、
+		|reltimefloat()| に渡すと浮動小数点数に変換できる。
 
 		引数を指定しないと reltime() は現在時刻を返す。
 		1個の引数を指定すると、その引数で指定された時刻からの経過時間
