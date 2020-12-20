@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 8.2.  Last change: 2020 Sep 06
+*options.txt*	For Vim バージョン 8.2.  Last change: 2020 Oct 10
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2571,8 +2571,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	ドのコマンド "x" はそれぞれの文字の上の combining character のみを削除
 	する。オフのときは (これが既定である) combining character と文字は同時
 	に削除される。
-	Note: 'delcombine' がオンになっていると "xx" の動作が "2x" と異なる場
-	合がある。
+	Note: 'delcombine' がオンになっていると "xx" が "2x" と異った動作をす
+	る場合がある。
 
 	このオプションは、アラビア語、ヘブライ語その他の言語で、ベースとなる文
 	字の上にcombining character が付いていて、combining character のみを削
