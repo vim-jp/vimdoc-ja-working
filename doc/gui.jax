@@ -627,30 +627,32 @@ Note: コマンドラインモードでの<Esc>はマッピングで使用され
 {訳注: |c_<Esc>|を参照}
 
 		*:nme* *:nmenu*  *:nnoreme* *:nnoremenu* *:nunme* *:nunmenu*
-メニューコマンドが "n" で始まるものはノーマルモードで動く。|mapmode-n|
+メニューコマンドが "n" で始まるものはノーマルモードに作用する。|mapmode-n|
 
 		*:ome* *:omenu*  *:onoreme* *:onoremenu* *:ounme* *:ounmenu*
-メニューコマンドが "o" で始まるものはオペレータ待機モードで動く。|mapmode-o|
+メニューコマンドが "o" で始まるものはオペレータ待機モードに作用す
+る。|mapmode-o|
 
 		*:vme* *:vmenu*  *:vnoreme* *:vnoremenu* *:vunme* *:vunmenu*
-メニューコマンドが "v" で始まるものはビジュアルモードで動く。|mapmode-v|
+メニューコマンドが "v" で始まるものはビジュアルモードに作用する。|mapmode-v|
 
 		*:xme* *:xmenu*  *:xnoreme* *:xnoremenu* *:xunme* *:xunmenu*
-メニューコマンドが "x" で始まるものはビジュアルモードと選択モードで動
-く。|mapmode-x|
+メニューコマンドが "x" で始まるものはビジュアルモードと選択モードに作用す
+る。|mapmode-x|
 
 		*:sme* *:smenu*  *:snoreme* *:snoremenu* *:sunme* *:sunmenu*
-メニューコマンドが "s" で始まるものは選択モードで動く。|mapmode-s|
+メニューコマンドが "s" で始まるものは選択モードに作用する。|mapmode-s|
 
 		*:ime* *:imenu*  *:inoreme* *:inoremenu* *:iunme* *:iunmenu*
-メニューコマンドが "i" で始まるものは挿入モードで動く。|mapmode-i|
+メニューコマンドが "i" で始まるものは挿入モードに作用する。|mapmode-i|
 
 		*:cme* *:cmenu*  *:cnoreme* *:cnoremenu* *:cunme* *:cunmenu*
-メニューコマンドが "c" で始まるものはコマンドラインモードで動く。|mapmode-c|
+メニューコマンドが "c" で始まるものはコマンドラインモードに作用す
+る。|mapmode-c|
 
 		*:tlm* *:tlmenu* *:tln*     *:tlnoremenu* *:tlu*   *:tlunmenu*
-メニューコマンドが "t" で始まるものは端末{訳註:ノーマルとジョブ両方の}モードで
-動く。|mapmode-t|
+メニューコマンドが "t" で始まるものは端末{訳註:ノーマルとジョブ両方の}モードに
+作用する。|mapmode-t|
 
 						*:menu-<silent>* *:menu-silent*
 実行したコマンドをコマンドラインに表示しないようなメニューを定義するには、最初
