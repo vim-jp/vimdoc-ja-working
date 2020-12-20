@@ -61,7 +61,7 @@ Note: 出力を表示中に "q" を押してそれ以降の出力表示をさせ
 
 とすればよい。面倒ならシフトキーを使わないでもできる: >
 
-	:help e72 
+	:help e72
 
 ==============================================================================
 2. エラーメッセージ				*error-messages* *errors*
@@ -747,7 +747,7 @@ Vimが一時ファイルを読み込めなかった。特に Windows では、cm
 例: >
 	:command MyCommand1 echo "one"
 	:command MyCommand2 echo "two"
-	:MyCommand 
+	:MyCommand
 <
 							*E492*  >
   Not an editor command
