@@ -15,7 +15,7 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
 
 1.  Vim9 script とは			|vim9-script|
-2.  古い Vim script からの変更点	|vim9-differences|
+2.  旧来の Vim script からの変更点	|vim9-differences|
 3.  新しいスタイルの関数		|fast-functions|
 4.  型					|vim9-types|
 5.  名前空間、Import と Export		|vim9script|
@@ -70,49 +70,49 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
 Vim9 script と `:def` で定義する関数を使用する際に最もよく遭遇する変更点を簡単
 にまとめると以下のとおりです:
-- コメントはダブルクォーテーション (") ではなく、ハッシュ (#) で始めます。 >
-  	echo "hello"   # コメント
+- コメントはダブルクォーテーション (") ではなく、# で始めます。 >
+	echo "hello"   # コメント
 - 行継続文字 (\) はほとんどの場合、必要ありません。 >
-  	echo "hello "
+	echo "hello "
 	     .. yourName
 	     .. ", how are you?"
 - 多くの場所にスペースが必要になります。
 - 値の代入には `:let` を使用せず、変数の宣言には `:var` を使用します。 >
-  	var count = 0
+	var count = 0
 	count += 3
 - `:final` と `:const` を使用して、定数を宣言できます。 >
-  	final matches = []		  # matches を追加
+	final matches = []		  # matches を追加
 	const names = ['Betty', 'Peter']  # 変更できない
 - `:final` は `:finally` の略語として使用することはできません。
 - 変数と関数のスコープは、明示しない限りスクリプトローカルです。
 - 関数を引数の型、戻り値の型とともに宣言します。 >
 	def CallMe(count: number, message: string): bool
 - 関数は `:call` なしで呼び出します。 >
-  	writefile(['done'], 'file.txt')
+	writefile(['done'], 'file.txt')
 - `:xit`、`:t`、`:append`、`:change`、`:insert`と波括弧変数は使用できません。
 - コマンドの前に範囲指定を置くときは、コロン (:) を前置しなくてはなりません。 >
-  	:%s/this/that
+	:%s/this/that
 
 
-ハッシュ (#) から始まるコメント ~
+# から始まるコメント ~
 
-古い Vim script のコメントは、ダブルクォーテーション (") で始めます。Vim9
-scriptのコメントはハッシュ (#) で始めます。 >
+旧来の Vim script のコメントは、ダブルクォーテーション (") で始めます。Vim9
+scriptのコメントは # で始めます。 >
 	# 宣言
 	var count = 0  # 出現回数
 
 これは、ダブルクォーテーションは文字列の開始を表す文字でもあるからです。多くの
 場所、特に改行を含む式の途中では、文字列とコメントの両方が現れるため、どちらを
 意味しているのかわかりにくくなってしまいます。この混乱を避けるために、Vim9
-script では、ハッシュ (#) のみをコメントとして認識します。このコメント形式は
-シェルスクリプトやPythonのコードと同じです。
+script では、# のみをコメントとして認識します。このコメント形式はシェルスクリ
+プトやPythonのコードと同じです。
 
-Vi においてハッシュ (#) は行番号付きでテキストを表示します。Vim9 script では、
-代わりに `:number` を使用します。 >
+Vi において # は行番号付きでテキストを表示します。Vim9 script では、代わりに
+`:number` を使用します。 >
 	101 number
 
-可読性を向上するために、コマンドとハッシュ (#)、コメント文の間にはスペースをお
-いてください。
+可読性を向上するために、コマンドと #、コメント文の間にはスペースをおいてくださ
+い。
 
 
 Vim9 関数 ~
@@ -322,7 +322,7 @@ Note 変数は使用する前に宣言する必要がありますが、関数は
 
 function() は不要に ~
 
-ユーザー定義の関数は、 `function()` を使わずとも関数リファレンスとして使用する
+ユーザー定義の関数は、`function()` を使わずとも関数リファレンスとして使用する
 ことができます。引数の型と戻り値の型がチェックされます。関数はすでに定義されて
 いる必要があります。 >
 
@@ -382,7 +382,7 @@ function() は不要に ~
 これは以下の記述と同じです。 >
 	var result = start + print
 
-次のように書くと、 "start" を代入して、1行表示します。 >
+次のように書くと、"start" を代入して、1行表示します。 >
 	var result = start
 	:+ print
 
@@ -429,7 +429,7 @@ Notes:
 
 辞書リテラル ~
 
-従来、 Vim は波括弧 {} で辞書リテラルの表記をサポートしてきました。 >
+従来、Vim は波括弧 {} で辞書リテラルの表記をサポートしてきました。 >
 	let dict = {'key': value}
 
 後に、辞書にシンプルなキーを使用することが非常に一般的であることが明らかになっ
@@ -469,7 +469,7 @@ Vim9 script ではスペースの適切な使用を推奨しています。以�
 	var name =234	# エラー！
 "=" の前後にはスペースを置く必要があります。 >
 	var name = 234	# OK
-コメント先頭のハッシュ (#) の前にもスペースが必要です。 >
+コメント先頭の # の前にもスペースが必要です。 >
 	var name = 234# エラー！
 	var name = 234 # OK
 
@@ -490,7 +490,7 @@ Vim9 script ではスペースの適切な使用を推奨しています。以�
 
 条件と式 ~
 
-条件と式は、他の言語とおよそ同じように扱われます。いくつかの値は古い Vim
+条件と式は、他の言語とおよそ同じように扱われます。いくつかの値は旧来の Vim
 script と扱いが異なります。
 	value		legacy Vim script	Vim9 script ~
 	0		falsy			falsy
@@ -552,8 +552,8 @@ Vim9 script では "true" を v:true として、"false" を v:false として�
 文字列に対してインデックス [idx] や [idx, idx] を使用すると、バイト単位ではな
 く文字単位のインデックスとして扱われます。例: >
 	echo 'bár'[1]
-古い Vim script ではこれは文字 0xc3 (不正な文字) となりますが、Vim9 script で
-は文字列 'á' が得られます。
+旧来の Vim script ではこれは文字 0xc3 (不正な文字) となりますが、Vim9 script
+では文字列 'á' が得られます。
 
 
 気をつけるべきこと ~
