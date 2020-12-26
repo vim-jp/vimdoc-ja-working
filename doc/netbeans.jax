@@ -558,10 +558,9 @@ setModtime time
 		version 2.3 から。
 
 setReadOnly readonly
-		boolean の引数 readonly が "T" で True のとき、バッファを読み
-		込み専用とマークします。ファイルを読み込み専用にします。"F" で
-		False のときは、読み込み専用ではないとマークします version 2.3
-		で実装されました。
+		boolean引数 "readonly" が True の "T" のとき、バッファを読み込
+		み専用とマークします。False の "F" のときは、読み込み専用では
+		ないとマークします。version 2.3で実装されました。
 
 setStyle	未実装。
 
