@@ -1,4 +1,4 @@
-*usr_03.txt*	For Vim バージョン 8.2.  Last change: 2020 Sep 0S
+*usr_03.txt*	For Vim バージョン 8.2.  Last change: 2020 Sep 03
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -30,7 +30,7 @@
 
 カーソルを 1 単語先に進めるには、"w" コマンドを使います。他の Vim コマンドもそ
 うですが、複数の単語を一気に進めるために数値 (カウンタ) による回数指定ができま
-す。例えば、"3w" では 3 単語進みます。図で示すと次のようになります。("x" でマー
+す。例えば、"3w" では 3 単語進みます。図で示すと次のようになります ("x" でマー
 クされた位置から開始します):
 
 	This is a line with example text ~
