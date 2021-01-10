@@ -1,4 +1,4 @@
-*windows.txt*   For Vim バージョン 8.2.  Last change: 2020 May 10
+*windows.txt*   For Vim バージョン 8.2.  Last change: 2020 Dec 18
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -214,11 +214,6 @@ CTRL-W CTRL_N						*CTRL-W_CTRL-N*
 		この動作は、はじめに ":split"、次に ":enew" コマンドを実行した
 		場合と同じ動作である。
 
-:[N]vne[w] [++opt] [+cmd] [file]			*:vne* *:vnew*
-		|:new|と同様だが、垂直分割する。'equalalways' がセットされ、
-		'eadirection' が "ver" でないならば、幅が指定されない限りウィ
-		ンドウは水平に広げられる。
-
 :[N]new [++opt] [+cmd] {file}
 :[N]sp[lit] [++opt] [+cmd] {file}			*:split_f*
 		新しいウィンドウを作成し、そのウィンドウでファイル {file} の編
@@ -231,6 +226,11 @@ CTRL-W CTRL_N						*CTRL-W_CTRL-N*
                 ンドウの高さの半分)。新しいウィンドウの場所を確保するため、カ
                 レントウィンドウの高さは低くなる。('equalalways' オプションが
                 セットされていれば他のウィンドウも低くなる)
+
+:[N]vne[w] [++opt] [+cmd] [file]			*:vne* *:vnew*
+		|:new|と同様だが、垂直分割する。'equalalways' がセットされ、
+		'eadirection' が "ver" でないならば、幅が指定されない限りウィ
+		ンドウは水平に広げられる。
 
 :[N]sv[iew] [++opt] [+cmd] [file]		*:sv* *:sview* *splitview*
 		":split" と同じ。ただし、バッファに対して 'readonly' オプショ
@@ -974,13 +974,13 @@ CTRL-W g }						*CTRL-W_g}*
 		関する情報を自動的に表示させることができる。これは |:ptag| コ
 		マンドを使うほど賢くないが、tags ファイルが必要なく、システム
 		インクルードファイル内のマッチを見つけることもできる。例: >
-  :au! CursorHold *.[ch] nested exe "silent! psearch " . expand("<cword>")
+  :au! CursorHold *.[ch] ++nested exe "silent! psearch " . expand("<cword>")
 <		注意:遅いかもしれない。
 
 
 例							*CursorHold-example*
 
-  :au! CursorHold *.[ch] nested exe "silent! ptag " . expand("<cword>")
+  :au! CursorHold *.[ch] ++nested exe "silent! ptag " . expand("<cword>")
 
 この例では、'updatetime' に設定された時間の間カーソルが動かなければ、カーソル
 下のキーワードで ":ptag" が実行される。"nested" は他の自動コマンドを実行するの
@@ -993,7 +993,7 @@ CTRL-W g }						*CTRL-W_g}*
 見つかったタグをハイライトさせる、カーソル位置に単語がないときに ":ptag" を実
 行しない、などの改良をしたものが以下の通り: >
 
-  :au! CursorHold *.[ch] nested call PreviewWord()
+  :au! CursorHold *.[ch] ++nested call PreviewWord()
   :func PreviewWord()
   :  if &previewwindow			" プレビューウィンドウ内では実行しない
   :    return
@@ -1134,10 +1134,12 @@ CTRL-W g }						*CTRL-W_g}*
 <
 						*:bad* *:badd*
 :bad[d]	[+lnum] {fname}
-		ファイル名 {fname} をバッファリストに追加する。ただし、メモリ
-		上には読み込まれない。"lnum" が指定された場合、バッファに初め
-		て移動したときにカーソルが指定された行番号にジャンプする。+ 以
-		降の他のコマンドは無視されることに注意。
+		ファイル名 {fname} をバッファリストに追加する、ただしメモリ上
+		には読み込まず、リストもされない。そのバッファが以前に削除さ
+		れ、しかしワイプれてないなら、再度リストされる。
+		"lnum" が指定された場合、バッファに初めて移動したときにカーソ
+		ルが指定された行番号にジャンプする。Note + 以降の他のコマンド
+		は無視される。
 
 :[N]bd[elete][!]			*:bd* *:bdel* *:bdelete* *E516*
 :bd[elete][!] [N]

@@ -1,4 +1,4 @@
-*popup.txt*  For Vim バージョン 8.2.  Last change: 2020 Jul 27
+*popup.txt*  For Vim バージョン 8.2.  Last change: 2020 Nov 07
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -102,7 +102,7 @@ Exコマンドの出力のために画面がスクロールアップすると、
 通常、ポップアップウィンドウを作成したプラグインは、それを閉じることも担当す
 る。何らかの理由でポップアップが表示される場合は、次のコマンドですべてを閉じる
 ことができる: >
-	call popup_clear()
+	call popup_clear(1)
 通知などの一部のポップアップは、指定した時間が経過すると閉じる。これは、
 `popup_create()` の "time" プロパティで設定できる。
 それ以外の場合は、右上隅の X をクリックするか、ポップアップ内の任意の場所をク
@@ -312,11 +312,12 @@ popup_dialog({what}, {options})				*popup_dialog()*
 
 popup_filter_menu({id}, {key})				*popup_filter_menu()*
 		ポップアップに使用できるフィルタ。これらのキーが使用できる:
-		    j <Down>		下の項目を選択する
-		    k <Up>		上の項目を選択する
+		    j <Down> <C-N>	下の項目を選択する
+		    k <Up> <C-P>	上の項目を選択する
 		    <Space> <Enter>	現在の選択を受け入れる
 		    x Esc CTRL-C	メニューをキャンセルする
 		他のキーは無視される。
+		常に |v:true| を返す。
 
 		行をハイライトするためにマッチがセットされる。|popup_menu()|
 		を参照。
@@ -705,9 +706,9 @@ popup_create() に渡す。
 			'encoding' が "utf-8" かつ 'ambiwidth' が "single" の
 			ときはデフォルトで2重線が使われる。それ以外の場合は
 			ASCII文字が使われる。
-	scrollbar	0 以外: テキストが収まらない場合にスクロールバーを表示
-			する。0: スクロールバーを表示しない。デフォルトは 0以
-			外である。|popup-scrollbar| も参照。
+	scrollbar	1か true: テキストが収まらない場合にスクロールバーを
+			表示する。0: スクロールバーを表示しない。デフォルトは
+			0以外である。|popup-scrollbar| も参照。
 	scrollbarhighlight  スクロールバー用のハイライトグループ名。背景色が重
 			要である。指定しない場合、PmenuSbar が使用される。
 	thumbhighlight  スクロールバーのつまみ用のハイライトグループ名。背景色
@@ -898,10 +899,21 @@ zindex を持つポップアップウィンドウのフィルタが最初に呼�
 Vimは標準のフィルタ |popup_filter_menu()| と |popup_filter_yesno()| を提供す
 る。
 
+キーは `:normal` からフィルターをすり抜けないでくる。これは "cursorline" が設
+定されているならポップアップ内でカーソルを動かすことに使える: >
+	call win_execute(winid, 'normal! 10Gzz')
+キーが `feedkeys()` からならフィルターをすり抜けてくる。
+
 Note "x" はポップアップを閉じる通常の方法である。Escを使いたくなるかもしれない
 が、多くのキーはEsc文字で始まるので、VimがEscキーを認識するまでに時間がかかる
 ことがある。Escを使用する場合は、'ttimeoutlen' オプションを 100 に設定し、
 'timeout' または 'ttimeout'、あるいはその両方を設定することを薦める。
+
+							*popup-filter-errors*
+フィルター関数は、たとえば名前が正しくないなどで、呼ばれないことがあり、その時
+はポップアップを閉じます。フィルターが原因のエラーの時は0を返します。もしある
+行で3度発生したらポップアップは閉じられます。ポップアップでの呼び出しでエラー
+が10%未満であるなら、閉じられません。
 
 
 ポップアップコールバック				*popup-callback*
