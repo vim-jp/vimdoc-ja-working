@@ -2062,7 +2062,7 @@ Note: 上記のコマンドでは <unique> が使われています。これは�
 "<Leader>a" にマップを定義します。ユーザーは自分の vimrc ファイルの中でマップ
 を定義することができます: >
 
-	map ,c  <Plug>TypecorrAdd
+	map ,c  <Plug>TypecorrAdd;
 
 すると、マップのキーとして ",c" が使われます。"_a" や "\a" は使われません。
 
