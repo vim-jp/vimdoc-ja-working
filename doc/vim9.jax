@@ -71,27 +71,27 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 Vim9 script と `:def` で定義する関数を使用する際に最もよく遭遇する変更点を簡単
 にまとめると以下のとおりです:
 - コメントはダブルクォーテーション (") ではなく、# で始めます。 >
-	echo "hello"   # コメント
+  	echo "hello"   # コメント
 - 行継続文字 (\) はほとんどの場合、必要ありません。 >
-	echo "hello "
+  	echo "hello "
 	     .. yourName
 	     .. ", how are you?"
 - 多くの場所にスペースが必要になります。
 - 値の代入には `:let` を使用せず、変数の宣言には `:var` を使用します。 >
-	var count = 0
+  	var count = 0
 	count += 3
 - `:final` と `:const` を使用して、定数を宣言できます。 >
-	final matches = []		  # matches を追加
+  	final matches = []		  # matches を追加
 	const names = ['Betty', 'Peter']  # 変更できない
 - `:final` は `:finally` の略語として使用することはできません。
 - 変数と関数のスコープは、明示しない限りスクリプトローカルです。
 - 関数を引数の型、戻り値の型とともに宣言します。 >
 	def CallMe(count: number, message: string): bool
 - 関数は `:call` なしで呼び出します。 >
-	writefile(['done'], 'file.txt')
+  	writefile(['done'], 'file.txt')
 - `:xit`、`:t`、`:append`、`:change`、`:insert`と波括弧変数は使用できません。
 - コマンドの前に範囲指定を置くときは、コロン (:) を前置しなくてはなりません。 >
-	:%s/this/that
+  	:%s/this/that
 
 
 # から始まるコメント ~
