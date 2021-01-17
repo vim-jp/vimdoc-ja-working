@@ -1,4 +1,4 @@
-*options.txt*	For Vim version 8.2.  Last change: 2020 Sep 06
+*options.txt*	For Vim version 8.2.  Last change: 2020 Dec 21
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -2554,7 +2554,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	"x" delete each combining character on its own.  When it is off (the
 	default) the character along with its combining characters are
 	deleted.
-	Note: When 'delcombine' is set "xx" may work different from "2x"!
+	Note: When 'delcombine' is set "xx" may work differently from "2x"!
 
 	This is useful for Arabic, Hebrew and many other languages where one
 	may have combining characters overtop of base characters, and want
@@ -2801,12 +2801,16 @@ A jump table for the options with a short description can be found at |Q_op|.
 	toggled each time the flag is given.  See |complex-change|.  See
 	also 'gdefault' option.
 	Switching this option on may break plugins!
+	This option is not used in |Vim9| script.
 
 					*'emoji'* *'emo'* *'noemoji'* *'noemo'*
 'emoji' 'emo'	boolean (default: on)
 			global
 	When on all Unicode emoji characters are considered to be full width.
-
+	This excludes "text emoji" characters, which are normally displayed as
+	single width.  Unfortunately there is no good specification for this
+	and it has been determined on trial-and-error basis.  Use the
+	|setcellwidths()| function to change the behavior.
 
 					*'encoding'* *'enc'* *E543*
 'encoding' 'enc'	string (default: "latin1" or value from $LANG)
@@ -3118,7 +3122,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 			local to buffer
 	This gives the <EOL> of the current buffer, which is used for
 	reading/writing the buffer from/to a file:
-	    dos	    <CR> <NL>
+	    dos	    <CR><NL>
 	    unix    <NL>
 	    mac	    <CR>
 	When "dos" is used, CTRL-Z at the end of a file is ignored.
@@ -3567,6 +3571,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	DEPRECATED: Setting this option may break plugins that are not aware
 	of this option.  Also, many users get confused that adding the /g flag
 	has the opposite effect of that it normally does.
+	This option is not used in |Vim9| script.
 
 						*'grepformat'* *'gfm'*
 'grepformat' 'gfm'	string	(default "%f:%l:%m,%f:%l%m,%f  %l%m")
@@ -4679,7 +4684,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	    characters.  Example: "abc;ABC"
 	Example: "aA,fgh;FGH,cCdDeE"
 	Special characters need to be preceded with a backslash.  These are
-	";", ',' and backslash itself.
+	";", ',', '"', '|' and backslash itself.
 
 	This will allow you to activate vim actions without having to switch
 	back and forth between the languages.  Your language characters will
@@ -4940,6 +4945,8 @@ A jump table for the options with a short description can be found at |Q_op|.
 	Only switch it off when working with old Vi scripts.  In any other
 	situation write patterns that work when 'magic' is on.  Include "\M"
 	when you want to |/\M|.
+	In |Vim9| script the value of 'magic' is ignored, patterns behave like
+	it is always set.
 
 						*'makeef'* *'mef'*
 'makeef' 'mef'		string	(default: "")
@@ -7222,7 +7229,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	normal text.  Each status line item is of the form:
 	  %-0{minwid}.{maxwid}{item}
 	All fields except the {item} are optional.  A single percent sign can
-	be given as "%%".  Up to 80 items can be specified.  *E541*
+	be given as "%%".
 
 	When the option starts with "%!" then it is used as an expression,
 	evaluated and the result is used as the option value.  Example: >
@@ -7288,8 +7295,8 @@ A jump table for the options with a short description can be found at |Q_op|.
 	N N   Printer page number.  (Only works in the 'printheader' option.)
 	l N   Line number.
 	L N   Number of lines in buffer.
-	c N   Column number.
-	v N   Virtual column number.
+	c N   Column number (byte index).
+	v N   Virtual column number (screen column).
 	V N   Virtual column number as -{num}.  Not displayed if equal to 'c'.
 	p N   Percentage through file in lines as in |CTRL-G|.
 	P S   Percentage through file of displayed window.  This is like the
