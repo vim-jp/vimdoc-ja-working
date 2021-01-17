@@ -70,7 +70,7 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
 Vim9 script と `:def` で定義する関数を使用する際に最もよく遭遇する変更点を簡単
 にまとめると以下のとおりです:
-- コメントはダブルクォーテーション (") ではなく、# で始めます: >
+- コメントは " ではなく、# で始めます: >
   	echo "hello"   # コメント
 - 行継続文字 (\) はほとんどの場合、必要ありません: >
   	echo "hello "
@@ -96,8 +96,8 @@ Vim9 script と `:def` で定義する関数を使用する際に最もよく遭
 
 # から始まるコメント ~
 
-旧来の Vim script のコメントは、ダブルクォーテーション (") で始めます。Vim9
-scriptのコメントは # で始めます。 >
+旧来の Vim script のコメントは、ダブルクォーテーションで始めます。Vim9 script
+のコメントは # で始めます。 >
 	# 宣言
 	var count = 0  # 出現回数
 
