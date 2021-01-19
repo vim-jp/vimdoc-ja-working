@@ -539,8 +539,8 @@ falsy か truthy として評価されます。これは JavaScripot とほぼ�
 	'hello ' .. 123  == 'hello 123'
 	'hello ' .. v:true  == 'hello v:true'
 
-単純型とは、文字列 (string)、数値 (float)、special {訳注: このspecialが何を指
-しているのか不明} と真偽値 (bool) です。他の型では |string()| が使用できます。
+単純型とは、文字列 (string)、数値 (float)、特殊値 (special) と真偽値 (bool) で
+す。他の型では |string()| が使用できます。
 
 							*false* *true*
 Vim9 script では "true" を v:true として、"false" を v:false として使うことが
