@@ -15,7 +15,7 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
 
 1.  Vim9 script とは			|vim9-script|
-2.  旧来の Vim script からの変更点	|vim9-differences|
+2.  変更点				|vim9-differences|
 3.  新しいスタイルの関数		|fast-functions|
 4.  型					|vim9-types|
 5.  名前空間、Import と Export		|vim9script|
