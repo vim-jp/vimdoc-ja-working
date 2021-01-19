@@ -68,8 +68,8 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
 概要 ~
 
-Vim9 script と `:def` で定義する関数を使用する際に最もよく遭遇する変更点を簡単
-にまとめると以下のとおりです:
+Vim9 script と `:def` で定義する関数を使用する際に最もよく遭遇する変更点の概要
+をまとめると以下のとおりです:
 - コメントは " ではなく、# で始めます: >
   	echo "hello"   # コメント
 - 行継続文字 (\) はほとんどの場合、必要ありません: >
