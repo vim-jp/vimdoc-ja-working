@@ -503,19 +503,19 @@ falsy か truthy として評価されます。これは JavaScript とほぼ同
 リストと辞書は falsy として評価されます:
 
 	型		真と評価される値 ~
-	bool		v:true or 1
-	number		non-zero
-	float		non-zero
-	string		non-empty
-	blob		non-empty
-	list		non-empty (different from JavaScript)
-	dictionary	non-empty (different from JavaScript)
+	bool		v:true または 1
+	number		非0
+	float		非0
+	string		空文字列以外
+	blob		空ブロブ以外
+	list		空リスト以外 (JavaScript とは異なります)
+	dictionary	空辞書以外 (JavaScript とは異なります)
 	func		when there is a function name
 	special		v:true
-	job		when not NULL
-	channel		when not NULL
-	class		when not NULL
-	object		when not NULL (TODO: when isTrue() returns v:true)
+	job		非 NULL
+	channel		非 NULL
+	class		非 NULL
+	object		非 NULL (TODO: isTrue() が v:true を返すとき)
 
 真偽値演算子 "||" と "&&" は、値が真偽値、0または1であることを期待します:
 >
