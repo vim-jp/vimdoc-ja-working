@@ -1,4 +1,4 @@
-*usr_41.txt*	For Vim version 8.2.  Last change: 2021 Jan 08
+*usr_41.txt*	For Vim version 8.2.  Last change: 2021 Jan 13
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -619,6 +619,8 @@ String manipulation:					*string-functions*
 	submatch()		get a specific match in ":s" and substitute()
 	strpart()		get part of a string using byte index
 	strcharpart()		get part of a string using char index
+	slice()			take a slice of a string, using char index in
+				Vim9 script
 	strgetchar()		get character from a string using char index
 	expand()		expand special keywords
 	expandcmd()		expand a command like done for `:edit`
@@ -648,6 +650,7 @@ List manipulation:					*list-functions*
 	map()			change each List item
 	mapnew()		make a new List with changed items
 	reduce()		reduce a List to a value
+	slice()			take a slice of a List
 	sort()			sort a List
 	reverse()		reverse the order of a List
 	uniq()			remove copies of repeated adjacent items
@@ -820,6 +823,7 @@ System functions and manipulation of files:
 	setenv()		set an environment variable
 	hostname()		name of the system
 	readfile()		read a file into a List of lines
+	readblob()		read a file into a Blob
 	readdir()		get a List of file names in a directory
 	readdirex()		get a List of file information in a directory
 	writefile()		write a List of lines or Blob into a file
