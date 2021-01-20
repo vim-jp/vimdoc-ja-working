@@ -2252,11 +2252,12 @@ http://papp.plan9.de
 
 PASCAL						*pascal.vim* *ft-pascal-syntax*
 
-"*.p" にマッチするファイルのタイプはProgressかPascalである。自動判別が機能しな
-いなら、またはProgressファイルを一切編集しないとわかっているなら、これをvimrc
-ファイルに書くといい: >
+"*.p" にマッチするファイルのタイプはProgressかPascalで、"*.pp" にマッチするファ
+イルのタイプはPuppetかPascalである。自動判別が機能しない、またはPascalファイル
+だけ編集するなら、これをvimrc ファイルに書くといい: >
 
-   :let filetype_p = "pascal"
+   :let filetype_p  = "pascal"
+   :let filetype_pp = "pascal"
 
 Pascal構文ファイルはTurbo Pascal, Free Pascal CompilerとGNU Pascal Compilerで
 提供される拡張に対応するための拡張が施されてきた。Delphiのキーワードもサポート
