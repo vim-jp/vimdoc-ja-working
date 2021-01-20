@@ -1,4 +1,4 @@
-*usr_41.txt*	For Vim バージョン 8.2.  Last change: 2021 Jan 08
+*usr_41.txt*	For Vim バージョン 8.2.  Last change: 2021 Jan 13
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -594,6 +594,8 @@ substitute() の呼び出しの前後にいろいろな処理を入れたりす�
 	submatch()		":s" と substitute() の中で部分マッチを得る
 	strpart()		文字列の一部分を得る(バイト数指定)
 	strcharpart()		文字のインデックスで指定された部分文字列を得る
+	slice()			Vim9 script での文字インデックスを用いて、文字
+				列のスライスを取る
 	strgetchar()		文字のインデックスで指定された文字コードを得る
 	expand()		特殊キーワードを展開する
 	expandcmd()		`:edit` のようにコマンドを展開する
@@ -625,6 +627,7 @@ substitute() の呼び出しの前後にいろいろな処理を入れたりす�
 	map()			リストの各要素を変換する
 	mapnew()		変換した要素で新しいリストを作成する
 	reduce()		リストの畳み込みの値を算出する
+	slice()			リストのスライスを取る
 	sort()			リストをソートする
 	reverse()		リストの並び順を反転させる
 	uniq()			隣接して繰り返される要素のコピーを削除する
