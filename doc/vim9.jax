@@ -493,13 +493,13 @@ script と扱いが異なります:
 	value		legacy Vim script	Vim9 script ~
 	0		falsy			falsy
 	1		truthy			truthy
-	99		truthy			Error!
-	"0"		falsy			Error!
-	"99"		truthy			Error!
-	"text"		falsy			Error!
+	99		truthy			エラー!
+	"0"		falsy			エラー!
+	"99"		truthy			エラー!
+	"text"		falsy			エラー!
 
 "??" 演算子か "!" を使用している場合はエラーとなることはなく、すべての値は
-falsy か truthy として評価されます。これは JavaScripot とほぼ同じですが、空の
+falsy か truthy として評価されます。これは JavaScript とほぼ同じですが、空の
 リストと辞書は falsy として評価されます:
 
 	型		真と評価される値 ~
@@ -517,7 +517,7 @@ falsy か truthy として評価されます。これは JavaScripot とほぼ�
 	class		when not NULL
 	object		when not NULL (TODO: when isTrue() returns v:true)
 
-真偽値演算子 "||" と "&&" は、値が真偽値、ゼロまたは1であることを期待します:
+真偽値演算子 "||" と "&&" は、値が真偽値、0または1であることを期待します:
 >
 	1 || false   == true
 	0 || 1       == true
