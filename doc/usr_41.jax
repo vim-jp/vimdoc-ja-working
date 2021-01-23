@@ -803,6 +803,7 @@ substitute() の呼び出しの前後にいろいろな処理を入れたりす�
 	setenv()		環境変数を設定する
 	hostname()		システムの名称を得る
 	readfile()		ファイルを読み込み、行のリストを得る
+	readblob()		ファイルを読み込み、Blobに格納する
 	readdir()		ディレクトリ内のファイル名のリストを得る
 	readdirex()		ディレクトリ内のファイル情報のリストを得る
 	writefile()		行のリストまたは Blob をファイルに書き込む
