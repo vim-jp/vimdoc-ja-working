@@ -3755,7 +3755,7 @@ netrw かあるいは関与している他のプラグインと衝突してい�
 		so $HOME/.vim/plugin/Decho.vim
 		so $HOME/.vim/plugin/netrwPlugin.vim
 <
-	   続けて次のように vim を動かす >
+	   続けて次のように vim を動かします >
 
 		vim -u netrw.vimrc --noplugins -i NONE [some path here]
 <
