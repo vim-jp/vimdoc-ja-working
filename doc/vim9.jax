@@ -1,4 +1,4 @@
-*vim9.txt*	For Vim バージョン 8.2.  Last change: 2020 Nov 25
+*vim9.txt*	For Vim バージョン 8.2.  Last change: 2021 Jan 23
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
 
@@ -6,7 +6,7 @@
 
 THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
-Vim9 script のコマンドと文法					*vim9*
+Vim9 script のコマンドと文法					*Vim9* *vim9*
 
 ほとんどの文法については |eval.txt| で解説されています。このファイルには Vim9
 script の新しい文法と機能について書かれています。
@@ -14,7 +14,7 @@ script の新しい文法と機能について書かれています。
 THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
 
-1.  Vim9 script とは			|vim9-script|
+1.  Vim9 script とは			|Vim9-script|
 2.  変更点				|vim9-differences|
 3.  新しいスタイルの関数		|fast-functions|
 4.  型					|vim9-types|
@@ -25,7 +25,7 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
 ==============================================================================
 
-1. Vim9 script とは					*vim9-script*
+1. Vim9 script とは					*Vim9-script*
 
 THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
@@ -53,7 +53,7 @@ Vim9 script は以下の場所で使用することができます:
 - 上記のコンテキストで定義された自動コマンド
 
 Vim9 スクリプトファイルの中でコマンド `:function` で関数を定義すると、その中で
-は旧来の Vim script の記法が有効になります。
+は旧来の Vim script の記法が、最新の |scriptversion| とともに有効になります。
 しかし、これは混乱を招く可能性があるため、推奨できません。
 
 Vim9 script と旧来の Vim script は同時に利用できます。古いスクリプトを書き換え
@@ -71,28 +71,28 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 Vim9 script と `:def` で定義する関数を使用する際に最もよく遭遇する変更点の概要
 をまとめると以下のとおりです:
 - コメントは " ではなく、# で始めます: >
-  	echo "hello"   # コメント
+	echo "hello"   # コメント
 - 行継続文字 (\) はほとんどの場合、必要ありません: >
-  	echo "hello "
+	echo "hello "
 	     .. yourName
 	     .. ", how are you?"
 - 多くの場所にスペースが必要になります。
 - 値の代入には `:let` を使用せず、変数の宣言には `:var` を使用します: >
-  	var count = 0
+	var count = 0
 	count += 3
 - `:final` と `:const` を使用して、定数を宣言できます: >
-  	final matches = []		  # matches を追加
+	final matches = []		  # matches を追加
 	const names = ['Betty', 'Peter']  # 変更できない
 - `:final` は `:finally` の略語として使用することはできません。
 - 変数と関数のスコープは、明示しない限りスクリプトローカルです。
 - 関数を引数の型、戻り値の型とともに宣言します: >
 	def CallMe(count: number, message: string): bool
 - 関数は `:call` なしで呼び出します: >
-  	writefile(['done'], 'file.txt')
+	writefile(['done'], 'file.txt')
 - `:xit`、`:t`、`:append`、`:change`、`:insert` と波括弧変数は使用できません。
 - コマンドの前に範囲指定を置くときは、コロン (:) を前置しなくてはなりません: >
-  	:%s/this/that
-
+	:%s/this/that
+- 特に指定しない限り、最新の |scriptversion| が使われます。
 
 # から始まるコメント ~
 
@@ -112,7 +112,13 @@ Vi において # は行番号付きでテキストを表示します。Vim9 scr
 	101 number
 
 可読性を向上するために、コマンドと #、コメント文の間にはスペースをおいてくださ
-い。
+い: >
+  var name = value # コメント
+  var name = value# エラー!
+
+旧来の Vim script では # は代替バッファのファイル名として使います。Vim9 script
+では、代わりに %% を使う必要があります。 ## の代わりに %%% を使います。(すべて
+の引数を意味します)
 
 
 Vim9 関数 ~
@@ -123,15 +129,16 @@ Vim9 関数 ~
 多くのエラーは関数が実行される前に、コンパイルされる段階で検出されます。読みや
 すく理解しやすいコードを強制するために、構文は厳密に定められています。
 
-コンパイルは以下のタイミングで実行されます:
+コンパイルは以下のいずれかのタイミングで実行されます:
 - 関数が最初に呼び出されるとき
 - 関数の定義されたスクリプトの中で、コマンド `:defcompile` に出会ったとき
 - 関数に対してコマンド `:disassemble` が実行されたとき
 - コンパイルされた関数から呼び出されたり、関数リファレンスとして使用されたとき
 
 `:def` には `:function` の "range"、"abort"、"dict" や "closure" といったオプ
-ションがありません。`:def` で定義する関数は常にエラー時は処理を中断 (abort)
-し、範囲を受け取らず、辞書関数にすることはできません。
+ションがありません。`:def` で定義する関数はエラー時は常に (ただし、`:silent!`
+が指定されたコマンドか、`:try` ブロックの中は除く) 処理を中断 (abort) し、範囲
+を受け取らず、辞書関数にすることはできず、常にクロージャとすることができます。
 
 引数の型と戻り値の型を指定する必要があります。型には "any" を指定することがで
 き、型のチェックは旧来の関数と同様に実行時に行われます。
