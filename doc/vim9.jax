@@ -403,7 +403,7 @@ NOT IMPLEMENTED YET
 には、括弧で包みます: >
 	var Lambda = (arg) => ({key: 42})
 
-コマンドブロックの開始と混同してしまう場合も同様です: >
+さらに、コマンドブロックの開始と混同してしまう場合: >
 	({
 	    key: value
 	 })->method()
@@ -412,7 +412,7 @@ NOT IMPLEMENTED YET
 自動行継続 ~
 
 多くの場合、式が次の行に続くことは明らかです。継続行の先頭に行継続のためのバッ
-クスラッシュ |line-continuation| を置く必要はありません。たとえば、複数行にま
+クスラッシュ (|line-continuation|参照) を置く必要はありません。たとえば、複数行にま
 たぐリストの場合: >
 	var mylist = [
 		'one',
@@ -450,6 +450,12 @@ NOT IMPLEMENTED YET
 	var result = MyDict
 			.member
 
+複数のコマンドのリストを引数に持つコマンドでは、行の先頭に置かれた文字 | は行
+継続を表します: >
+	autocmd BufNewFile *.match if condition
+		|   echo 'match'
+		| endif
+
 <							*E1050*
 行頭の演算子と識別できるようにするために、範囲指定の前にはコロンを置きま
 す。"start" と print をつなげる例: >
@@ -471,6 +477,18 @@ Note |+cmd| の引数にはコロンは不要です: >
 		separator = '-'
 		): string
 
+継続行を識別することは容易ではないため、コマンドの解析はより厳格化されていま
+す。たとえば、一行目のエラーにより、2行目は別のコマンドとみなされます: >
+	popup_create(some invalid expression, {
+	   exit_cb: Func})
+ここで "exit_cb: Func})" は実際に有効なコマンドです: 変更をファイル
+"_cb: Func})" に保存して閉じます。Vim9 script の中ではこの種のミスを回避するた
+めに、コマンド名と引数の間には空白を置かなくてはなりません。
+
+However, the argument of a command that is a command won't be recognized.  For
+example, after "windo echo expr" a line break inside "expr" will not be seen.
+
+
 Notes:
 - "enddef" は継続行の先頭に置くことはできません。それは関数の終端を意味します。
 - 代入式の左辺を複数の行に分割できません。特にリストのアンパック |:let-unpack|
@@ -489,13 +507,6 @@ Notes:
 <  以下のように記述することはできません: >
 	echo [1, 2]
 		[3, 4]
-- ラムダ関数の引数、"{" と "->" の間は複数の行に分割できません。以下は問題のな
-  い例です: >
-	filter(list, {k, v ->
-			v > 0})
-<  以下のように記述することはできません: >
-	filter(list, {k,
-			v -> v > 0})
 
 
 波括弧変数の廃止 ~
@@ -518,9 +529,15 @@ Notes:
 ラルに {} の表記を使うほうがずっと便利です: >
 	let dict = {key: value}
 
+これは英数字、アンダースコアとダッシュのキーで利用できます。異なる文字を使用す
+る場合は、シングルクォートまたはダブルクォートで囲まれた文字列を使用します: >
+	var dict = {'key with space': value}
+	var dict = {"key\twith\ttabs": value}
+	var dict = {'': value}  		# 空のキー
+
 キーに式を使用する必要がある場合は、JavaScript と同様に角括弧を使用することが
 できます: >
-	let dict = {["key" .. nr]: value}
+	var dict = {["key" .. nr]: value}
 
 
 :xit、:t、:append、:change、:insert の廃止 ~
