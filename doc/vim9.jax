@@ -667,15 +667,27 @@ falsy か truthy として評価されます。これは JavaScript とほぼ同
 単純型とは、文字列 (string)、数値 (float)、特殊値 (special) と真偽値 (bool) で
 す。他の型では |string()| が使用できます。
 
-							*false* *true*
-Vim9 script では "true" を v:true として、"false" を v:false として使うことが
-できます。
+							*false* *true* *null*
+Vim9 script では "true" を v:true として、"false" を v:false と "null" として
+使うことができます。真偽値を文字列に変換するとき、旧来のスクリプトのような
+"v:false" と "v:true" ではなく、"false" と "true" を使用します。"v:none" は変
+わらず、JSONでのみ使用され、他の言語に相当するものはありません
 
-文字列に対してインデックス [idx] や [idx, idx] を使用すると、バイト単位ではな
+文字列に対してインデックス [idx] や [idx : idx] を使用すると、バイト単位ではな
 く文字単位のインデックスとして扱われます。例: >
 	echo 'bár'[1]
 旧来の Vim script ではこれは文字 0xc3 (不正な文字) となりますが、Vim9 script
 では文字列 'á' が得られます。
+負のインデックスを指定すると、文字列の末尾から数えられます。"[-1]" は最後の文
+字です。
+最後の文字を除外するには |slice()| を使用します。
+インデックスが範囲外の場合は、空文字列になります。
+
+旧来のスクリプトでは "++var" と "--var" は寡黙に処理され、何の効果ももたらしま
+せん。これは Vim9 script ではエラーになります。
+
+ゼロから始まる数値は8進数とはみなされません、"0o" から始まる数値だけが8進数と
+みなされます: "0o744"。 |scriptversion-4|
 
 
 気をつけるべきこと ~
@@ -685,16 +697,17 @@ Vim9 は、一般的なプログラミング言語に近づくように設計さ
 ければなりませんでした。ここでは、意外と知られていないことをまとめてみました。
 
 Exコマンドの範囲指定にはコロンを前置する必要があります。 >
-	->		# 旧来の Vim: 前の行を右にシフト
-	->func()	# Vim9: 継続行におけるメソッド呼び出し
-	:->		# Vim9: 前の行を右にシフト
+	->		  旧来の Vim: 前の行を右にシフト
+	->func()	  Vim9: 継続行におけるメソッド呼び出し
+	:->		  Vim9: 前の行を右にシフト
 
-	%s/a/b		# 旧来の Vim: すべての行を置換
+	%s/a/b		  旧来の Vim: すべての行を置換
 	x = alongname
-	     % another	# Vim9: バックスラッシュなしの行継続
-	:%s/a/b		# Vim9: すべての行を置換
-	'text'->func()	# Vim9: メソッド呼び出し
-	:'t		# 旧来の Vim: マーク t へのジャンプ
+	     % another	  Vim9: 継続行の剰余演算
+	:%s/a/b		  Vim9: すべての行を置換
+	't		  旧来の Vim: マーク t へのジャンプ
+	'text'->func()	  Vim9: メソッド呼び出し
+	:'t		  Vim9: マーク t へのジャンプ
 
 いくつかのExコマンドは Vim9 script の代入式と紛らわしくなります: >
 	g:name = value  # 代入
@@ -719,7 +732,7 @@ Vim9 関数はすべてコンパイルされます: >
 応急的に、2つの関数に分けることができます: >
 	func Maybe()
 	  if has('feature')
-	    call MaybyInner()
+	    call MaybeInner()
 	  endif
 	endfunc
 	if has('feature')
@@ -734,11 +747,37 @@ Vim9 関数はすべてコンパイルされます: >
 	    use-feature
 	  endif
 	enddef
+<							*vim9-user-command*
+関数のコンパイルによる他の副作用として、ユーザーコマンドの存在がコンパイルの時
+点でチェックされます。ユーザーコマンドが後で定義されている場合、エラーとなりま
+す。以下は問題のない例です: >
+	command -nargs=1 MyCommand echom <q-args>
+	def Works()
+	  MyCommand 123
+	enddef
+以下の例では "MyCommand" が定義されていないというエラーが発生します: >
+	def Works()
+	  command -nargs=1 MyCommand echom <q-args>
+	  MyCommand 123
+	enddef
+ワークアラウンドとして、`:execute` を使用して間接的にコマンドを呼び出せます: >
+	def Works()
+	  command -nargs=1 MyCommand echom <q-args>
+	  execute 'MyCommand 123'
+	enddef
+
 Note 認識されていないコマンドを "|" でつなぐと、その後のコマンドは認識されませ
 ん。次のような記述は `endif` がないというエラーになります: >
 	def Maybe()
 	  if has('feature') | use-feature | endif
 	enddef
+
+その他の変更点 ~
+
+Patterns are used like 'magic' is set, unless explicitly overruled.
+The 'edcompatible' option value is not used.
+The 'gdefault' option value is not used.
+
 
 ==============================================================================
 
@@ -800,21 +839,30 @@ prefix and they do not need to exist (they can be deleted any time).
 			Note that for command line completion of {func} you
 			can prepend "s:" to find script-local functions.
 
+:disa[ssemble]! {func}	Like `:disassemble` but with the instructions used for
+			profiling.
+
 Limitations ~
 
 Local variables will not be visible to string evaluation.  For example: >
-	def EvalString(): list<string>
+	def MapList(): list<string>
 	  var list = ['aa', 'bb', 'cc', 'dd']
 	  return range(1, 2)->map('list[v:val]')
 	enddef
 
 The map argument is a string expression, which is evaluated without the
 function scope.  Instead, use a lambda: >
-	def EvalString(): list<string>
+	def MapList(): list<string>
 	  var list = ['aa', 'bb', 'cc', 'dd']
-	  return range(1, 2)->map({ _, v -> list[v] })
+	  return range(1, 2)->map(( _, v) => list[v])
 	enddef
 
+The same is true for commands that are not compiled, such as `:global`.
+For these the backtick expansion can be used.  Example: >
+	def Replace()
+	  var newText = 'blah'
+	  g/pattern/s/^/`=newText`/
+	enddef
 
 ==============================================================================
 
@@ -909,12 +957,14 @@ compiled code the "any" type is assumed.
 This can be a problem when the "any" type is undesired and the actual type is
 expected to always be the same.  For example, when declaring a list: >
 	var l: list<number> = [1, g:two]
-This will give an error, because "g:two" has type "any".  To avoid this, use a
-type cast: >
+At compile time Vim doesn't know the type of "g:two" and the expression type
+becomes list<any>.  An instruction is generated to check the list type before
+doing the assignment, which is a bit inefficient.
+							*type-casting*
+To avoid this, use a type cast: >
 	var l: list<number> = [1, <number>g:two]
-<							*type-casting*
-The compiled code will then check that "g:two" is a number at runtime and give
-an error if it isn't.  This is called type casting.
+The compiled code will then only check that "g:two" is a number and give an
+error if it isn't.  This is called type casting.
 
 The syntax of a type cast is:  "<" {type} ">".  There cannot be white space
 after the "<" or before the ">" (to avoid them being confused with
@@ -956,6 +1006,12 @@ an error, thus breaking backwards compatibility.  For example:
 - Using a string value when setting a number options.
 - Using a number where a string is expected.   *E1024*
 
+One consequence is that the item type of a list or dict given to map() must
+not change.  This will give an error in compiled code: >
+	map([1, 2, 3], (i, v) => 'item ' .. i)
+	E1012: Type mismatch; expected list<number> but got list<string>
+Instead use |mapnew()|.
+
 ==============================================================================
 
 5. Namespace, Import and Export
@@ -972,7 +1028,7 @@ that you don't do that.
 
 
 Namespace ~
-							*:vim9script* *:vim9*
+							*vim9-namespace*
 To recognize a file that can be imported the `vim9script` statement must
 appear as the first statement in the file.  It tells Vim to interpret the
 script in its own namespace, instead of the global namespace.  If a file
@@ -1065,14 +1121,14 @@ actually needed.  A recommended mechanism:
 
 1. In the plugin define user commands, functions and/or mappings that refer to
    an autoload script. >
-	command -nargs=1 SearchForStuff call searchfor#Stuff(<f-args>)
+	command -nargs=1 SearchForStuff searchfor#Stuff(<f-args>)
 
 <   This goes in .../plugin/anyname.vim.  "anyname.vim" can be freely chosen.
 
 2. In the autoload script do the actual work.  You can import items from
    other files to split up functionality in appropriate pieces. >
 	vim9script
-        import FilterFunc from "../import/someother.vim"
+	import FilterFunc from "../import/someother.vim"
 	def searchfor#Stuff(arg: string)
 	  var filtered = FilterFunc(arg)
 	  ...
@@ -1158,12 +1214,12 @@ When compiling lines of Vim commands into instructions as much as possible
 should be done at compile time.  Postponing it to runtime makes the execution
 slower and means mistakes are found only later.  For example, when
 encountering the "+" character and compiling this into a generic add
-instruction, at execution time the instruction would have to inspect the type
-of the arguments and decide what kind of addition to do.  And when the
-type is dictionary throw an error.  If the types are known to be numbers then
-an "add number" instruction can be used, which is faster.  The error can be
-given at compile time, no error handling is needed at runtime, since adding
-two numbers cannot fail.
+instruction, at runtime the instruction would have to inspect the type of the
+arguments and decide what kind of addition to do.  And when the type is
+dictionary throw an error.  If the types are known to be numbers then an "add
+number" instruction can be used, which is faster.  The error can be given at
+compile time, no error handling is needed at runtime, since adding two numbers
+cannot fail.
 
 The syntax for types, using <type> for compound types, is similar to Java.  It
 is easy to understand and widely used.  The type names are what were used in
