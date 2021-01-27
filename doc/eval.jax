@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Jan 17
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Jan 22
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2024,6 +2024,12 @@ v:null		空の文字列。JSONでは "null" として使われる。|json_encode
 <			v:null ~
 		これは eval() がその文字列をパースしたときに、元の値に戻せるよ
 		うにするためである。読出し専用。
+
+					*v:numbermax* *numbermax-variable*
+v:numbermax	数値の最大値。
+
+					*v:numbermin* *numbermin-variable*
+v:numbermin	数値の最小値(負数)
 
 					*v:numbersize* *numbersize-variable*
 v:numbersize	数値のビット数。これは通常64で、システムによっては32になること
