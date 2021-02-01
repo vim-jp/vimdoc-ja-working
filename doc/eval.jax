@@ -3598,7 +3598,7 @@ charclass({string})					*charclass()*
 		クラスはパターンと単語単位の移動で使われる。
 
 							*charcol()*
-charcol({expr})	|col()| と同様に {expr} で返す列位置をバイトインデックスではな
+charcol({expr})	|col()| と同様に {expr} で返す桁位置をバイトインデックスではな
 		く文字インデックスになる。
 
 		例:
