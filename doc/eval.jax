@@ -7478,7 +7478,7 @@ matchstrpos({expr}, {pat} [, {start} [, {count}]])		*matchstrpos()*
 <
 
 							*max()*
-max({expr})	{expr}の全要素の値の最大値を返す。 例: >
+max({expr})	{expr}の全要素の値の最大値を返す。例: >
 			echo max([apples, pears, oranges])
 
 <		{expr}はリスト |List| か辞書 |Dictionary| である。辞書の場合、
@@ -7550,8 +7550,10 @@ menu_info({name} [, {mode}])				*menu_info()*
 
 
 <							*min()*
-min({expr})	{expr}の全要素の値の最小値を返す。
-		{expr}はリスト |List| か辞書 |Dictionary| である。辞書の場合、
+min({expr})	{expr}の全要素の値の最小値を返す。例: >
+			echo min([apples, pears, oranges])
+
+<		{expr}はリスト |List| か辞書 |Dictionary| である。辞書の場合、
 		辞書に含まれるすべての値の最小値を返す。
 		{expr}がリストでも辞書でもなかったり、要素のどれかが数値に変換
 		できない場合はエラーとなる。
