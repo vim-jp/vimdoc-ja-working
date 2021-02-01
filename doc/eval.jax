@@ -3597,7 +3597,7 @@ charclass({string})					*charclass()*
 			その他	Unicode 固有のクラス
 		クラスはパターンと単語単位の移動で使われる。
 
-	*charcol()*
+							*charcol()*
 charcol({expr})	|col()| と同様に {expr} で返す列位置をバイトインデックスではな
 		く文字インデックスになる。
 
