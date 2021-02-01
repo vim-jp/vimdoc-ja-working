@@ -3693,7 +3693,7 @@ col({expr})	戻り値は数値で、{expr}で与えられる位置の桁番号(�
 		行番号を取得するには|line()|を使う。行番号と桁番号両方を取得す
 		るには|getpos()|を使う。
 		画面上の桁番号を取得するには|virtcol()|を使う。文字の位置を取
-		得するには|charcol()| を使う。
+		得するには |charcol()| を使う。
 		Note 現在のファイルのマークしか使えないことに注意。
 		例: >
 			col(".")		カーソルの桁
@@ -5203,7 +5203,7 @@ getcharmod()						*getcharmod()*
 
 							*getcharpos()*
 getcharpos({expr})
-		{expr} の位置を得る。|getpos()| と同様だが返すリスト内の列番号
+		{expr} の位置を得る。|getpos()| と同様だが返すリスト内の桁番号
 		はバイトインデックスの代わりに文字インデックスになっている。
 
 		例:
@@ -5357,7 +5357,7 @@ getcurpos([{winid}])
 
 <							*getcursorcharpos()*
 getcursorcharpos([{winid}])
-		|getcurpos()| と同様だが返すリスト内の列番号はバイトインデック
+		|getcurpos()| と同様だが返すリスト内の桁番号はバイトインデック
 		スの代わりに文字インデックスになっている。
 
 		Example:
@@ -5661,13 +5661,13 @@ getpos({expr})	{expr}の位置を返す。{expr}として指定できる値に�
 		Note: ビジュアルモードの '< と '> について: ビジュアルモードが
 		"V" (行選択モード) のとき、'< の桁番号はゼロ、'> の桁番号は大
 		きな値になる。
-		行番号は行内のバイト位置のリストとして返される。行内の文字での
+		桁番号は行内のバイト位置のリストとして返される。行内の文字での
 		位置を取得するなら、|getcharpos()| を使う。
 		この関数はマークの位置を保存し、復元するために使われる: >
 			let save_a_mark = getpos("'a")
 			...
 			call setpos("'a", save_a_mark)
-<		|getcharpos()| と |getcurpos()| そして |setpos()|も参照。
+<		|getcharpos()| と |getcurpos()| そして |setpos()| も参照。
 
 		|method| としても使用できる: >
 			GetMark()->getpos()
@@ -7570,7 +7570,7 @@ mkdir({name} [, {path} [, {prot}]])
 
 		{prot}は作成するディレクトリの保護ビット。デフォルトは0o755
 		(rwxr-xr-x: 所有者は読み書き可能、他の人は読み込み可能)。
-		他の人が読み込めないようにするには0700とすること。{prot} は
+		他の人が読み込めないようにするには0o700とすること。{prot} は
 		{name} の最後の部分にのみ適用される。なので、/tmp/foo/bar
 		を作成すると /tmp/foo は 0o755 で作成される。
 		例: >
@@ -8098,7 +8098,7 @@ readblob({fname})					*readblob()*
 		ファイル {fname} をバイナリモードで読み |Blob| を返す。
 		ファイルが開けない場合はエラーメッセージともに結果が空の
 		|Blob| となる。
-                |readfile()| と |writefile()| も参照。
+		|readfile()| と |writefile()| も参照。
 
 
 readdir({directory} [, {expr} [, {dict}]])			*readdir()*
@@ -9081,7 +9081,7 @@ setcellwidths({list})					*setcellwidths()*
 		$VIMRUNTIME/tools/emoji_list.vim スクリプトが使える。
 
  setcharpos({expr}, {list})				*setcharpos()*
-		|setpos()| と同様だが指定に使う列番号はその行のバイトインデッ
+		|setpos()| と同様だが指定に使う桁番号はその行のバイトインデッ
 		クスの代わりに文字インデックスである。
 
 		例:
@@ -9132,7 +9132,7 @@ setcmdpos({pos})					*setcmdpos()*
 
 setcursorcharpos({lnum}, {col} [, {off}])		*setcursorcharpos()*
 setcursorcharpos({list})
-		|cursor()| と同様だが指定に使う列番号はその行のバイトインデッ
+		|cursor()| と同様だが指定に使う桁番号はその行のバイトインデッ
 		クスの代わりに文字インデックスである。
 
 		例:
