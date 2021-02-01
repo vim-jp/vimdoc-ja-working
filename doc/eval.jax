@@ -1807,7 +1807,7 @@ v:dying		通常時は0。致命的なシグナルを受信したとき1が代入
 		は VimLeave 自動コマンドは実行されない。
 
 					*v:exiting* *exiting-variable*
-v:exiting	Vim の終了コード。通常は0、非0は何か問題があった時。
+v:exiting	Vim の終了コード。通常は0、何か問題があった時は非0。
 		|VimLeavePre| と |VimLeave| の自動コマンドが実行される前は値が
 		v:null。|:q|、|:x|、|:cquit| を参照。
 		例: >
