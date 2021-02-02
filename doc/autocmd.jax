@@ -1230,8 +1230,8 @@ VimResume			Vimがサスペンドと |VimSuspend| がトリガーした
 	:autocmd VimResume * checktime
 <							*VimSuspend*
 VimSuspend			Vimのインスタンスがサスペンドしたとき。Vim内で
-				CTRL-Z をタイプして、SIGSTOP か SIGTSTP シグナ
-				ルがVimに送られた時。
+				CTRL-Z がタイプされた時だけであり、SIGSTOP か
+				SIGTSTP シグナルがVimに送られた時ではない。
 							*WinEnter*
 WinEnter			別のウィンドウに入った後。Vimの開始直後、1個目
 				のウィンドウに入ったときは発生しない。ウィンド
