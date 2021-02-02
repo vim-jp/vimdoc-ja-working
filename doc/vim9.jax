@@ -113,12 +113,12 @@ Vi において # は行番号付きでテキストを表示します。Vim9 scr
 
 可読性を向上するために、コマンドと #、コメント文の間にはスペースをおいてくださ
 い: >
-  var name = value # コメント
-  var name = value# エラー!
+	var name = value # コメント
+	var name = value# エラー!
 
-旧来の Vim script では # は代替バッファのファイル名として使います。Vim9 script
-では、代わりに %% を使う必要があります。 ## の代わりに %%% を使います。（すべ
-ての引数を意味します）
+旧来の Vim script では # は代替ファイル名としても使われます。Vim9 scriptでは、
+代わりに %% を使う必要があります。## の代わりに %%% を使います。(すべての引数
+を意味します)
 
 
 Vim9 関数 ~
@@ -136,9 +136,9 @@ Vim9 関数 ~
 - コンパイルされた関数から呼び出されたり、関数リファレンスとして使用されたとき
 
 `:def` には `:function` の "range"、"abort"、"dict" や "closure" といったオプ
-ションがありません。`:def` で定義する関数はエラー時は常に（ただし、`:silent!`
-が指定されたコマンドか、`:try` ブロックの中は除く）処理を中断 (abort) し、範囲
-を受け取らず、辞書関数にすることはできず、常にクロージャとすることができます。
+ションがありません。`:def` で定義する関数はエラー時は常に(ただし、`:silent!`が
+指定されたコマンドか、`:try` ブロックの中は除く)処理を中断し、渡される範囲を受
+け取らない "dict" 関数にすることはできず、常にクロージャとすることができます。
 
 引数の型と戻り値の型を指定する必要があります。型には "any" を指定することがで
 き、型のチェックは旧来の関数と同様に実行時に行われます。
@@ -526,7 +526,7 @@ Notes:
 しかし、この #{} という表記は他の言語に比べて異色なものです。キーには式よりも
 リテラルを使うほうが一般的で、JavaScript が使っている構文を考えると、辞書リテ
 ラルに {} の表記を使うほうがずっと便利です: >
-	let dict = {key: value}
+	var dict = {key: value}
 
 これは英数字、アンダースコアとダッシュのキーで利用できます。異なる文字を使用す
 る場合は、シングルクォートまたはダブルクォートで囲まれた文字列を使用します: >
@@ -551,7 +551,7 @@ Notes:
 オプション 'ignorecase' は文字列の比較には作用しません。
 
 
-For ループ~
+For ループ ~
 
 旧来の Vim script では、リストのループ内で現在または前の項目を削除するための
 for ループをつくるために幾つかのトリックがあります。Vim9 script では、単純にイ
@@ -635,7 +635,7 @@ falsy か truthy として評価されます。これは JavaScript とほぼ同
 	list		空リスト以外 (JavaScript とは異なります)
 	dictionary	空辞書以外 (JavaScript とは異なります)
 	func		when there is a function name
-	special		true or v:true
+	special		true または v:true
 	job		非 NULL
 	channel		非 NULL
 	class		非 NULL
@@ -686,7 +686,7 @@ Vim9 script では "true" を v:true として、"false" を v:false と "null" 
 せん。これは Vim9 script ではエラーになります。
 
 ゼロから始まる数値は8進数とはみなされません、"0o" から始まる数値だけが8進数と
-みなされます: "0o744"。 |scriptversion-4|
+みなされます: "0o744"。|scriptversion-4|
 
 
 気をつけるべきこと ~
@@ -759,7 +759,7 @@ Vim9 関数はすべてコンパイルされます: >
 	  command -nargs=1 MyCommand echom <q-args>
 	  MyCommand 123
 	enddef
-ワークアラウンドとして、`:execute` を使用して間接的にコマンドを呼び出せます: >
+回避策は、`:execute` を使用して間接的にコマンドを呼び出すことです: >
 	def Works()
 	  command -nargs=1 MyCommand echom <q-args>
 	  execute 'MyCommand 123'
