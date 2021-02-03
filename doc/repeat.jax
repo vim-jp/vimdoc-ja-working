@@ -348,7 +348,7 @@ Vim script の書き方はユーザーマニュアルの41章|usr_41.txt|を参�
 			点については |vimscript-version| を参照。
 
 :vim9[script] [noclear]				*:vim9* *:vim9script*
-			|Vim9-script| のコマンドががスクリプトファイルに含まれ
+			|Vim9-script| のコマンドがスクリプトファイルに含まれ
 			ることをマークする。|vim9-namespace| も参照。
 			ファイルの先頭のコマンドである必要がある。
 			[noclear] については |vim9-reload| を参照。
