@@ -1224,9 +1224,9 @@ VimResized			Vimウィンドウのサイズが変わったとき。よって
 							*VimResume*
 VimResume			Vimがサスペンドと |VimSuspend| がトリガーした
 				後、Vimのインスタンスが復帰したとき。
-				Vimがサスペンド中はバッファ内容に変化がないこ
-				とを保証するので |:checktime| を実行するのに便
-				利である: >
+				|:checktime| を実行してVimがサスペンド中にバッ
+				ファ内容に変化がなかったことを保証するのに便利
+				である: >
 	:autocmd VimResume * checktime
 <							*VimSuspend*
 VimSuspend			Vimのインスタンスがサスペンドしたとき。Vim内で
