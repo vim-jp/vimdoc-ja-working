@@ -4490,10 +4490,10 @@ extend({expr1}, {expr2} [, {expr3}])			*extend()*
 
 
 extendnew({expr1}, {expr2} [, {expr3}])			*extendnew()*
-		|extend()| と同様だが、{expr1} へ要素を追加する代わりに、新しい
-		リストまたは辞書が作成されて返される。{expr1} は変更されない。
-		要素を変更したいなら {expr2} で変更でき、最初に |deepcopy()|
-		を利用したくない場合に使える。
+		|extend()| と同様だが、{expr1} へ要素を追加する代わりに、新し
+		いリストまたは辞書が作成されて返される。{expr1} は変更されな
+		い。要素は引き続き {expr2} で変更できるが、そうしたくないなら
+		最初に |deepcopy()| を利用すること。
 
 
 feedkeys({string} [, {mode}])				*feedkeys()*
@@ -7131,8 +7131,8 @@ mapcheck({name} [, {mode} [, {abbr}]])			*mapcheck()*
 mapnew({expr1}, {expr2})					*mapnew()*
 		|map()| と同様だが、{expr1} の要素を置き換える代わりに、新しい
 		リストまたは辞書が作成されて返される。{expr1} は変更されない。
-		要素を変更したいなら {expr2} で変更でき、最初に |deepcopy()|
-		を利用したくない場合に使える。
+		要素は引き続き {expr2} で変更できるが、そうしたくないなら最初
+		に |deepcopy()| を利用すること。
 
 mapset({mode}, {abbr}, {dict})					*mapset()*
 		|maparg()| が返す辞書からマッピングを復元する。
