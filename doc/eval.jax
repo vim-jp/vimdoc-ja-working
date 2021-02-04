@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Jan 22
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Jan 31
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -287,7 +287,7 @@ Note 関数の辞書へのバインドは、その関数が辞書のメンバー
 
 
 リストの連結 ~
-
+							*list-concatenation*
 2つのリストを連結するには演算子 "+" を使う: >
 	:let longlist = mylist + [5, 6]
 	:let mylist += [7, 8]
@@ -2504,6 +2504,8 @@ findfile({name} [, {path} [, {count}]])
 				文字列	{path}からファイル{name}を探す
 flatten({list} [, {maxdepth}])	リスト	リスト {list} を {maxdepth} の深さまで
 					平坦化する
+flattennew({list} [, {maxdepth}])
+				List	{list} のコピーを平坦化する
 float2nr({expr})		数値	浮動小数点数 {expr} を数値に変換する
 floor({expr})			浮動小数点数	{expr} を切り捨てる
 fmod({expr1}, {expr2})		浮動小数点数	{expr1} / {expr2} の余り
@@ -3132,6 +3134,7 @@ append({lnum}, {text})					*append()*
 		{text}がリスト|List|のときは、各要素をカレントバッファの{lnum}
 		行目以降にテキストとして追加する。
 		リストでないときは、{text}をテキストとしてカレントバッファの
+		要素としてどの型でも受け取り文字列に変換される。
 		{lnum}行目以降にテキストとして追加する。
 		{lnum}は0でもよく、その場合は1行目の前に行を挿入する。
 		失敗した場合は1を返す({lnum}が不正な範囲であるか、メモリ不足)。
@@ -4658,8 +4661,10 @@ flatten({list} [, {maxdepth}])					*flatten()*
 		リスト {list} を {maxdepth} の深さまで平坦化する。{maxdepth}
 		が無い場合の結果は {maxdepth} が非常に巨大な数であるのように、
 		リスト |List| からネストを除去する。
-		{list} は変更が入るので、それを望まないなら最初にコピーを作る
-		こと。
+		{list} は変更が入るので、それを望まないなら |flattennew()| を
+		使うこと。
+		Vim9 script では flatten() は使用できず、常に |flattennew()|
+		を使うこと。
 								*E900*
 		{maxdepth} はリストのネストをどれだけ深く変更するかを意味する。
 		{maxdepth} が0なら {list} は変更されない。
@@ -4672,6 +4677,10 @@ flatten({list} [, {maxdepth}])					*flatten()*
 <			[1, 2, 3, 4, 5] >
 			:echo flatten([1, [2, [3, 4]], 5], 1)
 <			[1, 2, [3, 4], 5]
+
+flattennew({list} [, {maxdepth}])			*flattennew()*
+		|flatten()| と同様だが最初に {list} のコピーを作る。
+
 
 float2nr({expr})					*float2nr()*
 		{expr} の小数点以下を切り捨てて |Number| に変換する。
@@ -9184,6 +9193,8 @@ setline({lnum}, {text})					*setline()*
 		{lnum}は|getline()|のときと同じように解釈される。
 		{lnum}が最後の行の次の行の場合、最後の行の下に{text}が追加され
 		る。
+		{text}は任意の型もしくは任意の型のリストで、各要素が文字列に変
+		換される。
 
 		成功したら偽を返す。失敗したら(大抵{lnum}が無効な値のとき)真を
 		返す。
