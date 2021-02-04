@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 8.2.  Last change: 2020 Dec 19
+*autocmd.txt*   For Vim バージョン 8.2.  Last change: 2021 Jan 28
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -54,6 +54,7 @@
 			{pat} |autocmd-patterns| に一致するファイルで、{event}
 			のときに自動的に実行するコマンドのリストに、{cmd} を加
 			える。
+			{event} には "*" は使えない。 *E1155*
 			Note: クォートは :autocmd への引数と見なされ、コメント
 			を開始しない。
 			{cmd} は常に既存の自動コマンドの後に追加されるので、
