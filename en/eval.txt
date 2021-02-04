@@ -1,4 +1,4 @@
-*eval.txt*	For Vim version 8.2.  Last change: 2021 Jan 22
+*eval.txt*	For Vim version 8.2.  Last change: 2021 Jan 31
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -293,13 +293,13 @@ is not available it returns zero or the default value you specify: >
 
 
 List concatenation ~
-
+							*list-concatenation*
 Two lists can be concatenated with the "+" operator: >
 	:let longlist = mylist + [5, 6]
 	:let mylist += [7, 8]
 
-To prepend or append an item turn the item into a list by putting [] around
-it.  To change a list in-place see |list-modification| below.
+To prepend or append an item, turn the item into a list by putting [] around
+it.  To change a list in-place, refer to |list-modification| below.
 
 
 Sublist ~
@@ -2549,6 +2549,8 @@ finddir({name} [, {path} [, {count}]])
 findfile({name} [, {path} [, {count}]])
 				String	find file {name} in {path}
 flatten({list} [, {maxdepth}])	List	flatten {list} up to {maxdepth} levels
+flattennew({list} [, {maxdepth}])
+				List	flatten a copy of {list}
 float2nr({expr})		Number	convert Float {expr} to a Number
 floor({expr})			Float	round {expr} down
 fmod({expr1}, {expr2})		Float	remainder of {expr1} / {expr2}
@@ -3133,6 +3135,7 @@ append({lnum}, {text})					*append()*
 		text line below line {lnum} in the current buffer.
 		Otherwise append {text} as one text line below line {lnum} in
 		the current buffer.
+		Any type of item is accepted and converted to a String.
 		{lnum} can be zero to insert a line before the first one.
 		Returns 1 for failure ({lnum} out of range or out of memory),
 		0 for success.  Example: >
@@ -4711,8 +4714,10 @@ flatten({list} [, {maxdepth}])					*flatten()*
 		Flatten {list} up to {maxdepth} levels.  Without {maxdepth}
 		the result is a |List| without nesting, as if {maxdepth} is
 		a very large number.
-		The {list} is changed in place, make a copy first if you do
+		The {list} is changed in place, use |flattennew()| if you do
 		not want that.
+		In Vim9 script flatten() cannot be used, you must always use
+		|flattennew()|.
 								*E900*
 		{maxdepth} means how deep in nested lists changes are made.
 		{list} is not modified when {maxdepth} is 0.
@@ -4725,6 +4730,10 @@ flatten({list} [, {maxdepth}])					*flatten()*
 <			[1, 2, 3, 4, 5] >
 			:echo flatten([1, [2, [3, 4]], 5], 1)
 <			[1, 2, [3, 4], 5]
+
+flattennew({list} [, {maxdepth}])			*flattennew()*
+		Like |flatten()| but first make a copy of {list}.
+
 
 float2nr({expr})					*float2nr()*
 		Convert {expr} to a Number by omitting the part after the
@@ -9409,6 +9418,8 @@ setline({lnum}, {text})					*setline()*
 		{lnum} is used like with |getline()|.
 		When {lnum} is just below the last line the {text} will be
 		added below the last line.
+		{text} can be any type or a List of any type, each item is
+		converted to a String.
 
 		If this succeeds, FALSE is returned.  If this fails (most likely
 		because {lnum} is invalid) TRUE is returned.
