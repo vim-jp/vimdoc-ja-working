@@ -4663,8 +4663,8 @@ flatten({list} [, {maxdepth}])					*flatten()*
 		リスト |List| からネストを除去する。
 		{list} は変更が入るので、それを望まないなら |flattennew()| を
 		使うこと。
-		Vim9 script では flatten() は使用できず、常に |flattennew()|
-		を使うこと。
+		Vim9 script では flatten() は使用できないため、常に
+		|flattennew()| を使う必要がある。
 								*E900*
 		{maxdepth} はリストのネストをどれだけ深く変更するかを意味する。
 		{maxdepth} が0なら {list} は変更されない。
