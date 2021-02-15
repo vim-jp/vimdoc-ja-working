@@ -347,13 +347,15 @@ Vim script の書き方はユーザーマニュアルの41章|usr_41.txt|を参�
 			しいバージョンに更新する必要がある。バージョン間の変更
 			点については |vimscript-version| を参照。
 
-:vim9[script] [noclear]				*:vim9* *:vim9script*
+:vim9s[cript] [noclear]				*:vim9s* *:vim9script*
 			|Vim9-script| のコマンドがスクリプトファイルに含まれる
 			ことをマークする。|vim9-namespace| も参照。
 			ファイルの先頭のコマンドである必要がある。
 			[noclear] については |vim9-reload| を参照。
 			|+eval| 機能がない場合、これは一部のコマンドの文法を変
 			更する。
+			Vim9 の文法とセマンティックスで単一コマンドを実行する
+			には |:vim9cmd| を参照。
 
 						*:scr* *:scriptnames*
 :scr[iptnames]		読み込まれているスクリプトを読み込まれた順番どおりに
