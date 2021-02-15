@@ -1,4 +1,4 @@
-*eval.txt*	For Vim version 8.2.  Last change: 2021 Jan 31
+*eval.txt*	For Vim version 8.2.  Last change: 2021 Feb 10
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -2562,6 +2562,7 @@ foldlevel({lnum})		Number	fold level at {lnum}
 foldtext()			String	line displayed for closed fold
 foldtextresult({lnum})		String	text for closed fold at {lnum}
 foreground()			Number	bring the Vim window to the foreground
+fullcommand({name})		String	get full command from {name}
 funcref({name} [, {arglist}] [, {dict}])
 				Funcref	reference to function {name}
 function({name} [, {arglist}] [, {dict}])
@@ -4902,6 +4903,21 @@ foreground()	Move the Vim window to the foreground.  Useful when sent from
 		{only in the Win32, Athena, Motif and GTK GUI versions and the
 		Win32 console version}
 
+fullcommand({name})						*fullcommand()*
+		Get the full command name from a short abbreviated command
+		name; see |20.2| for details on command abbreviations.
+
+		{name} may start with a `:` and can include a [range], these
+		are skipped and not returned.
+		Returns an empty string if a command doesn't exist or if it's
+		ambiguous (for user-defined functions).
+
+		For example `fullcommand('s')`, `fullcommand('sub')`,
+		`fullcommand(':%substitute')` all return "substitute".
+
+		Can also be used as a |method|: >
+			GetName()->fullcommand()
+<
 						*funcref()*
 funcref({name} [, {arglist}] [, {dict}])
 		Just like |function()|, but the returned Funcref will lookup
@@ -5887,6 +5903,7 @@ getreg([{regname} [, 1 [, {list}]]])			*getreg()*
 		When the register was not set an empty list is returned.
 
 		If {regname} is not specified, |v:register| is used.
+		In |Vim9-script| {regname} must be one character.
 
 		Can also be used as a |method|: >
 			GetRegname()->getreg()
@@ -5914,6 +5931,7 @@ getreginfo([{regname}])					*getreginfo()*
 		will be returned.
 		If {regname} is not specified, |v:register| is used.
 		The returned Dictionary can be passed to |setreg()|.
+		In |Vim9-script| {regname} must be one character.
 
 		Can also be used as a |method|: >
 			GetRegname()->getreginfo()
@@ -5927,6 +5945,7 @@ getregtype([{regname}])					*getregtype()*
 		    ""			for an empty or unknown register
 		<CTRL-V> is one character with value 0x16.
 		If {regname} is not specified, |v:register| is used.
+		In |Vim9-script| {regname} must be one character.
 
 		Can also be used as a |method|: >
 			GetRegname()->getregtype()
@@ -9642,6 +9661,7 @@ setqflist({list} [, {action} [, {what}]])		*setqflist()*
 setreg({regname}, {value} [, {options}])
 		Set the register {regname} to {value}.
 		If {regname} is "" or "@", the unnamed register '"' is used.
+		In |Vim9-script| {regname} must be one character.
 
 		{value} may be any value returned by |getreg()| or
 		|getreginfo()|, including a |List| or |Dict|.
