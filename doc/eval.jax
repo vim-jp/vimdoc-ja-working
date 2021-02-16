@@ -5386,7 +5386,7 @@ getcursorcharpos([{winid}])
 		スの代わりに文字インデックスになっている。
 
 		Example:
-		3行目のテキスト ""여보세요"" の '보' にカーソルがある状態: >
+		3行目のテキスト "여보세요" の '보' にカーソルがある状態: >
 			getcursorcharpos()	returns [0, 3, 2, 0, 3]
 			getcurpos()		returns [0, 3, 4, 0, 3]
 
