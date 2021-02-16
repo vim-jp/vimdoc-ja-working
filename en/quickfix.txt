@@ -1,4 +1,4 @@
-*quickfix.txt*  For Vim version 8.2.  Last change: 2020 May 31
+*quickfix.txt*  For Vim version 8.2.  Last change: 2021 Feb 05
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -1025,6 +1025,12 @@ commands can be combined to create a NewGrep command: >
 			'smartcase' is not used.
 			If {pattern} is empty (e.g. // is specified), the last
 			used search pattern is used. |last-pattern|
+
+			|QuickFixCmdPre| and |QuickFixCmdPost| are triggered.
+			A file that is opened for matching may use a buffer
+			number, but it is reused if possible to avoid
+			consuming buffer numbers.
+
 :{count}vim[grep] ...
 			When a number is put before the command this is used
 			as the maximum number of matches to find.  Use
@@ -1705,7 +1711,7 @@ special problem here is that it doesn't print information on leaving the
 directory and that it doesn't print the absolute path.
 
 To solve the problem with relative paths and missing "leave directory"
-messages Vim uses following algorithm:
+messages Vim uses the following algorithm:
 
 1) Check if the given directory is a subdirectory of the current directory.
    If this is true, store it as the current directory.
@@ -1938,7 +1944,7 @@ list window is:
 The values displayed in each line correspond to the "bufnr", "lnum", "col" and
 "text" fields returned by the |getqflist()| function.
 
-For some quickfix/location lists, the displayed text need to be customized.
+For some quickfix/location lists, the displayed text needs to be customized.
 For example, if only the filename is present for a quickfix entry, then the
 two "|" field separator characters after the filename are not needed.  Another
 use case is to customize the path displayed for a filename. By default, the
