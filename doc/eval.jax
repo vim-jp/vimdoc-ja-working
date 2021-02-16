@@ -4854,7 +4854,7 @@ fullcommand({name})						*fullcommand()*
 		{name} は `:` から始まっても [range] を含んでよいが、それらは
 		スキップされ戻り値には含まない。
 		コマンドが存在しないか、曖昧になってしまう場合空文字列を返す
-		(ユーザーが関数を定義した場合)。
+		(ユーザー定義関数用)。
 
 		例えば `fullcommand('s')`、 `fullcommand('sub')`、
 		`fullcommand(':%substitute')` はすべて "substitute" を返す。
