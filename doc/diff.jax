@@ -58,8 +58,8 @@ Vimが各ファイルについてウィンドウを開く時に起こること�
 	'scrollbind'	on
 	'cursorbind'	on
 	'scrollopt'	"hor" を入れる
-	'wrap'		off、または分割するに 'diffopt' に "followwrap" を含め
-			る
+	'wrap'		off、または 'diffopt' が "followwrap" を含むならそのま
+			まにする。
 	'foldmethod'	"diff"
 	'foldcolumn'	2
 
@@ -145,8 +145,8 @@ Vimが各ファイルについてウィンドウを開く時に起こること�
 	'scrollbind'	off
 	'cursorbind'	off
 	'scrollopt'	"hor" を外す
-	'wrap'		on、または分割するに 'diffopt' に "followwrap" を含め
-			る
+	'wrap'		on、または 'diffopt' が "followwrap" を含むならそのま
+			まにする。
 	'foldmethod'	"manual"
 	'foldcolumn'	0
 
