@@ -765,7 +765,7 @@ GNU_TOOLS.ZIP の [GNU]gnu_tools.com スクリプトである。
 9. VMS関連の変更点					*vms-changes*
 
 Version 8.2
-- 全プラットフォームの VMS Vim 8.2 クリーンビルドが必要となる全ての変更を実施
+- 全プラットフォームの VMS Vim 8.2 クリーンビルドで必要となる全ての変更を実施
 - mkdir 呼び出しバグの修正 (vicente_polo@yahoo.es)
 - VSI OpenVMS Alpha と Itanium プラットフォーム上のテスト
 - LUA サポートを追加
