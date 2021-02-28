@@ -1613,7 +1613,7 @@ viminfoを上書きしたいのならば、エラーを修正するか、また�
 
 			*:wv* *:wviminfo* *E137* *E138* *E574* *E886* *E929*
 :wv[iminfo][!] [file]	viminfoファイルを [file](デフォルト:上記
-			|viminfo-file-name| 参照) として保存する。
+			|viminfo-file-name| 参照)として保存する。
 			このコマンドは 'viminfofile' が "NONE" に設定されてい
 			る場合に効果がない。
 			まず既存のファイルの(古い)情報が読み込まれ、
