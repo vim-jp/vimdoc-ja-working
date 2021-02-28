@@ -769,7 +769,7 @@ Version 8.2
 - mkdir 呼び出しバグの修正 (vicente_polo@yahoo.es)
 - VSI OpenVMS Alpha と Itanium プラットフォーム上のテスト
 - LUA サポートを追加
-- XPM サポートを追加 - ツールバー付きMotif GUI が全プラットフォームで
+- XPM サポートを追加 - すべてのプラットフォームのツールバー付きMotif GUI
 - XPM v3.4.11 ライブラリの IA64、AXP、VAX 版を追加
 - 新テストスクリプト統合を開始
 
