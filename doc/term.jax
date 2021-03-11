@@ -370,7 +370,7 @@ Vim 独自のもの (標準的なコードはないもの):
 	t_Ri	アイコンテキストをスタックから復元		*t_Ri* *'t_Ri'*
 	t_TE	"raw" モードの終了				*t_TE* *'t_TE'*
 	t_TI	端末を "raw" モードにする 			*t_TI* *'t_TI'*
-	t_fd	フォーカスイベント監視の終了			*t_fd* *'t_fd'*
+	t_fd	フォーカスイベント追跡を無効化する		*t_fd* *'t_fd'*
 		|xterm-focus-event|
 	t_fe	フォーカスイベント監視の開始			*t_fe* *'t_fe'*
 		|xterm-focus-event|
