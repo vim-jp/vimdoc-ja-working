@@ -1094,7 +1094,7 @@ CTRL-W g }						*CTRL-W_g}*
 			[Scratch]	'buftype' が "nofile"
 			[No Name]	ファイル名が指定されていない
 		{訳注: 以下日本語メッセージの場合:
-			[Prompt]	[プロンプト],
+			[Prompt]	[プロンプト]
 			[Popup]		[ポップアップ]
 			[Scratch]	[下書き]
 			[No Name]	[無名]
