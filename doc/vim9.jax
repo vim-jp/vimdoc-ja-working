@@ -64,7 +64,7 @@ Vim9 script と旧来の Vim script は同時に利用できます。古いス�
 						*:vim9* *:vim9cmd*
 :vim9[cmd] {cmd}
 		Vim9 scriptの 文法と方式を使用して {cmd} を実行します。
-		コマンドを入力する時と、旧来のスクリプトや関数を使用する時に
+		コマンドを入力する時と、旧来のスクリプトや関数内で使用する時に
 		便利です。
 
 ==============================================================================
@@ -96,7 +96,8 @@ Vim9 script と `:def` で定義する関数を使用する際に最もよく遭
 	def CallMe(count: number, message: string): bool
 - 関数は `:call` なしで呼び出します: >
 	writefile(['done'], 'file.txt')
-- `:xit`、`:t`、`:k`、`:append`、`:change`、`:insert` と波括弧変数は使用できません。
+- `:xit`、`:t`、`:k`、`:append`、`:change`、`:insert`、`:open` と波括弧変数は
+使用できません。
 - コマンドの前に範囲指定を置くときは、コロン (:) を前置しなくてはなりません: >
 	:%s/this/that
 - 特に指定しない限り、最新の |scriptversion| が使われます。
