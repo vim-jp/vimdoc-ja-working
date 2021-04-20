@@ -3885,7 +3885,7 @@ copy({expr})	{expr}のコピーを作る。数値と文字列の場合は、{exp
 		辞書はリストと同様な方法でコピーされる。
 		|deepcopy()|も参照。
 		|method| としても使用できる: >
-			mylist->count(val)
+			mylist->copy()
 
 cos({expr})						*cos()*
 		{expr} の余弦(コサイン)をラジアンで浮動小数点数 |Float| で返す。
