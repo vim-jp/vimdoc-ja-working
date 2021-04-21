@@ -794,8 +794,8 @@ Note 認識されていないコマンドを "|" でつなぐと、その後の�
 オプション 'edcompatible' の値は使用されません。
 オプション 'gdefault' の値は使用されません。
 
-また、このwikiも参考になるでしょう。これはVim9 scriptの初期の採用者によって書
-かれました。https://github.com/lacygoill/wiki/blob/master/vim/vim9.md
+また、このwikiも参考になるでしょう。これはVim9 scriptのアーリーアダプターによっ
+て書かれました: https://github.com/lacygoill/wiki/blob/master/vim/vim9.md
 
 ==============================================================================
 
