@@ -3,9 +3,6 @@ on:
   push:
     branches:
       - master
-  workflow_dispatch:
-  # schedule:
-  #   - cron: '36 20 * * Sat'
 
 jobs:
   generate:
@@ -43,6 +40,7 @@ jobs:
 
             https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           branch: master
+          pull_strategy: 'NO-PULL'
         env:
           GITHUB_TOKEN: ${{ secrets.VIMDOC_JA_TOKEN }}
 
@@ -80,5 +78,6 @@ jobs:
 
             https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           branch: gh-pages
+          pull_strategy: 'NO-PULL'
         env:
           GITHUB_TOKEN: ${{ secrets.VIMDOC_JA_TOKEN }}
