@@ -18,6 +18,11 @@ jobs:
           path: target
           repository: 'vim-jp/vimdoc-ja'
           token: ${{ secrets.VIMDOC_JA_TOKEN }}
+      - name: Setup Vim
+        uses: thinca/action-setup-vim@v1
+        with:
+          vim_version: 'v8.2.0020'
+          vim_type: 'Vim'
       - name: Generate new document
         run: |
           cd work
@@ -58,6 +63,11 @@ jobs:
           repository: 'vim-jp/vimdoc-ja'
           token: ${{ secrets.VIMDOC_JA_TOKEN }}
           ref: gh-pages
+      - name: Setup Vim
+        uses: thinca/action-setup-vim@v1
+        with:
+          vim_version: 'v8.2.0020'
+          vim_type: 'Vim'
       - name: Generate new document
         run: |
           cd work
