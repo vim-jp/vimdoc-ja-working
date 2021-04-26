@@ -874,102 +874,102 @@ Note 認識されていないコマンドを "|" でつなぐと、その後の�
 
 ==============================================================================
 
-3. New style functions					*fast-functions*
+3. 新しいスタイルの関数					*fast-functions*
 
 THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
 							*:def*
 :def[!] {name}([arguments])[: {return-type}]
-			Define a new function by the name {name}.  The body of
-			the function follows in the next lines, until the
-			matching `:enddef`.
+			新しい関数を {name} という名前で定義します。関数の本体
+			は、次の行から対応する `:enddef` まで続きます。
 
-			When {return-type} is omitted or is "void" the
-			function is not expected to return anything.
+			{return-type} が省略されたか "void" である場合、関数は
+			何も返さないことが期待されます。
 
-			{arguments} is a sequence of zero or more argument
-			declarations.  There are three forms:
+			{arguments} は、引数の宣言を 0 個以上並べたものです。3
+			つの形式があります:
 				{name}: {type}
 				{name} = {value}
 				{name}: {type} = {value}
-			The first form is a mandatory argument, the caller
-			must always provide them.
-			The second and third form are optional arguments.
-			When the caller omits an argument the {value} is used.
+			1 番目の形式は必須の引数を表し、呼び出し側でそれらを渡
+			す必要があります。
+			2 番目と 3 番目の形式は省略可能な引数を表します。呼び
+			出し側で引数を省略した場合、{value} が使用されます。
 
-			The function will be compiled into instructions when
-			called, or when `:disassemble` or `:defcompile` is
-			used.  Syntax and type errors will be produced at that
-			time.
+			関数は、呼び出されたとき、または `:disassemble` か
+			`:defcompile` が使用されたときに、命令にコンパイルされ
+			ます。構文エラーと型のエラーはこのときに発生します。
 
-			It is possible to nest `:def` inside another `:def` or
-			`:function` up to about 50 levels deep.
+			他の `:def` や `:function` の内側で、`:def` を深さ 50
+			までネストできます。
 
-			[!] is used as with `:function`.  Note that
-			script-local functions cannot be deleted or redefined
-			later in Vim9 script.  They can only be removed by
-			reloading the same script.
+			[!] は `:function` と同様に使用されます。Note Vim9
+			script では、スクリプトローカルな関数を後から削除した
+			り再定義したりすることができません。同じスクリプトを再
+			読み込みすることでのみ除去できます。
 
 							*:enddef*
-:enddef			End of a function defined with `:def`. It should be on
-			a line by its own.
+:enddef			`:def` で定義された関数の終了です。1 行にこれだけを書
+			くようにしてください。
 
-You may also find this wiki useful.  It was written by an early adopter of
-Vim9 script: https://github.com/lacygoill/wiki/blob/master/vim/vim9.md
+この wiki も参考になるでしょう。これは Vim9 script のアーリーアダプターによっ
+て書かれました: https://github.com/lacygoill/wiki/blob/master/vim/vim9.md
 
-If the script the function is defined in is Vim9 script, then script-local
-variables can be accessed without the "s:" prefix.  They must be defined
-before the function is compiled.  If the script the function is defined in is
-legacy script, then script-local variables must be accessed with the "s:"
-prefix if they do not exist at the time of compiling.
+関数が定義されているスクリプトが Vim9 script である場合、関数の中からスクリプ
+トローカルな変数にアクセスするのに "s:" プレフィックスは必要ありません。また、
+スクリプトローカルな変数は、関数がコンパイルされる前に定義されていなければなり
+ません。スクリプトが旧来のスクリプトで、コンパイル時に変数が未定義となる場合
+は、"s:" を付ける必要があります。
 
 						*:defc* *:defcompile*
-:defc[ompile]		Compile functions defined in the current script that
-			were not compiled yet.
-			This will report errors found during the compilation.
+:defc[ompile]		現在のスクリプト内で定義された、まだコンパイルされて
+			いない関数をコンパイルします。
+			これはコンパイル時に見つかったエラーを報告します。
 
 						*:disa* *:disassemble*
-:disa[ssemble] {func}	Show the instructions generated for {func}.
-			This is for debugging and testing.
-			Note that for command line completion of {func} you
-			can prepend "s:" to find script-local functions.
+:disa[ssemble] {func}	{func} に対して生成された命令を表示します。
+			これはデバッグとテストのためのものです。
+			Note {func} をコマンドラインで補完するとき、"s:" を前
+			置することでスクリプトローカルな関数を見つけることがで
+			きます。
 
-:disa[ssemble]! {func}	Like `:disassemble` but with the instructions used for
-			profiling.
+:disa[ssemble]! {func}	`:disassemble` と同様ですが、プロファイリング用の命令
+			も表示します。
 
-Limitations ~
+制約 ~
 
-Local variables will not be visible to string evaluation.  For example: >
+文字列の評価結果の式からローカル変数にアクセスすることはできません。例: >
 	def MapList(): list<string>
 	  var list = ['aa', 'bb', 'cc', 'dd']
 	  return range(1, 2)->map('list[v:val]')
 	enddef
 
-The map argument is a string expression, which is evaluated without the
-function scope.  Instead, use a lambda: >
+map の引数は、文字列として評価されたあと再び式として評価されますが、2 回目の評
+価は関数スコープの外で行われます。代わりにラムダ式を使ってください: >
 	def MapList(): list<string>
 	  var list = ['aa', 'bb', 'cc', 'dd']
 	  return range(1, 2)->map(( _, v) => list[v])
 	enddef
 
-The same is true for commands that are not compiled, such as `:global`.
-For these the backtick expansion can be used.  Example: >
+同じことが、`:global` のようなコンパイルされないコマンドに対しても言えます。こ
+れはバッククォート展開を使って解決できます。例: >
 	def Replace()
 	  var newText = 'blah'
 	  g/pattern/s/^/`=newText`/
 	enddef
 
-Closures defined in a loop will share the same context.  For example: >
+同じループの内側で定義された複数のクロージャは、同じコンテキストを共有します。
+例: >
 	var flist: list<func>
 	for i in range(10)
 	  var inloop = i
 	  flist[i] = () => inloop
 	endfor
 
-The "inloop" variable will exist only once, all closures put in the list refer
-to the same instance, which in the end will have the value 9.  This is
-efficient.  If you do want a separate context for each closure call a function
-to define it: >
+変数 "inloop" は最終的に 1 つだけになり、リストに格納された全てのクロージャは、
+値が 9 の同じインスタンスを参照するようになります。この実装は効率的です。クロー
+ジャごとに個別のコンテキストが必要な場合は、クロージャを定義する関数を呼び出す
+ようにしてください: >
 	def GetFunc(i: number): func
 	  var inloop = i
 	  return () => inloop
