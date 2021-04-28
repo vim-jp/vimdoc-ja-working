@@ -1300,34 +1300,34 @@ TODO: "vim9script" 機能はまだ存在しません。Vim9 script の構文が�
 
 ==============================================================================
 
-6. Future work: classes					*vim9-classes*
+6. 将来的な変更: クラス					*vim9-classes*
 
-Above "class" was mentioned a few times, but it has not been implemented yet.
-Most of Vim9 script can be created without this functionality, and since
-implementing classes is going to be a lot of work, it is left for the future.
-For now we'll just make sure classes can be added later.
+"クラス" については何度か言及しましたが、まだ実装されていません。Vim9 script
+の大部分はこの機能がなくても作成できますし、クラスを実装するのは大変な作業にな
+りそうなので、将来に残しています。とりあえず、クラスを後から追加できるようにだ
+けしておきます。
 
-Thoughts:
-- `class` / `endclass`, everything in one file
-- Class names are always CamelCase
-- Single constructor
-- Single inheritance with `class ThisClass extends BaseClass`
+考えていること:
+- `class` / `endclass`、すべてを一つのファイルにまとめる
+- クラス名は常に CamelCase
+- 単一のコンストラクタ
+- `class ThisClass extends BaseClass` による単一の継承
 - `abstract class`
-- `interface` (Abstract class without any implementation)
+- `interface` (実装を持たない抽象クラス)
 - `class SomeClass implements SomeInterface`
-- Generics for class: `class <Tkey, Tentry>`
-- Generics for function: `def <Tkey> GetLast(key: Tkey)`
+- クラスに対するジェネリクス: `class <Tkey, Tentry>`
+- 関数に対するジェネリクス: `def <Tkey> GetLast(key: Tkey)`
 
-Again, much of this is from TypeScript.
+繰り返しになりますが、多くは TypeScript 由来です。
 
-Some things that look like good additions:
-- Use a class as an interface (like Dart)
-- Extend a class with methods, using an import (like Dart)
+追加するとよさそうなもの:
+- クラスをインターフェイスとして使う (Dart のように)
+- インポートを使用して、メソッドでクラスを拡張する (Dart のように)
 
-An important class that will be provided is "Promise".  Since Vim is single
-threaded, connecting asynchronous operations is a natural way of allowing
-plugins to do their work without blocking the user.  It's a uniform way to
-invoke callbacks and handle timeouts and errors.
+予定している重要なクラスの一つに "Promise" があります。Vim はシングルスレッド
+なので、非同期な操作を接続することは、プラグインがユーザーをブロックすることな
+く作業を行えるようにするための自然な方法です。これは、コールバックを呼び出した
+り、タイムアウトやエラーを処理したりするための統一的な方法を提供します。
 
 ==============================================================================
 
