@@ -18,7 +18,7 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 2.  変更点				|vim9-differences|
 3.  新しいスタイルの関数		|fast-functions|
 4.  型					|vim9-types|
-5.  名前空間、Import と Export		|vim9script|
+5.  名前空間、インポートとエクスポート	|vim9script|
 6.  将来的な変更: クラス		|vim9-classes|
 
 9.  言語設計の背景			|vim9-rationale|
@@ -1132,71 +1132,71 @@ Vim9 script では型チェックがより厳密になりました。ほとん�
 
 ==============================================================================
 
-5. Namespace, Import and Export
+5. 名前空間、インポートとエクスポート
 					*vim9script* *vim9-export* *vim9-import*
 
 THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
-A Vim9 script can be written to be imported.  This means that everything in
-the script is local, unless exported.  Those exported items, and only those
-items, can then be imported in another script.
+Vim9 script をインポートすることができます。これは、エクスポートされない限り、
+Vim9 script 内のすべてのアイテムがスクリプトローカルであることを意味します。イ
+ンポートできるのは、Vim9 script 内でエクスポートされたアイテムだけです。
 
-You can cheat by using the global namespace explicitly.  We will assume here
-that you don't do that.
+グローバルな名前空間を明示的に使用してごまかすことができますが、ここではそのよ
+うなことはしないと仮定します。
 
 
-Namespace ~
+名前空間 ~
 							*vim9-namespace*
-To recognize a file that can be imported the `vim9script` statement must
-appear as the first statement in the file (see |vim9-mix| for an exception).
-It tells Vim to interpret the script in its own namespace, instead of the
-global namespace.  If a file starts with: >
+ファイルをインポートできるものとして識別させるには、`vim9script` 文がファイル
+の最初の文として現れなければなりません (例外については |vim9-mix| を参照)。こ
+れは、スクリプトをグローバルな名前空間ではなく、独自の名前空間で解釈するよう
+Vim に指示します。ファイルが次の内容で始まる場合: >
 	vim9script
 	var myvar = 'yes'
-Then "myvar" will only exist in this file.  While without `vim9script` it would
-be available as `g:myvar` from any other script and function.
+"myvar" は、このファイルの中でしか使用できません。一方、`vim9script` がない場
+合は、他のスクリプトや関数の中で `g:myvar` として使用できます。
 
-The variables at the file level are very much like the script-local "s:"
-variables in legacy Vim script, but the "s:" is omitted.  And they cannot be
-deleted.
+ファイルレベルの変数は、旧来の Vim script のスクリプトローカルの "s:" 変数と非
+常によく似ていますが、"s:" は省略されます。また、削除することはできません。
 
-In Vim9 script the global "g:" namespace can still be used as before.  And the
-"w:", "b:" and "t:" namespaces.  These have in common that variables are not
-declared and they can be deleted.
+Vim9 script では、グローバルな名前空間 "g:" を以前と同様に使用できます。名前空
+間 "w:"、"b:" および "t:" についても同様です。これらに共通しているのは、変数は
+宣言されず、削除できるということです。
 
-A side effect of `:vim9script` is that the 'cpoptions' option is set to the
-Vim default value, like with: >
+`:vim9script` の副作用として、'cpoptions' オプションが Vim のデフォルト値に設
+定されます。ちょうどこのように動作します: >
 	:set cpo&vim
-One of the effects is that |line-continuation| is always enabled.
-The original value of 'cpoptions' is restored at the end of the script, while
-flags added or removed in the script are also added to or removed from the
-original value to get the same effect.  The order of flags may change.
+この効果の一つは、|line-continuation| が常に有効になることです。'cpoptions'
+の元の値はスクリプトの最後に復元されます。ただし、スクリプトで追加・削除された
+フラグは、元の値に対して追加・削除されます。また、フラグの順序は変わることがあ
+ります。
 
 							*vim9-mix*
-There is one way to use both legacy and Vim9 syntax in one script file: >
-	" comments may go here
+一つのスクリプトファイルで旧来の構文と Vim9 script の構文の両方を使用する方法
+があります: >
+	" ここにコメントが書けます
 	if !has('vim9script')
-	   " legacy script commands go here
+	   " 旧来の構文のコマンドをここに書きます
 	   finish
 	endif
 	vim9script
-	# Vim9 script commands go here
-This allows for writing a script that takes advantage of the Vim9 script
-syntax if possible, but will also work on a Vim version without it.
+	# Vim9 script の構文のコマンドをここに書きます
+こうすることで、可能であれば Vim9 script の構文を利用できます。また、このスク
+リプトは Vim9 script が使えないバージョンの Vim でも動作します。
 
-This can only work in two ways:
-1. The "if" statement evaluates to false, the commands up to `endif` are
-   skipped and `vim9script` is then the first command actually executed.
-2. The "if" statement evaluates to true, the commands up to `endif` are
-   executed and `finish` bails out before reaching `vim9script`.
+このスクリプトの挙動は次のいずれかになります:
+1. "if" 文の条件式が偽であると評価され、`endif` までのコマンドがスキップされ
+   る。その結果、`vim9script` が実際に実行される最初のコマンドになる。
+2. "if" 文の条件式が真であると評価され、`endif` までのコマンドが実行される。最
+   後の `finish` により `vim9script` に到達する前に終了する。
 
-TODO: The "vim9script" feature does not exist yet, it will only be added once
-the Vim9 script syntax has been fully implemented.
+TODO: "vim9script" 機能はまだ存在しません。Vim9 script の構文が完全に実装され
+てから追加される予定です。
 
 
-Export ~
+エクスポート ~
 							*:export* *:exp*
-Exporting an item can be written as: >
+アイテムをエクスポートするには、次のようにします: >
 	export const EXPORTED_CONST = 1234
 	export var someValue = ...
 	export final someValue = ...
@@ -1204,96 +1204,99 @@ Exporting an item can be written as: >
 	export def MyFunc() ...
 	export class MyClass ...
 
-As this suggests, only constants, variables, `:def` functions and classes can
-be exported. {not implemented yet: export class}
+このように、定数・変数・`:def` 関数およびクラスだけがエクスポートできます。
+{not implemented yet: export class}
 
 							*E1042*
-`:export` can only be used in Vim9 script, at the script level.
+`:export` は Vim9 script 内のスクリプトレベルでしか使用できません。
 
 
-Import ~
+インポート ~
 						*:import* *:imp* *E1094*
-The exported items can be imported individually in another Vim9 script: >
+エクスポートされたアイテムを別の Vim9 script 内で個別にインポートできます: >
 	import EXPORTED_CONST from "thatscript.vim"
 	import MyClass from "myclass.vim"
 
-To import multiple items at the same time: >
+複数のアイテムを同時にインポートするには: >
 	import {someValue, MyClass} from "thatscript.vim"
 
-In case the name is ambiguous, another name can be specified: >
+名前が気に入らない場合は、別の名前を指定できます: >
 	import MyClass as ThatClass from "myclass.vim"
 	import {someValue, MyClass as ThatClass} from "myclass.vim"
 
-To import all exported items under a specific identifier: >
+エクスポートされたすべてのアイテムを特定の識別子のもとでインポートするには: >
 	import * as That from 'thatscript.vim'
 
 {not implemented yet: using "This as That"}
 
-Then you can use "That.EXPORTED_CONST", "That.someValue", etc.  You are free
-to choose the name "That", but it is highly recommended to use the name of the
-script file to avoid confusion.
+こうすることで、"That.EXPORTED_CONST" や "That.someValue" などを使用できるよう
+になります。名前 "That" は自由に選べますが、混乱を避けるためにスクリプトファイ
+ルの名前を使うようにしてください {訳注: したがって、この例では "thatscript" と
+すべき}。
 
-`:import` can also be used in legacy Vim script.  The imported items still
-become script-local, even when the "s:" prefix is not given.
+`:import` は旧来の Vim script でも使用可能です。プリフィックス "s:" が与えられ
+なくても、インポートされたアイテムはスクリプトローカルになります。
 
-The script name after `import` can be:
-- A relative path, starting "." or "..".  This finds a file relative to the
-  location of the script file itself.  This is useful to split up a large
-  plugin into several files.
-- An absolute path, starting with "/" on Unix or "D:/" on MS-Windows.  This
-  will rarely be used.
-- A path not being relative or absolute.  This will be found in the
-  "import" subdirectories of 'runtimepath' entries.  The name will usually be
-  longer and unique, to avoid loading the wrong file.
+`:import` の後ろのスクリプト名には、以下のものが指定可能です:
+- "." か ".." で始まる相対パス。これは、スクリプトファイルのディレクトリから見
+  た相対的な位置を表します。大きなプラグインをいくつかのファイルに分割するのに
+  便利です。
+- Unix では "/"、MS-Windows では "D:/" で始まる絶対パス。これはめったに使われ
+  ません。
+- 相対パスでも絶対パスでもないパス。これは、'runtimepath' のディレクトリに配置
+  された "import" ディレクトリの中を検索します。誤ったファイルを読み込まないた
+  めに、名前は通常、長くて一意なものになります。
 
-Once a vim9 script file has been imported, the result is cached and used the
-next time the same script is imported.  It will not be read again.
+一度 Vim9 script ファイルがインポートされると、結果はキャッシュされ、同じスク
+リプトが再びインポートされるときに使用されます。スクリプトが再び読み込まれるこ
+とはありません。
 							*:import-cycle*
-The `import` commands are executed when encountered.  If that script (directly
-or indirectly) imports the current script, then items defined after the
-`import` won't be processed yet.  Therefore cyclic imports can exist, but may
-result in undefined items.
+`import` コマンドは見つかったときに実行されます。インポートされるスクリプトが
+(直接または間接的に) 現在のスクリプトをインポートする場合、`import` の後ろで定
+義されているアイテムはまだ処理されていません。そのため、インポートが循環する可
+能性がありますが、未定義のアイテムとして終了することもあります。
+{訳注: 何を言ってるのかよく分からない。}
 
 
-Import in an autoload script ~
+オートロードスクリプト内でのインポート ~
 
-For optimal startup speed, loading scripts should be postponed until they are
-actually needed.  A recommended mechanism:
+起動速度を最適化するためには、スクリプトの読み込みを実際に必要になるまで遅延す
+る必要があります。おすすめの方法は次のとおりです:
 
-1. In the plugin define user commands, functions and/or mappings that refer to
-   an autoload script. >
+1. プラグインスクリプトでは、オートロードスクリプトを参照するユーザー定義コマ
+   ンド・関数・マップなどを定義します。 >
 	command -nargs=1 SearchForStuff searchfor#Stuff(<f-args>)
 
-<   This goes in .../plugin/anyname.vim.  "anyname.vim" can be freely chosen.
+<   これを .../plugin/anyname.vim に書きます。ファイル名 "anyname.vim" はなん
+   でもかまいません。
 
-2. In the autoload script do the actual work.  You can import items from
-   other files to split up functionality in appropriate pieces. >
+2. オートロードスクリプトで実際の作業を行います。他のファイルからアイテムをイ
+   ンポートすることで、機能を適切なピースに分割できます。 >
 	vim9script
 	import FilterFunc from "../import/someother.vim"
 	def searchfor#Stuff(arg: string)
 	  var filtered = FilterFunc(arg)
 	  ...
-<   This goes in .../autoload/searchfor.vim.  "searchfor" in the file name
-   must be exactly the same as the prefix for the function name, that is how
-   Vim finds the file.
+<   これを .../autoload/searchfor.vim に書きます。ファイル名の "searchfor" の
+   部分は関数名のプリフィックスと一致していなければなりません。さもないと Vim
+   がファイルを見つられなくなります。
 
-3. Other functionality, possibly shared between plugins, contains the exported
-   items and any private items. >
+3. プラグイン間で共有されうる機能が書かれたスクリプトには、エクスポートされた
+   アイテムとプライベートなアイテムが含まれています。 >
 	vim9script
 	var localVar = 'local'
 	export def FilterFunc(arg: string): string
 	   ...
-<   This goes in .../import/someother.vim.
+<   これを .../import/someother.vim に書きます。
 
-When compiling a `:def` function and a function in an autoload script is
-encountered, the script is not loaded until the `:def` function is called.
+`:def` 関数のコンパイル中にオートロードスクリプト内の関数が見つかった場合、
+`:def` 関数が呼び出されるまでオートロードスクリプトはロードされません。
 
+旧来の Vim script でのインポート ~
 
-Import in legacy Vim script ~
-
-If an `import` statement is used in legacy Vim script, the script-local "s:"
-namespace will be used for the imported item, even when "s:" is not specified.
-
+旧来の Vim script で `import` 文を使用した場合、"s:" が指定されていなくても、
+インポートされたアイテムには名前空間 "s:" が使用され、アイテムはスクリプトロー
+カルになります。
 
 ==============================================================================
 
