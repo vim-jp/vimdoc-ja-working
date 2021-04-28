@@ -63,9 +63,9 @@ Vim9 script と旧来の Vim script は同時に利用できます。古いス�
 
 						*:vim9* *:vim9cmd*
 :vim9[cmd] {cmd}
-		Vim9 scriptの 文法と方式を使用して {cmd} を実行します。コマン
-		ドを入力する時と、旧来のスクリプトや関数内で使用する時に便利で
-		す。
+		Vim9 script の構文とセマンティクスを使用して {cmd} を実行しま
+		す。コマンドを入力する時と、旧来のスクリプトや関数内で使用する
+		時に便利です。
 
 ==============================================================================
 
@@ -982,11 +982,11 @@ map の引数は、文字列として評価されたあと再び式として評�
 
 ==============================================================================
 
-4. Types					*vim9-types*
+4. 型						*vim9-types*
 
 THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
-The following builtin types are supported:
+以下の組み込み型がサポートされています:
 	bool
 	number
 	float
@@ -1001,50 +1001,47 @@ The following builtin types are supported:
 	func({type}, ...)
 	func({type}, ...): {type}
 
-Not supported yet:
+これはまだサポートされていません:
 	tuple<a: {type}, b: {type}, ...>
 
-These types can be used in declarations, but no value will have this type:
+これらの型は宣言時に使用できますが、値がこの型を持つことはありません:
 	{type}|{type}  {not implemented yet}
 	void
 	any
 
-There is no array type, use list<{type}> instead.  For a list constant an
-efficient implementation is used that avoids allocating lot of small pieces of
-memory.
+array 型はありません。代わりに list<{type}> を使います。リスト定数には効率的な
+実装が使用されており、小さなメモリがたくさん確保されないようになっています。
 
-A partial and function can be declared in more or less specific ways:
-func				any kind of function reference, no type
-				checking for arguments or return value
-func: {type}			any number and type of arguments with specific
-				return type
-func({type})			function with argument type, does not return
-				a value
-func({type}): {type}		function with argument type and return type
-func(?{type})			function with type of optional argument, does
-				not return a value
-func(...{type})			function with type of variable number of
-				arguments, does not return a value
+関数と部分適用は、多かれ少なかれ具体的な方法で宣言できます:
+func				任意の種類の関数を表します。引数や戻り値に対し
+				て型チェックは行われません。
+func: {type}			引数の個数と型は任意で、特定の戻り値の型を持ち
+				ます。
+func({type})			引数の型を持つ関数です。値は返しません。
+func({type}): {type}		引数の型と戻り値の型を持つ関数です。
+func(?{type})			省略可能な引数の型を持つ関数です。値は返しませ
+				ん。
+func(...{type})			可変長引数の型を持つ関数です。値は返しません。
 func({type}, ?{type}, ...{type}): {type}
-				function with:
-				- type of mandatory argument
-				- type of optional argument
-				- type of variable number of arguments
-				- return type
+				次の要素を持つ関数です:
+				- 必須の引数の型
+				- 省略可能な引数の型
+				- 可変長引数の型
+				- 戻り値の型
 
-If the return type is "void" the function does not return a value.
+戻り値の型が "void" である場合、関数は値を返しません。
 
-The reference can also be a |Partial|, in which case it stores extra arguments
-and/or a dictionary, which are not visible to the caller.  Since they are
-called in the same way the declaration is the same.
+関数への参照は部分適用 |Partial| にすることもできます。その場合、参照は追加の
+引数や辞書を保持していますが、それらは呼び出し側からは見えません。部分適用は同
+じ方法で呼び出されるので、宣言の仕方も同じです。
 
-Custom types can be defined with `:type`: >
+カスタム型は `:type` で定義できます: >
 	:type MyList list<string>
-Custom types must start with a capital letter, to avoid name clashes with
-builtin types added later, similarly to user functions.
+カスタム型は大文字で始めなければなりません。これは、将来追加される組み込み型と
+名前が衝突するのを防ぐためで、ユーザー定義関数と同様です。
 {not implemented yet}
 
-And classes and interfaces can be used as types: >
+クラスとインターフェイスは型として使用できます: >
 	:class MyClass
 	:var mine: MyClass
 
@@ -1061,79 +1058,77 @@ And classes and interfaces can be used as types: >
 {not implemented yet}
 
 
-Variable types and type casting	~
+変数の型と型キャスト ~
 							*variable-types*
-Variables declared in Vim9 script or in a `:def` function have a type, either
-specified explicitly or inferred from the initialization.
+Vim9 script や `:def` 関数内で宣言された変数は、型を持ちます。型は明示的に指定
+されるか、変数の初期化から推論されます。
 
-Global, buffer, window and tab page variables do not have a specific type, the
-value can be changed at any time, possibly changing the type.  Therefore, in
-compiled code the "any" type is assumed.
+グローバル変数・バッファローカル変数・ウィンドウローカル変数およびタブページ
+ローカル変数は、特定の型を持ちません。値はいつでも変更でき、型を変更することも
+可能です。そのため、これらの変数はコンパイルされたコードでは "any" 型であると
+仮定されます。
 
-This can be a problem when the "any" type is undesired and the actual type is
-expected to always be the same.  For example, when declaring a list: >
+これは、"any" 型が望ましくなく、実際の型が常に同じであることが期待される場合に
+問題になります。例えば、リストを宣言するとき: >
 	var l: list<number> = [1, g:two]
-At compile time Vim doesn't know the type of "g:two" and the expression type
-becomes list<any>.  An instruction is generated to check the list type before
-doing the assignment, which is a bit inefficient.
+Vim はコンパイル時に "g:two" の型を知らないので、式の型は list<any> になってし
+まいます。代入の前にリストの型をチェックする命令が生成されますが、これは少し効
+率が悪いです。
 							*type-casting*
-To avoid this, use a type cast: >
+これを回避するには、型キャストを使います: >
 	var l: list<number> = [1, <number>g:two]
-The compiled code will then only check that "g:two" is a number and give an
-error if it isn't.  This is called type casting.
+コンパイルされたコードは ":g:two" が数値であることだけをチェックし、数値でない
+場合にエラーを報告します。これを型キャストと呼びます。
 
-The syntax of a type cast is:  "<" {type} ">".  There cannot be white space
-after the "<" or before the ">" (to avoid them being confused with
-smaller-than and bigger-than operators).
+型キャストの構文は: "<" {type} ">" です。"<" の後ろや ">" の前に空白を入れては
+いけません (smaller-than 演算子や bigger-than 演算子と混同されないようにするた
+めです)。
 
-The semantics is that, if needed, a runtime type check is performed.  The
-value is not actually changed.  If you need to change the type, e.g. to change
-it to a string, use the |string()| function.  Or use |str2nr()| to convert a
-string to a number.
+セマンティクスとは、実行時に必要に応じて型チェックを行うことをいいます。実際に
+値が変更されることはありません。型を変更する必要がある場合、例えば文字列に変更
+する場合は、|string()| 関数を使用します。文字列を数値に変換するには |str2nr()|
+を使用します。
 
 
-Type inference ~
+型推論 ~
 							*type-inference*
-In general: Whenever the type is clear it can be omitted.  For example, when
-declaring a variable and giving it a value: >
-	var name = 0		# infers number type
-	var name = 'hello'	# infers string type
+一般的に: 型が明らかな場合は型を省略できます。例えば、変数を宣言して値を与える
+場合です: >
+	var name = 0		# 数値型であると推論されます
+	var name = 'hello'	# 文字列型であると推論されます
 
-The type of a list and dictionary comes from the common type of the values.
-If the values all have the same type, that type is used for the list or
-dictionary.  If there is a mix of types, the "any" type is used. >
+リストと辞書の型は、その要素の型から推論されます。すべての要素が同じ型を持つ場
+合、その型がリストまたは辞書の型として使用されます。型が混在している場合は、
+"any" 型が使用されます。 >
 	[1, 2, 3]	list<number>
 	['a', 'b', 'c']	list<string>
 	[1, 'x', 3]	list<any>
 
-For script-local variables in Vim9 script the type is checked, also when the
-variable was declared in a legacy function.
- 
+Vim9 script のスクリプトローカルな変数に対する型チェックは、変数が旧来の関数内
+で宣言された場合にも行われます。
 
-Stricter type checking ~
+より厳密な型チェック ~
 							*type-checking*
-In legacy Vim script, where a number was expected, a string would be
-automatically converted to a number.  This was convenient for an actual number
-such as "123", but leads to unexpected problems (and no error message) if the
-string doesn't start with a number.  Quite often this leads to hard-to-find
-bugs.
+旧来の Vim script では、数値が期待される場所で文字列が自動的に数値に変換されま
+す。これは、文字列が "123" のような数字である場合には便利ですが、文字列が数字
+で始まらない場合には予期せぬ問題を引き起こします (エラーメッセージも表示されま
+せん)。この結果、発見しにくいバグが発生することも少なくありません。
 
-In Vim9 script this has been made stricter.  In most places it works just as
-before, if the value used matches the expected type.  There will sometimes be
-an error, thus breaking backwards compatibility.  For example:
-- Using a number other than 0 or 1 where a boolean is expected.  *E1023*
-- Using a string value when setting a number options.
-- Using a number where a string is expected.   *E1024*
+Vim9 script では型チェックがより厳密になりました。ほとんどの場所で以前と同様に
+動作しますが、値の型が期待と異なる場合はそうとは限りません。時にはエラーが発生
+し、後方互換性が損なわれることがあります。例:
+- 真偽値が期待される場所で 0 または 1 以外の数値が使用されています。 *E1023*
+- 数値オプションの設定に文字列が使用されています。
+- 文字列が期待される場所で数値が使用されています。 *E1024*
 
-One consequence is that the item type of a list or dict given to map() must
-not change.  This will give an error in Vim9 script: >
+結果として、|map()| に与えられたリストや辞書の要素の型は、変更できなくなりまし
+た。これは Vim9 script ではエラーになります: >
 	map([1, 2, 3], (i, v) => 'item ' .. i)
 	E1012: Type mismatch; expected number but got string
-Instead use |mapnew()|.  If the item type was determined to be "any" it can
-change to a more specific type.  E.g. when a list of mixed types gets changed
-to a list of numbers.
-Same for |extend()|, use |extendnew()| instead, and for |flatten()|, use
-|flattennew()| instead.
+代わりに |mapnew()| を使用してください。要素の型が "any" である場合は、map()
+で数値型などの特定の型に変更できます。
+同じことが |extend()| と |flatten()| にも言えます。代わりに |extendnew()| と
+|flattennew()| を使用してください。
 
 ==============================================================================
 
