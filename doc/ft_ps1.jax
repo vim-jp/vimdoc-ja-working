@@ -1,64 +1,66 @@
-*ps1.txt*  A Windows PowerShell syntax plugin for Vim
+*ps1.txt*  Vim 用 Windows PowerShell シンタックスプラグイン
 
-Author:  Peter Provost <https://www.github.com/PProvost>
-License: Apache 2.0
-URL:     https://github.com/PProvost/vim-ps1
+著者:       Peter Provost <https://www.github.com/PProvost>
+ライセンス: Apache 2.0
+URL:        https://github.com/PProvost/vim-ps1
 
-INTRODUCTION                                                    *ps1-syntax*
+導入                                                           *ps1-syntax*
 
-This plugin provides Vim syntax, indent and filetype detection for Windows
-PowerShell scripts, modules, and XML configuration files.
+このプラグインは Vim に Windows PowerShell スクリプト、モジュール、XML 設定ファ
+イルのシンタックス、インデント、ファイルタイプ検知を提供する。
 
 
-ABOUT                                                           *ps1-about*
+概要                                                           *ps1-about*
 
-Grab the latest version or report a bug on GitHub:
+最新版およびバグの報告はGitHubにて:
 
 https://github.com/PProvost/vim-ps1
 
 
-FOLDING                                                         *ps1-folding*
+折り畳み                                                       *ps1-folding*
 
-The ps1 syntax file provides syntax folding (see |:syn-fold|) for script blocks
-and digital signatures in scripts.
+ps1 シンタックスファイルはスクリプトブロックとスクリプト内の電子署名に対して文
+法による折り畳み(|:syn-fold| 参照)を提供する。
 
-When 'foldmethod' is set to "syntax" then function script blocks will be
-folded unless you use the following in your .vimrc or before opening a script: >
+'foldmethod' に "syntax" が設定されている時に関数のスクリプトブロックは以下の
+設定があなたの .vimrc に追加されているかスクリプトを開くまで折り畳まれている:
+>
 
     :let g:ps1_nofold_blocks = 1
 <
-Digital signatures in scripts will also be folded unless you use: >
+スクリプト内の電子署名もまた次のようにしない限りは折り畳まれている: >
 
     :let g:ps1_nofold_sig = 1
 <
-Note: syntax folding might slow down syntax highlighting significantly,
-especially for large files.
+Note: 折り畳みはシンタックスハイライトが著しく遅くなることがあり、特に巨大な
+ファイルで顕著である。
 
 
-COMPILER                                                        *ps1-compiler*
+コンパイラ                                                     *ps1-compiler*
 
-The powershell `:compiler` script configures |:make| to execute the script in
-PowerShell.
+powershell の `:compiler` スクリプトは |:make| を PowerShell スクリプト内で実
+行できるように設定する。
 
-It tries to pick a smart default PowerShell command: `pwsh` if available and
-`powershell` otherwise, but you can customize the command: >
+これを試すと PowerShell のデフォルトコマンドとして: `pwsh` あるいは存在するな
+らば `powershell` をうまく選択するが、しかしコマンドをカスタマイズすることもで
+きる: >
 
     :let g:ps1_makeprg_cmd = '/path/to/pwsh'
 <
-To configure whether to show the exception type information: >
+例外の種別情報を表示するように設定するには: >
 
     :let g:ps1_efm_show_error_categories = 1
 <
 
-KEYWORD LOOKUP                                                 *ps1-keyword*
+キーワード検索                                                 *ps1-keyword*
 
-To look up keywords using PowerShell's Get-Help, press the |K| key. For more
-convenient paging, the pager `less` should be installed, which is included in
-many Linux distributions and in macOS.
+|K| キーの押し下げでのキーワードの検索で、PowerShell の Get-Help を使用する。
+より便利にページングするなら、多数の Linux ディストリビューションや macOS に同
+梱されているページャの `less` をインストールする。
 
-Many other distributions are available for Windows like
-https://chocolatey.org/packages/less/. Make sure `less` is in a directory
-listed in the `PATH` environment variable, which chocolatey above does.
+Windows では https://chocolatey.org/packages/less/ およびこれに類似した多数の
+他の配布がある。`PATH` 環境変数にリストされる、上記 chocolatey ならその設定し
+たディレクトリに `less` があることを確認する。
 
 ------------------------------------------------------------------------------
  vim:ft=help:

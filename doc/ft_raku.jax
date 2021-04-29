@@ -1,31 +1,31 @@
-*vim-raku.txt*	The Raku programming language filetype
+*vim-raku.txt*	Raku プログラミング言語ファイルタイプ
 
                                                       *vim-raku*
 
-Vim-raku provides syntax highlighting, indentation, and other support for
-editing Raku programs.
+vim-raku はシンタックスハイライト、インデント、その他 Raku プログラムの編集の
+ためのサポートを提供する。
 
-1. Using Unicode in your Raku files	|raku-unicode|
+1. Raku ファイル内での Unicode の利用	|raku-unicode|
 
 ==============================================================================
-1. Using Unicode in your Raku files                           *raku-unicode*
+1. Raku ファイル内での Unicode の利用                         *raku-unicode*
 
-Defining new operators using Unicode symbols is a good way to make your
-Raku program easy to read. See:
+Unicode の記号を用いた新しい演算子が定義されており、あなたの Raku プログラムを
+読み易くする良い方法である。参照:
 https://perl6advent.wordpress.com/2012/12/18/day-18-formulas-resistance-is-futile/
 
-While Raku does define ASCII alternatives for some common operators (see
-https://docs.raku.org/language/unicode_ascii), using the full range of
-Unicode operators is highly desirable. Your operating system provides input
-facilities, but using the features built in to Vim may be preferable.
+Raku は基本的な演算子については ASCII での代替定義をしているが(参照
+https://docs.raku.org/language/unicode_ascii)、Unicode 演算子の全範囲が使える
+のが望しい。あなたのオペレーティングシステムが提供する入力環境で、Vim がその機
+能を使えるようにビルドされるのがより望しい。
 
-The natural way to produce these symbols in Vim is to use digraph shortcuts
-(:help |digraphs-use|). Many of them are defined; type `:digraphs` to get
-the list. A convenient way to read the list of digraphs is to save them in a
-file. From the shell: >
+自然な方法でこれらの記号を Vim 内に出すにはダイグラフショートカットを使う
+(:help |digraphs-use|)。多くの記号が定義されており、`:digraphs` とタイプするこ
+とでその一覧が得られる。便利な方法として、ダイグラフの一覧をファイルに保存して
+それを読んでもよい。シェルからなら: >
         vim +'redir >/tmp/vim-digraphs-listing.txt' +digraphs +'redir END' +q
 
-Some of them are available with standard Vim digraphs:
+標準の Vim のダイグラフにいくつかある:
 	<< «    /0 ∅    !< ≮  ~
 	>> »    Ob ∘    !> ≯  ~
 	., …    00 ∞    (C ⊂  ~
@@ -35,18 +35,18 @@ Some of them are available with standard Vim digraphs:
 	(- ∈    ?= ≅    != ≠  ~
 	-) ∋    ?- ≃  ~
 
-The Greek alphabet is available with '*' followed by a similar Latin symbol:
+ギリシャ文字は '*' の後に同等のラテン文字を続ける:
 	*p π  ~
 	*t τ  ~
 	*X ×  ~
 
-Numbers, subscripts and superscripts are available with 's' and 'S':
+下付きと上付き数値は 's' と 'S' と共に:
 	0s ₀    0S ⁰  ~
 	1s ₁    1S ¹  ~
 	2s ₂    9S ⁹  ~
 
-But some don´t come defined by default. Those are digraph definitions you can
-add in your ~/.vimrc file. >
+しかし、いくつかは標準では定義されていない。それらについては ~/.vimrc ファイル
+にダイグラフの定義を追加することができる。>
 	exec 'digraph \\ '.char2nr('∖')
 	exec 'digraph \< '.char2nr('≼')
 	exec 'digraph \> '.char2nr('≽')
@@ -57,13 +57,13 @@ add in your ~/.vimrc file. >
 	exec 'digraph )/ '.char2nr('⊅')
 	exec 'digraph U+ '.char2nr('⊎')
 	exec 'digraph 0- '.char2nr('⊖')
-	" Euler's constant
+	" オイラー数/ネイピア数
 	exec 'digraph ne '.char2nr('𝑒')
-	" Raku's atomic operations marker
+	" Raku の atomic 演算子記号
 	exec 'digraph @@ '.char2nr('⚛')
 
-Alternatively, you can write Insert mode abbreviations that convert ASCII-
-based operators into their single-character Unicode equivalent. >
+別の方法としては、挿入モードでの短縮入力で ASCII の演算子から同等の Unicode の
+単一文字へ変換することもできる。 >
 	iabbrev <buffer> !(<) ⊄
 	iabbrev <buffer> !(<=) ⊈
 	iabbrev <buffer> !(>) ⊅
