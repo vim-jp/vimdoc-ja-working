@@ -1331,292 +1331,294 @@ TODO: "vim9script" 機能はまだ存在しません。Vim9 script の構文が�
 
 ==============================================================================
 
-9. Rationale						*vim9-rationale*
+9. 言語設計の背景					*vim9-rationale*
 
-The :def command ~
+:def コマンド ~
 
-Plugin writers have asked for much faster Vim script.  Investigations have
-shown that keeping the existing semantics of function calls make this close to
-impossible, because of the overhead involved with calling a function, setting
-up the local function scope and executing lines.  There are many details that
-need to be handled, such as error messages and exceptions.  The need to create
-a dictionary for a: and l: scopes, the a:000 list and several others add too
-much overhead that cannot be avoided.
+プラグインを書く人たちは、より高速な Vim script を求めてきました。調査の結果、
+既存の関数呼び出しのセマンティクスを維持したままでは、高速化はほぼ不可能である
+ことが分かっています。関数呼び出し・ローカル関数のスコープの設定・行の実行にと
+もなうオーバーヘッドがあるからです。エラーメッセージや例外など、処理しなければ
+ならない細かい要素がたくさんあります。a: や l: スコープのための辞書や、a:000
+リストなど、さまざまなものを作る必要があり、これは多くのオーバーヘッドを導入し
+ます。そして、これを回避することはできません。
 
-Therefore the `:def` method to define a new-style function had to be added,
-which allows for a function with different semantics.  Most things still work
-as before, but some parts do not.  A new way to define a function was
-considered the best way to separate the legacy style code from Vim9 style code.
+そのため、新しいスタイルの関数を定義する `:def` メソッドを追加する必要がありま
+した。これにより、異なるセマンティクスを持つ関数を定義することができます。ほと
+んどのものはこれまで通りに動作しますが、そうでない部分もあるでしょう。関数を定
+義する新しい方法は、旧来のスタイルのコードと Vim9 スタイルのコードを分離するた
+めの最良の方法だと考えられました。
 
-Using "def" to define a function comes from Python. Other languages use
-"function" which clashes with legacy Vim script.
-
-
-Type checking ~
-
-When compiling lines of Vim commands into instructions as much as possible
-should be done at compile time.  Postponing it to runtime makes the execution
-slower and means mistakes are found only later.  For example, when
-encountering the "+" character and compiling this into a generic add
-instruction, at runtime the instruction would have to inspect the type of the
-arguments and decide what kind of addition to do.  And when the type is
-dictionary throw an error.  If the types are known to be numbers then an "add
-number" instruction can be used, which is faster.  The error can be given at
-compile time, no error handling is needed at runtime, since adding two numbers
-cannot fail.
-
-The syntax for types, using <type> for compound types, is similar to Java.  It
-is easy to understand and widely used.  The type names are what were used in
-Vim before, with some additions such as "void" and "bool".
+関数定義に "def" を使うのは Python 由来です。"function" を使う言語もあります
+が、これでは旧来の Vim script と衝突してしまいます。
 
 
-Removing clutter and weirdness ~
+型チェック ~
 
-Once decided that `:def` functions have different syntax than legacy functions,
-we are free to add improvements to make the code more familiar for users who
-know popular programming languages.  In other words: remove weird things that
-only Vim does.
+Vim コマンドを命令にコンパイルするとき、できるだけ多くの要素がコンパイル時に処
+理されるべきです。実行時まで延期すると、実行が遅くなるうえ、実行してからでない
+と間違いを見つけられなくなってしまいます。例えば、"+" 文字を見つけてこれを汎用
+的な加算命令にコンパイルした場合、この命令は実行時に引数の型を調べて実行する加
+算の種類を決定しなければなりません。また、型が辞書の場合にはエラーを発生させな
+ければなりません。型が数値であることが分かっている場合は、"数値の加算" 命令を
+使用できます。これはより高速です。エラーをコンパイル時に与えることができ、実行
+時のエラー処理も省略できます。2 つの数値の加算が失敗することはないからです。
 
-We can also remove clutter, mainly things that were done to make Vim script
-backwards compatible with the good old Vi commands.
-
-Examples:
-- Drop `:call` for calling a function and `:eval` for manipulating data.
-- Drop using a leading backslash for line continuation, automatically figure
-  out where an expression ends.
-
-However, this does require that some things need to change:
-- Comments start with # instead of ", to avoid confusing them with strings.
-  This is good anyway, it is known from several popular languages.
-- Ex command ranges need to be prefixed with a colon, to avoid confusion with
-  expressions (single quote can be a string or a mark, "/" can be divide or a
-  search command, etc.).
-
-Goal is to limit the differences.  A good criteria is that when the old syntax
-is accidentally used you are very likely to get an error message.
+複合型に <type> を用いる型の構文は、Java と似ています。これは分かりやすいし、
+広く使われています。型の名前は、旧来の Vim script で使われていたものに、"void"
+や "bool" などを追加したものです。
 
 
-Syntax and semantics from popular languages ~
+雑然とした構文や奇妙な構文の排除 ~
 
-Script writers have complained that the Vim script syntax is unexpectedly
-different from what they are used to.  To reduce this complaint popular
-languages are used as an example.  At the same time, we do not want to abandon
-the well-known parts of legacy Vim script.
+`:def` 関数は旧来の関数と異なる構文を持つと決めたので、一般的なプログラミング
+言語を知っているユーザーにとってより親しみやすいコードにするための改良を自由に
+追加できるようなりました。言い換えれば: Vim script にしかない奇妙な構文を排除
+できるようになったということです。
 
-For many things TypeScript is followed.  It's a recent language that is
-gaining popularity and has similarities with Vim script.  It also has a
-mix of static typing (a variable always has a known value type) and dynamic
-typing (a variable can have different types, this changes at runtime).  Since
-legacy Vim script is dynamically typed and a lot of existing functionality
-(esp. builtin functions) depends on that, while static typing allows for much
-faster execution, we need to have this mix in Vim9 script.
+また、古き良き Vi コマンドとの互換性のために存在していた雑然とした構文も、排除
+できるようになりました。
 
-There is no intention to completely match TypeScript syntax and semantics.  We
-just want to take those parts that we can use for Vim and we expect Vim users
-will be happy with.  TypeScript is a complex language with its own history,
-advantages and disadvantages.  To get an idea of the disadvantages read the
-book: "JavaScript: The Good Parts".  Or find the article "TypeScript: the good
-parts" and read the "Things to avoid" section.
+例:
+- 関数呼び出しのための `:call` と、データ操作のための `:eval` を削除します。
+- 行継続のためのバックスラッシュを削除し、式の終わりを自動的に認識します。
 
-People familiar with other languages (Java, Python, etc.) will also find
-things in TypeScript that they do not like or do not understand.  We'll try to
-avoid those things.
+しかし、これはいくつかの変更を要しました:
+- コメントは " ではなく # で始めます。文字列との混同を避けるためです。これは何
+  にせよ良い変更でしょう。いくつかのポピュラーな言語と同じ方法だからです。
+- Ex コマンドの範囲指定にはコロンを前置する必要があります。式との混同を避ける
+  ためです (シングルクォートが文字列やマークになったり、"/" が除算演算子や検索
+  コマンドになったりします)。
 
-Specific items from TypeScript we avoid:
-- Overloading "+", using it both for addition and string concatenation.  This
-  goes against legacy Vim script and often leads to mistakes.  For that reason
-  we will keep using ".." for string concatenation.  Lua also uses ".." this
-  way.  And it allows for conversion to string for more values.
-- TypeScript can use an expression like "99 || 'yes'" in a condition, but
-  cannot assign the value to a boolean.  That is inconsistent and can be
-  annoying.  Vim recognizes an expression with && or || and allows using the
-  result as a bool.  TODO: to be reconsidered
-- TypeScript considers an empty string as Falsy, but an empty list or dict as
-  Truthy.  That is inconsistent.  In Vim an empty list and dict are also
-  Falsy.
-- TypeScript has various "Readonly" types, which have limited usefulness,
-  since a type cast can remove the immutable nature.  Vim locks the value,
-  which is more flexible, but is only checked at runtime.
+目標は、違いを限定することです。古い構文を誤って使用した場合、エラーになる可能
+性が非常に高いと考えておくとよいでしょう。
 
 
-Declarations ~
+ポピュラーな言語由来の構文とセマンティクス ~
 
-Legacy Vim script uses `:let` for every assignment, while in Vim9 declarations
-are used.  That is different, thus it's good to use a different command:
-`:var`.  This is used in many languages.  The semantics might be slightly
-different, but it's easily recognized as a declaration.
+スクリプトを書く人たちから、Vim script の構文が慣れ親しんだ言語と予想外に異な
+るという不満の声が上がっています。この不満を軽減するため、Vim9 script はポピュ
+ラーな言語を参考にして作られています。同時に、旧来の Vim script のよく知られた
+部分を放棄したくはありません。
 
-Using `:const`  for constants is common, but the semantics varies.  Some
-languages only make the variable immutable, others also make the value
-immutable.  Since "final" is well known from Java for only making the variable
-immutable we decided to use that.  And then `:const` can be used for making
-both immutable.  This was also used in legacy Vim script and the meaning is
-almost the same.
+多くのものは TypeScript を踏襲しています。これは最近人気が出てきた言語で、Vim
+script と似たところがあります。また、静的型付け (変数は常に既知の値の型を持つ)
+と動的型付け (変数は異なる型を持つことができ、型は実行時に決定される) が混在し
+ています。旧来の Vim script は動的型付けであり、既存の機能 (特に組み込み関数)
+の多くはそれに依存していますが、静的型付けははるかに高速な実行を可能にするの
+で、Vim9 script ではこの混在が必要になりました。
 
-What we end up with is very similar to Dart: >
-	:var name	# mutable variable and value
-	:final name	# immutable variable, mutable value
-	:const name	# immutable variable and value
+TypeScript の構文やセマンティクスと完全に一致させるつもりはありません。ただ
+Vim で使える部分が欲しいだけであり、Vim ユーザーが満足することを期待していま
+す。TypeScript は複雑な言語であり、独自の歴史・メリット・デメリットを持ってい
+ます。デメリットを知るには、この本を読んでみてください: "JavaScript. The Good
+Parts"。または、"TypeScript: the good parts" という記事を探して、"Things to
+avoid" というセクションを読んでみてください。
 
-Since legacy and Vim9 script will be mixed and global variables will be
-shared, optional type checking is desirable.  Also, type inference will avoid
-the need for specifying the type in many cases.  The TypeScript syntax fits
-best for adding types to declarations: >
-	var name: string	  # string type is specified
+他の言語 (Java や Python など) に慣れている人でも、TypeScript の中に苦手なこと
+や理解できないことがあると思います。私たちはそのような項目は避けるつもりです。
+
+避けている TypeScript の項目:
+- "+" をオーバーロードして、加算と文字列連結の両方に使用すること。これは旧来の
+  Vim script に反しており、しばしば間違いを引き起こします。そのため、文字列連
+  結には引き続き ".." を使用するのがよいでしょう。これは Lua と同じ方法です。
+  また、これはさまざまな値を文字列に変換できます。
+- TypeScript では、"99 || 'yes'" のような式を条件として使用できますが、その値
+  を boolean に代入することはできません。この仕様は一貫性がなく、やっかいです。
+  Vim では、&& や || を含む式を認識し、その結果を真偽値として使用できます。
+  TODO: 再検討する。
+- TypeScript は空文字列を Falsy とみなしますが、空のリストや辞書は Truthy とみ
+  なします。これには一貫性がありません。Vim では、空のリストや辞書も Falsy と
+  みなします。
+- TypeScript にはさまざまな "Readonly" 型がありますが、その有用性は限られてい
+  ます。というのも、型キャストによって不変性を破棄できるからです。Vim は値を
+  ロックするので、より柔軟性がありますが、実行時にしかチェックされません。
+  {訳注: 最後の文よく分からない}
+
+
+宣言 ~
+
+旧来の Vim script はすべての代入に `:let` を使用しますが、Vim9 では宣言が使用
+されます。これは違うものなので、別のコマンドを使うのがよいでしょう: `:var`。こ
+れは多くの言語で使われています。セマンティクスは少し違うかもしれませんが、宣言
+であると簡単に認識できるでしょう。
+
+定数に `:const` を使うのは一般的ですが、そのセマンティクスはさまざまです。言語
+によっては変数を不変にするだけのものもあれば、値も不変にするものもあります。
+Java では "final" が変数だけを不変にすることがよく知られているので、それを使う
+ことにしました。また、`:const` を使って両方を不変にできるようにしています。こ
+れは旧来の Vim script でも使われていたもので、意味はほとんど同じです。
+
+結局のところ、Dart と似たようなものになりました: >
+	:var name	# 変数と値がともに可変
+	:final name	# 変数は不変で、値は可変
+	:const name	# 変数と値がともに不変
+
+旧来の script と Vim9 script が混在し、グローバル変数が共有されることになるの
+で、オプショナルな型チェックが求められます。また、型推論により多くの場合に型を
+指定する必要がなくなります。宣言に型を追加するには、TypeScript の構文が最も適
+しています: >
+	var name: string	  # 文字列型が指定されています
 	...
 	name = 'John'
-	const greeting = 'hello'  # string type is inferred
+	const greeting = 'hello'  # 文字列型であると推論されます
 
-This is how we put types in a declaration: >
+宣言に型を含める方法は次のとおりです: >
 	var mylist: list<string>
 	final mylist: list<string> = ['foo']
 	def Func(arg1: number, arg2: string): bool
 
-Two alternatives were considered:
-1. Put the type before the name, like Dart: >
+これには 2 つの代替案が検討されました:
+1. 変数名の前に型を書きます。Dart と同様です: >
 	var list<string> mylist
 	final list<string> mylist = ['foo']
 	def Func(number arg1, string arg2) bool
-2. Put the type after the variable name, but do not use a colon, like Go: >
+2. 変数名の後ろに型を書きますが、コロンは使用しません。Go と同様です: >
 	var mylist list<string>
 	final mylist list<string> = ['foo']
 	def Func(arg1 number, arg2 string) bool
 
-The first is more familiar for anyone used to C or Java.  The second one
-doesn't really have an advantage over the first, so let's discard the second.
+1 つ目は、C や Java に慣れている人には馴染みのあるものです。2 つ目は 1 つ目に
+比べてあまりメリットがないので、2 つ目はやめておきましょう。
 
-Since we use type inference the type can be left out when it can be inferred
-from the value.  This means that after `var` we don't know if a type or a name
-follows.  That makes parsing harder, not only for Vim but also for humans.
-Also, it will not be allowed to use a variable name that could be a type name,
-using `var string string` is too confusing.
+私たちは型推論を使用しているので、値から推論できる場合、型は省略可能です。これ
+は、`var` の後ろに型が続くのか名前が続くのか分からないことを意味します。これで
+は、Vim だけでなく、人間にとっても構文解析が難しくなります。また、型の名前にな
+り得る変数名を使用できなくなりますし、`var string string` という記法はたいへん
+まぎらわしいです。
 
-The chosen syntax, using a colon to separate the name from the type, adds
-punctuation, but it actually makes it easier to recognize the parts of a
-declaration.
+選ばれた構文は、名前と型を分離するためにコロンを使用するというものです。余計な
+句読点を追加することになりますが、実際には宣言の各部分を認識しやすくなります。
 
 
-Expressions ~
+式 ~
 
-Expression evaluation was already close to what other languages are doing.
-Some details are unexpected and can be improved.  For example a boolean
-condition would accept a string, convert it to a number and check if the
-number is non-zero.  This is unexpected and often leads to mistakes, since
-text not starting with a number would be converted to zero, which is
-considered false.  Thus using a string for a condition would often not give an
-error and be considered false.  That is confusing.
+式の評価は、すでに他の言語と近い方法で行われていました。しかし、予想外な動きを
+する、改善可能な挙動も存在します。例えば、boolean の条件に文字列を使用できます
+が、その場合、文字列は数値に変換され、数値がゼロではないかどうかがチェックされ
+ます。これは予想外のことで、しばしば間違いを引き起こします。というのも、数字で
+始まらないテキストはゼロに変換され、偽とみなされるからです。このため、条件に文
+字列を使用してもエラーにはならず、偽とみなされることが多くあります。これは紛ら
+わしいですね。
 
-In Vim9 type checking is stricter to avoid mistakes.  Where a condition is
-used, e.g. with the `:if` command and the `||` operator, only boolean-like
-values are accepted:
-	true:  `true`, `v:true`, `1`, `0 < 9`
-	false: `false`, `v:false`, `0`, `0 > 9`
-Note that the number zero is false and the number one is true.  This is more
-permissive than most other languages.  It was done because many builtin
-functions return these values.
+Vim9 では、間違いを避けるために型チェックがより厳しくなっています。`:if` コマ
+ンドや `||` 演算子などの条件が使用される場所では、boolean のような値だけが受け
+入れられます:
+	真: `true`, `v:true`, `1`, `0 < 9`
+	偽: `false`, `v:false`, `0`, `0 > 9`
+Note 数値の 0 は偽、数値の 1 は真とみなされることに注意してください。これは、
+他の多くの言語よりも寛容なものです。多くの組み込み関数がこれらの値を返すため、
+こうする必要がありました。
 
-If you have any type of value and want to use it as a boolean, use the `!!`
-operator:
-	true: !`!'text'`, `!![99]`, `!!{'x': 1}`, `!!99`
-	false: `!!''`, `!![]`, `!!{}`
+何らかの型の値を boolean として使用したい場合は、`!!` 演算子を使用します:
+	真: `!!'text'`, `!![99]`, `!!{'x': 1}`, `!!99`
+	偽: `!!''`, `!![]`, `!!{}`
 
-From a language like JavaScript we have this handy construct: >
+JavaScript などの言語に由来する、このような便利な構文があります: >
 	GetName() || 'unknown'
-However, this conflicts with only allowing a boolean for a condition.
-Therefore the "??" operator was added: >
+しかし、これは条件には boolean しか使えないという決まりと矛盾します。そこ
+で、"??" 演算子が追加されました: >
 	GetName() ?? 'unknown'
-Here you can explicitly express your intention to use the value as-is and not
-result in a boolean. This is called the |falsy-operator|.
+これにより、値をそのまま使い、結果を boolean にしないという意図を明示的に表現
+できます。これは |falsy-operator| と呼ばれています。
 
 
-Import and Export ~
+インポートとエクスポート ~
 
-A problem of legacy Vim script is that by default all functions and variables
-are global.  It is possible to make them script-local, but then they are not
-available in other scripts.  This defies the concept of a package that only
-exports selected items and keeps the rest local.
+旧来の Vim script の問題点の一つとして、デフォルトではすべての関数と変数がグ
+ローバルであることが挙げられます。これらをスクリプトローカルにすることはできま
+すが、そうすると他のスクリプトで利用できなくなります。これは、選択したアイテム
+だけをエクスポートして残りをローカルに保つというパッケージのコンセプトに反する
+ものです。
 
-In Vim9 script a mechanism very similar to the JavaScript import and export
-mechanism is supported.  It is a variant to the existing `:source` command
-that works like one would expect:
-- Instead of making everything global by default, everything is script-local,
-  unless exported.
-- When importing a script the symbols that are imported are explicitly listed,
-  avoiding name conflicts and failures if functionality is added later.
-- The mechanism allows for writing a big, long script with a very clear API:
-  the exported function(s) and class(es).
-- By using relative paths loading can be much faster for an import inside of a
-  package, no need to search many directories.
-- Once an import has been used, it can be cached and loading it again can be
-  avoided.
-- The Vim-specific use of "s:" to make things script-local can be dropped.
+Vim9 script は、JavaScript のインポートとエクスポートによく似たメカニズムをサ
+ポートしています。これは既存の `:source` コマンドの変形であり、期待どおりに動
+作します:
+- デフォルトですべてをグローバルにする代わりに、エクスポートしない限り、すべて
+  をスクリプトローカルにします。
+- スクリプトをインポートするとき、インポートされるシンボルが明示的にリストアッ
+  プされるため、機能を追加する際に起こる名前の競合や失敗を回避できます。
+- このメカニズムにより、巨大なスクリプトにとても分かりやすい API を組み込むこ
+  とができます: エクスポートされた関数とクラスのことです。
+- 相対パスを使用することで、パッケージ内でインポートする場合の読み込みが格段に
+  速くなり、多くのディレクトリを検索する必要がなくなります。
+- インポートが行われると、結果がキャッシュされるため、再読み込みを回避できま
+  す。
+- アイテムをスクリプトローカルにするために "s:" を付ける必要がなくなります。
 
-When sourcing a Vim9 script from a legacy script, only the items defined
-globally can be used, not the exported items.  Alternatives considered:
-- All the exported items become available as script-local items.  This makes
-  it uncontrollable what items get defined and likely soon leads to trouble.
-- Use the exported items and make them global.  Disadvantage is that it's then
-  not possible to avoid name clashes in the global namespace.
-- Completely disallow sourcing a Vim9 script, require using `:import`.  That
-  makes it difficult to use scripts for testing, or sourcing them from the
-  command line to try them out.
-Note that you can also use `:import` in legacy Vim script, see above.
-
-
-Compiling functions early ~
-
-Functions are compiled when called or when `:defcompile` is used.  Why not
-compile them early, so that syntax and type errors are reported early?
-
-The functions can't be compiled right away when encountered, because there may
-be forward references to functions defined later.  Consider defining functions
-A, B and C, where A calls B, B calls C, and C calls A again.  It's impossible
-to reorder the functions to avoid forward references.
-
-An alternative would be to first scan through the file to locate items and
-figure out their type, so that forward references are found, and only then
-execute the script and compile the functions.  This means the script has to be
-parsed twice, which is slower, and some conditions at the script level, such
-as checking if a feature is supported, are hard to use.  An attempt was made
-to see if it works, but it turned out to be impossible to make work nicely.
-
-It would be possible to compile all the functions at the end of the script.
-The drawback is that if a function never gets called, the overhead of
-compiling it counts anyway.  Since startup speed is very important, in most
-cases it's better to do it later and accept that syntax and type errors are
-only reported then.  In case these errors should be found early, e.g. when
-testing, the `:defcompile` command will help out.
+旧来の Vim script から Vim9 script を読み込んだ場合 {訳注: :source した場合}、
+使えるようになるのはグローバルに定義されたアイテムだけであり、エクスポートされ
+たアイテムは使えるようにはなりません。これについては以下の代替案が検討されてい
+ます:
+- エクスポートされたすべてのアイテムをスクリプトローカルなアイテムとして利用で
+  きるようにします。しかし、これでは定義するアイテムを自由に選べないので、トラ
+  ブルが起こりそうです。
+- エクスポートされたアイテムをグローバルなアイテムとして利用できるようにしま
+  す。デメリットは、グローバルな名前空間における名前の衝突を回避できないことで
+  す。
+- Vim9 script を読み込むことを完全に禁止して、`:import` の使用を要求します。し
+  かし、これではスクリプトをテスト用に使用したり、コマンドラインから読み込んで
+  試したりすることが、難しくなってしまいます。
+Note 旧来の Vim script で `:import` を使用することもできます。上記を参照してく
+ださい。
 
 
-Why not use an embedded language? ~
+関数の早期コンパイル ~
 
-Vim supports interfaces to Perl, Python, Lua, Tcl and a few others.  But
-these interfaces have never become widely used, for various reasons.  When
-Vim9 was designed a decision was made to make these interfaces lower priority
-and concentrate on Vim script.
+関数は、呼び出されたとき、または `:defcompile` が使用されたときにコンパイルさ
+れます。なぜ関数を早期にコンパイルして、構文エラーや型のエラーを早期に報告でき
+るようにしていないのでしょうか?
 
-Still, plugin writers may find other languages more familiar, want to use
-existing libraries or see a performance benefit.  We encourage plugin authors
-to write code in any language and run it as an external tool, using jobs and
-channels.  We can try to make this easier somehow.
+関数は出会ってすぐにはコンパイルできません。なぜなら、関数は後から定義される関
+数への前方参照を持っているかもしれないからです。関数 A、B、C が定義されていて、
+A が B を、B が C を、C が A を呼び出す場合を考えてみてください。この場合、関
+数を並べ替えて前方参照を回避することはできません。
 
-Using an external tool also has disadvantages.  An alternative is to convert
-the tool into Vim script.  For that to be possible without too much
-translation, and keeping the code fast at the same time, the constructs of the
-tool need to be supported.  Since most languages support classes the lack of
-support for classes in Vim is then a problem.
+別の方法としては、まずファイルをスキャンしてファイル内のアイテムとその型をすべ
+て洗い出し、前方参照を見つけられるようにしてから、スクリプトを実行して関数をコ
+ンパイルするというものが考えられます。しかし、これではスクリプトを 2 回解析し
+なければならず、時間がかかります。また、特定の機能がサポートされているかどうか
+のチェックなど、スクリプトレベルの条件の中には扱いづらいものがあります。この方
+法が動作するかどうかの試みは行われましたが、きれいに動作させることは不可能であ
+ることが分かりました。
+
+スクリプトの最後にすべての関数をコンパイルすることもできるでしょう。欠点は、あ
+る関数が一度も呼び出されなかった場合、そのコンパイルにかけた時間がオーバーヘッ
+ドになってしまうことです。起動速度はとても重要なので、たいていの場合、関数は後
+からコンパイルして、構文エラーと型のエラーはそのときに報告されるという動作を受
+け入れることにしたほうがよいでしょう。早期にエラーを発見する必要がある場合、た
+とえばテストの場合には、`:defcompile` コマンドが役に立ちます。
 
 
-Classes ~
+なぜ埋め込み型の言語を使わないのか? ~
 
-Vim supports a kind-of object oriented programming by adding methods to a
-dictionary.  With some care this can be made to work, but it does not look
-like real classes.  On top of that, it's quite slow, because of the use of
-dictionaries.
+Vim は Perl、Python、Lua、Tcl などのインターフェイスをサポートしています。しか
+し、これらのインターフェイスは、さまざまな理由により普及しませんでした。Vim9
+が設計されたとき、これらのインターフェイスの優先順位を下げ、Vim script に集中
+することが決定されました。
 
-The support of classes in Vim9 script is a "minimal common functionality" of
-class support in most languages.  It works much like Java, which is the most
-popular programming language.
+しかし、プラグインを書くとき、他の言語のほうが親しみやすいと感じたり、既存のラ
+イブラリを使いたいと思ったり、パフォーマンス上のメリットを感じたりするかもしれ
+ません。私たちは、プラグインの作者が他の言語でコードを書き、ジョブやチャネルを
+使ってプラグインを外部ツールとして実行することを奨励しています。私たちは、これ
+をどうにかして簡単にできないかと考えています。
+
+外部ツールを使用することのデメリットもあります。別の方法として、ツールを Vim
+script に変換するというものもあります。少しの翻訳で変換を実現し、同時にコード
+を高速に保つためには、ツールの構築をサポートする必要があるでしょう。たいていの
+言語はクラスをサポートしているので、Vim でクラスがサポートされていないのは問題
+です。
+
+
+クラス ~
+
+Vim では、辞書にメソッドを追加することで一種のオブジェクト指向プログラミングを
+することができます。これは、少し注意すればうまく動きますが、本当のクラスのよう
+には見えません。そのうえ、辞書を使っているので、かなり遅いです。
+
+Vim9 script のクラスがサポートするのは、他の多くの言語のクラスの "最小限の共通
+機能" です。これは、最も人気のあるプログラミング言語である Java とよく似た機能
+になります。
 
 
 
