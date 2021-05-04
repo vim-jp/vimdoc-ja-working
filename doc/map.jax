@@ -260,7 +260,7 @@ s:InsertDot() 関数の戻り値が挿入されます。カーソルの前のテ
 	nnoremap <expr> <F3> <SID>OpenPopup()
 
 また、前のコマンドが実行される前に、先行入力を探す時に式が評価されることがある
-ことを覚えておいてください。例えば: >
+ことを覚えておいてください。例: >
 	func StoreColumn()
 	  let g:column = col('.')
 	  return 'x'
