@@ -1326,7 +1326,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:edit|		:e[dit]		ファイルの編集
 |:earlier|	:ea[rlier]	バッファを時間的に前の状態に戻す。アンドゥ
 |:echo|		:ec[ho]		式の結果を表示する
-|:echoconsole|	:echoc[onsole]	:echomsgと同じだが、 stdout に出力する
+|:echoconsole|	:echoc[onsole]	:echomsgと同じだが、stdout に出力する
 |:echoerr|	:echoe[rr]	:echoと同じだが、エラー表示し、履歴に残す
 |:echohl|	:echoh[l]	echoコマンドで使用する強調表示を設定する
 |:echomsg|	:echom[sg]	:echoと同じだが、履歴に残す
