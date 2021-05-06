@@ -15,7 +15,7 @@ Unicode の記号を用いた新しい演算子が定義されており、あな
 https://perl6advent.wordpress.com/2012/12/18/day-18-formulas-resistance-is-futile/
 
 Raku は基本的な演算子については ASCII での代替定義をしているが(参照
-https://docs.raku.org/language/unicode_ascii)、Unicode 演算子の全範囲が使える
+https://docs.raku.org/language/unicode_ascii )、Unicode 演算子の全範囲が使える
 のが望しい。あなたのオペレーティングシステムが提供する入力環境で、Vim がその機
 能を使えるようにビルドされるのがより望しい。
 
