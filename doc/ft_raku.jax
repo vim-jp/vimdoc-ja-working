@@ -46,7 +46,7 @@ https://docs.raku.org/language/unicode_ascii)、Unicode 演算子の全範囲が
 	2s ₂    9S ⁹  ~
 
 しかし、いくつかは標準では定義されていない。それらについては ~/.vimrc ファイル
-にダイグラフの定義を追加することができる。>
+にダイグラフの定義を追加することができる。 >
 	exec 'digraph \\ '.char2nr('∖')
 	exec 'digraph \< '.char2nr('≼')
 	exec 'digraph \> '.char2nr('≽')
