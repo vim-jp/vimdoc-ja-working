@@ -25,6 +25,14 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
 ==============================================================================
 
+1. タグの重複					*Vim9-script*
+
+ここではPRの動作を確認するためのマージしない変更をいれています。
+nvcheckで検知できるものとして、たとえば アイディア は アイデアに修正されるはず
+です
+
+==============================================================================
+
 1. Vim9 script とは					*Vim9-script*
 
 THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
