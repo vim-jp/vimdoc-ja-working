@@ -30,6 +30,18 @@ jobs:
           vim -eu tools/maketags.vim
 
           cd ..
+      - name: Lock mutex
+        uses: shogo82148/actions-mutex@v1
+        with:
+          key: ${{ github.job }}
+      - name: Update target
+        run: |
+          cd target
+          # update latest
+          git pull --rebase
+          cd ..
+      - name: Install new document
+        run: |
           # install
           rsync -rlptD --delete-after work/doc/ target/doc
           rsync -rlptD --delete-after work/syntax/ target/syntax
@@ -75,6 +87,18 @@ jobs:
           make html
 
           cd ..
+      - name: Lock mutex
+        uses: shogo82148/actions-mutex@v1
+        with:
+          key: ${{ github.job }}
+      - name: Update target
+        run: |
+          cd target
+          # update latest
+          git pull --rebase
+          cd ..
+      - name: Install new document
+        run: |
           # install
           cp work/target/html/doc/*.html target
       - name: Commit updated master branch
