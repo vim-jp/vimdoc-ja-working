@@ -783,13 +783,13 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	Note: このオプションがオンになっていると動かないプラグインがある。
 
 			*'autoshelldir'* *'asd'* *'noautoshelldir'* *'noasd'*
-'autoshelldir' 'asd'	boolean (default off)
-			global
-	When on, Vim will change the current working directory whenever you
-	change the directory of the shell running in a terminal window. You
-	need proper setting-up, so whenever the shell's pwd changes an OSC 7
-	escape sequence will be emitted. For example, on Linux, you can source
-	/etc/profile.d/vte.sh in your shell profile if you use bash or zsh.
+'autoshelldir' 'asd'	切替	(既定ではオフ)
+			グローバル
+	オンの時、Vim は端末ウィンドウで動いているシェルのディレクトリが変更さ
+	れる度に、現在のワーキングディレクトリを変更する。適切な設定がされる必
+	要があり、シェルが pwd を変更する度に OSC 7 エスケープシーケンスを出力
+	しないといけない。例として、Linuxなら、あなたのシェルが bash か zsh で
+	profile で /etc/profile.d/vte.sh を読み込む場合である。
 
 				*'arabic'* *'arab'* *'noarabic'* *'noarab'*
 'arabic' 'arab'		切替	(既定ではオフ)
@@ -8822,9 +8822,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	"longest"	共通する最長の文字列までが補完される。それ以上長い文字
 			列を補完できないときは、次の候補に移る。
 	"list"		複数のマッチがあるときは、全てのマッチを羅列する。
-	"lastused"	When completing buffer names and more than one buffer
-			matches, sort buffers by time last used (other than
-			the current buffer).
+	"lastused"	バッファ名が補完され1より多くマッチした時、バッファを
+			最終利用時刻でソートする (カレントバッファ以外)。
 	マッチが1個しかないときは、どの場合でも完全に補完される。
 
 	コロン区切りで利用できる例:
@@ -8901,8 +8900,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	考慮したより賢い方法でスクロールする。
 	Vimウィンドウをリサイズするとき、このオプションの値が1より小さいか
 	'lines' 以上ならば 'lines' - 1 に設定される。
-	Note: Do not confuse this with the height of the Vim window, use
-	'lines' for that.
+	Note: Vim のウィンドウの高さと混同しない、それには 'lines' を利用する
+	こと。
 
 						*'winheight'* *'wh'* *E591*
 'winheight' 'wh'	数値	(既定では 1)
