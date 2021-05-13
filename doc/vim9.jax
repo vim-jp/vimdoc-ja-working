@@ -1137,7 +1137,7 @@ map() を使って} 要素の型を数値型などの特定の型に変更する
 
 THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 
-Vim9 script はインポートすることができます。これは、エクスポートされない限り、
+Vim9 script をインポートすることができます。これは、エクスポートされない限り、
 Vim9 script 内のすべてのアイテムがスクリプトローカルになること意味します。他の
 スクリプトでインポートできるのは、Vim9 script 内でエクスポートされたアイテムだ
 けです。
