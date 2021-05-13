@@ -916,7 +916,7 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 て書かれました: https://github.com/lacygoill/wiki/blob/master/vim/vim9.md
 
 関数が定義されているスクリプトが Vim9 script である場合、{訳注: 関数の中から}
-スクリプトローカルな変数にアクセスするのに "s:" プレフィックスは必要ありませ
+スクリプトローカルな変数にアクセスするのに "s:" プリフィックスは必要ありませ
 ん。ただし、スクリプトローカルな変数は関数のコンパイル時には定義されていなけれ
 ばなりません。スクリプトが旧来のスクリプトで、コンパイル時に変数が未定義となる
 場合は、"s:" を付ける必要があります。
