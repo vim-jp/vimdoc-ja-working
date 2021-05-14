@@ -10,7 +10,7 @@ vim-raku はシンタックスハイライト、インデント、その他 Raku
 ==============================================================================
 1. Raku ファイル内での Unicode の利用                         *raku-unicode*
 
-Unicode の記号を用いた新しい演算子が定義されており、あなたの Raku プログラムを
+Unicode の記号を用いて新しい演算子を定義することは、あなたの Raku プログラムを
 読み易くする良い方法である。参照:
 https://perl6advent.wordpress.com/2012/12/18/day-18-formulas-resistance-is-futile/
 
