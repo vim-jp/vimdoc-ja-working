@@ -4,14 +4,14 @@ cd "$GITHUB_WORKSPACE" || true
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
-# find doc -name \*.jax -print0 | xargs -0 nvcheck        \
-#       | reviewdog -f=checkstyle                         \
-#         -name="${INPUT_TOOL_NAME}"                      \
-#         -reporter="${INPUT_REPORTER:-github-pr-review}" \
-#         -filter-mode="${INPUT_FILTER_MODE}"             \
-#         -fail-on-error="${INPUT_FAIL_ON_ERROR}"         \
-#         -level="${INPUT_LEVEL}"                         \
-#         ${INPUT_REVIEWDOG_FLAGS}
+find doc -name \*.jax -print0 | xargs -0 nvcheck        \
+      | reviewdog -efm="%f:%l: %m"                      \
+        -name="${INPUT_TOOL_NAME}"                      \
+        -reporter="${INPUT_REPORTER:-github-pr-review}" \
+        -filter-mode="${INPUT_FILTER_MODE}"             \
+        -fail-on-error="${INPUT_FAIL_ON_ERROR}"         \
+        -level="${INPUT_LEVEL}"                         \
+        ${INPUT_REVIEWDOG_FLAGS}
 
 # github-pr-review only diff adding
 if [ "${INPUT_REPORTER}" = "github-pr-review" ]; then
