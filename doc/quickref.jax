@@ -1456,7 +1456,7 @@
 		set foldmethod=marker	'foldmarker' で折り畳み
 
 |zf|		zf{motion}		手動で折り畳みを定義する
-|:fold|		:{range}fold		{range}範囲の行を折畳む
+|:fold|		:{range}fold		{range}範囲の行を折り畳む
 |zd|		zd			カーソル下の1つの折り畳みを削除する
 |zD|		zD			カーソル下の全ての折り畳みを削除する
 
@@ -1466,12 +1466,12 @@
 |zC|		zC			カーソル下の折り畳みを全段閉じる
 
 |zm|		zm			'foldlevel' を減らし、折り畳みを増やす
-|zM|		zM			'foldlevel' を0にし、全て折畳む
-|zr|		zr			'foldlevel' を増やし、折畳を減らす
+|zM|		zM			'foldlevel' を0にし、全て折り畳む
+|zr|		zr			'foldlevel' を増やし、折り畳みを減らす
 |zR|		zR			'foldlevel' を最大にし、全て開く
 
 |zn|		zn			'foldenable' を無効にし、折り畳み無し
-|zN|		zN			'foldenable' を有効にし、折畳む
+|zN|		zN			'foldenable' を有効にし、折り畳む
 |zi|		zi			'foldenable' を反転させる
 
  vim:tw=78:ts=8:noet:ft=help:norl:
