@@ -4,6 +4,7 @@ cd "$GITHUB_WORKSPACE" || true
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
+reviewdog_exit_val="0"
 find doc -name \*.jax -print0 | xargs -0 nvcheck        \
       | reviewdog -efm="%f:%l: %m"                      \
         -name="${INPUT_TOOL_NAME}"                      \
@@ -11,7 +12,7 @@ find doc -name \*.jax -print0 | xargs -0 nvcheck        \
         -filter-mode="${INPUT_FILTER_MODE}"             \
         -fail-on-error="${INPUT_FAIL_ON_ERROR}"         \
         -level="${INPUT_LEVEL}"                         \
-        ${INPUT_REVIEWDOG_FLAGS}
+        ${INPUT_REVIEWDOG_FLAGS} || reviewdog_exit_val="$?"
 
 # github-pr-review only diff adding
 if [ "${INPUT_REPORTER}" = "github-pr-review" ]; then
@@ -33,6 +34,11 @@ if [ "${INPUT_REPORTER}" = "github-pr-review" ]; then
 
   git restore . || true
   rm -f "${TMPFILE}"
+fi
+
+# Throw error if an error occurred and fail_on_error is true
+if [ "${INPUT_FAIL_ON_ERROR}" = "true" -a "${reviewdog_exit_val}" != "0" ]; then
+  exit 1
 fi
 
 # EOF
