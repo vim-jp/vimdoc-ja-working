@@ -624,7 +624,7 @@ fish の場合、設定ファイルに以下の設定を追加する。
 
 MARKDOWN                                                *ft-markdown-plugin*
 
-折畳を有効にするには、次のようにする: >
+折り畳みを有効にするには、次のようにする: >
         let g:markdown_folding = 1
 <
 
