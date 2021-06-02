@@ -10069,6 +10069,7 @@ strcharpart({src}, {start} [, {len} [, {skipcc}]])		*strcharpart()*
 		|method| としても使用できる: >
 			GetText()->strcharpart(5)
 
+
 strchars({expr} [, {skipcc}])					*strchars()*
 		結果は数値で、文字列 {expr} の文字の数を返す。
 		{skipcc} を省略またはゼロを指定すると、合成文字は別々にカウン
