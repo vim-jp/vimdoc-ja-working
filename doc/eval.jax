@@ -5991,7 +5991,7 @@ getwininfo([{winid}])					*getwininfo()*
 		る情報が返される。
 
 		リストの各項目は次のエントリを持つ辞書 |Dictionary| である:
-			botline		最後に表示された完全なバッファ行
+			botline		ウィンドウの最も下の完全なバッファ行
 			bufnr		ウィンドウ内のバッファ番号
 			height		ウィンドウの高さ (winbarを除く)
 			loclist		locationリストを表示してる場合は1
@@ -6004,7 +6004,7 @@ getwininfo([{winid}])					*getwininfo()*
 			terminal	端末ウィンドウの場合は 1
 					{only with the +terminal feature}
 			tabnr		タブページ番号
-			topline		最初に表示されたバッファ行
+			topline		ウィンドウの最も上のバッファ行
 			variables	ウィンドウローカル変数の辞書への参照
 			width		ウィンドウ幅
 			winbar		ウィンドウがツールバーを持っていれば
