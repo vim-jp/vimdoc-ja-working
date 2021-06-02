@@ -10061,7 +10061,6 @@ strcharpart({src}, {start} [, {len} [, {skipcc}]])		*strcharpart()*
 		れる。
 		{skipcc} を 1 にすると、|slice()| と同様に合成文字は無視され
 		る。
-
 		文字インデックスが存在しない文字を指す場合、それは 1 つの文字
 		としてカウントされるが、戻り値には現れない。例: >
 			strcharpart('abc', -1, 2)
