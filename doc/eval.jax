@@ -6004,7 +6004,7 @@ getwininfo([{winid}])					*getwininfo()*
 			terminal	端末ウィンドウの場合は 1
 					{only with the +terminal feature}
 			tabnr		タブページ番号
-			topline		ウィンドウの最も上のバッファ行
+			topline		最上に表示されたバッファ行
 			variables	ウィンドウローカル変数の辞書への参照
 			width		ウィンドウ幅
 			winbar		ウィンドウがツールバーを持っていれば
