@@ -1001,6 +1001,7 @@ Vimサーバー:					*server-functions*
 	test_garbagecollect_now()   直ちにメモリを解放する
 	test_garbagecollect_soon()  メモリを解放のフラグを設定する
 	test_getvalue()		内部変数の値を取得する
+	test_gui_drop_files()	ウィンドウにファイルをドロップする
 	test_gui_mouse_event()	インプットバッファにGUIマウスイベントを追加する
 	test_ignore_error()	特定のエラーメッセージを無視する
 	test_null_blob()	null の Blob を返す
