@@ -1,4 +1,4 @@
-*options.txt*	For Vim version 8.2.  Last change: 2021 May 15
+*options.txt*	For Vim version 8.2.  Last change: 2021 May 31
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -2384,6 +2384,23 @@ A jump table for the options with a short description can be found at |Q_op|.
 			you write the file the encrypted bytes will be
 			different.  The whole undo file is encrypted, not just
 			the pieces of text.
+					*E1193* *E1194* *E1195* *E1196*
+					*E1197* *E1198* *E1199* *E1200* *E1201*
+	   xchacha20	XChaCha20 Cipher with Poly1305 Message Authentication
+			Code.  Medium strong till strong encryption.
+			Encryption is provided by the libsodium library, it
+			requires Vim to be built with |+sodium|
+			It adds a seed and a message authentication code (MAC)
+			to the file.  This needs at least a Vim 8.2.3022 to
+			read the encrypted file.
+			Encryption of swap files is not supported, therefore
+			no swap file will be used when xchacha20 encryption is
+			enabled.
+			Encryption of undo files is not yet supported,
+			therefore no undo file will currently be written.
+			CURRENTLY EXPERIMENTAL: Files written with this method
+			might have to be read back with the same version of
+			Vim if the binary format changes later.
 
 	You should use "blowfish2", also to re-encrypt older files.
 
@@ -2828,7 +2845,8 @@ A jump table for the options with a short description can be found at |Q_op|.
 	|setcellwidths()| function to change the behavior.
 
 					*'encoding'* *'enc'* *E543*
-'encoding' 'enc'	string (default: "latin1" or value from $LANG)
+'encoding' 'enc'	string (default for MS-Windows: "utf-8",
+				otherwise: value from $LANG or "latin1")
 			global
 	Sets the character encoding used inside Vim.  It applies to text in
 	the buffers, registers, Strings in expressions, text stored in the
@@ -3115,9 +3133,10 @@ A jump table for the options with a short description can be found at |Q_op|.
 	because Vim cannot detect an error, thus the encoding is always
 	accepted.
 	The special value "default" can be used for the encoding from the
-	environment.  This is the default value for 'encoding'.  It is useful
-	when 'encoding' is set to "utf-8" and your environment uses a
-	non-latin1 encoding, such as Russian.
+	environment.  On MS-Windows this is the system encoding.  Otherwise
+	this is the default value for 'encoding'.  It is useful when
+	'encoding' is set to "utf-8" and your environment uses a non-latin1
+	encoding, such as Russian.
 	When 'encoding' is "utf-8" and a file contains an illegal byte
 	sequence it won't be recognized as UTF-8.  You can use the |8g8|
 	command to find the illegal byte sequence.
@@ -7494,6 +7513,8 @@ A jump table for the options with a short description can be found at |Q_op|.
 'switchbuf' 'swb'	string	(default "")
 			global
 	This option controls the behavior when switching between buffers.
+	Mostly for |quickfix| commands some values are also used for other
+	commands, as mentioned below.
 	Possible values (comma separated list):
 	   useopen	If included, jump to the first open window that
 			contains the specified buffer (if there is one).
