@@ -2047,9 +2047,6 @@ v:numbermax	数値の最大値。
 					*v:numbermin* *numbermin-variable*
 v:numbermin	数値の最小値(負数)。
 
-					*v:numbermin* *numbermin-variable*
-v:numbermin	数値の最小値(負数)
-
 					*v:numbersize* *numbersize-variable*
 v:numbersize	数値のビット数。これは通常64で、システムによっては32になること
 		がある。
