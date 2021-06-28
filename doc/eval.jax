@@ -6630,7 +6630,7 @@ islocked({expr})					*islocked()* *E786*
 
 <		{expr}が存在しない変数のときはエラーメッセージが表示される。変
 		数の存在を確認するには|exists()|を使う。
-		Vim9 script ではローカル変数に対して動作しない。
+		Vim9 script ではローカル変数に対しては動作しない。
 
 		|method| としても使用できる: >
 			GetName()->islocked()
