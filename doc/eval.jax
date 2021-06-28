@@ -5752,7 +5752,7 @@ getqflist([{what}])					*getqflist()*
 			module	モジュール名
 			lnum	バッファ中の行番号(最初の行は1)
 			end_lnum
-				項目が複数行を指すときの最後の行
+				項目が複数行のときの最後の行
 			col	桁番号(最初の桁は1)
 			end_col	項目が範囲を持つときの最後の桁
 			vcol	|TRUE|: "col" は画面上の桁
