@@ -1911,7 +1911,7 @@ v:fcs_choice	|FileChangedShell|イベントが発生した後に何をすべき�
 		ときと同じ動作になり、警告メッセージは表示されない。
 
 					*v:fname* *fname-variable*
-v:fname		'includeexpr'によって設定されたファイル名。されてなければ空。
+v:fname		'includeexpr' によって設定されたファイル名。または空。
 
 					*v:fname_in* *fname_in-variable*
 v:fname_in	入力ファイルの名前。以下のオプションを評価している最中のみ
