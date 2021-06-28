@@ -5652,11 +5652,11 @@ getmarklist([{expr}])					*getmarklist()*
 		|bufname()| を参照。
 
 		戻り値のリストの各要素は以下の内容の辞書|Dict|になっている:
-		    mark  接頭辞 "'" が付いたマークの名前
-		    pos   マークの位置のリスト|List|:
+		    mark   接頭辞 "'" が付いたマークの名前
+		    pos    マークの位置のリスト|List|:
 				[bufnum, lnum, col, off]
 		       詳細は |getpos()| を参照。
-		    file  ファイル名
+		    file   ファイル名
 
 		特定のマークについて取得した情報の詳細は |getpos()| を参照。
 
