@@ -11662,7 +11662,7 @@ scrollbind		'scrollbind' をサポート (常に true)
 showcmd			'showcmd' をサポート
 signs			|:sign|をサポート
 smartindent		'smartindent' をサポート
-sodium			libsodium ライブラリによるよりよい暗号のサポート
+sodium			libsodium ライブラリによるより良い暗号のサポート
 sound			サウンド再生をサポート。例えば、`sound_playevent()`
 spell			スペルチェックをサポート |spell|
 startuptime		|--startuptime| をサポート
