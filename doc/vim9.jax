@@ -192,7 +192,7 @@ Vim9 関数 ~
 	def MyFunc(one = 'one', last = 'last')
 	  ...
 	enddef
-	MyFunc(v:none, 'LAST')  # 第一引数はデフォルト値 'one' を使用する
+	MyFunc(v:none, 'LAST')  # 第1引数はデフォルト値 'one' を使用する
 <
 						*vim9-ignored-argument*
 引数 "_" (アンダースコア) を使うことで引数を無視できます。これは引数は要らない
