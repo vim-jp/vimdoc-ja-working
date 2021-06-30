@@ -947,8 +947,8 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 			新しい関数を {name} という名前で定義します。関数の本体
 			は、次の行から対応する `:enddef` まで続きます。
 
-			{return-type} が省略されたか "void" である場合、関数は
-			何も返さないことが期待されます。
+			{return-type} が省略されるか "void" の場合、関数は何も
+			返さないことが期待されます。
 
 			{arguments} は引数の宣言を 0 個以上並べたものです。3
 			つの形式があります:
