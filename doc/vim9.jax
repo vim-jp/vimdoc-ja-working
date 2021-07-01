@@ -993,9 +993,8 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 						*:disa* *:disassemble*
 :disa[ssemble] {func}	{func} に対して生成された命令を表示します。
 			これはデバッグとテスト用です。
-			Note コマンドラインで {func} を補完するとき、"s:" を前
-			置することでスクリプトローカルな関数を見つけることがで
-			きます。
+			Note {func} のコマンドライン補完では、"s:" を先頭に追
+			加してスクリプトローカル関数を見つけることができます。
 
 :disa[ssemble] profile {func}
 			`:disassemble` と同様ですが、プロファイリング用の命令
