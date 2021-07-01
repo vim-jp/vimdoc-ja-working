@@ -1193,9 +1193,9 @@ Vim9 script ではエラーになります: >
 	map([1, 2, 3], (i, v) => 'item ' .. i)
 	E1012: Type mismatch; expected number but got string
 代わりに |mapnew()| を使ってください。要素の型が "any" である場合は {訳注:
-map() を使って} 要素の型を数値型などの特定の型に変更できます。同様に
-|extend()| の代わりに |extendnew()| を、|flatten()| の代わりに|flattennew()|
-を使ってください。
+map() を使って} 要素の型を数値型などの特定の型に変更できます。
+同様に |extend()| の代わりに |extendnew()| を、|flatten()| の代わりに
+|flattennew()| を使ってください。
 
 ==============================================================================
 
