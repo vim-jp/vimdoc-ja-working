@@ -3024,8 +3024,8 @@ test_garbagecollect_now()	なし	テスト用に直ちにメモリを解放す�
 test_garbagecollect_soon()	なし	テスト用にすぐにメモリを解放する
 test_getvalue({string})		任意	内部変数の値を取得する
 test_gui_drop_files({list}, {row}, {col}, {mods})
-				なし	{list} のファイルをウィンドウにドロッ
-					プする
+				なし	ファイルのリストをウィンドウにドロップ
+					する
 test_gui_mouse_event({button}, {row}, {col}, {repeated}, {mods})
 				なし	マウスイベントを入力バッファへ追加する
 test_ignore_error({expr})	なし	特定のエラーを無視する
