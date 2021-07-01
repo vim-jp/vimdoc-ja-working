@@ -5754,7 +5754,7 @@ getqflist([{what}])					*getqflist()*
 			end_lnum
 				項目が複数行のときの最後の行番号
 			col	桁番号(最初の桁は1)
-			end_col	項目が範囲を持つときの最後の桁
+			end_col	項目が範囲を持つときの最後の桁番号
 			vcol	|TRUE|: "col" は画面上の桁
 				|FALSE|: "col" はバイトインデックス
 			nr	エラー番号
