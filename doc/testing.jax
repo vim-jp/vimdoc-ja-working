@@ -81,40 +81,40 @@ test_getvalue({name})					*test_getvalue()*
 <
 						*test_gui_drop_files()*
 test_gui_drop_files({list}, {row}, {col}, {mods})
-		Drop one or more files in {list} in the window at {row}, {col}.
-		This function only works when the GUI is running.
-		
-		The supported values for {mods} are:
+		{list} の1つ以上のファイルをウィンドウの {row} 行 {col} 列にド
+		ロップする。この関数はGUIで実行している時に動作する。
+
+		{mods} としてサポートされる値:
 			0x4	Shift
 			0x8	Alt
 			0x10	Ctrl
-		The files are added to the argument list and the first file in
-		{list} is edited in the window.  See |drag-n-drop| for more
-		information.
+		ファイルは引数のリストに追加され、{list} の最初のファイルが現
+		在のウィンドウで編集状態になる。詳細は |drag-n-drop| を参照。
 
 						*test_gui_mouse_event()*
 test_gui_mouse_event({button}, {row}, {col}, {multiclick}, {modifiers})
-		Inject a mouse button click event.  This function only works
-		when the GUI is running.
-		The supported values for {button} are:
-			0	right mouse button
-			1	middle mouse button
-			2	left mouse button
-			3	mouse button release
-			4	scroll wheel down
-			5	scroll wheel up
-			6	scroll wheel left
-			7	scroll wheel right
-		{row} and {col} specify the location of the mouse click. The
-		first row of the Vim window is 1 and the last row is 'lines'.
-		The maximum value of {col} is 'columns'.
-		To inject a multiclick event, set {multiclick} to 1.
-		The supported values for {modifiers} are:
-			4	shift is pressed
-			8	alt is pressed
-			16	ctrl is pressed
-		After injecting the mouse event you probably should call
-		|feedkeys()| to have them processed, e.g.: >
+		マウスボタンのクリックイベントを注入する。この関数はGUIで実行
+		している時に動作する。
+		{button} としてサポートされる値:
+			0	右マウスボタン
+			1	中央マウスボタン
+			2	左マウスボタン
+			3	マウスボタン開放
+			4	スクロールホイール下
+			5	スクロールホイール上
+			6	スクロールホイール左
+			7	スクロールホイール右
+		{row} 行と {col} 列はマウスクリックの位置を明示する。Vim のウィ
+		ンドウで最初の行番号は1で最後の行番号は 'lines' になる。{col}
+		の最大値は 'columns' になる。
+		マルチクリックイベントを注入するには、{multiclick} に1を設定す
+		る。
+		{modifiers} としてサポートされる値:
+			4	shiftキーが押されている
+			8	altキーが押されている
+			16	ctrlキーが押されている
+		マウスイベントの注入後、処理のためにおそらく |feedkeys()| を呼
+		ぶ必要があるだろう、例: >
 			call feedkeys("y", 'Lx!')
 
 test_ignore_error({expr})			 *test_ignore_error()*
