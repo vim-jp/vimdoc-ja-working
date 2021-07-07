@@ -104,9 +104,9 @@ test_gui_mouse_event({button}, {row}, {col}, {multiclick}, {modifiers})
 			5	スクロールホイール上
 			6	スクロールホイール左
 			7	スクロールホイール右
-		{row} 行と {col} 列はマウスクリックの位置を明示する。Vim のウィ
-		ンドウで最初の行番号は1で最後の行番号は 'lines' になる。{col}
-		の最大値は 'columns' になる。
+		{row} と {col} はマウスクリックの位置を指定する。Vim のウィン
+		ドウで最初の行は1で最後の行は 'lines' である。{col} の最大値は
+		'columns' である。
 		マルチクリックイベントを注入するには、{multiclick} に1を設定す
 		る。
 		{modifiers} としてサポートされる値:
