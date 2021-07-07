@@ -94,7 +94,7 @@ test_gui_drop_files({list}, {row}, {col}, {mods})
 						*test_gui_mouse_event()*
 test_gui_mouse_event({button}, {row}, {col}, {multiclick}, {modifiers})
 		マウスボタンのクリックイベントを注入する。この関数はGUIで実行
-		している時に動作する。
+		している時のみ動作する。
 		{button} としてサポートされる値:
 			0	右マウスボタン
 			1	中央マウスボタン
