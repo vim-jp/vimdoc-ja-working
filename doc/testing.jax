@@ -88,8 +88,8 @@ test_gui_drop_files({list}, {row}, {col}, {mods})
 			0x4	Shift
 			0x8	Alt
 			0x10	Ctrl
-		ファイルは引数のリストに追加され、{list} の最初のファイルが現
-		在のウィンドウで編集状態になる。詳細は |drag-n-drop| を参照。
+		ファイルは引数リストに追加され、{list} の最初のファイルの編集
+		がウィンドウで開始される。詳細は |drag-n-drop| を参照。
 
 						*test_gui_mouse_event()*
 test_gui_mouse_event({button}, {row}, {col}, {multiclick}, {modifiers})
