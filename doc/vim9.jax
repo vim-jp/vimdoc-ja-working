@@ -1553,7 +1553,7 @@ avoid" というセクションを読んでみてください。
 	final mylist: list<string> = ['foo']
 	def Func(arg1: number, arg2: string): bool
 
-これには 2 つの代替案が検討されました:
+2 つの代替案が検討されました:
 1. Dart のように変数名の前に型を書く: >
 	var list<string> mylist
 	final list<string> mylist = ['foo']
