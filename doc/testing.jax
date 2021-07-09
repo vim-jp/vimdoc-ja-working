@@ -114,7 +114,7 @@ test_gui_mouse_event({button}, {row}, {col}, {multiclick}, {modifiers})
 			8	altキーが押されている
 			16	ctrlキーが押されている
 		マウスイベントの注入後、処理のためにおそらく |feedkeys()| を呼
-		ぶ必要があるだろう、例: >
+		ぶ必要があるだろう。例: >
 			call feedkeys("y", 'Lx!')
 
 test_ignore_error({expr})			 *test_ignore_error()*
