@@ -1235,8 +1235,8 @@ Vim9 script ではエラーになります: >
 	map(mylist, (i, v) => 'item ' .. i)
 	# typename(mylist) == "list<string>"、エラーなし
 
-同様に |extend()| の代わりに |extendnew()| を、|flatten()| の代わりに
-|flattennew()| を使ってください。
+同じことが |extend()| にも言えます。代わりに |extendnew()| を使ってください。
+また |flatten()| にも言えます。代わりに |flattennew()| を使ってください。
 
 ==============================================================================
 
