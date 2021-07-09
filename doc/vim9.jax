@@ -1,4 +1,4 @@
-*vim9.txt*	For Vim バージョン 8.2.  Last change: 2021 Jun 25
+*vim9.txt*	For Vim バージョン 8.2.  Last change: 2021 Jul 07
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
 
@@ -435,9 +435,9 @@ function() は不要に ~
 
 	var Funcref = MyFunction
 
-`function()` を使って "func" 型のリファレンスを得た場合、その関数は任意の個数
-の引数と任意の戻り値の型を持つものとされます。この場合、関数は後から宣言できま
-す。
+`function()` を使うと、型は "func" になります {訳注: 確認できず}。これは任意個
+の引数と任意の戻り値の型 (void を含む) を持つ関数を表します。この場合、関数は
+後から定義できます {訳注: 確認できず}。
 
 
 ラムダ式には -> の代わりに => を使う ~
@@ -573,13 +573,18 @@ heredoc が関数内にある場合、'cpoptions' は :def の前で設定し :e
 復元しなければなりません。
 
 長い Ex コマンドの分割など、バックスラッシュによる行継続が依然として必要な場所
-では、コメントを "\ ではなく #\ で開始できます: >
-      syn region Text
+では、コメントの開始に '#\ ' を使います: >
+	syn region Text
 	      \ start='foo'
 	      #\ comment
 	      \ end='bar'
-
-<							*E1050*
+旧来のスクリプトで '"\ ' を使うのと同様です。これは行継続がバックスラッシュな
+しで行われていて、かつ行がバーで始まる場合にも必要となります: >
+	au CursorHold * echom 'BEFORE bar'
+	      #\ some comment
+	      | echom 'AFTER bar'
+<
+							*E1050*
 行頭の演算子と識別できるようにするために、範囲指定の前にはコロンを置きま
 す。"start" と print をつなげる例: >
 	var result = start
@@ -1071,10 +1076,8 @@ THIS IS STILL UNDER DEVELOPMENT - ANYTHING CAN BREAK - ANYTHING CAN CHANGE
 これはまだサポートされていません:
 	tuple<a: {type}, b: {type}, ...>
 
-これらの型は宣言時に使用できますが、値がこの型を持つことはありません:
-	{type}|{type}  {not implemented yet}
-	void
-	any
+これらの型は宣言時に使用できますが、単純な値が実際に "void" 型を持つことはあり
+ません。{訳注: これらの型とは?}
 
 array 型はありません。代わりに list<{type}> を使います。リスト定数には効率的な
 実装が使われており、小さなメモリがたくさん確保されないようになっています。
@@ -1082,8 +1085,14 @@ array 型はありません。代わりに list<{type}> を使います。リス
 部分適用と関数は多かれ少なかれ具体的な方法で宣言できます:
 func				任意の種類の関数参照です。引数や戻り値に対して
 				型チェックは行われません
+func: void			引数の個数と型は任意で、戻り値もありません
 func: {type}			引数の個数と型は任意で、特定の戻り値の型を持ち
 				ます
+
+func()				引数を取らない関数です。値は返しません
+func(): void			同上
+func(): {type}			引数を取らない関数です。戻り値の型を持ちます
+
 func({type})			引数の型を持つ関数です。値は返しません
 func({type}): {type}		引数の型と戻り値の型を持つ関数です
 func(?{type})			省略可能な引数の型を持つ関数です。値は返しませ
@@ -1170,6 +1179,29 @@ Vim はコンパイル時に "g:two" の型を知らないので、式の型は 
 	['a', 'b', 'c']	list<string>
 	[1, 'x', 3]	list<any>
 
+The common type of function references, if they do not all have the same
+number of arguments, uses "(...)" to indicate the number of arguments is not
+specified.  例: >
+	def Foo(x: bool)
+	enddef
+	def Bar(x: bool, y: bool)
+	enddef
+	var funclist = [Foo, Bar]
+	echo funclist->typename()
+結果は:
+	list<func(...)>
+{訳注: 冒頭は文意不明のため原文ママとした。関数参照の引数の型が共通していて、
+かつ引数の個数が同じでない場合に "(...)" が使われる、ということか? しかし型が
+共通していなくても "(...)" は使われ得る (Vim 8.2.3119 で確認):
+	def Foo(x: bool)
+	enddef
+	def Bar(x: number, y: string)
+	enddef
+	var funclist = [Foo, Bar]
+	echo funclist->typename()
+	# => list<func(...)>
+}
+
 Vim9 script のスクリプトローカル変数に対する型チェックは、変数が旧来の関数内で
 宣言された場合にも行われます。
 
@@ -1190,10 +1222,19 @@ Vim9 script では型チェックがより厳密になりました。ほとん�
 
 結果的に map() に渡すリストや辞書の要素の型は変更できなくなりました。これは
 Vim9 script ではエラーになります: >
-	map([1, 2, 3], (i, v) => 'item ' .. i)
+	vim9 echo map([1, 2, 3], (i, v) => 'item ' .. i)
 	E1012: Type mismatch; expected number but got string
-代わりに |mapnew()| を使ってください。要素の型が "any" である場合は {訳注:
-map() を使って} 要素の型を数値型などの特定の型に変更できます。
+代わりに |mapnew()| を使ってください: >
+	vim9 echo mapnew([1, 2, 3], (i, v) => 'item ' .. i)
+	['item 0', 'item 1', 'item 2']
+
+要素の型が "any" である場合は特定の型に変更できます。例えば、型が混在したリス
+トを数値のリスト {訳注: 文字列のリストの誤り} に変更できます: >
+	var mylist = [1, 2.0, '3']
+	# typename(mylist) == "list<any>"
+	map(mylist, (i, v) => 'item ' .. i)
+	# typename(mylist) == "list<string>"、エラーなし
+
 同様に |extend()| の代わりに |extendnew()| を、|flatten()| の代わりに
 |flattennew()| を使ってください。
 
