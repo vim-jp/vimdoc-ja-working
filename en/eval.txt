@@ -1,4 +1,4 @@
-*eval.txt*	For Vim version 8.2.  Last change: 2021 Apr 07
+*eval.txt*	For Vim version 8.2.  Last change: 2021 Jun 07
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -1962,6 +1962,9 @@ v:fcs_choice	What should happen after a |FileChangedShell| event was
 		The default is empty.  If another (invalid) value is used then
 		Vim behaves like it is empty, there is no warning message.
 
+					*v:fname* *fname-variable*
+v:fname		The file name set by 'includeexpr'.  Empty otherwise.
+
 					*v:fname_in* *fname_in-variable*
 v:fname_in	The name of the input file.  Valid while evaluating:
 			option		used for ~
@@ -2099,7 +2102,7 @@ v:null		An empty String. Used to put "null" in JSON.  See
 v:numbermax	Maximum value of a number.
 
 					*v:numbermin* *numbermin-variable*
-v:numbermin	Minimum value of a number (negative)
+v:numbermin	Minimum value of a number (negative).
 
 					*v:numbersize* *numbersize-variable*
 v:numbersize	Number of bits in a Number.  This is normally 64, but on some
@@ -2505,7 +2508,7 @@ char2nr({expr} [, {utf8}])	Number	ASCII/UTF8 value of first char in {expr}
 charclass({string})		Number	character class of {string}
 charcol({expr})			Number	column number of cursor or mark
 charidx({string}, {idx} [, {countcc}])
-				Number  char index of byte {idx} in {string}
+				Number	char index of byte {idx} in {string}
 chdir({dir})			String	change current working directory
 cindent({lnum})			Number	C indent for line {lnum}
 clearmatches([{win}])		none	clear all matches
@@ -2526,7 +2529,7 @@ cscope_connection([{num}, {dbpath} [, {prepend}]])
 cursor({lnum}, {col} [, {off}])
 				Number	move cursor to {lnum}, {col}, {off}
 cursor({list})			Number	move cursor to position in {list}
-debugbreak({pid})		Number  interrupt process being debugged
+debugbreak({pid})		Number	interrupt process being debugged
 deepcopy({expr} [, {noref}])	any	make a full copy of {expr}
 delete({fname} [, {flags}])	Number	delete the file or directory {fname}
 deletebufline({expr}, {first} [, {last}])
@@ -2591,10 +2594,12 @@ getbufline({expr}, {lnum} [, {end}])
 getbufvar({expr}, {varname} [, {def}])
 				any	variable {varname} in buffer {expr}
 getchangelist([{expr}])		List	list of change list items
-getchar([expr])			Number	get one character from the user
+getchar([expr])			Number or String
+					get one character from the user
 getcharmod()			Number	modifiers for the last typed character
 getcharpos({expr})		List	position of cursor, mark, etc.
 getcharsearch()			Dict	last character search
+getcharstr([expr])		String	get one character from the user
 getcmdline()			String	return the current command-line
 getcmdpos()			Number	return cursor position in command-line
 getcmdtype()			String	return current command-line type
@@ -3017,6 +3022,10 @@ test_feedinput({string})	none	add key sequence to input buffer
 test_garbagecollect_now()	none	free memory right now for testing
 test_garbagecollect_soon()	none	free memory soon for testing
 test_getvalue({string})		any	get value of an internal variable
+test_gui_drop_files({list}, {row}, {col}, {mods})
+				none	drop a list of files in a window
+test_gui_mouse_event({button}, {row}, {col}, {repeated}, {mods})
+				none	add a mouse event to the input buffer
 test_ignore_error({expr})	none	ignore a specific error
 test_null_blob()		Blob	null value for testing
 test_null_channel()		Channel	null value for testing
@@ -4946,7 +4955,7 @@ funcref({name} [, {arglist}] [, {dict}])
 		Can also be used as a |method|: >
 			GetFuncname()->funcref([arg])
 <
-					*function()* *E700* *E922* *E923*
+				*function()* *partial* *E700* *E922* *E923*
 function({name} [, {arglist}] [, {dict}])
 		Return a |Funcref| variable that refers to function {name}.
 		{name} can be the name of a user defined function or an
@@ -5229,6 +5238,7 @@ getchar([expr])						*getchar()*
 			Return zero otherwise.
 		If [expr] is 1, only check if a character is available, it is
 			not consumed.  Return zero if no character available.
+		If you prefer always getting a string use |getcharstr()|.
 
 		Without [expr] and when [expr] is 0 a whole character or
 		special key is returned.  If it is a single character, the
@@ -5353,6 +5363,20 @@ getcharsearch()						*getcharsearch()*
 			:nnoremap <expr> ; getcharsearch().forward ? ';' : ','
 			:nnoremap <expr> , getcharsearch().forward ? ',' : ';'
 <		Also see |setcharsearch()|.
+
+
+getcharstr([expr])					*getcharstr()*
+		Get a single character from the user or input stream as a
+		string.
+		If [expr] is omitted, wait until a character is available.
+		If [expr] is 0 or false, only get a character when one is
+			available.  Return an empty string otherwise.
+		If [expr] is 1 or true, only check if a character is
+			available, it is not consumed.  Return an empty string
+			if no character is available.
+		Otherwise this works like |getchar()|, except that a number
+		result is converted to a string.
+
 
 getcmdline()						*getcmdline()*
 		Return the current command-line.  Only works when the command
@@ -5480,8 +5504,8 @@ getcurpos([{winid}])
 
 		Can also be used as a |method|: >
 			GetWinid()->getcurpos()
-
-<							*getcursorcharpos()*
+<
+							*getcursorcharpos()*
 getcursorcharpos([{winid}])
 		Same as |getcurpos()| but the column number in the returned
 		List is a character index instead of a byte index.
@@ -5490,8 +5514,8 @@ getcursorcharpos([{winid}])
 		With the cursor on '보' in line 3 with text "여보세요": >
 			getcursorcharpos()	returns [0, 3, 2, 0, 3]
 			getcurpos()		returns [0, 3, 4, 0, 3]
-
-<		Can also be used as a |method|: >
+<
+		Can also be used as a |method|: >
 			GetWinid()->getcursorcharpos()
 
 <							*getcwd()*
@@ -5716,11 +5740,11 @@ getmarklist([{expr}])					*getmarklist()*
 		see |bufname()|.
 
 		Each item in the returned List is a |Dict| with the following:
-		    name - name of the mark prefixed by "'"
-		    pos - a |List| with the position of the mark:
+		    mark   name of the mark prefixed by "'"
+		    pos	   a |List| with the position of the mark:
 				[bufnum, lnum, col, off]
-			  Refer to |getpos()| for more information.
-		    file - file name
+			   Refer to |getpos()| for more information.
+		    file   file name
 
 		Refer to |getpos()| for getting information about a specific
 		mark.
@@ -5775,7 +5799,6 @@ getmousepos()						*getmousepos()*
 
 		If the mouse is over a popup window then that window is used.
 
-
 		When using |getchar()| the Vim variables |v:mouse_lnum|,
 		|v:mouse_col| and |v:mouse_winid| also provide these values.
 
@@ -5803,7 +5826,7 @@ getpos({expr})	Get the position for {expr}.  For possible values of {expr}
 		'> is a large number.
 		The column number in the returned List is the byte position
 		within the line. To get the character position in the line,
-		use |getcharpos()|
+		use |getcharpos()|.
 		The column number can be very large, e.g. 2147483647, in which
 		case it means "after the end of the line".
 		This can be used to save and restore the position of a mark: >
@@ -5822,7 +5845,10 @@ getqflist([{what}])					*getqflist()*
 				bufname() to get the name
 			module	module name
 			lnum	line number in the buffer (first line is 1)
+			end_lnum
+				end of line number if the item is multiline
 			col	column number (first column is 1)
+			end_col	end of column number if the item has range
 			vcol	|TRUE|: "col" is visual column
 				|FALSE|: "col" is byte index
 			nr	error number
@@ -6721,6 +6747,7 @@ islocked({expr})					*islocked()* *E786*
 
 <		When {expr} is a variable that does not exist you get an error
 		message.  Use |exists()| to check for existence.
+		In Vim9 script it does not work for local variables.
 
 		Can also be used as a |method|: >
 			GetName()->islocked()
@@ -7588,6 +7615,9 @@ matchfuzzy({list}, {str} [, {dict}])			*matchfuzzy()*
 		empty list is returned. If length of {str} is greater than
 		256, then returns an empty list.
 
+		Refer to |fuzzy-match| for more information about fuzzy
+		matching strings.
+
 		Example: >
 		   :echo matchfuzzy(["clay", "crow"], "cay")
 <		results in ["clay"]. >
@@ -7614,7 +7644,7 @@ matchfuzzypos({list}, {str} [, {dict}])			*matchfuzzypos()*
 		Same as |matchfuzzy()|, but returns the list of matched
 		strings, the list of character positions where characters
 		in {str} matches and a list of matching scores.  You can
-		use |byteidx()|to convert a character position to a byte
+		use |byteidx()| to convert a character position to a byte
 		position.
 
 		If {str} matches multiple times in a string, then only the
@@ -9185,6 +9215,8 @@ searchpair({start}, {middle}, {end} [, {flags} [, {skip}
 		and -1 returned.
 		{skip} can be a string, a lambda, a funcref or a partial.
 		Anything else makes the function fail.
+		In a `:def` function when the {skip} argument is a string
+		constant it is compiled into instructions.
 
 		For {stopline} and {timeout} see |search()|.
 
@@ -9936,7 +9968,7 @@ sinh({expr})						*sinh()*
 		{only available when compiled with the |+float| feature}
 
 
-slice({expr}, {start} [, {end}])			*slice()* 
+slice({expr}, {start} [, {end}])			*slice()*
 		Similar to using a |slice| "expr[start : end]", but "end" is
 		used exclusive.  And for a string the indexes are used as
 		character indexes instead of byte indexes, like in
@@ -11943,6 +11975,7 @@ scrollbind		Compiled with 'scrollbind' support. (always true)
 showcmd			Compiled with 'showcmd' support.
 signs			Compiled with |:sign| support.
 smartindent		Compiled with 'smartindent' support.
+sodium			Compiled with libsodium for better crypt support
 sound			Compiled with sound support, e.g. `sound_playevent()`
 spell			Compiled with spell checking support |spell|.
 startuptime		Compiled with |--startuptime| support.
