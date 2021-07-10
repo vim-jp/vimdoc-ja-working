@@ -576,12 +576,12 @@ heredoc が関数内にある場合、'cpoptions' は :def の前で設定し :e
 では、コメントの開始に '#\ ' を使います: >
 	syn region Text
 	      \ start='foo'
-	      #\ comment
+	      #\ コメント
 	      \ end='bar'
 旧来のスクリプトで '"\ ' を使うのと同様です。これは行継続がバックスラッシュな
 しで行われていて、かつ行がバーで始まる場合にも必要となります: >
 	au CursorHold * echom 'BEFORE bar'
-	      #\ some comment
+	      #\ コメント
 	      | echom 'AFTER bar'
 <
 							*E1050*
