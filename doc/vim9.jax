@@ -1190,16 +1190,17 @@ specified.  例: >
 	echo funclist->typename()
 結果は:
 	list<func(...)>
-{訳注: 冒頭は文意不明のため原文ママとした。関数参照の引数の型が共通していて、
-かつ引数の個数が同じでない場合に "(...)" が使われる、ということか? しかし型が
-共通していなくても "(...)" は使われ得る (Vim 8.2.3119 で確認):
-	def Foo(x: bool)
-	enddef
-	def Bar(x: number, y: string)
-	enddef
-	var funclist = [Foo, Bar]
-	echo funclist->typename()
-	# => list<func(...)>
+{訳注:
+   冒頭は文意不明のため原文ママとした。関数参照の引数の型が共通していて、かつ
+   引数の個数が同じでない場合に "(...)" が使われる、ということか? しかし型が共
+   通していなくても "(...)" は使われ得る (Vim 8.2.3204 で確認):
+   	def Foo(x: bool)
+   	enddef
+   	def Bar(x: number, y: string)
+   	enddef
+   	var funclist = [Foo, Bar]
+   	echo funclist->typename()
+   	# => list<func(...)>
 }
 
 Vim9 script のスクリプトローカル変数に対する型チェックは、変数が旧来の関数内で
