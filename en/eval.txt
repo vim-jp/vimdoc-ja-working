@@ -1,4 +1,4 @@
-*eval.txt*	For Vim version 8.2.  Last change: 2021 Jun 07
+*eval.txt*	For Vim version 8.2.  Last change: 2021 Jul 01
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -1588,7 +1588,17 @@ The lambda expression is also useful for Channel, Job and timer: >
 	Handler called
 	Handler called
 
-Note how execute() is used to execute an Ex command.  That's ugly though.
+Note that it is possible to cause memory to be used and not freed if the
+closure is referenced by the context it depends on: >
+	function Function()
+	   let x = 0
+	   let F = {-> x}
+	 endfunction
+The closure uses "x" from the function scope, and "F" in that same scope
+refers to the closure.  This cycle results in the memory not being freed.
+Recommendation: don't do this.
+
+Notice how execute() is used to execute an Ex command.  That's ugly though.
 In Vim9 script you can use a command block, see |inline-function|.
 
 Lambda expressions have internal names like '<lambda>42'.  If you get an error
@@ -1963,7 +1973,8 @@ v:fcs_choice	What should happen after a |FileChangedShell| event was
 		Vim behaves like it is empty, there is no warning message.
 
 					*v:fname* *fname-variable*
-v:fname		The file name set by 'includeexpr'.  Empty otherwise.
+v:fname		When evaluating 'includeexpr': the file name that was
+		detected.  Empty otherwise.
 
 					*v:fname_in* *fname_in-variable*
 v:fname_in	The name of the input file.  Valid while evaluating:
@@ -2609,6 +2620,8 @@ getcompletion({pat}, {type} [, {filtered}])
 getcurpos([{winnr}])		List	position of the cursor
 getcursorcharpos([{winnr}])	List	character position of the cursor
 getcwd([{winnr} [, {tabnr}]])	String	get the current working directory
+getdigraph({chars})		String	get the digraph of {chars}
+getdigraphlist([{listall}])	List	get all |digraph|s
 getenv({name})			String	return environment variable
 getfontname([{name}])		String	name of font being used
 getfperm({fname})		String	file permissions of file {fname}
@@ -2875,6 +2888,8 @@ setcharpos({expr}, {list})	Number	set the {expr} position to {list}
 setcharsearch({dict})		Dict	set character search from {dict}
 setcmdpos({pos})		Number	set cursor position in command-line
 setcursorcharpos({list})	Number	move cursor to position in {list}
+setdigraph({chars}, {digraph})	Boolean  register |digraph|
+setdigraphlist({digraphlist})	Boolean  register multiple |digraph|s
 setenv({name}, {val})		none	set environment variable
 setfperm({fname}, {mode})	Number	set {fname} file permissions to {mode}
 setline({lnum}, {line})		Number	set line {lnum} to {line}
@@ -4862,6 +4877,8 @@ foldclosed({lnum})					*foldclosed()*
 		The result is a Number.  If the line {lnum} is in a closed
 		fold, the result is the number of the first line in that fold.
 		If the line {lnum} is not in a closed fold, -1 is returned.
+		{lnum} is used like with |getline()|.  Thus "." is the current
+		line, "'m" mark m, etc.
 
 		Can also be used as a |method|: >
 			GetLnum()->foldclosed()
@@ -4870,6 +4887,8 @@ foldclosedend({lnum})					*foldclosedend()*
 		The result is a Number.  If the line {lnum} is in a closed
 		fold, the result is the number of the last line in that fold.
 		If the line {lnum} is not in a closed fold, -1 is returned.
+		{lnum} is used like with |getline()|.  Thus "." is the current
+		line, "'m" mark m, etc.
 
 		Can also be used as a |method|: >
 			GetLnum()->foldclosedend()
@@ -4883,6 +4902,8 @@ foldlevel({lnum})					*foldlevel()*
 		returned for lines where folds are still to be updated and the
 		foldlevel is unknown.  As a special case the level of the
 		previous line is usually available.
+		{lnum} is used like with |getline()|.  Thus "." is the current
+		line, "'m" mark m, etc.
 
 		Can also be used as a |method|: >
 			GetLnum()->foldlevel()
@@ -5555,6 +5576,61 @@ getcwd([{winnr} [, {tabnr}]])
 <		Can also be used as a |method|: >
 			GetWinnr()->getcwd()
 <
+					      *getdigraph()* *E1214*
+getdigraph({chars})
+		Return the digraph of {chars}.  This should be a string with
+		exactly two characters.  If {chars} are not just two
+		characters, or the digraph of {chars} does not exist, an error
+		is given and an empty string is returned.
+
+		The character will be converted from Unicode to 'encoding'
+		when needed.  This does require the conversion to be
+		available, it might fail.
+
+		Also see |getdigraphlist()|.
+
+		Examples: >
+		" Get a built-in digraph
+		:echo getdigraph('00')		" Returns '∞'
+
+		" Get a user-defined digraph
+		:call setdigraph('aa', 'あ')
+		:echo getdigraph('aa')		" Returns 'あ'
+<
+		Can also be used as a |method|: >
+			GetChars()->getdigraph()
+<
+		This function works only when compiled with the |+digraphs|
+		feature.  If this feature is disabled, this function will
+		display an error message.
+
+
+getdigraphlist([{listall}])			*getdigraphlist()*
+		Return a list of digraphs.  If the {listall} argument is given
+		and it is TRUE, return all digraphs, including the default
+		digraphs.  Otherwise, return only user-defined digraphs.
+
+		The characters will be converted from Unicode to 'encoding'
+		when needed.  This does require the conservation to be
+		available, it might fail.
+
+		Also see |getdigraph()|.
+
+		Examples: >
+		" Get user-defined digraphs
+		:echo getdigraphlist()
+
+		" Get all the digraphs, including default digraphs
+		:echo digraphlist(1)
+<
+		Can also be used as a |method|: >
+			GetNumber()->getdigraphlist()
+<
+		This function works only when compiled with the |+digraphs|
+		feature.  If this feature is disabled, this function will
+		display an error message.
+
+
 getenv({name})						*getenv()*
 		Return the value of environment variable {name}.
 		When the variable does not exist |v:null| is returned.  That
@@ -5758,6 +5834,8 @@ getmatches([{win}])					*getmatches()*
 		|getmatches()| is useful in combination with |setmatches()|,
 		as |setmatches()| can restore a list of matches saved by
 		|getmatches()|.
+		If {win} is specified, use the window with this number or
+		window ID instead of the current window.
 		Example: >
 			:echo getmatches()
 <			[{'group': 'MyGroup1', 'pattern': 'TODO',
@@ -5795,7 +5873,7 @@ getmousepos()						*getmousepos()*
 		are zero.
 
 		When the position is after the text then "column" is the
-		length of the text in bytes.
+		length of the text in bytes plus one.
 
 		If the mouse is over a popup window then that window is used.
 
@@ -5858,8 +5936,10 @@ getqflist([{what}])					*getqflist()*
 			valid	|TRUE|: recognized error message
 
 		When there is no error list or it's empty, an empty list is
-		returned. Quickfix list entries with non-existing buffer
-		number are returned with "bufnr" set to zero.
+		returned. Quickfix list entries with a non-existing buffer
+		number are returned with "bufnr" set to zero (Note: some
+		functions accept buffer number zero for the alternate buffer,
+		you may need to explicitly check for zero).
 
 		Useful application: Find pattern matches in multiple files and
 		do something with them: >
@@ -6003,12 +6083,12 @@ getregtype([{regname}])					*getregtype()*
 		Can also be used as a |method|: >
 			GetRegname()->getregtype()
 
-gettabinfo([{arg}])					*gettabinfo()*
-		If {arg} is not specified, then information about all the tab
-		pages is returned as a |List|. Each List item is a |Dictionary|.
-		Otherwise, {arg} specifies the tab page number and information
-		about that one is returned.  If the tab page does not exist an
-		empty List is returned.
+gettabinfo([{tabnr}])					*gettabinfo()*
+		If {tabnr} is not specified, then information about all the
+		tab pages is returned as a |List|. Each List item is a
+		|Dictionary|.  Otherwise, {tabnr} specifies the tab page
+		number and information about that one is returned.  If the tab
+		page does not exist an empty List is returned.
 
 		Each List item is a |Dictionary| with the following entries:
 			tabnr		tab page number.
@@ -6061,11 +6141,11 @@ gettabwinvar({tabnr}, {winnr}, {varname} [, {def}])		*gettabwinvar()*
 <		Can also be used as a |method|: >
 			GetTabnr()->gettabwinvar(winnr, varname)
 
-gettagstack([{nr}])					*gettagstack()*
-		The result is a Dict, which is the tag stack of window {nr}.
-		{nr} can be the window number or the |window-ID|.
-		When {nr} is not specified, the current window is used.
-		When window {nr} doesn't exist, an empty Dict is returned.
+gettagstack([{winnr}])					*gettagstack()*
+		The result is a Dict, which is the tag stack of window {winnr}.
+		{winnr} can be the window number or the |window-ID|.
+		When {winnr} is not specified, the current window is used.
+		When window {winnr} doesn't exist, an empty Dict is returned.
 
 		The returned dictionary contains the following entries:
 			curidx		Current index in the stack. When at
@@ -8209,6 +8289,8 @@ prompt_getprompt({buf})					*prompt_getprompt()*
 		Can also be used as a |method|: >
 			GetBuffer()->prompt_getprompt()
 
+<		{only available when compiled with the |+channel| feature}
+
 
 prompt_setcallback({buf}, {expr})			*prompt_setcallback()*
 		Set prompt callback for buffer {buf} to {expr}.  When {expr}
@@ -8242,6 +8324,7 @@ prompt_setcallback({buf}, {expr})			*prompt_setcallback()*
 <		Can also be used as a |method|: >
 			GetBuffer()->prompt_setcallback(callback)
 
+<		{only available when compiled with the |+channel| feature}
 
 prompt_setinterrupt({buf}, {expr})			*prompt_setinterrupt()*
 		Set a callback for buffer {buf} to {expr}.  When {expr} is an
@@ -8255,6 +8338,8 @@ prompt_setinterrupt({buf}, {expr})			*prompt_setinterrupt()*
 		Can also be used as a |method|: >
 			GetBuffer()->prompt_setinterrupt(callback)
 
+<		{only available when compiled with the |+channel| feature}
+
 prompt_setprompt({buf}, {text})				*prompt_setprompt()*
 		Set prompt for buffer {buf} to {text}.  You most likely want
 		{text} to end in a space.
@@ -8264,6 +8349,8 @@ prompt_setprompt({buf}, {text})				*prompt_setprompt()*
 <
 		Can also be used as a |method|: >
 			GetBuffer()->prompt_setprompt('command: ')
+
+<		{only available when compiled with the |+channel| feature}
 
 prop_ functions are documented here: |text-prop-functions|
 
@@ -8904,6 +8991,10 @@ screenpos({winid}, {lnum}, {col})				*screenpos()*
 		The "curscol" value is where the cursor would be placed.  For
 		a Tab it would be the same as "endcol", while for a double
 		width character it would be the same as "col".
+		The |conceal| feature is ignored here, the column numbers are
+		as if 'conceallevel' is zero.  You can set the cursor to the
+		right position and use |screencol()| to get the value with
+		|conceal| taken into account.
 
 		Can also be used as a |method|: >
 			GetWinid()->screenpos(lnum, col)
@@ -9458,6 +9549,54 @@ setcursorcharpos({list})
 		Can also be used as a |method|: >
 			GetCursorPos()->setcursorcharpos()
 
+
+setdigraph({chars}, {digraph})		*setdigraph()* *E1205*
+		Add digraph {chars} to the list.  {chars} must be a string
+		with two characters.  {digraph} is a string with one utf-8
+		encoded character. Be careful, composing characters are NOT
+		ignored.  This function is similar to |:digraphs| command, but
+		useful to add digraphs start with a white space.
+
+		The function result is v:true if |digraph| is registered.  If
+		this fails an error message is given and v:false is returned.
+
+		If you want to define multiple digraphs at once, you can use
+		|setdigraphlist()|.
+
+		Example: >
+			call setdigraph('  ', 'あ')
+<
+		Can be used as a |method|: >
+			GetString()->setdigraph('あ')
+<
+		This function works only when compiled with the |+digraphs|
+		feature.  If this feature is disabled, this function will
+		display an error message.
+
+
+setdigraphlist({digraphlist})			*setdigraphlist()*
+		Similar to |setdigraph()| but this function can add multiple
+		digraphs at once.  {digraphlist} is a list composed of lists,
+		where each list contains two strings with {chars} and
+		{digraph} as in |setdigraph()|.
+		Example: >
+		    call setdigraphlist([['aa', 'あ'], ['ii', 'い']])
+<
+		It is similar to the following: >
+		    for [chars, digraph] in [['aa', 'あ'], ['ii', 'い']]
+			  call setdigraph(chars, digraph)
+		    endfor
+<		Except that the function returns after the first error,
+		following digraphs will not be added.
+
+		Can be used as a |method|: >
+		    GetList()->setdigraphlist()
+<
+		This function works only when compiled with the |+digraphs|
+		feature.  If this feature is disabled, this function will
+		display an error message.
+
+
 setenv({name}, {val})						*setenv()*
 		Set environment variable {name} to {val}.
 		When {val} is |v:null| the environment variable is deleted.
@@ -9868,6 +10007,10 @@ sha256({string})						*sha256()*
 
 shellescape({string} [, {special}])			*shellescape()*
 		Escape {string} for use as a shell command argument.
+		When the 'shell' contains powershell (MS-Windows) or pwsh
+		(MS-Windows, Linux, and MacOS) then it will enclose {string}
+		in single quotes and will double up all internal single
+		quotes.
 		On MS-Windows, when 'shellslash' is not set, it will enclose
 		{string} in double quotes and double all double quotes within
 		{string}.
@@ -11030,7 +11173,8 @@ tempname()					*tempname()* *temp-file-name*
 			:exe "redir > " . tmpfile
 <		For Unix, the file will be in a private directory |tempfile|.
 		For MS-Windows forward slashes are used when the 'shellslash'
-		option is set or when 'shellcmdflag' starts with '-'.
+		option is set, or when 'shellcmdflag' starts with '-' and
+		'shell' does not contain powershell or pwsh.
 
 
 term_ functions are documented here: |terminal-function-details|
@@ -11870,6 +12014,7 @@ diff			Compiled with |vimdiff| and 'diff' support.
 digraphs		Compiled with support for digraphs.
 directx			Compiled with support for DirectX and 'renderoptions'.
 dnd			Compiled with support for the "~ register |quote_~|.
+drop_file		Compiled with |drop_file| support.
 ebcdic			Compiled on a machine with ebcdic character set.
 emacs_tags		Compiled with support for Emacs tags.
 eval			Compiled with expression evaluation support.  Always
