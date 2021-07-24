@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Jun 07
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Jul 01
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -115,7 +115,7 @@ NOTE: |scriptversion-4| を使用する場合、先頭が "0" の8進数は認�
 使う。
 
 						*TRUE* *FALSE* *Boolean*
-ブール(真理値)演算には数値が使われる。0は偽を意味し、非0は真を表す。また、
+ブール(真偽値)演算には数値が使われる。0は偽を意味し、非0は真を表す。また、
 |v:false| と |v:true| を使うこともできる。Vim9 script では |false| と |true|
 になる。
 関数から真が返されたときは数値の 1 であり、偽が返されたときは数値の 0 である。
@@ -1542,8 +1542,18 @@ Note: これが正しく機能するためには、ラムダが定義される�
 	Handler called
 	Handler called
 
-Note Exコマンドを実行するためにどのように execute() を使っているかに注意。
-醜いが。
+Note クロージャの依存するコンテキストでメモリが参照されると利用されたものが開
+放されない場合があることに注意すること: >
+	function Function()
+	   let x = 0
+	   let F = {-> x}
+	 endfunction
+クロージャで利用する関数スコープの "x"、そして同スコープのクロージャの参照
+"F"。このメモリ内の循環の結果開放されることがない。
+推奨: このようなことはしないこと。
+
+Exコマンドを実行するためにどのように execute() を使っているかに注目する。
+この記述は醜いが。
 Vim9 script ではコマンドブロックが使える。|inline-function| を参照。
 
 ラムダ式は '<lambda>42' のような内部名を持っている。もしラムダ式でエラーが発生
@@ -1911,7 +1921,8 @@ v:fcs_choice	|FileChangedShell|イベントが発生した後に何をすべき�
 		ときと同じ動作になり、警告メッセージは表示されない。
 
 					*v:fname* *fname-variable*
-v:fname		'includeexpr' によって設定されたファイル名。または空。
+v:fname		'includeexpr'が評価されたとき: 検知したファイル名。それ以外は
+		空。
 
 					*v:fname_in* *fname_in-variable*
 v:fname_in	入力ファイルの名前。以下のオプションを評価している最中のみ
@@ -2568,6 +2579,8 @@ getcompletion({pat}, {type} [, {filtered}])
 getcurpos([{winnr}])		リスト	カーソルの位置
 getcursorcharpos([{winnr}])	リスト	カーソルの位置の文字
 getcwd([{winnr} [, {tabnr}]])	文字列	現在の作業ディレクトリを取得
+getdigraph({chars})		文字列	{chars} のダイグラフ |digraph| を取得
+getdigraphlist([{listall}])	リスト	すべてのダイグラフ |digraph| を取得
 getenv({name})			文字列	環境変数を返す
 getfontname([{name}])		文字列	使用しているフォントの名前
 getfperm({fname})		文字列	ファイル{fname}の許可属性を取得
@@ -2861,6 +2874,8 @@ setcharpos({expr}, {list})	数値	{list} の {expr} 位置に設定
 setcharsearch({dict})		辞書	文字検索を{dict}に設定
 setcmdpos({pos})		数値	コマンドライン内のカーソル位置を設定
 setcursorcharpos({list})	数値	{list} の位置へカーソルを移動
+setdigraph({chars}, {digraph})	真偽値	ダイグラフ |digraph| の登録
+setdigraphlist({digraphlist})	真偽値	複数のダイグラフ |digraph| の登録
 setenv({name}, {val})		なし	環境変数を設定
 setfperm({fname}, {mode})	数値	ファイル {fname} のパーミッションを
 					{mode} に設定
@@ -4812,6 +4827,8 @@ foldclosed({lnum})					*foldclosed()*
 		結果は数値。{lnum}行目が閉じた折り畳みの中にあるなら、その折り
 		畳みを構成する最初の行の行番号を返す。{lnum}行目が閉じた折り畳
 		みに入っていないなら-1を返す。
+		{lnum} は |getline()| と同様に扱われる。例えば "." は現在の行、
+		"'m" は m でマークした行、ほか。
 
 		|method| としても使用できる: >
 			GetLnum()->foldclosed()
@@ -4820,6 +4837,8 @@ foldclosedend({lnum})					*foldclosedend()*
 		結果は数値。{lnum}行目が閉じた折り畳みの中にあるなら、その折り
 		畳みを構成する最後の行の行番号を返す。{lnum}行目が閉じた折り畳
 		みに入っていないなら-1を返す。
+		{lnum} は |getline()| と同様に扱われる。例えば "." は現在の行、
+		"'m" は m でマークした行、ほか。
 
 		|method| としても使用できる: >
 			GetLnum()->foldclosedend()
@@ -4832,6 +4851,8 @@ foldlevel({lnum})					*foldlevel()*
 		いる最中に呼ぶと、まだ折り畳みを更新していなく、折り畳みレベル
 		が未知の行に対しては-1を返す。特別な場合として、普通は1行前の
 		レベルは取得できる。
+		{lnum} は |getline()| と同様に扱われる。例えば "." は現在の行、
+		"'m" は m でマークした行、ほか。
 
 		|method| としても使用できる: >
 			GetLnum()->foldlevel()
@@ -5474,6 +5495,56 @@ getcwd([{winnr} [, {tabnr}]])
 <		|method| としても使用できる: >
 			GetWinnr()->getcwd()
 <
+						*getdigraph()* *E1214*
+getdigraph({chars})
+		{chars} のダイグラフを返す。これは正確に2文字の文字列である必
+		要がある。もし {chars} が2文字ちょうどでない、もしくは {chars}
+		のダイグラフがないなら、エラーとなり空文字列を返す。
+
+		文字をUnicodeから変換する必要があるときは 'encoding' が必要。
+		{訳注: 文字の}変換が利用可能である必要があり、失敗することがあ
+		る。
+
+		|getdigraphlist()| も参照。
+
+		例: >
+		" 組み込みのダイグラフの取得
+		:echo getdigraph('00')		" '∞' が返る
+
+		" ユーザー定義のダイグラフの取得
+		:call setdigraph('aa', 'あ')
+		:echo getdigraph('aa')		" 'あ' が返る
+<
+		|method| としても使用できる: >
+			GetChars()->getdigraph()
+<
+		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
+		する。機能が無効の場合、この関数はエラーメッセージを表示する。
+
+getdigraphlist([{listall}])			*getdigraphlist()*
+		ダイグラフのリストを返す。引数 {listall} が真で与えられたとき、
+		デフォルトのダイグラフを含む全ダイグラフを返す。それ以外はユー
+		ザー定義のダイグラフのみを返す。
+
+		文字をUnicodeから変換する必要があるときは 'encoding' が必要。
+		{訳注: 文字の}変換が利用可能である必要があり、失敗することがあ
+		る。
+
+		|getdigraph()| も参照。
+
+		例: >
+		" ユーザー定義のダイグラフの取得
+		:echo getdigraphlist()
+
+		" デフォルトを含む全ダイグラフの取得
+		:echo digraphlist(1)
+<
+		|method| としても使用できる: >
+			GetNumber()->getdigraphlist()
+<
+		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
+		する。機能が無効の場合、この関数はエラーメッセージを表示する。
+
 getenv({name})						*getenv()*
 		環境変数{name}の値を返す。
 		変数が存在しない場合は |v:null| が返される。これは、空の文字列
@@ -5668,6 +5739,8 @@ getmatches([{win}])					*getmatches()*
 		全てのマッチの |List| を返す。|setmatches()| は |getmatches()|
 		で保存されたマッチのリストを復元できるので、|getmatches()| と
 		|setmatches()| は組み合わせて使うと便利である。
+		{win} が指定されたなら、カレントウィンドウの代わりに指定された
+		番号かウィンドウIDのウィンドウを使う。
 		例: >
 			:echo getmatches()
 <			[{'group': 'MyGroup1', 'pattern': 'TODO',
@@ -5703,8 +5776,8 @@ getmousepos()						*getmousepos()*
 		ウィンドウの下のステータスラインやウィンドウの右の垂直セパレー
 		ターの場合、"line" と "column" は 0 になる。
 
-		位置がテキストより後の場合、"column" はテキストのバイト長にな
-		る。
+		位置がテキストより後の場合、"column" はテキストのバイト長+1に
+		なる。
 
 		マウスがポップアップウィンドウの上の場合、そのウィンドウが使わ
 		れる。
@@ -5764,8 +5837,10 @@ getqflist([{what}])					*getqflist()*
 			valid	|TRUE|: エラーメッセージが認識されている
 
 		エラーリストがまったくないか、空であるときは空リストを返す。
-		存在しないバッファ番号を持つquickfixリストの項目は "bufnr" を0
-		にして返される。
+		quickfixリストの項目が存在しないバッファ番号とともに返る場合は
+		"bufnr" を0にして返される。(Note: いくつかの関数はバッファ番号
+		0を代替バッファとして受け付けるので、明確に0チェックを行う必要
+		がある)。
 
 		役に立つ応用例: 複数のファイルから正規表現検索を行い、見つかっ
 		たものに対してなんらかの操作をする: >
@@ -5907,11 +5982,11 @@ getregtype([{regname}])					*getregtype()*
 		|method| としても使用できる: >
 			GetRegname()->getregtype()
 
-gettabinfo([{arg}])					*gettabinfo()*
-		{arg}を指定しないと、すべてのタブページに関する情報がリスト
+gettabinfo([{tabnr}])					*gettabinfo()*
+		{tabnr}を指定しないと、すべてのタブページに関する情報がリスト
 		|List| として返される。各リスト項目は辞書 |Dictionary| である。
-		それ以外の場合、{arg} はタブページ番号を指定し、それに関する情
-		報が返される。タブページが存在しない場合、空のリストが返され
+		それ以外の場合、{tabnr} はタブページ番号を指定し、それに関する
+		情報が返される。タブページが存在しない場合、空のリストが返され
 		る。
 
 		各リストアイテムは、次のエントリを持つ辞書 |Dictionary| である:
@@ -5963,11 +6038,11 @@ gettabwinvar({tabnr}, {winnr}, {varname} [, {def}])		*gettabwinvar()*
 <		|method| としても使用できる: >
 			GetTabnr()->gettabwinvar(winnr, varname)
 
-gettagstack([{nr}])					*gettagstack()*
-		結果は辞書で、それはウィンドウ{nr}のタグスタックである。
-		{nr}にはウィンドウ番号または |window-ID| を指定できる。
-		{nr}を指定しない時は、カレントウィンドウが使用される。
-		ウィンドウ{nr}が存在しない場合、空の辞書が返される。
+gettagstack([{winnr}])					*gettagstack()*
+		結果は辞書で、それはウィンドウ{winnr}のタグスタックである。
+		{winnr}にはウィンドウ番号または |window-ID| を指定できる。
+		{winnr}を指定しない時は、カレントウィンドウが使用される。
+		ウィンドウ{winnr}が存在しない場合、空の辞書が返される。
 
 		返される辞書には、次のエントリが含まれる:
 			curidx		スタック内の現在のインデックス。スタッ
@@ -8022,6 +8097,8 @@ prompt_getprompt({buf})					*prompt_getprompt()*
 		|method| としても使用できる: >
 			GetBuffer()->prompt_getprompt()
 
+<		{|+channel| 機能つきでコンパイルされたときのみ存在する}
+
 
 prompt_setcallback({buf}, {expr})			*prompt_setcallback()*
 		バッファ {buf} のプロンプトコールバックを {expr} に設定する。
@@ -8055,6 +8132,7 @@ prompt_setcallback({buf}, {expr})			*prompt_setcallback()*
 <		|method| としても使用できる: >
 			GetBuffer()->prompt_setcallback(callback)
 
+<		{|+channel| 機能つきでコンパイルされたときのみ存在する}
 
 prompt_setinterrupt({buf}, {expr})			*prompt_setinterrupt()*
 		バッファ {buf} のコールバックを {expr} に設定する。{expr} が空
@@ -8700,6 +8778,9 @@ screenpos({winid}, {lnum}, {col})				*screenpos()*
 		る。例えば、タブの "col" は1で "endcol" は8。
 		"curscol" は、カーソルが置かれる場所。タブの場合は "endcol" と
 		同じになるが、倍幅文字の場合は "col" と同じになる。
+		|conceal| 機能はここでは無視され、列の数字は 'conceallevel' が
+		0のときと同じになる。カーソルの位置は右に設定でき
+		|screencol()| を使うことで |conceal| を考慮した値を取得できる。
 
 		|method| としても使用できる: >
 			GetWinid()->screenpos(lnum, col)
@@ -9229,6 +9310,51 @@ setcursorcharpos({list})
 		|method| としても使用できる: >
 			GetCursorPos()->setcursorcharpos()
 
+
+setdigraph({chars}, {digraph})		*setdigraph()* *E1205*
+		ダイグラフ {chars} をリストに追加する。{chars} は2文字の文字列
+		の必要がある。{digraph} はUTF-8でエンコードされた1文字の文字
+		列。注意すべき点として、合成文字は無視される。この関数は
+		|:digraphs| と同様だがスペース始まりのダイグラフを登録するに便
+		利である。
+
+		この関数はダイグラフ |digraph| は登録されたなら v:true を返す。
+		もし失敗したなら、エラーメッセージとともに v:false を返す。
+
+		一度に複数のダイグラフを登録したいなら、|setdigraphlist()| が
+		使える。
+
+		例: >
+			call setdigraph('  ', 'あ')
+<
+		|method| としても使用できる: >
+			GetString()->setdigraph('あ')
+<
+		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
+		する。機能が無効の場合、この関数はエラーメッセージを表示する。
+
+
+setdigraphlist({digraphlist})			*setdigraphlist()*
+		|setdigraph()| と同じだが複数のダイグラフを一度に追加する。
+		{digraphlist} はリストのリストで、各リストは |setdigraph()| と
+		同じ {chars} と {digraph} の2つの文字列を持つ。
+		例: >
+		    call setdigraphlist([['aa', 'あ'], ['ii', 'い']])
+<
+		これは以下と同様: >
+		    for [chars, digraph] in [['aa', 'あ'], ['ii', 'い']]
+			  call setdigraph(chars, digraph)
+		    endfor
+<		この関数は最初にエラーを返した値以降をとり除き、それ以降のダイ
+		グラフは追加されない。
+
+		|method| としても使用できる: >
+		    GetList()->setdigraphlist()
+<
+		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
+		する。機能が無効の場合、この関数はエラーメッセージを表示する。
+
+
 setenv({name}, {val})						*setenv()*
 		環境変数{name} に {val} を設定する。
 		{val} が |v:null| の場合は、環境変数は削除される。
@@ -9620,6 +9746,9 @@ sha256({string})						*sha256()*
 shellescape({string} [, {special}])			*shellescape()*
 		シェルコマンドの引数として利用できるように{string}をエスケープ
 		する。
+		'shell' がpowershell (MS-Windows) か pwsh (MS-Windows、Linux、
+		MacOS) が設定されている時 、{string} をシングルクォートで囲み、
+		{string}の中のシングルクォートを全て二重にする。
 		MS-Windowsでは、'shellslash' が設定されていない場合、{string}
 		をダブルクォートで囲み、{string}の中のダブルクォートを全て二重
 		にする。そうでなければ、{string}をシングルクォートで囲み、"'"
@@ -10743,8 +10872,9 @@ tempname()
 			:exe "redir > " . tmpfile
 <		Unix では、ファイルはプライベートなディレクトリに置かれる。
 		|tempfile|
-		MS-Windowsでは、'shellslash' がオンのときか 'shellcmdflag' が
-		'-' で始まるときはスラッシュが使われる。
+		MS-Windowsでは、'shellslash' がオンのときか、'shellcmdflag' が
+		'-' で始まり 'shell' が powershell か pwsh を含まない時はスラッ
+		シュが使われる。
 
 term_ 関数群はここに文書化されている: |terminal-function-details|
 
@@ -11557,6 +11687,7 @@ diff			|vimdiff| と 'diff' のサポート
 digraphs		ダイグラフをサポート
 directx			DirectX と 'renderoptions' をサポート
 dnd			レジスタ "~ をサポート |quote_~|
+drop_file		ファイルのドロップ |drop_file| をサポート
 ebcdic			EBCDIC文字集合のマシン用
 emacs_tags		Emacs式のタグファイルをサポート
 eval			式評価をサポート。もちろん常に真。
