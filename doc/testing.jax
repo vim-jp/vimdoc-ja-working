@@ -1,4 +1,4 @@
-*testing.txt*	For Vim バージョン 8.2.  Last change: 2021 Jun 23
+*testing.txt*	For Vim バージョン 8.2.  Last change: 2021 Jul 07
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -82,7 +82,8 @@ test_getvalue({name})					*test_getvalue()*
 						*test_gui_drop_files()*
 test_gui_drop_files({list}, {row}, {col}, {mods})
 		{list} の1つ以上のファイルをウィンドウの {row} 行 {col} 列にド
-		ロップする。この関数はGUIで実行している時のみ動作する。
+		ロップする。この関数はGUIで実行している時で |drag-n-drop| 機能
+		が存在するとき動作する。
 
 		{mods} としてサポートされる値:
 			0x4	Shift
@@ -107,7 +108,7 @@ test_gui_mouse_event({button}, {row}, {col}, {multiclick}, {modifiers})
 		{row} と {col} はマウスクリックの位置を指定する。Vimウィンドウ
 		で最初の行は1で最後の行は 'lines' である。{col} の最大値は
 		'columns' である。
-		マルチクリックイベントを注入するには、{multiclick} に1を設定す
+		マルチクリックイベントnを注入するには、{multiclick} に1を設定す
 		る。
 		{modifiers} としてサポートされる値:
 			4	shiftキーが押されている
