@@ -4827,7 +4827,7 @@ foldclosed({lnum})					*foldclosed()*
 		畳みを構成する最初の行の行番号を返す。{lnum}行目が閉じた折り畳
 		みに入っていないなら-1を返す。
 		{lnum} は |getline()| と同様に扱われる。例えば "." は現在の行、
-		"'m" は m でマークした行、ほか。
+		"'m" は m でマークした行、など。
 
 		|method| としても使用できる: >
 			GetLnum()->foldclosed()
@@ -4837,7 +4837,7 @@ foldclosedend({lnum})					*foldclosedend()*
 		畳みを構成する最後の行の行番号を返す。{lnum}行目が閉じた折り畳
 		みに入っていないなら-1を返す。
 		{lnum} は |getline()| と同様に扱われる。例えば "." は現在の行、
-		"'m" は m でマークした行、ほか。
+		"'m" は m でマークした行、など。
 
 		|method| としても使用できる: >
 			GetLnum()->foldclosedend()
@@ -4851,7 +4851,7 @@ foldlevel({lnum})					*foldlevel()*
 		が未知の行に対しては-1を返す。特別な場合として、普通は1行前の
 		レベルは取得できる。
 		{lnum} は |getline()| と同様に扱われる。例えば "." は現在の行、
-		"'m" は m でマークした行、ほか。
+		"'m" は m でマークした行、など。
 
 		|method| としても使用できる: >
 			GetLnum()->foldlevel()
