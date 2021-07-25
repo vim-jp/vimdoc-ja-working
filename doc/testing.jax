@@ -82,8 +82,8 @@ test_getvalue({name})					*test_getvalue()*
 						*test_gui_drop_files()*
 test_gui_drop_files({list}, {row}, {col}, {mods})
 		{list} の1つ以上のファイルをウィンドウの {row} 行 {col} 列にド
-		ロップする。この関数はGUIで実行している時で |drag-n-drop| 機能
-		が存在するとき動作する。
+		ロップする。この関数は |drag-n-drop| 機能が存在するGUI版のVim
+		でのみ動作する。
 
 		{mods} としてサポートされる値:
 			0x4	Shift
