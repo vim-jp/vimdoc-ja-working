@@ -108,7 +108,7 @@ test_gui_mouse_event({button}, {row}, {col}, {multiclick}, {modifiers})
 		{row} と {col} はマウスクリックの位置を指定する。Vimウィンドウ
 		で最初の行は1で最後の行は 'lines' である。{col} の最大値は
 		'columns' である。
-		マルチクリックイベントnを注入するには、{multiclick} に1を設定す
+		マルチクリックイベントを注入するには、{multiclick} に1を設定す
 		る。
 		{modifiers} としてサポートされる値:
 			4	shiftキーが押されている
