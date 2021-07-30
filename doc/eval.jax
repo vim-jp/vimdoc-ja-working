@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Jul 01
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Jul 28
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2503,6 +2503,10 @@ deletebufline({expr}, {first} [, {last}])
 did_filetype()			数値	FileTypeのautocommandが実行されたか?
 diff_filler({lnum})		数値	差分モードで{lnum}に挿入された行
 diff_hlID({lnum}, {col})	数値	差分モードで{lnum}/{col}位置の強調
+digraph_get({chars})		文字列	{chars} のダイグラフ |digraph| を取得
+digraph_getlist([{listall}])	リスト	すべてのダイグラフ |digraph| を取得
+digraph_set({chars}, {digraph})	真偽値	ダイグラフ |digraph| の登録
+digraph_setlist({digraphlist})	真偽値	複数のダイグラフ |digraph| の登録
 echoraw({expr})			なし	{expr} をそのまま出力する
 empty({expr})			数値	{expr}が空なら|TRUE|
 environ()			辞書	すべての環境変数を返す
@@ -2578,8 +2582,6 @@ getcompletion({pat}, {type} [, {filtered}])
 getcurpos([{winnr}])		リスト	カーソルの位置
 getcursorcharpos([{winnr}])	リスト	カーソルの位置の文字
 getcwd([{winnr} [, {tabnr}]])	文字列	現在の作業ディレクトリを取得
-getdigraph({chars})		文字列	{chars} のダイグラフ |digraph| を取得
-getdigraphlist([{listall}])	リスト	すべてのダイグラフ |digraph| を取得
 getenv({name})			文字列	環境変数を返す
 getfontname([{name}])		文字列	使用しているフォントの名前
 getfperm({fname})		文字列	ファイル{fname}の許可属性を取得
@@ -2873,8 +2875,6 @@ setcharpos({expr}, {list})	数値	{list} の {expr} 位置に設定
 setcharsearch({dict})		辞書	文字検索を{dict}に設定
 setcmdpos({pos})		数値	コマンドライン内のカーソル位置を設定
 setcursorcharpos({list})	数値	{list} の位置へカーソルを移動
-setdigraph({chars}, {digraph})	真偽値	ダイグラフ |digraph| の登録
-setdigraphlist({digraphlist})	真偽値	複数のダイグラフ |digraph| の登録
 setenv({name}, {val})		なし	環境変数を設定
 setfperm({fname}, {mode})	数値	ファイル {fname} のパーミッションを
 					{mode} に設定
@@ -3179,6 +3179,7 @@ append({lnum}, {text})					*append()*
 		{lnum}行目以降にテキストとして追加する。
 		要素としてどの型でも受け入れて文字列に変換される。
 		{lnum}は0でもよく、その場合は1行目の前に行を挿入する。
+		{lnum}は|getline()|と同様に扱われる。
 		失敗した場合は1を返す({lnum}が不正な範囲であるか、メモリ不足)。
 		成功なら0を返す。例: >
 			:let failed = append(line('$'), "# THE END")
@@ -3444,8 +3445,9 @@ bufloaded({expr})					*bufloaded()*
 			let loaded = 'somename'->bufloaded()
 
 bufname([{expr}])					*bufname()*
-		戻り値はバッファの名前。バッファ名はコマンド ":ls" で表示され
-		るものと同様。
+		戻り値はバッファの名前。バッファ名はコマンド `:ls` で表示され
+		るものとほとんど同じだが、例えば "[No Name]" などの特殊名は使
+		用しない。
 		{expr}が省略された場合は、カレントバッファが使われる。
 		{expr}が数値ならば、その番号のバッファ名が返される。0は現在の
 		ウィンドウの代替バッファを意味する。{expr}が文字列ならば、バッ
@@ -3479,7 +3481,7 @@ bufname([{expr}])					*bufname()*
 
 							*bufnr()*
 bufnr([{expr} [, {create}]])
-		結果はバッファの番号。バッファ番号はコマンド ":ls" で表示され
+		結果はバッファの番号。バッファ番号はコマンド `:ls` で表示され
 		るものと同様。{expr}の使い方は前述の |bufname()| を参照。
 
 		バッファが存在しない場合-1が返される。ただし、{create}が与えら
@@ -3659,10 +3661,11 @@ charidx({string}, {idx} [, {countcc}])
 		{string} 内の {idx} バイト目の文字インデックスを返す。最初の文
 		字のインデックスは0。
 		マルチバイト文字がない時は {idx} に等しい値を返す。
-		{countcc} がないもしくは0の場合、合成文字は分割して文字として
-		カウントせず、先行する基底文字に合成文字のバイト長が足される。
-		{countcc} が1の場合、合成文字は分割した文字としてカウントされ
-		る。
+		{countcc} がないもしくは |FALSE| の場合、合成文字は分割して文
+		字としてカウントせず、先行する基底文字に合成文字のバイト長が足
+		される。
+		{countcc} が |TRUE| の場合、合成文字は分割した文字としてカウン
+		トされる。
 		引数が不正であるか {idx} が {string} の最後のバイトより大きい
 		場合-1が返る。最初の引数が文字列でない、2番目の引数が数値でな
 		い、もしくは3番目の引数ありで0でも1でもない場合はエラーとなる。
@@ -3817,9 +3820,11 @@ complete_info([{what}])
 		   items 	補完マッチのリスト。各要素は "word", "abbr",
 				"menu", "kind", "info", "user_data" を含む辞書。
 				|complete-items| を参照。
-		   selected	選択された補完候補のインデックス。最初のインデッ
-				クスが 0。どの補完候補も選択されていなければ -1
-				(入力したテキストのみを表示)。
+		   selected	選択された補完候補のインデックス。最初のイン
+				デックスが 0。どの補完候補も選択されていなけれ
+				ば -1 (入力したテキストのみ表示、もしくは <Up>
+				や <Down> キーを利用した最後の補完後に選択しな
+				かった場合)。
 		   inserted	入力された文字列。[現時点では未実装]
 
 							*complete_info_mode*
@@ -4031,6 +4036,7 @@ cursor({list})
 		|setcursorcharpos()| を使う。
 
 		この関数を呼んでもジャンプリストは変更されない。
+		{lnum}は|getline()|と同様に扱われる。
 		{lnum}がバッファの行数よりも大きい場合は、最後の行へ移動する。
 		{lnum}が0の場合はカレント行に留まる。
 		{col}がその行のバイト数より大きい場合は、その行の最後の文字へ
@@ -4154,6 +4160,102 @@ diff_hlID({lnum}, {col})				*diff_hlID()*
 
 		|method| としても使用できる: >
 			GetLnum()->diff_hlID(col)
+<
+
+digraph_get({chars})					*digraph_get()* *E1214*
+		{chars} のダイグラフを返す。これは正確に2文字の文字列である必
+		要がある。もし {chars} が2文字ちょうどでない、もしくは {chars}
+		のダイグラフがないなら、エラーとなり空文字列を返す。
+
+		文字をUnicodeから変換する必要があるときは 'encoding' が必要。
+		{訳注: 文字の}変換が利用可能である必要があり、失敗することがあ
+		る。
+
+		|digraph_getlist()| も参照。
+
+		例: >
+		" 組み込みのダイグラフの取得
+		:echo digraph_get('00')		" '∞' が返る
+
+		" ユーザー定義のダイグラフの取得
+		:call digraph_set('aa', 'あ')
+		:echo digraph_get('aa')		" 'あ' が返る
+<
+		|method| としても使用できる: >
+			GetChars()->digraph_get()
+<
+		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
+		する。機能が無効の場合、この関数はエラーメッセージを表示する。
+
+
+digraph_getlist([{listall}])				*digraph_getlist()*
+		ダイグラフのリストを返す。引数 {listall} が真で与えられたとき、
+		デフォルトのダイグラフを含む全ダイグラフを返す。それ以外はユー
+		ザー定義のダイグラフのみを返す。
+
+		文字をUnicodeから変換する必要があるときは 'encoding' が必要。
+		{訳注: 文字の}変換が利用可能である必要があり、失敗することがあ
+		る。
+
+		|digraph_get()| も参照。
+
+		例: >
+		" ユーザー定義のダイグラフの取得
+		:echo digraph_getlist()
+
+		" デフォルトを含む全ダイグラフの取得
+		:echo digraph_getlist(1)
+<
+		|method| としても使用できる: >
+			GetNumber()->digraph_getlist()
+<
+		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
+		する。機能が無効の場合、この関数はエラーメッセージを表示する。
+
+
+digraph_set({chars}, {digraph})				*digraph_set()* *E1205*
+		ダイグラフ {chars} をリストに追加する。{chars} は2文字の文字列
+		の必要がある。{digraph} はUTF-8でエンコードされた1文字の文字
+		列。注意すべき点として、合成文字は無視される。この関数は
+		|:digraphs| と同様だがスペース始まりのダイグラフを登録するに便
+		利である。
+
+		この関数はダイグラフ |digraph| は登録されたなら v:true を返す。
+		もし失敗したなら、エラーメッセージとともに v:false を返す。
+
+		一度に複数のダイグラフを登録したいなら、|digraph_setlist()| が
+		使える。
+
+		例: >
+			call digraph_set('  ', 'あ')
+<
+		|method| としても使用できる: >
+			GetString()->digraph_set('あ')
+<
+		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
+		する。機能が無効の場合、この関数はエラーメッセージを表示する。
+
+
+digraph_setlist({digraphlist})				*digraph_setlist()*
+		|digraph_set()| と同じだが複数のダイグラフを一度に追加する。
+		{digraphlist} はリストのリストで、各リストは |digraph_set()|
+		と同じ {chars} と {digraph} の2つの文字列を持つ。
+		例: >
+		    call digraph_setlist([['aa', 'あ'], ['ii', 'い']])
+<
+		これは以下と同様: >
+		    for [chars, digraph] in [['aa', 'あ'], ['ii', 'い']]
+			  call digraph_set(chars, digraph)
+		    endfor
+<		この関数は最初にエラーを返した値以降をとり除き、それ以降のダイ
+		グラフは追加されない。
+
+		|method| としても使用できる: >
+		    GetList()->digraph_setlist()
+<
+		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
+		する。機能が無効の場合、この関数はエラーメッセージを表示する。
+
 
 echoraw({expr})						*echoraw()*
 		{expr}を表示不可能な文字を含み、そのまま出力する。これは端末
@@ -4294,6 +4396,8 @@ exepath({expr})						*exepath()*
 							*exists()*
 exists({expr})	結果は数値で、変数{expr}が存在すれば|TRUE|となり、そうでなけれ
 		ば0となる。
+		Note: コンパイルされる |:def| 関数内のローカル変数と引数は
+		`exists()` からは見えない。
 
 		ある機能がサポートされているか判定するには|has()|を使う。
 		ファイルが存在するかを判定するには|filereadable()|を使う。
@@ -4314,6 +4418,8 @@ exists({expr})	結果は数値で、変数{expr}が存在すれば|TRUE|とな�
 			varname		内部変数(|internal-variables|)
 					|curly-braces-names|, |Dictionary|の要
 					素、|List|の要素などに対しても動作する。
+					コンパイルされる |:def| 関数内のローカ
+					ル変数には動作しない。
 					インデックスの評価で無効な式であるとエ
 					ラーメッセージが出る可能性があることに
 					注意。例: >
@@ -4621,16 +4727,20 @@ filewritable({file})					*filewritable()*
 
 
 filter({expr1}, {expr2})					*filter()*
-		{expr1}はリスト|List|または辞書|Dictionary|でなければならない。
+		{expr1}はリスト|List|、|Blob|、辞書|Dictionary|でなければなら
+		ない。
 		{expr1}の各要素に対して{expr2}を評価し、その結果が0ならばリス
-		トまたは辞書からその要素を削除する。
+		トまたは辞書からその要素を削除する。|Blob| であればそのバイト
+		を削除する。
+
 		{expr2}は文字列|string|または関数参照|Funcref|でなければならな
 		い。
 
 		{expr2}が文字列の場合、{expr2}の内部では|v:val|が現在の要素の
 		値を保持している。辞書の場合は|v:key|が現在の要素のキーを保持
 		しており、リストの場合は|v:key|が現在の要素のインデックスを保
-		持している。
+		持している。|Blob| の場合は |v:key| が現在のバイトのインデック
+		スになる。
 		例: >
 			call filter(mylist, 'v:val !~ "OLD"')
 <		は要素 "OLD" を削除する。 >
@@ -4661,11 +4771,11 @@ filter({expr1}, {expr2})					*filter()*
 		ない場合は最初にコピーを作ること: >
 			:let l = filter(copy(mylist), 'v:val =~ "KEEP"')
 
-<		{expr1}のリストまたは辞書をフィルターした結果を返す。{expr2}を
-		評価している最中にエラーが発生した場合は、{expr1}内のそれ以降
-		の要素の処理は行われない。{expr2}が関数参照の場合、関数が
-		"abort" フラグつきで定義されていない限り、関数内のエラーは無視
-		される。
+<		{expr1}のリスト |List|、|Blob|、 または辞書 |Dictionary| をフ
+		ィルターした結果を返す。{expr2}を評価している最中にエラーが発
+		生した場合は、{expr1}内のそれ以降の要素の処理は行われない。
+		{expr2}が関数参照の場合、関数が "abort" フラグつきで定義されて
+		いない限り、関数内のエラーは無視される。
 
 		|method| としても使用できる: >
 			mylist->filter(expr2)
@@ -5495,56 +5605,6 @@ getcwd([{winnr} [, {tabnr}]])
 
 <		|method| としても使用できる: >
 			GetWinnr()->getcwd()
-<
-						*getdigraph()* *E1214*
-getdigraph({chars})
-		{chars} のダイグラフを返す。これは正確に2文字の文字列である必
-		要がある。もし {chars} が2文字ちょうどでない、もしくは {chars}
-		のダイグラフがないなら、エラーとなり空文字列を返す。
-
-		文字をUnicodeから変換する必要があるときは 'encoding' が必要。
-		{訳注: 文字の}変換が利用可能である必要があり、失敗することがあ
-		る。
-
-		|getdigraphlist()| も参照。
-
-		例: >
-		" 組み込みのダイグラフの取得
-		:echo getdigraph('00')		" '∞' が返る
-
-		" ユーザー定義のダイグラフの取得
-		:call setdigraph('aa', 'あ')
-		:echo getdigraph('aa')		" 'あ' が返る
-<
-		|method| としても使用できる: >
-			GetChars()->getdigraph()
-<
-		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
-		する。機能が無効の場合、この関数はエラーメッセージを表示する。
-
-getdigraphlist([{listall}])			*getdigraphlist()*
-		ダイグラフのリストを返す。引数 {listall} が真で与えられたとき、
-		デフォルトのダイグラフを含む全ダイグラフを返す。それ以外はユー
-		ザー定義のダイグラフのみを返す。
-
-		文字をUnicodeから変換する必要があるときは 'encoding' が必要。
-		{訳注: 文字の}変換が利用可能である必要があり、失敗することがあ
-		る。
-
-		|getdigraph()| も参照。
-
-		例: >
-		" ユーザー定義のダイグラフの取得
-		:echo getdigraphlist()
-
-		" デフォルトを含む全ダイグラフの取得
-		:echo digraphlist(1)
-<
-		|method| としても使用できる: >
-			GetNumber()->getdigraphlist()
-<
-		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
-		する。機能が無効の場合、この関数はエラーメッセージを表示する。
 
 getenv({name})						*getenv()*
 		環境変数{name}の値を返す。
@@ -6958,10 +7018,10 @@ line2byte({lnum})					*line2byte()*
 		次のようにすることで最終行を含むバイトサイズを獲得することがで
 		きる: >
 			line2byte(line("$") + 1)
-<		これはバッファの大きさプラス1になる。もし 'fileencoding' が空
-		ならその値はファイルの大きさプラス1に等しい。
-		{lnum}が無効であるか、|+byte_offset|機能がコンパイル時に無効に
-		されている場合、-1が返される。
+<		これはバッファの大きさプラス1になる。 {lnum}は|getline()|と同
+		様に扱われる。もし 'fileencoding' が空ならその値はファイルの大
+		きさプラス1に等しい。{lnum}が無効であるか、|+byte_offset|機能
+		がコンパイル時に無効にされている場合、-1が返される。
 		|byte2line()|、|go|及び|:goto|も参照。
 
 		|method| としても使用できる: >
@@ -7128,6 +7188,7 @@ luaeval({expr} [, {expr}])					*luaeval()*
 		vim.eval() で取得される辞書とリストはそのまま返される。
 		それ以外のオブジェクトは 0 が返され、エラーにはならない。
 		詳細は |lua-luaeval| を参照。
+		Note `:def` 関数にあるローカル変数は {expr} からは見えない。
 
 		|method| としても使用できる: >
 			GetExpr()->luaeval()
@@ -7147,7 +7208,8 @@ map({expr1}, {expr2})					*map()*
 		{expr2}が文字列の場合、{expr2}の内部では|v:val|が現在の要素の
 		値を保持している。辞書の場合は|v:key|が現在の要素のキーを保持
 		している。リストの場合は|v:key|が現在の要素のインデックスを保
-		持している。
+		持している。|Blob| の場合は |v:key| が現在のバイトのインデック
+		スを保持している。
 		例: >
 			:call map(mylist, '"> " . v:val . " <"')
 <		これは "mylist" の各要素の前に "> " をつけ、後に " <" をつける。
@@ -7773,6 +7835,12 @@ mode([expr])	現在のモードを示す文字列を返す。
 		   s	    文字単位選択
 		   S	    行単位選択
 		   CTRL-S   矩形選択
+		   vs	    選択モードで |v_CTRL-O| を利用した時の文字単位ビ
+			    ジュアル
+		   Vs	    選択モードで |v_CTRL-O| を利用した時の行単位ビジュ
+			    アル
+		   CTRL-Vs  選択モードで |v_CTRL-O| を利用した時の矩形単位ビ
+			    ジュアル
 		   i	    挿入
 		   ic	    挿入モード補完 |compl-generic|
 		   ix	    挿入モード |i_CTRL-X| 補完
@@ -7814,6 +7882,8 @@ mzeval({expr})							*mzeval()*
 		    :echo mzeval("l")
 		    :echo mzeval("h")
 <
+		Note `:def` 関数にあるローカル変数は {expr} からは見えない。
+
 		|method| としても使用できる: >
 			GetExpr()->mzeval()
 <
@@ -7824,6 +7894,7 @@ nextnonblank({lnum})					*nextnonblank()*
 		例: >
 			if getline(nextnonblank(1)) =~ "Java"
 <		{lnum}が無効なときや、それ以降に非空行がないときは0を返す。
+		{lnum}は|getline()|と同様に扱われる。
 		|prevnonblank()|も参照。
 
 		|method| としても使用できる: >
@@ -7884,6 +7955,8 @@ perleval({expr})					*perleval()*
 			:echo perleval('[1 .. 4]')
 <			[1, 2, 3, 4]
 
+		Note `:def` 関数にあるローカル変数は {expr} からは見えない。
+
 		|method| としても使用できる: >
 			GetExpr()->perleval()
 
@@ -7912,6 +7985,7 @@ prevnonblank({lnum})					*prevnonblank()*
 		例: >
 			let ind = indent(prevnonblank(v:lnum - 1))
 <		{lnum}が無効なときや、それ以前に非空行がないときは0を返す。
+		{lnum}は|getline()|と同様に扱われる。
 		|nextnonblank()|も参照。
 
 		|method| としても使用できる: >
@@ -8186,6 +8260,7 @@ py3eval({expr})						*py3eval()*
 		リストは Vim の |List| 型に変換される。
 		辞書は Vim の |Dictionary| 型に変換される。辞書のキーは文字列
 		に変換される。
+		Note `:def` 関数にあるローカル変数は {expr} からは見えない。
 
 		|method| としても使用できる: >
 			GetExpr()->py3eval()
@@ -8200,6 +8275,7 @@ pyeval({expr})						*pyeval()*
 		リストは Vim の |List| 型に変換される。
 		辞書は Vim の |Dictionary| 型に変換される。文字列ではない辞書
 		のキーはエラーになる。
+		Note `:def` 関数にあるローカル変数は {expr} からは見えない。
 
 		|method| としても使用できる: >
 			GetExpr()->pyeval()
@@ -8459,7 +8535,9 @@ reltime([{start} [, {end}]])				*reltime()*
 		を返す。
 		2個の引数を指定すると、{start}と{end}の間の経過時間を返す。
 
-		{start}と{end}はreltime()で返される値でなければならない。
+		{start}と{end}はreltime()で返される値でなければならない。旧来
+		の Vim script ではエラーがあると0を返すが、Vim9 script ではエ
+		ラーとなる。
 
 		|method| としても使用できる: >
 			GetStart()->reltime()
@@ -8474,6 +8552,8 @@ reltimefloat({time})				*reltimefloat()*
 			let seconds = reltimefloat(reltime(start))
 <		オーバーヘッドについては reltimestr() の note を参照。
 		|profiling|も参照。
+		旧来の Vim script ではエラーがあると0.0を返すが、Vim9 script
+		ではエラーとなる。
 
 		|method| としても使用できる: >
 			reltime(start)->reltimefloat()
@@ -8492,6 +8572,8 @@ reltimestr({time})				*reltimestr()*
 		スペースを取り除くにはsplit()を使えばよい。 >
 			echo split(reltimestr(reltime(start)))[0]
 <		|profiling|も参照。
+		旧来の Vim script ではエラーがあると空文字列を返すが、Vim9
+		script ではエラーとなる。
 
 		|method| としても使用できる: >
 			reltime(start)->reltimestr()
@@ -8719,6 +8801,7 @@ rubyeval({expr})					*rubyeval()*
 		ハッシュは Vim の |Dictionary| 型に変換される。
 		それ以外のオブジェクトは "Object#to_s" メソッドの結果の文字列
 		として表現される。
+		Note `:def` 関数にあるローカル変数は {expr} からは見えない。
 
 		|method| としても使用できる: >
 			GetRubyExpr()->rubyeval()
@@ -9310,50 +9393,6 @@ setcursorcharpos({list})
 
 		|method| としても使用できる: >
 			GetCursorPos()->setcursorcharpos()
-
-
-setdigraph({chars}, {digraph})		*setdigraph()* *E1205*
-		ダイグラフ {chars} をリストに追加する。{chars} は2文字の文字列
-		の必要がある。{digraph} はUTF-8でエンコードされた1文字の文字
-		列。注意すべき点として、合成文字は無視される。この関数は
-		|:digraphs| と同様だがスペース始まりのダイグラフを登録するに便
-		利である。
-
-		この関数はダイグラフ |digraph| は登録されたなら v:true を返す。
-		もし失敗したなら、エラーメッセージとともに v:false を返す。
-
-		一度に複数のダイグラフを登録したいなら、|setdigraphlist()| が
-		使える。
-
-		例: >
-			call setdigraph('  ', 'あ')
-<
-		|method| としても使用できる: >
-			GetString()->setdigraph('あ')
-<
-		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
-		する。機能が無効の場合、この関数はエラーメッセージを表示する。
-
-
-setdigraphlist({digraphlist})			*setdigraphlist()*
-		|setdigraph()| と同じだが複数のダイグラフを一度に追加する。
-		{digraphlist} はリストのリストで、各リストは |setdigraph()| と
-		同じ {chars} と {digraph} の2つの文字列を持つ。
-		例: >
-		    call setdigraphlist([['aa', 'あ'], ['ii', 'い']])
-<
-		これは以下と同様: >
-		    for [chars, digraph] in [['aa', 'あ'], ['ii', 'い']]
-			  call setdigraph(chars, digraph)
-		    endfor
-<		この関数は最初にエラーを返した値以降をとり除き、それ以降のダイ
-		グラフは追加されない。
-
-		|method| としても使用できる: >
-		    GetList()->setdigraphlist()
-<
-		この関数は |+digraphs| 機能付きでコンパイルされたときのみ動作
-		する。機能が無効の場合、この関数はエラーメッセージを表示する。
 
 
 setenv({name}, {val})						*setenv()*
@@ -10555,7 +10594,7 @@ synID({lnum}, {col}, {trans})				*synID()*
 		{line}に1を指定する。'synmaxcol' が適用され、長すぎる行では0が
 		返ってくる。
 		Note 挿入モードでカーソル位置を最後の文字より後ろにした場合、
-		synID()は0を返す。
+		synID()は0を返す。{lnum}は|getline()|と同様に扱われる。
 
 		{trans}が|TRUE|ならば、透過属性のアイテムは省略され、実際に表
 		示されているアイテムが評価対象になる。これは実際に有効になって
@@ -10620,7 +10659,7 @@ synconcealed({lnum}, {col})				*synconcealed()*
 		結果は現状 3 つのアイテムを含むリスト |List| である。
 		1. リストの 1 番目のアイテムは、{lnum} と {col} が指す位置の文
 		   字が Conceal 可能リージョンの中にあるなら 1、そうでないなら
-		   0。
+		   0。{lnum}は|getline()|と同様に扱われる。
 		2. リストの 2 番目のアイテムは文字列で、最初のアイテムが 1 な
 		   ら、Conceal されたテキストの代わりに表示されるテキストが入
 		   る (実行時の'conceallevel' および 'listchars' の設定に依
@@ -10643,8 +10682,8 @@ synconcealed({lnum}, {col})				*synconcealed()*
 
 synstack({lnum}, {col})					*synstack()*
 		カレントウィンドウの {lnum}, {col} の位置の構文アイテムのスタッ
-		クを |List| にして返す。このリストの要素は |synID()|が返すのと
-		同じ種類の ID である。
+		クを |List| にして返す。{lnum}は|getline()|と同様に扱われる。
+		このリストの要素は |synID()|が返すのと同じ種類の ID である。
 		リストの最初の要素が一番外側の領域で、続く要素がその中に内包さ
 		れている。アイテム全体がハイライトされている、または最後の要素
 		が transparent なアイテムである場合を除き、最後の要素が
