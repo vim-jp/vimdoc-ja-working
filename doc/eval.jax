@@ -11349,10 +11349,10 @@ win_gettype([{nr}])					*win_gettype()*
 		ウィンドウの種別を返す:
 			"autocmd"	自動コマンドのウィンドウ。自動コマンド
 					を実行するに使う一時的なウィンドウ。
-			"popup"		ポップアップウィンドウ |popup|
-			"preview"	プレビューウィンドウ |preview-window|
 			"command"	コマンドラインウィンドウ |cmdwin|
 			(empty)		通常のウィンドウ
+			"popup"		ポップアップウィンドウ |popup|
+			"preview"	プレビューウィンドウ |preview-window|
 			"unknown"	ウィンドウ{nr}が見付からない
 
 		{nr} を省略した場合は現在のウィンドウの種別を返す。
