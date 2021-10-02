@@ -2,6 +2,9 @@ name: depup
 on:
   schedule:
     - cron: '35 9 2,13,25 * *' # Runs at 9:35 UTC 2,13,25 per month
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   reviewdog:
