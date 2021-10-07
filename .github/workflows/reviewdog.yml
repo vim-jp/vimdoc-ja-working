@@ -1,5 +1,8 @@
 name: reviewdog
 on: pull_request
+permissions:
+  pull-requests: write
+
 jobs:
   nvcheck:
     name: runner / nvcheck
@@ -9,11 +12,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: true
-      - name: nvcheck-github-pr-check
+      - name: nvcheck-github-pr-review
         uses: ./.github/actions/vimhelp-nvcheck/
         with:
           github_token: ${{ secrets.github_token }}
-          reporter: github-pr-check
+          reporter: github-pr-review
           level: error
           fail_on_error: true
 
