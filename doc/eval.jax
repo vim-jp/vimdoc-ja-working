@@ -4234,7 +4234,7 @@ digraph_set({chars}, {digraph})				*digraph_set()* *E1205*
 
 
 digraph_setlist({digraphlist})				*digraph_setlist()*
-		|digraph_set()| と同じだが複数のダイグラフを一度に追加する。
+		|digraph_set()| と同じだが複数のダイグラフを一度に追加できる。
 		{digraphlist} はリストのリストで、各リストは |digraph_set()|
 		と同じ {chars} と {digraph} の2つの文字列を持つ。
 		例: >
