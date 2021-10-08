@@ -9166,8 +9166,8 @@ searchpair({start}, {middle}, {end} [, {flags} [, {skip}
 		-1を返す。
 		{skip} は、文字列、ラムダ、関数参照もしくは部分適用のいずれか
 		である。それ以外の場合、関数は失敗する。
-		`:def` 関数内では引数 {skip} が文字列定数の場合、命令の中にコンパ
-		イルされる。
+		`:def` 関数内では引数 {skip} が文字列定数の場合、命令の中にコ
+		ンパイルされる。
 
 		{stopline} と {timeout} については|search()|を参照。
 
@@ -9788,7 +9788,7 @@ shellescape({string} [, {special}])			*shellescape()*
 		シェルコマンドの引数として利用できるように{string}をエスケープ
 		する。
 		'shell' がpowershell (MS-Windows) か pwsh (MS-Windows、Linux、
-		MacOS) が設定されている時 、{string} をシングルクォートで囲み、
+		MacOS) が設定されている時、{string} をシングルクォートで囲み、
 		{string}の中のシングルクォートを全て二重にする。
 		MS-Windowsでは、'shellslash' が設定されていない場合、{string}
 		をダブルクォートで囲み、{string}の中のダブルクォートを全て二重
@@ -11352,8 +11352,10 @@ win_gettype([{nr}])					*win_gettype()*
 					を実行するに使う一時的なウィンドウ。
 			"command"	コマンドラインウィンドウ |cmdwin|
 			(empty)		通常のウィンドウ
+			"loclist"	|location-list-window|
 			"popup"		ポップアップウィンドウ |popup|
 			"preview"	プレビューウィンドウ |preview-window|
+			"quickfix"	|quickfix-window|
 			"unknown"	ウィンドウ{nr}が見付からない
 
 		{nr} を省略した場合は現在のウィンドウの種別を返す。
