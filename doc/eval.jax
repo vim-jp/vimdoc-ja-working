@@ -8218,6 +8218,8 @@ prompt_setinterrupt({buf}, {expr})			*prompt_setinterrupt()*
 		|method| としても使用できる: >
 			GetBuffer()->prompt_setinterrupt(callback)
 
+<		{|+channel| 機能つきでコンパイルされたときのみ存在する}
+
 prompt_setprompt({buf}, {text})				*prompt_setprompt()*
 		バッファ {buf} のプロンプトを {text} に設定する。大抵の場合、
 		{text} が空白で終わるようにしたいと考えるだろう。
@@ -8227,6 +8229,8 @@ prompt_setprompt({buf}, {text})				*prompt_setprompt()*
 <
 		|method| としても使用できる: >
 			GetBuffer()->prompt_setprompt('command: ')
+
+<		{|+channel| 機能つきでコンパイルされたときのみ存在する}
 
 prop_ 関数群はここに文書化されている: |text-prop-functions|
 
@@ -8860,7 +8864,7 @@ screenpos({winid}, {lnum}, {col})				*screenpos()*
 		"curscol" は、カーソルが置かれる場所。タブの場合は "endcol" と
 		同じになるが、倍幅文字の場合は "col" と同じになる。
 		|conceal| 機能はここでは無視され、列の数字は 'conceallevel' が
-		0のときと同じになる。カーソルの位置は右に設定でき
+		0のときと同じになる。カーソルの位置を正しい設定にでき
 		|screencol()| を使うことで |conceal| を考慮した値を取得できる。
 
 		|method| としても使用できる: >
