@@ -4240,12 +4240,12 @@ digraph_setlist({digraphlist})				*digraph_setlist()*
 		例: >
 		    call digraph_setlist([['aa', 'あ'], ['ii', 'い']])
 <
-		これは以下と同様: >
+		これは以下と似ている: >
 		    for [chars, digraph] in [['aa', 'あ'], ['ii', 'い']]
 			  call digraph_set(chars, digraph)
 		    endfor
-<		この関数は最初にエラーを返した値以降をとり除き、それ以降のダイ
-		グラフは追加されない。
+<		しかし、この関数は最初のエラーでリターンし、それ以降のダイグラ
+		フは追加されない点が異なる。
 
 		|method| としても使用できる: >
 		    GetList()->digraph_setlist()
