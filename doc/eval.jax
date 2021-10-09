@@ -2567,8 +2567,7 @@ getbufline({expr}, {lnum} [, {end}])
 getbufvar({expr}, {varname} [, {def}])
 				任意	バッファ{expr}の変数 {varname}
 getchangelist([{expr}])		リスト	変更リスト要素のリスト
-getchar([expr])			数値/文字列
-					ユーザーから1文字を取得する
+getchar([expr])			数値/文字列	ユーザーから1文字を取得する
 getcharmod()			数値	修飾キーの状態を表す数値を取得
 getcharpos({expr})		リスト	カーソル、マーク、その他のカーソル位置
 getcharsearch()			辞書	最後の文字検索を取得
@@ -7015,10 +7014,11 @@ line2byte({lnum})					*line2byte()*
 		次のようにすることで最終行を含むバイトサイズを獲得することがで
 		きる: >
 			line2byte(line("$") + 1)
-<		これはバッファの大きさプラス1になる。もし 'fileencoding' が空な
-		らその値はファイルの大きさプラス1に等しい。{lnum}は|getline()|
-		と同様に扱われる。{lnum}が無効であるか、|+byte_offset|機能がコ
-		ンパイル時に無効にされている場合、-1が返される。
+<		これはバッファの大きさプラス1になる。もし 'fileencoding' が空
+		ならその値はファイルの大きさプラス1に等しい。{lnum} は
+		|getline()| と同様に扱われる。{lnum} が無効であるか、
+		|+byte_offset| 機能がコンパイル時に無効にされている場合、-1が
+		返される。
 		|byte2line()|、|go|及び|:goto|も参照。
 
 		|method| としても使用できる: >
@@ -7837,7 +7837,7 @@ mode([expr])	現在のモードを示す文字列を返す。
 		   Vs	    選択モードで |v_CTRL-O| を利用した時の行単位ビジュ
 			    アル
 		   CTRL-Vs  選択モードで |v_CTRL-O| を利用した時の矩形ビジュア
-		   ル
+			    ル
 		   i	    挿入
 		   ic	    挿入モード補完 |compl-generic|
 		   ix	    挿入モード |i_CTRL-X| 補完
