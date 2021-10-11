@@ -5011,9 +5011,9 @@ LineNrAbove	'relativenumber' オプションが設定されているときのカ
 LineNrBelow	'relativenumber' オプションが設定されているときのカーソル行の
 		下の行番号。
 							*hl-CursorLineNr*
-CursorLineNr	LineNr と同じだが 'cursorline' が設定され、'cursorlineopt' が
-		"number" または "both" が含まれた設定されているときに現在行に
-		"使われる。
+CursorLineNr	LineNr と同じだが 'cursorline' が設定され、'cursorlineopt' に
+		"number" が含まれるか "both" が設定されているときに現在行に使
+		"われる。
 							*hl-MatchParen*
 MatchParen	カーソル下の文字、または直後の文字が括弧であるとき、その文字と
 		対応する括弧に使われる。|pi_paren.txt|
