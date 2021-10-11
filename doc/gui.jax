@@ -619,15 +619,9 @@ CTRL-Oの仕様による。2つ以上のコマンドを使うには、":imenu" �
 
    :amenu Insert.foobar   "='foobar'<CR>P
 
-<<<<<<< HEAD
 特殊なテキスト <Cmd> は "コマンドメニュー" を開始し、モードを変更せずにコマン
 ドを直接実行する。":...<CR>" を使う箇所で代わりに "<Cmd>...<CR>" を使うことが
 できる。詳細は |<Cmd>| を参照。例: >
-=======
-特別な文字列 <Cmd> は "コマンドメニュー" を開始し、モードを変化させずにコマン
-ドを直に実行します。":...<CR>" を使う代わりに "<Cmd>...<CR>" が使えます。詳細
-は |<Cmd>| を参照してください。 例: >
->>>>>>> 0d8c941d ({arabic,diff,filetype,gui}.jax: Update Vim 8.2.3487 translation)
 	anoremenu File.Next <Cmd>next<CR>
 
 Note: 'cpoptions' の中の '<' フラグと 'k' フラグが適用される(含まれていたとき
