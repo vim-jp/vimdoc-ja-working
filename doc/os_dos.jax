@@ -301,90 +301,84 @@ Win32の例:
 	<shell> -c "command name >file"
 DOS 32ビットでは、DJGPPが内部的にどうにかして処理する。
 
-起動時にVimは "sh" が 'shell' オプション内のどこかにあるかチェックする。存在す
-るならば、Vimは 'shellcmdflag' と 'shellquote' または 'shellxquote' オプション
-を上記のように設定するだろう。
-
-When starting up, if Vim does not recognise a standard Windows shell it checks
-for the presence of "sh" anywhere in the 'shell' option.  If it is present,
-Vim sets the 'shellcmdflag' and 'shellquote' or 'shellxquote' options will be
-set as described above.
+起動時にVimがWindowsの標準シェルを認識しない場合は "sh" が 'shell' オプション
+内のどこかにあるかチェックする。存在するならば、Vimは 'shellcmdflag' と
+'shellquote' または 'shellxquote' オプションを上記のように設定するだろう。
 
 ==============================================================================
 10. PowerShell					*dos-powershell* *dos-pwsh*
 
-Vim supports PowerShell Desktop and PowerShell Core.  PowerShell Desktop is
-the version of PowerShell that is installed with Windows, while PowerShell
-Core is a separate downloadable version that works cross-platform.  To see
-which version you are using then enter the following in a PowerShell prompt -
-$PSVersionTable.PSEdition
+Vim は PowerShell Desktop および PowerShell Core をサポートする。PowerShell
+Desktop はWindowsにインストールされている のPowerShell のバージョンで、
+PowerShell Core はクロスプラットフォームで動くダウンロード可能な分離されたバー
+ジョンである。使用しているのがどちらのバージョンであるかは PowerShell のプロン
+プトで以下を入力することで確認できる - $PSVersionTable.PSEdition
 
-If 'shell' includes "powershell" in the filename at startup then VIM sets
-'shellcmdflag', 'shellxquote', 'shellpipe', and 'shellredir' options to the
-following values:
+起動時に 'shell' オプションのファイル名に "powershell" が含まれる時、Vimは
+'shellcmdflag'、'shellxquote'、'shellpipe'、'shellredir' オプションについて以
+下の値を設定する:
 
 'shellcmdflag'	-Command
 'shellxquote'	"
 'shellpipe'	2>&1 | Out-File -Encoding default
 'shellredir'	2>&1 | Out-File -Encoding default
 
-If 'shell' includes "pwsh" in the filename at startup then VIM sets
-'shellcmdflag', 'shellxquote', 'shellpipe', and 'shellredir' options to the
-following values:
+起動時に 'shell' オプションのファイル名に "pwsh" が含まれる時、Vimは
+'shellcmdflag'、'shellxquote'、'shellpipe'、'shellredir' オプションについて以
+下の値を設定する:
 
 'shellcmdflag'	-c
 'shellxquote'	"
 'shellpipe'	>%s 2>&1
 'shellredir'	>%s 2>&1
 
-If you find that PowerShell commands are taking a long time to run then try
-with "-NoProfile" at the beginning of the 'shellcmdflag'.  Note this will
-prevent any PowerShell environment setup by the profile from taking place.
+PowerShell コマンドの実行で時間がかかる場合には 'shellcmdflag' の先頭を
+"-NoProfile" にすること試す。 Note これにより PowerShell 環境のプロファイルで
+の設定が行われるのを防ぐ。
 
-If you have problems running PowerShell scripts through the 'shell' then try
-with "-ExecutionPolicy RemoteSigned -Command" at the beginning of
-'shellcmdflag'.  See online Windows documentation for more information on
-PowerShell Execution Policy settings.
+'shell' 経由での PowerShell スクリプトの実行に問題がある場合には
+'shellcmdflag' の先頭を "-ExecutionPolicy RemoteSigned -Command" にするのを試
+す。詳細についてはオンラインの Windows のドキュメントにある PowerShell 実行ポ
+リシー設定を参照する。
 
-See |option-backslash| about including spaces in 'shellcmdflag' when using
-multiple flags.
+'shellcmdflag' で空白を含む複数のフラグを使用するときについては
+|option-backslash| を参照。
 
-The 'shellpipe' and 'shellredir' option values re-encode the UTF-16le output
-from PowerShell Desktop to your currently configured console codepage.  The
-output can be forced into a different encoding by changing "default" to one of
-the following:
+'shellpipe' および 'shellredir' オプションの値は PowerShell Desktop の
+UTF-16le 出力を現在のあなたのコンソールのコードページに再エンコードする。「デ
+フォルト値」を以下のどれかに変更することで出力を別のエンコーディングに強制でき
+る:
 
-	unicode		 - UTF-16le (default output from PowerShell 5.1)
+	unicode		 - UTF-16le (PowerShell 5.1 からのデフォルト値)
 	bigendianunicode - UTF-16
 	utf8		 - UTF-8
-	utf7		 - UTF-7 (no BOM)
+	utf7		 - UTF-7 (BOM なし)
 	utf32		 - UTF-32
-	ascii		 - 7-bit ASCII character set
-	default		 - System's active code page (typically ANSI)
-	oem		 - System's current OEM code page
+	ascii		 - 7-bit ASCII キャラクターセット
+	default		 - システムのアクティブなコードページ (一般には ANSI)
+	oem		 - システムの現在の OEM のコードページ
 
-Note The abovce multi-byte Unicode encodings include a leading BOM unless
-otherwise indicated.
+Note 上記のマルチバイト Unicode エンコーディングはそうでないと掲示がない限り
+BOM から始まるものを含む。
 
-By default PowerShell Core's output is UTF-8 encoded without a BOM.  If you
-want to force the output of PowerShell Core into a different encoding then set
-'shellredir' and 'shellpipe' to "2>&1 | Out-File -Encoding encoding" where
-encoding is one of the following:
+PowerShell Coreの出力のデフォルトは BOM なしでエンコードされた UTF-8 である。
+出力を別のエンコーディングに強制したい場合 'shellredir' と 'shellpipe' に
+"2>&1 | Out-File -Encoding encoding" とし encoding を以下のどれか設定する:
 
-	ascii		 - 7-bit ASCII character set
+	ascii		 - 7-bit ASCII キャラクターセット
 	bigendianunicode - UTF-16be
 	bigendianutf32	 - UTF-32be
-	oem		 - System's current OEM code page
+	oem		 - システムの現在の OEM のコードページ
 	unicode		 - UTF-16le
 	utf7		 - UTF-7
 	utf8		 - UTF-8
-	utf8BOM		 - UTF-8, with BOM
-	utf8NoBOM	 - UTF-8, no BOM (default output from PowerShell Core)
+	utf8BOM		 - UTF-8 BOM あり
+	utf8NoBOM	 - UTF-8 BOM なし (PowerShell Core からのデフォルト値)
 	utf32		 - UTF-32
 
-Since PowerShell Core 6.2, the Encoding parameter also supports specifying a
-numeric ID of a registered code page (-Encoding 1251) or string names of
-registered code pages (-Encoding "windows-1251").  The .NET documentation for
-Encoding.CodePage has more information
+PowerShell Core 6.2 から、Encoding パラメータとして登録されたコードページの数
+値ID(-Encoding 1251)もしくは登録されたコードページ名文字列(-Encoding
+"windows-1251")もまたサポートされる。詳細な情報は .NET ドキュメントの
+Encoding.CodePage にある。
 
  vim:tw=78:ts=8:noet:ft=help:norl:

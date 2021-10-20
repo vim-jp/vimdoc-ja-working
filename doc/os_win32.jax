@@ -176,26 +176,26 @@ Windows 95/98/ME のサポートはパッチ 8.0.0029 にて削除された。�
 パッチ 7.4.1364 にてサポートは削除された。
 
 ==============================================================================
-7. Installation package					*win32-installer*
+7. インストールパッケージ				*win32-installer*
 
-A simple installer for windows is available at http://www.vim.org/download.php
-(stable version) and nightly builds are also available at
-https://github.com/vim/vim-win32-installer/releases/
+Windows版のシンプルなインストーラは http://www.vim.org/download.php (安定バー
+ジョン)にあり、ナイトリービルドも
+https://github.com/vim/vim-win32-installer/releases/ にある
 
-The nightly builds include 32bit and 64bit builds, have most features enabled
-and usually also contain an extra cryptographic signed installer, so Windows
-will not complain.
+ナイトリービルドには32bitと64bitのビルドが含まれ、ほとんどの機能が有効なってお
+り通常は追加の暗号化署名されたインストーラなので、Windowsから問題報告されるこ
+とはない。
 
-To use the installer, simply run the exe file.  The following switches are
-also supported: >
+インストーラを利用するには、簡単にexeファイルを実行する。以下のスイッチもサポー
+トされる: >
 
-    gvim_<version>.exe /S           -> silent install without any dialogues
-    gvim_<version>.exe /D=C:\vim    -> Install into directory c:\vim
-                                    -> /D must be the last argument
-    gvim_<version>.exe /S /D=c:\vim -> silent install into c:\vim
+    gvim_<version>.exe /S           -> ダイアログなしのサイレントインストール
+    gvim_<version>.exe /D=C:\vim    -> c:\vim ディレクトリへのインストール
+                                    -> /D は最後の引数でなくてはいけない
+    gvim_<version>.exe /S /D=c:\vim -> c:\vim へのサイレントインストール
 <
-The default installation directory can alternatively be given by setting the
-$VIM environment variable.
+$VIM 環境変数を設定することでもデフォルトのインストールディレクトリを指定する
+こともできる。
 
 ==============================================================================
 8. Win32 ミニ FAQ					*win32-faq*
