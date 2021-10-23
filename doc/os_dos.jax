@@ -309,7 +309,7 @@ DOS 32ビットでは、DJGPPが内部的にどうにかして処理する。
 10. PowerShell					*dos-powershell* *dos-pwsh*
 
 Vim は PowerShell Desktop および PowerShell Core をサポートする。PowerShell
-Desktop はWindowsにインストールされている のPowerShell のバージョンで、
+Desktop は Windows にインストールされている PowerShell のバージョンで、
 PowerShell Core はクロスプラットフォームで動くダウンロード可能な分離されたバー
 ジョンである。使用しているのがどちらのバージョンであるかは PowerShell のプロン
 プトで以下を入力することで確認できる - $PSVersionTable.PSEdition
@@ -345,9 +345,9 @@ PowerShell コマンドの実行で時間がかかる場合には 'shellcmdflag'
 |option-backslash| を参照。
 
 'shellpipe' および 'shellredir' オプションの値は PowerShell Desktop の
-UTF-16le 出力を現在のあなたのコンソールのコードページに再エンコードする。「デ
-フォルト値」を以下のどれかに変更することで出力を別のエンコーディングに強制でき
-る:
+UTF-16le 出力を現在のあなたのコンソールのコードページに再エンコードす
+る。"default" を以下のどれかに変更することで出力を別のエンコーディングに強制で
+きる:
 
 	unicode		 - UTF-16le (PowerShell 5.1 からのデフォルト値)
 	bigendianunicode - UTF-16
@@ -362,8 +362,8 @@ Note 上記のマルチバイト Unicode エンコーディングはそうでな
 BOM から始まるものを含む。
 
 PowerShell Coreの出力のデフォルトは BOM なしでエンコードされた UTF-8 である。
-出力を別のエンコーディングに強制したい場合 'shellredir' と 'shellpipe' に
-"2>&1 | Out-File -Encoding encoding" とし encoding を以下のどれか設定する:
+出力を別のエンコーディングに強制したい場合 'shellredir' と 'shellpipe' を
+"2>&1 | Out-File -Encoding encoding" とし encoding を以下のどれかに設定する:
 
 	ascii		 - 7-bit ASCII キャラクターセット
 	bigendianunicode - UTF-16be
