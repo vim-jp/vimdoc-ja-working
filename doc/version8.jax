@@ -1,4 +1,4 @@
-*version8.txt*  For Vim バージョン 8.2.  Last change: 2021 May 13
+*version8.txt*  For Vim バージョン 8.2.  Last change: 2021 Jul 24
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -39,6 +39,10 @@
 Vi と Vim 8.0 の違いの概要については |vi_diff.txt| を参照してください。
 他のバージョンとの違いについては |version4.txt|, |version5.txt|,
 |version6.txt|, |version7.txt| を参照してください。
+
+							*vim-changelog*
+このサイトで(Martin Tournoijによる)最重要な変更の概要を見付けることができます:
+https://www.arp242.net/vimlog/
 
 ==============================================================================
 新機能							*new-8*
@@ -3285,7 +3289,7 @@ Solution:   Convert the printer name from the active codepage to 'encoding'.
 Files:	    src/os_mswin.c
 
 Patch 7.4.472
-Problem:    The "precedes" entry in 'listchar' will be drawn when 'showbreak'
+Problem:    The "precedes" entry in 'listchars' will be drawn when 'showbreak'
 	    is set and 'list' is not.
 Solution:   Only draw this character when 'list' is on. (Christian Brabandt)
 Files:	    src/screen.c
@@ -12983,7 +12987,7 @@ Files:      src/evalfunc.c, src/testdir/test_cmdline.vim
 Patch 7.4.2113
 Problem:    Test for undo is flaky.
 Solution:   Turn it into a new style test.  Use test_settime() to avoid
-            flakyness.
+            flakiness.
 Files:      src/Makefile, src/undo.c, src/testdir/test61.in,
             src/testdir/test61.ok, src/testdir/test_undo.vim,
             src/testdir/test_undolevels.vim, src/testdir/Make_all.mak,
@@ -14531,70 +14535,67 @@ Files:      src/testdir/runtest.vim
 
 
 ==============================================================================
-バージョン 8.1				*version-8.1* *version8.1* *vim-8.1*
+VERSION 8.1				*version-8.1* *version8.1* *vim-8.1*
 
-このセクションでは、バージョン 8.0 と 8.1 の間の改善点について説明します。
+This section is about improvements made between version 8.0 and 8.1.
 
-このリリースには何百ものバグ修正、新機能、多くのマイナーな改善点が含まれます。
-
-
-端末ウィンドウ					*new-terminal-window*
---------------
-
-端末として機能するウィンドウを開くことができるようになりました。
-以下のように使用できます:
-- 他のウィンドウで編集中に "make" などのコマンドを実行する
-- シェルを実行していくつかのコマンドを実行する
-- ターミナルデバッガ (|terminal-debugger|) プラグインを使用する
-
-これらは、リモート (ssh) 接続のような簡単に多くの端末を開くことができない環境
-で Vim を実行する場合に特に便利です。
-
-詳細は |terminal-window| を参照してください。
+This release has hundreds of bug fixes, there is a new feature and there are
+many minor improvements.
 
 
-変更点							*changed-8.1*
-------
+The terminal window				*new-terminal-window*
+-------------------
 
-内部的変更: C99 のいくつかの機能 ("//" ダブルスラッシュのコメント、enum で最後
-の要素の後にコンマを付けるなど) が許可されるようになりました。
-詳細は |style-compiler| を参照してください。
+You can now open a window which functions as a terminal.  You can use it for:
+- Running a command, such as "make", while editing in other windows
+- Running a shell and execute several commands
+- Use the terminal debugger plugin, see |terminal-debugger|
 
-パッチ 8.0.0029 では古い MS-Windows システムのサポートが削除されました。
-MS-Windows XP 以降のみがサポートされます。
+All of this is especially useful when running Vim on a remote (ssh)
+connection, when you can't easily open more terminals.
+
+For more information see |terminal-window|.
 
 
-追加要素						*added-8.1*
---------
+Changed							*changed-8.1*
+-------
 
-さまざまなシンタックス、インデント、その他プラグインが追加されました。
+Internal: A few C99 features are now allowed such as // comments and a
+comma after the last enum entry.  See |style-compiler|.
 
-Quickfix の改善 (by Yegappan Lakshmanan): ~
-	quickfix/locationリストのスタックに含まれる、あらゆるリストを変更する
-	機能が追加されました。
-	すべてのquickfix/locationリストに固有識別子が追加されました。
-	任意の Vim の型をコンテキスト情報としてquickfix/locationリストに関連付
-	ける機能が追加されました。
-	getqflist(), getloclist(), setqflist() および setloclist() が拡張され、
-	quickfix/locationリストのさまざまな属性情報の取得、設定が可能になりま
-	した。
-	quickfixウィンドウの現在行を強調する QuickFixLine ハイライトグループが
-	追加されました。
-	quickfixリストのバッファの b:changedtick 変数が、そのリストが変更され
-	るたびにインクリメントされます。
-	quickfix/locationリストに changedtick 変数が追加され、そのリストが変更
-	されるたびにインクリメントされます。
-	quickfixリストを新しく作成せずに、'errorformat' を利用してテキストを解
-	析する機能が追加されました。
-	quickfixエントリに "module" 要素が追加され、長いファイル名の代わりに表
-	示名として使用できます。
-	quickfix/locationリストのスタックに含まれる、すべてのリストを解放する
-	機能が追加されました。
-	:copen/:cwindow コマンドでquickfixウィンドウを開く場合に、分割修飾子が
-	適用されます。
+Since patch 8.0.0029 removed support for older MS-Windows systems, only
+MS-Windows XP and later are supported.
 
-関数: ~
-	全ての term_ 関数。
+
+Added							*added-8.1*
+-----
+
+Various syntax, indent and other plugins were added.
+
+Quickfix improvements (by Yegappan Lakshmanan):
+	Added support for modifying any quickfix/location list in the quickfix
+	stack.
+	Added a unique identifier for every quickfix/location list.
+	Added support for associating any Vim type as a context information to
+	a quickfix/location list.
+	Enhanced the getqflist(), getloclist(), setqflist() and setloclist()
+	functions to get and set the various quickfix/location list attributes.
+	Added the QuickFixLine highlight group to highlight the current line
+	in the quickfix window.
+	The quickfix buffer b:changedtick variable is incremented for every
+	change to the contained quickfix list.
+	Added a changedtick variable to a quickfix/location list which is
+	incremented when the list is modified.
+	Added support for parsing text using 'errorformat' without creating a
+	new quickfix list.
+	Added support for the "module" item to a quickfix entry which can be
+	used for display purposes instead of a long file name.
+	Added support for freeing all the lists in the quickfix/location stack.
+	When opening a quickfix window using the :copen/:cwindow commands, the
+	supplied split modifiers are used.
+
+Functions:
+	All the term_ functions.
 
 	|assert_beeps()|
 	|assert_equalfile()|
@@ -14613,7 +14614,7 @@ Quickfix の改善 (by Yegappan Lakshmanan): ~
 	|trim()|
 	|win_screenpos()|
 
-自動コマンドイベント: ~
+Autocommands:
 	|CmdlineChanged|
 	|CmdlineEnter|
 	|CmdlineLeave|
@@ -14624,7 +14625,7 @@ Quickfix の改善 (by Yegappan Lakshmanan): ~
 	|TextChangedP|
 	|TextYankPost|
 
-Ex コマンド: ~
+Commands:
 	|:pyx|
 	|:pythonx|
 	|:pyxdo|
@@ -14635,7 +14636,7 @@ Ex コマンド: ~
 	|:tnoremap|
 	|:tunmap|
 
-オプション: ~
+Options:
 	'balloonevalterm'
 	'imstyle'
 	'mzschemedll'
@@ -14652,8 +14653,8 @@ Ex コマンド: ~
 	'winptydll'
 
 
-パッチ							*patches-8.1*
-------
+Patches							*patches-8.1*
+-------
 
 Patch 8.0.0001
 Problem:    Intro screen still mentions version7. (Paul)
@@ -25806,131 +25807,128 @@ Files:      src/terminal.c
 
 
 ==============================================================================
-バージョン 8.2				*version-8.2* *version8.2* *vim-8.2*
+VERSION 8.2				*version-8.2* *version8.2* *vim-8.2*
 
-このセクションでは、バージョン 8.1 と 8.2 の間の改善点について説明します。
+This section is about improvements made between version 8.1 and 8.2.
 
-このリリースには何百ものバグ修正、いくつかの新機能、多くのマイナーな改善点が含
-まれます。
-
-
-ボップアップウィンドウ				*new-popup-window*
-----------------------
-
-ポップアップウィンドウは他のウィンドウの上にテキストを表示するために使えます。
-これは、「ビルドが正常に終了しました」のような単純なメッセージを表示したり、関
-数呼び出しを編集中に関数プロトタイプを表示したり、柔軟なポップアップメニューや
-他の多くの用途に使えます。|popup-window| を参照してください。
-
-ポップアップウィンドウはとても柔軟です: テキストとの相対位置に配置したり、絶対
-位置に配置したり、あるいは単に画面の中央に配置することができます。サイズは固定
-することもテキストに合わせることもできます。"zindex" の値はどのポップアップウィ
-ンドウを他のものの上に持ってくるかを指定します。
-
-新しい 'wincolor' オプションはポップアップウィンドウ全体の色を設定することがで
-きます。これは通常のウィンドウにも作用します。
+This release has hundreds of bug fixes, there are several new features and
+there are many minor improvements.
 
 
-テキストプロパティ				*new-text-properties*
-------------------
+Popup windows					*new-popup-window*
+-------------
 
-テキストプロパティはプラグインの作者に何をハイライトするかについての柔軟性を与
-えます。これは外部の非同期パーサーによってシンタックスハイライトを行うために使
-うことができます。あるいはポップアップウィンドウのテキストをハイライトするのに
-も使います。テキストプロパティは文字が削除や挿入されたときでもテキストにくっつ
-いて離れず、これによりテキストマーカーとしても役立ちます。|text-properties| を
-参照してください。
+Popup windows can be used to display text on top of other windows.  This can
+be for a simple message such as "Build finished successfully", showing a
+function prototype while editing a function call, a flexible popup menu and
+many other purposes.  See |popup-window|.
 
-ハイライトを動的に更新したり、シンタックスエラーなどをマークしたりできるよう
-に、テキストの変更をサーバーに通知するためのリスナー関数が追加されました。
-|listener_add()| を参照してください。
+Popup windows are very flexible: they can be positioned relative to text, an
+absolute position or just in the middle of the screen.  The size can be fixed
+or adjusts to fit the text.  A "zindex" value specifies what popup window goes
+on top of others.
+
+The new 'wincolor' option allows for setting the color for the whole popup
+window.  This also works for normal windows.
 
 
-Vim script の改良点				*new-vimscript-8.2*
--------------------
+Text properties					*new-text-properties*
+---------------
 
-関数は、"->" を使って連鎖で呼び出すことができるようになりました: >
+Text properties give a plugin author flexibility about what to highlight.
+This can be used with an external asynchronous parser to do syntax
+highlighting.  Or to highlight text in a popup window.  The text properties
+stick with the text when characters are deleted or inserted, which makes them
+also useful as text markers. See |text-properties|.
+
+The listener functions have been added to report text changes to a server so
+that it can dynamically update highlighting, mark syntax errors and the like.
+See |listener_add()|.
+
+
+Vim script improvements				*new-vimscript-8.2*
+-----------------------
+
+Functions can now be called in a chain, using "->": >
 	mylist->filter(filterexpr)->map(mapexpr)->sort()->join()
-連鎖が結果を持たない場合には新しい `:eval` コマンドが使えます。
+The new `:eval` command can be used if the chain has no result.
 
-関数引数はデフォルト値を渡すことでオプショナルにすることができます
+Function arguments can be made optional by giving them a default value
 |optional-function-argument|: >
 	function Something(key, value = 10)
 
-後方互換性の無い変更を許可するために `:scriptversion` コマンドが追加されまし
-た。例: "." を一貫して辞書メンバーへのアクセスに使えるようにするため、文字列結
-合には ".." のみを使用します。
+The `:scriptversion` command was added to allow for changes that are not
+backwards compatible. E.g. to only use ".." for string concatenation, so that
+"." can be used to access a dictionary member consistently.
 
-変更できない変数を宣言できるようにするため `:const` が追加されました: >
+`:const` was added to allow for declaring a variable that cannot change: >
 	const TIMER_DELAY = 400
 
-行のリストを引用符や行継続を使わずに簡単に変数に代入できるようにするため、
-heredoc スタイルの代入が追加されました: >
+A heredoc-style assignment was added to easily assign a list of lines to a
+variable without quoting or line continuation: >
 	let lines =<< trim END
 	   line one
 	   line two
 	END
 
-|Blob| 型が追加されました。これはバイナリデータを扱いやすくします。
+The |Blob| type was added. This makes it easy to deal with binary data.
 
-/= と %= の代入演算子が追加されました。
+The /= and %= assignment operators were added.
 
-辞書は #{} を使ってリテラルキーで定義できるようになりました。これでたくさんの
-引用符を使うことを避けられます: >
+A Dictionary can be defined with literal keys using #{}.  This avoids having
+to use a lot of quotes:  >
 	let options = #{width: 30, height: 24}
 
 
-その他の改良点						*new-other-8.2*
---------------
+Other improvements					*new-other-8.2*
+------------------
 
-- 'incsearch' がセットされているとき `:substitute` にも適用されます。
-- より多くのキーの組み合わせがマッピングできるように |modifyOtherKeys| が追加
-  されました。
-- Windows 10 用に ConPTY 対応が追加され、端末でフルカラーをサポートしました。
-- MS-Windows インストーラは翻訳やサイレントインストールに対応し、見栄えもよく
-  なりました。
+- When 'incsearch' is set it also applies to `:substitute`.
+- |modifyOtherKeys| was added to allow mapping more key combinations.
+- ConPTY support was added for Windows 10, supports full color in the terminal.
+- The MS-Windows installer supports translations, silent install and looks
+  much better.
 
 
-変更点							*changed-8.2*
-------
+Changed							*changed-8.2*
+-------
 
-外部 diff プログラムの必要を避け、差分の更新をより高速化するために、xdiff ライ
-ブラリが取り込まれました。
+The xdiff library was included to avoid the need for an external diff program
+and to make updating diffs much faster.
 
-コードは、// コメントのようなさらにいくつかの現代的な C の機能を使っています。
+The code is using a few more modern C features, such as // comments.
 
-古いコンパイラの対応が削除されました: Borland C++, MSVC 2008
+Support for old compilers has been dropped: Borland C++, MSVC 2008.
 
-ハングル入力対応が削除されました。実際はもはや動いていませんでした。
+Hangul input support was removed, it actually didn't work anymore.
 
-古い Amiga コンパイラ向けのメイクファイルが削除されました: Dice, Manx と SAS
+Makefiles for old Amiga compilers were removed: Dice, Manx and SAS.
 
-変更のないスワップファイルが見つかったときは自動的に削除されます。
+If a swap file is found without any changes it is automatically deleted.
 
-FEAT_TAG_OLDSTATIC コードは削除されました。それはタグの検索を遅くしていました。
-FEAT_TAG_ANYWHITE コードは削除されました。それはどのビルドでも有効化されていま
-せんでした。
-UNICODE16 コードは削除されました。それは有用ではありませんでした。
-Workshop 対応は削除されました。誰もそれを使っていませんでした。
-Aap ビルドファイルは削除されました。それらは古くなっていました。
-ペルシア語対応は削除されました。それは古くなり使われていませんでした。
+The FEAT_TAG_OLDSTATIC code was removed, it slowed down tag searches.
+The FEAT_TAG_ANYWHITE code was removed, it was not enabled in any build.
+The UNICODE16 code was removed, it was not useful.
+Workshop support was removed, nobody was using it.
+The Aap build files were removed, they were outdated.
+Farsi support was removed, it was outdated and unused.
 
-VIMDLL は再実装されました。これはインストールサイズを減らすために vim と gvim
-の共通部分を 1 つにまとめます。
+VIMDLL was re-implemented, this shares the common parts between vim and gvim
+to reduce the total install size.
 
-以下の機能は今では全てのバージョンに含まれています: |+multi_byte|,
+The following features are now included in all versions: |+multi_byte|,
 |+virtualedit|, |+vreplace|, |+localmap|, |+cmdline_hist|, |+cmdline_compl|,
 |+insert_expand|, |+modify_fname|, |+comments|
 
 
-追加要素						*added-8.2*
---------
+Added							*added-8.2*
+-----
 
-追加された関数:
-	全ての popup_ 関数。
-	全ての prop_ 関数。
-	全ての sign_ 関数。
-	全ての sound_ 関数。
+Added functions:
+	All the popup_ functions.
+	All the prop_ functions.
+	All the sign_ functions.
+	All the sound_ functions.
 
 	|appendbufline()|
 	|balloon_gettext()|
@@ -25982,7 +25980,7 @@ VIMDLL は再実装されました。これはインストールサイズを減�
 	|win_splitmove()|
 	|winlayout()|
 
-追加された自動コマンド:
+Added autocommands:
 	|CompleteChanged|
 	|DiffUpdated|
 	|SafeState|
@@ -25990,8 +25988,8 @@ VIMDLL は再実装されました。これはインストールサイズを減�
 	|SourcePost|
 	|TerminalWinOpen|
 
-追加されたコマンド:
-    カーソル位置からの相対位置でエラーにジャンプする:
+Added commands:
+    Jumping to errors relative to the cursor position:
 	`:cabove`
 	`:cafter`
 	`:cbefore`
@@ -26000,10 +25998,10 @@ VIMDLL は再実装されました。これはインストールサイズを減�
 	`:lbefore`
 	`:lbelow`
 	`:lafter`
-    タブローカルディレクトリ:
+    Tab-local directory:
 	`:tcd`
 	`:tchdir`
-    その他:
+    Others:
 	`:const`
 	`:eval`
 	`:redrawtabline`
@@ -26014,7 +26012,7 @@ VIMDLL は再実装されました。これはインストールサイズを減�
 	`:tlunmenu`
 	`:xrestore`
 
-追加されたオプション:
+Added options:
 	'completepopup'
 	'completeslash'
 	'cursorlineopt'
@@ -26028,10 +26026,11 @@ VIMDLL は再実装されました。これはインストールサイズを減�
 	'wincolor'
 
 
-パッチ							*patches-8.2*
-------
+Patches							*patches-8.2*
+-------
 
-これらのパッチは 8.1 リリースの後に適用され、8.2 リリースに含まれています。
+These patches were applied after the 8.1 release and are included in the 8.2
+release.
 
 Patch 8.1.0001
 Problem:    The netrw plugin does not work.
@@ -30914,7 +30913,7 @@ Files:	    src/eval.c, src/testdir/test_assert.vim
 Patch 8.1.0820
 Problem:    Test for sending large data over channel sometimes fails.
 Solution:   Handle that the job may have finished early.  Also fix that file
-            changed test doesn't work in the GUI and reduce flakyness. (Ozaki
+            changed test doesn't work in the GUI and reduce flakiness. (Ozaki
             Kiichi, closes #3861)
 Files:	    src/testdir/test_channel.vim, src/testdir/test_filechanged.vim
 
@@ -35512,7 +35511,7 @@ Files:	    Filelist, src/testdir/Make_all.mak, src/testdir/check.vim,
             src/testdir/test_xxd.vim
 
 Patch 8.1.1545
-Problem:    When the screen is to small there is no message about that.
+Problem:    When the screen is too small there is no message about that.
             (Daniel Hahler)
 Solution:   Do not use :cquit. (closes #4534)
 Files:	    src/testdir/runtest.vim
@@ -39261,7 +39260,7 @@ Files:	    src/option.c
 
 Patch 8.1.2117
 Problem:    CursorLine highlight used while 'cursorline' is off.
-Solution:   Check 'cursorline' is set. (cloes #5017)
+Solution:   Check 'cursorline' is set. (closes #5017)
 Files:	    src/drawline.c, src/testdir/test_cursorline.vim
 
 Patch 8.1.2118
@@ -41112,7 +41111,7 @@ Files:	    src/buffer.c, src/testdir/test_popupwin.vim
 Patch 8.1.2419
 Problem:    With a long file name the hit-enter prompt appears. (J. Lewis
             Muir)
-Solution:   When checking for text to wrap don't do this when outputing a CR.
+Solution:   When checking for text to wrap don't do this when outputting a CR.
 Files:	    src/message.c, src/testdir/test_display.vim,
             src/testdir/dumps/Test_long_file_name_1.dump
 
@@ -41148,10 +41147,10 @@ Files:	    src/os_win32.c
 
 ==============================================================================
 
-パッチ							*patches-after-8.2*
+Patches							*patches-after-8.2*
 -------
 
-これらのパッチは 8.2 リリースの後に適用されました。
+These patches were applied after the 8.2 release.
 
 Patch 8.2.0001
 Problem:    #endif comments do not reflect corresponding #ifdef.
