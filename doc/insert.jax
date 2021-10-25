@@ -802,9 +802,9 @@ CTRL-X CTRL-T		CTRL-X CTRL-Kと同じだが、'dictionary' ではなく
 	CTRL-P		次のキーワードを後方に探す。見つかったキーワードはそ
 			の前のキーワードを置き換える。
 
-'thesaurus' オプションで使用されるファイル内では、ファイルの各行は同じ意味の単
-語が含まれ、非キーワード文字で区分けされている(空白が優先)。行の最大長は510バ
-イト。
+'thesaurus' オプションで使用されるファイル内では、ファイルの各行は似た意味の単
+語が含まれ、非キーワード文字(空白が好ましい)で区分けされている。行の最大長は
+510 バイト。
 
 例えば、'thesaurus' ファイルにこのような行があるとして: >
 	angry furious mad enraged
@@ -816,7 +816,7 @@ CTRL-X CTRL-T		CTRL-X CTRL-Kと同じだが、'dictionary' ではなく
 
 英単語リストはこのGitHub Issueに追加されている:
 https://github.com/vim/vim/issues/629#issuecomment-443293282
-thesaurus_pkg.zip を展開し、thesaurus.txt を配置する、例えば
+thesaurus_pkg.zip を展開し、thesaurus.txt をどこかに配置する、例えば
 ~/.vim/thesaurus/english.txt、そして 'thesaurus' オプションをこのファイル名{訳
 注: ファイルパス}にする。
 
@@ -952,13 +952,6 @@ CTRL-X CTRL-V		カーソルの前に何があるかを推測し、最初に一�
 			える。例えば: >
 				:imap <Tab> <C-X><C-V>
 
-
-補完の停止						*compl-stop*
-
-							*i_CTRL-X_CTRL-Z*
-CTRL-X CTRL-Z		テキストの変更なく補完を停止する。
-
-
 ユーザー定義補完						*compl-function*
 
 ユーザー定義補完は、オプション 'completefunc' で設定した関数(ユーザー定義関数
@@ -1037,9 +1030,15 @@ CTRL-P			カーソルの直前と同じキーワードで始まる単語を、
 			で続く。
 
 
+補完の停止						*compl-stop*
+
+							*i_CTRL-X_CTRL-Z*
+CTRL-X CTRL-Z		テキストの変更なく補完を停止する。
+
+
 補完候補を検索する関数					*complete-functions*
 
-ここでは 'completefunc' と 'omnifunc' について説明する。
+ここでは 'completefunc', 'thesaurusfunc', 'omnifunc' について説明する。
 
 これらの関数は次の2通りの形で呼ばれる:
 - 最初に、補完するテキストの始点を見つけるために呼ばれる。
