@@ -333,21 +333,20 @@ PowerShell Core はクロスプラットフォームで動く別途ダウンロ�
 'shellredir'	>%s 2>&1
 
 PowerShell コマンドの実行で時間がかかる場合には 'shellcmdflag' の先頭を
-"-NoProfile" にすること試す。 Note これにより PowerShell 環境のプロファイルで
-の設定が行われるのを防ぐ。
+"-NoProfile" にすることを試す。 Note これにより PowerShell 環境のプロファイル
+での設定が行われるのを防ぐ。
 
 'shell' 経由での PowerShell スクリプトの実行に問題がある場合には
 'shellcmdflag' の先頭を "-ExecutionPolicy RemoteSigned -Command" にするのを試
 す。詳細についてはオンラインの Windows のドキュメントにある PowerShell 実行ポ
-リシー設定を参照する。
+リシー設定を参照すること。
 
 'shellcmdflag' で空白を含む複数のフラグを使用するときについては
 |option-backslash| を参照。
 
 'shellpipe' および 'shellredir' オプションの値は PowerShell Desktop の
-UTF-16le 出力を現在のあなたのコンソールのコードページに再エンコードす
-る。"default" を以下のどれかに変更することで出力を別のエンコーディングに強制で
-きる:
+UTF-16le 出力を現在のあなたのコンソールのコードページに再エンコードする。
+"default" を以下のどれかに変更することで出力を別のエンコーディングに強制できる:
 
 	unicode		 - UTF-16le (PowerShell 5.1 からのデフォルト値)
 	bigendianunicode - UTF-16
