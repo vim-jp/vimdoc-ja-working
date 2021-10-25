@@ -338,8 +338,8 @@ PowerShell コマンドの実行で時間がかかる場合には 'shellcmdflag'
 
 'shell' 経由での PowerShell スクリプトの実行に問題がある場合には
 'shellcmdflag' の先頭を "-ExecutionPolicy RemoteSigned -Command" にするのを試
-す。詳細についてはオンラインの Windows のドキュメントにある PowerShell 実行ポ
-リシー設定を参照すること。
+すこと。詳細についてはオンラインの Windows のドキュメントにある PowerShell 実
+行ポリシー設定を参照すること。
 
 'shellcmdflag' で空白を含む複数のフラグを使用するときについては
 |option-backslash| を参照。
