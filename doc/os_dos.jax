@@ -333,13 +333,13 @@ PowerShell Core はクロスプラットフォームで動く別途ダウンロ�
 'shellredir'	>%s 2>&1
 
 PowerShell コマンドの実行で時間がかかる場合には 'shellcmdflag' の先頭を
-"-NoProfile" にすることを試すこと。Note これにより PowerShell 環境のプロファ
-イルでの設定が行われるのを防ぐ。
+"-NoProfile" にすることを試すこと。Note これにより PowerShell 環境のプロファイ
+ルでの設定が行われるのを防ぐ。
 
 'shell' 経由での PowerShell スクリプトの実行に問題がある場合には
 'shellcmdflag' の先頭を "-ExecutionPolicy RemoteSigned -Command" にするのを試
 すこと。詳細についてはオンラインの Windows のドキュメントにある PowerShell 実
-行ポリシー設定を参照すること。
+行ポリシー設定を参照。
 
 'shellcmdflag' で空白を含む複数のフラグを使用するときについては
 |option-backslash| を参照。
