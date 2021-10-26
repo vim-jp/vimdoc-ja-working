@@ -614,7 +614,7 @@ Note: カーソルより後ろの文字が移動して見えることがある�
 12. スペリング補完					|i_CTRL-X_s|
 13. 'complete' のキーワード				|i_CTRL-N| |i_CTRL-P|
 
-追加として、|i_CTRL-X_CTRL-Z| でテキストの変更なく補完を停止する。
+追加として、|i_CTRL-X_CTRL-Z| でテキストを変更せずに補完を停止する。
 
 CTRL-N と CTRL-P を除くこれらの全ては、CTRL-X モードで動作する。CTRL-X モード
 とは挿入・置換モードのサブモードである。CTRL-X と CTRL-X コマンドのどれか 1
@@ -1033,7 +1033,7 @@ CTRL-P			カーソルの直前と同じキーワードで始まる単語を、
 補完の停止						*compl-stop*
 
 							*i_CTRL-X_CTRL-Z*
-CTRL-X CTRL-Z		テキストの変更なく補完を停止する。
+CTRL-X CTRL-Z		テキストを変更せずに補完を停止する。
 
 
 補完候補を検索する関数					*complete-functions*
