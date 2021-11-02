@@ -180,7 +180,7 @@ Windows 95/98/ME のサポートはパッチ 8.0.0029 にて削除された。�
 
 Windows版のシンプルなインストーラは http://www.vim.org/download.php (安定バー
 ジョン)にあり、ナイトリービルドも
-https://github.com/vim/vim-win32-installer/releases/ にある
+https://github.com/vim/vim-win32-installer/releases/ にある。
 
 ナイトリービルドには32bitと64bitのビルドが含まれ、ほとんどの機能が有効になって
 おり通常は追加の暗号化署名されたインストーラなので、Windowsから問題報告される
