@@ -1,0 +1,36 @@
+name: Weekly report
+on:
+  schedule:
+    - cron: 30 15 * * SAT
+  workflow_dispatch:
+permissions:
+  issues: write
+
+jobs:
+  report:
+    name: Create Weekly report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: work
+      - name: Checkout vim
+        uses: actions/checkout@v2
+        with:
+          repository: vim/vim
+          path: vim
+      - name: Build report
+        run: |
+          bash work/script/get_doc_info.sh
+      - name: Create issue
+        uses: peter-evans/create-issue-from-file@v3
+        with:
+          title: Weekly help diff (Update ${{ steps.current-time.outputs.ISOTime }})
+          content-filepath: ./doc_info.md
+            # When using the same issue continuously
+            # title: Weekly help diff
+            # issue-number: <target issue>
