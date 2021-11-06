@@ -326,21 +326,10 @@ Sys_WindowText
 Gray, Grey, LightYellow, SeaGreen, Orange, Purple, SlateBlue, Violet,
 
 								*rgb.txt*
-付け加えて、"rgb.txt" で定義される色も使うことができる。このファイルはX11のも
-のとして知られている。何行かを抜粋する: >
-
-  255 218 185		   peach puff
-  205 133  63		   peru
-  255 181 197		   pink
-
-これはファイルのレイアウトを示している: 最初に赤、緑、そして青の輝度を10進数で
-記述し、続いて色の名前を定義している。4つのフィールドはスペースで区切られてい
-る。
-
-rgb.txtはX11のディストリビューションから手に入れることができる。
-"/usr/X11R6/lib/X11/" あたりのディレクトリにおいてあることが多い。Vimでは
-$VIMRUNTIMEディレクトリに置く。だから "$VIMRUNTIME/rgb.txt" にファイルが見つけ
-ることができる。
+付け加えて、デフォルトのカラーリストで定義される色も使うことができる。詳細は
+|:colorscheme| を参照のこと。これらの色は $VIMRUNTIME/rgb.txt で定義されたもの
+が使われ、現在の色について $VIMRUNTIME/colors/lists/default.vim にて初期化され
+た値が |v:colornames| にある。
 
 ==============================================================================
 6. ダイアログとブラウズ				*gui-w32-dialogs* *dialog*

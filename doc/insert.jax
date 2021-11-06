@@ -1,4 +1,4 @@
-*insert.txt*    For Vim バージョン 8.2.  Last change: 2021 Aug 31
+*insert.txt*    For Vim バージョン 8.2.  Last change: 2021 Oct 18
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -851,7 +851,7 @@ thesaurus_pkg.zip を展開し、thesaurus.txt をどこかに配置する、例
 	    endif
 	endfunc
 
-	if has('patch-8.2.3520')
+	if exists('+thesaurusfunc')
 	    set thesaurusfunc=Thesaur
 	endif
 
