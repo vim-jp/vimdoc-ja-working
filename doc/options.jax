@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 8.2.  Last change: 2021 May 31
+*options.txt*	For Vim バージョン 8.2.  Last change: 2021 Oct 20
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -220,9 +220,17 @@ t_xxの形のオプションは安全上の理由により、モードライン|
 "there" に設定している。 >
 	:set titlestring=hi|set iconstring=there
 
-また、ダブルクォート文字はコメントを開始する。オプションの値に '"' を含めるに
-は '\"' と書くこと。次の例は 'titlestring' を 'hi "there"' に設定する: >
+また、旧来のスクリプトではダブルクォート文字はコメントを開始する。オプションの
+値に '"' を含めるには '\"' と書くこと。次の例は 'titlestring' を 'hi "there"'
+に設定する: >
    :set titlestring=hi\ \"there\"
+
+|Vim9| script においては、コメントは '#' 文字で始まり、合せて前にはスペースし
+か書けない。バックスラッシュの必要な頻度は低い: >
+   vim9script
+   set titlestring=hi\ "there"
+   set titlestring=hi#there#
+   set titlestring=hi\ \#there#
 
 Win32では、ファイル名の中の '\' は大抵は取り除かれない。正確に言うと、値にファ
 イル名を取るオプション (環境変数が展開されるもの) では、通常のファイル名に使わ
@@ -574,6 +582,15 @@ se[t]			"set " または "se " という文字列 (終わりの空白に注意);
 (バージョン3.0との互換性のため)。"ex:" が行頭に来ると、モードラインとは見なさ
 れない ("example:" の略かもしれないから)。
 
+If the modeline is disabled within a modeline, subsequent modelines will be
+ignored.  This is to allow turning off modeline on a per-file basis.  This is
+useful when a line looks like a modeline but isn't.  For example, it would be
+good to start a YAML file containing strings like "vim:" with
+    # vim: nomodeline ~
+so as to avoid modeline misdetection.  Following options on the same line
+after modeline deactivation, if any, are still evaluated (but you would
+normally not have any).
+
 							*modeline-local*
 オプションは ":setlocal" を使った時のように設定される。つまり設定した値は、そ
 のバッファとそれを開いているウィンドウにのみ適用される。モードラインからグロー
@@ -736,7 +753,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	"double":	ASCII文字の2倍の幅を使う。
 							*E834* *E835*
 	"double" は 'listchars' や 'fillchars' に指定された文字が全角幅になっ
-	てしまう場合は使えない。
+	てしまう場合は使えない。このエラーはまた setcellwidths() を呼ぶことで
+	も発生するようになる。
 
 	この値は |setcellwidths()| で指定された文字では無視される。
 
@@ -1381,7 +1399,11 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 			    インデント (負の値) や行の継続を強調 (正の値) した
 			    りできる。
 		sbr	    追加インデントの前に 'showbreak' を表示する。
-	初期設定は、min が 20、shift が 0 である。
+		list:{n}    番号付きもしくは箇条書きリスト('formatlistpat' の
+			    設定を使う)に合致する行について追加のインデントを
+			    加える。
+		list:-0	    インデントに 'formatlistpat' のマッチの長さを使う。
+	初期設定は、min が 20、shift と list が 0 である。
 
 						*'browsedir'* *'bsdir'*
 'browsedir' 'bsdir'	文字列	(既定では "last")
@@ -3618,8 +3640,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	実装がないシステム上ではこの変数は常にオフである。
 	スワップファイルに対してfsync()をコントロールするには 'swapsync' を参
 	照。
-	'fsync' は、フラグがこれを却下するように指定されていない限り、
-	|writefile()| にも適用する。
+	'fsync' はまた |writefile()| (フラグがこれを却下するように指定されてい
+	ない限り)そしてアンドゥファイルが書き込まれる時(|undo-persistence| を
+	参照) にも適用される。
 	セキュリティ上の理由から、このオプションを |modeline| または |sandbox|
 	内で設定することはできない。
 
@@ -3795,6 +3818,17 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	正の値を指定すると、それだけのピクセル数がウィンドウの装飾や画面上の他
 	のもののために残される。ウィンドウを画面よりも高くするには、負の値を指
 	定すること。
+
+						*'guiligatures'* *'gli'* *E1243*
+'guiligatures' 'gli'	文字列	(既定では "")
+			グローバル
+			{GTK GUIでのみ有効}
+	より複雑な形状を作るために結合して利用できるASCII文字セットのリスト。
+	各文字は値が32-127の範囲内の印字可能なASCIIの文字。
+	例: >
+		:set guiligatures=!\"#$%&()*+-./:<=>?@[]^_{\|~
+<	このオプションを変更した場合画面の出力は即座に更新される。空文字列を設定
+	することでリガチャが無効になる。
 
 						*'guioptions'* *'go'*
 'guioptions' 'go'	文字列	(既定では "egmrLtT"   (MS-Windows,
@@ -4964,15 +4998,24 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 							*lcs-space*
 	  space:文字	スペースの表示に使われる文字。指定されないと、スペース
 			は空白のまま。
+							*lcs-multispace*
+	  multispace:文字...
+			連続した複数の空白を1つもしくは複数の文字を順に使って
+			表示する。"space" の設定を、単一の空白を除いて上書きす
+			る。省略された場合、"space" の設定が使われる。例とし
+			て、`:set listchars=multispace:---+` は10文字の連続ス
+			ペースで次のようになる:
+				---+---+--
 							*lcs-lead*
 	  lead:文字	先頭のスペースの表示に使われる文字。指定されないと、先
 			頭のスペースは空白のまま。行頭のスペースでは "space"
-			の設定を上書きする。"tab:" と組み合せられる、例えば: >
+			および "multispace" の設定を上書きする。"tab:" と組み
+			合せられる、例えば: >
 				:set listchars+=tab:>-,lead:.
 <							*lcs-trail*
 	  trail:文字	行末のスペースの表示に使われる文字。指定されないと、行
 			末のスペースは空白のまま。行末のスペースでは "space"
-			の設定を上書きする。
+			および "multispace" の設定を上書きする。
 							*lcs-extends*
 	  extends:文字	'wrap' がオフで、行が画面の右端よりも伸びているときに、
 			最終列に表示される文字。
@@ -4991,12 +5034,21 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	文字 ':' と ',' は使えない。'encoding' が "utf-8" のときはUTF-8の文字
 	が使える。そうでないときはprintableな文字 {訳注: 文書先頭を参照} だけ
 	が使える。全ての文字は幅が1でなければならない。
+
+	各文字は16進で指定できる: >
+		set listchars=eol:\\x24
+		set listchars=eol:\\u21b5
+		set listchars=eol:\\U000021b5
+<	Note これには二重バックスラッシュを使う。16進文字の数値は \\x で
+	2桁、\\u で4桁、\\U で8桁丁度の必要がある。
+
 	例: >
 		:set lcs=tab:>-,trail:-
 		:set lcs=tab:>-,eol:<,nbsp:%
 		:set lcs=extends:>,precedes:<
-<	"eol", "extends", "precedes" には強調表示グループ "NonText" が、
-	"nbsp", "space", "tab" , "trail" には "SpecialKey" が適用される。
+<	"eol", "extends", "precedes" には強調表示グループ "NonText" が適用さ
+	れ、"tab", "nbsp", "space", "multispace", "lead", "trail" には
+	"SpecialKey" が適用される。
 	|hl-NonText| |hl-SpecialKey|
 
 			*'lpl'* *'nolpl'* *'loadplugins'* *'noloadplugins'*
@@ -5644,19 +5696,21 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 		- 略語展開が無効になる
 		- 'autoindent' がオフになる
 		- 'expandtab' がオフになる
-		- 'formatoptions' が空のときのような動作になる
+		- 'hkmap' がオフになる
 		- 'revins' がオフになる
 		- 'ruler' がオフになる
 		- 'showmatch' がオフになる
-		- 'smartindent' がオフになる
 		- 'smarttab' がオフになる
 		- 'softtabstop' が 0 になる
 		- 'textwidth' が 0 になる
 		- 'wrapmargin' が 0 になる
+		- 'varsofttabstop' が空になる
 	以下のオプションの値に変化はないが、働きは無効になる。
 		- 'cindent'
+		- 'formatoptions' が空のときのような動作になる
 		- 'indentexpr'
 		- 'lisp'
+		- 'smartindent'
 	NOTE: 'paste' がオンのときに別のファイルの編集を始めると、モードライン
 	や autocommand によって設定が再び変わり、貼り付け時に問題が起きること
 	があるので注意。そのときは 'paste' を再びオンにするとよいだろう。
@@ -6620,23 +6674,25 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 						*'shellcmdflag'* *'shcf'*
 'shellcmdflag' 'shcf'	文字列	(既定では: "-c"
-				 Win32 で 'shell' に "sh" が含まれないときは:
+				 Win32 で 'shell' に "powershell" が含まるとき:
+				 "-Command"、あるいは "sh" が含まれないとき:
 				 "/c")
 			グローバル
 	"!" や ":!" 等のコマンドを実行するためにシェルに渡されるフラグ。例えば、
-	"bash.exe -c ls" や "cmd.exe /c dir" である。MS-Windowsでは、ユーザー
-	が必ずこのオプションを設定しなくともよいように、既定値はオプション
-	'shell' に従って設定される。
+	"bash.exe -c ls"、"powershell.exe -Command dir"、"cmd.exe /c dir" であ
+	る。MS-Windowsでは、ユーザーがこのオプションを設定する必要がないよう
+	に、初期設定は 'shell' に適した値が設定される。
 	Unix では一つ以上のフラグを指定できる。空白で区切られた各部は shell
 	コマンドの引数として渡される。
 	値に空白や '\' を含める方法については、|option-backslash| を参照。
-	MS-Windows については |dos-shell| も参照。
+	MS-Windows については |dos-shell| と |dos-powershell| も参照。
 	安全上の理由から、このオプションをモードライン |modeline| やサンドボッ
 	クス |sandbox| の中で設定することはできない。
 
 						*'shellpipe'* *'sp'*
 'shellpipe' 'sp'	文字列	(既定では ">", ">%s 2>&1", "| tee", "|& tee"
-				 または "2>&1| tee")
+				 "2>&1| tee" または
+				 "2>&1 | Out-File -Encoding default")
 			グローバル
 			{|+quickfix| 機能付きでコンパイルされたときのみ有効}
 	コマンド ":make" の出力をエラーファイルに導くために使われる文字列。
@@ -6644,8 +6700,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	|option-backslash| を参照。
 	必要であれば、一時ファイルの名前は "%s" で参照できる (値に "%s" が1個
 	も含まれていなければ、一時ファイル名は自動的に追加される)。
-	Amigaでの既定値は ">" である。MS-Windowsでの既定値は ">%s 2>&1" であ
-	る。出力はファイルに直接保存され、スクリーンには表示されない。
+	Amigaでの既定値は ">" である。MS-Windowsでの既定値は powershell を使う
+	なら "2>&1 | Out-File -Encoding default"、そうでない場合は ">%s 2>&1"
+	である。出力はファイルに直接保存され、スクリーンには表示されない。
 	Unixでの既定値は "| tee" である。コンパイラからの標準出力がファイルに
 	保存され、画面にも表示される。初期化の後にオプション 'shell' が "csh"
 	か "tcsh" だったときは、既定値は "|& tee" である。'shell' が "sh",
@@ -6653,6 +6710,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	は "dash" のときは、既定値は "2>&1| tee" である。つまり標準エラー出力
 	も含まれる。'shell' オプションは、使用される前にパスが削除される (例え
 	ば "/bin/sh" なら "sh" が使われる)。
+ 	Unix と MS-Windows で、'shell' オプションが "pwsh" のときデフォルトが
+ 	">%s 2>&1" になり、出力が画面には表示されなくなる。
 	このオプションの初期化は、ファイル ".vimrc" の読み込みと他の初期化の後
 	に行われる。これは 'shell' がその間に設定されていたときは、'shellpipe'
 	を自動的に変更するためである。ただし 'shellpipe' がユーザー自らによっ
@@ -6668,8 +6727,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	ス|sandbox|の中で設定することはできない。
 
 						*'shellquote'* *'shq'*
-'shellquote' 'shq'	文字列	(既定では ""; Win32で 'shell' に "sh" が含まれ
-						るなら "\"")
+'shellquote' 'shq'	文字列	(既定では "")
 			グローバル
 	"!" や ":!" 等のコマンドでコマンドをシェルに渡すときに、コマンドを囲む
 	引用符(の列)。リダイレクトの指示は常に引用符の外側に置かれる。リダイレ
@@ -6677,14 +6735,13 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	プションを設定するのは、おそらく良い方法ではない。
 	既定値は空である。MS-Windows系のシステムの、MKS Korn Shell や bash 等
 	のサードパーティ製のシェルに対してのみ便利である。それらのシェルでは引
-	用符を "\"" とするべきである。ユーザーが必ずこのオプションを設定しなく
-	ともよいように、既定値は 'shell' に従って設定される。|dos-shell| を参
-	照。
+	用符を "\"" とするべきである。|dos-shell| を参照。
 	安全上の理由から、このオプションをモードライン|modeline|やサンドボック
 	ス|sandbox|の中で設定することはできない。
 
 						*'shellredir'* *'srr'*
-'shellredir' 'srr'	文字列	(既定では ">", ">&" or ">%s 2>&1")
+'shellredir' 'srr'	文字列	(既定では ">", ">&", ">%s 2>&1" もしくは
+				 "2>&1 | Out-File -Encoding default")
 			グローバル
 	フィルタコマンドの出力を一時ファイルに導くために使われる文字列。|:!|も
 	参照。値に空白や '\' を含める方法については、|option-backslash| を参照。
@@ -6693,11 +6750,13 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	る)。
 	既定値は ">" である。Unixでは、初期化の後にオプション 'shell' が "csh"
 	または "tcsh" だったときは、既定値は ">&" になる。'shell' が "sh",
-	"ksh", "mksh", "pdksh", "zsh", "zsh-beta", "bash" または "fish" だった
-	ときは、既定値は ">%s 2>&1" になる。つまり標準エラー出力も含まれる。
-	Win32では、Unixと同様のチェックがなされ、加えて値が "cmd" であるかどう
-	か調べられる。そのときは既定値は ">%s 2>&1" になる。また ".exe" 付きの
-	シェル名も探す。
+	"ksh", "mksh", "pdksh", "zsh", "zsh-beta", "bash", "fish" または
+	"pwsh" だったときは、既定値は ">%s 2>&1" になる。つまり標準エラー出力
+	も含まれる。Win32では、Unixと同様のチェックがなされ、加えて値が "cmd"
+	であるかどうか調べられる。そのときは既定値は ">%s 2>&1" になり、
+	"powershell" であるかを調べて、その場合は既定値を
+	"2>&1 | Out-File -Encoding default" にする(|dos-powershell| を参照)。
+	また ".exe" 付きのシェル名も探す。
 	このオプションの初期化は、ファイル ".vimrc" の読み込みと他の初期化の後
 	に行われる。これは 'shell' がその間に設定されていたときは、
 	'shellredir' を自動的に変更するためである。ただし 'shellredir' がユー
@@ -6711,9 +6770,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 'shellslash' 'ssl'	切替	(既定ではオフ)
 			グローバル
 			{VimのMS-Windows版でのみ有効}
-	オンのときは、ファイル名の展開にスラッシュが使われる。これは cmd.exe
-	の代わりにUnix系のシェルを使うときに便利である。'\' も入力できるが、
-	Vimによってスラッシュに変換される。
+	オンのときは、ファイル名の展開にスラッシュが使われる。これは cmd.exe,
+	pwsh.exe, powershell.exe の代わりにUnix系のシェルを使うときに便利であ
+	る。'\' も入力できるが、Vimによってスラッシュに変換される。
 	Note このオプションをオンにしたりオフにしても、すでにVim内に読み込まれ
 	たファイル名には影響がないので、完全を期すためにはこのオプションはどの
 	ファイルを開くのよりも先に設定する必要があることに注意。この点は将来変
@@ -6766,6 +6825,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 						*'shellxquote'* *'sxq'*
 'shellxquote' 'sxq'	文字列	(既定では "";
 				 Win32 で 'shell' が cmd.exe なら: "("
+				 Win32 で 'shell' が powershell.exeなら: "\""
 				 Win32 で 'shell' に "sh" が含まれるなら: "\""
 				 Unixで system() を使っているなら: "\"")
 			グローバル
@@ -6776,12 +6836,13 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	値が '(' なら末尾に ')' が追加される。値が '"(' なら ')"' が追加され
 	る。
 	値が '(' のときの動作に付いては 'shellxescape' も参照。
-	ほとんどのシステムでは初期設定は空になる。このオプションは Win32 版で
-	cmd.exe やサードパーティ製のシェルを使う場合に便利である。cmd.exe は自
-	動的にコマンドの最初と最後のクォート文字を取り除く。MKS Korn Shell や
-	bash などのサードパーティ製のシェルを使う場合は設定値は "\"" とすべき
-	である。ユーザーがこのオプションを設定する必要がないように、初期設定は
-	'shell' に適した値が設定される。|dos-shell| を参照。
+	このオプションはほとんどのシステムでは初期設定は空になるが、しかし
+	Win32 版で自動的にコマンドの最初と最後のクォート文字を取り除く必要があ
+	る cmd.exe, powershell.exe, pwsh.exe、あるいは設定値が "\"" となる必要
+	のあるMKS Korn Shell や bash などのサードパーティ製のシェルを使う場合
+	に役立つことが知られている。ユーザーがこのオプションを設定する必要がな
+	いように、初期設定は 'shell' に適した値が設定される。|dos-shell| を参
+	照。
 	安全上の理由から、このオプションをモードライン|modeline|やサンドボック
 	ス|sandbox|の中で設定することはできない。
 
@@ -7168,6 +7229,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	"cjk" という名前が含まれる場合は、東アジアの文字はスペルチェックから除
 	外される。これは、アジアの文字を含むようなテキストを編集する際に便利で
 	ある。
+	Note 「医療」辞書は存在せず、これは単に長い名前の例でしかない。
 							*E757*
 	特別な場合として、.spl ファイルの名前をそのまま指定することができる。
 	その名前の最初の "_xx" は除去され、地域名として使われる (_xx はアン
@@ -7997,24 +8059,29 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 'thesaurus' 'tsr'	文字列	(既定では "")
 			グローバル／バッファについてローカル |global-local|
 	同義語補完コマンド |i_CTRL-X_CTRL-T| で単語の検索に使われるファイルの
-	名前の、コンマ区切りのリスト。
+	名前の、コンマ区切りのリスト。|compl-thesaurus| を参照。
 
-	そのファイルの各行には、似た意味の単語をキーワードを構成しない文字で
-	(空白がよい) 区切ったものが並ぶ。行長の最大値は 510 バイトである。
-
-	英単語リストがこのgithubのissueに追加された:
-	https://github.com/vim/vim/issues/629#issuecomment-443293282
-	thesaurus_pkg.zip を展開し、thesaurus.txt ファイルをどこかに置き、例え
-	ば、~/.vim/thesaurus/english.txt そして、'thesaurus' オプションをこの
-	ファイル名にする。
+	This option is not used if 'thesaurusfunc' is set, either for the
+	buffer or globally.
 
 	ファイル名にコンマを含めるときは、その前に '\' を置くこと。コンマの後
 	の空白は無視されるが、それ以外では空白はそのままファイル名に含まれる。
-	値に空白や '\' を含める方法については、|option-backslash| を参照。
-	リストにディレクトリを追加するときには |:set+=|、リストからディレクト
-	リを除くときには |:set-=| を使うのがよい。こうすると将来のバージョンで
-	異なった既定値が使われるようになったときに、問題が起きるのを防げる。
-	安全上の問題のため、このオプションにバッククォート '`' は使えない。
+	値に空白や '\' を含める方法については、|option-backslash| を参照。リス
+	トにディレクトリを追加と削除をするときには |:set+=| と |:set-=| を使う
+	のがよい。こうすると将来のバージョンで異なった既定値が使われるように
+	なったときに、問題が起きるのを防げる。安全上の問題のため、このオプショ
+	ンにバッククォート '`' は使えない。
+ 
+						*'thesaurusfunc'* *tsrfu'*
+'thesaurusfunc' 'tsrfu'	string	(default: empty)
+			global or local to buffer |global-local|
+			{not available when compiled without the |+eval|
+			feature}
+	This option specifies a function to be used for thesaurus completion
+	with CTRL-X CTRL-T. |i_CTRL-X_CTRL-T| See |compl-thesaurusfunc|.
+
+	This option cannot be set from a |modeline| or in the |sandbox|, for
+	security reasons.
 
 			     *'tildeop'* *'top'* *'notildeop'* *'notop'*
 'tildeop' 'top'		切替	(既定ではオフ)
@@ -8651,12 +8718,17 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 					    *'virtualedit'* *'ve'*
 'virtualedit' 've'	文字列  (既定では "")
-			グローバル
+			グローバル／ウィンドウについてローカル |global-local|
 	値は、以下のキーワードのコンマ区切りのリストである。
 		block	矩形ビジュアルモードで仮想編集を有効にする。
 		insert	挿入モードで仮想編集を有効にする。
 		all	全てのモードで仮想編集を有効にする。
 		onemore	行末の1文字先までカーソルを移動できるようにする。
+		none	ローカルの値を使うとき、グローバルの値が設定されない限
+			り仮想編集を有効にしない。グローバルの値で使うとき、
+			"none" は "" と同じ。
+		NONE	"none" の代替記法。
+
 	仮想編集とは、実際に文字がないところにもカーソルを置けるようにすること
 	である。つまりタブ文字の内部や行末より後ろにカーソルを移動できる。ビ
 	ジュアルモードで長方形を選択するときや、表を編集するときに便利である。
@@ -8672,6 +8744,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	コマンド `g$` はスクリーン行の最後に移動するだろう。
 	"all" と "onemore" を同時に設定することは意味がないが、そのように設定
 	しても警告は出ない。
+	他の値と合せて使うとき、"none" は無視される。
 	NOTE: このオプションは、'compatible' がオンになると "" になるので注意。
 
 			*'visualbell'* *'vb'* *'novisualbell'* *'novb'* *beep*
@@ -8754,8 +8827,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	を展開するために打ち込まなければならない文字。
 	より詳しくは |cmdline-completion| を参照。
 	その文字はマクロ内では認識されない。それには 'wildcharm' を参照。
+	CTRL-C, <CR> および Enter キーは機能しない。
 	このオプションは数値オプションだが、次のように特殊キーも設定できる。 >
-		:set wc=<Esc>
+		:set wc=<Tab>
 <	NOTE: このオプションは 'compatible' がオンになるとViの既定値に設定され、
 	'compatible' がオフになるとVimの既定値に設定されるので注意。
 
