@@ -582,14 +582,13 @@ se[t]			"set " または "se " という文字列 (終わりの空白に注意);
 (バージョン3.0との互換性のため)。"ex:" が行頭に来ると、モードラインとは見なさ
 れない ("example:" の略かもしれないから)。
 
-If the modeline is disabled within a modeline, subsequent modelines will be
-ignored.  This is to allow turning off modeline on a per-file basis.  This is
-useful when a line looks like a modeline but isn't.  For example, it would be
-good to start a YAML file containing strings like "vim:" with
+モードラインの中でモードラインを無効にした場合、後続のモードラインは無効にな
+る。これはファイルごとにモードラインをオフにできるようにするためである。これは
+行がモードラインに見えるがそうでない時に便利である。例えば "vim:" を含むような
+YAML ファイルは次のように始めるとよい
     # vim: nomodeline ~
-so as to avoid modeline misdetection.  Following options on the same line
-after modeline deactivation, if any, are still evaluated (but you would
-normally not have any).
+これはモードラインの誤判定を回避する。モードラインが無効になった後の同行の後続
+のオプションは、なんであれ、依然として評価される(通常はなにもないだろうが)。
 
 							*modeline-local*
 オプションは ":setlocal" を使った時のように設定される。つまり設定した値は、そ
@@ -8061,8 +8060,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	同義語補完コマンド |i_CTRL-X_CTRL-T| で単語の検索に使われるファイルの
 	名前の、コンマ区切りのリスト。|compl-thesaurus| を参照。
 
-	This option is not used if 'thesaurusfunc' is set, either for the
-	buffer or globally.
+	'thesaurusfunc' がバッファまたはグローバルで設定されている場合、このオ
+	プションは使用されない。
 
 	ファイル名にコンマを含めるときは、その前に '\' を置くこと。コンマの後
 	の空白は無視されるが、それ以外では空白はそのままファイル名に含まれる。
@@ -8071,17 +8070,16 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	のがよい。こうすると将来のバージョンで異なった既定値が使われるように
 	なったときに、問題が起きるのを防げる。安全上の問題のため、このオプショ
 	ンにバッククォート '`' は使えない。
- 
-						*'thesaurusfunc'* *tsrfu'*
-'thesaurusfunc' 'tsrfu'	string	(default: empty)
-			global or local to buffer |global-local|
-			{not available when compiled without the |+eval|
-			feature}
-	This option specifies a function to be used for thesaurus completion
-	with CTRL-X CTRL-T. |i_CTRL-X_CTRL-T| See |compl-thesaurusfunc|.
 
-	This option cannot be set from a |modeline| or in the |sandbox|, for
-	security reasons.
+						*'thesaurusfunc'* *tsrfu'*
+'thesaurusfunc' 'tsrfu'	文字列	(既定では空)
+			グローバル／バッファについてローカル |global-local|
+			{|+eval| 機能付きでコンパイルされたときのみ有効}
+	このオプションは CTRL-X CTRL-T での同義語補完で利用する関数を指定する。
+ 	|i_CTRL-X_CTRL-T| |compl-thesaurusfunc| を参照。
+
+	安全上の理由から、このオプションをモードライン|modeline|やサンドボック
+	ス|sandbox|の中で設定することはできない。
 
 			     *'tildeop'* *'top'* *'notildeop'* *'notop'*
 'tildeop' 'top'		切替	(既定ではオフ)
@@ -8724,7 +8722,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 		insert	挿入モードで仮想編集を有効にする。
 		all	全てのモードで仮想編集を有効にする。
 		onemore	行末の1文字先までカーソルを移動できるようにする。
-		none	ローカルの値を使うとき、グローバルの値が設定されない限
+		none	ローカルの値で使うとき、グローバルの値が設定されない限
 			り仮想編集を有効にしない。グローバルの値で使うとき、
 			"none" は "" と同じ。
 		NONE	"none" の代替記法。
