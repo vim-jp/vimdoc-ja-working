@@ -26,11 +26,11 @@ jobs:
       - name: Build report
         run: |
           bash work/script/get_doc_info.sh
+          echo Update ${{ steps.current-time.outputs.ISOTime }} >> doc_info.md
       - name: Create issue
         uses: peter-evans/create-issue-from-file@v3
         with:
-          title: Weekly help diff (Update ${{ steps.current-time.outputs.ISOTime }})
+          title: Weekly help diff
           content-filepath: ./doc_info.md
-            # When using the same issue continuously
-            # title: Weekly help diff
+            # next change, use previous issue number
             # issue-number: <target issue>
