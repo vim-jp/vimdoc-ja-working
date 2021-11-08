@@ -25,7 +25,7 @@ jobs:
           path: vim
       - name: Build report
         run: |
-          bash work/script/get_doc_info.sh
+          bash work/tools/script/get_doc_info.sh
           echo Update ${{ steps.current-time.outputs.ISOTime }} >> doc_info.md
       - name: Create issue
         uses: peter-evans/create-issue-from-file@v3
