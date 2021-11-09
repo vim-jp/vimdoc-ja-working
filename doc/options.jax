@@ -225,8 +225,8 @@ t_xxの形のオプションは安全上の理由により、モードライン|
 に設定する: >
    :set titlestring=hi\ \"there\"
 
-|Vim9| script においては、コメントは '#' 文字で始まり、合せて前にはスペースし
-か書けない。バックスラッシュの必要な頻度は低い: >
+|Vim9| script においては、コメントは '#' 文字で始まり、かつ前に空白文字が必要
+である。バックスラッシュの必要な頻度は低い: >
    vim9script
    set titlestring=hi\ "there"
    set titlestring=hi#there#
