@@ -1,7 +1,7 @@
 name: Weekly report
 on:
   schedule:
-    - cron: 30 15 * * SAT
+    - cron: '30 15 * * SAT'
   workflow_dispatch:
 permissions:
   issues: write
