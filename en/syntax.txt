@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim version 8.2.  Last change: 2021 Apr 02
+*syntax.txt*	For Vim version 8.2.  Last change: 2021 Aug 16
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -923,7 +923,7 @@ For Visual Basic use: >
 
 BAAN						    *baan.vim* *baan-syntax*
 
-The baan.vim gives syntax support for BaanC of release BaanIV upto SSA ERP LN
+The baan.vim gives syntax support for BaanC of release BaanIV up to SSA ERP LN
 for both 3 GL and 4 GL programming. Large number of standard defines/constants
 are supported.
 
@@ -1132,11 +1132,13 @@ The ColdFusion syntax file is based on the HTML syntax file.
 
 CPP						*cpp.vim* *ft-cpp-syntax*
 
-Most of things are same as |ft-c-syntax|.
+Most things are the same as |ft-c-syntax|.
 
 Variable		Highlight ~
 cpp_no_cpp11		don't highlight C++11 standard items
 cpp_no_cpp14		don't highlight C++14 standard items
+cpp_no_cpp17		don't highlight C++17 standard items
+cpp_no_cpp20		don't highlight C++20 standard items
 
 
 CSH						*csh.vim* *ft-csh-syntax*
@@ -1420,11 +1422,17 @@ To select syntax highlighting file for Euphoria, as well as for
 auto-detecting the *.e and *.E file extensions as Euphoria file type,
 add the following line to your startup file: >
 
-	:let filetype_euphoria="euphoria3"
+	:let g:filetype_euphoria = "euphoria3"
 
-	or
+<	or >
 
-	:let filetype_euphoria="euphoria4"
+	:let g:filetype_euphoria = "euphoria4"
+
+Elixir and Euphoria share the *.ex file extension.  If the filetype is 
+specifically set as Euphoria with the g:filetype_euphoria variable, or the
+file is determined to be Euphoria based on keywords in the file, then the
+filetype will be set as Euphoria. Otherwise, the filetype will default to
+Elixir.
 
 
 ERLANG						*erlang.vim* *ft-erlang-syntax*
@@ -1440,6 +1448,22 @@ put the following line in your vimrc: >
 To enable highlighting some special atoms, put this in your vimrc: >
 
       :let g:erlang_highlight_special_atoms = 1
+
+
+ELIXIR						*elixir.vim* *ft-elixir-syntax*
+
+Elixir is a dynamic, functional language for building scalable and maintainable
+applications.
+
+The following file extensions are auto-detected as Elixir file types:
+
+	*.ex, *.exs, *.eex, *.leex, *.lock
+
+Elixir and Euphoria share the *.ex file extension. If the filetype is 
+specifically set as Euphoria with the g:filetype_euphoria variable, or the
+file is determined to be Euphoria based on keywords in the file, then the
+filetype will be set as Euphoria. Otherwise, the filetype will default to
+Elixir.
 
 
 FLEXWIKI				*flexwiki.vim* *ft-flexwiki-syntax*
@@ -3430,8 +3454,8 @@ syntax highlighting script handles this with the following logic:
  Tex: Match Check Control~
 
 	Sometimes one actually wants mismatched parentheses, square braces,
-	and or curly braces; for example, \text{(1,10] is a range from but
-	not including 1 to and including 10}.  This wish, of course, conflicts
+	and or curly braces; for example, \text{(1,10]} is a range from but
+	not including 1 to and including 10.  This wish, of course, conflicts
 	with the desire to provide delimiter mismatch detection.  To
 	accommodate these conflicting goals, syntax/tex.vim provides >
 		g:tex_matchcheck = '[({[]'
@@ -4084,7 +4108,7 @@ match in the same position overrules an earlier one).  The "transparent"
 argument makes the "myVim" match use the same highlighting as "myString".  But
 it does not contain anything.  If the "contains=NONE" argument would be left
 out, then "myVim" would use the contains argument from myString and allow
-"myWord" to be contained, which will be highlighted as a Constant.  This
+"myWord" to be contained, which will be highlighted as a Comment.  This
 happens because a contained match doesn't match inside itself in the same
 position, thus the "myVim" match doesn't overrule the "myWord" match here.
 
@@ -4967,6 +4991,14 @@ ctermul={color-nr}				*highlight-ctermul*
 	colors for a color-xterm can be changed from the .Xdefaults file.
 	Unfortunately this means that it's not possible to get the same colors
 	for each user.	See |xterm-color| for info about color xterms.
+							*tmux*
+	When using tmux you may want to use this in the tmux config: >
+	    # tmux colors
+	    set -s default-terminal "tmux-256color"
+	    set -as terminal-overrides ",*-256color:Tc"
+<	More info at:
+	https://github.com/tmux/tmux/wiki/FAQ#how-do-i-use-a-256-colour-terminal
+	https://github.com/tmux/tmux/wiki/FAQ#how-do-i-use-rgb-colour
 
 	The MS-Windows standard colors are fixed (in a console window), so
 	these have been used for the names.  But the meaning of color names in
@@ -5171,9 +5203,8 @@ LineNrAbove	Line number for when the 'relativenumber'
 LineNrBelow	Line number for when the 'relativenumber'
 		option is set, below the cursor line.
 							*hl-CursorLineNr*
-CursorLineNr	Like LineNr when 'cursorline' is set and 'cursorlineopt' is
-		set to "number" or "both", or 'relativenumber' is set, for
-		the cursor line.
+CursorLineNr	Like LineNr when 'cursorline' is set and 'cursorlineopt'
+		contains "number" or is "both", for the cursor line.
 							*hl-MatchParen*
 MatchParen	The character under the cursor or just before it, if it
 		is a paired bracket, and its match. |pi_paren.txt|
