@@ -1,5 +1,8 @@
-name: Weekly report
+name: Update report
 on:
+  push:
+    paths:
+      - 'en/**'
   schedule:
     - cron: '30 15 * * SAT'
   workflow_dispatch:
@@ -8,13 +11,13 @@ permissions:
 
 jobs:
   report:
-    name: Create Weekly report
+    name: Update help diff report
     runs-on: ubuntu-latest
     steps:
       - name: Get current time
         uses: 1466587594/get-current-time@v2
         id: current-time
-      - name: Checkout
+      - name: Checkout vimdoc-ja-working
         uses: actions/checkout@v2
         with:
           path: work
@@ -27,10 +30,10 @@ jobs:
         run: |
           bash work/tools/script/get_doc_info.sh
           echo Update ${{ steps.current-time.outputs.ISOTime }} >> doc_info.md
-      - name: Create issue
+      - name: Create or Update issue
         uses: peter-evans/create-issue-from-file@v3
         with:
-          title: Weekly help diff
+          title: 'Vim help : number of untranslated lines diff status'
           content-filepath: ./doc_info.md
           issue-number: 968
             # issue-number: if removed, create new issue/if define issue num, update numbered issue.
