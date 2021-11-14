@@ -1,6 +1,8 @@
 name: Update report
 on:
   push:
+    branches:
+      - master
     paths:
       - 'en/**'
   schedule:
