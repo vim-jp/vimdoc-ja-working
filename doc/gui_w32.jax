@@ -327,9 +327,9 @@ Gray, Grey, LightYellow, SeaGreen, Orange, Purple, SlateBlue, Violet,
 
 								*rgb.txt*
 付け加えて、デフォルトのカラーリストで定義される色も使うことができる。詳細は
-|:colorscheme| を参照のこと。これらの色は $VIMRUNTIME/rgb.txt で定義されたもの
-が使われ、現在の色について $VIMRUNTIME/colors/lists/default.vim にて初期化され
-た値が |v:colornames| にある。
+|:colorscheme| を参照のこと。これらの色は以前は $VIMRUNTIME/rgb.txt で定義され
+ていたもので、現在は $VIMRUNTIME/colors/lists/default.vim にて初期化された値が
+|v:colornames| にある。
 
 ==============================================================================
 6. ダイアログとブラウズ				*gui-w32-dialogs* *dialog*
