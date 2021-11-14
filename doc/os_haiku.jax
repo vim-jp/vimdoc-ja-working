@@ -201,7 +201,7 @@ $VIM/macros/swapmous.vim ファイルを見てください。	|gui-mouse-mapping
 11. 色名						*haiku-colors*
 
 Vim は多数の色名を内蔵しています。追加の名前については |v:colornames| に定義さ
-れる。詳細は |:colorscheme| を参照。
+れています。詳細は |:colorscheme| を参照してください。
 
 12. GUI ツールバーイメージ				*haiku-toolbar-images*
 
