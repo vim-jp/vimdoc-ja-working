@@ -749,7 +749,7 @@
 'guifontset'	  'gfs'     GUI: マルチバイト用のフォント
 'guifontwide'	  'gfw'     全角文字用のフォントのリスト
 'guiheadroom'	  'ghr'     GUI: ウィンドウ装飾用の余地。ピクセル単位
-'guiligatures'	  'gli'	    GTK GUI: 図形を作るれるASCII 文字セット
+'guiligatures'	  'gli'	    GTK GUI: 図形を作れるASCII文字セット
 'guioptions'	  'go'      GUI: GUIに特化したオプション
 'guipty'		    GUI: |:!|でpseudo-ttyの使用を試みる
 'guitablabel'	  'gtl'	    GUI: タブページのラベル設定
