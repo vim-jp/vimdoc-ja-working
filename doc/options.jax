@@ -1474,8 +1474,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 	このオプションの変更には十分注意すること。多くの副作用が起こるかもしれ
 	ない！
-	One such effect is that Vim will not check the timestamp of the file,
-	if the file is changed by another program this will not be noticed.
+	その作用の1つとして、Vim がファイルのタイムスタンプをチェックしなくな
+	るというのがあり、もしファイルが他のプログラムに変更されても認識されな
+	い。
 
 	"quickfix" バッファはエラーリストとロケーションリストにのみ使われる。
 	この値はコマンド|:cwindow| と|:lwindow|で設定され、ユーザーが変更するこ
