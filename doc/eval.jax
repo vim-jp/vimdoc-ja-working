@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Jul 28
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Nov 14
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -115,8 +115,8 @@ NOTE: |scriptversion-4| を使用する場合、先頭が "0" の8進数は認�
 
 						*TRUE* *FALSE* *Boolean*
 ブール(真偽値)演算には数値が使われる。0は偽を意味し、非0は真を表す。また、
-|v:false| と |v:true| を使うこともできる。Vim9 script では |false| と |true|
-になる。
+|v:false| と |v:true| を使うこともでき、Vim9 script では |false| と |true| に
+なる。
 関数から真が返されたときは数値の 1 であり、偽が返されたときは数値の 0 である。
 
 Note 次のコマンドをみると >
@@ -635,7 +635,7 @@ Note 辞書の要素間に順序は定まっていない。そのため ":echo a
 
 番号付き関数でエラーが発生したときは、あるトリックを使うことで発生源を確認でき
 る。例えば 42 という関数なら次のようにする: >
-	:function {42}
+	:function g:42
 
 
 辞書操作関数 ~
@@ -1313,7 +1313,8 @@ number			数定数				*expr-number*
 	[-+]{N}.{M}[eE][-+]{exp}
 
 ここで {N} と {M} は数値である。{N} と {M} の両方とも省略してはならず、数値の
-みを含めることができる。
+みを含めることができるが、|Vim9| script で {N} がシングルクォートで挟まれた数
+値である場合を除く。
 [-+] は、省略可能なプラスまたはマイナス記号である。
 {exp} は指数で、10 のベキ。
 現在のロケールが何であれ、小数点にはドットのみを使える。コンマは使えない。
@@ -1377,7 +1378,7 @@ number			数定数				*expr-number*
 \U....	\u と同じだが8桁までの16進数が使える
 \b	バックスペース <BS>
 \e	エスケープ <Esc>
-\f	フォームフィード <FF>
+\f	フォームフィード 0x0C
 \n	改行 <NL>
 \r	改行(キャリッジリターン) <CR>
 \t	タブ <Tab>
@@ -1386,7 +1387,7 @@ number			数定数				*expr-number*
 \<xxx>	"xxx" という名の特殊キー。例 "\<C-W>" は CTRL-W。これはマップで使うた
 	めのものであり、0x80 バイトはエスケープされる。
 	ダブルクォート文字を使う場合はエスケープしなければならない: "<M-\">"
-	utf-8 文字を得るためには <Char-xxxx> を使わずに、上述の \uxxxx を使う
+	UTF-8 文字を得るためには <Char-xxxx> を使わずに、上述の \uxxxx を使う
 	こと。
 \<*xxx>	 \<xxx> と同じだが、文字に修飾子を含むのではなくそれを前に付加する。
 	たとえば、"\<C-w>" は 0x17 の1文字だが、"\<*C-w>" は 4バイトになる:
@@ -1786,6 +1787,40 @@ v:collate	現在のロケール設定での実行環境の照合順序。これ�
 		"C" となる。この変数は直接は設定できなく、|:language| コマンド
 		を使う。
 		|multi-lang| を参照。
+                                                                 *v:colornames*
+v:colornames    カラー名のhexカラー文字列の割り当て辞書。このカラー名は
+		|highlight-guifg|, |highlight-guibg|, |highlight-guisp| のパラ
+		メタとして使うことができる v:colornamesのエントリは更新するこ
+		とはできるが、シンタックスハイライトには即座には反映されない。
+		ハイライトのコマンド(一般的にはカラースキームのスクリプト)は色
+		の値を更新するには再評価が必要になる。例: >
+
+		    :let v:colornames['fuscia'] = '#cf3ab4'
+		    :let v:colornames['mauve'] = '#915f6d'
+		    :highlight Normal guifg=fuscia guibg=mauve
+<
+		これを利用しての |cterm-colors|を上書きして使うことはできず、
+		ただ他の色を上書きして使うことはできる。例えば、X11の色は
+		`colors/lists/default.vim` (以前は |rgb.txt| にて定義されてい
+		た) にて定義されている。プラグインにて新しいカラー名が定義され
+		るときは、カラーのエントリが以前設定されていないときだけ設定す
+		るように動く必要がある。例: >
+
+		    :call extend(v:colornames, {
+			\ 'fuscia': '#cf3ab4',
+			\ 'mauve': '#915f6d,
+			\ }, 'keep')
+<
+		'keep' オプション付きの |extend()| を使うことで |v:colornames|
+		に各カラーが存在しないときだけ更新される。そうすることでユー
+		ザーは自身の |.vimrc| で標準名について正確なカラー値を選択でき
+		る。
+
+		辞書から項目を削除することも可能ではあるがしかしそれは強く推奨
+		されない、なぜならば他のスクリプトを破壊してしまうので。これは
+		また |:colorscheme| と |:highlight| がどちらも自動で
+		`colors/lists/default.vim` の全カラースクリプトをロードするた
+		め不幸な結末となる。
 
 				*v:completed_item* *completed_item-variable*
 v:completed_item
@@ -2194,6 +2229,18 @@ v:shell_error	最後に実行したシェルコマンドの結果。シェルコ
 <		|scriptversion| が 3以降でなければ、"shell_error" も、以前の版
 		のVimとの互換性の為に動作する。
 
+					*v:sizeofint* *sizeofint-variable*
+v:sizeofint	intのバイト数。Vimがどのようにコンパイルされたかによる。
+		テストにおいて確定した期待値を提供するときだけ有用である。
+
+					*v:sizeoflong* *sizeoflong-variable*
+v:sizeoflong	longのバイト数。Vimがどのようにコンパイルされたかによる。
+		テストにおいて確定した期待値を提供するときだけ有用である。
+
+				*v:sizeofpointer* *sizeofpointer-variable*
+v:sizeofpointer	ポインタのバイト数。Vimがどのようにコンパイルされたかによる。
+		テストにおいて確定した期待値を提供するときだけ有用である。
+
 					*v:statusmsg* *statusmsg-variable*
 v:statusmsg	最後に表示されたステータスメッセージ。この変数は代入すること
 		が許されている。
@@ -2416,19 +2463,20 @@ balloon_gettext()		文字列	バルーン内のカレントテキストを得る
 balloon_show({expr})		なし	{expr} をバルーン内に表示
 balloon_split({msg})		リスト	{msg} をバルーンで使われるように分割す
 					る
+blob2list({blob})		リスト	{blob} を数値のリストに変換する
 browse({save}, {title}, {initdir}, {default})
 				文字列	ファイル選択ダイアログを表示
 browsedir({title}, {initdir})	文字列	ディレクトリ選択ダイアログを表示
 bufadd({name})			数値	バッファリストにバッファを追加する
-bufexists({expr})		数値	バッファ{expr}が存在すれば|TRUE|
-buflisted({expr})		数値	バッファ{expr}がリストにあるなら|TRUE|
-bufload({expr})			数値	まだバッファ{expr}がロードされていなけ
+bufexists({buf})		数値	バッファ{buf}が存在すれば|TRUE|
+buflisted({buf})		数値	バッファ{buf}がリストにあるなら|TRUE|
+bufload({buf})			数値	まだバッファ{buf}がロードされていなけ
 					ればバッファをロードする
-bufloaded({expr})		数値	バッファ{expr}がロード済みなら|TRUE|
-bufname([{expr}])		文字列	バッファ{expr}の名前
-bufnr([{expr} [, {create}]])	数値	バッファ{expr}の番号
-bufwinid({expr})		数値	バッファ{expr}のウィンドウID
-bufwinnr({nr})			数値	バッファ{nr}のウィンドウ番号
+bufloaded({buf})		数値	バッファ{buf}がロード済みなら|TRUE|
+bufname([{buf}])		文字列	バッファ{buf}の名前
+bufnr([{buf} [, {create}]])	数値	バッファ{buf}の番号
+bufwinid({buf})			数値	バッファ{buf}のウィンドウID
+bufwinnr({buf})			数値	バッファ{buf}のウィンドウ番号
 byte2line({byte})		数値	{byte}番目のバイトの行番号
 byteidx({expr}, {nr})		数値	{expr}の{nr}文字目のバイトインデックス
 byteidxcomp({expr}, {nr})	数値	{expr}の{nr}文字目のバイトインデックス
@@ -2467,7 +2515,7 @@ ch_setoptions({handle}, {options})
 ch_status({handle} [, {options}])
 				文字列	チャネル{handle}の状態
 changenr()			数値	現在の変更番号
-char2nr({expr} [, {utf8}])	数値	{expr}の先頭文字のASCII/UTF8コード
+char2nr({expr} [, {utf8}])	数値	{expr}の先頭文字のASCII/UTF-8コード
 charclass({string})		数値	{string} の文字クラス
 charcol({expr})			数値	カーソルかマークのカラム番号
 charidx({string}, {idx} [, {countcc}])
@@ -2497,8 +2545,8 @@ cursor({list})			数値	カーソルを{list}の位置へ移動
 debugbreak({pid})		数値	デバッグするプロセスへ割り込む
 deepcopy({expr} [, {noref}])	任意	{expr}の完全なコピーを作る
 delete({fname} [, {flags}])	数値	ファイルやディレクトリ{fname}を消す
-deletebufline({expr}, {first} [, {last}])
-				数値	バッファ {expr} から行を削除する
+deletebufline({buf}, {first} [, {last}])
+				数値	バッファ {buf} から行を削除する
 did_filetype()			数値	FileTypeのautocommandが実行されたか?
 diff_filler({lnum})		数値	差分モードで{lnum}に挿入された行
 diff_hlID({lnum}, {col})	数値	差分モードで{lnum}/{col}位置の強調
@@ -2516,6 +2564,7 @@ executable({expr})		数値	実行可能な{expr}が存在するなら1
 execute({command})		文字列	{command}を実行し、出力を得る
 exepath({expr})			文字列	コマンド {expr} のフルパス
 exists({var})			数値	変数{var}が存在したら|TRUE|
+exists_compiled({expr})		数値	変数{var}がコンパイル時に存在したら|TRUE|
 exp({expr})			浮動小数点数	{expr}の指数
 expand({expr} [, {nosuf} [, {list}]])
 				任意	{expr}内の特別なキーワードを展開
@@ -2560,12 +2609,12 @@ garbagecollect([{atexit}])	なし	メモリを解放する。循環参照を断�
 get({list}, {idx} [, {def}])	任意	{list}や{def}から要素{idx}を取得
 get({dict}, {key} [, {def}])	任意	{dict}や{def}から要素{key}を取得
 get({func}, {what})		任意	funcref/partial {func}のプロパティ取得
-getbufinfo([{expr}])		リスト	バッファに関する情報
-getbufline({expr}, {lnum} [, {end}])
-				リスト	バッファ{expr}の{lnum}から{end}行目
-getbufvar({expr}, {varname} [, {def}])
-				任意	バッファ{expr}の変数 {varname}
-getchangelist([{expr}])		リスト	変更リスト要素のリスト
+getbufinfo([{buf}])		リスト	バッファに関する情報
+getbufline({buf}, {lnum} [, {end}])
+				リスト	バッファ{buf}の{lnum}から{end}行目
+getbufvar({buf}, {varname} [, {def}])
+				任意	バッファ{buf}の変数 {varname}
+getchangelist([{buf}])		リスト	変更リスト要素のリスト
 getchar([expr])			数値/文字列	ユーザーから1文字を取得する
 getcharmod()			数値	修飾キーの状態を表す数値を取得
 getcharpos({expr})		リスト	カーソル、マーク、その他のカーソル位置
@@ -2593,7 +2642,7 @@ getline({lnum})			文字列	現在のバッファから行の内容を取得
 getline({lnum}, {end})		リスト	カレントバッファの{lnum}から{end}行目
 getloclist({nr})		リスト	locationリストの要素のリスト
 getloclist({nr}, {what})	辞書	指定したlocationリストのプロパティ
-getmarklist([{expr}])		リスト	グローバル/ローカルのマークのリスト
+getmarklist([{buf}])		リスト	グローバル/ローカルのマークのリスト
 getmatches([{win}])		リスト	現在のマッチのリスト
 getmousepos()			辞書	マウスの最新の位置
 getpid()			数値	Vim のプロセス ID
@@ -2637,6 +2686,8 @@ histget({history} [, {index}])	文字列	ヒストリから{index}アイテム�
 histnr({history})		数値	ヒストリの数
 hlID({name})			数値	highlight group {name}のID
 hlexists({name})		数値	highlight group {name}が存在したら|TRUE|
+hlget([{name} [, {resolve}]])	リスト	highlight group の属性を取得
+hlset({list})			数値	highlight group の属性を設定
 hostname()			文字列	vimが動作しているマシンの名前
 iconv({expr}, {from}, {to})	文字列	{expr}のエンコーディングを変換する
 indent({lnum})			文字列	行{lnum}のインデントを取得
@@ -2679,7 +2730,8 @@ libcallnr({lib}, {func}, {arg})	数値	上と同じ。ただし数値を返す
 line({expr} [, {winid}])	数値	行番号の取得
 line2byte({lnum})		数値	行{lnum}のバイトカウント
 lispindent({lnum})		数値	{lnum}行目のLispインデント量を取得
-list2str({list} [, {utf8}])	文字列	{list}の数値を文字列に変換する
+list2blob({list})		Blob	数値のリスト {list} をBlobに変換する
+list2str({list} [, {utf8}])	文字列	数値のリスト {list} を文字列に変換する
 listener_add({callback} [, {buf}])
 				数値	変更を監視するためのコールバックを追加
 listener_flush([{buf}])		なし	リスナーコールバックを呼び出す
@@ -2729,7 +2781,7 @@ mkdir({name} [, {path} [, {prot}]])
 mode([expr])			文字列	現在の編集モード
 mzeval({expr})			任意	|MzScheme| の式を評価する
 nextnonblank({lnum})		数値	{lnum}行目以降で空行でない行の行番号
-nr2char({expr} [, {utf8}])	文字列	ASCII/UTF8コード{expr}で示される文字
+nr2char({expr} [, {utf8}])	文字列	ASCII/UTF-8コード{expr}で示される文字
 or({expr}, {expr})		数値    ビット論理和
 pathshorten({expr} [, {len}])	文字列	path内の短縮したディレクトリ名
 perleval({expr})		任意	|Perl|の式を評価する
@@ -2757,7 +2809,7 @@ popup_getpos({id})		辞書	ポップアップウィンドウ {id} の位置を�
 popup_hide({id})		なし	ポップアップメニュー {id} を隠す
 popup_list()			リスト	全ポップアップのウィンドウIDのリストを
 					取得する
-popup_locate({row}, {col})	数値 	指定位置のポップアップのウィンドウIDを
+popup_locate({row}, {col})	数値	指定位置のポップアップのウィンドウIDを
 					取得する
 popup_menu({what}, {options})	数値	メニューとして使われるポップアップウィ
 					ンドウを作成する
@@ -2779,7 +2831,9 @@ prompt_getprompt({buf})		文字列	プロンプト文字列の取得
 prompt_setcallback({buf}, {expr}) なし	プロンプトコールバック関数を設定する
 prompt_setinterrupt({buf}, {text}) なし	プロンプト割り込み関数を設定する
 prompt_setprompt({buf}, {text}) なし	プロンプトテキストを設定する
-prop_add({lnum}, {col}, {props})  なし	テキストプロパティを追加
+prop_add({lnum}, {col}, {props})  なし	テキストプロパティ1つを追加
+prop_add_list({props}, [[{lnum}, {col}, {end-lnum}, {end-col}], ...])
+				なし	複数のテキストプロパティを追加
 prop_clear({lnum} [, {lnum-end} [, {props}]])
 				なし	全てのテキストプロパティを削除
 prop_find({props} [, {direction}])
@@ -2866,8 +2920,8 @@ serverlist()			文字列	利用可能なサーバーのリストを取得
 setbufline({expr}, {lnum}, {text})
 				数値	バッファ {expr} の {lnum} 行目に {text}
 					を設定する
-setbufvar({expr}, {varname}, {val})	バッファ{expr}内の変数{varname}に{val}
-					をセット
+setbufvar({buf}, {varname}, {val})	バッファ{buf}内の変数{varname}に{val}を
+					セット
 setcellwidths({list})		なし	文字のセル幅の上書き設定
 setcharpos({expr}, {list})	数値	{list} の {expr} 位置に設定
 setcharsearch({dict})		辞書	文字検索を{dict}に設定
@@ -2906,11 +2960,11 @@ shiftwidth([{col}])		数値	実際に使用される 'shiftwidth' の値
 sign_define({name} [, {dict}])	数値	目印を定義または更新する
 sign_define({list})		リスト	目印のリストを定義または更新する
 sign_getdefined([{name}])	リスト	定義されている目印のリストを取得する
-sign_getplaced([{expr} [, {dict}]])
+sign_getplaced([{buf} [, {dict}]])
 				リスト	設置されている目印のリストを取得する
-sign_jump({id}, {group}, {expr})
+sign_jump({id}, {group}, {buf})
 				数値	目印に移動する
-sign_place({id}, {group}, {name}, {expr} [, {dict}])
+sign_place({id}, {group}, {name}, {buf} [, {dict}])
 				数値	目印を設置する
 sign_placelist({list})		リスト	目印のリストを設置する
 sign_undefine([{name}])		数値	目印を削除する
@@ -2940,8 +2994,8 @@ split({expr} [, {pat} [, {keepempty}]])
 sqrt({expr})			浮動小数点数	{expr} の平方根
 srand([{expr}])			リスト	|rand()| 用の種を取得する
 state([{what}])			文字列	Vimの現在の状態
-str2float({expr})		浮動小数点数	文字列を浮動小数点数に変換する
-str2list({expr} [, {utf8}])	リスト	{expr}の各文字をASCII / UTF8値に変換する
+str2float({expr} [, {quoted}])	浮動小数点数	文字列を浮動小数点数に変換する
+str2list({expr} [, {utf8}])	リスト	{expr}の各文字をASCII/UTF-8値に変換する
 str2nr({expr} [, {base} [, {quoted}]])
 				数値	文字列を数値に変換する
 strcharlen({expr})		数値	文字列 {expr} の文字の長さ
@@ -2973,7 +3027,7 @@ submatch({nr} [, {list}])	文字列/リスト
 substitute({expr}, {pat}, {sub}, {flags})
 				文字列	{expr}の{pat}を{sub}に置換え
 swapinfo({fname})		辞書	スワップファイル {fname} に関する情報
-swapname({expr})		文字列	バッファ{expr}のスワップファイル名
+swapname({buf})			文字列	バッファ{buf}のスワップファイル名
 synID({line}, {col}, {trans})	数値	{line}と{col}のsyntax IDを取得
 synIDattr({synID}, {what} [, {mode}])
 				文字列	syntax ID{synID}の属性{what}を取得
@@ -3187,13 +3241,13 @@ append({lnum}, {text})					*append()*
 		渡される: >
 			mylist->append(lnum)
 
-appendbufline({expr}, {lnum}, {text})			*appendbufline()*
-		|append()| と同様、ただしバッファ {expr} にテキストを追加する。
+appendbufline({buf}, {lnum}, {text})			*appendbufline()*
+		|append()| と同様、ただしバッファ {buf} にテキストを追加する。
 
 		この関数は、ロードされたバッファに対してのみ機能する。必要であ
 		れば、最初に |bufload()| を呼び出すこと。
 
-		{expr} の使い方については |bufname()| を参照。
+		{buf} の使い方については |bufname()| を参照。
 
 		{lnum} は |append()| と同様に扱われる。Note: |line()| の使用
 		は、追加対象のバッファではなくカレントバッファに適用される。
@@ -3201,7 +3255,7 @@ appendbufline({expr}, {lnum}, {text})			*appendbufline()*
 
 		成功時には 0 が返り、失敗時には 1 が返る。
 
-		{expr} が有効なバッファでない、もしくは {lnum} が有効でない場
+		{buf} が有効なバッファでない、もしくは {lnum} が有効でない場
 		合、エラーメッセージが与えられる。例: >
 			:let failed = appendbufline(13, 0, "# THE START")
 <
@@ -3301,7 +3355,7 @@ atan2({expr1}, {expr2})					*atan2()*
 <			2.356194
 
 		|method| としても使用できる: >
-			Compute()->atan(1)
+			Compute()->atan2(1)
 <
 		{|+float| 機能を有効にしてコンパイルしたときのみ有効}
 
@@ -3339,13 +3393,24 @@ balloon_show({expr})					*balloon_show()*
 		でコンパイルされたときのみ有効}
 
 balloon_split({msg})					*balloon_split()*
-		{msg} をバルーン内で表示される行に分割する。カレントウィンドウ
-		サイズ用に分割され、デバッガ出力を表示するために最適化される。
+		文字列 {msg} をバルーン内で表示される行に分割する。カレントウィ
+		ンドウサイズ用に分割され、デバッガ出力を表示するために最適化さ
+		れる。
 		分割された行の |List| を返す。
 		|method| としても使用できる: >
 			GetText()->balloon_split()->balloon_show()
 
 <		{|+balloon_eval_term| 機能付きでコンパイルされたときのみ有効}
+
+blob2list({blob})					*blob2list()*
+		Return a List containing the number value of each byte in Blob
+		Blob {blob} の各バイトを数値として保持するリストを返す。例: >
+			blob2list(0z0102.0304)	returns [1, 2, 3, 4]
+			blob2list(0z)		returns []
+<		エラーの時は空リストを返す。|list2blob()| は反対のことをする。
+
+		|method| としても使用できる: >
+			GetBlob()->blob2list()
 
 							*browse()*
 browse({save}, {title}, {initdir}, {default})
@@ -3373,7 +3438,7 @@ browsedir({title}, {initdir})
 		ラウジングが不可能ならば、空文字列が戻ってくる。
 
 bufadd({name})						*bufadd()*
-		バッファリストに {name} という名前でバッファを追加する。
+		バッファリストに文字列 {name} という名前でバッファを追加する。
 		もし、ファイル {name} 用のバッファが既に存在した場合、そのバッ
 		ファの番号を返す。そうでなければ、新しく作られたバッファの番号
 		を返す。{name} が空の文字列だったときは新しいバッファが常に作
@@ -3386,14 +3451,13 @@ bufadd({name})						*bufadd()*
 <		|method| としても使用できる: >
 			let bufnr = 'somename'->bufadd()
 
-bufexists({expr})					*bufexists()*
-		結果は数値で、{expr}と呼ばれるバッファが存在すれば|TRUE|とな
-		る。
-		{expr}が数値の場合、バッファ番号とみなされる。数値の 0 はカレ
-		ントウィンドウの代替バッファである。
+bufexists({buf})					*bufexists()*
+		結果は数値で、{buf}と呼ばれるバッファが存在すれば|TRUE|となる。
+		{buf}が数値の場合、バッファ番号とみなされる。数値の 0 はカレン
+		トウィンドウの代替バッファである。
 
-		{expr}が文字列の場合、バッファ名に正確にマッチしなければな
-		らない。名前として以下のものが許される:
+		{buf}が文字列の場合、バッファ名に正確にマッチしなければならな
+		い。名前として以下のものが許される:
 		- カレントディレクトリからの相対パス。
 		- フルパス。
 		- 'buftype' が "nofile" であるバッファの名前
@@ -3413,42 +3477,41 @@ bufexists({expr})					*bufexists()*
 							*buffer_exists()*
 		以前の名前: buffer_exists().
 
-buflisted({expr})					*buflisted()*
-		戻り値は数値で、{expr}と呼ばれるバッファが存在しリストされてい
+buflisted({buf})					*buflisted()*
+		戻り値は数値で、{buf}と呼ばれるバッファが存在しリストされてい
 		る ('buflisted' オプションがオンになっている) ならば結果は
-		|TRUE|となる。引数{expr}は|bufexists()|と同じように扱われる。
+		|TRUE|となる。引数{buf}は|bufexists()|と同じように扱われる。
 
 		|method| としても使用できる: >
 			let listed = 'somename'->buflisted()
 
-bufload({expr})						*bufload()*
-		バッファ{expr}がロードされていることを保証する。バッファの名前
+bufload({buf})						*bufload()*
+		バッファ{buf}がロードされていることを保証する。バッファの名前
 		が既存のファイルを参照しているときは、そのファイルが読み込まれ
 		る。そうでなければバッファは空になる。もし既にバッファが読み込
 		まれていれば、変更はない。
 		バッファのファイルに対して既存のスワップファイルがある場合、ダ
 		イアログなしで、バッファはロードされる。
-		引数{expr}は|bufexists()|と同じように扱われる。
+		引数{buf}は|bufexists()|と同じように扱われる。
 
 		|method| としても使用できる: >
 			eval 'somename'->bufload()
 
-bufloaded({expr})					*bufloaded()*
-		戻り値は数値で、{expr}と呼ばれるバッファが存在しロード済み(
-		ウィンドウに表示されているか、隠されているかは問わない)ならば
-		結果は|TRUE|となる。引数{expr}は|bufexists()|と同じように扱わ
-		れる。
+bufloaded({buf})					*bufloaded()*
+		戻り値は数値で、{buf}と呼ばれるバッファが存在しロード済み(ウィ
+		ンドウに表示されているか、隠されているかは問わない)ならば結果
+		は|TRUE|となる。引数{buf}は|bufexists()|と同じように扱われる。
 
 		|method| としても使用できる: >
 			let loaded = 'somename'->bufloaded()
 
-bufname([{expr}])					*bufname()*
+bufname([{buf}])					*bufname()*
 		戻り値はバッファの名前。バッファ名はコマンド `:ls` で表示され
 		るものとほとんど同じだが、例えば "[No Name]" などの特殊名は使
 		用しない。
-		{expr}が省略された場合は、カレントバッファが使われる。
-		{expr}が数値ならば、その番号のバッファ名が返される。0は現在の
-		ウィンドウの代替バッファを意味する。{expr}が文字列ならば、バッ
+		{buf}が省略された場合は、カレントバッファが使われる。
+		{buf}が数値ならば、その番号のバッファ名が返される。0は現在の
+		ウィンドウの代替バッファを意味する。{buf}が文字列ならば、バッ
 		ファ名に対してファイル名マッチング |file-pattern| を行うパター
 		ンとなる。このマッチングは常に、'magic' をセットし 'cpoptions'
 		を空にした状態で行われる。複数マッチしてしまった場合には空文字
@@ -3462,8 +3525,8 @@ bufname([{expr}])					*bufname()*
 		まずバッファリストにあるバッファが探される。そこで1個だけマッ
 		チが見つかればそれを返す。次にバッファリストにないものが探され
 		る。
-		{expr}が文字列のときに、それをバッファ番号として使いたいなら
-		ば、0を足すことによって強制的に数値にすることができる: >
+		{buf}が文字列のときに、それをバッファ番号として使いたいならば、
+		0を足すことによって強制的に数値にすることができる: >
 			echo bufname("3" + 0)
 <		|method| としても使用できる: >
 			echo bufnr->bufname()
@@ -3478,9 +3541,9 @@ bufname([{expr}])					*bufname()*
 		以前の名前: buffer_name().
 
 							*bufnr()*
-bufnr([{expr} [, {create}]])
+bufnr([{buf} [, {create}]])
 		結果はバッファの番号。バッファ番号はコマンド `:ls` で表示され
-		るものと同様。{expr}の使い方は前述の |bufname()| を参照。
+		るものと同様。{buf}の使い方は前述の |bufname()| を参照。
 
 		バッファが存在しない場合-1が返される。ただし、{create}が与えら
 		れて真であるときは、バッファリストに載せない新しいバッファを作
@@ -3504,11 +3567,11 @@ bufnr([{expr} [, {create}]])
 							*last_buffer_nr()*
 		bufnr("$")の以前の名前: last_buffer_nr().
 
-bufwinid({expr})					*bufwinid()*
-		その結果は数値で、バッファ{expr}に関連付けられた最初のウィンド
-		ウの|window-ID|。{expr}の使い方は前述の|bufname()|を参照。バッ
-		ファ{expr}が存在しないか、ウィンドウが無い場合は、-1が返され
-		る。例: >
+bufwinid({buf})						*bufwinid()*
+		その結果は数値で、バッファ{buf}に関連付けられた最初のウィンド
+		ウの |window-ID|。{buf}の使い方は前述の|bufname()|を参照。バッ
+		ファ{buf}が存在しないか、ウィンドウが無い場合は、-1が返される。
+		例: >
 
 	echo "A window containing buffer 1 is " . (bufwinid(1))
 <
@@ -3517,10 +3580,10 @@ bufwinid({expr})					*bufwinid()*
 		|method| としても使用できる: >
 			FindBuffer()->bufwinid()
 
-bufwinnr({expr})					*bufwinnr()*
-		結果は数値で、バッファ{expr}に関連付けられた最初のウィンドウの
-		番号。{expr}の使い方は前述の|bufname()|を参照。バッファ{expr}
-		が存在しないか、ウィンドウが無い場合には-1を返す。例: >
+bufwinnr({buf})						*bufwinnr()*
+		|bufwinid()| と同様だが、バッファの |window-ID| ではなくウィン
+		ドウ番を返す。バッファ{buf} が存在しないか、ウィンドウが無い場
+		合には-1を返す。例: >
 
 	echo "A window containing buffer 1 is " . (bufwinnr(1))
 
@@ -3612,15 +3675,15 @@ changenr()						*changenr()*
 		redoされた変更の番号となる。undoを行った直後はundoされた変更よ
 		り1小さい番号になる。
 
-char2nr({expr} [, {utf8}])					*char2nr()*
-		{expr}の最初の文字のASCIIコードを返す。例: >
+char2nr({string} [, {utf8}])					*char2nr()*
+		{string}の最初の文字のASCIIコードを返す。例: >
 			char2nr(" ")		returns 32
 			char2nr("ABC")		returns 65
 <		{utf8} を省略、またはゼロを指定すると、現在の 'encoding' が適
 		用される。"utf-8" の場合の例: >
 			char2nr("á")		returns 225
 			char2nr("á"[0])		returns 195
-<		{utf8} に真を指定すると、常に utf-8 文字として扱われる。
+<		{utf8} に真が指定された場合、常に UTF-8 文字として扱われる。
 		合成文字は個別の文字として扱われる。
 		|nr2char()| はこの逆を行う。
 		文字列を文字の番号のリストに変換するには: >
@@ -3642,8 +3705,8 @@ charclass({string})					*charclass()*
 			その他	Unicode 固有のクラス
 		クラスはパターンと単語単位の移動で使われる。
 
-							*charcol()*
-charcol({expr})	|col()| と同様だが {expr} で返す桁位置がバイトインデックスでは
+charcol({expr})						*charcol()*
+		|col()| と同様だが {expr} で返す桁位置がバイトインデックスでは
 		なく文字インデックスになる。
 
 		例:
@@ -3770,6 +3833,7 @@ complete({startcol}, {matches})			*complete()* *E785*
 		{matches}はリスト|List|でなければならない。リストの各要素が1つ
 		の候補となる。この要素として許される値については
 		|complete-items|を参照。
+		'completeopt' の "longest" は無視される。
 		Note この関数を呼んだ後は補完を停止させるようなテキストの挿入
 		をしないように注意しなければならない。
 		この関数で設定した候補は普通の挿入モード補完と同じ様にCTRL-Nと
@@ -3806,8 +3870,8 @@ complete_check()				*complete_check()*
 		しているときは|TRUE|を返す。そうでないときは0を返す。
 		'completefunc' で指定された関数の中でのみ使われる。
 
-							*complete_info()*
-complete_info([{what}])
+
+complete_info([{what}])				*complete_info()*
 		挿入モードの補完に関する情報を辞書 |Dictionary| で返す。
 		|ins-completion| を参照。
 		要素は以下の通り:
@@ -3830,6 +3894,8 @@ complete_info([{what}])
 		   ""		     補完モードでない
 		   "keyword"	     キーワード補完 |i_CTRL-X_CTRL-N|
 		   "ctrl_x"	     CTRL-X のみが入力された |i_CTRL-X|
+		   "scroll"	     |i_CTRL-X_CTRL-E| か |i_CTRL-X_CTRL-Y|
+				     でのスクロール
 		   "whole_line"	     行全体補完 |i_CTRL-X_CTRL-L|
 		   "files"	     ファイル名補完 |i_CTRL-X_CTRL-F|
 		   "tags"	     タグ補完 |i_CTRL-X_CTRL-]|
@@ -3891,11 +3957,11 @@ confirm({msg} [, {choices} [, {default} [, {type}]]])
 		する。デフォルトを設定したくないのならば0を使用する。
 		{default}を省略した場合、1が使用される。
 
-		省略可能な引数{type}はダイアログの種類を指定する。これは GTK,
-		Mac, Motif, Win32 の GUI でアイコンを指定するのに使われる。
-		"Error", "Question", "Info", "Warning", "Generic" のうちどれか
-		一つを指定する。以上のうちの先頭の文字だけで指定できる。{type}
-		が省略された場合、"Generic" が使用される。
+		省略可能な文字列引数{type}はダイアログの種類を指定する。これは
+		GTK, Mac, Motif, Win32 の GUI でアイコンを指定するのに使われ
+		る。"Error", "Question", "Info", "Warning", "Generic" のうちど
+		れか一つを指定する。以上のうちの先頭の文字だけで指定できる。
+		{type} が省略された場合、"Generic" が使用される。
 
 		ユーザーが<Esc>やCTRL-Cや、その他の割りこみキーでダイアログを
 		中断した場合、confirm()は0を返す。
@@ -4082,7 +4148,7 @@ deepcopy({expr} [, {noref}])				*deepcopy()* *E698*
 		|method| としても使用できる: >
 			GetObject()->deepcopy()
 
-delete({fname} [, {flags}])					*delete()*
+delete({fname} [, {flags}])				*delete()*
 		{flags}を指定しないもしくは{flags}を空で指定した場合: ファイル
 		{fname}を削除する。
 		これは{fname}がシンボリックリンクの時でも動作する。
@@ -4108,19 +4174,19 @@ delete({fname} [, {flags}])					*delete()*
 		|method| としても使用できる: >
 			GetName()->delete()
 
-deletebufline({expr}, {first} [, {last}])		*deletebufline()*
-		{first} から {last} (を含む) までの行をバッファ {expr} から削
-		除する。{last} が省略されている場合、{first} 行だけを削除する。
+deletebufline({buf}, {first} [, {last}])		*deletebufline()*
+		{first} から {last} (を含む) までの行をバッファ {buf} から削除
+		する。{last} が省略されている場合、{first} 行だけを削除する。
 		成功時には 0 が返され、失敗時には 1 が返される。
 
 		この関数は、ロードされたバッファに対してのみ機能する。必要であ
 		れば、最初に |bufload()| を呼び出すこと。
 
-		{expr} の使い方は前述の |bufname()| を参照。
+		{buf} の使い方は前述の |bufname()| を参照。
 
 		{first} および {last} は |getline()| と同様に扱われる。Note:
-		|line()| の使用はカレントバッファを参照する。バッファ {expr}
-		内の最後の行を参照するには "$" を使用する。
+		|line()| の使用はカレントバッファを参照する。バッファ {buf} 内
+		の最後の行を参照するには "$" を使用する。
 
 		|method| としても使用できる: >
 			GetBuffer()->deletebufline(1)
@@ -4252,8 +4318,8 @@ digraph_setlist({digraphlist})				*digraph_setlist()*
 		する。機能が無効の場合、この関数はエラーメッセージを表示する。
 
 
-echoraw({expr})						*echoraw()*
-		{expr}を表示不可能な文字を含み、そのまま出力する。これは端末
+echoraw({string})					*echoraw()*
+		{string}を表示不可能な文字を含み、そのまま出力する。これは端末
 		コードを出力するために使える。例えば、modifyOtherKeysを無効に
 		するためには: >
 			call echoraw(&t_TE)
@@ -4391,8 +4457,9 @@ exepath({expr})						*exepath()*
 							*exists()*
 exists({expr})	結果は数値で、変数{expr}が存在すれば|TRUE|となり、そうでなけれ
 		ば0となる。
-		Note: コンパイルされる |:def| 関数内のローカル変数と引数は
-		`exists()` からは見えない。
+
+		Note: コンパイルされる |:def| 関数は実行時に評価が完了する。
+                `exists_compiled()` を使うことでコンパイル時に式が評価される。
 
 		ある機能がサポートされているか判定するには|has()|を使う。
 		ファイルが存在するかを判定するには|filereadable()|を使う。
@@ -4480,8 +4547,24 @@ exists({expr})	結果は数値で、変数{expr}が存在すれば|TRUE|とな�
 
 		|method| としても使用できる: >
 			Varname()->exists()
+<
 
-exp({expr})						*exp()*
+exists_compiled({expr})					*exists_compiled()*
+		`exists()` と同様だがコンパイル時に評価を行う。関数にあるブロッ
+		クが使うとエラーになってしまう場合にスキップするに便利である:
+		>
+			if exists_compiled('*ThatFunction')
+			   ThatFunction('works')
+			endif
+<		`exists()` を使った場合に編集時でThatFunction() が未定義だとエ
+		ラーになる。
+
+		{expr} は文字列定数の必要がある。 *E1232*
+		|:def| 関数の中で使える。 *E1233*
+		引数やローカル変数のチェックには機能しない。
+
+
+exp({expr})							*exp()*
 		{expr} の指数を返す。
 		値は [0, inf] の範囲の浮動小数点数 (|Float|)。
 		{expr} は浮動小数点数 (|Float|) か数値 (|Number|) でなければな
@@ -4498,8 +4581,8 @@ exp({expr})						*exp()*
 		{|+float| 機能を有効にしてコンパイルしたときのみ有効}
 
 
-expand({expr} [, {nosuf} [, {list}]])				*expand()*
-		ワイルドカードと{expr}内の特殊なキーワードを展開する。
+expand({string} [, {nosuf} [, {list}]])				*expand()*
+		ワイルドカードと{string}内の特殊なキーワードを展開する。
 		'wildignorecase' が適用される。
 
 		{list} が指定されその値が|TRUE|なら、結果はリストで返される。
@@ -4508,11 +4591,11 @@ expand({expr} [, {nosuf} [, {list}]])				*expand()*
 		5.0 では空白文字が用いられ、スペースを含むファイル名について問
 		題を引き起こしていた]
 
-		展開が失敗した場合、結果は空文字列となる。{expr} が '%'、'#'、
-		'<' で始まらない限り、存在しないファイル名というのは、結果の文
-		字列には含まれない。下記を参照のこと。
+		展開が失敗した場合、結果は空文字列となる。{string} が
+		'%'、'#'、'<' で始まらない限り、存在しないファイル名というの
+		は、結果の文字列には含まれない。下記を参照のこと。
 
-		{expr} が '%' か '#' か '<' で始まる場合には、展開は
+		{string} が '%' か '#' か '<' で始まる場合には、展開は
 		|cmdline-special|のように、変換子を受け付け、それらに関連付け
 		られた変換が施される。ここに簡単な概略を示す:
 
@@ -4563,9 +4646,9 @@ expand({expr} [, {nosuf} [, {list}]])				*expand()*
 		'#' を使うと空文字列になる。"%:p" を名無しのバッファに使用した
 		場合、結果はカレントディレクトリに '/' が付加されたものになる。
 
-		'%' や '#' や '<' で始まらない{expr}は、コマンドラインのファイ
-		ル名と同じように展開される。{nosuf}引数に|TRUE|を指定しない限
-		り、'suffixes' と 'wildignore' が使用される。
+		'%' や '#' や '<' で始まらない{string}は、コマンドラインのファ
+		イル名と同じように展開される。{nosuf}引数に|TRUE|を指定しない
+		限り、'suffixes' と 'wildignore' が使用される。
 		存在しないファイルの名前も結果の文字列に含まれる。"**" を使う
 		とディレクトリツリーを検索できる。例えば、カレントディレクトリ
 		以下にある全ての "README" を見つけるには次のようにする: >
@@ -4584,12 +4667,12 @@ expand({expr} [, {nosuf} [, {list}]])				*expand()*
 		|method| としても使用できる: >
 			Getpattern()->expand()
 
-expandcmd({expr})					*expandcmd()*
-		`:edit` などのExコマンドに対しておこなわれているように、{expr}
-		の特殊な項目を展開する。これは {expr} の中のどこでも、
-		|expand()| のような特殊なキーワードと環境変数を展開する。
-		"~user" および "~/path" は冒頭でのみ展開される。展開された文字
-		列を返す。例: >
+expandcmd({string})					*expandcmd()*
+		`:edit` などのExコマンドに対しておこなわれているように、文字列
+		{string} の特殊な項目を展開する。これは {string} の中のどこで
+		も、|expand()| のような特殊なキーワードと環境変数を展開する。
+		"~user" および "~/path" は冒頭でのみ展開される。
+		展開された文字列を返す。例: >
 			:echo expandcmd('make %<.o')
 
 <		|method| としても使用できる: >
@@ -4779,15 +4862,19 @@ finddir({name} [, {path} [, {count}]])				*finddir()*
 		{path}から{name}という名前のディレクトリを探す。ディレクトリを
 		上方・下方のどちらにも再帰的に検索できる。{path}の記法について
 		は|file-searching|を参照。
+
 		最初に見つかったディレクトリのパスを返す。そのディレクトリがカ
 		レントディレクトリの下にある場合は相対パスを返す。そうでなけれ
 		ば絶対パスを返す。
 		{path}が省略されたとき、または空のときはオプション 'path' の値
 		が使われる。
+
 		省略可能な引数{count}が指定されたときは、最初に見つかったディ
 		レクトリでなく、{count}番目に見つかったディレクトリを返す。
 		{count}が負の場合は、見つかったディレクトリ全てのリスト|List|
-		を返す。これはexコマンド|:find|によく似ている。
+		を返す。
+
+		これはexコマンド`:find`によく似ている。
 		{|+file_in_path| 機能付きでコンパイルされたときのみ利用可能}
 
 		|method| としても使用できる: >
@@ -4825,6 +4912,9 @@ flatten({list} [, {maxdepth}])					*flatten()*
 			:echo flatten([1, [2, [3, 4]], 5], 1)
 <			[1, 2, [3, 4], 5]
 
+		|method| としても使用できる: >
+			mylist->flatten()
+<
 flattennew({list} [, {maxdepth}])			*flattennew()*
 		|flatten()| と同様だが最初に {list} のコピーを作る。
 
@@ -5003,10 +5093,10 @@ fullcommand({name})						*fullcommand()*
 		短縮コマンド名から完全なコマンド名を取得する。コマンドの短縮名
 		については |20.2| を参照。
 
-		{name} は `:` から始まっても [range] を含んでよいが、それらは
-		スキップされ戻り値には含まない。
-		コマンドが存在しないか、曖昧になってしまう場合空文字列を返す
-		(ユーザー定義関数用)。
+		文字列引数 {name} は `:` から始まっても [range] を含んでよい
+		が、それらはスキップされ戻り値には含まない。
+		コマンドが存在しないか、曖昧になってしまう場:空文字列を返す
+		(ユーザー定義コマンド用)。
 
 		例えば `fullcommand('s')`、 `fullcommand('sub')`、
 		`fullcommand(':%substitute')` はすべて "substitute" を返す。
@@ -5157,7 +5247,7 @@ get({func}, {what})
 			myfunc->get(what)
 <
 							*getbufinfo()*
-getbufinfo([{expr}])
+getbufinfo([{buf}])
 getbufinfo([{dict}])
 		バッファの情報を辞書のリストとして取得する。
 
@@ -5169,9 +5259,9 @@ getbufinfo([{dict}])
 			bufloaded	ロードされたバッファのみを含む。
 			bufmodified	修正されたバッファのみを含む。
 
-		それ以外の場合、{expr}は情報を返す特定のバッファを指定する。
-		{expr}の使用については、上記の|bufname()|を参照。バッファが見
-		つかった場合、返されるListには1つの項目がある。それ以外の場合、
+		それ以外の場合、{buf}は情報を返す特定のバッファを指定する。
+		{buf}の使用については、上記の|bufname()|を参照。バッファが見つ
+		かった場合、返されるListには1つの項目がある。それ以外の場合、
 		結果は空のリストになる。
 
 		返される各List項目は、次のエントリを持つ辞書である:
@@ -5226,12 +5316,12 @@ getbufinfo([{dict}])
 <
 
 							*getbufline()*
-getbufline({expr}, {lnum} [, {end}])
-		バッファ{expr}の{lnum}行目から{end}行目まで(両端含む)の行から
-		なるリスト|List|を返す。{end}が省略されたときは{lnum}行目だけ
-		からなるリストを返す。
+getbufline({buf}, {lnum} [, {end}])
+		バッファ{buf}の{lnum}行目から{end}行目まで(両端含む)の行からな
+		るリスト|List|を返す。{end}が省略されたときは{lnum}行目だけか
+		らなるリストを返す。
 
-		{expr}の指定の仕方については|bufname()|を参照。
+		{buf}の指定の仕方については|bufname()|を参照。
 
 		{lnum}と{end}では "$" でバッファの最後の行を表すことができる。
 		それ以外は数値でなければならない。
@@ -5253,8 +5343,8 @@ getbufline({expr}, {lnum} [, {end}])
 <		|method| としても使用できる: >
 			GetBufnr()->getbufline(lnum)
 
-getbufvar({expr}, {varname} [, {def}])				*getbufvar()*
-		バッファ{expr}のオプションの値やバッファローカル変数{varname}
+getbufvar({buf}, {varname} [, {def}])				*getbufvar()*
+		バッファ{buf}のオプションの値やバッファローカル変数{varname}
 		の値を返す。Note "b:" をつけない変数名を指定すること。
 		{varname} が空文字列の場合、全てのバッファローカル変数からなる
 		辞書 |Dictionary| を返す。
@@ -5265,7 +5355,7 @@ getbufvar({expr}, {varname} [, {def}])				*getbufvar()*
 		グローバルオプション、バッファローカルオプションのどちらに対し
 		ても動作するが、グローバル変数、ウィンドウローカル変数、ウィン
 		ドウローカルオプションに対しては動作しない。
-		{expr}の指定の仕方については|bufname()|を参照。
+		{buf}の指定の仕方については|bufname()|を参照。
 		バッファや変数が存在しないときは{def}または空文字列を返し、エ
 		ラーメッセージは表示されない。
 		例: >
@@ -5275,10 +5365,10 @@ getbufvar({expr}, {varname} [, {def}])				*getbufvar()*
 <		|method| としても使用できる: >
 			GetBufnr()->getbufvar(varname)
 <
-getchangelist([{expr}])					*getchangelist()*
-		バッファ {expr} の |changelist| を返す。{expr} の使い方は前述
-		の |bufname()| を参照。バッファ {expr} が存在しない場合、空の
-		リストが返される。
+getchangelist([{buf}])					*getchangelist()*
+		バッファ {buf} の |changelist| を返す。{buf} の使い方は前述の
+		|bufname()| を参照。バッファ {buf} が存在しない場合、空のリス
+		トが返される。
 
 		返されるリストは 2 つのエントリを含む: 変更位置のリストと、リ
 		スト内の現在地。変更リスト内のそれぞれの項目は、以下の項目を含
@@ -5286,7 +5376,7 @@ getchangelist([{expr}])					*getchangelist()*
 			col		列番号
 			coladd		'virtualedit' 用の列のオフセット
 			lnum		行番号
-		バッファ {expr} がカレントバッファの場合、現在地はリスト内の位
+		バッファ {buf} がカレントバッファの場合、現在地はリスト内の位
 		置を指す。それ以外のバッファではリストの長さに設定される。
 
 		|method| としても使用できる: >
@@ -5388,8 +5478,9 @@ getcharmod()						*getcharmod()*
 
 							*getcharpos()*
 getcharpos({expr})
-		{expr} の位置を得る。|getpos()| と同様だが返すリスト内の桁番号
-		はバイトインデックスの代わりに文字インデックスになっている。
+		文字列 {expr} の位置を得る。|getpos()| と同様だが返すリスト内
+		の桁番号はバイトインデックスの代わりに文字インデックスになって
+		いる。
 		|getpos()| が 2147483647 のような非常に大きな桁番号を返す場合、
 		getcharpos() は最後の文字の文字インデックスを返す。
 
@@ -5466,15 +5557,15 @@ getcmdwintype()						*getcmdwintype()*
 		ウィンドウでなければ空文字列を返す。
 
 getcompletion({pat}, {type} [, {filtered}])		*getcompletion()*
-		コマンドライン補完のマッチするリストを返す。{type}は何のための
-		ものかを指定する。次の補完タイプがサポートされている:
+		コマンドライン補完のマッチするリストを返す。文字列 {type}は何
+		のためのものかを指定する。次の補完タイプがサポートされている:
 
 		arglist		引数リスト内のファイル名
 		augroup		自動コマンドグループ
 		buffer		バッファ名
 		behave		|:behave|サブオプション
 		color		カラースキーム
-		command		Exコマンド (および引数)
+		command		Exコマンド
 		cmdline		|cmdline-completion| の結果
 		compiler	コンパイラ
 		cscope		|:cscope|のサブオプション
@@ -5568,7 +5659,8 @@ getcursorcharpos([{winid}])
 
 <							*getcwd()*
 getcwd([{winnr} [, {tabnr}]])
-		結果は現在の作業ディレクトリ名の文字列である。
+		結果は現在の作業ディレクトリ名の文字列である。'autochdir' は無
+		視される。
 
 		{winnr} が指定された場合、現在のタブページ内の {winnr} のウィ
 		ンドウのローカルカレントディレクトリを返す。{winnr} にはウィン
@@ -5581,7 +5673,8 @@ getcwd([{winnr} [, {tabnr}]])
 		{winnr}が -1 の場合、タブページの作業ディレクトリを返す。
 		{winnr}が 0 の場合、カレントウィンドウを使用し、{tabnr}が 0 の
 		場合はカレントタブページを使用する。
-		引数なしの場合は、カレントウィンドウの作業ディレクトリを返す。
+		引数なしの場合は、カレントウィンドウの実際の作業ディレクトリを
+		返す。
 		もし引数が不正の場合、空文字列を返す。
 
 		例: >
@@ -5602,8 +5695,11 @@ getcwd([{winnr} [, {tabnr}]])
 			GetWinnr()->getcwd()
 
 getenv({name})						*getenv()*
-		環境変数{name}の値を返す。
-		変数が存在しない場合は |v:null| が返される。これは、空の文字列
+		環境変数{name}の値を返す。引数 {name} は先行する '$' のない文
+		字列。例: >
+			myHome = getenv('HOME')
+
+<		変数が存在しない場合は |v:null| が返される。これは、空の文字列
 		に設定された変数とは異なるが、一部のシステムは空の値を削除され
 		る変数として解釈する。|expr-env| も参照。
 
@@ -5613,8 +5709,8 @@ getenv({name})						*getenv()*
 getfontname([{name}])					*getfontname()*
 		引数なしで使われた場合には現在の通常のフォント名を返す。ハイラ
 		イトグループNormalに対して使われるものと同様|hl-Normal|。
-		引数が指定された場合には{name}が有効なフォント名であるか判定さ
-		れる。有効でないときは空文字列を返す。
+		引数が指定された場合には文字列{name}が有効なフォント名であるか
+		判定される。有効でないときは空文字列を返す。
 		有効なときは実際のフォント名を返す。またはGUIが実際の名前の取
 		得をサポートしていないときは{name}をそのまま返す。
 		GUIモードで実行しているときのみ動作する。よってvimrcやgvimrcの
@@ -5770,12 +5866,12 @@ getloclist({nr} [, {what}])				*getloclist()*
 			:echo getloclist(5, {'filewinid': 0})
 
 
-getmarklist([{expr}])					*getmarklist()*
-		{expr} 引数が無い場合は全グローバルマークについての情報のリス
-		トを返す。|mark|
+getmarklist([{buf}])					*getmarklist()*
+		{buf} 引数が無い場合は全グローバルマークについての情報のリスト
+		を返す。|mark|
 
-		オプショナル引数 {expr} が指定されている場合、{expr} で指定
-		されたバッファのローカルマークの値を返す。{expr} の使い方は
+		オプショナル引数 {buf} が指定されている場合、{buf} で指定され
+		たバッファのローカルマークの値を返す。{buf} の使い方は
 		|bufname()| を参照。
 
 		戻り値のリストの各要素は以下の内容の辞書|Dict|になっている:
@@ -5846,7 +5942,7 @@ getpid()	Vim のプロセス ID を数値で返す。Unix と MS-Windows では 
 		終了するまでこれは一意な数値である。
 
 							*getpos()*
-getpos({expr})	{expr}の位置を返す。{expr}として指定できる値については
+getpos({expr})	文字列{expr}の位置を返す。{expr}として指定できる値については
 		|line()|を参照。カーソル位置を得るには |getcurpos()| を参照。
 		結果は次の4個の要素を持つリスト|List|:
 		    [bufnum, lnum, col, off]
@@ -5979,6 +6075,8 @@ getreg([{regname} [, 1 [, {list}]]])			*getreg()*
 		レジスタ{regname}の中身を文字列にして返す。例: >
 			:let cliptext = getreg('*')
 <		{regname} がセットされていないときは、結果は空文字列となる。
+ 		引数 {regname} は文字列。
+
 		getreg('=')は最後に評価した式レジスタの値を返す。(マップの中で
 		使用する)。
 		getreg('=', 1)はその式そのものを返す。これを使って|setreg()|で
@@ -5991,6 +6089,8 @@ getreg([{regname} [, 1 [, {list}]]])			*getreg()*
 		として扱われる (|NL-used-for-Nul| 参照)。
 		指定したレジスタがセットされていないときは、空のリストが返され
 		る。
+
+		{regname} が "" の場合、無名レジスタ '"' が使われる。
 		{regname}を指定しないときは|v:register|が使われる。
 		|Vim9-script| では {regname} は1文字でなくてはならない。
 
@@ -6015,8 +6115,9 @@ getreginfo([{regname}])					*getreginfo()*
 					ルドは "1" となりそのレジスタには削除
 					したテキストが入る。
 
-		{regname} が不正なレジスタ名もしくは未設定の場合、空の辞書が返
-		される。
+		引数 {regname} は文字列。{regname} が不正なレジスタ名もしくは
+		未設定の場合、空の辞書が返される。{regname} が "" か "@" の場
+		合、無名レジスタ '"' が使われる。
 		{regname} が未指定の場合、|v:register| が使われる。
 		戻り値の辞書は |setreg()| に渡すことができる。
 		|Vim9-script| では {regname} は1文字でなくてはならない。
@@ -6032,7 +6133,9 @@ getregtype([{regname}])					*getregtype()*
 		    "<CTRL-V>{width}"	矩形|blockwise-visual|の場合
 		    ""			空、または未知のレジスタの場合
 		<CTRL-V>は値0x16の1文字である。
-		{regname}を指定しないときは|v:register|が使われる。
+		引数 {regname} は文字列。{regname} が "" の場合、無名レジスタ
+		'"' が使われる。{regname}を指定しないときは|v:register|が使わ
+		れる。
 		|Vim9-script| では {regname} は1文字でなくてはならない。
 
 		|method| としても使用できる: >
@@ -6057,7 +6160,8 @@ gettabvar({tabnr}, {varname} [, {def}])				*gettabvar()*
 		タブページ {tabnr} のタブローカル変数 {varname} を取得する。
 		|t:var|
 		タブの番号は 1 から始まる。
-		{varname} が空のときは全タブローカル変数からなる辞書を返す。
+		引数 {varname} は文字列。{varname} が空のときは全タブローカル
+		変数からなる辞書を返す。
 		Note: 指定する変数名は "t:" を除いた名前。
 		タブや変数が存在しないときは{def}または空文字列を返し、エラー
 		メッセージは表示されない。
@@ -6068,8 +6172,8 @@ gettabvar({tabnr}, {varname} [, {def}])				*gettabvar()*
 gettabwinvar({tabnr}, {winnr}, {varname} [, {def}])		*gettabwinvar()*
 		タブページ{tabnr}内のウィンドウ{winnr}のウィンドウローカル変数
 		{varname}の値を取得する。
-		{varname}が空のときは全ウィンドウローカル変数からなる辞書を返
-		す。
+		引数 {varname} は文字列。{varname}が空のときは全ウィンドウロー
+		カル変数からなる辞書を返す。
 		{varname}が "&" と等しい場合はすべてのウィンドウローカルオプ
 		ションの値を辞書 |Dictionary| に入れて返す。
 		{varname}が文字 "&" で始まるときはウィンドウローカルオプション
@@ -6125,7 +6229,7 @@ gettagstack([{winnr}])					*gettagstack()*
 
 
 gettext({text})						*gettext()*
-		可能であれば {text} を翻訳する。
+		可能であれば文字列 {text} を翻訳する。
 		これは主に配布する Vim script で使う。
 		メッセージの翻訳を生成するときに {text} が xgettext によって抽
 		出され、翻訳者が .po ファイルで翻訳済みメッセージを追加でき
@@ -6256,22 +6360,22 @@ glob({expr} [, {nosuf} [, {list} [, {alllinks}]]])		*glob()*
 		|method| としても使用できる: >
 			GetExpr()->glob()
 
-glob2regpat({expr})					 *glob2regpat()*
+glob2regpat({string})					 *glob2regpat()*
 		glob()に使われるファイルパターンを検索パターンに変換する。
 		結果はファイル名の文字列とのマッチに使用できる。例えば、 >
 			if filename =~ glob2regpat('Make*.mak')
 <		上記は次と同じである: >
 			if filename =~ '^Make.*\.mak$'
-<		{expr}が空文字列の場合、結果は "^$" で、空文字列にマッチする。
-		結果はシステムによって異なることに注意すること。MS-Windowsで
-		は、バックスラッシュは通常、パス区切りを意味する。
+<		{string}が空文字列の場合、結果は "^$" で、空文字列にマッチす
+		る。結果はシステムによって異なることに注意すること。MS-Windows
+		では、バックスラッシュは通常、パス区切りを意味する。
 
 		|method| としても使用できる: >
 			GetExpr()->glob2regpat()
 <								*globpath()*
 globpath({path}, {expr} [, {nosuf} [, {list} [, {alllinks}]]])
-		{path}の中の全ディレクトリで {expr} に対して|glob()|を実行し、
-		結果を連結する。例: >
+		{path}の中の全ディレクトリで文字列 {expr} に対して|glob()|を実
+		行し、結果を連結する。例: >
 			:echo globpath(&rtp, "syntax/c.vim")
 <
 		{path}はコンマ区切りのディレクトリのリスト。各ディレクトリを
@@ -6320,7 +6424,7 @@ has({feature} [, {check}])
 		される機能のことは知らず、現在のバージョンの Vim は放棄された
 		機能のことを知らないということに注意。
 
-		|exists()|も参照。
+		|exists()| と |exists_compiled()| も参照。
 
 		Note ある機能が無い時に文法エラーとなるコードをスキップするた
 		めには、Vim は行の残りをスキップし、後続の `endif` を見逃すか
@@ -6334,7 +6438,7 @@ has({feature} [, {check}])
 
 has_key({dict}, {key})					*has_key()*
 		結果は数値で、辞書|Dictionary| {dict}がキー{key}の要素を持つな
-		ら真、持たないなら偽となる。
+		ら真、持たないなら偽となる。引数 {key} は文字列。
 
 		|method| としても使用できる: >
 			mydict->has_key(key)
@@ -6384,6 +6488,7 @@ hasmapto({what} [, {mode} [, {abbr}]])			*hasmapto()*
 		結果は数値。右辺側(マップした先)の一部分に{what}を含むマッピン
 		グが存在し、それが{mode}で指定されたモードのいずれかで定義され
 		ているなら真を返す。
+		引数 {what} と {mode} は文字列。
 		{abbr}が指定されていて|TRUE|のときはマッピングでなく短縮入力の
 		存在を判定する。挿入モードまたはコマンドモードを指定することを
 		忘れないように。
@@ -6508,6 +6613,102 @@ hlexists({name})					*hlexists()*
 		|method| としても使用できる: >
 			GetName()->hlexists()
 <
+hlget([{name} [, {resolve}]])				*hlget()*
+		ハイライトグループの全属性のリストを返す。省略可能な引数 {name}
+		を指定したときは、指定したハイライトグループの属性だけのリスト
+		を返す。ハイライトグループの {name} が無いときは空のリストを返
+		す。
+
+		省略可能な引数 {resolve} が v:true に設定され、ハイライトグルー
+		プの {name} が他のグループにリンクしているなら、リンクを再帰的
+		に解決して解決したハイライトグループの属性を返す。
+
+		返されるリストの各要素は、以下を含む辞書になる:
+			cleared	真偽値フラグ、ハイライトグループがクリアされて
+				いたら v:true に設定され設定があればそうではな
+				い。|highlight-clear| を参照
+			cterm	cterm 属性。|highlight-cterm| を参照。
+			ctermbg	cterm の背景色。|highlight-ctermbg| を参照。
+			ctermfg	cterm の前面色。|highlight-ctermfg| を参照。
+			ctermul	cterm の下線色。|highlight-ctermul| を参照。
+			default 真偽値フラグ、ハイライトグループのリンクがデ
+				フォルトへのリンクだと v:true。
+				|highlight-default| を参照。
+			font	ハイライトグループのフォント。
+				|highlight-font| を参照。
+			gui	gui 属性。|highlight-gui| を参照。
+			guibg	gui の背景色。|highlight-guibg| を参照。
+			guifg	gui の前面色。|highlight-guifg| を参照。
+			guisp	gui の特殊色。|highlight-guisp| を参照。
+			id	ハイライトグループの ID。
+			linksto	リンクしているハイライトグループ名。
+				|:highlight-link| を参照。
+			name	ハイライトグループ名。|group-name| を参照。
+			start	ターミナルの開始コード。|highlight-start| を参
+				照。
+			stop	ターミナルの終了コード。|highlight-stop| を参
+				照。
+			term	term 属性。|highlight-term| を参照。
+
+		上記の辞書の要素 'term', 'cterm', 'gui' の値は以下の省略可能な
+		真偽値の要素を持つ辞書: 'bold', 'standout', 'underline',
+		'undercurl', 'italic', 'reverse', 'inverse', 'strikethrough'。
+
+		例: >
+			:echo hlget()
+			:echo hlget('ModeMsg')
+			:echo hlget('Number', v:true)
+<
+		|method| としても使用できる: >
+			GetName()->hlget()
+<
+hlset({list})						*hlset()*
+		ハイライトグループのリストの属性を作成もしくは変更する。{list}
+		の各要素はハイライトグループの属性を持つ辞書。この辞書内でサ
+		ポートされる要素のリストは |hlget()| を参照。
+
+		|hlget()| で説明されている要素に追加して、以下の追加の要素が辞
+		書内でサポートされる:
+
+			force		既存の属性のあるハイライトグループへの
+					リンクを強制的に作成する真偽値。
+
+		ハイライトグループは 'name' 要素によって識別され、'id' 要素
+		(提供されていれば) は無視される。ハイライトグループの指定した
+		名前が存在しない場合は、作成される。そうでなければ既存のハイラ
+		イトグループの属性を変更する。
+
+		'term', 'cterm', 'gui' の項については空の辞書が値として使え、
+		一致する属性の値をクリアする。'cleared' 要素に v:true を設定し
+		た場合、ハイライトグループのすべての属性をクリアする。
+
+		'linksto' 要素はハイライトグループを他のハイライトグループへリ
+		ンクさせることができる、|:highlight-link| を参照。
+
+		成功で0を返し、失敗で-1を返す。
+
+		例: >
+			" Visual ハイライトグループに太字属性を追加する
+			:call hlset([#{name: 'Visual',
+					\ term: #{reverse: 1 , bold: 1}}])
+			:call hlset([#{name: 'Type', guifg: 'DarkGreen'}])
+			:let l = hlget()
+			:call hlset(l)
+			" Search ハイライトグループをクリアする
+			:call hlset([#{name: 'Search', cleared: v:true}])
+			" ハイライトグループの 'term' 属性をクリアする
+			:call hlset([#{name: 'Title', term: {}}])
+			" DiffAdd にリンクした MyHlg グループを作る
+			:call hlset([#{name: 'MyHlg', linksto: 'DiffAdd'}])
+			" MyHlg グループのリンクを削除する
+			:call hlset([#{name: 'MyHlg', linksto: 'NONE'}])
+			" 属性とリンクをクリアする
+			:call hlset([#{name: 'MyHlg', cleared: v:true,
+					\ linksto: 'NONE'}])
+<
+		 |method| としても使用できる: >
+			GetAttrList()->hlset()
+<
 							*hlID()*
 hlID({name})	結果は数値で、{name}という名前のハイライトグループのID番号。そ
 		のハイライトグループが存在しない場合は0が返される。
@@ -6525,9 +6726,9 @@ hostname()						*hostname()*
 		結果は文字列で、現在Vimが実行されているマシンの名前。名前が256
 		文字を超える場合、超えた部分は切り捨てられる。
 
-iconv({expr}, {from}, {to})				*iconv()*
-		文字列{expr}をエンコーディング{from}からエンコーディング{to}に
-		変換した文字列を返す。
+iconv({string}, {from}, {to})				*iconv()*
+		文字列{string}をエンコーディング{from}からエンコーディング{to}
+		に変換した文字列を返す。
 		変換が完全に失敗したときは空文字列を返す。一部の文字が変換でき
 		なかった場合、その文字は "?" に置き換わる。
 		エンコーディング名はライブラリ関数iconv()が受け付けるものなら
@@ -6751,17 +6952,19 @@ isinf({expr})						*isinf()*
 		{|+float| 機能を有効にしてコンパイルしたときのみ有効}
 
 islocked({expr})					*islocked()* *E786*
-		結果は数値で、{expr}がロックされている変数の名前ならば|TRUE|を
-		返す。
-		{expr}は変数の名前、リストの要素、辞書の要素のいずれかでなけれ
-		ばならない。変数そのものを指定しないように注意。例: >
+		結果は数値で、{expr} がロックされている変数の名前ならば|TRUE|
+		を返す。
+		文字列の引数 {expr} は変数の名前、リスト |List| の要素、辞書
+		|Dictionary| の要素のいずれかでなければならない。変数そのもの
+		を指定しないように注意。
+		例: >
 			:let alist = [0, ['a', 'b'], 2, 3]
 			:lockvar 1 alist
 			:echo islocked('alist')		" 1
 			:echo islocked('alist[1]')	" 0
 
-<		{expr}が存在しない変数のときはエラーメッセージが表示される。変
-		数の存在を確認するには|exists()|を使う。
+<		{expr} が存在しない変数のときはエラーメッセージが表示される。変
+		数の存在を確認するには |exists()| を使う。
 		Vim9 script ではローカル変数に対しては動作しない。
 
 		|method| としても使用できる: >
@@ -6975,8 +7178,8 @@ libcallnr({libname}, {funcname}, {argument})
 <
 
 line({expr} [, {winid}])				*line()*
-		結果は数値で、{expr}で与えられた位置のファイル内での行番号。受
-		け付けられる位置指定は次の通り:
+		結果は数値で、{expr}で与えられた位置のファイル内での行番号。引
+		数 {expr} は文字列。受け付けられる位置指定は次の通り:
 		    .	    カーソルの位置
 		    $	    現在のバッファの最後の位置
 		    'x	    マークxの位置(マークが設定されていない場合、0が返
@@ -7035,6 +7238,20 @@ lispindent({lnum})					*lispindent()*
 		|method| としても使用できる: >
 			GetLnum()->lispindent()
 
+ list2blob({list})					*list2blob()*
+		Return a Blob concatenating all the number values in {list}.
+		{list} にある数値全てを連結したBlobを返す。
+		例: >
+			list2blob([1, 2, 3, 4])	returns 0z01020304
+			list2blob([])		returns 0z
+<		エラーの時は空のBlobを返す。1つ以上の数値が負数や255を越えてい
+		るときは *E1239* エラーが発生する。
+
+		|blob2list()| は反対のことをする。
+
+		|method| としても使用できる: >
+			GetList()->list2blob()
+
 list2str({list} [, {utf8}])				*list2str()*
 		{list}の各数値を文字列に変換し、それらすべてを連結する。例: >
 			list2str([32])		returns " "
@@ -7044,8 +7261,8 @@ list2str({list} [, {utf8}])				*list2str()*
 <		|str2list()| は反対のことをする。
 
 		{utf8}が省略されているかゼロの場合、現在の 'encoding'が使用さ
-		れる。{utf8}が1の場合は、常にutf-8文字列を返す。
-		utf-8の合成文字は期待通りに動作する: >
+		れる。{utf8}が真の場合は、常にUTF-8文字列を返す。
+		UTF-8の合成文字は期待通りに動作する: >
 			list2str([97, 769])	returns "á"
 <
 		|method| としても使用できる: >
@@ -7427,6 +7644,7 @@ match({expr}, {pat} [, {start} [, {count}]])			*match()*
 		0になる傾向があるので注意。
 
 		|method| としても使用できる: >
+			GetText()->match('word')
 			GetList()->match('word')
 <
 				*matchadd()* *E798* *E799* *E801* *E957*
@@ -7651,8 +7869,10 @@ matchlist({expr}, {pat} [, {start} [, {count}]])		*matchlist()*
 <		結果は['acd', 'a', '', 'c', 'd', '', '', '', '', '']となる。
 		マッチしなかったときは空リストを返す。
 
+                リストを渡すことはできるが、あまり役に立たない。
+
 		|method| としても使用できる: >
-			GetList()->matchlist('word')
+			GetText()->matchlist('word')
 
 matchstr({expr}, {pat} [, {start} [, {count}]])			*matchstr()*
 		|match()| と同じだが、マッチした文字列を返す。例: >
@@ -7709,6 +7929,7 @@ max({expr})	{expr}の全要素の値の最大値を返す。例: >
 menu_info({name} [, {mode}])				*menu_info()*
 		{mode} モードのときのメニュー {name} についての情報を返す。メ
 		ニュー名はショートカット文字 ('&') を除いたもの。
+		{name} が "" の場合、最上位のメニュー名を返す。
 
 		{mode} は以下の文字の1つを指定できる:
 			"n"	ノーマル
@@ -7759,6 +7980,20 @@ menu_info({name} [, {mode}])				*menu_info()*
 		例: >
 			:echo menu_info('Edit.Cut')
 			:echo menu_info('File.Save', 'n')
+
+			" メニュー階層全体をバッファに表示する
+			func ShowMenu(name, pfx)
+			  let m = menu_info(a:name)
+			  call append(line('$'), a:pfx .. m.display)
+			  for child in m->get('submenus', [])
+			    call ShowMenu(a:name .. '.' .. escape(child, '.'),
+							\ a:pfx .. '    ')
+			  endfor
+			endfunc
+			new
+			for topmenu in menu_info('').submenus
+			  call ShowMenu(topmenu, '')
+			endfor
 <
 		|method| としても使用できる: >
 			GetMenuName()->menu_info('v')
@@ -7816,7 +8051,7 @@ mode([expr])	現在のモードを示す文字列を返す。
 		けが返される。
 		|state()| も参照。
 
-		   n	    ノーマル、端末ノーマル
+		   n	    ノーマル
 		   no	    オペレータ待機
 		   nov	    オペレータ待機 (強制文字単位 |o_v|)
 		   noV	    オペレータ待機 (強制行単位 |o_V|)
@@ -7826,25 +8061,28 @@ mode([expr])	現在のモードを示す文字列を返す。
 		   niR	    |Replace-mode| で |i_CTRL-O| を使用したノーマル
 		   niV	    |Virtual-Replace-mode| で |i_CTRL-O| を使用したノー
 			    マル
+		   nt	    端末ノーマル (挿入により端末ジョブモードになる)
 		   v	    文字単位ビジュアル
+		   vs	    選択モードで |v_CTRL-O| を利用した時の文字単位ビ
+			    ジュアル
 		   V	    行単位ビジュアル
+		   Vs	    選択モードで |v_CTRL-O| を利用した時の行単位ビジュ
+			    アル
 		   CTRL-V   矩形ビジュアル
+		   CTRL-Vs  選択モードで |v_CTRL-O| を利用した時の矩形ビジュア
+			    ル
 		   s	    文字単位選択
 		   S	    行単位選択
 		   CTRL-S   矩形選択
-		   vs	    選択モードで |v_CTRL-O| を利用した時の文字単位ビ
-			    ジュアル
-		   Vs	    選択モードで |v_CTRL-O| を利用した時の行単位ビジュ
-			    アル
-		   CTRL-Vs  選択モードで |v_CTRL-O| を利用した時の矩形ビジュア
-			    ル
 		   i	    挿入
 		   ic	    挿入モード補完 |compl-generic|
 		   ix	    挿入モード |i_CTRL-X| 補完
 		   R	    置換 |R|
 		   Rc	    置換モード補完 |compl-generic|
-		   Rv	    仮想置換 |gR|
 		   Rx	    置換モード |i_CTRL-X| 補完
+		   Rv	    仮想置換 |gR|
+		   Rvc	    補完での仮想置換モード |compl-generic|
+		   Rvx	    |i_CTRL-X| 補完での仮想置換モード
 		   c	    コマンドライン編集
 		   cv	    Vim Ex モード |gQ|
 		   ce	    ノーマル Ex モード |Q|
@@ -7853,6 +8091,7 @@ mode([expr])	現在のモードを示す文字列を返す。
 		   r?	    ある種の |:confirm| 問い合わせ
 		   !	    シェルまたは外部コマンド実行中
 		   t	    端末ジョブモード: キー入力がジョブに行く
+
 		これらはオプション 'statusline' の中や、|remote_expr()| といっ
 		しょに使うと便利である。他のほとんどの場所では "c" または "n"
 		しか返さない。
@@ -7904,7 +8143,7 @@ nr2char({expr} [, {utf8}])				*nr2char()*
 <		{utf8} を省略、またはゼロを指定すると、現在の 'encoding' が適
 		用される。"utf-8" の場合の例: >
 			nr2char(300)		短音記号つきのIを返す
-<		{utf8} に 1 を指定すると、常に utf-8 文字が返る。
+<		{utf8} が真のとき、常に UTF-8 文字が返る。
 		Note Vim内部では、ファイル中のNUL文字を改行文字(0x0A)に変換し
 		て保持している。そのため、nr2char(10)とすればNUL文字を指定でき
 		る。nr2char(0)は真のNUL文字(文字列の終端)となるので、空文字列
@@ -7926,8 +8165,8 @@ or({expr}, {expr})					*or()*
 <		|method| としても使用できる: >
 			:let bits = bits->or(0x80)
 
-pathshorten({expr} [, {len}])				*pathshorten()*
-		パス{expr}におけるディレクトリ名を短縮して返す。拡張子、ファイ
+pathshorten({path} [, {len}])				*pathshorten()*
+		パス{path}におけるディレクトリ名を短縮して返す。拡張子、ファイ
 		ル名はそのまま保たれる。パスのその他の構成要素は要素内での長さ
 		が {len}文字 に縮められる。{len} が省略された場合もしくは1以下
 		のときは1文字が使われる。1文字目の '~' と '.' はそのまま保たれ
@@ -8296,6 +8535,21 @@ pyxeval({expr})						*pyxeval()*
 <		{|+python| または |+python3| 機能付きでコンパイルされたときの
 		み利用可能}
 
+rand([{expr}])						*rand()* *random*
+		種 {expr} を使い、xoshiro128** アルゴリズムで生成された疑似乱
+		数を返す。返される数値は一貫性のため、64 ビットシステム上であ
+		っても 32 ビットである。
+		{expr} は |srand()| で初期化することができ、rand() で更新され
+		る。{expr} が省略されたときは内部的な種の値が用いられ、更新さ
+		れる。
+
+		例: >
+			:echo rand()
+			:let seed = srand()
+			:echo rand(seed)
+			:echo rand(seed) % 16  " random number 0 - 15
+<
+
 							*E726* *E727*
 range({expr} [, {max} [, {stride}]])				*range()*
 		以下のような数値のリスト|List|を返す。
@@ -8315,21 +8569,6 @@ range({expr} [, {max} [, {stride}]])				*range()*
 <
 		|method| としても使用できる: >
 			GetExpr()->range()
-<
-
-rand([{expr}])						*rand()* *random*
-		種 {expr} を使い、xoshiro128** アルゴリズムで生成された疑似乱
-		数を返す。返される数値は一貫性のため、64 ビットシステム上であ
-		っても 32 ビットである。
-		{expr} は |srand()| で初期化することができ、rand() で更新され
-		る。{expr} が省略されたときは内部的な種の値が用いられ、更新さ
-		れる。
-
-		例: >
-			:echo rand()
-			:let seed = srand()
-			:echo rand(seed)
-			:echo rand(seed) % 16  " random number 0 - 15
 <
 
 readblob({fname})					*readblob()*
@@ -8611,6 +8850,7 @@ remote_expr({server}, {string} [, {idvar} [, {timeout}]])
 
 remote_foreground({server})				*remote_foreground()*
 		サーバー名{server}のVimをフォアグラウンドに移動させる。
+ 		引数 {server} は文字列。
 		次を実行するのと同様である: >
 			remote_expr({server}, "foreground()")
 <		ただし、次の点が異なる: Win32では、OSが必ずしもサーバーが自分
@@ -9107,7 +9347,9 @@ searchcount([{options}])					*searchcount()*
 						|cursor()|、 |getpos()| を参照
 						(デフォルト: カーソルの位置)
 
-
+		|method| としても使用できる: >
+			GetSearchOpts()->searchcount()
+<
 searchdecl({name} [, {global} [, {thisblock}]])			*searchdecl()*
 		{name}の宣言を検索する。
 
@@ -9263,8 +9505,8 @@ serverlist()					*serverlist()*
 		例: >
 			:echo serverlist()
 <
-setbufline({expr}, {lnum}, {text})			*setbufline()*
-		バッファ {expr} の行 {lnum} を {text} に設定する。これは特定の
+setbufline({buf}, {lnum}, {text})			*setbufline()*
+		バッファ {buf} の行 {lnum} を {text} に設定する。これは特定の
 		バッファに対し、|setline()| のように機能する。
 
 		この関数は、ロードされたバッファに対してのみ機能する。必要であ
@@ -9277,27 +9519,27 @@ setbufline({expr}, {lnum}, {text})			*setbufline()*
 		リストである。リストが最後の行の下にある場合、それらの行が追加
 		される。
 
-		{expr} の使い方については前述の |bufname()| を参照。
+		{buf} の使い方については前述の |bufname()| を参照。
 
 		{lnum} は |setline()| と同様に扱われる。
 		{lnum} が最後の行のすぐ下にある場合、{text} は最後の行の下に追
 		加される。
 
-		{expr} が有効なバッファでない場合、バッファがロードされない
-		か、{lnum} が無効な場合は 1 が返される、成功すると 0 が返され
-		る。
+		{buf} が有効なバッファでない場合、バッファがロードされないか、
+		{lnum} が無効な場合は 1 が返される、成功すると 0 が返される。
 
 		|method| としても使用でき、ベースは第3引数として渡される: >
 			GetText()->setbufline(buf, lnum)
 
-setbufvar({expr}, {varname}, {val})			*setbufvar()*
-		バッファ{expr}のオプションまたはローカル変数{varname}に{val}を
+setbufvar({buf}, {varname}, {val})			*setbufvar()*
+		バッファ{buf}のオプションまたはローカル変数{varname}に{val}を
 		代入する。
 		グローバル・ウィンドウローカルオプションに対しても動作するが、
 		グローバル・ウィンドウローカル変数に対しては動作しない。
 		ウィンドウローカルオプションの場合、グローバルな値は変更されな
 		い。
-		{expr}の解釈の仕方については|bufname()|を参照。
+		{buf}の解釈の仕方については|bufname()|を参照。
+ 		引数 {varname} は文字列。
 		Note 変数名には "b:" をつけてはならない。
 		例: >
 			:call setbufvar(1, "&mod", 1)
@@ -9313,7 +9555,7 @@ setcellwidths({list})					*setcellwidths()*
 		面のセルで数えてどれだけになるかを Vim に教えるのに使う。
 		これは 'ambiwidth' を上書きする。例: >
 		   setcellwidths([[0xad, 0xad, 1],
-		   		\ [0x2194, 0x2199, 2]])
+				\ [0x2194, 0x2199, 2]])
 
 <					*E1109* *E1110* *E1111* *E1112* *E1113*
 		引数 {list} は3つの数字を持つリストのリスト。3つの数字は[low,
@@ -9324,6 +9566,9 @@ setcellwidths({list})					*setcellwidths()*
 		与えられた引数が不正、もしくは範囲が他と被る場合はエラーにな
 		る。
 		文字の値は 0x100 かそれ以上の値だけが使える。
+
+ 		新しい値が原因で 'fillchars' か 'listchars' が無効になる場合
+ 		は、拒否されてエラーになる。
 
 		空のリストを渡すことで上書きがクリアされる: >
 		   setcellwidths([]);
@@ -9397,8 +9642,10 @@ setcursorcharpos({list})
 
 
 setenv({name}, {val})						*setenv()*
-		環境変数{name} に {val} を設定する。
-		{val} が |v:null| の場合は、環境変数は削除される。
+		環境変数{name} に {val} を設定する。例: >
+			call setenv('HOME', '/home/myhome')
+
+<		{val} が |v:null| の場合は、環境変数は削除される。
 		|expr-env| も参照。
 
 		|method| としても使用でき、ベースは第2引数として渡される: >
@@ -9486,7 +9733,7 @@ setmatches({list} [, {win}])				*setmatches()*
 <
 							*setpos()*
 setpos({expr}, {list})
-		{expr}の位置を設定する。{expr}として有効な値は次の通り:
+		文字列{expr}の位置を設定する。有効な値は次の通り:
 			.	カーソル位置
 			'x	マーク x
 
@@ -9647,7 +9894,8 @@ setqflist({list} [, {action} [, {what}]])		*setqflist()*
 setreg({regname}, {value} [, {options}])
 		レジスタ{regname}に{value}をセットする。
 		{regname} が "" もしくは "@" のとき、無名レジスタ '"' を使う。
-		|Vim9-script| では {regname} は1文字でなくてはならない。
+		引数 {regname} は文字列。|Vim9-script| では {regname} は1文字
+		でなくてはならない。
 
 		{value} には |getreg()| か |getreginfo()| の戻り値ならどんな値
 		でも (リスト |List| でも 辞書 |Dictionary|でも) 指定できる。
@@ -9699,7 +9947,8 @@ setreg({regname}, {value} [, {options}])
 
 settabvar({tabnr}, {varname}, {val})			*settabvar()*
 		タブページ {tabnr} のタブローカル変数 {varname} を {val} に設
-		定する。 |t:var|
+		定する。|t:var|
+ 		引数 {varname} は文字列。
 		Note 自動コマンドがブロックされ、副作用が発生しない可能性があ
 		る。例えば、'filetype' を設定する時。
 		Note: 指定する変数名は "t:" を除いた名前。
@@ -9730,7 +9979,7 @@ settabwinvar({tabnr}, {winnr}, {varname}, {val})	*settabwinvar()*
 <		この関数は|sandbox|の中では使用できない。
 
 		|method| としても使用でき、ベースは第4引数として渡される: >
-			GetValue()->settabvar(tab, winnr, name)
+			GetValue()->settabwinvar(tab, winnr, name)
 
 settagstack({nr}, {dict} [, {action}])			*settagstack()*
 		{dict}を使用してウィンドウ{nr}のタグスタックを変更する。
@@ -9808,6 +10057,10 @@ shellescape({string} [, {special}])			*shellescape()*
 		{special} が |non-zero-arg| である場合、<NL> 文字もエスケープ
 		される。'shell' の末尾が "csh" である場合、これは 2 回エスケー
 		プされる。
+
+		'shell' の値の末尾が "fish" である場合、"\" 文字はエスケープさ
+		れる。fish はシングルクォート内のエスケープ文字として "\"をシ
+		ングルクォートの代わりに使うため。
 
 		|:!| コマンドを使う場合の例: >
 		    :exe '!dir ' . shellescape(expand('<cfile>'), 1)
@@ -9958,15 +10211,20 @@ sort({list} [, {func} [, {dict}]])			*sort()* *E702*
 			func MyCompare(i1, i2)
 			   return a:i1 == a:i2 ? 0 : a:i1 > a:i2 ? 1 : -1
 			endfunc
-			let sortedlist = sort(mylist, "MyCompare")
+			eval mylist->sort("MyCompare")
 <		この例の場合、より短く次のように書くことができる。ただしオーバー
 		フローは無視される: >
 			func MyCompare(i1, i2)
 			   return a:i1 - a:i2
 			endfunc
-
+<		簡単な式をラムダとして使う例: >
+			eval mylist->sort({i1, i2 -> i1 - i2})
+<
 sound_clear()						*sound_clear()*
 		すべてのサウンドの再生を停止する。
+
+		一部のLinuxシステムでは libcanberra-pulse のパッケージが必要に
+		なる場合があり、そうしないとサウンドが停止しない場合がある。
 
 		|method| としても使用できる: >
 			GetSoundName()->sound_playevent()
@@ -10019,6 +10277,9 @@ sound_stop({id})					*sound_stop()*
 		サウンド {id} の再生を停止する。{id} は、事前に
 		`sound_playevent()` または `sound_playfile()` によって返された
 		ものでなければならない。
+
+		一部のLinuxシステムでは libcanberra-pulse のパッケージが必要に
+		なる場合があり、そうしないとサウンドが停止しない場合がある。
 
 		MS-Windowsでは、これは `sound_playevent()` によって開始される
 		イベントサウンドに対しては機能しない。イベントのサウンドを止め
@@ -10094,10 +10355,10 @@ spellsuggest({word} [, {max} [, {capital}]])
 		|method| としても使用できる: >
 			GetWord()->spellsuggest()
 
-split({expr} [, {pattern} [, {keepempty}]])			*split()*
-		{expr}を分割して|List|にする。{pattern}を省略した場合、または
-		{pattern}が空文字列の場合は、{expr}を空白文字で区切った各文字
-		列が要素となる。
+split({string} [, {pattern} [, {keepempty}]])			*split()*
+		{string}を分割してリスト |List| にする。{pattern}を省略した場
+		合、または {pattern}が空文字列の場合は、{expr}を空白文字で区
+		切った各文字列が要素となる。
 		{pattern}を指定すると、{pattern}がマッチする位置で文字列を分割
 		する。マッチした文字列は削除される。'ignorecase' はここでは適
 		用されないので大文字小文字を無視するには \c を使う。 |/\c|
@@ -10188,13 +10449,15 @@ state([{what}])						*state()*
 			"ccc" まで繰り返す)
 		    s	画面がメッセージでスクロールされた
 
-str2float({expr})					*str2float()*
-		文字列 {expr} を浮動小数点数に変換する。これは式の中で浮動小数
-		点数を使っているときと同じように働く (|floating-point-format|
-		を参照)。しかしこちらの方がゆるやかである。例えばこちらでは
-		"1e40" も許されるが、式の中では "1.0e40" と書かなければならな
-		い。16進形式の "0x123" も許されるが、バイナリや8進数のようなも
-		のは許されない。
+str2float({string} [, {quoted}])				*str2float()*
+		文字列 {string} を浮動小数点数に変換する。これは式の中で浮動小
+		数点数を使っているときと同じように働く
+		(|floating-point-format| を参照)。しかしこちらの方がゆるやかで
+		ある。例えばこちらでは "1e40" も許されるが、式の中では
+		"1.0e40" と書かなければならない。16進形式の "0x123" も許される
+		が、バイナリや8進数のようなものは許されない。
+		{quoted} が存在し非0の場合は小数点の前のシングルクォートの付与
+		は無視され、結果 "1'000.0" は1000になる。
 		数値の後ろにある文字列は黙って無視される。
 		小数点数はロケールの設定にかかわらず常に '.' である。コンマを
 		発見すると、そこで数値は終わりになる。つまり "12,345.67" は
@@ -10207,23 +10470,23 @@ str2float({expr})					*str2float()*
 <
 		{|+float| 機能つきでコンパイルされたときのみ有効}
 
-str2list({expr} [, {utf8}])				*str2list()*
-		文字列{expr}の各文字を表す数値を含むリストを返す。例: >
+str2list({string} [, {utf8}])					*str2list()*
+		文字列{string}の各文字を表す数値を含むリストを返す。例: >
 			str2list(" ")		returns [32]
 			str2list("ABC")		returns [65, 66, 67]
 <		|list2str()| は反対のことをする。
 
 		{utf8}が省略されているかゼロの場合、現在の 'encoding' が使用さ
-		れる。{utf8}が1の場合は、常に文字列がutf-8であるとして扱う。
-		utf-8の合成文字は正しく処理される: >
+		れる。{utf8}が真の場合は、常に文字列がUTF-8であるとして扱う。
+		UTF-8の合成文字は正しく処理される: >
 			str2list("á")		returns [97, 769]
 
 <		|method| としても使用できる: >
 			GetString()->str2list()
 
 
-str2nr({expr} [, {base} [, {quoted}]])				*str2nr()*
-		文字列{expr}を数値に変換する。
+str2nr({string} [, {base} [, {quoted}]])			*str2nr()*
+		文字列{string}を数値に変換する。
 		{base}は変換の底。2、8、10、16のいずれか。
 		{quoted} が与えられ 0 以外の場合、埋め込まれた単一引用符は無視
 		されるため、"1'000'000" は100万である。
@@ -10242,9 +10505,9 @@ str2nr({expr} [, {base} [, {quoted}]])				*str2nr()*
 		|method| としても使用できる: >
 			GetText()->str2nr()
 
-strcharlen({expr})					*strcharlen()*
-		結果は数値で、文字列 {expr} の文字の数を返す。合成文字は無視さ
-		れる。
+strcharlen({string})					*strcharlen()*
+		結果は数値で、文字列 {string} の文字の数を返す。合成文字は無視
+		される。
 		|strchars()| は合成文字を別々にカウントできる。
 
 		|strlen()|, |strdisplaywidth()|, |strwidth()| も参照。
@@ -10268,8 +10531,8 @@ strcharpart({src}, {start} [, {len} [, {skipcc}]])		*strcharpart()*
 			GetText()->strcharpart(5)
 
 
-strchars({expr} [, {skipcc}])					*strchars()*
-		結果は数値で、文字列 {expr} の文字の数を返す。
+strchars({string} [, {skipcc}])					*strchars()*
+		結果は数値で、文字列 {string} の文字の数を返す。
 		{skipcc} を省略またはゼロを指定すると、合成文字は別々にカウン
 		トされる。
 		{skipcc} に 1 を指定すると、合成文字は無視される。
@@ -10293,17 +10556,17 @@ strchars({expr} [, {skipcc}])					*strchars()*
 		      endfunction
 		    endif
 <
-strdisplaywidth({expr} [, {col}])			*strdisplaywidth()*
-		結果は数値で、文字列 {expr} が {col} (最初の桁はゼロ)で始まる
-		時のスクリーン上での表示セル幅を返す。
+strdisplaywidth({string} [, {col}])			*strdisplaywidth()*
+		結果は数値で、文字列 {string} が {col} (最初の桁はゼロ)で始ま
+		る時のスクリーン上での表示セル幅を返す。
 		{col} が省略されたときはゼロが使われる。{col} には計算を開始す
 		るスクリーン上の列の位置を指定する。これはタブ文字の幅の計算に
 		影響する。
 		計算にはカレントウィンドウのオプションが使用される。'tabstop'
 		や 'display' のような表示を変更するようなオプションが影響す
 		る。
-		{expr} に幅が曖昧 (Ambiguous) な東アジアの文字が含まれていると
-		きは、文字幅は 'ambiwidth' の設定に依存する。
+		{string} に幅が曖昧 (Ambiguous) な東アジアの文字が含まれている
+		ときは、文字幅は 'ambiwidth' の設定に依存する。
 		|strlen()|, |strwidth()|, |strchars()| も参照。
 
 		|method| としても使用できる: >
@@ -10383,8 +10646,9 @@ string({expr})	{expr}を文字列に変換して返す。{expr}が数値、浮�
 			mylist->string()
 
 <		|strtrans()|も参照。
-							*strlen()*
-strlen({expr})	結果は数値で、文字列{expr}のバイト単位での長さ。
+
+strlen({string})						*strlen()*
+		結果は数値で、文字列{string}のバイト単位での長さ。
 		引数が数値の場合は、まず文字列に変換される。
 		それ以外の型の場合はエラーとなる。
 		マルチバイト文字の数を数える場合は|strchars()|を使用する。
@@ -10438,9 +10702,11 @@ strptime({format}, {timestring})				*strptime()*
 		  :echo strftime("%c", strptime("%Y%m%d%H%M%S", "19970427115355") + 3600)
 <		  Sun Apr 27 12:53:55 1997
 
+		|method| としても使用できる: >
+			GetFormat()->strptime(timestring)
+<
 		全システムで使用可能ではない。調べるにはこれを使う: >
 			:if exists("*strptime")
-
 
 strridx({haystack}, {needle} [, {start}])			*strridx()*
 		結果は数値で、{haystack}の中で文字列{needle}が最後に現れる位置
@@ -10461,10 +10727,10 @@ strridx({haystack}, {needle} [, {start}])			*strridx()*
 		|method| としても使用できる: >
 			GetHaystack()->strridx(needle)
 
-strtrans({expr})					*strtrans()*
-		結果は文字列で、{expr}内の表示不可能な文字を|'isprint'|で指定
-		される、表示可能な文字に変換したもの。ウィンドウに表示すること
-		ができるようになる。例: >
+strtrans({string})					*strtrans()*
+		結果は文字列で、{string}内の表示不可能な文字を|'isprint'|で指
+		定される、表示可能な文字に変換したもの。ウィンドウに表示するこ
+		とができるようになる。例: >
 			echo strtrans(@a)
 <		これはレジスタの中の改行を、改行として表示する代わりに "^@" と
 		表示する。
@@ -10472,12 +10738,12 @@ strtrans({expr})					*strtrans()*
 		|method| としても使用できる: >
 			GetString()->strtrans()
 
-strwidth({expr})					*strwidth()*
-		結果は数値で、文字列 {expr} のスクリーン上での表示セル幅を返
+strwidth({string})					*strwidth()*
+		結果は数値で、文字列 {string} のスクリーン上での表示セル幅を返
 		す。タブ文字の幅は 1 として数えられる (タブ文字の幅も考慮した
 		い場合は|strdisplaywidth()| を使うこと)。
-		{expr} に幅が曖昧 (Ambiguous) な東アジアの文字が含まれていると
-		きは、文字幅は 'ambiwidth' の設定に依存する。
+		{string} に幅が曖昧 (Ambiguous) な東アジアの文字が含まれている
+		ときは、文字幅は 'ambiwidth' の設定に依存する。
 		|strlen()|, |strdisplaywidth()|, |strchars()| も参照。
 
 		|method| としても使用できる: >
@@ -10510,11 +10776,12 @@ submatch({nr} [, {list}])			*submatch()* *E935*
 		|method| としても使用できる: >
 			GetNr()->submatch()
 
-substitute({expr}, {pat}, {sub}, {flags})		*substitute()*
-		結果は文字列で、{expr}内で最初に{pat}にマッチした部分を{sub}に
-		置換えたコピーになる。
-		{flags} が "g" なら、{expr} 内の {pat} にマッチした部分をすべ
-		て置換する。そうしたくない場合は {flags} は "" にすべきである。
+substitute({string}, {pat}, {sub}, {flags})		*substitute()*
+		結果は文字列で、{string}内で最初に{pat}にマッチした部分を{sub}
+		に置換えたコピーになる。
+		{flags} が "g" なら、{string} 内の {pat} にマッチした部分をす
+		べて置換する。そうしたくない場合は {flags} は "" にすべきであ
+		る。
 
 		これはコマンド ":substitute" (一切のフラグ無し) のように働く。
 		しかしマッチングは常にオプション 'magic' が設定され、オプショ
@@ -10529,8 +10796,8 @@ substitute({expr}, {pat}, {sub}, {flags})		*substitute()*
 		あることに注意。例えば、何かの文字列をリテラルの "\n" に置換え
 		るためには、"\\\\n" か '\\n' を使う必要がある。
 
-		{pat}が{expr}の何処にもマッチしなければ、{expr}が何の変更も受
-		けずに返される。
+		{pat}が{string}の何処にもマッチしなければ、{string}が何の変更
+		も受けずに返される。
 
 		例: >
 		   :let &path = substitute(&path, ",\\=[^,]*$", "", "")
@@ -10575,12 +10842,12 @@ swapinfo({fname})					*swapinfo()*
 		|method| としても使用できる: >
 			GetFilename()->swapinfo()
 
-swapname({expr})					*swapname()*
-		結果はバッファ {expr} のスワップファイルパス。
-		{expr} の使用については、上記の |bufname()| を参照。
-		バッファ {expr} がカレントバッファの場合、結果は |:swapname|
+swapname({buf})						*swapname()*
+		結果はバッファ {buf} のスワップファイルパス。
+		{buf} の使用については、上記の |bufname()| を参照。
+		バッファ {buf} がカレントバッファの場合、結果は |:swapname|
 		と等しい。(スワップファイルがない場合を除く)
-		バッファ {expr} にスワップファイルがない場合、空文字列を返す。
+		バッファ {buf} にスワップファイルがない場合、空文字列を返す。
 
 		|method| としても使用できる: >
 			GetBufname()->swapname()
@@ -10683,8 +10950,9 @@ synconcealed({lnum}, {col})				*synconcealed()*
 
 synstack({lnum}, {col})					*synstack()*
 		カレントウィンドウの {lnum}, {col} の位置の構文アイテムのスタッ
-		クを |List| にして返す。{lnum}は|getline()|と同様に扱われる。
-		このリストの要素は |synID()|が返すのと同じ種類の ID である。
+		クをリスト |List| にして返す。{lnum} は |getline()| と同様に扱
+		われる。
+		このリストの要素は |synID()| が返すのと同じ種類の ID である。
 		リストの最初の要素が一番外側の領域で、続く要素がその中に内包さ
 		れている。アイテム全体がハイライトされている、または最後の要素
 		が transparent なアイテムである場合を除き、最後の要素が
@@ -10698,13 +10966,13 @@ synstack({lnum}, {col})					*synstack()*
 		最後の文字の一つ後ろと空行の一番目の列は有効な位置である。
 
 system({expr} [, {input}])				*system()* *E677*
-		シェルコマンド {expr} の実行結果を文字列として得る。リスト
-		|List| として受け取るには |systemlist()| を参照。
+		シェルコマンド {expr} の実行結果を文字列 |String| として得る。
+		リスト |List| として受け取るには |systemlist()| を参照。
 
-		{input} に文字列が指定された場合、その文字列はファイルに書き出
-		され、コマンドの標準入力として渡される。この文字列はそのまま
-		(as-is) 書き出されるので、正しい改行文字を使うよう自分自身で気
-		をつけなければならない。
+		{input} に文字列 |String| が指定された場合、その文字列はファイ
+		ルに書き出され、コマンドの標準入力として渡される。この文字列は
+		そのまま (as-is) 書き出されるので、正しい改行文字を使うよう自
+		分自身で気をつけなければならない。
 		{input} にリスト (|List|) が指定された場合は、|writefile()| の
 		{binary} に "b" を指定したのと同様にファイルに書き出される (つ
 		まり、リストの各要素は改行文字で連結され、要素内の改行文字は
@@ -11308,10 +11576,10 @@ wildmenumode()					*wildmenumode()*
 win_execute({id}, {command} [, {silent}])		*win_execute()*
 		`execute()` と似ているが、ウィンドウ {id} のコンテキスト内で実
 		行する。
-		自動コマンドを発生させずに、ウィンドウを一時的にカレントウィン
-		ドウにする。{command} を実行すると、自動コマンドがトリガーされ
-		る。これは予期しない副作用を引き起こす可能性がある。必要であれ
-		ば |:noautocmd| を使用すること。
+		自動コマンドを発生させないかディレクトリを変更しないで、ウィン
+		ドウを一時的にカレントウィンドウにする。{command} を実行する
+		と、自動コマンドがトリガーされる。これは予期しない副作用を引き
+		起こす可能性がある。必要であれば |:noautocmd| を使用すること。
 		例: >
 			call win_execute(winid, 'set syntax=python')
 <		`setwinvar()` で同じことをしても自動コマンドはトリガーされず、
@@ -11366,7 +11634,9 @@ win_gettype([{nr}])					*win_gettype()*
 		ターミナルが起動している場合、'buftype' は "terminal" であり、
 		win_gettype() は "popup" を返す。
 
-
+		|method| としても使用できる: >
+			GetWinid()->win_gettype()
+<
 win_gotoid({expr})					*win_gotoid()*
 		{expr} の ID で示されるウィンドウへ移動する。これは現在のタブ
 		ページも移動する。
@@ -11675,6 +11945,7 @@ xor({expr}, {expr})					*xor()*
 機能は大別して 3 つの系統に分けられる:
 1.  コンパイル時に|+feature-list|とした時にだけサポートされる機能。例: >
 	:if has("cindent")
+<							*gui_running*
 2.  ある状態の時にだけサポートされる機能。例: >
 	:if has("gui_running")
 <							*has-patch*
@@ -11803,6 +12074,7 @@ multi_byte_encoding	'encoding' がマルチバイトエンコーディングに�
 multi_byte_ime		IMEによる入力をサポート
 multi_lang		複数言語をサポート
 mzscheme		MzSchemeインターフェイスをサポート |mzscheme|
+nanotime		サブ秒のタイムスタンプチェックのサポート
 netbeans_enabled	|netbeans|をサポートし、現在接続している
 netbeans_intg		|netbeans|をサポート
 num64			64ビット数値をサポート |Number|
@@ -12651,7 +12923,7 @@ text...
 			きない: >
 				const ll = [1, 2, 3]
 				let ll[1] = 5  " Error!
-< 			参照の入れ子はロックされない: >
+<			参照の入れ子はロックされない: >
 				let lvar = ['a']
 				const lconst = [0, lvar]
 				let lconst[0] = 2  " Error!
@@ -12701,8 +12973,8 @@ text...
 			[depth] 0 の例: >
 				let mylist = [1, 2, 3]
 				lockvar 0 mylist
-				let mylist[0] = 77   	" OK
-				call add(mylist, 4]  	" OK
+				let mylist[0] = 77  " OK
+				call add(mylist, 4] " OK
 				let mylist = [7, 8, 9]  " エラー!
 <								*E743*
 			深さを無限にするには[!]を使い、[depth]を省略する。しか
