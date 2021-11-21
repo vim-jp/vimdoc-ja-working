@@ -974,7 +974,7 @@ QuickFixCmdPost			QuickFixCmdPreと同様だが、QuickFixコマンドが実
 				初のエラーに移動する前に実行される。
 				|QuickFixCmdPost-example| を参照。
 							*QuitPre*
-QuitPre				`:quit`、`:wq` または `:qall` を使ったとき。カ
+QuitPre				`:quit`、`:wq` または `:qall` を使ったときで、カ
 				レントウィンドウを閉じるか Vim を終了するかを
 				決定する前。`:wq` では QuitPre が発生する前に
 				バッファが書き込まれる。カレントウィンドウが最
