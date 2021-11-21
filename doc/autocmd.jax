@@ -974,12 +974,12 @@ QuickFixCmdPost			QuickFixCmdPreと同様だが、QuickFixコマンドが実
 				初のエラーに移動する前に実行される。
 				|QuickFixCmdPost-example| を参照。
 							*QuitPre*
-QuitPre				`:quit`、`:wq` または `:qall` を使ったときで、カ
-				レントウィンドウを閉じるか Vim を終了するかを
-				決定する前。`:wq` では QuitPre が発生する前に
-				バッファが書き込まれる。カレントウィンドウが最
-				後の通常のウィンドウで、余分なウィンドウを閉じ
-				たいときに使える。
+QuitPre				`:quit`、`:wq` または `:qall` を使ったときで、
+				カレントウィンドウを閉じるか Vim を終了するか
+				を決定する前。`:wq` では QuitPre が発生する前
+				にバッファが書き込まれる。カレントウィンドウが
+				最後の通常のウィンドウで、余分なウィンドウを閉
+				じたいときに使える。
 				|ExitPre| も参照。
 							*RemoteReply*
 RemoteReply			サーバーとして働くVimからの応答を受け取ったとき
