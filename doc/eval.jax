@@ -4555,8 +4555,8 @@ exists_compiled({expr})					*exists_compiled()*
 			if exists_compiled('*ThatFunction')
 			   ThatFunction('works')
 			endif
-<		`exists()` を使った場合に編集時でThatFunction() が未定義だとエ
-		ラーになる。
+<		`exists()` を使った場合はコンパイル時に ThatFunction() が未定
+		義だとエラーになる。
 
 		{expr} は文字列定数の必要がある。 *E1232*
 		|:def| 関数の中で使える。 *E1233*
