@@ -3403,7 +3403,6 @@ balloon_split({msg})					*balloon_split()*
 <		{|+balloon_eval_term| 機能付きでコンパイルされたときのみ有効}
 
 blob2list({blob})					*blob2list()*
-		Return a List containing the number value of each byte in Blob
 		Blob {blob} の各バイトを数値として保持するリストを返す。例: >
 			blob2list(0z0102.0304)	returns [1, 2, 3, 4]
 			blob2list(0z)		returns []
