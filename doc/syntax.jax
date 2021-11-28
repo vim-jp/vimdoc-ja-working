@@ -1497,13 +1497,13 @@ FORM用の既定の拡張カラーモードではヘッダー命令とFORMプロ
 拡張モードを使うことは、gvimで暗いディスプレイを使用した場合にも利点がある。命
 令文は黄色ではなく明るい黄色で表示され、条件文は視認性のため明るい青で表示され
 る。
- 
+
 
 FORTH						*forth.vim* *ft-forth-syntax*
 
-Files matching "*.fs" could be F# or Forth.  If the automatic detection
-doesn't work for you, or you don't edit F# at all, use this in your
-startup vimrc: >
+"*.fs" にマッチするファイルのタイプは F# か Forth である。自動判別がうまく機能
+しないなら、または F# ファイルを一切編集しないとわかっているなら、次をvimrcに
+加えるとよい: >
    :let filetype_fs = "forth"
 
 
@@ -4982,28 +4982,25 @@ guisp={color-name}					*highlight-guisp*
 	これらの値は16進であり、範囲は "00" から "ff"。例: >
             :highlight Comment guifg=#11f0c3 guibg=#ff00ff
 <
-	If you are authoring a color scheme and use the same hexademical value
-	repeatedly, you can define a name for it in |v:colornames|. For
-	example: >
+	あなたがカラースキームの作者であり同じ16進数値を繰り返すのであれば
+	|v:colornames| にカラー名を定義することができる。例えば: >
 
-	    # provide a default value for this color but allow the user to
-	    # override it.
+	    # デフォルト値を提供するがユーザーが上書きすることを許容する。
 	    :call extend(v:colornames, {'alt_turquoise': '#11f0c3'}, 'keep')
 	    :highlight Comment guifg=alt_turquoise guibg=magenta
 <
-	If you are using a color scheme that relies on named colors and you
-	would like to adjust the precise appearance of those colors, you can
-	do so by overriding the values in |v:colornames| prior to loading the
-	scheme: >
+	あなたが名前の付いたカラーに頼るカラースキームを利用するのなら、それら
+	の色について正確な出力に調整することができ、そのために |v:colornames|
+	の値をスキームをロードするまえに上書きできる: >
 
 	    let v:colornames['alt_turquoise'] = '#22f0d3'
 	    colorscheme alt
 <
-	If you want to develop a color list that can be relied on by others,
-	it is best to prefix your color names. By convention these color lists
-	are placed in the colors/lists directory. You can see an example in
-	'$VIMRUNTIME/colors/lists/csscolors.vim'. This list would be sourced
-	by a color scheme using: >
+	他に頼るカラーリストの開発をしたいなら、あなたのカラー名にプリフィック
+	スを付けるのが最良である。習慣としてそれらのカラーリストは
+	colors/lists ディレクトリに置く。例を
+	'$VIMRUNTIME/colors/lists/csscolors.vim' に見ることができる。このリス
+	トはカラースキームが使われるときに読み込まれうる: >
 
 	    :runtime colors/lists/csscolors.vim
 	    :highlight Comment guifg=css_turquoise
