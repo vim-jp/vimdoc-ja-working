@@ -72,7 +72,7 @@
 内) にあると {cmd} は Vim9 script として実行される。したがってこの依存は自動コ
 マンドが定義された位置に依存し、トリガーされた位置ではない。
 
-`:command` のように {cmd} はブロックにでる、 |:command-repl| を参照。  例: >
+`:command` のように {cmd} はブロックにできる、|:command-repl| を参照。例: >
 	au BufReadPost *.xml {
 		  setlocal matchpairs+=<:>
 		  /<start
@@ -81,7 +81,7 @@
 Note: パターンの期待された位置に '|' がある場合、":autocmd" コマンドの後には別
 のコマンドを続けることができる。これは動作する: >
 	:augroup mine | au! BufRead | augroup END
-しかし、これは定義されたコマンドの一部として "augroup" を見る: >
+しかし、これは定義されたコマンドの一部として "augroup" を見做す: >
 	:augroup mine | au! BufRead * | augroup END
 	:augroup mine | au BufRead * set tw=70 | augroup END
 代わりにグループ名をコマンドの中に置くことができる: >
