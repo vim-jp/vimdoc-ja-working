@@ -913,22 +913,18 @@ MenuPopup			(マウス右ボタンで)ポップアップメニューを表示す
 					c	コマンドライン
 					tl	端末
 							*ModeChanged*
-ModeChanged			After changing the mode. The pattern is
-				matched against `'old_mode:new_mode'`, for
-				example match against `*:c*` to simulate
-				|CmdlineEnter|.
-				The following values of |v:event| are set:
-				   old_mode	The mode before it changed.
-				   new_mode	The new mode as also returned
-						by |mode()| called with a
-						non-zero argument.
-				When ModeChanged is triggered, old_mode will
-				have the value of new_mode when the event was
-				last triggered.
-				This will be triggered on every minor mode
-				change.
-				Usage example to use relative line numbers
-				when entering Visual mode: >
+ModeChanged			モード変更後。パターンは `'old_mode:new_mode'`
+				に対して照合され、例えば `*:c*` で照合させれば
+				|CmdlineEnter| の模倣になる。
+				|v:event| には以下の値が設定される:
+				   old_mode	変更前のモード。
+				   new_mode	|mode()| を引数が非0のときに返
+						す値と同じ新しいモードの値。
+				ModeChanged が起動した時、old_mode は最後に起
+				動した時の new_mode の値を持つ。
+				各マイナーモードが変更されるたびに起動される。
+				使い方の例としてビジュアルモードに入ったら相対
+				行番号を使うもの: >
 	:au ModeChanged [vV\x16]*:* let &l:rnu = mode() =~# '^[vV\x16]'
 	:au ModeChanged *:[vV\x16]* let &l:rnu = mode() =~# '^[vV\x16]'
 	:au WinEnter,WinLeave * let &l:rnu = mode() =~# '^[vV\x16]'
@@ -1266,11 +1262,10 @@ VimSuspend			Vimのインスタンスがサスペンドしたとき。Vim内で
 				CTRL-Z がタイプされた時だけであり、SIGSTOP か
 				SIGTSTP シグナルがVimに送られた時ではない。
 							*WinClosed*
-WinClosed			After closing a window.  The pattern is
-				matched against the |window-ID|.  Both
-				<amatch> and <afile> are set to the
-				|window-ID|.  Non-recursive (event cannot
-				trigger itself).
+WinClosed			ウィンドウが閉じた後。パターンは |window-ID|
+				に対して照合される。<amatch> と <afile> は共に
+				|window-ID| を設定する。再帰的に発生しない(こ
+				のイベントで自分自身を起動しない)。
 							*WinEnter*
 WinEnter			別のウィンドウに入った後。Vimの開始直後、1個目
 				のウィンドウに入ったときは発生しない。ウィンド
@@ -1495,10 +1490,10 @@ Note: パスの途中だけにマッチさせ、ルートディレクトリに�
 とが防げる。
 
 						*FileExplorer*
-There is one group that is recognized by Vim: FileExplorer.  If this group
-exists Vim assumes that editing a directory is possible and will trigger a
-plugin that lists the files in that directory.  This is used by the |netrw|
-plugin.  This allows you to do: >
+Vim によって認識されるグループが1つある: FileExplorer。このグループが存在する
+なら Vim はディレクトリが編集可能であると想定しディレクトリ内のファイルを列挙
+するプラグインを起動する。これは |netrw| プラグインによって使われる。これによ
+り次のことが出来ます: >
 	browse edit
 
 ==============================================================================
