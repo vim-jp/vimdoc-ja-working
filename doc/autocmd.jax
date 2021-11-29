@@ -830,7 +830,7 @@ FilterReadPre			フィルタコマンドからファイルを読み込む前。V
 							*FilterWritePost*
 FilterWritePost			フィルタコマンド用のファイルを書き込んだり、外
 				部diffで差分表示用のファイルを作った後。(内部
-				diffについては |DiffUpdated|  を参照)
+				diffについては |DiffUpdated| を参照)
 				Vimは FilterWritePre と同様、現在のバッファの
 				名前に対してパターンをチェックする。
 				'shelltemp' がオフのときは発生しない。
