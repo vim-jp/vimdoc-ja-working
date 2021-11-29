@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 8.2.  Last change: 2021 Jul 27
+*autocmd.txt*   For Vim バージョン 8.2.  Last change: 2021 Nov 20
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -72,8 +72,14 @@
 内) にあると {cmd} は Vim9 script として実行される。したがってこの依存は自動コ
 マンドが定義された位置に依存し、トリガーされた位置ではない。
 
-Note: '|' が {cmd} の前にある場合、":autocmd" コマンドの後には別のコマンドを続
-けることができる。これは動作する: >
+`:command` のように {cmd} はブロックにでる、 |:command-repl| を参照。  例: >
+	au BufReadPost *.xml {
+		  setlocal matchpairs+=<:>
+		  /<start
+		}
+
+Note: パターンの期待された位置に '|' がある場合、":autocmd" コマンドの後には別
+のコマンドを続けることができる。これは動作する: >
 	:augroup mine | au! BufRead | augroup END
 しかし、これは定義されたコマンドの一部として "augroup" を見る: >
 	:augroup mine | au! BufRead * | augroup END
@@ -348,6 +354,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 
 |WinNew|		新しいウィンドウを作成した後
 |TabNew|		新しいタブページを作成した後
+|WinClosed|		ウィンドウを閉じた後
 |TabClosed|		タブページを閉じた後
 |WinEnter|		別のウィンドウに入った後
 |WinLeave|		ウィンドウから離れる前
@@ -365,6 +372,8 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |InsertLeave|		挿入モードを抜けるとき
 |InsertCharPre|		挿入モードで文字が入力されたとき、その文字が挿入される
 			前
+
+|ModeChanged|		モードの変更の後
 
 |TextChanged|		ノーマルモードでテキストが変更された後
 |TextChangedI|		ポップアップメニューが表示されていないときに、挿入モー
@@ -701,7 +710,7 @@ EncodingChanged			オプション 'encoding' が変更されたとき。例え�
 				フォント等の設定に便利である。
 							*FileAppendCmd*
 FileAppendCmd			ファイルに追加する前。ファイルへの追加の役目を
-				負う。 |Cmd-event|
+				負う。|Cmd-event|
 							*FileAppendPost*
 FileAppendPost			ファイルに追加した後。
 							*FileAppendPre*
@@ -821,7 +830,7 @@ FilterReadPre			フィルタコマンドからファイルを読み込む前。V
 							*FilterWritePost*
 FilterWritePost			フィルタコマンド用のファイルを書き込んだり、外
 				部diffで差分表示用のファイルを作った後。(内部
-				diffについては |DiffUpdated| を参照)
+				diffについては |DiffUpdated|  を参照)
 				Vimは FilterWritePre と同様、現在のバッファの
 				名前に対してパターンをチェックする。
 				'shelltemp' がオフのときは発生しない。
@@ -903,7 +912,27 @@ MenuPopup			(マウス右ボタンで)ポップアップメニューを表示す
 					i	挿入
 					c	コマンドライン
 					tl	端末
-							*OptionSet*
+							*ModeChanged*
+ModeChanged			After changing the mode. The pattern is
+				matched against `'old_mode:new_mode'`, for
+				example match against `*:c*` to simulate
+				|CmdlineEnter|.
+				The following values of |v:event| are set:
+				   old_mode	The mode before it changed.
+				   new_mode	The new mode as also returned
+						by |mode()| called with a
+						non-zero argument.
+				When ModeChanged is triggered, old_mode will
+				have the value of new_mode when the event was
+				last triggered.
+				This will be triggered on every minor mode
+				change.
+				Usage example to use relative line numbers
+				when entering Visual mode: >
+	:au ModeChanged [vV\x16]*:* let &l:rnu = mode() =~# '^[vV\x16]'
+	:au ModeChanged *:[vV\x16]* let &l:rnu = mode() =~# '^[vV\x16]'
+	:au WinEnter,WinLeave * let &l:rnu = mode() =~# '^[vV\x16]'
+<							*OptionSet*
 OptionSet			オプションが設定された後。パターンは長い(短縮
 				しない)オプション名に対してマッチする。
 				|<amatch>| は対象のオプション名が設定される。
@@ -1158,7 +1187,8 @@ TextYankPost			カレントバッファでテキストがヤンクもしくは�
 						テキストのリスト。以下と同様: >
 						getreg(r, 1, 1)
 <				   regname	レジスタの名前、もしくは無名レ
-						ジスタの場合は空文字列。
+						ジスタの場合は空文字列、
+						|registers| を参照。
 				   regtype	レジスタの種類、|getregtype()|
 						を参照。
 				   visual	オペレーションが |Visual| エリ
@@ -1235,6 +1265,12 @@ VimResume			Vimがサスペンドと |VimSuspend| がトリガーした
 VimSuspend			Vimのインスタンスがサスペンドしたとき。Vim内で
 				CTRL-Z がタイプされた時だけであり、SIGSTOP か
 				SIGTSTP シグナルがVimに送られた時ではない。
+							*WinClosed*
+WinClosed			After closing a window.  The pattern is
+				matched against the |window-ID|.  Both
+				<amatch> and <afile> are set to the
+				|window-ID|.  Non-recursive (event cannot
+				trigger itself).
 							*WinEnter*
 WinEnter			別のウィンドウに入った後。Vimの開始直後、1個目
 				のウィンドウに入ったときは発生しない。ウィンド
@@ -1457,6 +1493,13 @@ Note: パスの途中だけにマッチさせ、ルートディレクトリに�
 
 これで自動コマンドを (例えばファイル .vimrc を再び読み込んだ後) 2回定義するこ
 とが防げる。
+
+						*FileExplorer*
+There is one group that is recognized by Vim: FileExplorer.  If this group
+exists Vim assumes that editing a directory is possible and will trigger a
+plugin that lists the files in that directory.  This is used by the |netrw|
+plugin.  This allows you to do: >
+	browse edit
 
 ==============================================================================
 9. 自動コマンドの実行				*autocmd-execute*
