@@ -781,9 +781,9 @@ NOTE: デバッグモードは未完成である。デバッグはVimの動作�
 
 デバッグモードのためのコマンドラインヒストリが別に用意されている。
 
-NOTE: In Vim9 script, if a command is written at the script level and
-continues on the next line, not using the old way with a backslash for line
-continuation, only the first line is printed before the debugging prompt.
+NOTE: Vim9 scriptで、コマンドがスクリプトレベルで記述されて次行へ続くとき、旧
+来のバックスラッシュを使わずに行継続するため、最初の行のみデバッグ出力に印刷さ
+れる。
 
 関数の行番号はその関数の始まりから数える。見ている行の番号を数えるのに苦労する
 場合はその関数の書かれたファイルを別のVimで開き、その関数の始まりを探しだし、
@@ -836,15 +836,14 @@ continuation, only the first line is printed before the debugging prompt.
 - 同じ名前のExコマンドを使うにはコロンを付けること:
   ":cont", ":next", ":finish" (省略時も)
 							*vim9-debug*
-When debugging a compiled :def function, "step" will stop before every
-executed line, not every single instruction.  Thus it works mostly like a not
-compiled function.  Access to local variables is limited you can use: >
+コンパイルされている :def 関数をデバッグする時、"step" は各実行行で、単一の命
+令毎ではない。これにより多くの場合は非コンパイル関数と同様に動く。ローカル変数
+へのアクセスは制限されるが使える: >
 	echo varname
-But not much else.
-When executing a command that is not a specific bytecode instruction but
-executed like a normal Ex command, "step" will stop once in the compiled
-context, where local variables can be inspected, and once just before
-executing the command.
+しかし他にあまりない。
+特定のバイトコード命令ではないが通常のExコマンドのように実行するコマンドを実行
+する時、"step" はコンパイルされているコンテキストで1度止まり、ローカル変数を検
+査でき、その直前は一度に実行したコマンドになる。
 
 バックトレースは、関数呼び出しの階層を表示する。例えば:
 	>bt ~
@@ -887,9 +886,8 @@ executing the command.
 			:breakadd expr g:lnum
 <		これはグローバル変数の lnum が変化するときに常にブレークする。
 
-		Errors in evaluation are suppressed, you can use the name of a
-		variable that does not exist yet.  This also means you will
-		not notice anything if the expression has a mistake.
+		実行時のエラーは抑制され、まだ存在しない変数の名前が使える。こ
+		れはまた式に問題があっても気付けないということでもある。
 
 		Note: |script-variable| を監視する場合、スクリプトが切り替わっ
 		たときにブレークする。これは、定義されたスクリプト内でのみ、そ
