@@ -1,4 +1,4 @@
-*repeat.txt*    For Vim バージョン 8.2.  Last change: 2021 Jun 11
+*repeat.txt*    For Vim バージョン 8.2.  Last change: 2021 Nov 24
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -781,6 +781,10 @@ NOTE: デバッグモードは未完成である。デバッグはVimの動作�
 
 デバッグモードのためのコマンドラインヒストリが別に用意されている。
 
+NOTE: In Vim9 script, if a command is written at the script level and
+continues on the next line, not using the old way with a backslash for line
+continuation, only the first line is printed before the debugging prompt.
+
 関数の行番号はその関数の始まりから数える。見ている行の番号を数えるのに苦労する
 場合はその関数の書かれたファイルを別のVimで開き、その関数の始まりを探しだし、
 "99j" を実行すること。"99" は実際の行番号に合わせて変えること。
@@ -831,6 +835,16 @@ NOTE: デバッグモードは未完成である。デバッグはVimの動作�
   (どうすべきかがわかりにくいため)。
 - 同じ名前のExコマンドを使うにはコロンを付けること:
   ":cont", ":next", ":finish" (省略時も)
+							*vim9-debug*
+When debugging a compiled :def function, "step" will stop before every
+executed line, not every single instruction.  Thus it works mostly like a not
+compiled function.  Access to local variables is limited you can use: >
+	echo varname
+But not much else.
+When executing a command that is not a specific bytecode instruction but
+executed like a normal Ex command, "step" will stop once in the compiled
+context, where local variables can be inspected, and once just before
+executing the command.
 
 バックトレースは、関数呼び出しの階層を表示する。例えば:
 	>bt ~
@@ -871,8 +885,12 @@ NOTE: デバッグモードは未完成である。デバッグはVimの動作�
 		{expression} の評価結果が異なる値となるときに常にブレークする
 		ブレークポイントを設定する。例: >
 			:breakadd expr g:lnum
-
 <		これはグローバル変数の lnum が変化するときに常にブレークする。
+
+		Errors in evaluation are suppressed, you can use the name of a
+		variable that does not exist yet.  This also means you will
+		not notice anything if the expression has a mistake.
+
 		Note: |script-variable| を監視する場合、スクリプトが切り替わっ
 		たときにブレークする。これは、定義されたスクリプト内でのみ、そ
 		のスクリプト変数が有効だからである。そしてそのスクリプトがいく
