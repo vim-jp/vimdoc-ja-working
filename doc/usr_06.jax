@@ -183,31 +183,29 @@ GUI バージョンのときだけ使いたい場合は、":syntax enable" を |
 	:runtime syntax/colortest.vim
 
 いろんな色の組み合せが表示されます。どれが読みやすくて見た目が良いかチェックし
-てください。
-These aren't the only colors available to you though.
-You can specify #rrggbb hex colors and you can define new names for hex
-colors in |v:colornames| like so: >
+てください。ただし使用できるのはこれらの色だけではありません。
+#rrggbb の16進カラーの指定や次のような |v:colornames| への16進カラーの名称定義
+ができます: >
 
 	let v:colornames['mine_red'] = '#aa0000'
 <
-If you are authoring a color scheme for others to use, it is important
-to define these colors only when they do not exist: >
+他から利用できるカラースキームを作る場合は、既存の定義のないようにすることが重
+要です: >
 
 	call extend(v:colornames, {'mine_red': '#aa0000'}, 'keep')
 
-This allows users of the color scheme to override the precise definition of
-that color prior to loading your color scheme. For example, in a |.vimrc|
-file:
+これによって、カラースキームのユーザーはあなたのカラースキームをロードする前に
+正確に定義を上書き定義できます、例えば、|.vimrc| ファイルにて:
 
 	runtime colors/lists/css_colors.vim
 	let v:colornames['your_red'] = v:colornames['css_red']
 	colorscheme yourscheme
 
-As a color scheme author, you should be able to rely on some color names for
-GUI colors. These are defined in `colors/lists/default.vim`. All such files
-found on the |'runtimepath'| are loaded each time the colorscheme command is
-run. A canonical list is provided by the vim distribution, which should
-include all X11 colors (previously defined in rgb.txt).
+カラースキームの作者であれば、一部のカラー名はGUIカラーにたよることができます。
+これらは `colors/lists/default.vim` に定義されています。|'runtimepath'| にて発
+見されるこれらのようなファイルは colorscheme コマンドが実行されるたびにロード
+される正規のリストは Vim の配布物として提供され、これにたすべての X11 カラーを
+含んでいます(以前は rgb.txtで定義されていました)。
 
 
 ==============================================================================
