@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 8.2.  Last change: 2021 Nov 24
+*options.txt*	For Vim バージョン 8.2.  Last change: 2021 Dec 03
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -55,6 +55,8 @@ Vimには、特別な働きをさせるための多くの内部変数とスイ�
 			コードは内部的に生成され、変更が不可能だからだ。それに、
 			GUIバージョンでターミナルコードを変更するのは便利とは
 			言えない...
+
+:se[t]! termcap		同様だが、複数列を使用しない。
 
 								*E518* *E519*
 :se[t] {option}?	{option} の値を表示する。
@@ -411,7 +413,8 @@ Note: 将来的に、より多くのグローバルオプションが global-loc
 						*option-value-function*
 いくつかのオプション('completefunc', 'imactivatefunc', 'imstatusfunc',
 'omnifunc', 'operatorfunc', 'quickfixtextfunc', 'tagfunc', 'thesaurusfunc')は
-関数名もしくは関数への参照もしくはラムダ関数を設定する。例:
+関数名もしくは関数への参照もしくはラムダ関数を設定する。ラムダを使う場合は内部
+名へ変換される、例えば "<lambda>123"。例:
 >
 	set opfunc=MyOpFunc
 	set opfunc=function('MyOpFunc')
@@ -421,10 +424,10 @@ Note: 将来的に、より多くのグローバルオプションが global-loc
 	let Fn = function('MyTagFunc')
 	let &tagfunc = string(Fn)
 	" ラムダ式を用いて設定
-	let &tagfunc = "{t -> MyTagFunc(t)}"
+	let &tagfunc = {t -> MyTagFunc(t)}
 	" ラムダ式を含む変数を用いて設定
 	let L = {a, b, c -> MyTagFunc(a, b , c)}
-	let &tagfunc = string(L)
+	let &tagfunc = L
 <
 
 ファイルタイプの設定
@@ -899,10 +902,12 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 				 *'autowrite'* *'aw'* *'noautowrite'* *'noaw'*
 'autowrite' 'aw'	切替	(既定ではオフ)
 			グローバル
-	コマンド :next, :rewind, :last, :first, :previous, :stop, :suspend,
-	:tag, :!, :make, CTRL-], CTRL-^ を実行したときや、コマンド :buffer,
-	CTRL-O, CTRL-I, '{A-Z0-9}, `{A-Z0-9} の移動先が別のファイルのとき、ファ
-	イルが変更されているなら書き込む。
+	コマンド `:next`, `:rewind`, `:last`, `:first`, `:previous`, `:stop`,
+	`:suspend`, `:tag, `:!`, ``:make`, CTRL-], CTRL-^ を実行したときや、コ
+	マンド :buffer, CTRL-O, CTRL-I, '{A-Z0-9}, `{A-Z0-9} の移動先が別のファ
+	イルのとき、ファイルが変更されているなら書き込む。
+	バッファが書き込まれないのは隠れバッファになったときで、例えば
+	'bufhidden' が "hide" に設定されていて `:next` が使われたとき。
 	Note 'autowrite' が適用されないコマンドもあることに注意。それについて
 	はオプション 'autowriteall' を参照。
 	いくつかのバッファは書き込まれない。具体的には 'buftype' が "nowrite",
@@ -4278,7 +4283,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 'imactivatefunc' 'imaf'	文字列 (既定では "")
 			グローバル
 	このオプションはインプットメソッド (IM) をオン/オフにするのに呼ばれる
-	関数を指定する。
+	関数を指定する。値として関数名、ラムダ |lambda|、関数の参照 |Funcref|
+	が使える。詳細は |option-value-function| を参照。
 	MS-Windows GUI 版では使われない。
 	モードラインから設定した場合、式は |sandbox| で評価される。
 	|sandbox-option| を参照。
@@ -4392,7 +4398,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 'imstatusfunc' 'imsf'	文字列 (既定では "")
 			グローバル
 	このオプションはインプットメソッド (IM) の状態を得るのに呼ばれる関数を
-	指定する。IMEがオンのとき、関数は正の数を返さなければならない。
+	指定する。IMEがオンのとき、関数は正の数を返さなければならない。値とし
+	て関数名、ラムダ |lambda|、関数の参照 |Funcref| が使える。詳細は
+	|option-value-function| を参照。
 	MS-Windows GUI 版では使われない。
 
 	例: >
