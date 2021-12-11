@@ -1,4 +1,4 @@
-*map.txt*       For Vim バージョン 8.2.  Last change: 2021 May 16
+*map.txt*       For Vim バージョン 8.2.  Last change: 2021 Nov 20
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -59,6 +59,8 @@
 			は、マップコマンドに対応したモードで使用できます。マッ
 			プが使用されたときに {rhs} が調べられ、再マップされま
 			す。マップを入れ子にしたり再帰的にすることができます。
+			Note: Trailing spaces are included in the {rhs},
+			because space is a valid Normal mode command.
 
 						*:nore* *:norem*
 :no[remap]  {lhs} {rhs}		|mapmode-nvo|	*:no*  *:noremap* *:nor*
@@ -92,6 +94,9 @@
 :tunma[p] {lhs}			|mapmode-t|		*:tunma* *:tunmap*
 			マップコマンドに対応したモードの {lhs} というマップを
 			削除します。他のモードのマップは残ります。
+			It also works when {lhs} matches the {rhs} of a
+			mapping. This is for when when an abbreviation
+			applied.
 			Note: 末尾の空白は {lhs} に含まれます。次の unmap コマ
 			ンドは機能しません: >
 				:map @@ foo
@@ -334,6 +339,8 @@ Note:
 - 同じ理由により、<C-R><C-W> のようなキーコード |keycodes| は通常の、マッピン
   グされていないキーとして解釈されます。
 - コマンドは echo されせん、<silent> は不要です。
+- The {rhs} is not subject to abbreviations nor to other mappings, even if the
+  mapping is recursive.
 - ビジュアルモードでは、`line('v')` と `col('v')` を使って、ビジュアルエリアの
   一端を取得でき、カーソルは反対の端にいます。
 - 選択モードでは、|:map| と |:vmap| コマンドでのマッピングがビジュアルモード内
@@ -990,6 +997,20 @@ Note: 'clipboard' オプションの値に `unnamed` か `unnamedplus` が含ま
 合、レジスタの `"*` や `"+` が上書きされることを防ぐため、一時的に空に設定され
 ます。
 
+The `mode()` function will return the state as it will be after applying the
+operator.
+
+Here is an example for using a lambda function to create a normal-mode
+operator to add quotes around text in the current line: >
+
+	nnoremap <F4> <Cmd>let &opfunc='{t ->
+				\ getline(".")
+				\ ->split("\\zs")
+				\ ->insert("\"", col("'']"))
+				\ ->insert("\"", col("''[") - 1)
+				\ ->join("")
+				\ ->setline(".")}'<CR>g@
+
 ==============================================================================
 2. 短縮入力 (Abbreviations)		*abbreviations* *Abbreviations*
 
@@ -1351,6 +1372,10 @@ non-id	  マッチした場所の前がスペース、タブ、行頭、挿入�
 :delc[ommand] {cmd}				*:delc* *:delcommand* *E184*
 			ユーザー定義コマンド {cmd} を削除します。
 
+:delc[ommand] -buffer {cmd}					*E1237*
+			Delete the user-defined command {cmd} that was defined
+			for the current buffer.
+
 :comc[lear]						*:comc* *:comclear*
 			すべてのユーザー定義コマンドを削除します。
 
@@ -1526,7 +1551,7 @@ Note: -range=Nと-count=Nは相互に排他的であるということに注意�
 特殊なケース ~
 					*:command-bang* *:command-bar*
 					*:command-register* *:command-buffer*
-
+					*:command-keepscript*
 特殊なケースがいくつかあります:
 
 	-bang	    コマンドは!修飾子を取ることができます(:qや:wのように)
@@ -1536,6 +1561,9 @@ Note: -range=Nと-count=Nは相互に排他的であるということに注意�
 	-register   コマンドの1つ目の引数にレジスタ名を指定することができます
 		    (:del、:put、:yankのように)。
 	-buffer	    コマンドはカレントバッファでのみ利用できます。
+	-keepscript Do not use the location of where the user command was
+		    defined for verbose messages, use the location of where
+		    the user command was invoked.
 
 ユーザー定義コマンドの定義に-countや-registerが指定された場合に、その省略可能
 な引数が与えられた場合、それは引数リストから削除され、それぞれの引数に対応する
@@ -1544,6 +1572,20 @@ Note これらの引数は省略できますが、これは廃止される機能
 では完全な名前を使用して下さい。
 
 置き換えテキスト ~
+							*:command-repl*
+The {repl} argument is normally one long string, possibly with "|" separated
+commands.  A special case is when the argument is "{", then the following
+lines, up to a line starting with "}" are used and |Vim9| syntax applies.
+Example: >
+	:command MyCommand {
+		echo 'hello'
+		g:calledMyCommand = true
+	    }
+<							*E1231*
+There must be white space before the "{".  No nesting is supported, inline
+functions cannot be used.  Commands where a "|" may appear in the argument,
+such as commands with an expression argument, cannot be followed by a "|" and
+another command.
 
 ユーザー定義コマンドでは、<...>表記を使った特別な文字列 {repl} を使用できます。
 その文字列はコマンドラインに入力された実際の引数に置き換えられます。その他のテ
