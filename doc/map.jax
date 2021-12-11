@@ -59,8 +59,8 @@
 			は、マップコマンドに対応したモードで使用できます。マッ
 			プが使用されたときに {rhs} が調べられ、再マップされま
 			す。マップを入れ子にしたり再帰的にすることができます。
-			Note: Trailing spaces are included in the {rhs},
-			because space is a valid Normal mode command.
+			Note: 末尾の空白は {rhs} に含まれます、なぜなら空白は
+			有効なノーマルモードのコマンドであるためです。
 
 						*:nore* *:norem*
 :no[remap]  {lhs} {rhs}		|mapmode-nvo|	*:no*  *:noremap* *:nor*
@@ -94,9 +94,8 @@
 :tunma[p] {lhs}			|mapmode-t|		*:tunma* *:tunmap*
 			マップコマンドに対応したモードの {lhs} というマップを
 			削除します。他のモードのマップは残ります。
-			It also works when {lhs} matches the {rhs} of a
-			mapping. This is for when when an abbreviation
-			applied.
+			{lhs} がマッピングの {rhs} にマッチするときも機能しま
+			す。これは略語が適用された場合に使用します。
 			Note: 末尾の空白は {lhs} に含まれます。次の unmap コマ
 			ンドは機能しません: >
 				:map @@ foo
@@ -339,8 +338,8 @@ Note:
 - 同じ理由により、<C-R><C-W> のようなキーコード |keycodes| は通常の、マッピン
   グされていないキーとして解釈されます。
 - コマンドは echo されせん、<silent> は不要です。
-- The {rhs} is not subject to abbreviations nor to other mappings, even if the
-  mapping is recursive.
+- マッピングが再帰的であっても、 {rhs} は略語系や他のマッピング対象にはできま
+  せん。
 - ビジュアルモードでは、`line('v')` と `col('v')` を使って、ビジュアルエリアの
   一端を取得でき、カーソルは反対の端にいます。
 - 選択モードでは、|:map| と |:vmap| コマンドでのマッピングがビジュアルモード内
@@ -997,11 +996,10 @@ Note: 'clipboard' オプションの値に `unnamed` か `unnamedplus` が含ま
 合、レジスタの `"*` や `"+` が上書きされることを防ぐため、一時的に空に設定され
 ます。
 
-The `mode()` function will return the state as it will be after applying the
-operator.
+`mode()` 関数はオペレータが適用された後の状態を返します。
 
-Here is an example for using a lambda function to create a normal-mode
-operator to add quotes around text in the current line: >
+この例では現在行のテキストの外側にクォートを追加するノーマルモードのオペレータ
+を作成するのにラムダ関数を使用しています: >
 
 	nnoremap <F4> <Cmd>let &opfunc='{t ->
 				\ getline(".")
@@ -1373,8 +1371,8 @@ non-id	  マッチした場所の前がスペース、タブ、行頭、挿入�
 			ユーザー定義コマンド {cmd} を削除します。
 
 :delc[ommand] -buffer {cmd}					*E1237*
-			Delete the user-defined command {cmd} that was defined
-			for the current buffer.
+			現在のバッファで定義されたユーザー定義コマンド {cmd}
+			を削除します。
 
 :comc[lear]						*:comc* *:comclear*
 			すべてのユーザー定義コマンドを削除します。
@@ -1561,9 +1559,9 @@ Note: -range=Nと-count=Nは相互に排他的であるということに注意�
 	-register   コマンドの1つ目の引数にレジスタ名を指定することができます
 		    (:del、:put、:yankのように)。
 	-buffer	    コマンドはカレントバッファでのみ利用できます。
-	-keepscript Do not use the location of where the user command was
-		    defined for verbose messages, use the location of where
-		    the user command was invoked.
+	-keepscript 詳細なメッセージのためにユーザーコマンドが定義された場所は
+		    利用できません。ユーザーコマンドが実行された場所を利用しま
+		    す。
 
 ユーザー定義コマンドの定義に-countや-registerが指定された場合に、その省略可能
 な引数が与えられた場合、それは引数リストから削除され、それぞれの引数に対応する
@@ -1573,19 +1571,18 @@ Note これらの引数は省略できますが、これは廃止される機能
 
 置き換えテキスト ~
 							*:command-repl*
-The {repl} argument is normally one long string, possibly with "|" separated
-commands.  A special case is when the argument is "{", then the following
-lines, up to a line starting with "}" are used and |Vim9| syntax applies.
-Example: >
+引数 {repl} は通常は1つの長い文字列で、分割のコマンド "|" と合せて利用できま
+す。特殊な場合として引数が "{" であるなら、"}" で始まる行までのそれ以降の行が
+利用され |Vim9| の文法が適用されます。
+例: >
 	:command MyCommand {
 		echo 'hello'
 		g:calledMyCommand = true
 	    }
 <							*E1231*
-There must be white space before the "{".  No nesting is supported, inline
-functions cannot be used.  Commands where a "|" may appear in the argument,
-such as commands with an expression argument, cannot be followed by a "|" and
-another command.
+"{" の前には空白が必要です。入れ子はサポートされず、インライン関数は利用できま
+せん。コマンドは "|" を引数に含めることができ、その場合はコマンドとともに引数
+は評価され、 "|" と他のコマンドを続けることができません。
 
 ユーザー定義コマンドでは、<...>表記を使った特別な文字列 {repl} を使用できます。
 その文字列はコマンドラインに入力された実際の引数に置き換えられます。その他のテ
