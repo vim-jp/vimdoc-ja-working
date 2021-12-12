@@ -1,4 +1,4 @@
-*pi_netrw.txt*  For Vim バージョン 8.2.  Last change: 2020 Sep 19
+*pi_netrw.txt*  For Vim バージョン 8.2.  Last change: 2021 Aug 16
 
 	    ------------------------------------------------
 	    NETRW REFERENCE MANUAL    by Charles E. Campbell
@@ -55,6 +55,7 @@ Copyright: Copyright (C) 2017 Charles E Campbell    *netrw-copyright*
       水平分割ウィンドウを使ったブラウジング..............|netrw-o|
       タブを使ったブラウジング............................|netrw-t|
       垂直分割ウィンドウを使ったブラウジング..............|netrw-v|
+      ファイルの権限を変更................................|netrw-gp|
       一覧表示スタイル変更 (thin wide long tree)..........|netrw-i|
       ブックマークしたディレクトリに移動..................|netrw-gb|
       前方のディレクトリに移動............................|netrw-u|
@@ -1070,6 +1071,7 @@ QUICK HELP						*netrw-quickhelp* {{{2
 	   gd	取扱いをディレクトリに強制する                       |netrw-gd|
 	   gf	取扱いをファイルに強制する                           |netrw-gf|
 	   gh	ドットファイルの表示/非表示を切り替える              |netrw-gh|
+	   gp	ローカルファイルの権限変更                           |netrw-gp|
 	   i	表示方法を切り替える (thin, long, wide, tree)        |netrw-i|
 	   I	バナーの表示を切り替える                             |netrw-I|
 	   mb	カレントディレクトリをブックマークする               |netrw-mb|
@@ -1472,6 +1474,8 @@ Netrw は次の方法で専用ハンドラを決定します:
     g:netrw_browsex_viewer が '-' のときは netrwFileHandler#Invoke() が最初に
     呼ばれます (|netrw_filehandler|参照)。
 
+    もし、使いたいビューアがリモートURLディレクトリの処理をサポートしていない場合は、
+    |g:netrw_browsex_support_remote| を 0 に設定してください。
   * Windows 32 or 64 では、URL と FileProtocolHandler dll が使われます。
   * Gnome (with gnome-open): gnome-open が使われます。
   * KDE (with kfmclient)   : kfmclient が使われます。
@@ -2545,13 +2549,30 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 				理するスクリプト/関数が呼ばれます。
 				(|netrw_filehandler| 参照)
 
+  *g:netrw_browsex_support_remote*
+ 				リモートURLをサポートしているビューアを指定します。
+ 				(|netrw-handler| 参照).
+
   *g:netrw_chgperm*		Unix/Linux: "chmod PERM FILENAME"
 				Windows:    "cacls FILENAME /e /p PERM"
 				ファイルのアクセス権限を変更するのに使われま
 				す。
 
+  *g:netrw_clipboard*		=1
+				デフォルトでnetrw はクリップボードの値が
+				変更されないようにしようとします。
+				しかし、一部のユーザーからスピードの問題が
+				あると報告されています。
+				したがって、このオプションをゼロに設定ことで
+				netrw がクリップボードの保存と復元を
+				行わないようにすることができます
+				（復元は必要に応じてのみ行われます）。
+				つまり、通常の netrw の操作でクリップボードが
+				不注意で変更された場合、それが以前の状態に
+				復元されないということです。
+
   *g:netrw_compress*		="gzip"
-				    ファイル圧縮コマンド
+				ファイル圧縮コマンド
 
   *g:Netrw_corehandler*		netrw ブラウザーの "x" コマンドで <core> ファ
 				イルを処理するときの追加処理を設定できます。
@@ -2574,12 +2595,23 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 				 =2        cul u-cuc        cul u-cuc
 				 =3        cul u-cuc        cul   cuc
 				 =4        cul   cuc        cul   cuc
+				 =5      U-cul U-cuc      U-cul U-cuc
+ 				 =6      U-cul U-cuc        cul U-cuc
+ 				 =7        cul U-cuc        cul U-cuc
+ 				 =8        cul U-cuc        cul   cuc
 
 				記号の意味
 				  u-cul : |'cursorline'| のユーザー設定使用
 				  u-cuc : |'cursorcolumn'| のユーザー設定使用
+ 				  U-cul : |'cursorline'| のユーザー設定を使用
+ 				  U-cuc : |'cursorcolumn'| のユーザー設定を使用
 				  cul   : |'cursorline'|  をローカル設定する
 				  cuc   : |'cursorcolumn'| をローカル設定する
+
+				  初期設定は、netrw を最後に開いたときの
+				  |g:netrw_cursor| >= 5 または、netrw が
+				  最初に実行されたときに有効だった｜'cuc'｜
+				  および｜'cal'｜の設定値を意味します。
 
   *g:netrw_decompress*		= { ".gz" : "gunzip" ,
 				    ".bz2" : "bunzip2" ,
@@ -3064,6 +3096,9 @@ NETRW のカレントディレクトリで新しいファイルを作成する	*
 netrw のカレントディレクトリで新しいファイルを作成するには "%" を押します。
 ファイル名を入力するためのプロンプトが表示されます。指定した名前の空のファイル
 が netrw のカレントディレクトリ (b:netrw_curdir) に作成されます。
+
+Lexplore (|netrw-:Lexplore|) が使用されている場合、新しいファイルは |g:netrw_chgwin| 
+ウィンドウで生成されます。
 
 関連項目:               |netrw-d|
 
@@ -3791,6 +3826,32 @@ netrw かあるいは関与している他のプラグインと衝突してい�
 ==============================================================================
 12. 変更履歴						*netrw-history* {{{1
 
+	v171:	Oct 09, 2020	* included code in s:NetrwOptionsSafe()
+ 				  to allow |'bh'| to be set to delete when
+ 				  rather than hide when g:netrw_fastbrowse
+ 				  was zero.
+ 				* Installed |g:netrw_clipboard| setting
+ 				* Installed option bypass for |'guioptions'|
+ 				  a/A settings
+ 				* Changed popup_beval() to |popup_atcursor|()
+ 				  in netrw#ErrorMsg (lacygoill). Apparently
+ 				  popup_beval doesn't reliably close the
+ 				  popup when the mouse is moved.
+ 				* VimEnter() now using win_execute to examine
+ 				  buffers for an attempt to open a directory.
+ 				  Avoids issues with popups/terminal from
+ 				  command line. (lacygoill)
+ 		Jun 28, 2021	* (zeertzjq) provided a patch for use of
+ 				  xmap,xno instead of vmap,vno in
+ 				  netrwPlugin.vim. Avoids entanglement with
+ 				  select mode.
+ 		Jul 14, 2021	* Fixed problem addressed by tst976; opening
+ 				  a file using tree mode, going up a
+ 				  directory, and opening a file there was
+ 				  opening the file in the wrong directory.
+ 		Jul 28, 2021	* (Ingo Karkat) provided a patch fixing an
+ 				  E488 error with netrwPlugin.vim
+ 				  (occurred for vim versions < 8.02)
 	v170:	Mar 11, 2020	* (reported by Reiner Herrmann) netrw+tree
 				  would not hide with the ^\..* pattern
 				  correctly.
@@ -3807,7 +3868,7 @@ netrw かあるいは関与している他のプラグインと衝突してい�
 		Jun 07, 2020	* (reported by Jo Totland) repeatedly invoking
 				  :Lexplore and quitting it left unused
 				  hidden buffers.  Netrw will now set netrw
-				  buffers created by :Lexplore to |bh|=wipe.
+				  buffers created by :Lexplore to |'bh'|=wipe.
 	v169:	Dec 20, 2019	* (reported by amkarthik) that netrw's x
 				  (|netrw-x|) would throw an error when
 				  attempting to open a local directory.
