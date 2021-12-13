@@ -2550,8 +2550,8 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 				(|netrw_filehandler| 参照)
 
   *g:netrw_browsex_support_remote*
- 				リモートURLをサポートしているビューアを指定します。
- 				(|netrw-handler| 参照).
+				指定しているビューアがリモートURLをサポートす
+				るかどうかを設定します(|netrw-handler| 参照)。
 
   *g:netrw_chgperm*		Unix/Linux: "chmod PERM FILENAME"
 				Windows:    "cacls FILENAME /e /p PERM"
