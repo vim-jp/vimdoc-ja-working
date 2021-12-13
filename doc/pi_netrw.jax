@@ -2609,9 +2609,9 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 				  cuc   : |'cursorcolumn'| をローカル設定する
 
 				  初期設定は、netrw を最後に開いたときの
-				  |g:netrw_cursor| >= 5 または、netrw が
-				  最初に実行されたときに有効だった｜'cuc'｜
-				  および｜'cal'｜の設定値を意味します。
+				  |g:netrw_cursor| >= 5 または、netrw が最初に
+				  実行されたときに有効だった |'cuc'| および
+				  |'cal'| の設定値を意味します。
 
   *g:netrw_decompress*		= { ".gz" : "gunzip" ,
 				    ".bz2" : "bunzip2" ,
