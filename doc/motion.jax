@@ -404,8 +404,8 @@ b			[count] word 後方に。|exclusive|
 
 <C-Left>	or					*<C-Left>* *B*
 B			[count] WORD 後方に。|exclusive|
-			もし <C-Left> が動かないなら、|arrow_modifiers| を確
-			認のこと。
+			もし <C-Left> が動かないなら、|arrow_modifiers| を確認
+			のこと。
 
 							*ge*
 ge			[count] word 後方の単語の最後に。|inclusive|
