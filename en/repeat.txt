@@ -1,4 +1,4 @@
-*repeat.txt*    For Vim version 8.2.  Last change: 2021 Jun 11
+*repeat.txt*    For Vim version 8.2.  Last change: 2021 Nov 24
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -792,6 +792,10 @@ won't be very helpful.
 
 There is a separate command-line history for debug mode.
 
+NOTE: In Vim9 script, if a command is written at the script level and
+continues on the next line, not using the old way with a backslash for line
+continuation, only the first line is printed before the debugging prompt.
+
 The line number for a function line is relative to the start of the function.
 If you have trouble figuring out where you are, edit the file that defines
 the function in another Vim, search for the start of the function and do
@@ -844,6 +848,16 @@ About the additional commands in debug mode:
   is reset (because it's not clear what you want to repeat).
 - When you want to use the Ex command with the same name, prepend a colon:
   ":cont", ":next", ":finish" (or shorter).
+							*vim9-debug*
+When debugging a compiled :def function, "step" will stop before every
+executed line, not every single instruction.  Thus it works mostly like a not
+compiled function.  Access to local variables is limited you can use: >
+	echo varname
+But not much else.
+When executing a command that is not a specific bytecode instruction but
+executed like a normal Ex command, "step" will stop once in the compiled
+context, where local variables can be inspected, and once just before
+executing the command.
 
 The backtrace shows the hierarchy of function calls, e.g.:
 	>bt ~
@@ -883,8 +897,12 @@ DEFINING BREAKPOINTS
 		Sets a breakpoint, that will break whenever the {expression}
 		evaluates to a different value. Example: >
 			:breakadd expr g:lnum
-
 <		Will break, whenever the global variable lnum changes.
+
+		Errors in evaluation are suppressed, you can use the name of a
+		variable that does not exist yet.  This also means you will
+		not notice anything if the expression has a mistake.
+
 		Note if you watch a |script-variable| this will break
 		when switching scripts, since the script variable is only
 		valid in the script where it has been defined and if that
