@@ -17,7 +17,7 @@ jobs:
         with:
           path: target
           repository: 'vim-jp/vimdoc-ja'
-          token: ${{ secrets.VIMDOC_JA_TOKEN }}
+          ssh-key: ${{ secrets.VIMDOC_JA_SSH_KEY }}
       - name: Setup Vim
         uses: thinca/action-setup-vim@v1
         with:
@@ -57,8 +57,6 @@ jobs:
             https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           branch: master
           pull_strategy: 'NO-PULL'
-        env:
-          GITHUB_TOKEN: ${{ secrets.VIMDOC_JA_TOKEN }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -72,7 +70,7 @@ jobs:
         with:
           path: target
           repository: 'vim-jp/vimdoc-ja'
-          token: ${{ secrets.VIMDOC_JA_TOKEN }}
+          ssh-key: ${{ secrets.VIMDOC_JA_SSH_KEY }}
           ref: gh-pages
       - name: Setup Vim
         uses: thinca/action-setup-vim@v1
@@ -111,5 +109,3 @@ jobs:
             https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           branch: gh-pages
           pull_strategy: 'NO-PULL'
-        env:
-          GITHUB_TOKEN: ${{ secrets.VIMDOC_JA_TOKEN }}
