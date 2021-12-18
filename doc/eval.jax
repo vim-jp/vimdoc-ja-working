@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Nov 20
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2021 Dec 15
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2577,8 +2577,9 @@ extendnew({expr1}, {expr2} [, {expr3}])
 feedkeys({string} [, {mode}])	数値	先行入力バッファにキーシーケンスを追加
 filereadable({file})		数値	{file}が読み込み可能なら|TRUE|
 filewritable({file})		数値	{file}が書き込み可能なら|TRUE|
-filter({expr1}, {expr2})	リスト/辞書  {expr2}が0となる要素を{expr1}から
-					とり除く
+filter({expr1}, {expr2})	リスト/辞書/Blob/文字列
+					{expr2} が0となる要素を {expr1} からと
+					り除く
 finddir({name} [, {path} [, {count}]])
 				文字列	{path}からディレクトリ{name}を探す
 findfile({name} [, {path} [, {count}]])
@@ -2741,14 +2742,15 @@ log({expr})			浮動小数点数	{expr}の自然対数(底e)
 log10({expr})			浮動小数点数	浮動小数点数 {expr} の 10 を底
 						とする対数
 luaeval({expr} [, {expr}])	任意	|Lua| の式を評価する
-map({expr1}, {expr2})		リスト/辞書  {expr1}の各要素を{expr2}に変える
+map({expr1}, {expr2})		リスト/辞書/Blob/文字列
+					{expr1} の各要素を {expr2} に変える
 maparg({name} [, {mode} [, {abbr} [, {dict}]]])
 				文字列/辞書
 					モード{mode}でのマッピング{name}の値
 mapcheck({name} [, {mode} [, {abbr}]])
 				文字列	{name}にマッチするマッピングを確認
-mapnew({expr1}, {expr2})	リスト/辞書  |map()| と同様だが新規のリストか
-					     辞書を作る
+mapnew({expr1}, {expr2})	リスト/辞書/Blob/文字列
+					|map()| と同様だが新規のリストか辞書を作る
 mapset({mode}, {abbr}, {dict})	なし	|maparg()| の結果からマッピングを復元
 					する
 match({expr}, {pat} [, {start} [, {count}]])
@@ -4804,11 +4806,11 @@ filewritable({file})					*filewritable()*
 
 
 filter({expr1}, {expr2})					*filter()*
-		{expr1}はリスト|List|、|Blob|、辞書|Dictionary|でなければなら
-		ない。
-		{expr1}の各要素に対して{expr2}を評価し、その結果が0ならばリス
-		トまたは辞書からその要素を削除する。|Blob| であればそのバイト
-		を削除する。
+		{expr1}はリスト |List|、文字列 |String|、|Blob|、辞書
+		|Dictionary| でなければならない。
+		{expr1}の各要素に対して{expr2}を評価し、その結果が0もしくは偽
+		ならばリストまたは辞書からその要素を削除する。|Blob| の各バイト
+		文字列 |String| の各文字も同様に行う。
 
 		{expr2}は文字列|string|または関数参照|Funcref|でなければならな
 		い。
@@ -4853,6 +4855,17 @@ filter({expr1}, {expr2})					*filter()*
 		生した場合は、{expr1}内のそれ以降の要素の処理は行われない。
 		{expr2}が関数参照の場合、関数が "abort" フラグつきで定義されて
 		いない限り、関数内のエラーは無視される。
+
+		リストや辞書でのこの操作はその場で(in-place)行われる。変更した
+		くない場合は最初にコピーを作ること: >
+			:let l = filter(copy(mylist), 'v:val =~ "KEEP"')
+
+<		{expr1}のリスト |List| または辞書 |Dictionary| をフィルターし
+		た結果、もしくは新規の |Blob| か文字列 |String| を返す。{expr2}
+		を評価している最中にエラーが発生した場合は、{expr1}内のそれ以
+		降の要素の処理は行われない。{expr2}が関数参照の場合、関数が
+		"abort" フラグつきで定義されていない限り、関数内のエラーは無視
+		される。
 
 		|method| としても使用できる: >
 			mylist->filter(expr2)
@@ -7411,20 +7424,23 @@ luaeval({expr} [, {expr}])					*luaeval()*
 <		{|+lua| 機能つきでコンパイルされたときのみ有効}
 
 map({expr1}, {expr2})					*map()*
-		{expr1}はリスト|List|、|Blob|または辞書|Dictionary|。
-		{expr1}の各要素を、{expr2}を評価した結果で置き換える。|Blob|
-		の場合、各バイトを置き換える。
+		{expr1}はリスト|List|、文字列 |String|、|Blob|または辞書
+		|Dictionary|。
+		{expr1}がリスト|List| もしくは 辞書|Dictionary| なら、{expr1}
+		の各要素を、{expr2}を評価した結果で置き換える。
+		|Blob| の場合、各バイトを置き換える。
+		文字列 |String| の場合、合成文字を含む各文字を置き換える。
 		要素の型を変更したい場合は、|mapnew()| を使って新しいリストか
 		辞書を作る。これは、Vim9 script を使用する場合に必要である。
 
-		{expr2}は文字列|string|または関数参照|Funcref|でなければならな
+		{expr2}は文字列|String|または関数参照|Funcref|でなければならな
 		い。
 
-		{expr2}が文字列の場合、{expr2}の内部では|v:val|が現在の要素の
-		値を保持している。辞書の場合は|v:key|が現在の要素のキーを保持
-		している。リストの場合は|v:key|が現在の要素のインデックスを保
-		持している。|Blob| の場合は |v:key| が現在のバイトのインデック
-		スを保持している。
+		{expr2}が文字列 |String| の場合、{expr2}の内部では|v:val|が現
+		在の要素の値を保持している。辞書の場合は|v:key|が現在の要素の
+		キーを保持している。リストの場合は|v:key|が現在の要素のインデッ
+		クスを保持している。|Blob| の場合は |v:key| が現在のバイトのイ
+		ンデックスを保持している。
 		例: >
 			:call map(mylist, '"> " . v:val . " <"')
 <		これは "mylist" の各要素の前に "> " をつけ、後に " <" をつける。
@@ -7448,15 +7464,17 @@ map({expr1}, {expr2})					*map()*
 <		"key" を使用しない場合は、短い名前が使用できる: >
 			call map(myDict, {_, val -> 'item: ' . val})
 <
-		この操作はその場で(in-place)行われる。リストや辞書を変更したく
-		ない場合は最初にコピーを作ること: >
+		この操作はリスト |List| と辞書 |Dictionary| の場合その場で
+		(in-place)行われる。リストや辞書を変更したくない場合は最初にコ
+		ピーを作ること: >
 			:let tlist = map(copy(mylist), ' v:val . "\t"')
 
-<		{expr1}のリスト、Blobまたは辞書に式を適用した結果を返す。
+<		{expr1}が式を適用した結果のリストまたは辞書、もしくは新規の
+		|Blob| か文字列を返す。
 		{expr2}を評価している最中にエラーが発生した場合は、{expr1}内の
-		それ以降の要素の処理は行われない。{expr2}が関数参照の場合、関
-		数が "abort" フラグつきで定義されていない限り、関数内のエラー
-		は無視される。
+		それ以降の要素の処理は行われない。
+		{expr2}が関数参照の場合、関数が "abort" フラグつきで定義されて
+		いない限り、関数内のエラーは無視される。
 
 		|method| としても使用できる: >
 			mylist->map(expr2)
