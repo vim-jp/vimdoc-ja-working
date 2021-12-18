@@ -1,4 +1,4 @@
-*helphelp.txt*	For Vim バージョン 8.2.  Last change: 2021 Nov 18
+*helphelp.txt*	For Vim バージョン 8.2.  Last change: 2021 Dec 13
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -160,7 +160,7 @@
 ヘルプを現在のウィンドウで開きたいのならば、|help-curwin| のTIPSを参照のこと。
 
 ヘルプウィンドウの高さの初期値は 'helpheight' で設定できます (標準設定: 20)。
-
+						*help-buffer-options*
 ヘルプバッファが作られた時、ヘルプ文章が意図したとおりに表示されるようにするた
 めにいくつかのローカルのオプションが設定される:
     'iskeyword'		' '、'*'、'"'、'|' を除くほぼすべてのASCII文字
