@@ -1,4 +1,4 @@
-*term.txt*      For Vim バージョン 8.2.  Last change: 2021 Dec 04
+*term.txt*      For Vim バージョン 8.2.  Last change: 2021 Dec 08
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -146,6 +146,8 @@ tmux 内で Vim を実行する際に問題が発生する場合、ここにい�
         " フォーカスイベントの追跡有効、:help xterm-focus-event を参照
         let &t_fe = "\<Esc>[?1004h"
         let &t_fd = "\<Esc>[?1004l"
+        execute "set <FocusGained>=\<Esc>[I"
+        execute "set <FocusLost>=\<Esc>[O"
 
         " 修飾ありカーソルキー有効、:help arrow_modifiers を参照
         execute "silent! set <xUp>=\<Esc>[@;*A"
@@ -604,6 +606,8 @@ Vim はそれらを適切に処理することでフォーカスイベント(|Fo
 あなた自身でオプションを設定する必要がある場合があります: >
 	let &t_fe = "\<Esc>[?1004h"
 	let &t_fd = "\<Esc>[?1004l"
+	execute "set <FocusGained>=\<Esc>[I"
+	execute "set <FocusLost>=\<Esc>[O"
 Vim 起動時にこれが原因のゴミ表示がある場合はこれは機能しません。
 
 							*termcap-colors*
