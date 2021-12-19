@@ -81,7 +81,7 @@ jobs:
         run: |
           cd work
           # Create html documents
-          make html
+          make -j4 html2
 
           cd ..
       - name: Lock mutex
