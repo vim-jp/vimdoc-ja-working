@@ -2750,7 +2750,8 @@ maparg({name} [, {mode} [, {abbr} [, {dict}]]])
 mapcheck({name} [, {mode} [, {abbr}]])
 				文字列	{name}にマッチするマッピングを確認
 mapnew({expr1}, {expr2})	リスト/辞書/Blob/文字列
-					|map()| と同様だが新規のリストか辞書を作る
+					|map()| と同様だが新規のリストか辞書を
+					作る
 mapset({mode}, {abbr}, {dict})	なし	|maparg()| の結果からマッピングを復元
 					する
 match({expr}, {pat} [, {start} [, {count}]])
