@@ -38,6 +38,10 @@ function! MakeHtmlAll(...)
   endif
 endfunction
 
+function! s:JsonName(lang)
+  return a:lang == "" ? "tags.json" : printf("tags-%s.json", a:lang)
+endfunction
+
 function! MakeTagsFile()
   let files = split(glob('tags'), '\n')
   let files += split(glob('tags-??'), '\n')
@@ -50,7 +54,7 @@ function! MakeTagsFile()
     endif
     silent new `=fname`
     silent %delete _
-    let tags = s:GetTags(lang)
+    let tags = s:LoadTags(lang)
     for tagname in sort(keys(tags))
       if tagname == "help-tags"
         continue
@@ -60,6 +64,8 @@ function! MakeTagsFile()
     call append('$', ' vim:ft=help:')
     silent 1delete _
     silent wq!
+    " save JSON tag cache
+    call writefile([js_encode(tags)], s:JsonName(lang), "s")
   endfor
 endfunction
 
@@ -216,24 +222,34 @@ endfunction
 
 function! s:GetTags(lang)
   if !exists("s:tags_" . a:lang)
-    let &l:tags = (a:lang == "") ? "./tags" : "./tags-" . a:lang
-    let tags = {}
-    for item in taglist(".*")
-      let item["html"] = s:HtmlName(item["filename"])
-      let tags[item["name"]] = item
-    endfor
-    " for help-tags
-    let item = {}
-    let item["name"] = "help-tags"
-    if s:IsSingleMode()
-      let item["html"] = "tags.html"
+    " try to load JSON tag cache
+    let jsonname = s:JsonName(a:lang)
+    if filereadable(jsonname)
+      let s:tags_{a:lang} = js_decode(readfile(jsonname)[0])
     else
-      let item["html"] = printf("tags%s.html", (a:lang == "") ? "" : "." . a:lang)
+      let s:tags_{a:lang} = s:LoadTags(a:lang)
     endif
-    let tags[item["name"]] = item
-    let s:tags_{a:lang} = tags
   endif
   return s:tags_{a:lang}
+endfunction
+
+func s:LoadTags(lang)
+  let &l:tags = (a:lang == "") ? "./tags" : "./tags-" . a:lang
+  let tags = {}
+  for item in taglist(".*")
+    let item["html"] = s:HtmlName(item["filename"])
+    let tags[item["name"]] = item
+  endfor
+  " for help-tags
+  let item = {}
+  let item["name"] = "help-tags"
+  if s:IsSingleMode()
+    let item["html"] = "tags.html"
+  else
+    let item["html"] = printf("tags%s.html", (a:lang == "") ? "" : "." . a:lang)
+  endif
+  let tags[item["name"]] = item
+  return tags
 endfunction
 
 function! s:IsSingleMode()
