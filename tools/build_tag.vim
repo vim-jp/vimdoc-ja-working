@@ -27,7 +27,7 @@ function! s:main()
   call s:BuildTag()
 endfunction
 
-function! s:BuildTag
+function! s:BuildTag()
   " generate tags
   try
     helptags .
