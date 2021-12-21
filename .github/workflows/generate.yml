@@ -4,6 +4,9 @@ on:
     branches:
       - master
 
+concurrency: vimdoc-ja-deploy
+  # global concurrency limit access to vim-jp/vimdoc-ja per workflow
+
 jobs:
   generate:
     runs-on: ubuntu-latest
