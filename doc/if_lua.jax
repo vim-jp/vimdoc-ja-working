@@ -494,7 +494,7 @@ Lua コードと同じです:
 	local chunkheader = "local _A = select(1, ...) return "
 	function luaeval (expstr, arg)
 	    local chunk = assert(loadstring(chunkheader .. expstr, "luaeval"))
-	    -- {訳注: 本来のluaevalではVimの内部値である } typval を返す
+	    -- {訳注: 本来の luaeval では Vim の内部値である } typval を返す
 	    return chunk(arg)
 	end
 <
