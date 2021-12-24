@@ -1,4 +1,4 @@
-*cmdline.txt*   For Vim バージョン 8.2.  Last change: 2021 Aug 06
+*cmdline.txt*   For Vim バージョン 8.2.  Last change: 2021 Dec 04
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -877,14 +877,16 @@ Note: これらは文字通りに打ち込まれる、これらは特別なキ�
 							*:<amatch>* *<amatch>*
 	<amatch>   自動コマンドの実行時、この自動コマンドが実行されたときのマッ
 		   チに置き換えられる。 *E497*
-		   そのファイル名がマッチの検索に使われていないときのみ、
-		   <afile> と違う値になる (イベント FileType, Syntax,
-		   SpellFileMissing 用)。
+		   ファイル名がマッチに使われていないとき <afile> と違う値にな
+		   る (イベント FileType, Syntax, SpellFileMissing 用)。
+		   ファイル名としてマッチした時、フルパスに展開される。
 							*:<sfile>* *<sfile>*
 	<sfile>    コマンド ":source" の実行時、取り込まれたファイルのファイル
 		   名に置き換えられる。  *E498*
-		   関数の実行時は、<stack> と同様にコールスタックに置き換えら
-		   れる(これは後方互換性のためであり、<stack> を使うのが望しい)
+		   旧来の関数の実行時は、<stack> と同様にコールスタックに置き
+		   換えられる(これは後方互換性のためであり、<stack> を使うのが
+		   望しい)
+		   Vim9 script では関数で <sfile> を使うとエラーとなる。*E1245*
 		   Note: スクリプト内で <sfile> が使われていない場合、ファイル
 		   名修飾子は無効になることに注意。
 							*:<stack>* *<stack>*

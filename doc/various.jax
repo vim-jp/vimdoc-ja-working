@@ -1,4 +1,4 @@
-*various.txt*   For Vim バージョン 8.2.  Last change: 2021 Sep 06
+*various.txt*   For Vim バージョン 8.2.  Last change: 2021 Dec 13
 
 
 		VIM リファレンスマニュアル    by Bram Moolenaar
@@ -368,7 +368,7 @@ N  *+digraphs*		|digraphs| *E196*
    *+dnd*		"~レジスタ |quote_~|を使ったDnDのサポート
 B  *+emacs_tags*	|emacs-tags| ファイル
 N  *+eval*		式評価 {訳注: Vim script} |eval.txt|
-N  *+ex_extra*		今は常にオン、かつてVimの拡張Exコマンドのためにあった
+T  *+ex_extra*		今は常にオン、かつてVimの拡張Exコマンドのためにあった
 N  *+extra_search*	|'hlsearch'| と |'incsearch'| オプション
 -  *+farsi*		削除済み; |farsi| 言語
 N  *+file_in_path*	|gf|, |CTRL-W_f| と |<cfile>|
@@ -390,7 +390,7 @@ m  *+hangul_input*	ハングル入力サポート |hangul|
 T  *+insert_expand*	|insert_expand| 挿入モード補完
 m  *+ipv6*		IPv6 ネットワーク通信サポート |channel|
 m  *+job*		job の開始と停止 |job|
-S  *+jumplist*		|jumplist|
+T  *+jumplist*		|jumplist|。8.2.3795以降は常に有効になっている。
 B  *+keymap*		|'keymap'|
 N  *+lambda*		|lambda| と |closure|
 B  *+langmap*		|'langmap'|
@@ -422,7 +422,7 @@ N  *+multi_lang*	多言語サポート |multi-lang|
 m  *+mzscheme*		Mzscheme インターフェイス |mzscheme|
 m  *+mzscheme/dyn*	Mzscheme インターフェイス |mzscheme-dynamic| |/dyn|
 m  *+netbeans_intg*	|netbeans|
-   *+num64*		64ビットの数値をサポート |Number|
+T  *+num64*		64ビットの数値をサポート |Number|
    			8.2.0271以降は常に有効になっている。実際の数値のサイズ
 			を確認するにはv:numbersizeを使用すること。
 m  *+ole*		Win32 GUI のみ: |ole-interface|
@@ -471,15 +471,16 @@ N  *+textobjects*	|text-objects| 選択
 N  *+textprop*		|text-properties|
    *+tgetent*		非Unix のみ: 外部termcapを使用可能
 N  *+timers*		|timer_start()| 関数
-N  *+title*		ウィンドウタイトルとアイコン設定 |'title'| |'icon'|
+T  *+title*		ウィンドウタイトルとアイコン設定 |'title'| |'icon'|;
+			常に有効
 N  *+toolbar*		|gui-toolbar|
 T  *+user_commands*	ユーザー定義コマンド |user-commands|
 			8.1.1210 からは常に有効。
 B  *+vartabs*		可変幅のタブストップ |'vartabstop'|
 N  *+viminfo*		|'viminfo'|
-   *+vertsplit*		ウィンドウの垂直分割 |:vsplit|; 8.0.1118 からは常に
+T  *+vertsplit*		ウィンドウの垂直分割 |:vsplit|; 8.0.1118 からは常に
 			有効。
-N  *+virtualedit*	|'virtualedit'| 8.1.826 からは常に有効
+T  *+virtualedit*	|'virtualedit'| 8.1.826 からは常に有効
 T  *+visual*		ビジュアルモード |Visual-mode| 7.4.200からは常に有効
 T  *+visualextra*	拡張ビジュアルモードコマンド |blockwise-operators|
 T  *+vreplace*		|gR| と |gr|
@@ -598,7 +599,7 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 			   |:oldfiles|   - ファイル名でフィルタ
 			   |:registers|  - レジスタの内容でフィルタ
 					   (複数行は動作しない)
-			   |:set|        - 変数名でフィルタ
+			   |:set|        - オプション名でフィルタ
 
 			通常のメッセージだけがフィルタリングされ、エラー
 			メッセージはされません。 {訳注: 常に出力されます}
