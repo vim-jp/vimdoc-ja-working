@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 8.2.  Last change: 2021 Dec 11
+*options.txt*	For Vim バージョン 8.2.  Last change: 2021 Dec 21
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -422,7 +422,7 @@ Note: 将来的に、より多くのグローバルオプションが global-loc
 	set opfunc={a\ ->\ MyOpFunc(a)}
 	" 関数への参照の変数を用いて設定
 	let Fn = function('MyTagFunc')
-	let &tagfunc = string(Fn)
+	let &tagfunc = Fn
 	" ラムダ式を用いて設定
 	let &tagfunc = {t -> MyTagFunc(t)}
 	" ラムダ式を含む変数を用いて設定
