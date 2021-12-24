@@ -4820,7 +4820,8 @@ filter({expr1}, {expr2})					*filter()*
 		値を保持している。辞書の場合は|v:key|が現在の要素のキーを保持
 		しており、リストの場合は|v:key|が現在の要素のインデックスを保
 		持している。|Blob| の場合は |v:key| が現在のバイトのインデック
-		スになる。
+		スになる。文字列 |String| の場合は |v:key| が現在の文字のイン
+		デックスになる。
 		例: >
 			call filter(mylist, 'v:val !~ "OLD"')
 <		は要素 "OLD" を削除する。 >
@@ -8760,9 +8761,9 @@ readfile({fname} [, {type} [, {max}]])
 			GetFileName()->readfile()
 
 reduce({object}, {func} [, {initial}])			*reduce()* *E998*
-		|List| もしくは |Blob| である {object} の各要素ごとに {func}
-		を呼ぶ。{func} は2つの引数で呼ばれる: これまでの結果と現在の要
-		素。全要素処理後は結果を返す。
+		文字列 |String|、リスト |List| もしくは |Blob| である {object}
+		の各要素ごとに {func} を呼ぶ。{func} は2つの引数で呼ばれる: こ
+		れまでの結果と現在の要素。全要素処理後は結果を返す。
 
 		{initial} は初期結果値。もし無いなら、最初の {object} の要素を
 		使い {func} の最初の呼び出しは2つ目の要素から行う。{initial}
@@ -8773,6 +8774,7 @@ reduce({object}, {func} [, {initial}])			*reduce()* *E998*
 			echo reduce([1, 3, 5], { acc, val -> acc + val })
 			echo reduce(['x', 'y'], { acc, val -> acc .. val }, 'a')
 			echo reduce(0z1122, { acc, val -> 2 * acc + val })
+			echo reduce('xyz', { acc, val -> acc .. ',' .. val })
 <
 		|method| としても使用できる: >
 			echo mylist->reduce({ acc, val -> acc + val }, 0)
