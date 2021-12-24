@@ -1,4 +1,4 @@
-*map.txt*       For Vim バージョン 8.2.  Last change: 2021 Dec 15
+*map.txt*       For Vim バージョン 8.2.  Last change: 2021 Dec 20
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -948,9 +948,8 @@ g@{motion}		'operatorfunc' に設定された関数を実行します。
 			    "line"  {motion} は行単位 |linewise|
 			    "char"  {motion} は文字単位 |characterwise|
 			    "block" {motion} は矩形 |blockwise-visual|
-			"block" はたまにしか使われません。ビジュアルモードの場
-			合だけ渡されるのですが、"g@" と合わせてもそれほど便利
-			ではないからです。
+			タイプは強制することがでます、|forced-motion| を参照し
+			てください。
 			{|+eval| が有効な場合のみ利用できます}
 
 例を示します。これは <F4> を使ってスペースの数を数えます: >
@@ -960,35 +959,56 @@ g@{motion}		'operatorfunc' に設定された関数を実行します。
 	" <F4> 2回で行に作用
 	nnoremap <expr> <F4><F4> CountSpaces() .. '_'
 
-	function CountSpaces(virtualedit = '', irregular_block = v:false, type = '') abort
+	function CountSpaces(context = {}, type = '') abort
 	  if a:type == ''
-	    let &operatorfunc = function('CountSpaces', [&virtualedit, v:false])
+	    let context = #{
+	      \ dot_command: v:false,
+	      \ extend_block: '',
+	      \ virtualedit: [&l:virtualedit, &g:virtualedit],
+	      \ }
+	    let &operatorfunc = function('CountSpaces', [context])
 	    set virtualedit=block
 	    return 'g@'
 	  endif
 
-	  let cb_save = &clipboard
-	  let sel_save = &selection
-	  let reg_save = getreginfo('"')
-	  let visual_marks_save = [getpos("'<"), getpos("'>")]
+	  let save = #{
+	    \ clipboard: &clipboard,
+	    \ selection: &selection,
+	    \ virtualedit: [&l:virtualedit, &g:virtualedit],
+	    \ register: getreginfo('"'),
+	    \ visual_marks: [getpos("'<"), getpos("'>")],
+	    \ }
 
 	  try
 	    set clipboard= selection=inclusive virtualedit=
-	    let commands = #{line: "'[V']", char: "`[v`]", block: "`[\<C-V>`]"}->get(a:type, 'v')
-	    if getpos("']")[-1] != 0 || a:irregular_block
-	      let commands ..= 'oO$'
-	      let &operatorfunc = function('CountSpaces', [a:virtualedit, v:true])
+	    let commands = #{
+	      \ line: "'[V']",
+	      \ char: "`[v`]",
+	      \ block: "`[\<C-V>`]",
+	      \ }[a:type]
+	    let [_, _, col, off] = getpos("']")
+	    if off != 0
+	      let vcol = getline("'[")->strpart(0, col + off)->strdisplaywidth()
+	      if vcol >= [line("'["), '$']->virtcol() - 1
+	        let a:context.extend_block = '$'
+	      else
+	        let a:context.extend_block = vcol .. '|'
+	      endif
+	    endif
+	    if a:context.extend_block != ''
+	      let commands ..= 'oO' .. a:context.extend_block
 	    endif
 	    let commands ..= 'y'
 	    execute 'silent noautocmd keepjumps normal! ' .. commands
 	    echomsg getreg('"')->count(' ')
 	  finally
-	    call setreg('"', reg_save)
-	    call setpos("'<", visual_marks_save[0])
-	    call setpos("'>", visual_marks_save[1])
-	    let &clipboard = cb_save
-	    let &selection = sel_save
-	    let &virtualedit = a:virtualedit
+	    call setreg('"', save.register)
+	    call setpos("'<", save.visual_marks[0])
+	    call setpos("'>", save.visual_marks[1])
+	    let &clipboard = save.clipboard
+	    let &selection = save.selection
+	    let [&l:virtualedit, &g:virtualedit] = get(a:context.dot_command ? save : a:context, 'virtualedit')
+	    let a:context.dot_command = v:true
 	  endtry
 	endfunction
 
