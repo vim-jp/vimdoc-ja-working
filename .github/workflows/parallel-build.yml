@@ -15,4 +15,4 @@ jobs:
           vim_type: 'Vim'
       - name: Generate new document
         run: |
-          make -j6 html2
+          make -j2 html2
