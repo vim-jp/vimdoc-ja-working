@@ -1,6 +1,6 @@
 name: Parallel build
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build-in-parallel:
@@ -15,4 +15,4 @@ jobs:
           vim_type: 'Vim'
       - name: Generate new document
         run: |
-          make -j4 html2
+          make -j6 html2
