@@ -1427,10 +1427,10 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 			    りできる。
 		sbr	    追加インデントの前に 'showbreak' を表示する。
 		list:{n}    番号付きもしくは箇条書きリスト('formatlistpat' の
-			    設定を使う)に合致する行について追加のインデントを
-			    加える。
+			    設定を使う)にマッチする行について追加のインデント
+			    を加える。
 		list:-1	    インデントに 'formatlistpat' のマッチの長さを使う。
-	初期設定は、min が 20、shift と list が 0 である。
+	デフォルト値は、min が 20、shift と list が 0 である。
 
 						*'browsedir'* *'bsdir'*
 'browsedir' 'bsdir'	文字列	(既定では "last")
