@@ -914,8 +914,9 @@ MenuPopup			(マウス右ボタンで)ポップアップメニューを表示す
 					tl	端末
 							*ModeChanged*
 ModeChanged			モード変更後。パターンは `'old_mode:new_mode'`
-				に対して照合され、例えば `*:c*` で照合させれば
-				|CmdlineEnter| の模倣になる。
+				に対してマッチングされ、例えば、|CmdlineEnter|
+				をシミュレートするために、`*:c*` に対してマッ
+				チする。
 				|v:event| には以下の値が設定される:
 				   old_mode	変更前のモード。
 				   new_mode	|mode()| を引数が非0のときに返
