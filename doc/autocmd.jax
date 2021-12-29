@@ -78,8 +78,8 @@
 		  /<start
 		}
 
-Note: パターンの期待された位置に '|' がある場合、":autocmd" コマンドの後には別
-のコマンドを続けることができる。これは動作する: >
+Note: ":autocmd" コマンドの後には、パターンが期待される位置に '|' が現れる場合
+にのみ別のコマンドを続けることができる。これは動作する: >
 	:augroup mine | au! BufRead | augroup END
 しかし、これは定義されたコマンドの一部として "augroup" を見做す: >
 	:augroup mine | au! BufRead * | augroup END
