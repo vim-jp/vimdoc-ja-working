@@ -373,7 +373,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |InsertCharPre|		挿入モードで文字が入力されたとき、その文字が挿入される
 			前
 
-|ModeChanged|		モードの変更の後
+|ModeChanged|		モード変更後
 
 |TextChanged|		ノーマルモードでテキストが変更された後
 |TextChangedI|		ポップアップメニューが表示されていないときに、挿入モー
