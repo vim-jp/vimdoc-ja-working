@@ -6726,9 +6726,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 				 "/c")
 			グローバル
 	"!" や ":!" 等のコマンドを実行するためにシェルに渡されるフラグ。例えば、
-	"bash.exe -c ls"、"powershell.exe -Command dir"、"cmd.exe /c dir" であ
-	る。MS-Windowsでは、ユーザーがこのオプションを設定する必要がないよう
-	に、初期設定は 'shell' に適した値が設定される。
+	"bash.exe -c ls", "powershell.exe -Command dir" または
+	"cmd.exe /c dir" である。MS-Windowsでは、ユーザーがこのオプションを設
+	定する必要がないように、既定値は 'shell' に適した値が設定される。
 	Unix では一つ以上のフラグを指定できる。空白で区切られた各部は shell
 	コマンドの引数として渡される。
 	値に空白や '\' を含める方法については、|option-backslash| を参照。
