@@ -1887,6 +1887,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	'balloonexpr'	+ ""		バルーンに表示するテキストの式
 	'breakindent'	+ オフ		折り返した行をインデントしない
 	'cedit'		- {変更なし}	{'cp' リセット時にVimの既定値に設定}
+	'cdhome'	+ オフ		非 Unix で ":cd" でホームに変更しない
 	'cindent'	+ オフ		C言語ファイルにインデントなし
 	'compatible'	- {変更なし}	{'cp' リセット時にVimの既定値に設定}
 	'copyindent'	+ オフ		インデント構造をコピーしない
@@ -2002,8 +2003,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	このオプションは入力モードのCTRL-X CTRL-U |i_CTRL-X_CTRL-U|での補完に
 	使われる関数を指定する。
 	その関数がどのように起動され、何を返すべきかについての説明は
-	|complete-functions|を参照。値として関数名、ラムダ |lambda|、関数の参
-	照 |Funcref| が使える。詳細は |option-value-function| を参照。
+	|complete-functions|を参照。値として関数名、|lambda|、|Funcref| が使え
+	る。詳細は |option-value-function| を参照。
 	安全上の理由から、このオプションをモードライン|modeline|やサンドボック
 	ス|sandbox|の中で設定することはできない。
 
@@ -4297,8 +4298,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 'imactivatefunc' 'imaf'	文字列 (既定では "")
 			グローバル
 	このオプションはインプットメソッド (IM) をオン/オフにするのに呼ばれる
-	関数を指定する。値として関数名、ラムダ |lambda|、関数の参照 |Funcref|
-	が使える。詳細は |option-value-function| を参照。
+	関数を指定する。値として関数名、|lambda|、|Funcref| が使える。詳細は
+	|option-value-function| を参照。
 	MS-Windows GUI 版では使われない。
 	モードラインから設定した場合、式は |sandbox| で評価される。
 	|sandbox-option| を参照。
@@ -4413,8 +4414,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 			グローバル
 	このオプションはインプットメソッド (IM) の状態を得るのに呼ばれる関数を
 	指定する。IMEがオンのとき、関数は正の数を返さなければならない。値とし
-	て関数名、ラムダ |lambda|、関数の参照 |Funcref| が使える。詳細は
-	|option-value-function| を参照。
+	て関数名、|lambda|、|Funcref| が使える。詳細は |option-value-function|
+	を参照。
 	MS-Windows GUI 版では使われない。
 
 	例: >
@@ -5673,8 +5674,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	このオプションは挿入モードにおける CTRL-X CTRL-O でのオムニ補完で使わ
 	れる関数を指定する。|i_CTRL-X_CTRL-O|
 	その関数がどのように起動され、何を返すべきかについての説明は
-	|complete-functions|を参照。値として関数名、ラムダ |lambda|、関数の参
-	照 |Funcref| が使える。詳細は |option-value-function| を参照。
+	|complete-functions|を参照。値として関数名、|lambda|、|Funcref| が使え
+	る。詳細は |option-value-function| を参照。
 	このオプションは普通、ファイルタイププラグインによって設定される。
 	|:filetype-plugin-on|
 	このオプションは |modeline| や |sandbox| の中ではセキュリティ上の理由
@@ -5696,8 +5697,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 			グローバル
 	このオプションはオペレータ |g@| で呼び出される関数を指定する。
 	より詳しい情報と例については |:map-operator| を参照。値として関数名、
-	ラムダ |lambda|、関数の参照 |Funcref| が使える。詳細は
-	|option-value-function| を参照。
+	|lambda|、|Funcref| が使える。詳細は |option-value-function| を参照。
 
 	安全上の理由から、このオプションをモードライン|modeline|やサンドボック
 	ス|sandbox|の中で設定することはできない。
@@ -6087,8 +6087,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	テキストを取得するのに利用される関数を指定する。クイックフィックスもし
 	くはロケーションリストでの情報を各表示項目に付随する情報をカスタマイズ
 	して表示するときに利用できる。関数の書き方と例については
-	|quickfix-window-function| を参照。値として関数名、ラムダ |lambda|、関
-	数の参照 |Funcref| が使える。詳細は |option-value-function| を参照。
+	|quickfix-window-function| を参照。値として関数名、|lambda|、|Funcref|
+	が使える。詳細は |option-value-function| を参照。
 
 	このオプションはセキュリティの理由により |modeline| や |sandbox| から
 	は設定できない。
@@ -7856,8 +7856,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	このオプションは、タグ検索を実行するために使用される関数を指定する。こ
 	の関数はタグパターンを取得し、一致するタグのリストを返さなければならな
 	い。|tag-function| を参照。関数の書き方と例の説明がある。値として関数
-	名、ラムダ |lambda|、関数の参照 |Funcref| が使える。詳細は
-	|option-value-function| を参照。
+	名、|lambda|、|Funcref| が使える。詳細は |option-value-function| を参
+	照。
 
 						*'taglength'* *'tl'*
 'taglength' 'tl'	数値	(既定では 0)
@@ -8123,13 +8123,13 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	になったときに、問題が起きるのを防げる。安全上の問題のため、このオプ
 	ションにバッククォート '`' は使えない。
 
-						*'thesaurusfunc'* *tsrfu'*
+						*'thesaurusfunc'* *'tsrfu'*
 'thesaurusfunc' 'tsrfu'	文字列	(既定では空)
 			グローバル／バッファについてローカル |global-local|
 			{|+eval| 機能付きでコンパイルされたときのみ有効}
 	このオプションは CTRL-X CTRL-T での同義語補完で利用する関数を指定する。
  	|i_CTRL-X_CTRL-T| |compl-thesaurusfunc| を参照。
-	値として関数名、ラムダ |lambda|、関数の参照 |Funcref| が使える。詳細は
+	値として関数名、|lambda|、|Funcref| が使える。詳細は
 	|option-value-function| を参照。
 
 	安全上の理由から、このオプションをモードライン|modeline|やサンドボック
