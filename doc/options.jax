@@ -2003,8 +2003,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	このオプションは入力モードのCTRL-X CTRL-U |i_CTRL-X_CTRL-U|での補完に
 	使われる関数を指定する。
 	その関数がどのように起動され、何を返すべきかについての説明は
-	|complete-functions|を参照。値として関数名、|lambda|、|Funcref| が使え
-	る。詳細は |option-value-function| を参照。
+	|complete-functions| を参照。値として関数名、|lambda|、|Funcref| が使
+	える。詳細は |option-value-function| を参照。
 	安全上の理由から、このオプションをモードライン|modeline|やサンドボック
 	ス|sandbox|の中で設定することはできない。
 
@@ -5674,8 +5674,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	このオプションは挿入モードにおける CTRL-X CTRL-O でのオムニ補完で使わ
 	れる関数を指定する。|i_CTRL-X_CTRL-O|
 	その関数がどのように起動され、何を返すべきかについての説明は
-	|complete-functions|を参照。値として関数名、|lambda|、|Funcref| が使え
-	る。詳細は |option-value-function| を参照。
+	|complete-functions| を参照。値として関数名、|lambda|、|Funcref| が使
+	える。詳細は |option-value-function| を参照。
 	このオプションは普通、ファイルタイププラグインによって設定される。
 	|:filetype-plugin-on|
 	このオプションは |modeline| や |sandbox| の中ではセキュリティ上の理由
