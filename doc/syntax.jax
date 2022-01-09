@@ -1058,10 +1058,10 @@ CLOJURE							*ft-clojure-syntax*
 
 						*g:clojure_syntax_keywords*
 
-"clojure.core" 内の公開変数のシンタックスハイライトがデフォルトで提供され、
-しかし追加シンボルを変数 |g:clojure_syntax_keywords| へ追加することでハイライ
-トできる。値には構文グループの名前をキーとし、値にカスタム識別子のリスト
-|List| を持つ辞書 |Dictionary| を指定する。
+"clojure.core" 内の公開変数のシンタックスハイライトはデフォルトで提供されるが、
+|g:clojure_syntax_keywords| 変数にシンボルを追加することによって、追加のシンボ
+ルをハイライトすることができる。値は、それぞれが識別子の |List| を含む構文グ
+ループ名の |Dictionary| である必要がある。
 >
 	let g:clojure_syntax_keywords = {
 	    \   'clojureMacro': ["defproject", "defcustom"],
