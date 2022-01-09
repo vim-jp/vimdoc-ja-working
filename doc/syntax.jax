@@ -1086,8 +1086,8 @@ CLOJURE							*ft-clojure-syntax*
 
 						*g:clojure_discard_macro*
 
-この変数を1に設定すると Clojure の "Discard マクロ" の基本的なハイライトを有効
-にする。
+この変数を `1` に設定すると Clojure の "discard リーダーマクロ" の基本的なハイ
+ライトを有効にする。
 >
 	#_(defn foo [x]
 	    (println x))
