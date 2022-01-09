@@ -1092,8 +1092,8 @@ CLOJURE							*ft-clojure-syntax*
 	#_(defn foo [x]
 	    (println x))
 <
-Note このオプションでは重なった Discard マクロのハイライトは正しくならない(例
-`#_#_`)。
+Note このオプションは、スタックされたdiscardマクロが正しくハイライトされない
+(例 `#_#_`)。
 
 
 COBOL						*cobol.vim* *ft-cobol-syntax*
