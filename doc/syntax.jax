@@ -1079,9 +1079,9 @@ CLOJURE							*ft-clojure-syntax*
 
 							*g:clojure_fold*
 
-|g:clojure_fold| を1に設定すると Clojure のコードの折り畳みが有効になる。
-標準のVimの折り畳みコマンド |fold-commands| で1行を越える任意のlist, vector,
-mapを折り畳みできる。
+|g:clojure_fold| を `1` に設定すると、Clojureコードの折り畳みが有効になる。複
+数行にまたがる任意の list, vector または map は、標準のVimの |fold-commands| を
+使用して折り畳むことができる。
 
 
 						*g:clojure_discard_macro*
