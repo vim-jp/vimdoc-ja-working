@@ -4996,9 +4996,9 @@ guisp={color-name}					*highlight-guisp*
 	    :call extend(v:colornames, {'alt_turquoise': '#11f0c3'}, 'keep')
 	    :highlight Comment guifg=alt_turquoise guibg=magenta
 <
-	あなたが名前の付いたカラーに頼るカラースキームを利用するのなら、それら
-	の色について正確な出力に調整することができ、そのために |v:colornames|
-	の値をスキームをロードするまえに上書きできる: >
+	名前付きのカラーに依存するカラースキームを使用していて、それらのカラー
+	の正確な見栄えを調整したい場合は、スキームをロードする前に
+	|v:colornames| の値をオーバーライドすることで調整できる: >
 
 	    let v:colornames['alt_turquoise'] = '#22f0d3'
 	    colorscheme alt
