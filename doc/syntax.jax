@@ -4687,12 +4687,12 @@ Note: "*/" を含む文字列で行をまたぐものがあると、Cコメン�
 				hi Statement ctermfg=Blue guifg=Blue
 
 <			カラースキームがロードされる前に全デフォルトのカラーリ
-			ストのスクリプト(`colors/lists/default.vim`)が実行され
-			|ColorSchemePre| 自動コマンドイベントが起動される。カ
-			ラースキームがロードされたら |ColorScheme| 自動コマン
-			ドイベントが起動される。
-			カラースキームファイルを書くための情報については次
-			を参照: >
+			ストのスクリプト(`colors/lists/default.vim`)が実行さ
+			れ、|ColorSchemePre| 自動コマンドイベントがトリガーさ
+			れる。カラースキームがロードされた後に |ColorScheme|
+			自動コマンドイベントがトリガーされる。
+			カラースキームファイルを書くための情報については次を参
+			照: >
 				:edit $VIMRUNTIME/colors/README.txt
 
 :hi[ghlight]		属性がセットされたハイライトグループを全て表示する。
