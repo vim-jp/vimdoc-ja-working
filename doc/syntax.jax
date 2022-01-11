@@ -829,9 +829,9 @@ Apache の構文ファイルは Apache HTTP サーバーのバージョン 2.2.3
 アセンブリ言語	*ft-asm-syntax* *ft-asmh8300-syntax* *ft-nasm-syntax*
 		*ft-masm-syntax* *ft-asm68k-syntax* *fasm.vim*
 
-"*.i" にマッチする名前のファイルのタイプはProgressかアセンブリである。自動検出
-が動作しない場合や、Progressを編集しないことが判っている場合には、起動設定ファ
-イルvimrcに次のコマンドを書くことができる: >
+"*.i" にマッチするファイルのタイプは Progress かアセンブリである。自動判別がう
+まく機能しない場合、または Progress ファイルを一切編集しない場合は、vimrcでこ
+れを使用する: >
    :let filetype_i = "asm"
 "asm" には使用するアセンブリ言語の種類を指定する。
 
@@ -1172,9 +1172,9 @@ cppファイルについても同様(この拡張子は通常Windowsだけで使
 
 CWEB						*cweb.vim* *ft-cweb-syntax*
 
-"*.w" にマッチする名前のファイルのタイプはProgressかCWEBである。自動検出が動作
-しない場合や、Progressを編集しないことが判っている場合には、起動設定ファイル
-vimrcに次のコマンドを書くとよい: >
+"*.w" にマッチするファイルのタイプは Progress か cweb である。自動判別がうまく
+機能しない場合、または Progress ファイルを一切編集しない場合は、vimrcでこれを
+使用する: >
    :let filetype_w = "cweb"
 
 
@@ -2287,9 +2287,9 @@ http://papp.plan9.de
 
 PASCAL						*pascal.vim* *ft-pascal-syntax*
 
-"*.p" にマッチするファイルのタイプはProgressかPascalで、"*.pp" にマッチするファ
-イルのタイプはPuppetかPascalである。自動判別が機能しない、またはPascalファイル
-だけ編集するなら、これをvimrc ファイルに書くといい: >
+"*.p" にマッチするファイルのタイプは Progress か Pascal で、"*.pp" にマッチす
+るファイルのタイプは Puppet か Pascal ある。自動判別がうまく機能しない場合、ま
+たは Pascal ファイルしか編集しない場合は、vimrcでこれを使用する: >
 
    :let filetype_p  = "pascal"
    :let filetype_pp = "pascal"
@@ -2590,12 +2590,12 @@ PRINTCAP + TERMCAP	*ft-ptcap-syntax* *ft-termcap-syntax*
 
 PROGRESS				*progress.vim* *ft-progress-syntax*
 
-"*.w" にマッチするファイルのタイプはProgressかCWEBである。自動判別がうまく機能
-しないなら、またはcwebファイルを一切編集しないとわかっているなら、次をvimrcに
-加えるとよい: >
+"*.w" にマッチするファイルのタイプは Progress か cweb である。自動判別がうまく
+機能しない場合、または cweb ファイルを一切編集しない場合は、vimrcでこれを使用
+する: >
    :let filetype_w = "progress"
-同じことが "*.i" (アセンブリでもありうる)と "*.p" (Pascalでもありうる)にもいえ
-る。アセンブリとPascalを使わないとわかっているならこれを使うこと: >
+同じことが "*.i" においてアセンブリと、 "*.p" において Pascal とありえる。アセ
+ンブリと Pascal を使わないとわかっているならこれを使用する: >
    :let filetype_i = "progress"
    :let filetype_p = "progress"
 
