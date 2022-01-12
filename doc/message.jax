@@ -1,4 +1,4 @@
-*message.txt*   For Vim バージョン 8.2.  Last change: 2021 Dec 13
+*message.txt*   For Vim バージョン 8.2.  Last change: 2022 Jan 08
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -118,7 +118,8 @@ LIST OF MESSAGES
 							*E95*  >
   Buffer with this name already exists
 
-同じ名前のバッファを2つ持つことはできない。
+完全に同名のバッファを2つ持つことはできない。これにはファイルに繋がるパスも含
+まれる。
 
 							*E72*  >
   Close error on swap file
@@ -527,10 +528,10 @@ Vimが|swap-file|からテキストを読み込もうとしたが、何かまず
 							*E22*  >
   Scripts nested too deep
 
-スクリプトはコマンドライン引数の "-s" や、":source" コマンドで読み込むことがで
-きる。スクリプトは、他のスクリプトファイルを読み込むことができる。これは14段階
-まで続けることができる。それ以上に入れ子にした場合には、Vimは再帰的なループが
-あると仮定し、このエラーメッセージを出して読み込みを止める。
+スクリプトはコマンドライン引数の "-s" や、`:source!` コマンドで読み込むことが
+できる。スクリプトは、他のスクリプトファイルを読み込むことができる。これは14段
+階まで続けることができる。それ以上に入れ子にした場合には、Vimは再帰的なループ
+があると仮定し、このエラーメッセージを出して読み込みを止める。
 
 							*E319*  >
   Sorry, the command is not available in this version
@@ -715,6 +716,7 @@ Exコマンドまたは関数が実行されたが、無効な引数が指定さ
   Trailing characters
 
 引数をつけてはならないExコマンドに引数が指定された。
+または、引数に無効な文字が含まれていて、認識されていいない。
 
 							*E477* *E478*  >
   No ! allowed
