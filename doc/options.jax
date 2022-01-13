@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 8.2.  Last change: 2021 Dec 21
+*options.txt*	For Vim バージョン 8.2.  Last change: 2022 Jan 02
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -405,9 +405,9 @@ Note: 非切替かつ非数値オプションの変更で "<" を使うと、グ
 これは 'path' のローカルな値を空にし、グローバルな値が使われるようにする。すな
 わち、次と同じことをする: >
 	:setlocal path=
-Note: 将来的に、より多くのグローバルオプションが global-local になる可能性があ
-る。そうなるとグローバルオプションに対する ":setlocal" の動作が変わるかもしれ
-ない。
+Note: 将来的に、より多くのグローバルオプションが |global-local| になる可能性が
+ある。そうなるとグローバルオプションに対する ":setlocal" の動作が変わるかもし
+れない。
 
 
 						*option-value-function*
@@ -907,9 +907,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 'autowrite' 'aw'	切替	(既定ではオフ)
 			グローバル
 	コマンド `:next`, `:rewind`, `:last`, `:first`, `:previous`, `:stop`,
-	`:suspend`, `:tag, `:!`, ``:make`, CTRL-], CTRL-^ を実行したときや、コ
-	マンド :buffer, CTRL-O, CTRL-I, '{A-Z0-9}, `{A-Z0-9} の移動先が別のファ
-	イルのとき、ファイルが変更されているなら書き込む。
+	`:suspend`, `:tag`, `:!`, `:make`, CTRL-], CTRL-^ を実行したときや、コ
+	マンド `:buffer`, CTRL-O, CTRL-I, '{A-Z0-9}, `{A-Z0-9} の移動先が別の
+	ファイルのとき、ファイルが変更されているなら書き込む。
 	バッファが書き込まれないのは隠れバッファになったときで、例えば
 	'bufhidden' が "hide" に設定されていて `:next` が使われたとき。
 	Note 'autowrite' が適用されないコマンドもあることに注意。それについて
@@ -1282,6 +1282,11 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	'balloonexpr' を評価した結果が空でないなら、Vimは外部デバッガ(Netbeans
 	またはSun Workshop)にメッセージを送ろうとしない。
 
+	式が s: か <SID> で始まるなら、スクリプトID(|local-function|) に置き換
+	えられる。例: >
+		set bexpr=s:MyBalloonExpr()
+		set bexpr=<SID>SomeBalloonExpr()
+<
 	このオプションがモードラインで設定されたときは、式はサンドボックス
 	(|sandbox|) の中で評価される。|sandbox-option| を参照。
 	'modelineexpr' がオフの場合は、モードラインでこのオプションを設定する
@@ -2166,8 +2171,18 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	読みやすくするためにコンマを入れてもよい。
 	将来追加されるフラグによる問題を避けるため、コマンド ":set" では "+="
 	と "-=" を使うこと |add-option-flags|。
+
 	NOTE: このオプションは 'compatible' がオンになるとViの既定値に設定され、
 	'compatible' がオフになるとVimの既定値に設定されるので注意。
+
+	NOTE: |Vim9| script では、`vim9script` が来た時、値が保存され、
+	'cpoptions' は Vim の初期値が設定され、保存された値がスクリプトの終了
+	時に復元される。'cpoptions' の値を変更した場合保存した値へ適用される、
+	しかし 'cpoptions' の変更でフラグを存在しないように削除しても影響がな
+	いことは覚えておく必要がある。|.vimrc| ファイル内では値は復元されず、
+	その結果として  |.vimrc| 内で `vim9script` を利用したときの結果は Vim
+	のデフォルト値になる。
+
 	NOTE: Viの既定値が使われるようになっており、さらに環境変数$VIM_POSIXが
 	存在するとき、Vim起動時にこのオプションがPOSIXの既定値にセットされる
 	|posix|。これによってVimがPOSIX仕様に近い挙動をするようになる。
@@ -3612,6 +3627,11 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 	この関数が非ゼロを返すと Vim 内部の文章整形処理が使われる。
 
+	式が s: か <SID> で始まるなら、スクリプトID(|local-function|) に置き換
+	えられる。例: >
+		set formatexpr=s:MyFormatExpr()
+		set formatexpr=<SID>SomeFormatExpr()
+<
 	このオプションがモードラインで設定されたときは、式はサンドボックス
 	(|sandbox|) の中で評価される。|sandbox-option| を参照。その場合、サン
 	ドボックスの中ではバッファテキストの変更は許可されていないので、このオ
@@ -4481,6 +4501,11 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	る。
 	また |<cfile>| にも使われる。
 
+	式が s: か <SID> で始まるなら、スクリプトID(|local-function|) に置き換
+	えられる。例: >
+		set includeexpr=s:MyIncludeExpr(v:fname)
+		set includeexpr=<SID>SomeIncludeExpr(v:fname)
+<
 	このオプションがモードラインで設定されたときは、式はサンドボックス
 	(|sandbox|) の中で評価される。|sandbox-option| を参照。
 	'modelineexpr' がオフの場合は、モードラインでこのオプションを設定する
@@ -4554,6 +4579,11 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	指定された expression が評価されるとき、変数 |v:lnum| はインデント計算
 	の対象となっている行の行番号に設定される。また、この式を評価するとき、
 	カーソルもこの行に置かれる(移動してしまうかもしれないが)。
+	式が s: か <SID> で始まるなら、スクリプトID(|local-function|) に置き換
+	えられる。例: >
+		set indentexpr=s:MyIndentExpr()
+		set indentexpr=<SID>SomeIndentExpr()
+<
 	指定された expression は、インデントすべき空白の数を返さなければならな
 	い。そのままのインデントを保たせるには "-1" を返させればよい (つまり、
 	こうするとインデントには 'autoindent' が使われる)。
@@ -6681,6 +6711,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	"curdir" と "sesdir" の両方を含めないこと。
 	"curdir" も "sesdir" も含まれていないときは、ファイル名は絶対パスで保
 	存される。
+	"options" を省略した場合セッション復元後に多くの機能がうまく機能しなく
+	なる。
 	"slash" と "unix" は、Windows上でセッションファイルをUnixと共有すると
 	きに便利である。Unix版のVimはdos形式のスクリプトを読み込めないが、
 	Windows版のVimはunix形式のスクリプトを読み込めるからだ。
