@@ -252,11 +252,10 @@ xterm から直接得られたコードが |t_RV| それらを上書きするの
 は "CSI 1 ; modifier X" のいずれかを使用するカーソルキー用です。したがって、
 "@" は修飾子が続く場合は "1" を表すか、何も表しません。
 							*arrow_modifiers*
-多くの端末エミュレータ(alacritty, gnome, konsole, など)はキーを修飾付きで押す
-と特殊なコードを送信しますが、しかし termcap/terminfo データベースにそのエント
-リはありません。なのであなたの vimrc にいくつかの行を追加することで動くように
-できます。例えば、gnome terminal で矢印キーを Control 修飾キーとともに動くよう
-にするには: >
+いくつかの端末エミュレータ(alacritty, gnome, konsole 等)は修飾子付きのキーに特
+殊なコードを送信しますが、これらは termcap/terminfo データベースにエントリはあ
+りません。vimrc に数行追加することでこれらを機能させることができます。例えば、
+Control 修飾子を gnome 端末の矢印キーで機能させるには: >
 	if &term =~ 'gnome'
 	   execute "set <xUp>=\<Esc>[@;*A"
 	   execute "set <xDown>=\<Esc>[@;*B"
