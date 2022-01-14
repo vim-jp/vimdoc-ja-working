@@ -694,7 +694,7 @@ Clojure のいくつかのフォームは、'lispwords' に依らず、すべて
 	  bar
 	  baz)
 <
-このオプションを '1' に設定すると、clojure-mode.el のデフォルトの振る舞いのよ
+このオプションを `1` に設定すると、clojure-mode.el のデフォルトの振る舞いのよ
 うに、すべての subform を同じカラムに揃えることができる:
 >
 	(foo
