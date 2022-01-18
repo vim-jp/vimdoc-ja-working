@@ -1,4 +1,4 @@
-*map.txt*       For Vim version 8.2.  Last change: 2021 May 16
+*map.txt*       For Vim version 8.2.  Last change: 2021 Dec 20
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -61,6 +61,8 @@ modes.
 			where the map command applies.  The result, including
 			{rhs}, is then further scanned for mappings.  This
 			allows for nested and recursive use of mappings.
+			Note: Trailing spaces are included in the {rhs},
+			because space is a valid Normal mode command.
 
 						*:nore* *:norem*
 :no[remap]  {lhs} {rhs}		|mapmode-nvo|	*:no*  *:noremap* *:nor*
@@ -94,6 +96,9 @@ modes.
 			Remove the mapping of {lhs} for the modes where the
 			map command applies.  The mapping may remain defined
 			for other modes where it applies.
+			It also works when {lhs} matches the {rhs} of a
+			mapping. This is for when when an abbreviation
+			applied.
 			Note: Trailing spaces are included in the {lhs}.  This
 			unmap does NOT work: >
 				:map @@ foo
@@ -168,7 +173,7 @@ type "a", then "bar" will get inserted.
 "<unique>" can be used in any order.  They must appear right after the
 command, before any other arguments.
 
-				*:map-local* *:map-<buffer>* *E224* *E225*
+			*:map-local* *:map-<buffer>* *:map-buffer* *E224* *E225*
 If the first argument to one of these commands is "<buffer>" the mapping will
 be effective in the current buffer only.  Example: >
 	:map <buffer>  ,w  /[.,;]<CR>
@@ -227,7 +232,7 @@ Note: ":map <script>" and ":noremap <script>" do the same thing.  The
 "<script>" overrules the command name.  Using ":noremap <script>" is
 preferred, because it's clearer that remapping is (mostly) disabled.
 
-						*:map-<unique>* *E226* *E227*
+				*:map-<unique>* *:map-unique* *E226* *E227*
 If the first argument to one of these commands is "<unique>" and it is used to
 define a new mapping or abbreviation, the command will fail if the mapping or
 abbreviation already exists.  Example: >
@@ -344,6 +349,8 @@ Note:
 - For the same reason, |keycodes| like <C-R><C-W> are interpreted as plain,
   unmapped keys.
 - The command is not echo'ed, no need for <silent>.
+- The {rhs} is not subject to abbreviations nor to other mappings, even if the
+  mapping is recursive.
 - In Visual mode  you can use `line('v')` and `col('v')` to get one end of the
   Visual area, the cursor is at the other end.
 - In Select mode, |:map| and |:vmap| command mappings are executed in
@@ -955,8 +962,7 @@ g@{motion}		Call the function set by the 'operatorfunc' option.
 			    "line"	{motion} was |linewise|
 			    "char"	{motion} was |characterwise|
 			    "block"	{motion} was |blockwise-visual|
-			Although "block" would rarely appear, since it can
-			only result from Visual mode where "g@" is not useful.
+			The type can be forced, see |forced-motion|.
 			{not available when compiled without the |+eval|
 			feature}
 
@@ -967,28 +973,56 @@ Here is an example that counts the number of spaces with <F4>: >
 	" doubling <F4> works on a line
 	nnoremap <expr> <F4><F4> CountSpaces() .. '_'
 
-	function CountSpaces(type = '') abort
+	function CountSpaces(context = {}, type = '') abort
 	  if a:type == ''
-	    set opfunc=CountSpaces
+	    let context = #{
+	      \ dot_command: v:false,
+	      \ extend_block: '',
+	      \ virtualedit: [&l:virtualedit, &g:virtualedit],
+	      \ }
+	    let &operatorfunc = function('CountSpaces', [context])
+	    set virtualedit=block
 	    return 'g@'
- 	  endif
+	  endif
 
-	  let sel_save = &selection
-	  let reg_save = getreginfo('"')
-	  let cb_save = &clipboard
-	  let visual_marks_save = [getpos("'<"), getpos("'>")]
+	  let save = #{
+	    \ clipboard: &clipboard,
+	    \ selection: &selection,
+	    \ virtualedit: [&l:virtualedit, &g:virtualedit],
+	    \ register: getreginfo('"'),
+	    \ visual_marks: [getpos("'<"), getpos("'>")],
+	    \ }
 
 	  try
-	    set clipboard= selection=inclusive
-	    let commands = #{line: "'[V']y", char: "`[v`]y", block: "`[\<c-v>`]y"}
-	    silent exe 'noautocmd keepjumps normal! ' .. get(commands, a:type, '')
-	    echom getreg('"')->count(' ')
+	    set clipboard= selection=inclusive virtualedit=
+	    let commands = #{
+	      \ line: "'[V']",
+	      \ char: "`[v`]",
+	      \ block: "`[\<C-V>`]",
+	      \ }[a:type]
+	    let [_, _, col, off] = getpos("']")
+	    if off != 0
+	      let vcol = getline("'[")->strpart(0, col + off)->strdisplaywidth()
+	      if vcol >= [line("'["), '$']->virtcol() - 1
+	        let a:context.extend_block = '$'
+	      else
+	        let a:context.extend_block = vcol .. '|'
+	      endif
+	    endif
+	    if a:context.extend_block != ''
+	      let commands ..= 'oO' .. a:context.extend_block
+	    endif
+	    let commands ..= 'y'
+	    execute 'silent noautocmd keepjumps normal! ' .. commands
+	    echomsg getreg('"')->count(' ')
 	  finally
-	    call setreg('"', reg_save)
-	    call setpos("'<", visual_marks_save[0])
-	    call setpos("'>", visual_marks_save[1])
-	    let &clipboard = cb_save
-	    let &selection = sel_save
+	    call setreg('"', save.register)
+	    call setpos("'<", save.visual_marks[0])
+	    call setpos("'>", save.visual_marks[1])
+	    let &clipboard = save.clipboard
+	    let &selection = save.selection
+	    let [&l:virtualedit, &g:virtualedit] = get(a:context.dot_command ? save : a:context, 'virtualedit')
+	    let a:context.dot_command = v:true
 	  endtry
 	endfunction
 
@@ -1003,6 +1037,20 @@ mark.
 Also note that the 'clipboard' option is temporarily emptied to avoid
 clobbering the `"*` or `"+` registers, if its value contains the item `unnamed`
 or `unnamedplus`.
+
+The `mode()` function will return the state as it will be after applying the
+operator.
+
+Here is an example for using a lambda function to create a normal-mode
+operator to add quotes around text in the current line: >
+
+	nnoremap <F4> <Cmd>let &opfunc='{t ->
+				\ getline(".")
+				\ ->split("\\zs")
+				\ ->insert("\"", col("'']"))
+				\ ->insert("\"", col("''[") - 1)
+				\ ->join("")
+				\ ->setline(".")}'<CR>g@
 
 ==============================================================================
 2. Abbreviations			*abbreviations* *Abbreviations*
@@ -1368,6 +1416,10 @@ See |:verbose-cmd| for more information.
 :delc[ommand] {cmd}				*:delc* *:delcommand* *E184*
 			Delete the user-defined command {cmd}.
 
+:delc[ommand] -buffer {cmd}					*E1237*
+			Delete the user-defined command {cmd} that was defined
+			for the current buffer.
+
 :comc[lear]						*:comc* *:comclear*
 			Delete all user-defined commands.
 
@@ -1553,6 +1605,7 @@ Possible values are (second column is the short name used in listing):
 Special cases ~
 					*:command-bang* *:command-bar*
 					*:command-register* *:command-buffer*
+					*:command-keepscript*
 There are some special cases as well:
 
 	-bang	    The command can take a ! modifier (like :q or :w)
@@ -1562,6 +1615,9 @@ There are some special cases as well:
 	-register   The first argument to the command can be an optional
 		    register name (like :del, :put, :yank).
 	-buffer	    The command will only be available in the current buffer.
+	-keepscript Do not use the location of where the user command was
+		    defined for verbose messages, use the location of where
+		    the user command was invoked.
 
 In the cases of the -count and -register attributes, if the optional argument
 is supplied, it is removed from the argument list and is available to the
@@ -1571,6 +1627,20 @@ feature.  Use the full name for new scripts.
 
 
 Replacement text ~
+							*:command-repl*
+The {repl} argument is normally one long string, possibly with "|" separated
+commands.  A special case is when the argument is "{", then the following
+lines, up to a line starting with "}" are used and |Vim9| syntax applies.
+Example: >
+	:command MyCommand {
+		echo 'hello'
+		g:calledMyCommand = true
+	    }
+<							*E1231*
+There must be white space before the "{".  No nesting is supported, inline
+functions cannot be used.  Commands where a "|" may appear in the argument,
+such as commands with an expression argument, cannot be followed by a "|" and
+another command.
 
 The replacement text {repl} for a user defined command is scanned for special
 escape sequences, using <...> notation.  Escape sequences are replaced with
