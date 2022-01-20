@@ -345,10 +345,10 @@ Note: テキストの末尾以外で 0x80 をシングルバイトとして使�
 	import autoload 'implementation.vim' as impl
 	nnoremap <F4> <ScriptCmd>impl.DoTheWork()<CR>
 
-どこで <F4> が押されても、"impl" のインポートはマッピングが定義された位置のス
-クリプトのコンテキストから見つけます。そして autoload インポートの、
-"implementation.vim" スクリプトは一度 <F4> が押されたときの後にのみロードされ
-て、マッピングが定義されたときにはなりません。
+<F4> がどこで入力されたとしても、"impl " のインポートはマッピングが定義された
+場所のスクリプトのコンテキストで検出されます。また、これは autoload のインポー
+トなので、マッピングが定義された時ではなく、一度 <F4> が入力された時にのみ
+"implementation.vim" スクリプトがロードされます。
 
 Note:
 - <Cmd> と <ScriptCmd> はモード変更を回避するので、ユーザーの介入を必要としな
