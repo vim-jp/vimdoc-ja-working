@@ -1,4 +1,4 @@
-*term.txt*      For Vim version 8.2.  Last change: 2021 Aug 29
+*term.txt*      For Vim version 8.2.  Last change: 2021 Dec 21
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -150,8 +150,10 @@ terminal that tmux is running in): >
         " Enable focus event tracking, see  :help xterm-focus-event
         let &t_fe = "\<Esc>[?1004h"
         let &t_fd = "\<Esc>[?1004l"
+	execute "set <FocusGained>=\<Esc>[I"
+        execute "set <FocusLost>=\<Esc>[O"
 
-        " Enable modified arrow keys, see  :help xterm-modifier-keys
+        " Enable modified arrow keys, see  :help arrow_modifiers
         execute "silent! set <xUp>=\<Esc>[@;*A"
         execute "silent! set <xDown>=\<Esc>[@;*B"
         execute "silent! set <xRight>=\<Esc>[@;*C"
@@ -252,7 +254,19 @@ another code.  That is to avoid that the codes obtained from xterm directly
 Another special value is a termcap entry ending in "@;*X".  This is for cursor
 keys, which either use "CSI X" or "CSI 1 ; modifier X".  Thus the "@"
 stands for either "1" if a modifier follows, or nothing.
-							*xterm-scroll-region*
+							*arrow_modifiers*
+Several terminal emulators (alacritty, gnome, konsole, etc.) send special
+codes for keys with modifiers, but these do not have an entry in the
+termcap/terminfo database.  You can make them work by adding a few lines in
+your vimrc.  For example, to make the Control modifier work with arrow keys
+for the gnome terminal: >
+	if &term =~ 'gnome'
+	   execute "set <xUp>=\<Esc>[@;*A"
+	   execute "set <xDown>=\<Esc>[@;*B"
+	   execute "set <xRight>=\<Esc>[@;*C"
+	   execute "set <xLeft>=\<Esc>[@;*D"
+	endif
+<							*xterm-scroll-region*
 The default termcap entry for xterm on Sun and other platforms does not
 contain the entry for scroll regions.  Add ":cs=\E[%i%d;%dr:" to the xterm
 entry in /etc/termcap and everything should work.
@@ -542,8 +556,15 @@ request the key codes directly from the xterm.  The responses are used to
 adjust the various t_ codes.  This avoids the problem that the xterm can
 produce different codes, depending on the mode it is in (8-bit, VT102,
 VT220, etc.).  The result is that codes like <xF1> are no longer needed.
-Note: This is only done on startup.  If the xterm options are changed after
-Vim has started, the escape sequences may not be recognized anymore.
+
+One of the codes that can change is 't_Co', the number of colors.  This will
+trigger a redraw.  If this is a problem, reset the 'xtermcodes' option as
+early as possible: >
+	set noxtermcodes
+
+Note: Requesting the key codes is only done on startup.  If the xterm options
+are changed after Vim has started, the escape sequences may not be recognized
+anymore.
 
 							*xterm-true-color*
 Vim supports using true colors in the terminal (taken from |highlight-guifg|
@@ -594,6 +615,8 @@ If your terminal does support this but Vim does not recognize the terminal,
 you may have to set the options yourself: >
 	let &t_fe = "\<Esc>[?1004h"
 	let &t_fd = "\<Esc>[?1004l"
+	execute "set <FocusGained>=\<Esc>[I"
+        execute "set <FocusLost>=\<Esc>[O"
 If this causes garbage to show when Vim starts up then it doesn't work.
 
 							*termcap-colors*
