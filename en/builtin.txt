@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim version 8.2.  Last change: 2021 Dec 27
+*builtin.txt*	For Vim version 8.2.  Last change: 2022 Jan 28
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -641,10 +641,7 @@ test_feedinput({string})	none	add key sequence to input buffer
 test_garbagecollect_now()	none	free memory right now for testing
 test_garbagecollect_soon()	none	free memory soon for testing
 test_getvalue({string})		any	get value of an internal variable
-test_gui_drop_files({list}, {row}, {col}, {mods})
-				none	drop a list of files in a window
-test_gui_mouse_event({button}, {row}, {col}, {repeated}, {mods})
-				none	add a mouse event to the input buffer
+test_gui_event({event}, {args})	bool	generate a GUI event for testing
 test_ignore_error({expr})	none	ignore a specific error
 test_null_blob()		Blob	null value for testing
 test_null_channel()		Channel	null value for testing
@@ -657,8 +654,6 @@ test_null_string()		String	null value for testing
 test_option_not_set({name})	none	reset flag indicating option was set
 test_override({expr}, {val})	none	test with Vim internal overrides
 test_refcount({expr})		Number	get the reference count of {expr}
-test_scrollbar({which}, {value}, {dragging})
-				none	scroll in the GUI for testing
 test_setmouse({row}, {col})	none	set the mouse position for testing
 test_settime({expr})		none	set current time for testing
 test_srand_seed([seed])		none	set seed for testing srand()
@@ -695,6 +690,8 @@ win_gettype([{nr}])		String	type of window {nr}
 win_gotoid({expr})		Number	go to window with ID {expr}
 win_id2tabwin({expr})		List	get tab and window nr from window ID
 win_id2win({expr})		Number	get window nr from window ID
+win_move_separator({nr})	Number	move window vertical separator
+win_move_statusline({nr})	Number	move window status line
 win_screenpos({nr})		List	get screen position of window {nr}
 win_splitmove({nr}, {target} [, {options}])
 				Number	move window {nr} to split of {target}
@@ -806,9 +803,10 @@ appendbufline({buf}, {lnum}, {text})			*appendbufline()*
 
 		For the use of {buf}, see |bufname()|.
 
-		{lnum} is used like with |append()|.  Note that using |line()|
-		would use the current buffer, not the one appending to.
-		Use "$" to append at the end of the buffer.
+		{lnum} is the line number to append below.  Note that using
+		|line()| would use the current buffer, not the one appending
+		to.  Use "$" to append at the end of the buffer.  Other string
+		values are not supported.
 
 		On success 0 is returned, on failure 1 is returned.
 		In |Vim9| script an error is given for an invalid {lnum}.
@@ -2079,6 +2077,22 @@ exists({expr})	The result is a Number, which is |TRUE| if {expr} is defined,
 		For checking if a file exists use |filereadable()|.
 
 		The {expr} argument is a string, which contains one of these:
+			varname		internal variable (see
+			dict.key	|internal-variables|).  Also works
+			list[i]		for |curly-braces-names|, |Dictionary|
+			import.Func	entries, |List| items, imported
+					items,etc.
+					Does not work for local variables in a
+					compiled `:def` function.
+					Beware that evaluating an index may
+					cause an error message for an invalid
+					expression.  E.g.: >
+					   :let l = [1, 2, 3]
+					   :echo exists("l[5]")
+<					   0 >
+					   :echo exists("l[xx]")
+<					   E121: Undefined variable: xx
+					   0
 			&option-name	Vim option (only checks if it exists,
 					not if it really works)
 			+option-name	Vim option that works.
@@ -2093,21 +2107,6 @@ exists({expr})	The result is a Number, which is |TRUE| if {expr} is defined,
 			?funcname	built-in function that could be
 					implemented; to be used to check if
 					"funcname" is valid
-			varname		internal variable (see
-					|internal-variables|).  Also works
-					for |curly-braces-names|, |Dictionary|
-					entries, |List| items, etc.
-					Does not work for local variables in a
-					compiled `:def` function.
-					Beware that evaluating an index may
-					cause an error message for an invalid
-					expression.  E.g.: >
-					   :let l = [1, 2, 3]
-					   :echo exists("l[5]")
-<					   0 >
-					   :echo exists("l[xx]")
-<					   E121: Undefined variable: xx
-					   0
 			:cmdname	Ex command: built-in command, user
 					command or command modifier |:command|.
 					Returns:
@@ -2391,6 +2390,9 @@ feedkeys({string} [, {mode}])				*feedkeys()*
 			Note that if you manage to call feedkeys() while
 			executing commands, thus calling it recursively, then
 			all typeahead will be consumed by the last call.
+		'c'	Remove any script context when executing, so that
+			legacy script syntax applies, "s:var" does not work,
+			etc.
 		'!'	When used with 'x' will not end Insert mode. Can be
 			used in a test when a timer is set to exit Insert mode
 			a little later.  Useful for testing CursorHoldI.
@@ -2434,7 +2436,7 @@ filter({expr1}, {expr2})				*filter()*
 		For each item in {expr1} evaluate {expr2} and when the result
 		is zero or false remove the item from the |List| or
 		|Dictionary|.  Similarly for each byte in a |Blob| and each
-		charactor in a |String|.
+		character in a |String|.
 
 		{expr2} must be a |string| or |Funcref|.
 
@@ -2465,7 +2467,9 @@ filter({expr1}, {expr2})				*filter()*
 			  return a:idx % 2 == 1
 			endfunc
 			call filter(mylist, function('Odd'))
-<		It is shorter when using a |lambda|: >
+<		It is shorter when using a |lambda|.  In |Vim9| syntax: >
+			call filter(myList, (idx, val) => idx * val <= 42)
+<		In legacy script syntax: >
 			call filter(myList, {idx, val -> idx * val <= 42})
 <		If you do not use "val" you can leave it out: >
 			call filter(myList, {idx -> idx % 2 == 1})
@@ -2479,7 +2483,7 @@ filter({expr1}, {expr2})				*filter()*
 			:let l = filter(copy(mylist), 'v:val =~ "KEEP"')
 
 <		Returns {expr1}, the |List| or |Dictionary| that was filtered,
-		or a new |Blob| or |String|. 
+		or a new |Blob| or |String|.
 		When an error is encountered while evaluating {expr2} no
 		further items in {expr1} are processed.
 		When {expr2} is a Funcref errors inside a function are ignored,
@@ -2527,7 +2531,7 @@ flatten({list} [, {maxdepth}])					*flatten()*
 		The {list} is changed in place, use |flattennew()| if you do
 		not want that.
 		In Vim9 script flatten() cannot be used, you must always use
-		|flattennew()|.
+		|flattennew()|. *E1158*
 								*E900*
 		{maxdepth} means how deep in nested lists changes are made.
 		{list} is not modified when {maxdepth} is 0.
@@ -2743,8 +2747,10 @@ funcref({name} [, {arglist}] [, {dict}])
 		function {name} is redefined later.
 
 		Unlike |function()|, {name} must be an existing user function.
-		Also for autoloaded functions. {name} cannot be a builtin
-		function.
+		It only works for an autoloaded function if it has already
+		been loaded (to avoid mistakenly loading the autoload script
+		when only intending to use the function name, use |function()|
+		instead). {name} cannot be a builtin function.
 
 		Can also be used as a |method|: >
 			GetFuncname()->funcref([arg])
@@ -2872,7 +2878,7 @@ get({dict}, {key} [, {default}])
 		Preferably used as a |method|: >
 			mydict->get(key)
 get({func}, {what})
-		Get an item with from Funcref {func}.  Possible values for
+		Get item {what} from Funcref {func}.  Possible values for
 		{what} are:
 			"name"	The function name
 			"func"	The function
@@ -3127,8 +3133,8 @@ getcharpos({expr})
 		Get the position for String {expr}. Same as |getpos()| but the
 		column number in the returned List is a character index
 		instead of a byte index.
-		If |getpos()| returns a very large column number, such as
-		2147483647, then getcharpos() will return the character index
+		If |getpos()| returns a very large column number, equal to
+		|v:maxcol|, then getcharpos() will return the character index
 		of the last character.
 
 		Example:
@@ -3278,7 +3284,8 @@ getcurpos([{winid}])
 		includes an extra "curswant" item in the list:
 		    [0, lnum, col, off, curswant] ~
 		The "curswant" number is the preferred column when moving the
-		cursor vertically.  Also see |getcursorcharpos()| and
+		cursor vertically.  After |$| command it will be a very large
+		number equal to |v:maxcol|.  Also see |getcursorcharpos()| and
 		|getpos()|.
 		The first "bufnum" item is always zero. The byte position of
 		the cursor is returned in 'col'. To get the character
@@ -3623,12 +3630,12 @@ getpos({expr})	Get the position for String {expr}.  For possible values of
 		character.
 		Note that for '< and '> Visual mode matters: when it is "V"
 		(visual line mode) the column of '< is zero and the column of
-		'> is a large number.
+		'> is a large number equal to |v:maxcol|.
 		The column number in the returned List is the byte position
 		within the line. To get the character position in the line,
 		use |getcharpos()|.
-		The column number can be very large, e.g. 2147483647, in which
-		case it means "after the end of the line".
+		A very large column number equal to |v:maxcol| can be returned,
+		in which case it means "after the end of the line".
 		This can be used to save and restore the position of a mark: >
 			let save_a_mark = getpos("'a")
 			...
@@ -4736,7 +4743,7 @@ js_encode({expr})					*js_encode()*
 		Can also be used as a |method|: >
 			GetObject()->js_encode()
 
-json_decode({string})					*json_decode()*
+json_decode({string})				*json_decode()* *E491*
 		This parses a JSON formatted string and returns the equivalent
 		in Vim values.  See |json_encode()| for the relation between
 		JSON and Vim values.
@@ -5236,6 +5243,8 @@ maparg({name} [, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 				     (|mapmode-ic|)
 		  "sid"	     The script local ID, used for <sid> mappings
 			     (|<SID>|).
+		  "scriptversion"  The version of the script.  999999 for
+		  		   |Vim9| script.
 		  "lnum"     The line number in "sid", zero if unknown.
 		  "nowait"   Do not wait for other, longer mappings.
 			     (|:map-<nowait>|).
@@ -5378,7 +5387,7 @@ match({expr}, {pat} [, {start} [, {count}]])			*match()*
 			GetText()->match('word')
 			GetList()->match('word')
 <
-				*matchadd()* *E798* *E799* *E801* *E957*
+				*matchadd()* *E290* *E798* *E799* *E801* *E957*
 matchadd({group}, {pattern} [, {priority} [, {id} [, {dict}]]])
 		Defines a pattern to be highlighted in the current window (a
 		"match").  It will be highlighted with {group}.  Returns an
@@ -6383,8 +6392,8 @@ readdir({directory} [, {expr} [, {dict}]])			*readdir()*
 		  readdir(dirname, {n -> n =~ '.txt$'})
 <		To skip hidden and backup files: >
 		  readdir(dirname, {n -> n !~ '^\.\|\~$'})
-
-<		The optional {dict} argument allows for further custom
+<								*E857*
+		The optional {dict} argument allows for further custom
 		values. Currently this is used to specify if and how sorting
 		should be performed. The dict can have the following members:
 
@@ -6518,7 +6527,7 @@ reduce({object}, {func} [, {initial}])			*reduce()* *E998*
 		{func} is called for every item in {object}, which can be a
 		|String|, |List| or a |Blob|.  {func} is called with two
 		arguments: the result so far and current item.  After
-		processing all items the result is returned.
+		processing all items the result is returned. *E1132*
 
 		{initial} is the initial result.  When omitted, the first item
 		in {object} is used and {func} is first called for the second
@@ -7377,7 +7386,7 @@ setcellwidths({list})					*setcellwidths()*
 		   setcellwidths([[0xad, 0xad, 1],
 				\ [0x2194, 0x2199, 2]])
 
-<					*E1109* *E1110* *E1111* *E1112* *E1113*
+<				*E1109* *E1110* *E1111* *E1112* *E1113* *E1114*
 		The {list} argument is a list of lists with each three
 		numbers. These three numbers are [low, high, width].  "low"
 		and "high" can be the same, in which case this refers to one
@@ -8128,7 +8137,8 @@ sound_playfile({path} [, {callback}])
 <		Can also be used as a |method|: >
 			GetSoundPath()->sound_playfile()
 
-<		{only available when compiled with the |+sound| feature}
+<		There is no error *E538* , but  can listen to 538.nl.
+		{only available when compiled with the |+sound| feature}
 
 
 sound_stop({id})					*sound_stop()*
@@ -9484,7 +9494,6 @@ win_execute({id}, {command} [, {silent}])		*win_execute()*
 			call win_execute(winid, 'set syntax=python')
 <		Doing the same with `setwinvar()` would not trigger
 		autocommands and not actually show syntax highlighting.
-
 							*E994*
 		Not all commands are allowed in popup windows.
 		When window {id} does not exist then no error is given and
@@ -9559,6 +9568,35 @@ win_id2win({expr})					*win_id2win()*
 
 		Can also be used as a |method|: >
 			GetWinid()->win_id2win()
+
+win_move_separator({nr}, {offset})			*win_move_separator()*
+		Move window {nr}'s vertical separator (i.e., the right border)
+		by {offset} columns, as if being dragged by the mouse. {nr}
+		can be a window number or |window-ID|. A positive {offset}
+		moves right and a negative {offset} moves left. Moving a
+		window's vertical separator will change the width of the
+		window and the width of other windows adjacent to the vertical
+		separator. The magnitude of movement may be smaller than
+		specified (e.g., as a consequence of maintaining
+		'winminwidth'). Returns TRUE if the window can be found and
+		FALSE otherwise.
+
+		Can also be used as a |method|: >
+			GetWinnr()->win_move_separator(offset)
+
+win_move_statusline({nr}, {offset})			*win_move_statusline()*
+		Move window {nr}'s status line (i.e., the bottom border) by
+		{offset} rows, as if being dragged by the mouse. {nr} can be a
+		window number or |window-ID|. A positive {offset} moves down
+		and a negative {offset} moves up. Moving a window's status
+		line will change the height of the window and the height of
+		other windows adjacent to the status line. The magnitude of
+		movement may be smaller than specified (e.g., as a consequence
+		of maintaining 'winminheight'). Returns TRUE if the window can
+		be found and FALSE otherwise.
+
+		Can also be used as a |method|: >
+			GetWinnr()->win_move_statusline(offset)
 
 win_screenpos({nr})					*win_screenpos()*
 		Return the screen position of window {nr} as a list with two
@@ -9747,10 +9785,14 @@ winsaveview()	Returns a |Dictionary| that contains information to restore
 		The return value includes:
 			lnum		cursor line number
 			col		cursor column (Note: the first column
-					zero, as opposed to what getpos()
+					zero, as opposed to what |getcurpos()|
 					returns)
 			coladd		cursor column offset for 'virtualedit'
-			curswant	column for vertical movement
+			curswant	column for vertical movement (Note:
+					the first column is zero, as opposed
+					to what |getcurpos()| returns).  After
+					|$| command it will be a very large
+					number equal to |v:maxcol|.
 			topline		first line in the window
 			topfill		filler lines, only in diff mode
 			leftcol		first column displayed; only used when
@@ -10063,6 +10105,7 @@ vertsplit		Compiled with vertically split windows |:vsplit|.
 			(always true)
 vim_starting		True while initial source'ing takes place. |startup|
 			*vim_starting*
+vim9script		Compiled with |Vim9| script support
 viminfo			Compiled with viminfo support.
 vimscript-1		Compiled Vim script version 1 support
 vimscript-2		Compiled Vim script version 2 support
