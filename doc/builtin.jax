@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 8.2.  Last change: 2021 Dec 27
+*builtin.txt*	For Vim バージョン 8.2.  Last change: 2022 Jan 28
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -698,11 +698,7 @@ test_feedinput({string})	なし	キー入力を入力バッファに追加する
 test_garbagecollect_now()	なし	テスト用に直ちにメモリを解放する
 test_garbagecollect_soon()	なし	テスト用にすぐにメモリを解放する
 test_getvalue({string})		任意	内部変数の値を取得する
-test_gui_drop_files({list}, {row}, {col}, {mods})
-				なし	ファイルのリストをウィンドウにドロップ
-					する
-test_gui_mouse_event({button}, {row}, {col}, {repeated}, {mods})
-				なし	マウスイベントを入力バッファへ追加する
+test_gui_event({event}, {args})	真偽値	テスト用の GUI イベントを発生させる
 test_ignore_error({expr})	なし	特定のエラーを無視する
 test_null_blob()		Blob	テスト用のnull値
 test_null_channel()		チャネル	テスト用のnull値
@@ -715,8 +711,6 @@ test_null_string()		文字列	テスト用のnull値
 test_option_not_set({name})	なし	オプション設定フラグをリセットする
 test_override({expr}, {val})	なし	Vimの内部処理を置き換えてテストする
 test_refcount({expr})		数値	{expr}の参照カウントを取得
-test_scrollbar({which}, {value}, {dragging})
-				なし	GUIのスクロールのテスト用
 test_setmouse({row}, {col})	なし	テスト用にマウス位置を設定する
 test_settime({expr})		なし	テスト用に現在の時刻を設定する
 test_srand_seed([seed])		なし	srand() のテスト用に種を設定する
@@ -753,6 +747,8 @@ win_gettype([{nr}])		文字列	ウィンドウ {nr} の型
 win_gotoid({expr})		数値	ID {expr}のウィンドウに行く
 win_id2tabwin({expr})		リスト	ウィンドウIDからタブとウィンドウnr取得
 win_id2win({expr})		数値	ウィンドウIDからウィンドウnr取得
+win_move_separator({nr})	数値	ウィンドウの垂直セパレータの移動
+win_move_statusline({nr})	数値	ウィンドウのステータス行の移動
 win_screenpos({nr})		リスト	ウィンドウ {nr} のスクリーン位置を取得
 					する
 win_splitmove({nr}, {target} [, {options}])
@@ -864,9 +860,10 @@ appendbufline({buf}, {lnum}, {text})			*appendbufline()*
 
 		{buf} の使い方については |bufname()| を参照。
 
-		{lnum} は |append()| と同様に扱われる。Note: |line()| の使用
-		は、追加対象のバッファではなくカレントバッファに適用される。
-		バッファの最後に追加するには "$" を使用する。
+		{lnum} は行番号をその下に追加する。Note: |line()| の使用は、追
+		加対象のバッファではなくカレントバッファに適用される。バッファ
+		の最後に追加するには "$" を使用する。他の文字列値はサポートれ
+		ない。
 
 		成功時には 0 が返り、失敗時には 1 が返る。
 		|Vim9| script では不正な {lnum} を与えられた時エラーになる。
@@ -2080,6 +2077,21 @@ exists({expr})	結果は数値で、変数{expr}が存在すれば|TRUE|とな�
 		ファイルが存在するかを判定するには|filereadable()|を使う。
 
 		引数{expr}は文字列で次のうちいずれかである。
+			varname		内部変数(|internal-variables|)
+			dict.key	|curly-braces-names|, |Dictionary|の要
+			list[i]		素、|List|の要素、import要素などに対し
+			import.Func	ても動作する。
+					コンパイルされる |:def| 関数内のローカ
+					ル変数には動作しない。
+					インデックスの評価で無効な式であるとエ
+					ラーメッセージが出る可能性があることに
+					注意。例: >
+					   :let l = [1, 2, 3]
+					   :echo exists("l[5]")
+<					   0 >
+					   :echo exists("l[xx]")
+<					   E121: Undefined variable: xx
+					   0
 			&option-name	Vimオプション(存在するかだけを判定し、
 					本当に動作するかは判定しない)
 			+option-name	動作するVimオプション
@@ -2092,20 +2104,6 @@ exists({expr})	結果は数値で、変数{expr}が存在すれば|TRUE|とな�
 			?funcname	実装されているかもしれない組み込み関数。
 					"funcname" が有効かチェックするのに利
 					用できる。
-			varname		内部変数(|internal-variables|)
-					|curly-braces-names|, |Dictionary|の要
-					素、|List|の要素などに対しても動作する。
-					コンパイルされる |:def| 関数内のローカ
-					ル変数には動作しない。
-					インデックスの評価で無効な式であるとエ
-					ラーメッセージが出る可能性があることに
-					注意。例: >
-					   :let l = [1, 2, 3]
-					   :echo exists("l[5]")
-<					   0 >
-					   :echo exists("l[xx]")
-<					   E121: Undefined variable: xx
-					   0
 			:cmdname	exコマンド: 組み込みコマンド、ユーザー
 					定義コマンド、コマンド修飾子|:command|。
 					戻り値:
@@ -2381,6 +2379,8 @@ feedkeys({string} [, {mode}])				*feedkeys()*
 			るために、<Esc>が入力されたかのように振る舞う。
 			Note コマンドの実行中に feedkeys() を再帰的に呼び出し
 			た場合、最後の呼び出しですべての先行入力が消費される。
+		'c'	実行時のスクリプトのコンテキストを削除し、旧来のスクリ
+			プトの構文が適用され、"s:var" が動作しないようにする。
 		'!'	'x' と一緒に使用すると挿入モードを終了しない。タイマー
 			が少し後で挿入モードを終了するように設定されているとき
 			にテストで使用できる。CursorHoldIのテストに便利である。
@@ -2456,7 +2456,9 @@ filter({expr1}, {expr2})					*filter()*
 			  return a:idx % 2 == 1
 			endfunc
 			call filter(mylist, function('Odd'))
-<		|lambda| を使えばより短く書ける: >
+<		|lambda| を使えばより短く書ける。|Vim9| の構文では: >
+			call filter(myList, (idx, val) => idx * val <= 42)
+<		旧来のスクリプトの構文では: >
 			call filter(myList, {idx, val -> idx * val <= 42})
 <		"val" を使わない場合は省略できる: >
 			call filter(myList, {idx -> idx % 2 == 1})
@@ -2528,7 +2530,7 @@ flatten({list} [, {maxdepth}])					*flatten()*
 		{list} は変更が入るので、それを望まないなら |flattennew()| を
 		使うこと。
 		Vim9 script では flatten() は使用できないため、常に
-		|flattennew()| を使う必要がある。
+		|flattennew()| を使う必要がある。*E1158*
 								*E900*
 		{maxdepth} はリストのネストをどれだけ深く変更するかを意味する。
 		{maxdepth} が0なら {list} は変更されない。
@@ -2741,8 +2743,10 @@ funcref({name} [, {arglist}] [, {dict}])
 		きに重要である。
 
 		|function()|とは違い、{name}はユーザー定義関数として存在してい
-		なければならない。また、autoload関数についても同様である。
-		{name}は組込み関数であってはならない。
+		なければならない。autoload関数ではすでにロード済みのときだけ機
+		能する(関数名のみを利用する場合にautoload関数を誤ってロードし
+		ないようにするには、代りに |function()| を使用する)。{name}は
+		組込み関数であってはならない。
 
 		|method| としても使用できる: >
 			GetFuncname()->funcref([arg])
@@ -2868,7 +2872,7 @@ get({dict}, {key} [, {default}])
 		|method| として使用したいなら: >
 			mydict->get(key)
 get({func}, {what})
-		Funcref {func}から項目を取得する。{what}の可能な値は:
+		Funcref {func} から項目 {what} を取得する。{what}の可能な値は:
 			"name"	関数名
 			"func"	関数
 			"dict"	辞書
@@ -3111,7 +3115,7 @@ getcharpos({expr})
 		文字列 {expr} の位置を得る。|getpos()| と同様だが返すリスト内
 		の桁番号はバイトインデックスの代わりに文字インデックスになって
 		いる。
-		|getpos()| が 2147483647 のような非常に大きな桁番号を返す場合、
+		|getpos()| が |v:maxcol| と等しい非常に大きな桁番号を返す場合、
 		getcharpos() は最後の文字の文字インデックスを返す。
 
 		例:
@@ -3252,7 +3256,8 @@ getcurpos([{winid}])
 		カーソルの位置を返す。これは getpos('.') に似ているが、追加の
 		"curswant" 情報を含む:
 		    [0, lnum, col, off, curswant] ~
-		"curswant" は縦方向移動の優先的列番号である。
+		"curswant" は縦方向移動の優先的列番号である。|$| コマンド後は
+		非常に巨大な値として |v:maxcol| と同値を返す。
 		|getcursorcharpos()| と |getpos()| も参照。
 		最初の "bufnum" は常に0である。カーソルのバイトでの位置は
 		'col' に返される。文字の位置を得るには |getcursorcharpos()| を
@@ -3585,10 +3590,10 @@ getpos({expr})	文字列{expr}の位置を返す。{expr}として指定でき�
 		を持つ。
 		Note: ビジュアルモードの '< と '> について: ビジュアルモードが
 		"V" (行選択モード) のとき、'< の桁番号はゼロ、'> の桁番号は大
-		きな値になる。
+		きな値として |v:maxcol| と同値になる。
 		桁番号は行内のバイト位置のリストとして返される。行内の文字での
 		位置を取得するなら、|getcharpos()| を使う。
-		桁番号は 2147483647 のような非常に大きな値になり得る。これは
+		桁番号は |v:maxcol| と同値の非常に大きな値になり得る。これは
 		"行末の後" を意味する。
 		この関数はマークの位置を保存し、復元するために使われる: >
 			let save_a_mark = getpos("'a")
@@ -4668,7 +4673,7 @@ js_encode({expr})					*js_encode()*
 		|method| としても使用できる: >
 			GetObject()->js_encode()
 
-json_decode({string})					*json_decode()*
+json_decode({string})				*json_decode()* *E491*
 		これはJSONフォーマットの文字列を解析し、それと同等のVimの値を
 		返す。JSONとVimの値の関係は|json_encode()|を参照。
 		デコードは寛容である:
@@ -5147,6 +5152,8 @@ maparg({name} [, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 					(|mapmode-ic|)
 		  "sid"		<sid> マッピングで使用されるスクリプトローカル
 				ID (|<SID>|)。
+		  "scriptversion"  スクリプトのバージョン番号。999999 は |Vim9|
+				   script を表す。
 		  "lnum"	"sid" 内の行番号。不明の場合はゼロ。
 		  "nowait"	他の長いマッピングを待たない。
 				(|:map-<nowait>|)。
@@ -5285,7 +5292,7 @@ match({expr}, {pat} [, {start} [, {count}]])			*match()*
 			GetText()->match('word')
 			GetList()->match('word')
 <
-				*matchadd()* *E798* *E799* *E801* *E957*
+				*matchadd()* *E290* *E798* *E799* *E801* *E957*
 matchadd({group}, {pattern} [, {priority} [, {id} [, {dict}]]])
 		カレントウィンドウで強調表示するパターンを定義する。このパター
 		ンのことを「マッチ」と呼ぶ。構文グループ {group}で強調する。戻
@@ -6241,8 +6248,8 @@ readdir({directory} [, {expr} [, {dict}]])			*readdir()*
 		  readdir(dirname, {n -> n =~ '.txt$'})
 <		隠しファイルとバックアップファイルをスキップするには: >
 		  readdir(dirname, {n -> n !~ '^\.\|\~$'})
-
-<		オプションの {dict} 引数で値をよりカスタムできる。
+<								*E857*
+		オプションの {dict} 引数で値をよりカスタムできる。
 		現時点では、実行時にソートするか、するならどのような仕方かを指
 		定できる。辞書は以下のメンバーを保持できる:
 
@@ -6380,7 +6387,7 @@ readfile({fname} [, {type} [, {max}]])
 reduce({object}, {func} [, {initial}])			*reduce()* *E998*
 		文字列 |String|、リスト |List| もしくは |Blob| である {object}
 		の各要素ごとに {func} を呼ぶ。{func} は2つの引数で呼ばれる: こ
-		れまでの結果と現在の要素。全要素処理後は結果を返す。
+		れまでの結果と現在の要素。全要素処理後は結果を返す。*E1132*
 
 		{initial} は初期結果値。もし無いなら、最初の {object} の要素を
 		使い {func} の最初の呼び出しは2つ目の要素から行う。{initial}
@@ -7201,7 +7208,7 @@ setcellwidths({list})					*setcellwidths()*
 		   setcellwidths([[0xad, 0xad, 1],
 				\ [0x2194, 0x2199, 2]])
 
-<					*E1109* *E1110* *E1111* *E1112* *E1113*
+<				*E1109* *E1110* *E1111* *E1112* *E1113* *E1114*
 		引数 {list} は3つの数字を持つリストのリスト。3つの数字は[low,
 		high, width]。"low" と "high" は同じ値にでき、その場合はある1
 		文字を参照する。そうでないなら、"low" から "high" まで(両方を
@@ -7915,7 +7922,9 @@ sound_playfile({name} [, {callback}])
 <		|method| としても使用できる: >
 			GetSoundPath()->sound_playfile()
 
-<		{|+sound| 機能つきでコンパイルされたときのみ有効}
+<		エラー *E539* が出ることはないが、でも 538.nl は聞くことができ
+		る。
+		{|+sound| 機能つきでコンパイルされたときのみ有効}
 
 
 sound_stop({id})					*sound_stop()*
@@ -9229,7 +9238,6 @@ win_execute({id}, {command} [, {silent}])		*win_execute()*
 			call win_execute(winid, 'set syntax=python')
 <		`setwinvar()` で同じことをしても自動コマンドはトリガーされず、
 		実際には構文ハイライトは表示されない。
-
 							*E994*
 		すべてのコマンドがポップアップウィンドウで許可されているわけで
 		はない。
@@ -9305,6 +9313,34 @@ win_id2win({expr})					*win_id2win()*
 
 		|method| としても使用できる: >
 			GetWinid()->win_id2win()
+
+win_move_separator({nr}, {offset})			*win_move_separator()*
+		ウィンドウ {nr} の垂直セパレータ(例えば、右側のボーダー)を
+		{offset} 桁分、マウスでドラッグしたかのように動かす。{nr} は
+		ウィンドウ番号もしくは |window-ID| が使える。正の値の {offset}
+		は右への移動になり負の値の {offset} は左への移動になる。ウィン
+		ドウの垂直セパレータの移動はウィンドウの幅と垂直セパレータで隣
+		接する他のウィンドウの幅を変更しうる。移動の変更量の大きさは指
+		定したよりは小さくなりうる(例えば、'winminwidth' 変更の帰結と
+		して)。ウィンドウを見付ければ戻り値が TRUE になり、そうでない
+		なら FALSE になる。
+
+		|method| としても使用できる: >
+			GetWinnr()->win_move_separator(offset)
+
+win_move_statusline({nr}, {offset})			*win_move_statusline()*
+		ウィンドウ {nr} のステータス行(例えば、下側のボーダー)を
+		{offset} 行分、マウスでドラッグしたかのように動かす。{nr} は
+		ウィンドウ番号もしくは |window-ID| が使える。正の値の {offset}
+		は下への移動になり負の値の {offset} は上への移動になる。ウィン
+		ドウのステータス行の移動はウィンドウの高さとステータス行で隣接
+		する他のウィンドウの高さを変更しうる。移動の変更量の大きさは指
+		定したよりは小さくなりうる(例えば、'winminheight' 変更の帰結と
+		して)。ウィンドウを見付ければ戻り値が TRUE になり、そうでない
+		なら FALSE になる。
+
+		Can also be used as a |method|: >
+			GetWinnr()->win_move_statusline(offset)
 
 win_screenpos({nr})					*win_screenpos()*
 		ウィンドウ {nr} のスクリーン位置を 2 つの数値のリストで返す:
@@ -9485,11 +9521,14 @@ winsaveview()	カレントウィンドウの表示状態を復元するための
 		こと。これは副作用があるかもしれない。
 		戻り値は以下のキーを持つ:
 			lnum		カーソルの行番号
-			col		カーソルの桁番号 (Note: getpos() とは
-					異なり最初の桁番号はゼロ)
+			col		カーソルの桁番号 (Note: |getcurpos()|
+					とは異なり最初の桁番号はゼロ)
 			coladd		カーソル位置の桁オフセット。
 					'virtualedit' がオンのとき使われる。
-			curswant	垂直移動するときの桁
+			curswant	垂直移動するときの桁 (Note: 最初のカ
+					ラムは0で、|getcurpos()| が返す値と対
+					応する)。|$| コマンド後は非常に巨大な
+					値として |v:maxcol| と同値になる。
 			topline		ウィンドウの最上行
 			topfill		削除行。差分モードでのみ
 			leftcol		表示されている最初の桁。'wrap' がオフ
@@ -9789,6 +9828,7 @@ vcon			Win32: 仮想コンソールサポートが機能していて、
 vertsplit		ウィンドウの垂直分割をサポート |:vsplit| (常に true)
 vim_starting		Vimの初期化プロセス中は真となる。|startup|
 			*vim_starting*
+vim9script		|Vim9| script をサポート
 viminfo			viminfoをサポート
 vimscript-1		Vim scriptバージョン1 サポート
 vimscript-2		Vim scriptバージョン2 サポート
