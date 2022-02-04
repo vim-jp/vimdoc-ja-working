@@ -2745,8 +2745,8 @@ funcref({name} [, {arglist}] [, {dict}])
 		|function()|とは違い、{name}はユーザー定義関数として存在してい
 		なければならない。autoload関数ではすでにロード済みのときだけ機
 		能する(関数名のみを利用する場合にautoload関数を誤ってロードし
-		ないようにするには、代りに |function()| を使用する)。{name}は
-		組込み関数であってはならない。
+		ないようにするには、代わりに |function()| を使用する)。{name}
+		は組込み関数であってはならない。
 
 		|method| としても使用できる: >
 			GetFuncname()->funcref([arg])
