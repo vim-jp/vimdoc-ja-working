@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 8.2.  Last change: 2022 Jan 28
+*builtin.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 04
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1887,11 +1887,12 @@ digraph_getlist([{listall}])				*digraph_getlist()*
 		する。機能が無効の場合、この関数はエラーメッセージを表示する。
 
 
-digraph_set({chars}, {digraph})				*digraph_set()* *E1205*
+digraph_set({chars}, {digraph})				*digraph_set()*
 		ダイグラフ {chars} をリストに追加する。{chars} は2文字の文字列
 		の必要がある。{digraph} はUTF-8でエンコードされた1文字の文字
-		列。合成文字は無視されないことに注意。この関数は |:digraphs|
-		と同様だがスペース始まりのダイグラフを登録するのに便利である。
+		列。 *E1215*
+		合成文字は無視されないことに注意。この関数は |:digraphs| と同
+		様だがスペース始まりのダイグラフを登録するのに便利である。
 
 		この関数はダイグラフ |digraph| は登録されたなら v:true を返す。
 		もし失敗したなら、エラーメッセージとともに v:false を返す。
@@ -1912,7 +1913,7 @@ digraph_set({chars}, {digraph})				*digraph_set()* *E1205*
 digraph_setlist({digraphlist})				*digraph_setlist()*
 		|digraph_set()| と同じだが複数のダイグラフを一度に追加できる。
 		{digraphlist} はリストのリストで、各リストは |digraph_set()|
-		と同じ {chars} と {digraph} の2つの文字列を持つ。
+		と同じ {chars} と {digraph} の2つの文字列を持つ。 *E1216*
 		例: >
 		    call digraph_setlist([['aa', 'あ'], ['ii', 'い']])
 <
@@ -2530,7 +2531,7 @@ flatten({list} [, {maxdepth}])					*flatten()*
 		{list} は変更が入るので、それを望まないなら |flattennew()| を
 		使うこと。
 		Vim9 script では flatten() は使用できないため、常に
-		|flattennew()| を使う必要がある。*E1158*
+		|flattennew()| を使う必要がある。
 								*E900*
 		{maxdepth} はリストのネストをどれだけ深く変更するかを意味する。
 		{maxdepth} が0なら {list} は変更されない。
@@ -3711,7 +3712,7 @@ getreg([{regname} [, 1 [, {list}]]])			*getreg()*
 			:let cliptext = getreg('*')
 <		レジスタ {regname} がセットされていないときは、結果は空文字列
 		となる。
-		引数 {regname} は文字列である必要がある。
+		引数 {regname} は文字列である必要がある。 *E1162*
 
 		getreg('=')は最後に評価した式レジスタの値を返す。(マップの中で
 		使用する)。
@@ -4713,7 +4714,7 @@ json_encode({expr})					*json_encode()*
 		す。
 		このエンコード方式の詳細はここに記載されている:
 		https://tools.ietf.org/html/rfc7159.html
-		Vimの値は以下の通りに変換される:
+		Vimの値は以下の通りに変換される: *E1161*
 		   数値 |Number|	10進数
 		   浮動小数点数 |Float|	浮動小数点数
 		   浮動小数点数 nan	"NaN"
@@ -4817,7 +4818,7 @@ libcallnr({libname}, {funcname}, {argument})
 
 line({expr} [, {winid}])				*line()*
 		結果は数値で、{expr}で与えられた位置のファイル内での行番号。引
-		数 {expr} は文字列。受け付けられる位置指定は次の通り:
+		数 {expr} は文字列。受け付けられる位置指定は次の通り:	*E1209*
 		    .	    カーソルの位置
 		    $	    現在のバッファの最後の位置
 		    'x	    マークxの位置(マークが設定されていない場合、0が返
@@ -7452,10 +7453,12 @@ setqflist({list} [, {action} [, {what}]])		*setqflist()*
 		    module	モジュール名; 与えられた場合はファイル名の代わ
 				りに quickfix エラーウィンドウ内で使用される。
 		    lnum	ファイル中の行番号
+		    end_lnum	複数行の時の最後の行番号
 		    pattern	エラーの位置を特定するための検索パターン
 		    col		桁番号
 		    vcol	0でない場合: "col" は表示上の桁
 				0の場合: "col" はバイトインデックス
+		    end_col	複数桁の時の最後の桁番号
 		    nr		エラー番号
 		    text	エラーの説明
 		    type	エラータイプを示す1文字。'E', 'W' など。

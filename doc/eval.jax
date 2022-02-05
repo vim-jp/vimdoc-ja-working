@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2022 Jan 24
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 04
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -176,7 +176,7 @@ Note: " " と "0" も空文字列ではないので、TRUE と見なされる。
 
 
 1.2 関数への参照 ~
-					*Funcref* *E695* *E718* *E1086*
+				*Funcref* *E695* *E718* *E1086* *E1192*
 関数への参照は、関数|function()|、関数|funcref()|またはラムダ式|expr-lambda|を
 使うことで得られる。関数への参照は、式の中で関数名が要求される場所で使うと参照
 先の関数を呼び出す。例: >
@@ -743,7 +743,7 @@ Blobの一部は、角括弧内のコロンで区切られた最初と最後の�
 
 
 Blobの変更 ~
-							*blob-modification*
+					*blob-modification* *E1182* *E1184*
 Blobの特定のバイトを変更するには、 |:let| を使用する: >
 	:let blob[4] = 0x44
 
@@ -994,7 +994,7 @@ Note "&&" は "||" よりも高い優先順位を持っている。これは次�
 る時にだけ評価される。
 
 
-expr4							*expr4*
+expr4							*expr4* *E1153*
 -----
 
 expr5 {cmp} expr5
@@ -1151,6 +1151,7 @@ Note 旧来のスクリプトでの "+" と ".." の違い:
 	  0 / 0  = -0x8000000000000000	(浮動小数点数の NaN のようなもの)
 	 >0 / 0  =  0x7fffffffffffffff	(正の無限大のようなもの)
 	 <0 / 0  = -0x7fffffffffffffff	(負の無限大のようなもの)
+|Vim9| script では0除算でエラーになる。			*E1154*
 
 '%' の右辺(法)が0の場合、結果は0になる。
 
@@ -1209,7 +1210,7 @@ expr1は数として扱われる。マルチバイトのエンコーディング
 換すれば良い。例えばカーソルの下のバイトを得るには: >
 	:let c = getline(".")[col(".") - 1]
 
-|Vim9| script では:
+|Vim9| script では:					*E1147* *E1148*
 expr9 が文字列ならば、この値は文字列 expr9 の第 expr1 番目の文字 (合成文字があ
 る場合はそれらを全て含む) に相当する文字列となる。バイトインデックスの場合は
 |strpart()| を使う。
@@ -1287,7 +1288,7 @@ expr9が |Blob| ならば、インデックスexpr1aとexpr1bのバイト数を�
 
 
 expr9.name		辞書|Dictionary|の要素		*expr-entry*
-
+							*E1203* *E1229*
 expr9が辞書|Dictionary|のとき、ドットをつけるとその後に書かれた名前が辞書の
 キーと見なされる。例: expr9[name]。
 
@@ -1313,7 +1314,7 @@ expr9が|Funcref|型の変数のとき、その参照する関数を呼び出す
 
 expr9->name([args])	メソッド呼び出し		*method* *->*
 expr9->{lambda}([args])
-							*E260* *E276*
+							*E260* *E276* *E1265*
 グローバル関数としても利用可能なメソッドの場合、これは次と同じである: >
     name(expr9 [, args])
 これらは "expr9" 専用としても利用できる
@@ -1505,7 +1506,7 @@ Note シングルクォートが使われていることに注意。
 |eval()|を使う。
 
 
-入れ子							*expr-nesting* *E110*
+入れ子						*expr-nesting* *E110*
 -------
 (expr1)			式の入れ子
 
@@ -2621,7 +2622,7 @@ Vim9 関数については |vim9.txt| を参照のこと。
 			関数内で|:nohlsearch| を行っても、関数から戻ると検索結
 			果のハイライトが元に戻ることになる。
 
-			*:endf* *:endfunction* *E126* *E193* *W22*
+			*:endf* *:endfunction* *E126* *E193* *W22* *E1151*
 :endf[unction] [argument]
 			関数定義の終了。最も良いのは、[argument] 無しに行内に
 			これ自身のみを書くこと。
@@ -2981,7 +2982,7 @@ Note: |Vim9| script では `:let` は使用しない。変数の宣言は `:let`
 <			{var-name}が |Blob| の場合、{idx}はblobの長さになる。
 			この場合、1バイトが追加される。
 
-							*E711* *E719*
+					*E711* *E719* *E1165* *E1166* *E1183*
 :let {var-name}[{idx1}:{idx2}] = {expr1}		*E708* *E709* *E710*
 			リスト|List|の一部を式{expr}の値で置き換える。{expr}の
 			値は正しい個数の要素を持つリストでなければならない。
@@ -3307,7 +3308,7 @@ text...
 			|deepcopy()|を参照。
 
 
-:unlo[ckvar][!] [depth] {name} ...			*:unlockvar* *:unlo*
+:unlo[ckvar][!] [depth] {name} ...		*:unlockvar* *:unlo* *E1246*
 			内部変数{name}をアンロックする。|:lockvar|の逆を行う。
 
 :if {expr1}			*:if* *:end* *:endif* *:en* *E171* *E579* *E580*
@@ -3367,7 +3368,7 @@ text...
 :endfo[r]						*:endfo* *:endfor*
 			{object}の各要素に対し、":for" と ":endfor" の間のコマ
 			ンドを繰り返す。{object}はリスト |List| または |Blob|
-			である。
+			である。 *E1177*
 
 			変数{var}に各要素の値がセットされる。
 			|Vim9| script ではループ変数がグローバル/ウィンドウ/タ
@@ -3603,6 +3604,8 @@ text...
 			れる。この例では、`append()` 呼び出しはテキスト付きリ
 			ストをバッファに追加する。これは `:call` に似ている
 			が、どの式でも動作する。
+			|Vim9| script では効果がない式だと *E1207* になる。こ
+			れは間違いに気付くのを助けになる。
 
 			このコマンドは `:ev` や `:eva` に短縮できるが、これら
 			は認識しにくいため、使用するべきでない。
@@ -4731,6 +4734,9 @@ matchstr()やsubstitute()を使えば実現できる。以下の例は、"foobar
 れると、これは古いVim scriptを壊すだろう。これを明確にするために
 |:scriptversion| コマンドを使うことができる。Vim scriptが古いバージョンのVimと
 互換性がない場合、不可解な方法で失敗するのではなく、明示的なエラーを与える。
+
+|Vim9| script で旧来の関数を使うときは、`:function` で、 scriptversion 4 を使
+用してから定義する。
 
 							*scriptversion-1*  >
  :scriptversion 1
