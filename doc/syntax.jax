@@ -2605,8 +2605,8 @@ PROGRESS				*progress.vim* *ft-progress-syntax*
 機能しない場合、または cweb ファイルを一切編集しない場合は、vimrcでこれを使用
 する: >
    :let filetype_w = "progress"
-同じことが "*.i" においてアセンブリと、 "*.p" において Pascal とありえる。アセ
-ンブリと Pascal を使わないとわかっているならこれを使用する: >
+同じことが "*.i" (アセンブリでもありうる)と "*.p" (Pascal でもありうる)にもい
+える。アセンブリと Pascal を使わないとわかっているならこれを使用する: >
    :let filetype_i = "progress"
    :let filetype_p = "progress"
 
