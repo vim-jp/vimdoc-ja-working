@@ -63,8 +63,8 @@ Python 3 インターフェイスは Vim が |+python3| 機能付きでコンパ
 sys をインポートする必要はありません。これはデフォルトで行われます。
 
 							*python-environment*
-Vim で設定した環境変数は Python で常に利用できるとは限らない。Vim と Python が
-どのようにビルドされたかに依存します。以下も参照
+Vim で設定した環境変数は Python で常に利用できるとは限りません。Vim と Python
+がどのようにビルドされたかに依存します。以下も参照
 https://docs.python.org/3/library/os.html#os.environ
 
 Note: Pythonはインデントに関して非常に繊細です。"class" の行と "EOF" の行はまっ
