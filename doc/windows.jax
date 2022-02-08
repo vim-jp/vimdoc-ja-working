@@ -257,9 +257,8 @@ CTRL-W :	|:| と同じ。コマンドラインを入力する。
 オプション 'splitbelow' と 'splitright' が新しいウィンドウが現れる場所に影響を
 及ぼすことに注意。
 								*E36*
-Creating a window will fail if there is not enough room.  Every window needs
-十分な余裕がない場合はウィンドウの生成に失敗する。各ウィンドウは最低でも1画面
-分の行と列が必要であり、時にはそれ以上になる。オプションの 'winminheight' と
+十分な余裕がない場合はウィンドウの生成に失敗する。各ウィンドウは最低でも画面の
+1行と列が必要であり、時にはそれ以上になる。オプションの 'winminheight' と
 'winminwidth' が関係する。
 
 						*:vert* *:vertical*
