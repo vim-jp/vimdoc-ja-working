@@ -1640,8 +1640,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	Vim は 'charconvert' を用いたエンコーディング変換では暗号化をしない。
 	変換後に暗号化をしたいなら、'charconvert' にそうさせる必要がある。
 
-	'charconvert' の式が s: か <SID> で始まるなら、スクリプト
-	ID(|local-function|) に置き換えられる。例: >
+	'charconvert' の式が s: か |<SID>| で始まる場合、スクリプトID
+	(|local-function|) に置き換えられる。例: >
 		set charconvert=s:MyConvert()
 		set charconvert=<SID>SomeConvert()
 <	そうでない場合、式はオプションが設定されたスクリプトのコンテキストで評
