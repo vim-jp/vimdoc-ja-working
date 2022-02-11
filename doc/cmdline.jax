@@ -1,4 +1,4 @@
-*cmdline.txt*   For Vim バージョン 8.2.  Last change: 2022 Jan 08
+*cmdline.txt*   For Vim バージョン 8.2.  Last change: 2022 Feb 04
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -698,7 +698,7 @@ Exコマンドには、その前に行単位の範囲を指定できるものが
 に除外される。
 
 行番号は以下の方法で指定できる:			*:range* *{address}*
-	{number}	絶対的な行番号
+	{number}	絶対的な行番号  *E1247*
 	.		現在の行				  *:.*
 	$		ファイルの最終行			  *:$*
 	%		1,$と同じ (ファイル全体)		  *:%*

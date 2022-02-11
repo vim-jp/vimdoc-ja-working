@@ -1,4 +1,4 @@
-*various.txt*   For Vim バージョン 8.2.  Last change: 2022 Jan 15
+*various.txt*   For Vim バージョン 8.2.  Last change: 2022 Feb 03
 
 
 		VIM リファレンスマニュアル    by Bram Moolenaar
@@ -549,7 +549,7 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 :redi[r] @">		メッセージを無名レジスタにリダイレクトします。互換性の
 			ため、レジスタ名の後ろの ">" は省略できます。
 :redi[r] @">>		メッセージを無名レジスタに追記します。
-
+							*E1092*
 :redi[r] => {var}	メッセージを変数にリダイレクトします。
 			旧来のスクリプトでは: 変数が存在しない場合は、作成され
 			ます。変数がすでにある場合は、空文字列で初期化されま
@@ -564,7 +564,7 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 			|execute()| 関数を使うことができます。
 
 :redi[r] =>> {var}	メッセージを変数に追記します。文字列変数のみ使えます。
-
+								 *E1185*
 :redi[r] END		メッセージのリダイレクトを終了します。
 
 							*:filt* *:filter*
@@ -648,7 +648,7 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 			使用します。次の例では、|:silent| を使ってファイル読み
 			込みに関するメッセージを抑制しつつ、|:unsilent| を使っ
 			て各ファイルの最初の行を表示できるようにしています: >
-    		:silent argdo unsilent echo expand('%') . ": " . getline(1)
+		:silent argdo unsilent echo expand('%') . ": " . getline(1)
 <
 
 						*:verb* *:verbose*
