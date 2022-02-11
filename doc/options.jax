@@ -1283,7 +1283,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	'balloonexpr' を評価した結果が空でないなら、Vimは外部デバッガ(Netbeans
 	またはSun Workshop)にメッセージを送ろうとしない。
 
-	式が s: か <SID> で始まるなら、スクリプトID(|local-function|) に置き換
+	式が s: か |<SID>| で始まる場合、スクリプトID(|local-function|) に置き換
 	えられる。例: >
 		set bexpr=s:MyBalloonExpr()
 		set bexpr=<SID>SomeBalloonExpr()
