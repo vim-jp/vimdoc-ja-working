@@ -3643,8 +3643,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 	この関数が非ゼロを返すと Vim 内部の文章整形処理が使われる。
 
-	式が s: か <SID> で始まるなら、スクリプトID(|local-function|) に置き換
-	えられる。例: >
+	式が s: か |<SID>| で始まる場合、スクリプトID(|local-function|) に置き
+	換えられる。例: >
 		set formatexpr=s:MyFormatExpr()
 		set formatexpr=<SID>SomeFormatExpr()
 <	そうでない場合、式はオプションが設定されたスクリプトのコンテキストで評
