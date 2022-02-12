@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 04
+*builtin.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 08
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -4602,9 +4602,11 @@ islocked({expr})					*islocked()* *E786*
 			:echo islocked('alist')		" 1
 			:echo islocked('alist[1]')	" 0
 
-<		{expr} が存在しない変数のときはエラーメッセージが表示される。変
-		数の存在を確認するには |exists()| を使う。
-		Vim9 script ではローカル変数に対しては動作しない。
+<		{expr} が存在しない変数のときは-1を返す。
+		{expr} が範囲のある、リストか辞書でインデックスが範囲外か要素
+		が存在しないならエラーメッセージが表示される。変数の存在を確認
+		するには |exists()| を使う。
+		Vim9 script ではローカル関数変数に対しては動作しない。
 
 		|method| としても使用できる: >
 			GetName()->islocked()
@@ -7925,7 +7927,7 @@ sound_playfile({name} [, {callback}])
 <		|method| としても使用できる: >
 			GetSoundPath()->sound_playfile()
 
-<		エラー *E539* が出ることはないが、でも 538.nl は聞くことができ
+<		エラー *E538* が出ることはないが、でも 538.nl は聞くことができ
 		る。
 		{|+sound| 機能つきでコンパイルされたときのみ有効}
 
