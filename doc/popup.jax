@@ -263,8 +263,8 @@ popup_close({id} [, {result}])				*popup_close()*
 
 
 popup_create({what}, {options})				*popup_create()*
+							*E450*
 		次のどれかである {what} を見せるポップアップウィンドウを開く:
-		*E450*
 		- バッファ番号
 		- 文字列
 		- 文字列のリスト
