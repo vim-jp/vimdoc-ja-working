@@ -1657,8 +1657,8 @@ Vim9 script ではコマンドブロックが使える。|inline-function| を�
 	:    unlet s:[k]
 	:endfor
 
-Note: Vim9 script では変数はコマンドブロックにローカルにもできる、
-|vim9-scopes| を参照。
+Note: Vim9 script では、変数はコマンドのブロックについてローカルにすることもで
+きる。|vim9-scopes| を参照。
 
 						*buffer-variable* *b:var* *b:*
 "b:" で始まる変数名は、カレントバッファに局所的な変数を意味する。このように一
