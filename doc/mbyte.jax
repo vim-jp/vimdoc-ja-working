@@ -924,9 +924,9 @@ VimはIMEの最後の状態を記録してからIMEをオフにする。そし�
 オプション 'iminsert'、'imsearch'、'imcmdline' を設定して、それぞれ別々に入力
 方法を選択したり、無効にしたりできる。
 
-Windows 9x および Windows NT 4.0 では *global-ime* があったが、しかしすでにサ
-ポートされていない。Active Input Method Manager (Global IME) についてのドキュ
-メントは次の所でまだ見付けることができる:
+Windows 9x および Windows NT 4.0 では *global-ime* があったが、これはサポートさ
+れなくなった。Active Input Method Manager (Global IME) のドキュメントはまだこ
+こにある:
 	http://msdn.microsoft.com/en-us/library/aa741221(v=VS.85).aspx
 
 NOTE: IMEを使用するには入力したい言語をシステムに追加する必要がある。正確な設
