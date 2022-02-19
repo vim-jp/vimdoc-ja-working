@@ -168,7 +168,7 @@ eventhandler()			数値	イベントハンドラの内側なら|TRUE|
 executable({expr})		数値	実行可能な{expr}が存在するなら1
 execute({command})		文字列	{command}を実行し、出力を得る
 exepath({expr})			文字列	コマンド {expr} のフルパス
-exists({expr})			数値	変数{var}が存在したら|TRUE|
+exists({expr})			数値	変数{expr}が存在したら|TRUE|
 exists_compiled({expr})		数値	変数{var}がコンパイル時に存在したら|TRUE|
 exp({expr})			浮動小数点数	{expr}の指数
 expand({expr} [, {nosuf} [, {list}]])
