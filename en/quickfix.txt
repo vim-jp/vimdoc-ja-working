@@ -1,4 +1,4 @@
-*quickfix.txt*  For Vim version 8.2.  Last change: 2021 Dec 03
+*quickfix.txt*  For Vim version 8.2.  Last change: 2022 Feb 08
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -244,7 +244,7 @@ processing a quickfix or location list command, it will be aborted.
 			[!] is not used.  It works like ":qall!" |:qall|,
 			except that Vim returns a non-zero exit code.
 
-							*:cf* *:cfile*
+							*:cf* *:cfi* *:cfile*
 :cf[ile][!] [errorfile]	Read the error file and jump to the first error.
 			This is done automatically when Vim is started with
 			the -q option.  You can use this command when you
@@ -1385,12 +1385,17 @@ Basic items
 	%f		file name (finds a string)
 	%o		module name (finds a string)
 	%l		line number (finds a number)
+	%e		end line number (finds a number)
 	%c		column number (finds a number representing character
 			column of the error, byte index, a <tab> is 1
 			character column)
 	%v		virtual column number (finds a number representing
 			screen column of the error (1 <tab> == 8 screen
 			columns))
+	%k		end column number (finds a number representing
+			the character column of the error, byte index, or a
+			number representing screen end column of the error if
+			it's used with %v)
 	%t		error type (finds a single character):
 			    e - error message
 			    w - warning message
