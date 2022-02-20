@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 04
+*syntax.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 06
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -3587,12 +3587,12 @@ ZSH						    *zsh.vim* *ft-zsh-syntax*
 	影響する。
 
 :sy[ntax] case
-	"syntax case match" または "syntax case ignore" (翻訳される)を表示す
-	る。
+	"syntax case match" または "syntax case ignore" を表示する。
 
 折り畳みレベルの定義					*:syn-foldlevel*
 
-:sy[ntax] foldlevel [start | minimum]
+:sy[ntax] foldlevel start
+:sy[ntax] foldlevel minimum
 	foldmethod=syntax 利用時での行の折り畳みレベル算出の方法を定義する
 	(|fold-syntax| と |:syn-fold| を参照):
 
@@ -3604,14 +3604,16 @@ ZSH						    *zsh.vim* *ft-zsh-syntax*
 	方向に開閉する場合に、より自然な折りたたみが生成される。
 
 :sy[ntax] foldlevel
-	"syntax foldlevel start" かもしくは "syntax foldlevel minimum" を表示
-	する。
+	現在の折り畳みレベルを表示する手段、"syntax foldlevel start" もしくは
+	"syntax foldlevel minimum" を表示する。
 
 	{|+folding|機能なしでコンパイルされた場合は意味を持たない}
 
 スペルチェック						*:syn-spell*
 
-:sy[ntax] spell [toplevel | notoplevel | default]
+:sy[ntax] spell toplevel
+:sy[ntax] spell notoplevel
+:sy[ntax] spell default
 	構文アイテムに入っていないテキストに対して、どこでスペルチェック
 	を行うかを定義する:
 
@@ -3627,8 +3629,8 @@ ZSH						    *zsh.vim* *ft-zsh-syntax*
 	らない。
 
 :sy[ntax] spell
-	"syntax spell toplevel", "syntax spell notoplevel" または
-	"syntax spell default" (翻訳される)を表示する。
+	現在の文法でのスペルチェックの手段、"syntax spell toplevel", "syntax
+	spell notoplevel" または "syntax spell default" を表示する。
 
 
 SYNTAX ISKEYWORD SETTING				*:syn-iskeyword*
@@ -4198,8 +4200,7 @@ Note この例はネストした "if" には機能しないことに注意。ネ
 	ればならない状態に戻る。
 
 :sy[ntax] conceal
-	"syntax conceal on" または "syntax conceal off" (翻訳される)を表示す
-	る。
+	"syntax conceal on" または "syntax conceal off" を表示する。
 
 ==============================================================================
 8. syntaxのパターン				*:syn-pattern* *E401* *E402*
