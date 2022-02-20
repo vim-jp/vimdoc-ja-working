@@ -1,4 +1,4 @@
-*various.txt*   For Vim version 8.2.  Last change: 2022 Feb 03
+*various.txt*   For Vim version 8.2.  Last change: 2021 Sep 06
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -244,10 +244,10 @@ g8			Print the hex values of the bytes used in the
 			compiler will have set stdin to a non-interactive
 			mode.
 
-							*:!cmd* *:!*
+							*:!cmd* *:!* *E34*
 :!{cmd}			Execute {cmd} with the shell.  See also the 'shell'
 			and 'shelltype' option.
-							*E34*
+
 			Any '!' in {cmd} is replaced with the previous
 			external command (see also 'cpoptions').  But not when
 			there is a backslash before the '!', then that
@@ -369,7 +369,7 @@ N  *+digraphs*		|digraphs| *E196*
    *+dnd*		Support for DnD into the "~ register |quote_~|.
 B  *+emacs_tags*	|emacs-tags| files
 N  *+eval*		expression evaluation |eval.txt|
-T  *+ex_extra*		always on now, used to be for Vim's extra Ex commands
+N  *+ex_extra*		always on now, used to be for Vim's extra Ex commands
 N  *+extra_search*	|'hlsearch'| and |'incsearch'| options.
 -  *+farsi*		Removed: |farsi| language
 N  *+file_in_path*	|gf|, |CTRL-W_f| and |<cfile>|
@@ -391,7 +391,7 @@ m  *+hangul_input*	Hangul input support |hangul|
 T  *+insert_expand*	|insert_expand| Insert mode completion
 m  *+ipv6*		Support for IPv6 networking |channel|
 m  *+job*		starting and stopping jobs |job|
-T  *+jumplist*		|jumplist|; Always enabled since 8.2.3795
+S  *+jumplist*		|jumplist|
 B  *+keymap*		|'keymap'|
 N  *+lambda*		|lambda| and |closure|
 B  *+langmap*		|'langmap'|
@@ -423,8 +423,8 @@ N  *+multi_lang*	non-English language support |multi-lang|
 m  *+mzscheme*		Mzscheme interface |mzscheme|
 m  *+mzscheme/dyn*	Mzscheme interface |mzscheme-dynamic| |/dyn|
 m  *+netbeans_intg*	|netbeans|
-T  *+num64*		64-bit Number support |Number|
-			Always enabled since 8.2.0271, use v:numbersize to
+   *+num64*		64-bit Number support |Number|
+   			Always enabled since 8.2.0271, use v:numbersize to
 			check the actual size of a Number.
 m  *+ole*		Win32 GUI only: |ole-interface|
 N  *+packages*		Loading |packages|
@@ -471,16 +471,15 @@ N  *+textobjects*	|text-objects| selection
 N  *+textprop*		|text-properties|
    *+tgetent*		non-Unix only: able to use external termcap
 N  *+timers*		the |timer_start()| function
-T  *+title*		Setting the window 'title' and 'icon'; Always enabled
+N  *+title*		Setting the window 'title' and 'icon'
 N  *+toolbar*		|gui-toolbar|
 T  *+user_commands*	User-defined commands. |user-commands|
 			Always enabled since 8.1.1210.
 B  *+vartabs*		Variable-width tabstops. |'vartabstop'|
-T  *+vertsplit*		Vertically split windows |:vsplit|; Always enabled
-			since 8.0.1118.
-T  *+vim9script*	|Vim9| script
 N  *+viminfo*		|'viminfo'|
-T  *+virtualedit*	|'virtualedit'| Always enabled since 8.1.826.
+   *+vertsplit*		Vertically split windows |:vsplit|; Always enabled
+			since 8.0.1118.
+N  *+virtualedit*	|'virtualedit'| Always enabled since 8.1.826.
 T  *+visual*		Visual mode |Visual-mode| Always enabled since 7.4.200.
 T  *+visualextra*	extra Visual mode commands |blockwise-operators|
 T  *+vreplace*		|gR| and |gr|
@@ -549,40 +548,37 @@ N  *+X11*		Unix only: can restore window title |X11|
 			backward compatibility, the ">" after the register
 			name can be omitted.
 :redi[r] @">>		Append messages to the unnamed register.
-							*E1092*
-:redi[r] => {var}	Redirect messages to a variable.
-			In legacy script: If the variable doesn't exist, then
-			it is created.  If the variable exists, then it is
-			initialized to an empty string.  After the redirection
-			starts, if the variable is removed or locked or the
-			variable type is changed, then further command output
-			messages will cause errors.
-			In Vim9 script: the variable must have been declared
-			as a string.
+
+:redi[r] => {var}	Redirect messages to a variable.  If the variable
+			doesn't exist, then it is created.  If the variable
+			exists, then it is initialized to an empty string.
 			The variable will remain empty until redirection ends.
-			Only string variables can be used.
+			Only string variables can be used.  After the
+			redirection starts, if the variable is removed or
+			locked or the variable type is changed, then further
+			command output messages will cause errors.
 			To get the output of one command the |execute()|
 			function can be used instead of redirection.
 
 :redi[r] =>> {var}	Append messages to an existing variable.  Only string
 			variables can be used.
-								 *E1185*
+
 :redi[r] END		End redirecting messages.
 
 							*:filt* *:filter*
-:filt[er][!] {pattern} {command}
-:filt[er][!] /{pattern}/ {command}
+:filt[er][!] {pat} {command}
+:filt[er][!] /{pat}/ {command}
 			Restrict the output of {command} to lines matching
-			with {pattern}.  For example, to list only xml files: >
+			with {pat}.  For example, to list only xml files: >
 				:filter /\.xml$/ oldfiles
 <			If the [!] is given, restrict the output of {command}
-			to lines that do NOT match {pattern}.
+			to lines that do NOT match {pat}.
 
-			{pattern} is a Vim search pattern.  Instead of enclosing
+			{pat} is a Vim search pattern.  Instead of enclosing
 			it in / any non-ID character (see |'isident'|) can be
-			used, so long as it does not appear in {pattern}.
-			Without the enclosing character the pattern cannot
-			include the bar character. 'ignorecase' is not used.
+			used, so long as it does not appear in {pat}.  Without
+			the enclosing character the pattern cannot include the
+			bar character. 'ignorecase' is not used.
 
 			The pattern is matched against the relevant part of
 			the output, not necessarily the whole line. Only some
@@ -602,7 +598,7 @@ N  *+X11*		Unix only: can restore window title |X11|
 			   |:oldfiles|   - filter by file name
 			   |:registers|  - filter by register contents
 					   (does not work multi-line)
-			   |:set|        - filter by option name
+			   |:set|        - filter by variable name
 
 			Only normal messages are filtered, error messages are
 			not.
@@ -649,7 +645,7 @@ N  *+X11*		Unix only: can restore window title |X11|
 			used.  In this example |:silent| is used to avoid the
 			message about reading the file and |:unsilent| to be
 			able to list the first line of each file. >
-		:silent argdo unsilent echo expand('%') . ": " . getline(1)
+    		:silent argdo unsilent echo expand('%') . ": " . getline(1)
 <
 
 						*:verb* *:verbose*
