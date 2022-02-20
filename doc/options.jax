@@ -421,7 +421,7 @@ Note: 将来的に、より多くのグローバルオプションが |global-lo
 	set opfunc=funcref('MyOpFunc')
 	set opfunc={a\ ->\ MyOpFunc(a)}
 
-スクリプトローカル関数を設定する: >
+スクリプトローカル関数を設定: >
 	set opfunc=s:MyLocalFunc
 	set opfunc=<SID>MyLocalFunc
 |Vim9| script では関数がスクリプト内にあるなら "s:" や "<SID>" が不要になった:
