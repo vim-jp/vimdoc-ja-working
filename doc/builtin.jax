@@ -4649,7 +4649,7 @@ join({list} [, {sep}])					*join()*
 		この逆を行う関数は|split()|である。
 
 		|method| としても使用できる: >
-			mydict->join()
+			mylist->join()
 
 js_decode({string})					*js_decode()*
 		|json_decode()| に似ているが以下が異なる:
