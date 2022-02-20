@@ -1,4 +1,4 @@
-*various.txt*   For Vim バージョン 8.2.  Last change: 2021 Sep 06
+*various.txt*   For Vim バージョン 8.2.  Last change: 2022 Feb 03
 
 
 		VIM リファレンスマニュアル    by Bram Moolenaar
@@ -245,10 +245,10 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 			が起動された場合には、コンパイラが標準入力を非対話型
 			モードにしてしまうので使用できません。
 
-							*:!cmd* *:!* *E34*
+							*:!cmd* *:!*
 :!{cmd}			シェルで {cmd} を実行します。'shell' と 'shelltype' も
 			参照。
-
+							*E34*
 			{cmd} の中の '!' は以前使用した外部プログラムに置
 			き換えられます ('cpoptions' も参照)。'!' の前にバック
 			スラッシュがある場合はバックスラッシュが削除され '!'
@@ -368,7 +368,7 @@ N  *+digraphs*		|digraphs| *E196*
    *+dnd*		"~レジスタ |quote_~|を使ったDnDのサポート
 B  *+emacs_tags*	|emacs-tags| ファイル
 N  *+eval*		式評価 {訳注: Vim script} |eval.txt|
-N  *+ex_extra*		今は常にオン、かつてVimの拡張Exコマンドのためにあった
+T  *+ex_extra*		今は常にオン、かつてVimの拡張Exコマンドのためにあった
 N  *+extra_search*	|'hlsearch'| と |'incsearch'| オプション
 -  *+farsi*		削除済み; |farsi| 言語
 N  *+file_in_path*	|gf|, |CTRL-W_f| と |<cfile>|
@@ -390,7 +390,7 @@ m  *+hangul_input*	ハングル入力サポート |hangul|
 T  *+insert_expand*	|insert_expand| 挿入モード補完
 m  *+ipv6*		IPv6 ネットワーク通信サポート |channel|
 m  *+job*		job の開始と停止 |job|
-S  *+jumplist*		|jumplist|
+T  *+jumplist*		|jumplist|。8.2.3795以降は常に有効になっている。
 B  *+keymap*		|'keymap'|
 N  *+lambda*		|lambda| と |closure|
 B  *+langmap*		|'langmap'|
@@ -422,7 +422,7 @@ N  *+multi_lang*	多言語サポート |multi-lang|
 m  *+mzscheme*		Mzscheme インターフェイス |mzscheme|
 m  *+mzscheme/dyn*	Mzscheme インターフェイス |mzscheme-dynamic| |/dyn|
 m  *+netbeans_intg*	|netbeans|
-   *+num64*		64ビットの数値をサポート |Number|
+T  *+num64*		64ビットの数値をサポート |Number|
    			8.2.0271以降は常に有効になっている。実際の数値のサイズ
 			を確認するにはv:numbersizeを使用すること。
 m  *+ole*		Win32 GUI のみ: |ole-interface|
@@ -471,15 +471,17 @@ N  *+textobjects*	|text-objects| 選択
 N  *+textprop*		|text-properties|
    *+tgetent*		非Unix のみ: 外部termcapを使用可能
 N  *+timers*		|timer_start()| 関数
-N  *+title*		ウィンドウタイトルとアイコン設定 |'title'| |'icon'|
+T  *+title*		ウィンドウタイトルとアイコン設定 |'title'| |'icon'|;
+			常に有効
 N  *+toolbar*		|gui-toolbar|
 T  *+user_commands*	ユーザー定義コマンド |user-commands|
 			8.1.1210 からは常に有効。
 B  *+vartabs*		可変幅のタブストップ |'vartabstop'|
-N  *+viminfo*		|'viminfo'|
-   *+vertsplit*		ウィンドウの垂直分割 |:vsplit|; 8.0.1118 からは常に
+T  *+vertsplit*		ウィンドウの垂直分割 |:vsplit|; 8.0.1118 からは常に
 			有効。
-N  *+virtualedit*	|'virtualedit'| 8.1.826 からは常に有効
+T  *+vim9script*	|Vim9| script
+N  *+viminfo*		|'viminfo'|
+T  *+virtualedit*	|'virtualedit'| 8.1.826 からは常に有効
 T  *+visual*		ビジュアルモード |Visual-mode| 7.4.200からは常に有効
 T  *+visualextra*	拡張ビジュアルモードコマンド |blockwise-operators|
 T  *+vreplace*		|gR| と |gr|
@@ -541,43 +543,45 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 :redi[r] @+>		メッセージをセレクションまたはクリップボードにリダイレ
 			クトします。互換性のため、レジスタ名の後ろの ">" は省
 			略できます。|quotestar| と |quoteplus| を参照。
-:redi[r] @*>>		
+:redi[r] @*>>
 :redi[r] @+>>		メッセージをクリップボードに追記します。
 
 :redi[r] @">		メッセージを無名レジスタにリダイレクトします。互換性の
 			ため、レジスタ名の後ろの ">" は省略できます。
 :redi[r] @">>		メッセージを無名レジスタに追記します。
-
-:redi[r] => {var}	メッセージを変数にリダイレクトします。変数が存在しない
-			場合は、作成されます。変数がすでにある場合は、空文字列
-			で初期化されます。
+							*E1092*
+:redi[r] => {var}	メッセージを変数にリダイレクトします。
+			旧来のスクリプトでは: 変数が存在しない場合は、作成され
+			ます。変数がすでにある場合は、空文字列で初期化されま
+			す。リダイレクトを開始した後で変数を変更したり、ロック
+			したり、変数タイプを変更したりすると、それ以降のコマン
+			ドがメッセージを出力するときにエラーが起こります。
+			Vim9 script では: 変数が文字列として宣言されている必要
+			があります。
 			リダイレクトが終了するまでは、変数は空のままです。
-			文字列変数のみ使えます。リダイレクトを開始した後で変数
-			を変更したり、ロックしたり、変数タイプを変更したりする
-			と、それ以降のコマンドがメッセージを出力するときにエラー
-			が起こります。
+			文字列変数のみ使えます。
 			コマンド1つの出力を取得するのにはリダイレクトの代わりに
 			|execute()| 関数を使うことができます。
 
 :redi[r] =>> {var}	メッセージを変数に追記します。文字列変数のみ使えます。
-
+								 *E1185*
 :redi[r] END		メッセージのリダイレクトを終了します。
 
 							*:filt* *:filter*
-:filt[er][!] {pat} {command}
-:filt[er][!] /{pat}/ {command}
-			コマンドの出力を {pat} に一致する行に制限します。例と
-			して xml ファイルだけを一覧する場合には以下のようにし
-			ます: >
+:filt[er][!] {pattern} {command}
+:filt[er][!] /{pattern}/ {command}
+			コマンドの出力を {pattern} に一致する行に制限します。
+			例として xml ファイルだけを一覧する場合には以下のよう
+			にします: >
 				:filter /\.xml$/ oldfiles
-<			[!] を付けたときは、コマンドの出力を {pat} に一致しな
-			い行に制限します。
+<			[!] を付けたときは、コマンドの出力を {pattern} に一致
+			しない行に制限します。
 
-			{pat} は Vim の検索パターンです。パターンを囲む "/"
-			は、{pat} 内に使われない限り、非ID文字 (|'isident'|)
-			で代用できます。パターンを囲む文字を省略した場合は、パ
-			ターンにバー文字 {訳注: "|"} を含むことはできなくなり
-			ます。'ignorecase' は使われません。
+			{pattern} は Vim の検索パターンです。パターンを囲む
+			"/" は、{pattern} 内に使われない限り、非ID文字
+			(|'isident'|) で代用できます。パターンを囲む文字を省略
+			した場合は、パターンにバー文字 {訳注: "|"} を含むこと
+			はできなくなります。'ignorecase' は使われません。
 
 			パターンは出力に部分一致でマッチするので、行全体に
 			マッチするパターンを指定する必要はありません。一部のコ
@@ -598,7 +602,7 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 			   |:oldfiles|   - ファイル名でフィルタ
 			   |:registers|  - レジスタの内容でフィルタ
 					   (複数行は動作しない)
-			   |:set|        - 変数名でフィルタ
+			   |:set|        - オプション名でフィルタ
 
 			通常のメッセージだけがフィルタリングされ、エラー
 			メッセージはされません。 {訳注: 常に出力されます}
@@ -644,7 +648,7 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 			使用します。次の例では、|:silent| を使ってファイル読み
 			込みに関するメッセージを抑制しつつ、|:unsilent| を使っ
 			て各ファイルの最初の行を表示できるようにしています: >
-    		:silent argdo unsilent echo expand('%') . ": " . getline(1)
+		:silent argdo unsilent echo expand('%') . ": " . getline(1)
 <
 
 						*:verb* *:verbose*
