@@ -3604,7 +3604,7 @@ ZSH						    *zsh.vim* *ft-zsh-syntax*
 	方向に開閉する場合に、より自然な折りたたみが生成される。
 
 :sy[ntax] foldlevel
-	現在の折り畳みレベルを表示する手段、"syntax foldlevel start" もしくは
+	現在の折り畳みレベルを表示する方法、"syntax foldlevel start" もしくは
 	"syntax foldlevel minimum" を表示する。
 
 	{|+folding|機能なしでコンパイルされた場合は意味を持たない}
@@ -3629,7 +3629,7 @@ ZSH						    *zsh.vim* *ft-zsh-syntax*
 	らない。
 
 :sy[ntax] spell
-	現在の文法でのスペルチェックの手段、"syntax spell toplevel", "syntax
+	現在の構文でのスペルチェックの方法、"syntax spell toplevel", "syntax
 	spell notoplevel" または "syntax spell default" を表示する。
 
 
