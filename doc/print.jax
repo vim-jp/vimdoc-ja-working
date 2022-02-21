@@ -172,12 +172,12 @@ MS-Windows 以外のシステムの初期設定では、"v:shell_error" を足�
 クを使っています。"v:shell_error" には system() の呼び出しでエラーが起きたとき
 に 0 以外の値が入ります。
 
-式が s: か |<SID>| で始まる場合、スクリプトID(|local-function|) に置き換えられ
-る。例: >
+式が s: か |<SID>| で始まる場合は、スクリプトID(|local-function|) に置き換えら
+れます。例: >
 		set printexpr=s:MyPrintFile()
 		set printexpr=<SID>SomePrintFile()
 そうでない場合、式はオプションが設定されたスクリプトのコンテキストで評価され、
-その結果スクリプトローカルな要素を使用できる。
+その結果スクリプトローカルな要素を使用できます。
 
 セキュリティ上の理由から、このオプションを |modeline| または |sandbox| 内で設
 定することはできません。
