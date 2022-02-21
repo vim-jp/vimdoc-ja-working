@@ -739,8 +739,8 @@ DiffUpdated			差分が更新された後。使用されているdiffコマン�
 				の種類(内部または外部)に応じて、変更毎か
 				|:diffupdate| 実行時に発生する。
 							*DirChangedPre*
-DirChangedPre			|DirChanged| となる、作業ディレクトリが変更と
-				なるとき。パターンは |DirChanged| と同様。新し
+DirChangedPre			|DirChanged| と同じように、作業ディレクトリが変更
+				されようとしているとき。パターンは |DirChanged| と同様。新し
 				いディレクトリ名は v:event.directory にある。
 							*DirChanged*
 DirChanged			|:cd|, |:tcd| もしくは |:lcd| コマンドによって、
