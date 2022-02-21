@@ -370,7 +370,7 @@ Vim script の書き方はユーザーマニュアルの41章|usr_41.txt|を参�
 			|:vim9cmd| を参照。
 
 						*:scr* *:scriptnames*
-:scr[iptnames]		読み込まれているスクリプトを確認していった順番どおりに
+:scr[iptnames]		読み込まれているスクリプトを最初に遭遇した順番どおりに
 			全て表示する。数字はスクリプトのID(識別子) |<SID>| に
 			使われている。
 			`import autoload` でスクリプトを利用した場合は実際には
@@ -488,7 +488,7 @@ Windowsで作られたファイル)を使っているならば、全ての行が
 		\ "very long regexp"
 		\ keepend
 
-|Vim9| script ではバックスラッシュの省略できることがよくあるが、常にそうではな
+|Vim9| script ではバックスラッシュを省略できることがよくあるが、常にそうではな
 い。 |vim9-line-continuation| を参照。
 
 ":append" と ":insert" コマンドには1つ問題がある: >
