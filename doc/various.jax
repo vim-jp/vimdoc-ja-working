@@ -390,7 +390,7 @@ m  *+hangul_input*	ハングル入力サポート |hangul|
 T  *+insert_expand*	|insert_expand| 挿入モード補完
 m  *+ipv6*		IPv6 ネットワーク通信サポート |channel|
 m  *+job*		job の開始と停止 |job|
-T  *+jumplist*		|jumplist|。8.2.3795以降は常に有効になっている。
+T  *+jumplist*		|jumplist|; 8.2.3795以降は常に有効
 B  *+keymap*		|'keymap'|
 N  *+lambda*		|lambda| と |closure|
 B  *+langmap*		|'langmap'|
