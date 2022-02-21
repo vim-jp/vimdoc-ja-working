@@ -827,14 +827,14 @@ Python 内で SystemExit 例外を発生させても Vim は終了しません�
 <
 							*E1266*
 このエラーは Python 3 が要求するモジュールがロードできないときに発生します。こ
-れはあなたの Python 3 が正しくインストールされていない、もしくはあたなの設定に
-間違いがあることを意味します。次の要素を確認してください:
+れはあなたの Python 3 が正しくインストールされていない、もしくはあなたの設定に
+間違いがあることを意味します。次の項目を確認してください:
 1. Python 3 が正しくインストールされていることを確認する。また Python のバー
    ジョンを確認する。
 2. 'pythonthreedll' オプションを確認する。
 3. 'pythonthreehome' オプションを確認する。
-4. MS-Windows で  'pythonthreedll' を設定していないなら環境変数 PATH を確認す
-   る、where.exe で dll がロードできるかを確認できる。
+4. 'pythonthreedll' を設定していないなら環境変数 PATH を確認する。
+   MS-Windows では  where.exe でどの dll がロードされるかを確認できる。
    例 >
 	where.exe python310.dll
 5. 環境変数 PYTHONPATH と PYTHONHOME を確認する。
