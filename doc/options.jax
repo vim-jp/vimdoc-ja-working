@@ -424,8 +424,8 @@ Note: 将来的に、より多くのグローバルオプションが |global-lo
 スクリプトローカル関数を設定: >
 	set opfunc=s:MyLocalFunc
 	set opfunc=<SID>MyLocalFunc
-|Vim9| script では関数がスクリプト内にあるなら "s:" や "<SID>" が不要になった:
->
+|Vim9| script では、関数がスクリプト内に存在する場合、"s:" や "<SID>" を省略で
+きる: >
 	set opfunc=MyLocalFunc
 
 関数への参照の変数を用いて設定: >
