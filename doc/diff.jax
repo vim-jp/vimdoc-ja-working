@@ -368,7 +368,7 @@ g:diff_translations を 0 に設定する: >
 
 	v:fname_in		基準となるファイル
 	v:fname_new		同ファイルの新バージョン
-	v:fname_out		結果を出力し保存する先の差分ファイル
+	v:fname_out		結果の差分ファイルを書き込む場所
 
 その上、'diffexpr' は 'diffopt' オプションの "icase" と "iwhite" についても考
 慮するべきだろう。'diffexpr' は 'lines' と 'columns' の値を変更できない。
