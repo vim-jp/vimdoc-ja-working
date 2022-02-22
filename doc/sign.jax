@@ -50,7 +50,7 @@
 
 	:highlight SignColumn guibg=darkgrey
 <
-'cursorline' が有効ならば、CursorLineSign ハイライトグループが使われる
+'cursorline' が有効な場合、CursorLineSign ハイライトグループが使われる
 |hl-CursorLineSign|。
 							*sign-identifier*
 設置された各目印は、目印IDと呼ばれる番号によって識別される。この識別子は、目印
@@ -150,8 +150,8 @@
 		テキスト部分に使用されるハイライトグループ。
 
 	culhl={group}
-		目印と同じ行にカーソルがあるときかつ 'cursorline' が有効な場合
-		にテキスト部分に使われるハイライトグループ。
+		カーソルが目印と同じ行にあり、'cursorline' が有効な場合にテキ
+		スト部分に使用されるハイライトグループ。
 
 	例: >
 		:sign define MySign text=>> texthl=Search linehl=DiffText
@@ -412,9 +412,9 @@ sign_define({list})
 		   text		アイコンがない場合、またはGUIが使用されていな
 				い場合に表示されるテキスト。
 		   texthl	text項目に使用されるハイライトグループ
-		   culhl	目印と同じ行にカーソルがあるときかつ
-				'cursorline' が有効な場合にtext項目に使われる
-				ハイライトグループ。
+		   culhl	カーソルが目印と同じ行にあり、'cursorline' が
+				有効な場合にtext項目に使用されるハイライトグ
+				ループ。
 
 		{name}という名前の目印がすでに存在する場合は、その目印の属性が
 		更新される。
@@ -459,7 +459,7 @@ sign_getdefined([{name}])				*sign_getdefined()*
 				い場合に表示されるテキスト。
 		   texthl	text 項目に使用されるハイライトグループ。設定
 				されなければ存在しない。
-		   culhl	カーソルが目印と同じ行にあり 'cursorline' が有
+		   culhl	カーソルが目印と同じ行にあり、'cursorline' が有
 				効な時に text 項目が利用するハイライトグルー
 				プ。設定されなければ存在しない。
 
