@@ -1267,7 +1267,7 @@ VimResume			Vimがサスペンドと |VimSuspend| がトリガーした
 <							*VimSuspend*
 VimSuspend			Vimのインスタンスがサスペンドしたとき。Vim内で
 				CTRL-Z がタイプされた時、もしくは SIGTSTP シグ
-				ナルがVimに送られた時で SIGSTOP ではない。
+				ナルがVimに送られた時で、SIGSTOP ではない。
 							*WinClosed*
 WinClosed			ウィンドウが閉じた後。パターンは |window-ID|
 				に対して照合される。<amatch> と <afile> は共に
