@@ -833,8 +833,8 @@ Python 内で SystemExit 例外を発生させても Vim は終了しません�
    ジョンを確認する。
 2. 'pythonthreedll' オプションを確認する。
 3. 'pythonthreehome' オプションを確認する。
-4. 'pythonthreedll' を設定していないなら環境変数 PATH を確認する。
-   MS-Windows では  where.exe でどの dll がロードされるかを確認できる。
+4. 'pythonthreedll' を設定していない場合、環境変数 PATH を確認する。
+   MS-Windows では where.exe でどの dll がロードされるかを確認できる。
    例 >
 	where.exe python310.dll
 5. 環境変数 PYTHONPATH と PYTHONHOME を確認する。
