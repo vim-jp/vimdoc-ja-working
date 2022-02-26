@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 04
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 20
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2120,7 +2120,7 @@ v:lnum		'foldexpr' |fold-expr| と 'indentexpr' に使うための行番号。�
 
 						*v:maxcol* *maxcol-variable*
 v:maxcol	最大行長。使用場所に応じて、画面の行数、文字数、またはバイト数
-		になる。
+		になる。現在はすべてのシステムで値が2147483647になっている。
 
 					*v:mouse_win* *mouse_win-variable*
 v:mouse_win	|getchar()|でマウスクリックイベントが発生したときのウィンドウ
@@ -2913,8 +2913,8 @@ sourceするかVimを再スタートさせる。
 ると、これは動作しない。
 トップレベルでオートロード機能を使うのは避けること。
 
-|Vim9| scriptでは、autpload スクリプトではない所で "#" 文字を関数名に使用する
-と、エラー *E1263* が発生する。
+|Vim9| scriptでは、"#" 文字を関数名内に含んで定義すると、エラー *E1263* が発生
+する。"#" を含まない名前を利用し `:export` を利用しなくてはならない。
 
 Hint: たくさんのファイルからなるスクリプトを配布する場合には、|vimball|ユーティ
 リティを使うとそれらをまとめることができる。ユーザーマニュアルの
