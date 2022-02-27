@@ -1,39 +1,39 @@
-*version9.txt*  For Vim version 8.2.  Last change: 2022 Feb 26
+*version9.txt*  For Vim バージョン 8.2.  Last change: 2022 Feb 26
 
 
-		  VIM REFERENCE MANUAL    by Bram Moolenaar
+		  VIMリファレンスマニュアル	  by Bram Moolenaar
 
 
 				*vim-9.0* *vim-9* *version-9.0* *version9.0*
 Welcome to Vim 9!  Several years have passed since the previous release.
 A large number of bugs have been fixed, many nice features have been added
-and Vim9 script syntax is introduced.  This file mentions all the new items
-and changes to existing features since Vim 8.2.0. The patches up to Vim 8.2
-can be found here: |vim-8.2|.
+and Vim9 script syntax is introduced.
+このファイルは Vim 8.2.0 以降のすべての新規要素と既存の機能に対する変更に言
+及しています。Vim 8.2 までのパッチはここで見られます: |vim-8.2|
 
-Use this command to see the full version and features information of the Vim
-program you are using: >
+あなたが使用している Vim のバージョンと機能に関する全ての情報を見るには以下の
+コマンドを使用してください: >
 	:version
 
-NEW FEATURES				|new-9|
-	Vim script enhancements		|new-vim-script-9|
-	Various new items		|new-items-9|
+新機能					|new-9|
+	Vim script の拡張		|new-vim-script-9|
+	さまざまな新要素		|new-items-9|
 
-INCOMPATIBLE CHANGES			|incompatible-9|
+非互換な変更				|incompatible-9|
 
-IMPROVEMENTS				|improvements-9|
+改善点					|improvements-9|
 
-COMPILE TIME CHANGES			|compile-changes-9|
+コンパイル時の変更			|compile-changes-9|
 
-PATCHES					|patches-9|
+パッチ					|patches-9|
 
 
-See |vi_diff.txt| for an overview of differences between Vi and Vim 9.0.
-See |version4.txt|, |version5.txt|, |version6.txt|, |version7.txt| and
-|version8.txt| for differences between Vim versions.
+Vi と Vim 9.0 の違いの概要については |vi_diff.txt| を参照してください。
+Vimのバージョン間の違いについては |version4.txt|, |version5.txt|,
+|version6.txt|, |version7.txt|, |version8.txt| を参照してください。
 
-You can find an overview of the most important changes (according to Martin
-Tournoij) on this site: https://www.arp242.net/vimlog/
+このサイトで(Martin Tournoijによる)最重要な変更の概要を見付けることができます:
+https://www.arp242.net/vimlog/
 
 
 Vim version 9.0 is dedicated to Sven Guckes, who passed away in February 2022
@@ -42,10 +42,9 @@ He registered the vim.org domain and created the first Vim website.  We will
 remember him!
 
 ==============================================================================
-NEW FEATURES						*new-9*
+新機能							*new-9*
 
-First an overview of the more interesting new features.  A comprehensive list
-is below.
+初めに、より興味深い新機能の概要を示します。包括的な一覧は下にあります。
 
 
 Vim9 script ~
@@ -65,7 +64,7 @@ is added, it does not replace the legacy script.
 All the information about Vim9 script can be found in the |Vim9| help file.
 
 
-Various new items					*new-items-9*
+さまざまな新要素					*new-items-9*
 -----------------
 
 TODO
@@ -76,30 +75,30 @@ New runtime files: ~
 Too many to list here.
 
 ==============================================================================
-INCOMPATIBLE CHANGES				*incompatible-9*
+非互換な変更						*incompatible-9*
 
-These changes are incompatible with previous releases.  Check this list if you
-run into a problem when upgrading from Vim 8.2.0 to 9.0.
-
-TODO
-
-==============================================================================
-IMPROVEMENTS						*improvements-9*
+これらの変更は以前のリリースとは互換性がありません。もしもあなたが Vim 8.2.0
+から 9.0 に更新した際に問題が起きたなら、この一覧を確認してください。
 
 TODO
 
 ==============================================================================
-COMPILE TIME CHANGES					*compile-changes-9*
+改善点							*improvements-9*
 
 TODO
 
 ==============================================================================
-PATCHES						*patches-9* *bug-fixes-9*
+コンパイル時の変更					*compile-changes-9*
+
+TODO
+
+==============================================================================
+パッチ						*patches-9* *bug-fixes-9*
 						*patches-after-8.2*
 
-The list of patches that got included since 8.2.0.  This includes all the new
-features, but does not include runtime file changes (syntax, indent, help,
-etc.)
+8.2.0 以降に取り込まれたパッチのリストです。これはすべての新機能を含んでいます
+が、ランタイムファイルの変更 (シンタックス、インデント、ヘルプなど) は含んでい
+ません。
 
 Patch 8.2.0001
 Problem:    #endif comments do not reflect corresponding #ifdef.
