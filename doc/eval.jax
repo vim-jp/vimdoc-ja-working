@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 20
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 21
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -454,7 +454,7 @@ for ループ ~
 	:for [i, j; rest] in listlist
 	:   call Doit(i, j)
 	:   if !empty(rest)
-	:      echo "remainder: " . string(rest)
+	:      echo "remainder: " .. string(rest)
 	:   endif
 	:endfor
 
@@ -481,11 +481,11 @@ Blob の場合、一度に 1 バイトが使われる。
 	:let list = split("a b c")	" 文字列を分割してリストにする
 	:let string = join(list, ', ')	" リストの要素を連結して文字列にする
 	:let s = string(list)		" リストの文字列表現
-	:call map(list, '">> " . v:val')  " 各要素の前に ">> " をつける
+	:call map(list, '">> " .. v:val')  " 各要素の前に ">> " をつける
 
 機能を組み合わせると、処理を単純に記述できることを覚えておくとよい。例えば、リ
 スト中の全ての数値の和を求める例: >
-	:exe 'let sum = ' . join(nrlist, '+')
+	:exe 'let sum = ' .. join(nrlist, '+')
 
 
 1.4 辞書 ~
@@ -549,7 +549,7 @@ Note ここでは 333 は 文字列 "333" であることに注意。空のキ�
 
 多くの場合はキーに対してループを行う。これには関数|keys()|を使う: >
 	:for key in keys(mydict)
-	:   echo key . ': ' . mydict[key]
+	:   echo key .. ': ' .. mydict[key]
 	:endfor
 
 このキーのリストはソートされていない。ソートさせるには関数|sort()|を使う: >
@@ -557,13 +557,13 @@ Note ここでは 333 は 文字列 "333" であることに注意。空のキ�
 
 値に対してループを行うには関数|values()|を使う: >
 	:for v in values(mydict)
-	:   echo "value: " . v
+	:   echo "value: " .. v
 	:endfor
 
 キーと値両方を得るには関数|items()|を使う。この関数は、キーと値の2個の要素から
 なるリストのリストを返す: >
 	:for [key, value] in items(mydict)
-	:   echo key . ': ' . value
+	:   echo key .. ': ' .. value
 	:endfor
 
 
@@ -654,7 +654,7 @@ Note 辞書の要素間に順序は定まっていない。そのため ":echo a
 	:let small = min(dict)		" 辞書中の最小値
 	:let xs = count(dict, 'x')	" 'x' の出現回数を数える
 	:let s = string(dict)		" 辞書の文字列表現
-	:call map(dict, '">> " . v:val')  " 各要素の前に ">> " をつける
+	:call map(dict, '">> " .. v:val')  " 各要素の前に ">> " をつける
 
 
 1.5 Blobs ~
@@ -898,7 +898,7 @@ MY_VAR_6		viminfoファイル
 は300)までに制限されている。 *E1169*
 
 
-expr1				*expr1* *trinary* *falsy-operator* *??* *E109*
+expr1				*expr1* *ternary* *falsy-operator* *??* *E109*
 -----
 
 三項演算子:   expr2 ? expr1 : expr1
@@ -1488,7 +1488,7 @@ Note シングルクォートが使われていることに注意。
 &l:option		ローカルオプション変数
 
 例: >
-	echo "タブストップは " . &tabstop . " です"
+	echo "タブストップは " .. &tabstop .. " です"
 	if &insertmode
 
 ここにはあらゆるオプション名を使うことができる。|options|を参照。ローカル変数
@@ -1767,7 +1767,7 @@ MyCounter()の中では変数s:counterにアクセスできる。
 	  echo "script executed for the first time"
 	else
 	  let s:counter = s:counter + 1
-	  echo "script executed " . s:counter . " times now"
+	  echo "script executed " .. s:counter .. " times now"
 	endif
 
 Note これはつまり、ファイルタイププラグインはバッファごとにスクリプト変数を1セッ
@@ -1899,7 +1899,7 @@ v:completed_item
 v:count		最後に実行されたノーマルモードコマンドに渡されたカウント数。
 		マッピングの前のカウントを取得するのに使用できる。読出し専用。
 		使用例: >
-	:map _x :<C-U>echo "the count is " . v:count<CR>
+	:map _x :<C-U>echo "the count is " .. v:count<CR>
 <		Note: <C-U>は、カウントの後に ':' をタイプした時に示される行範
 		囲指定を削除するために必要となる。
 		"3d2w" のようにカウントが2個指定された場合、その数が掛けられる。
@@ -2748,9 +2748,9 @@ a: のスコープとこれらの変数は固定されており、変更でき�
   :  echohl Title
   :  echo a:title
   :  echohl None
-  :  echo a:0 . " items:"
+  :  echo a:0 .. " items:"
   :  for s in a:000
-  :    echon ' ' . s
+  :    echon ' ' .. s
   :  endfor
   :endfunction
 
@@ -2790,7 +2790,7 @@ a: のスコープとこれらの変数は固定されており、変更でき�
 		て繰り返し評価される。それは次の例で確かめることができる:
 						*function-range-example*  >
 	:function Mynumber(arg)
-	:  echo line(".") . " " . a:arg
+	:  echo line(".") .. " " .. a:arg
 	:endfunction
 	:1,5call Mynumber(getline("."))
 <
@@ -2800,7 +2800,7 @@ a: のスコープとこれらの変数は固定されており、変更でき�
 		「範囲」自身を扱っている関数の例: >
 
 	:function Cont() range
-	:  execute (a:firstline + 1) . "," . a:lastline . 's/^/\t\\ '
+	:  execute (a:firstline + 1) .. "," .. a:lastline .. 's/^/\t\\ '
 	:endfunction
 	:4,8call Cont()
 <
@@ -2986,7 +2986,7 @@ Note: |Vim9| script では、`:let` は使用されない。`:var` は変数宣�
 			このコマンドはリストに要素を追加するためには使えない。
 			文字列の i バイト目をセットするためにも使えない。それ
 			には次のようにする: >
-				:let var = var[0:2] . 'X' . var[4:]
+				:let var = var[0:2] .. 'X' .. var[4:]
 <			{var-name}が |Blob| の場合、{idx}はblobの長さになる。
 			この場合、1バイトが追加される。
 
@@ -3051,7 +3051,7 @@ Note: |Vim9| script では、`:let` は使用されない。`:var` は変数宣�
 			ては、その効果は|:set|コマンドを使ったときと同様で、ロー
 			カルな値とグローバルな値の両方が変更される。
 			例: >
-				:let &path = &path . ',/usr/local/include'
+				:let &path = &path .. ',/usr/local/include'
 <			これは、t_xx 形式の端末コードにも使える。ただし、英数
 			字の名前に限る。例: >
 				:let &t_k1 = "\<Esc>[234;"
@@ -3322,6 +3322,8 @@ text...
 :if {expr1}			*:if* *:end* *:endif* *:en* *E171* *E579* *E580*
 :en[dif]		{expr1}が非ゼロと評価された場合に、対応する ":else" か
 			":endif" までの命令を実行する。
+			短い記述でも動作するが、混乱を避けるために常に
+			`:endif` を使うことを推奨する。
 
 			バージョン4.5から5.0まで間のVimは、":if" と ":endif"
 			の間の全てのExコマンドは無視する。この2つのコマンドは
@@ -3887,7 +3889,7 @@ thrown" を表示する。例外は、順番に ":catch" コマンドに照合�
 
 	:function! Caught()
 	:  if v:exception != ""
-	:    echo 'Caught "' . v:exception . '" in ' . v:throwpoint
+	:    echo 'Caught "' . v:exception .. '" in ' .. v:throwpoint
 	:  else
 	:    echo 'Nothing caught'
 	:  endif
@@ -4282,8 +4284,8 @@ NOTE: エラーメッセージの本文によって捕捉しようとしては�
 	:catch /^Vim:Interrupt$/
 	:    echo "Script interrupted"
 	:catch /.*/
-	:  echo "Internal error (" . v:exception . ")"
-	:  echo " - occurred at " . v:throwpoint
+	:  echo "Internal error (" .. v:exception .. ")"
+	:  echo " - occurred at " .. v:throwpoint
 	:endtry
 	:" スクリプトの終わり
 
@@ -4476,7 +4478,7 @@ Note: 全てを捕捉すると、期待していた以上のものを捕捉し�
 
 	:function! CheckRange(a, func)
 	:  if a:a < 0
-	:    throw "EXCEPT:MATHERR:RANGE(" . a:func . ")"
+	:    throw "EXCEPT:MATHERR:RANGE(" .. a:func .. ")"
 	:  endif
 	:endfunction
 	:
@@ -4503,7 +4505,7 @@ Note: 全てを捕捉すると、期待していた以上のものを捕捉し�
 	:  try
 	:    execute "write" fnameescape(a:file)
 	:  catch /^Vim(write):/
-	:    throw "EXCEPT:IO(" . getcwd() . ", " . a:file . "):WRITEERR"
+	:    throw "EXCEPT:IO(" .. getcwd() .. ", " .. a:file .. "):WRITEERR"
 	:  endtry
 	:endfunction
 	:
@@ -4522,9 +4524,9 @@ Note: 全てを捕捉すると、期待していた以上のものを捕捉し�
 	:  let dir = substitute(v:exception, '.*(\(.\+\),\s*.\+).*', '\1', "")
 	:  let file = substitute(v:exception, '.*(.\+,\s*\(.\+\)).*', '\1', "")
 	:  if file !~ '^/'
-	:    let file = dir . "/" . file
+	:    let file = dir .. "/" .. file
 	:  endif
-	:  echo 'I/O error for "' . file . '"'
+	:  echo 'I/O error for "' .. file .. '"'
 	:
 	:catch /^EXCEPT/
 	:  echo "Unspecified error"
@@ -4584,7 +4586,7 @@ Vim script言語では、エラーの後もスクリプトや関数が処理を�
 	:    echo "inner finally"
 	:  endtry
 	:catch
-	:  echo 'outer catch-all caught "' . v:exception . '"'
+	:  echo 'outer catch-all caught "' .. v:exception .. '"'
 	:  finally
 	:    echo "outer finally"
 	:endtry
@@ -4648,7 +4650,7 @@ try条件文の中のエラー例外の値は次になる: >
   :  let n = a:nr
   :  let r = ""
   :  while n
-  :    let r = '01'[n % 2] . r
+  :    let r = '01'[n % 2] .. r
   :    let n = n / 2
   :  endwhile
   :  return r
@@ -4659,7 +4661,7 @@ try条件文の中のエラー例外の値は次になる: >
   :func String2Bin(str)
   :  let out = ''
   :  for ix in range(strlen(a:str))
-  :    let out = out . '-' . Nr2Bin(char2nr(a:str[ix]))
+  :    let out = out .. '-' .. Nr2Bin(char2nr(a:str[ix]))
   :  endfor
   :  return out[1:]
   :endfunc
