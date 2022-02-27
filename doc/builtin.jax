@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 18
+*builtin.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 23
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -912,7 +912,7 @@ argv([{nr} [, {winid}]])
 	:let i = 0
 	:while i < argc()
 	:  let f = escape(fnameescape(argv(i)), '.')
-	:  exe 'amenu Arg.' . f . ' :e ' . f . '<CR>'
+	:  exe 'amenu Arg.' .. f .. ' :e ' .. f .. '<CR>'
 	:  let i = i + 1
 	:endwhile
 <		引数{nr} が指定されなかった場合、または、-1 の場合、引数リス
@@ -1187,7 +1187,7 @@ bufwinid({buf})						*bufwinid()*
 		ファ{buf}が存在しないか、ウィンドウが無い場合は、-1が返される。
 		例: >
 
-	echo "A window containing buffer 1 is " . (bufwinid(1))
+	echo "A window containing buffer 1 is " .. (bufwinid(1))
 <
 		現在のタブページのみを処理する。
 
@@ -1199,7 +1199,7 @@ bufwinnr({buf})						*bufwinnr()*
 		ドウ番を返す。バッファ{buf} が存在しないか、ウィンドウが無い場
 		合には-1を返す。例: >
 
-	echo "A window containing buffer 1 is " . (bufwinnr(1))
+	echo "A window containing buffer 1 is " .. (bufwinnr(1))
 
 <		この番号は|CTRL-W_w|や ":wincmd w" |:wincmd|で使える。
 
@@ -1238,7 +1238,7 @@ byteidx({expr}, {nr})					*byteidx()*
 
 byteidxcomp({expr}, {nr})					*byteidxcomp()*
 		byteidx() と同じだが、合成文字は個別にカウントされる。例: >
-			let s = 'e' . nr2char(0x301)
+			let s = 'e' .. nr2char(0x301)
 			echo byteidx(s, 1)
 			echo byteidxcomp(s, 1)
 			echo byteidxcomp(s, 2)
@@ -1430,7 +1430,7 @@ col({expr})	戻り値は数値で、{expr}で与えられる位置の桁番号(�
 		には次のマップが使える: >
 			:imap <F2> <C-O>:let save_ve = &ve<CR>
 				\<C-O>:set ve=all<CR>
-				\<C-O>:echo col(".") . "\n" <Bar>
+				\<C-O>:echo col(".") .. "\n" <Bar>
 				\let &ve = save_ve<CR>
 
 <		|method| としても使用できる: >
@@ -2246,12 +2246,12 @@ expand({string} [, {nosuf} [, {list}]])				*expand()*
 			:e		拡張子だけ
 
 		例: >
-			:let &tags = expand("%:p:h") . "/tags"
+			:let &tags = expand("%:p:h") .. "/tags"
 <		'%' や '#' や '<' で始まる文字列を展開する時には、それに続くテ
 		キストは無視されることに注意。従ってこれは正しくない: >
 			:let doesntwork = expand("%:h.bak")
 <		こうすると良い: >
-			:let doeswork = expand("%:h") . ".bak"
+			:let doeswork = expand("%:h") .. ".bak"
 <		"<cfile>" やそれらを展開する時には、戻り値が完全な展開をされな
 		い参照名であることにも注意が必要。もしも "<cfile>" が
 		"~/.cshrc" であった場合、"~/" を展開してホームディレクトリにす
@@ -2633,7 +2633,7 @@ fnameescape({string})					*fnameescape()*
 		プされる(|:cd| の引数では意味を持つ)。
 		例: >
 			:let fname = '+some str%nge|name'
-			:exe "edit " . fnameescape(fname)
+			:exe "edit " .. fnameescape(fname)
 <		上記は次と同じ結果になる: >
 			edit \+some\ str\%nge\|name
 <
@@ -2810,7 +2810,7 @@ function({name} [, {arglist}] [, {dict}])
 <		辞書は "dict" 関数を呼び出すときのみ有用である。この場合、
 		{dict}は "self" として渡される。例えば: >
 			function Callback() dict
-			   echo "called for " . self.name
+			   echo "called for " .. self.name
 			endfunction
 			...
 			let context = {"name": "example"}
@@ -3000,7 +3000,7 @@ getbufvar({buf}, {varname} [, {def}])				*getbufvar()*
 		ラーメッセージは表示されない。
 		例: >
 			:let bufmodified = getbufvar(1, "&mod")
-			:echo "todo myvar = " . getbufvar("todo", "myvar")
+			:echo "todo myvar = " .. getbufvar("todo", "myvar")
 
 <		|method| としても使用できる: >
 			GetBufnr()->getbufvar(varname)
@@ -3058,9 +3058,9 @@ getchar([expr])						*getchar()*
 		ルを移動させる。 >
 			let c = getchar()
 			if c == "\<LeftMouse>" && v:mouse_win > 0
-			  exe v:mouse_win . "wincmd w"
+			  exe v:mouse_win .. "wincmd w"
 			  exe v:mouse_lnum
-			  exe "normal " . v:mouse_col . "|"
+			  exe "normal " .. v:mouse_col .. "|"
 			endif
 <
 		bracketed pasteを使用しているときは最初の文字のみが返され、ペー
@@ -3832,7 +3832,7 @@ gettabwinvar({tabnr}, {winnr}, {varname} [, {def}])		*gettabwinvar()*
 		返し、エラーメッセージは表示されない。
 		例: >
 			:let list_is_on = gettabwinvar(1, 2, '&list')
-			:echo "myvar = " . gettabwinvar(3, 1, 'myvar')
+			:echo "myvar = " .. gettabwinvar(3, 1, 'myvar')
 <
 		すべてのウィンドウローカル変数を取得するには: >
 			gettabwinvar({tabnr}, {winnr}, '&')
@@ -3960,7 +3960,7 @@ getwinvar({winnr}, {varname} [, {def}])				*getwinvar()*
 		カレントタブページに対する|gettabwinvar()|と同様。
 		例: >
 			:let list_is_on = getwinvar(2, '&list')
-			:echo "myvar = " . getwinvar(1, 'myvar')
+			:echo "myvar = " .. getwinvar(1, 'myvar')
 
 <		|method| としても使用できる: >
 			GetWinnr()->getwinvar(varname)
@@ -4207,7 +4207,7 @@ histdel({history} [, {item}])				*histdel()*
 		次の3つは等価である: >
 			:call histdel("search", histnr("search"))
 			:call histdel("search", -1)
-			:call histdel("search", '^'.histget("search", -1).'$')
+			:call histdel("search", '^' .. histget("search", -1) .. '$')
 <
 		最後の検索パターンを削除し、一つ前のパターンを "n" コマンド(次
 		のマッチへ移動)と 'hlsearch' の為に設定する: >
@@ -4226,7 +4226,7 @@ histget({history} [, {index}])				*histget()*
 
 		例:
 		2つ前に行われた検索をやり直す: >
-			:execute '/' . histget("search", -2)
+			:execute '/' .. histget("search", -2)
 
 <		|:history|によって出力される{num}番目のエントリを、再度実行す
 		るための ":H {num}" というコマンドを定義する。 >
@@ -4461,7 +4461,7 @@ input({prompt} [, {text} [, {completion}]])		*input()*
 		いようにすることである。
 
 		マッピングと同時に使う例: >
-			:nmap \x :call GetFoo()<CR>:exe "/" . Foo<CR>
+			:nmap \x :call GetFoo()<CR>:exe "/" .. Foo<CR>
 			:function GetFoo()
 			:  call inputsave()
 			:  let g:Foo = input("enter search pattern: ")
@@ -4632,7 +4632,7 @@ items({dict})						*items()*
 		の要素の順序は不定である。|keys()| と |values()| も参照。
 		例: >
 			for [key, value] in items(mydict)
-			   echo key . ': ' . value
+			   echo key .. ': ' .. value
 			endfor
 
 <		|method| としても使用できる: >
@@ -4646,7 +4646,7 @@ join({list} [, {sep}])					*join()*
 		されなかったときは1個のスペースが使われる。
 		Note 末尾には{sep}がつかない。末尾にもつけたければ以下のように
 		する: >
-			let lines = join(mylist, "\n") . "\n"
+			let lines = join(mylist, "\n") .. "\n"
 <		{list}の要素が文字列なら、そのまま使われる。リストと辞書は
 		|string()|を使ったときと同じようにして文字列に変換される。
 		この逆を行う関数は|split()|である。
@@ -4847,7 +4847,7 @@ line({expr} [, {winid}])				*line()*
 			line(".")		カーソルの行番号
 			line(".", winid)	ウィンドウ "winid" で同上
 			line("'t")		マークtの位置の行番号
-			line("'" . marker)	マークmarkerの位置の行番号
+			line("'" .. marker)	マークmarkerの位置の行番号
 <
 		ファイルを開くときに最後の既知の位置にジャンプするには、
 		|last-position-jump| を参照。
@@ -5074,7 +5074,7 @@ map({expr1}, {expr2})					*map()*
 		クスを保持している。|Blob| の場合は |v:key| が現在のバイトのイ
 		ンデックスを保持している。
 		例: >
-			:call map(mylist, '"> " . v:val . " <"')
+			:call map(mylist, '"> " .. v:val .. " <"')
 <		これは "mylist" の各要素の前に "> " をつけ、後に " <" をつける。
 		Note {expr2}は式を表す文字列である。バックスラッシュを二重に
 		しなくても済むように|literal-string|を使うとよいだろう。ただし
@@ -5086,20 +5086,20 @@ map({expr1}, {expr2})					*map()*
 		関数は、その要素の新しい値を返さなければならない。それぞれの値
 		を "key-value" に置き換える例: >
 			func KeyValue(key, val)
-			  return a:key . '-' . a:val
+			  return a:key .. '-' .. a:val
 			endfunc
 			call map(myDict, function('KeyValue'))
 <		|lambda| を使えばより短く書ける: >
-			call map(myDict, {key, val -> key . '-' . val})
+			call map(myDict, {key, val -> key .. '-' .. val})
 <		"val" を使わない場合は省略できる: >
-			call map(myDict, {key -> 'item: ' . key})
+			call map(myDict, {key -> 'item: ' .. key})
 <		"key" を使用しない場合は、短い名前が使用できる: >
-			call map(myDict, {_, val -> 'item: ' . val})
+			call map(myDict, {_, val -> 'item: ' .. val})
 <
 		この操作はリスト |List| と辞書 |Dictionary| の場合その場で
 		(in-place)行われる。リストや辞書を変更したくない場合は最初にコ
 		ピーを作ること: >
-			:let tlist = map(copy(mylist), ' v:val . "\t"')
+			:let tlist = map(copy(mylist), ' v:val .. "\t"')
 
 <		{expr1}が式を適用した結果のリストまたは辞書、もしくは新規の
 		|Blob| か文字列を返す。
@@ -5172,7 +5172,7 @@ maparg({name} [, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 		ルマッピングを探す。
 		この関数を使うと、あるキーに対して既にマップがされているとき、
 		その動作を行いつつ、再マップすることができる。概要: >
-			exe 'nnoremap <Tab> ==' . maparg('<Tab>', 'n')
+			exe 'nnoremap <Tab> ==' .. maparg('<Tab>', 'n')
 
 <		|method| としても使用できる: >
 			GetKey()->maparg('n')
@@ -5679,7 +5679,7 @@ mkdir({name} [, {path} [, {prot}]])
 		{name} の最後の部分にのみ適用される。なので、/tmp/foo/bar
 		を作成すると /tmp/foo は 0o755 で作成される。
 		例: >
-			:call mkdir($HOME . "/tmp/foo/bar", "p", 0o700)
+			:call mkdir($HOME .. "/tmp/foo/bar", "p", 0o700)
 
 <		|sandbox|の中ではこの関数は使用できない。
 
@@ -6089,7 +6089,7 @@ prompt_setcallback({buf}, {expr})			*prompt_setcallback()*
 		       stopinsert
 		       close
 		     else
-		       call append(line('$') - 1, 'Entered: "' . a:text . '"')
+		       call append(line('$') - 1, 'Entered: "' .. a:text .. '"')
 		       " Reset 'modified' to allow the buffer to be closed.
 		       set nomodified
 		     endif
@@ -6282,7 +6282,7 @@ readdir({directory} [, {expr} [, {dict}]])			*readdir()*
 		  function! s:tree(dir)
 		      return {a:dir : map(readdir(a:dir),
 		      \ {_, x -> isdirectory(x) ?
-		      \		 {x : s:tree(a:dir . '/' . x)} : x})}
+		      \		 {x : s:tree(a:dir .. '/' .. x)} : x})}
 		  endfunction
 		  echo s:tree(".")
 <
@@ -6539,7 +6539,7 @@ remote_peek({serverid} [, {retvar}])		*remote_peek()*
 		{|+clientserver|機能付きでコンパイルされたときのみ利用可能}
 		例: >
 			:let repl = ""
-			:echo "PEEK: ".remote_peek(id, "repl").": ".repl
+			:echo "PEEK: " .. remote_peek(id, "repl") .. ": " .. repl
 
 <		|method| としても使用できる: >
 			ServerId()->remote_peek()
@@ -6577,12 +6577,12 @@ remote_send({server}, {string} [, {idvar}])
 		Note: なんらかのエラーが発生すると、サーバー側で報告され、表示
 		が乱れてしまうかもしれない。
 		例: >
-		:echo remote_send("gvim", ":DropAndReply ".file, "serverid").
+		:echo remote_send("gvim", ":DropAndReply " .. file, "serverid") ..
 		 \ remote_read(serverid)
 
 		:autocmd NONE RemoteReply *
 		 \ echo remote_read(expand("<amatch>"))
-		:echo remote_send("gvim", ":sleep 10 | echo ".
+		:echo remote_send("gvim", ":sleep 10 | echo " ..
 		 \ 'server2client(expand("<client>"), "HELLO")<CR>')
 <
 		|method| としても使用できる: >
@@ -6607,7 +6607,7 @@ remove({list}, {idx} [, {end}])				*remove()*
 		より前になる場合、エラーとなる。
 		{idx}と{end}として指定できる値については|list-index|を参照。
 		例: >
-			:echo "last item: " . remove(mylist, -1)
+			:echo "last item: " .. remove(mylist, -1)
 			:call remove(mylist, 0, 9)
 <
 		ファイルを削除するには |delete()| を使う。
@@ -6623,12 +6623,12 @@ remove({blob}, {idx} [, {end}])
 		トを指す場合、1個のバイトからなる |Blob| が返る。
 		{end}が{idx}より前になる場合、エラーとなる。
 		例: >
-			:echo "last byte: " . remove(myblob, -1)
+			:echo "last byte: " .. remove(myblob, -1)
 			:call remove(mylist, 0, 9)
 
 remove({dict}, {key})
 		{dict}からキー{key}を持つ要素を削除し、それを返す。例: >
-			:echo "removed " . remove(dict, "one")
+			:echo "removed " .. remove(dict, "one")
 <		{dict}に{key}がない場合はエラーになる。
 
 rename({from}, {to})					*rename()*
@@ -6751,7 +6751,7 @@ screencol()							*screencol()*
 		れた場合 (例えば ":echo screencol()") は、コマンドライン内の列
 		を返す (つまりコマンドが実行されたときその値は 1)。ファイル内
 		でのカーソル位置を取得するには次のようなマップを使用する: >
-			nnoremap <expr> GG ":echom ".screencol()."\n"
+			nnoremap <expr> GG ":echom " .. screencol() .. "\n"
 			nnoremap <silent> GG :echom screencol()<CR>
 			nnoremap GG <Cmd>echom screencol()<CR>
 <
@@ -6866,7 +6866,7 @@ search({pattern} [, {flags} [, {stopline} [, {timeout} [, {skip}]]]])
 		例 (引数リストの全ファイルにわたって検索して置換する): >
 		    :let n = 1
 		    :while n <= argc()   " arglist中の全ファイルに対してループ
-		    :  exe "argument " . n
+		    :  exe "argument " .. n
 		    :  " ファイルの最後の文字から開始し、循環してファイルの
 		    :  " 最初から検索する
 		    :  normal G$
@@ -6949,11 +6949,11 @@ searchcount([{options}])					*searchcount()*
 			  return printf(' /%s [%d/%d]', @/,
 			  \		result.current, result.total)
 			endfunction
-			let &statusline .= '%{LastSearchCount()}'
+			let &statusline ..= '%{LastSearchCount()}'
 
 			" もしくは 'hlsearch' がオンのときのみカウントを表示し
 			" たいのであれば
-			" let &statusline .=
+			" let &statusline ..=
 			" \   '%{v:hlsearch ? LastSearchCount() : ""}'
 <
 		もし検索カウントの更新もしたいのであれば、|CursorMoved| か
@@ -7737,10 +7737,10 @@ shellescape({string} [, {special}])			*shellescape()*
 		ングルクォートの代わりに使うため。
 
 		|:!| コマンドを使う場合の例: >
-		    :exe '!dir ' . shellescape(expand('<cfile>'), 1)
+		    :exe '!dir ' .. shellescape(expand('<cfile>'), 1)
 <		これはカーソル下のファイルを dir コマンドで表示する。
 		|system()| を使う場合の例: >
-		    :call system("chmod +w -- " . shellescape(expand("%")))
+		    :call system("chmod +w -- " .. shellescape(expand("%")))
 <		|::S| も参照のこと。
 
 		|method| としても使用できる: >
@@ -8485,14 +8485,14 @@ substitute({string}, {pat}, {sub}, {flags})		*substitute()*
 		{sub} が "\=" で開始している場合は、その後ろの文字列は式として
 		解釈される。|sub-replace-expression| 参照。例: >
 		   :echo substitute(s, '%\(\x\x\)',
-			   \ '\=nr2char("0x" . submatch(1))', 'g')
+			   \ '\=nr2char("0x" .. submatch(1))', 'g')
 
 <		{sub} が関数リファレンスの場合、1個のオプショナル引数と共にそ
 		の関数が呼び出される。例: >
 		   :echo substitute(s, '%\(\x\x\)', SubNr, 'g')
 <		オプショナル引数はマッチ文字列全体と9個のサブマッチが含まれる
 		以下の |submatch()| が返す様なリストである。例: >
-		   :echo substitute(s, '%\(\x\x\)', {m -> '0x' . m[1]}, 'g')
+		   :echo substitute(s, '%\(\x\x\)', {m -> '0x' .. m[1]}, 'g')
 
 <		|method| としても使用できる: >
 			GetString()->substitute(pat, sub, flags)
@@ -8674,8 +8674,8 @@ system({expr} [, {input}])				*system()* *E677*
 		対話的なコマンドを使用することはできない。
 
 		戻り値は文字列。例: >
-		    :let files = system("ls " .  shellescape(expand('%:h')))
-		    :let files = system('ls ' . expand('%:h:S'))
+		    :let files = system('ls ' .. shellescape(expand('%:h')))
+		    :let files = system('ls ' .. expand('%:h:S'))
 
 <		システムに依存しないような戻り値にするために、シェルの出力を
 		フィルタリングし、マッキントッシュにおいては<CR>を<NL>に変換
@@ -8855,7 +8855,7 @@ tempname()
 		ンポラリファイルの名前として使用可能である。少なくとも連続26回
 		の呼出しまでは違う名前を生成することが保証される。例: >
 			:let tmpfile = tempname()
-			:exe "redir > " . tmpfile
+			:exe "redir > " .. tmpfile
 <		Unix では、ファイルはプライベートなディレクトリに置かれる。
 		|tempfile|
 		MS-Windowsでは、'shellslash' がオンのときか、'shellcmdflag' が
@@ -9044,7 +9044,7 @@ trim({text} [, {mask} [, {dir}]])				*trim()*
 		例: >
 			echo trim("   some text ")
 <		"some text" を返す >
-			echo trim("  \r\t\t\r RESERVE \t\n\x0B\xA0") . "_TAIL"
+			echo trim("  \r\t\t\r RESERVE \t\n\x0B\xA0") .. "_TAIL"
 <		"RESERVE_TAIL" を返す >
 			echo trim("rm<Xrm<>X>rrm", "rm<>")
 <		"Xrm<>X" を返す (中央部分の文字は取り除かれない)
@@ -9228,7 +9228,7 @@ visualmode([{expr}])						*visualmode()*
 		か "V" か "<CTRL-V>" (CTRL-Vの文字が1文字で) 返される。これは
 		それぞれ文字選択、行選択、矩形選択を意味している。
 		例: >
-			exe "normal " . visualmode()
+			:exe "normal " .. visualmode()
 <		これは最後に使われたのと同じビジュアルモードに入る。また、スク
 		リプトの動作を、最後に使われたビジュアルモードに応じて変更した
 		い場合にも便利だろう。
@@ -9432,7 +9432,7 @@ winheight({nr})						*winheight()*
 		に0かそれ以上の高さを持っている。
 		ウィンドウツールバーはすべて除く。
 		例: >
-  :echo "The current window has " . winheight(0) . " lines."
+  :echo "The current window has " .. winheight(0) .. " lines."
 
 <		|method| としても使用できる: >
 			GetWinid()->winheight()
@@ -9566,7 +9566,7 @@ winwidth({nr})						*winwidth()*
 		{nr}が0のときはカレントウィンドウの幅を返す。ウィンドウ{nr}が
 		存在しないときは-1を返す。ウィンドウは必ず0以上の幅を持つ。
 		例: >
-  :echo "The current window has " . winwidth(0) . " columns."
+  :echo "The current window has " .. winwidth(0) .. " columns."
   :if winwidth(0) <= 50
   :  50 wincmd |
   :endif
