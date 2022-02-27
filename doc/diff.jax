@@ -379,13 +379,13 @@ g:diff_translations を 0 に設定する: >
 	function MyDiff()
 	   let opt = ""
 	   if &diffopt =~ "icase"
-	     let opt = opt . "-i "
+	     let opt = opt .. "-i "
 	   endif
 	   if &diffopt =~ "iwhite"
-	     let opt = opt . "-b "
+	     let opt = opt .. "-b "
 	   endif
-	   silent execute "!diff -a --binary " . opt . v:fname_in . " " . v:fname_new .
-		\  " > " . v:fname_out
+	   silent execute "!diff -a --binary " .. opt .. v:fname_in .. " " .. v:fname_new ..
+		\  " > " .. v:fname_out
 	   redraw!
 	endfunction
 
@@ -443,8 +443,8 @@ http://gnuwin32.sourceforge.net/packages/diffutils.htm.
 
 	set patchexpr=MyPatch()
 	function MyPatch()
-	   :call system("patch -o " . v:fname_out . " " . v:fname_in .
-	   \  " < " . v:fname_diff)
+	   :call system("patch -o " .. v:fname_out .. " " .. v:fname_in ..
+	   \  " < " .. v:fname_diff)
 	endfunction
 
 利用する "patch" プログラムが望んでいない副作用をしていないことを確認する必要
