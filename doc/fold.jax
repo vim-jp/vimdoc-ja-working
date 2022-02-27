@@ -506,7 +506,7 @@ zk		カーソルより上方の折り畳みへ移動する。閉じられた折�
     :function MyFoldText()
     :  let line = getline(v:foldstart)
     :  let sub = substitute(line, '/\*\|\*/\|{{{\d\=', '', 'g')
-    :  return v:folddashes . sub
+    :  return v:folddashes .. sub
     :endfunction
 
 'foldtext' は|sandbox|環境下で実行評価される。現在のウィンドウはそのラインの属
