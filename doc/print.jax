@@ -135,28 +135,28 @@ Mac、VMS、HPUX、EBCDIC環境の標準エンコーディングのための、�
 MS-Windows と VMS 以外の環境の初期設定では、単純に "lpr" を使ってファイルを印
 刷します: >
 
-    system('lpr' . (&printdevice == '' ? '' : ' -P' . &printdevice)
-	. ' ' . v:fname_in) . delete(v:fname_in) + v:shell_error
+    system('lpr' .. (&printdevice == '' ? '' : ' -P' .. &printdevice)
+	.. ' ' .. v:fname_in) .. delete(v:fname_in) + v:shell_error
 
 MS-Windows での初期設定は、現在指定されている印刷デバイスにファイルをコピーし
 ます: >
 
-    system('copy' . ' ' . v:fname_in . (&printdevice == ''
-		? ' LPT1:' : (' \"' . &printdevice . '\"')))
-		. delete(v:fname_in)
+    system('copy' .. ' ' .. v:fname_in .. (&printdevice == ''
+		? ' LPT1:' : (' \"' .. &printdevice .. '\"')))
+		.. delete(v:fname_in)
 
 VMS での初期設定は、標準の印刷デバイスか、指定されている印刷デバイスにファイル
 を送ります: >
 
-    system('print' . (&printdevice == '' ? '' : ' /queue=' .
-		&printdevice) . ' ' . v:fname_in) . delete(v:fname_in)
+    system('print' .. (&printdevice == '' ? '' : ' /queue=' ..
+		&printdevice) .. ' ' .. v:fname_in) .. delete(v:fname_in)
 
 このオプションを設定するときは、関数を使うと、スペースをエスケープしなくてもい
 いので簡単です。例: >
 
 	:set printexpr=PrintFile(v:fname_in)
 	:function PrintFile(fname)
-	:  call system("ghostview " . a:fname)
+	:  call system("ghostview " .. a:fname)
 	:  call delete(a:fname)
 	:  return v:shell_error
 	:endfunc
