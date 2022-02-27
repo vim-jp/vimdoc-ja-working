@@ -47,19 +47,18 @@ Vim version 9.0 は、リリース準備中の2022年2月に亡くなられた S
 
 Vim9 script ~
 							*new-vim-script-9*
-The Vim script language has been changed step by step over many years,
-preserving backwards compatibility.  Several choices made in early days got in
-the way of making it work better.  At the same time, Vim script is being used
-much more often, since there are so many plugins being used.
+Vim script 言語は長年の間、後方互換性を保持しながら段階的に変更されてきました。
+初期の頃行われたいくつかの選択がより良い動作の妨げになってしまいました。同時
+に、とても多くのプラグインが利用され、Vim script ははるかに頻繁に使用されてい
+ます。
 
-Vim9 script provides a syntax that is much more similar to other languages.
-In other words: "less weird".  Compiled functions are introduced which allow
-for a large speed improvement.  You can expect around ten times faster
-execution.  The price to pay is that Vim9 script is not backwards compatible.
-But don't worry, you can still use your old scripts, the new script language
-is added, it does not replace the legacy script.
+Vim9 script は他の言語により似た文法を提供します。言い替えるなら: "風変りさが
+減りました"。コンパイルされた関数が大きな速度の改善のために提供されています。
+約10倍の早さが期待できます。この価値への支払いとして Vim9 script は後方互換性
+がありません。しかし心配はいりません、あなたの旧いスクリプトはまだ使うことがで
+き、新しいスクリプト言語は追加であり、旧来のスクリプトを置き換えません。
 
-All the information about Vim9 script can be found in the |Vim9| help file.
+Vim9 script のすべての情報はヘルプファイルの |Vim9| で見付けることができます。
 
 
 さまざまな新要素					*new-items-9*
