@@ -635,7 +635,7 @@ ID が必要である。例えば生成された HTML を他のドキュメン�
 ID に付加する。その完全な ID であれば、他のドキュメントにコピーされた場合でも
 一意に定めることができる。例えば、 _ とバッファ番号を ID に付加するには: >
 
-	:let g:html_id_expr = '"_".bufnr("%")'
+	:let g:html_id_expr = '"_" .. bufnr("%")'
 <
 ID の末尾に "_mystring" を付加するには: >
 
@@ -3485,8 +3485,8 @@ xpm.vimは編集中のXPMファイルの内容から、動的に構文要素を�
    :function! GetPixel()
    :   let c = getline(".")[col(".") - 1]
    :   echo c
-   :   exe "noremap <LeftMouse> <LeftMouse>r".c
-   :   exe "noremap <LeftDrag>	<LeftMouse>r".c
+   :   exe "noremap <LeftMouse> <LeftMouse>r" .. c
+   :   exe "noremap <LeftDrag>	<LeftMouse>r" .. c
    :endfunction
    :noremap <RightMouse> <LeftMouse>:call GetPixel()<CR>
    :set guicursor=n:hor20	   " to see the color beneath the cursor
@@ -5355,10 +5355,10 @@ types.vim: *.[ch]
 
 そして以下を.vimrcに加える: >
 
-   " load the types.vim highlighting file, if it exists
-   autocmd BufRead,BufNewFile *.[ch] let fname = expand('<afile>:p:h') . '/types.vim'
+   " 存在するなら、ハイライトするファイル types.vim をロードする
+   autocmd BufRead,BufNewFile *.[ch] let fname = expand('<afile>:p:h') .. '/types.vim'
    autocmd BufRead,BufNewFile *.[ch] if filereadable(fname)
-   autocmd BufRead,BufNewFile *.[ch]   exe 'so ' . fname
+   autocmd BufRead,BufNewFile *.[ch]   exe 'so ' .. fname
    autocmd BufRead,BufNewFile *.[ch] endif
 
 ==============================================================================

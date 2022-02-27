@@ -1345,7 +1345,7 @@ Note: .vimrcファイルを作成するときにはオプション 'compatible' 
 セッションを復元すると、内部変数の "v:this_session" (|this_session-variable|)
 を使って現在のセッションの名前(フルパス)を利用できる。
 それを利用したマッピングの例: >
-  :nmap <F2> :wa<Bar>exe "mksession! " . v:this_session<CR>:so ~/sessions/
+  :nmap <F2> :wa<Bar>exe "mksession! " .. v:this_session<CR>:so ~/sessions/
 これは現在のセッションを保存してから、別のセッションを開こうとするものである。
 
 'sessionoptions' から "tabpages" が除かれていない限り、セッションはすべてのタ
