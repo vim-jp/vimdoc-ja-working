@@ -5,11 +5,10 @@
 
 
 				*vim-9.0* *vim-9* *version-9.0* *version9.0*
-Welcome to Vim 9!  Several years have passed since the previous release.
-A large number of bugs have been fixed, many nice features have been added
-and Vim9 script syntax is introduced.
-このファイルは Vim 8.2.0 以降のすべての新規要素と既存の機能に対する変更に言
-及しています。Vim 8.2 までのパッチはここで見られます: |vim-8.2|
+ようこそ Vim 9 へ! 以前のリリースから数年が経過しました。多数のバグが修正され、
+いくつかの素敵な機能と Vim9 script 文法が追加されています。このファイルは Vim
+8.2.0 以降のすべての新規要素と既存の機能に対する変更に言及しています。Vim 8.2
+までのパッチはここで見られます: |vim-8.2|
 
 あなたが使用している Vim のバージョンと機能に関する全ての情報を見るには以下の
 コマンドを使用してください: >
@@ -36,10 +35,9 @@ Vimのバージョン間の違いについては |version4.txt|, |version5.txt|,
 https://www.arp242.net/vimlog/
 
 
-Vim version 9.0 is dedicated to Sven Guckes, who passed away in February 2022
-when the release was being prepared.  Sven was a long time supporter of Vim.
-He registered the vim.org domain and created the first Vim website.  We will
-remember him!
+Vim version 9.0 は、リリース準備中の2022年2月に亡くなられた Sven Guckes 氏に捧
+げます。SvenはVimの長年のサポーターでした。彼は vim.org ドメインを登録し、最初
+のVimWebサイトを作成しました。私たちは彼を忘れません!
 
 ==============================================================================
 新機能							*new-9*
@@ -72,7 +70,7 @@ TODO
 
 New runtime files: ~
 
-Too many to list here.
+ここにリストするには多すぎます。
 
 ==============================================================================
 非互換な変更						*incompatible-9*
