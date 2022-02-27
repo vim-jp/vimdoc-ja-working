@@ -837,9 +837,9 @@ thesaurus_pkg.zip を展開し、thesaurus.txt をどこかに配置する、例
       endif
       let res = []
       let h = ''
-      for l in systemlist('aiksaurus '.shellescape(a:base))
+      for l in systemlist('aiksaurus ' .. shellescape(a:base))
 	if l[:3] == '=== '
-	  let h = '('.substitute(l[4:], ' =*$', ')', '')
+	  let h = '(' .. substitute(l[4:], ' =*$', ')', '')
 	elseif l ==# 'Alphabetically similar known words are: '
 	  let h = "\U0001f52e"
 	elseif l[0] =~ '\a' || (h ==# "\U0001f52e" && l[0] ==# "\t")
@@ -1200,7 +1200,7 @@ Note 最初の呼び出し以降にカーソルが移動した可能性があり
 	    " "a:base" にマッチする月を探す
 	    let res = []
 	    for m in split("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec")
-	      if m =~ '^' . a:base
+	      if m =~ '^' .. a:base
 		call add(res, m)
 	      endif
 	    endfor
@@ -1222,7 +1222,7 @@ Note 最初の呼び出し以降にカーソルが移動した可能性があり
 	  else
 	    " "a:base" にマッチする月を探す
 	    for m in split("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec")
-	      if m =~ '^' . a:base
+	      if m =~ '^' .. a:base
 		call complete_add(m)
 	      endif
 	      sleep 300m	" 次の候補の検索をシミュレートする
