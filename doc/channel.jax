@@ -135,7 +135,7 @@ IPv6 アドレスを使う時、角カッコでくくった中に納めてくだ
 		(例えば、ID が0の JSON メッセージ)。これはチャネルのハンドル
 		と、受信したメッセージの 2 つの引数を取ります。例: >
 	func Handle(channel, msg)
-	  echo '受信した: ' . a:msg
+	  echo '受信した: ' .. a:msg
 	endfunc
 	let channel = ch_open("localhost:8765", {"callback": "Handle"})
 <
