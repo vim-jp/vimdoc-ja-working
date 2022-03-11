@@ -1,4 +1,4 @@
-*version9.txt*  For Vim バージョン 8.2.  Last change: 2022 Feb 26
+*version9.txt*  For Vim バージョン 8.2.  Last change: 2022 Mar 08
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -64,136 +64,136 @@ Vim9 script のすべての情報はヘルプファイルの |Vim9| で見付け
 さまざまな新要素					*new-items-9*
 -----------------
 
-TODO: Visual/Insert/Cmdline mode commands?
+TODO: Visual/Insert/Cmdline モードのコマンドは?
 
 
-Options: ~
+オプション: ~
 
-'autoshelldir'		change directory to the shell's current directory
-'cdhome'		change directory to the home directory by ":cd"
-'guiligatures'		GTK GUI: ASCII characters that can form shapes
-'quickfixtextfunc'	function for the text in the quickfix window
-'spelloptions'		options for spell checking
-'thesaurusfunc'		function to be used for thesaurus completion
-'xtermcodes'		request terminal codes from an xterm
+'autoshelldir'		シェルのカレントディレクトリにディレクトリを変更する
+'cdhome'		":cd" 時にホームディレクトリにディレクトリを変更する
+'guiligatures'		GTK GUI: 変形に使える ASCII 文字
+'quickfixtextfunc'	quickfix ウィンドウのテキスト用関数
+'spelloptions'		スペルチェックのオプション
+'thesaurusfunc'		同義語補完に使う関数
+'xtermcodes'		xterm から端末コードを要求
 
 
-Ex commands: ~
+Ex コマンド: ~
 
 |:abstract|
-|:argdedupe|		remove duplicates from the argument list
-|:balt|			like ":badd" but also set the alternate file
-|:class|		reserved for future use
-|:def|			define a Vim9 user function
-|:defcompile|		compile Vim9 user functions in current script
-|:disassemble|		disassemble Vim9 user function
-|:echoconsole|		like :echomsg but write to stdout
-|:endinterface|		reserved for future use
-|:endclass|		reserved for future use
-|:enddef|		end of a user function started with :def
-|:endenum|		reserved for future use
-|:enum|			reserved for future use
-|:export|		Vim9: export an item from a script
-|:final|		declare an immutable variable in Vim9
-|:import|		Vim9: import an item from another script
-|:interface|		reserved for future use
-|:static|		reserved for future use
-|:type|			reserved for future use
-|:var|			variable declaration in Vim9
-|:vim9script|		indicates Vim9 script file
+|:argdedupe|		引数リストから重複を削除
+|:balt|			":badd" と同様だが代替ファイルを設定する
+|:class|		将来の利用のための予約
+|:def|			Vim9 のユーザー関数を定義する
+|:defcompile|		現在のスクリプト内の Vim9 のユーザー関数をコンパイルす
+			る
+|:disassemble|		Vim9 のユーザー関数を逆アセンブルする
+|:echoconsole|		:echomsg と同様だが、出力を stdout に行う
+|:endinterface|		将来の利用のための予約
+|:endclass|		将来の利用のための予約
+|:enddef|		:def で始まるユーザー関数の終了
+|:endenum|		将来の利用のための予約
+|:enum|			将来の利用のための予約
+|:export|		Vim9: スクリプトから要素をエクスポートする
+|:final|		Vim9 で不変変数を宣言する
+|:import|		Vim9: 他のスクリプトから要素をインポートする
+|:interface|		将来の利用のための予約
+|:static|		将来の利用のための予約
+|:type|			将来の利用のための予約
+|:var|			Vim9 で変数を宣言する
+|:vim9script|		Vim9 script ファイルであることを示す
 
 
-Ex command modifiers: ~
+Ex コマンド修飾子: ~
 
-|:legacy|		make following command use legacy script syntax
-|:vim9cmd|		make following command use Vim9 script syntax
-
-
-New and extended functions: ~
-
-|assert_nobeep()|	assert that a command does not cause a beep
-|blob2list()|		get a list of numbers from a blob
-|charclass()|		class of a character
-|charcol()|		character number of the cursor or a mark
-|charidx()|		character index of a byte in a string
-|digraph_get()|		get digraph
-|digraph_getlist()|	get all digraphs
-|digraph_set()|		register digraph
-|digraph_setlist()|	register multiple digraphs
-|echoraw()|		output characters as-is
-|exists_compiled()|	like exists() but check at compile time
-|extendnew()|		make a new Dictionary and append items
-|flatten()|		flatten a List
-|flattennew()|		flatten a copy of a List
-|fullcommand()|		get full command name
-|getcharpos()|		get character position of cursor, mark, etc.
-|getcharstr()|		get a character from the user as a string
-|getcursorcharpos()|	get character position of the cursor
-|getmarklist()|		list of global/local marks
-|getreginfo()|		get information about a register
-|gettext()|		lookup message translation
-|hlget()|		get highlight group attributes
-|hlset()|		set highlight group attributes
-|list2blob()|		get a blob from a list of numbers
-|mapnew()|		make a new List with changed items
-|mapset()|		restore a mapping
-|matchfuzzy()|		fuzzy matches a string in a list of strings
-|matchfuzzypos()|	fuzzy matches a string in a list of strings
-|menu_info()|		get information about a menu item
-|popup_list()|		get list of all popup window IDs
-|prompt_getprompt()|	get the effective prompt text for a buffer
-|prop_add_list()|	attach a property at multiple positions
-|prop_find()|		search for a property
-|readblob()|		read a file into a Blob
-|readdirex()|		get a List of file information in a directory
-|reduce()|		reduce a List to a value
-|searchcount()|		get number of matches before/after the cursor
-|setcellwidths()|	set character cell width overrides
-|setcharpos()|		set character position of cursor, mark, etc.
-|setcursorcharpos()|	set character position of the cursor
-|slice()|		take a slice of a List
-|strcharlen()|		length of a string in characters
-|terminalprops()|	properties of the terminal
-|test_gui_event()|	generate a GUI event for testing
-|test_null_function()|	return a null Funcref
-|test_srand_seed()|	set the seed value for srand()
-|test_unknown()|	return a value with unknown type
-|test_void()|		return a value with void type
-|typename()|		type of a variable as text
-|win_gettype()|		get type of window
-|win_move_separator()|	move window vertical separator
-|win_move_statusline()|	move window status line
-|windowsversion()|	get MS-Windows version
+|:legacy|		以降のコマンドで旧来の script の文法を使用する
+|:vim9cmd|		以降のコマンドで Vim9 script の文法を使用する
 
 
-New Vim variables: ~
+新規および拡張された関数: ~
 
-|v:numbermax|		maximum value of a number
-|v:numbermin|		minimum value of a number (negative)
-|v:numbersize|		number of bits in a Number
-|v:collate|		current locale setting for collation order
-|v:exiting|		vim exit code
-|v:colornames|		dictionary that maps color names to hex color strings
-|v:sizeofint|		number of bytes in an int
-|v:sizeoflong|		number of bytes in a long
-|v:sizeofpointer|	number of bytes in a pointer
-|v:maxcol|		maximum line length
+|assert_nobeep()|	コマンドがビープ音を鳴らさないことをテストする
+|blob2list()|		Blobから数値のリストを取得する
+|charclass()|		文字のクラス
+|charcol()|		カーソルかマークの文字カラム番号
+|charidx()|		文字列のあるバイトの文字インデックス
+|digraph_get()|		ダイグラフの取得
+|digraph_getlist()|	全ダイグラフの取得
+|digraph_set()|		ダイグラフの登録
+|digraph_setlist()|	複数ダイグラフの登録
+|echoraw()|		文字そのままでの出力
+|exists_compiled()|	exists() と同様だがコンパイル時にチェックする
+|extendnew()|		要素を追加した新しい辞書を作る
+|flatten()|		リストの平坦化
+|flattennew()|		平坦化したコピーのリスト
+|fullcommand()|		完全なコマンド名を取得
+|getcharpos()|		カーソル、マーク他の文字位置の取得
+|getcharstr()|		ユーザーから1文字を文字列として取得
+|getcursorcharpos()|	カーソル位置の文字の取得
+|getmarklist()|		グローバル/ローカルのマークのリスト
+|getreginfo()|		レジスタ情報の取得
+|gettext()|		翻訳メッセージの検索
+|hlget()|		highlight group の属性を取得
+|hlset()|		highlight group の属性を設定
+|list2blob()|		数値のリストからBlobを取得する
+|mapnew()|		変更した要素の新しいリストを作る
+|mapset()|		マッピングの復元
+|matchfuzzy()|		文字列のリストに文字列でファジーマッチ
+|matchfuzzypos()|	文字列のリストに文字列でファジーマッチ
+|menu_info()|		メニューの項目情報を取得
+|popup_list()|		全ポップアップウィンドウのIDのリストを取得
+|prompt_getprompt()|	バッファのプロンプトテキストを取得
+|prop_add_list()|	複数箇所へプロパティを付加
+|prop_find()|		プロパティの検索
+|readblob()|		ファイルをBlobに読み出し
+|readdirex()|		ディレクトリの情報のリストの取得
+|reduce()|		リストの値の畳み込み
+|searchcount()|		カーソルの前後のマッチ数取得
+|setcellwidths()|	文字のセル幅の上書き設定
+|setcharpos()|		カーソル、マークなどの位置を文字インデックスで設定
+|setcursorcharpos()|	カーソル位置を文字インデックスで設定
+|slice()|		リストのスライス取得
+|strcharlen()|		文字列の文字数
+|terminalprops()|	端末のプロパティ
+|test_gui_event()|	テストのための GUI イベント生成
+|test_null_function()|	null の Funcref を返す
+|test_srand_seed()|	srand() のシード値を設定
+|test_unknown()|	unknown型の値を返す
+|test_void()|		void型の値を返す
+|typename()|		変数の型名のテキスト
+|win_gettype()|		ウィンドウの型を取得
+|win_move_separator()|	ウィンドウの垂直セパレータの移動
+|win_move_statusline()|	ウィンドウのステータス行の移動
+|windowsversion()|	MS-Windows のバージョン取得
 
 
-New autocommand events: ~
+新しい Vim 変数: ~
 
-|CompleteDonePre|	after Insert mode completion is done, before clearing
-			info
-|DirChangedPre|		before the working directory will change
-|InsertLeavePre| 	just before leaving Insert mode
-|ModeChanged|		after changing the mode
-|SigUSR1|		after the SIGUSR1 signal has been detected
-|WinClosed|		after closing a window
-|VimSuspend|		when suspending Vim
-|VimResume|		when Vim is resumed after being suspended
+|v:numbermax|		数値の最大値
+|v:numbermin|		数値の最小値 (負数)
+|v:numbersize|		数値型のビット数
+|v:collate|		現在のロケート設定の照合順
+|v:exiting|		Vim の終了コード
+|v:colornames|		色名と16進文字列の割り当て辞書
+|v:sizeofint|		int のバイト数
+|v:sizeoflong|		long のバイト数
+|v:sizeofpointer|	pointer のバイト数
+|v:maxcol|		最大行数
 
 
-New runtime files: ~
+新しい自動コマンドイベント: ~
+
+|CompleteDonePre|	挿入モード補完が完了したときで、情報がクリアされる前
+|DirChangedPre|		作業ディレクトリが変更される前
+|InsertLeavePre| 	挿入モードを離れる前
+|ModeChanged|		モード変更後
+|SigUSR1|		SIGUSR1 シグナルを検知した後
+|WinClosed|		ウィンドウを閉じた後
+|VimSuspend|		Vim がサスペンドした時
+|VimResume|		Vim がサスペンド後の復帰時
+
+
+新しい runtime ファイル: ~
 
 ここにリストするには多すぎます。
 
@@ -208,8 +208,8 @@ TODO
 ==============================================================================
 改善点							*improvements-9*
 
-Many memory leaks, invalid memory accesses and crashes have been fixed.
-See the list of patches below.
+多くのメモリリーク、不正なメモリアクセスとクラッシュを修正しています。
+以下のパッチリストを参照。
 
 TODO
 
