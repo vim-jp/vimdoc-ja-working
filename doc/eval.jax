@@ -2153,7 +2153,7 @@ v:none		空の文字列。JSONでは空の要素として使われる。
 		これは eval() がその文字列をパースしたときに、元の値に戻せるよ
 		うにするためである。読出し専用。
 		Note `== v:none` および `!= v:none` の使用はエラーになる場合が
-		ある。代りに `is v:none` および `isnot v:none` を使用する。
+		ある。代わりに `is v:none` および `isnot v:none` を使用する。
 
 					*v:null* *null-variable*
 v:null		空の文字列。JSONでは "null" として使われる。|json_encode()|を
