@@ -1,4 +1,4 @@
-*intro.txt*     For Vim バージョン 8.2.  Last change: 2021 Sep 29
+*intro.txt*     For Vim バージョン 8.2.  Last change: 2022 Mar 03
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -688,8 +688,9 @@ Q			"Ex" モードに切り替えます。このモードは ":" コマンドを
 			います。
 			Note: Vim の昔のバージョンでは "Q" がテキストを整形す
 			るコマンドでしたが、いまは |gq| になっています。ただし
-			|vimrc_example.vim| を使っている場合は、"Q" と "gq" は
-			同じ動作をします。
+			|vimrc_example.vim| あるいは |defaults.vim| を使ってい
+			る場合は、"Q" と "gq" は同じ動作をします。ただし選択
+			モードを除きます。
 
 					*gQ*
 gQ			"Ex" モードに切り替えます。"Q" と同じですが、実際に
