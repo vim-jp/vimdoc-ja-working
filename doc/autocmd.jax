@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 8.2.  Last change: 2022 Feb 09
+*autocmd.txt*   For Vim バージョン 8.2.  Last change: 2022 Mar 04
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -60,7 +60,8 @@
 			{cmd} は常に既存の自動コマンドの後に追加されるので、
 			自動コマンドは指定された順に実行される。
 			[nested] については |autocmd-nested| を参照。後方互換
-			性のために、"nested" (++ なし)も使用できる。
+			性のために、"nested" (++ なし)も使用できる、しかし
+			|Vim9| script ではできない。 *E1078*
 							*autocmd-once*
 			[++once] が指定されている場合、コマンドは1回実行される
 			と削除される("one shot")。
@@ -371,6 +372,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |InsertEnter|		挿入モードを開始したとき
 |InsertChange|		挿入や置換モードで<Insert>をタイプしたとき
 |InsertLeave|		挿入モードを抜けるとき
+|InsertLeavePre| 	挿入モードを抜ける直前
 |InsertCharPre|		挿入モードで文字が入力されたとき、その文字が挿入される
 			前
 
@@ -739,9 +741,10 @@ DiffUpdated			差分が更新された後。使用されているdiffコマン�
 				の種類(内部または外部)に応じて、変更毎か
 				|:diffupdate| 実行時に発生する。
 							*DirChangedPre*
-DirChangedPre			|DirChanged| と同じように、作業ディレクトリが変更
-				されようとしているとき。パターンは |DirChanged| と同様。新し
-				いディレクトリ名は v:event.directory にある。
+DirChangedPre			|DirChanged| と同じように、作業ディレクトリが
+				変更されようとしているとき。パターンは
+				|DirChanged| と同様。新しいディレクトリ名は
+				v:event.directory にある。
 							*DirChanged*
 DirChanged			|:cd|, |:tcd| もしくは |:lcd| コマンドによって、
 				もしくは 'autochdir' オプションの結果として作業
