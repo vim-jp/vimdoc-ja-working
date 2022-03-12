@@ -410,8 +410,8 @@ T  *+mouse*		マウス操作 |mouse-using|
 N  *+mouseshape*	|'mouseshape'|
 B  *+mouse_dec*		Unix のみ: Dec端末マウス操作 |dec-mouse|
 N  *+mouse_gpm*		Unix のみ: Linuxコンソールマウス操作 |gpm-mouse|
-m  *+mouse_gpm/dyn*	|+mouse_gpm| と同じでライブラリへ依存がオプショナル
-			|/dyn|
+m  *+mouse_gpm/dyn*	|+mouse_gpm| と同じだが、ライブラリへの依存がオプショ
+			ナル |/dyn|
 N  *+mouse_jsbterm*	JSB マウスサポート |jsbterm-mouse|
 B  *+mouse_netterm*	Unix のみ: nettermマウス操作 |netterm-mouse|
 N  *+mouse_pterm*	QNX  のみ: ptermマウス操作 |qnx-terminal|
