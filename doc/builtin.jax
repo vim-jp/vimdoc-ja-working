@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 23
+*builtin.txt*	For Vim バージョン 8.2.  Last change: 2022 Mar 08
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -5467,7 +5467,8 @@ matchfuzzy({list}, {str} [, {dict}])			*matchfuzzy()*
 		マッチする文字列がないかエラーとなった場合、空のリストが返され
 		る。{str} の長さが256かそれ以上であるなら、空のリストを返す。
 
-		文字列へのファジーマッチについての詳細は |fuzzy-match| を参照。
+		文字列へのファジーマッチについての詳細は |fuzzy-matching| を参
+		照。
 
 		例: >
 		   :echo matchfuzzy(["clay", "crow"], "cay")
@@ -7945,9 +7946,7 @@ sound_playfile({name} [, {callback}])
 <		|method| としても使用できる: >
 			GetSoundPath()->sound_playfile()
 
-<		エラー *E538* が出ることはないが、でも 538.nl は聞くことができ
-		る。
-		{|+sound| 機能つきでコンパイルされたときのみ有効}
+<		{|+sound| 機能つきでコンパイルされたときのみ有効}
 
 
 sound_stop({id})					*sound_stop()*
