@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 21
+*eval.txt*	For Vim バージョン 8.2.  Last change: 2022 Mar 05
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1782,6 +1782,7 @@ Vimの定義済変数					*vim-variable* *v:var* *v:*
 					*v:argv* *argv-variable*
 v:argv		Vimの起動に使用したコマンドライン引数。これは文字列のリストで
 		ある。最初の項目はVimコマンドである。
+		コマンドのフルパスは |v:progpath| を参照。
 
 					*v:beval_col* *beval_col-variable*
 v:beval_col	マウスポインタがある桁の桁番号。|v:beval_lnum|行目のバイトイン
@@ -2151,6 +2152,8 @@ v:none		空の文字列。JSONでは空の要素として使われる。
 <			v:none ~
 		これは eval() がその文字列をパースしたときに、元の値に戻せるよ
 		うにするためである。読出し専用。
+		Note `== v:none` および `!= v:none` の使用はエラーになる場合が
+		ある。代りに `is v:none` および `isnot v:none` を使用する。
 
 					*v:null* *null-variable*
 v:null		空の文字列。JSONでは "null" として使われる。|json_encode()|を
@@ -2160,7 +2163,9 @@ v:null		空の文字列。JSONでは "null" として使われる。|json_encode
 <			v:null ~
 		これは eval() がその文字列をパースしたときに、元の値に戻せるよ
 		うにするためである。読出し専用。
-		|Vim9| script では、"null" は "v:" なしで使用できる。
+		|Vim9| script では、`null` は "v:" なしで使用できる。
+		`v:null` と `null` はリスト、辞書、Jobなどいくつかの場所で設定
+		なしとして使用できる。これは空のリスト、辞書などとは異なる。
 
 					*v:numbermax* *numbermax-variable*
 v:numbermax	数値の最大値。
@@ -3320,16 +3325,16 @@ text...
 			内部変数{name}をアンロックする。|:lockvar|の逆を行う。
 
 :if {expr1}			*:if* *:end* *:endif* *:en* *E171* *E579* *E580*
-:en[dif]		{expr1}が非ゼロと評価された場合に、対応する ":else" か
-			":endif" までの命令を実行する。
-			短い記述でも動作するが、混乱を避けるために常に
-			`:endif` を使うことを推奨する。
+:en[dif]		{expr1}が非ゼロと評価された場合に、対応する `:else` か
+			`:endif` までの命令を実行する。
+			短い記述でも動作するが、混乱を避け自動インデントを正し
+			く動作させるために常に `:endif` を使うことを推奨する。
 
-			バージョン4.5から5.0まで間のVimは、":if" と ":endif"
+			バージョン4.5から5.0まで間のVimは、`:if` と `:endif`
 			の間の全てのExコマンドは無視する。この2つのコマンドは
 			将来の拡張性を、下位互換と同時に提供するためのものであ
-			る。ネスティング (入れ子) が可能である。":else" や
-			":elseif" は無視され、"else" 部分は一切実行されないこ
+			る。ネスティング (入れ子) が可能である。`:else` や
+			`:elseif` は無視され、`else` 部分は一切実行されないこ
 			とに注意。
 
 			あなたはこれを、旧バージョンとの互換性を保ったまま使用
@@ -3337,33 +3342,39 @@ text...
 				:if version >= 500
 				:  version-5-specific-commands
 				:endif
-<			しかしそれでも "endif" を見つけるために後続のコマンド
+<			しかしそれでも `endif` を見つけるために後続のコマンド
 			をパースする必要がある。古いVimで新しいコマンドを使う
-			と問題が起こることがある。例えば ":silent" が
-			":substitute" コマンドと認識されるなど。その場合には、
-			":execute" を使うと問題を避けることができる: >
+			と問題が起こることがある。例えば `:silent` が
+			`:substitute` コマンドと認識されるなど。その場合には、
+			`:execute` を使うと問題を避けることができる: >
 				:if version >= 600
 				:  execute "silent 1,$delete"
 				:endif
 <
-			NOTE: ":append" と ":insert" コマンドは ":if" と
-			":endif" の間では正しく動かない。
+			スクリプトの可読性向上のため、|Vim9| script では
+			`:endif` は短縮できない。
+			NOTE: `:append` と `:insert` コマンドは `:if` と
+			`:endif` の間では正しく動かない。
 
 						*:else* *:el* *E581* *E583*
-:el[se]			対応する ":if" ブロックが実行されなかった場合には、こ
-			れに対応する ":else" か ":endif" までのコマンドが実行
+:el[se]			対応する `:if` ブロックが実行されなかった場合には、こ
+			れに対応する `:else` か `:endif` までのコマンドが実行
 			される。
+			スクリプトの可読性向上のため、|Vim9| script では
+			`:else` は短縮できない。
 
 					*:elseif* *:elsei* *E582* *E584*
-:elsei[f] {expr1}	":else" ":if" の省略形。":endif" を付け加える (入れ子
+:elsei[f] {expr1}	`:else` `:if` の省略形。`:endif` を付け加える (入れ子
 			にする) 手間を省くことができる。
+			スクリプトの可読性向上のため、|Vim9| script では
+			`:elseif` は短縮できない。
 
 :wh[ile] {expr1}			*:while* *:endwhile* *:wh* *:endw*
 						*E170* *E585* *E588* *E733*
-:endw[hile]		{expr1}が非ゼロとして評価される間、":while" と
-			":endwhile" の間のコマンドを繰り返し実行する。
-			ループの内側でエラーが生じた場合、endwhileの直後から実
-			行が再開される。
+:endw[hile]		{expr1}が非ゼロとして評価される間、`:while` と
+			`:endwhile` の間のコマンドを繰り返し実行する。
+			ループの内側でエラーが生じた場合、`endwhile` の直後か
+			ら実行が再開される。
 			例: >
 				:let lnum = 1
 				:while lnum <= line("$")
@@ -3371,12 +3382,14 @@ text...
 				   :let lnum = lnum + 1
 				:endwhile
 <
-		NOTE: ":append" や ":insert" コマンドは ":while" ループの内側
-		では正しく動かない。
+			スクリプトの可読性向上のため、|Vim9| script では
+			`:endwhile` は短縮できない。
+			NOTE: `:append` と `:insert` コマンドは `:while` と
+			`:for` ループの内側では正しく動かない。
 
 :for {var} in {object}					*:for* *E690* *E732*
 :endfo[r]						*:endfo* *:endfor*
-			{object}の各要素に対し、":for" と ":endfor" の間のコマ
+			{object}の各要素に対し、`:for` と `:endfor` の間のコマ
 			ンドを繰り返す。{object}はリスト |List| または |Blob|
 			である。 *E1177*
 
@@ -3385,7 +3398,7 @@ text...
 			ブ/バッファ変数でない限り、未宣言である必要がある。
 
 			ループの内側のコマンドでエラーが検出されたときは
-			"endfor" の後から実行が継続される。
+			`endfor` の後から実行が継続される。
 			ループの内側で{object}を変更するとどの要素が使われるか
 			に影響を与える。それを望まない場合はコピーを作ること: >
 				:for item in copy(mylist)
@@ -3407,9 +3420,12 @@ text...
 			り返す。|List| とは異なり、|Blob| を変更しても繰り返し
 			には影響しない。
 
+			スクリプトの可読性向上のため、|Vim9| script では
+			`:endfor` は短縮できない。
+
 :for [{var1}, {var2}, ...] in {listlist}
 :endfo[r]							*E1140*
-			上の ":for" と同様だが、{listlist}の各要素がリストでな
+			上の `:for` と同様だが、{listlist}の各要素がリストでな
 			ければならない点が異なる。そのリストの各要素が{var1},
 			{var2}などに代入される。例: >
 				:for [lnum, col] in [[1, 3], [2, 5], [3, 8]]
@@ -3417,44 +3433,48 @@ text...
 				:endfor
 <
 						*:continue* *:con* *E586*
-:con[tinue]		":while" または ":for" ループの内側で使われたときは、
+:con[tinue]		`:while` または `:for` ループの内側で使われたときは、
 			そのループの開始位置まで戻る。
-			ループの内側の|:try|と|:finally|の間で使われた場合、
-			|:finally|から|:endtry|までの間のコマンドがまず実行さ
-			れる。ループの内側で ":try" がネストしている場合、全て
-			の ":try" に対してこのプロセスが適用される。最も外側の
-			":endtry" の後ループの開始位置まで戻る。
+			ループの内側の `:try` と `:finally` の間で使われた場
+			合、`:finally` から `:endtry` までの間のコマンドがまず
+			実行される。ループの内側で `:try` がネストしている場
+			合、全ての `:try` に対してこのプロセスが適用される。最
+			も外側の `:endtry` の後ループの開始位置まで戻る。
 
+			スクリプトの可読性向上のため、|Vim9| script では
+			短縮系は `:cont` になる。
 						*:break* *:brea* *E587*
-:brea[k]		":while" または ":for" ループの内側で使われたときは、
-			対応する ":endwhile" または ":endfor" の後のコマンドま
+:brea[k]		`:while` または `:for` ループの内側で使われたときは、
+			対応する `:endwhile` または `:endfor` の後のコマンドま
 			でスキップする。
-			ループの内側の|:try|と|:finally|の間で使われた場合、
-			|:finally|から|:endtry|までの間のコマンドがまず実行さ
-			れる。ループの内側で ":try" がネストしている場合、全て
-			の ":try" に対してこのプロセスが適用される。最も外側の
-			":endtry" の後ループの後までジャンプする。
+			ループの内側の `:try` と `:finally` の間で使われた場
+			合、`:finally` から `:endtry` までの間のコマンドがまず
+			実行される。ループの内側で `:try` がネストしている場
+			合、全ての `:try` に対してこのプロセスが適用される。最
+			も外側の `:endtry` の後ループの後までジャンプする。
 
+			スクリプトの可読性向上のため、|Vim9| script では
+			`:break` は短縮できない。
 :try						*:try* *:endt* *:endtry*
 						*E600* *E601* *E602* *E1032*
-:endt[ry]		":try" と ":endtry" の間のコマンド (":source" コマン
+:endt[ry]		`:try` と `:endtry` の間のコマンド (`:source` コマン
 			ド、関数呼び出し、自動コマンド実行を含めた全てのコマン
 			ド実行) のエラー制御を変更する。
 
-			エラーや割り込みが検出された場合、後に|:finally|コマン
-			ドがあるならば、":finally" の後から実行が継続される。
-			そうでなければ、または ":endtry" に達した後は次の動的
-			に囲んでいる ":try" に対応する ":finally" などが探され
+			エラーや割り込みが検出された場合、後に `:finally` コマ
+			ンドがあるならば、`:finally` の後から実行が継続される。
+			そうでなければ、または `:endtry` に達した後は次の動的
+			に囲んでいる `:try` に対応する `:finally` などが探され
 			る。その後スクリプトは実行を停止する。関数定義に引数
 			"abort" がついているかどうかは関係ない。
 			例: >
 		try | call Unknown() | finally | echomsg "cleanup" | endtry
 		echomsg "not reached"
 <
-			さらに、(動的に) ":try" と ":endtry" の内側にあるエラー
-			や割り込みは例外に変換される。そしてそれは|:throw|コマ
-			ンドによって投げたときと同様に捕捉できる(|:catch|を参
-			照)。この場合はスクリプトの実行は停止しない。
+			さらに、(動的に) `:try` と `:endtry` の内側にあるエラー
+			や割り込みは例外に変換される。そしてそれは `:throw` コ
+			マンドによって投げたときと同様に捕捉できる(`:catch` を
+			参照)。この場合はスクリプトの実行は停止しない。
 
 			割り込み例外には "Vim:Interrupt" という値が使われる。
 			Vimコマンドにおけるエラーは "Vim({command}):{errmsg}"
@@ -3467,13 +3487,16 @@ text...
 		try | sleep 100 | catch /^Vim:Interrupt$/ | endtry
 		try | edit | catch /^Vim(edit):E\d\+/ | echo "error" | endtry
 <
+			スクリプトの可読性向上のため、|Vim9| script では
+			`:endtry` は短縮できない。
+
 					*:cat* *:catch*
 					*E603* *E604* *E605* *E654* *E1033*
-:cat[ch] /{pattern}/	{pattern}にマッチする例外が発生し、より前の|:catch|
-			で捕捉されなかった場合、このコマンドから次の|:catch|,
-			|:finally|, |:endtry|までのコマンドが実行される。その
-			ような例外が発生しなかった場合、そのコマンドはスキップ
-			される。
+:cat[ch] /{pattern}/	{pattern}にマッチする例外が発生し、より前の `:catch`
+			で捕捉されなかった場合、この `:catch` と同じ `:try` に
+			属する次の `:catch`, `:finally`, `:endtry` までの後続
+			のコマンドが実行される。そのような例外が発生しなかった
+			場合、それらのコマンドはスキップされる。
 			{pattern}が省略された場合は全てのエラーが捕捉される。
 			例: >
 		:catch /^Vim:Interrupt$/	 " 割り込み (CTRL-C) を捕捉
@@ -3493,32 +3516,40 @@ text...
 			NOTE: エラーメッセージの本文によって ":catch" すること
 			は確実ではない。メッセージはロケールによって異なるから
 			である。
+			スクリプトの可読性向上のため、|Vim9| script では
+			`:catch` は短縮できない。
 
 					*:fina* *:finally* *E606* *E607*
-:fina[lly]		|:try|と ":finally" の間を抜ける前に必ず、このコマンド
-			から対応する|:endtry|の間のコマンドが実行される。つま
-			り正常に進んだ場合、|:continue|, |:break|, |:finish|,
-			|:return|を使った場合、エラー・割り込み・例外が発生し
-			た場合(|:throw|を参照)のいずれの場合でも。
+:fina[lly]		`:try` と `:finally` の間を抜ける前に必ず、このコマンド
+			から対応する `:endtry` の間のコマンドが実行される: つ
+			まり、正常に `:finally` まで進んだ場合、`:continue`,
+			`:break`, `:finish`, `:return` を使った場合、エラー・
+			割り込み・例外が発生した場合(|:throw|を参照)のいずれの
+			場合であっても。
+			スクリプトの可読性向上と `:final` と混同するのを避ける
+			ため、|Vim9| script では `:finally` は短縮できない。
 
 						*:th* *:throw* *E608* *E1129*
-:th[row] {expr1}	{expr1}を評価し、例外として投げる。|:try|と|:catch|の
-			間で ":throw" が使われた場合、{expr1}にマッチする最初
-			の|:catch|までのコマンドはスキップされる。そのような
-			":catch" がない場合、または ":catch" と|:finally|の間
-			で ":throw" が使われた場合、":finally" から|:endtry|ま
-			でのコマンドが実行される。":throw" が ":finally" の後
-			で実行された場合、":endtry" までのコマンドはスキップさ
-			れる。
-			":endtry" において、動的に囲んでいる次の ":try" (これ
-			は関数呼び出しやスクリプトsourceも含めて探される) から
-			対応する ":catch" までに対しこのプロセスが再び適用され
-			る。例外が捕捉されない場合、コマンドの処理は終了する。
+:th[row] {expr1}	{expr1}を評価し、例外として投げる。`:try` と `:catch`
+			の間で ":throw" が使われた場合、{expr1}にマッチする最初
+			の `:catch` までのコマンドはスキップされる。そのような
+			`:catch` がない場合、または `:catch` と `:finally` の間
+			で ":throw" が使われた場合、`:finally` から `:endtry` ま
+			でのコマンドが実行される。`:throw` が `:finally` の後
+			で実行された場合、`:endtry` までのコマンドはスキップさ
+			れる。":endtry" において、動的に囲んでいる次の `:try`
+			(これは関数呼び出しやスクリプトsourceも含めて探される)
+			から対応する `:catch` までに対しこのプロセスが再び適用
+			される。例外が捕捉されない場合、コマンドの処理は終了す
+			る。
 			例: >
 		:try | throw "oops" | catch /^oo/ | echo "caught" | endtry
 <			Note: エラーによって行のパースがスキップされ、"|" によ
 			るコマンド区切りが解釈されないような場合は "catch" は
 			行を分けて書く必要がある。
+
+			スクリプトの可読性向上のため、|Vim9| script では
+			`:throw` は短縮できない。
 
 							*:ec* *:echo*
 :ec[ho] {expr1} ..	各{expr1}をスペースで区切って表示する。最初の{expr1}の
@@ -3526,7 +3557,7 @@ text...
 			|:comment|も参照。
 			改行が必要な場合 "\n" を使用する。カーソルを第1桁に
 			持って行くには "\r" を使用する。
-			色強調を行うにはコマンド|:echohl|を使用する。
+			色強調を行うにはコマンド `:echohl` を使用する。
 			コメント文を同じ行に続けることはできない。
 			例: >
 		:echo "the value of 'shell' is" &shell
@@ -3534,23 +3565,23 @@ text...
 			このコマンドの後、再描画を行うと表示したメッセージが消
 			えてしまう。Vim は一連のコマンドが完了するまで再描画を
 			後回しにするため、この現象は頻繁に発生する。例えば、
-			":echo" より前に実行したコマンドが後で再描画を引き起こ
+			`:echo` より前に実行したコマンドが後で再描画を引き起こ
 			し、メッセージが消えてしまうということがある(再描画は
 			しばしばユーザーが何か入力するまで後回しにされる)。こ
-			の問題を避けるには、|:redraw| を使って強制的に再描画す
+			の問題を避けるには、`:redraw` を使って強制的に再描画す
 			ること。例: >
 		:new | redraw | echo "there is a new window"
 <
 
 							*:echon*
 :echon {expr1} ..	改行を付けずに、{expr1}を表示する。|:comment|も参照。
-			色強調を行うにはコマンド|:echohl|を使用する。
+			色強調を行うにはコマンド `:echohl` を使用する。
 			コメント文を同じ行に続けることはできない。
 			例: >
 				:echon "the value of 'shell' is " &shell
 <
-			Vimコマンドの ":echo" と、外部のシェルコマンドである
-			":!echo" との違いに注意: >
+			Vimコマンドの `:echo` と、外部のシェルコマンドである
+			`:!echo` との違いに注意: >
 		:!echo %		--> filename
 <			":!" の引数は展開される。|:_%|を参照。 >
 		:!echo "%"		--> filename or "filename"
@@ -3564,8 +3595,8 @@ text...
 <			'%' を展開するために関数expand()を呼び出している。
 
 							*:echoh* *:echohl*
-:echoh[l] {name}	次の |:echo|, |:echon|, |:echomsg| コマンドから、ハイ
-			ライトグループ{name}を適用する。|input()|のプロンプト
+:echoh[l] {name}	次の `:echo`, `:echon`, `:echomsg` コマンドから、ハイ
+			ライトグループ{name}を適用する。`input()` のプロンプト
 			に対しても適用される。例: >
 		:echohl WarningMsg | echo "Don't panic!" | echohl None
 <			使用した後にはグループを "None" に戻すことを忘れないよ
@@ -3575,13 +3606,13 @@ text...
 							*:echom* *:echomsg*
 :echom[sg] {expr1} ..	式を本当のメッセージとして表示し、そのメッセージをメッ
 			セージ履歴|message-history|に保存する。
-			|:echo|コマンド同様に、引数の間にスペースが挿入される。
-			しかし印字不可能な文字は解釈されずに表示される。
-			|:echo|とはかなり異なり、むしろ|:execute|に近い方法で
-			解析がされる。なんらかを表示する前に、まず最初に全ての
-			式が数値または文字列に評価されない場合は、string() を
-			使用して文字列に変換する。
-			強調を行うには|:echohl|コマンドを使う。
+			`:echo` コマンド同様に、引数の間にスペースが挿入され
+			る。しかし印字不可能な文字は解釈されずに表示される。
+			`:echo` とはかなり異なり、むしろ `:execute` に近い方法
+			で解析がされる。なんらかを表示する前に、まず最初に全て
+			の式が数値または文字列に評価されない場合は、string()
+			を使用して文字列に変換する。
+			強調を行うには `:echohl` コマンドを使う。
 			例: >
 		:echomsg "It's a Zizzer Zazzer Zuzz, as you can plainly see."
 <			画面を再描画したときメッセージが消去されてしまうのを避
