@@ -1335,7 +1335,7 @@ The same in |Vim9| script: >
 
 	# 入力されたテキスト行を扱う関数。
 	def TextEntered(text: string)
-	  # Send the text to a shell with Enter appended.
+	  # Enterを付加してテキストをシェルに送信する。
 	  ch_sendraw(shell_job, text .. "\n")
 	enddef
 
