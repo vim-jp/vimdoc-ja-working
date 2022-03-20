@@ -3203,7 +3203,8 @@ getcompletion({pat}, {type} [, {filtered}])		*getcompletion()*
 		arglist		引数リスト内のファイル名
 		augroup		自動コマンドグループ
 		buffer		バッファ名
-		behave		|:behave|サブオプション
+		behave		|:behave| サブオプション
+		breakpoint	|:breakadd| および |:breakdel| サブオプション
 		color		カラースキーム
 		command		Exコマンド
 		cmdline		|cmdline-completion| の結果
@@ -3220,7 +3221,7 @@ getcompletion({pat}, {type} [, {filtered}])		*getcompletion()*
 		function	関数名
 		help		ヘルプ項目
 		highlight	ハイライトグループ
-		history		|:history|サブオプション
+		history		|:history| サブオプション
 		locale		ロケール名 (locale -aの出力)
 		mapclear	バッファ引数
 		mapping		マッピング名
@@ -8787,10 +8788,10 @@ taglist({expr} [, {filename}])				*taglist()*
 			cmd		そのファイルの中でタグの位置を特定する
 					ために使うexコマンド。
 			kind		タグの種類。種類は言語に依存する。この
-					要素は、Exuberant ctagsかhdrtagによっ
-					て生成されたタグファイルを使っていると
-					きのみ使用できる。
-			static		ファイル固有のタグ。より詳しくは
+					要素は、Universal/Exuberant ctagsか
+					hdrtagによって生成されたタグファイルを
+					使っているときのみ使用できる。static
+					ファイル固有のタグ。より詳しくは
 					|static-tag|を参照。
 		タグファイルの内容によってはこれ以上の要素が存在することもある。
 		例: アクセス、実装、継承、シグネチャ。これらのフィールドについ
