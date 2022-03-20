@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 8.2.  Last change: 2022 Feb 18
+*options.txt*	For Vim バージョン 8.2.  Last change: 2022 Mar 13
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -7889,9 +7889,10 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	"!_TAG_FILE_SORTED" 行の値として '2' を使う。ほとんどの Unix では
 	"sort" にオプション -f をつけることで大文字・小文字を無視してタグファ
 	イルを整列することができる。そのコマンドは次のようになる: "sort -f -o
-	tags tags"。"Exuberant ctags" のバージョン 5.x 以降 (少なくとも 5.5 以
-	降) ではオプション --sort=foldcase をつけることでこれと同様のことがで
-	きる。Note: これが機能するために文字は大文字にまとめられる。
+	tags tags"。Universal ctags と Exuberant ctags のバージョン 5.x 以降
+	(少なくとも 5.5 以降) ではオプション --sort=foldcase をつけることでこ
+	れと同様のことができる。Note: これが機能するために文字は大文字にまとめ
+	られる。
 
 	デフォルトではタグ検索は大文字小文字を区別する。'ignorecase' が設定済
 	みで 'tagcase' が "followic" もしくは "ignore" に設定されている時は、
