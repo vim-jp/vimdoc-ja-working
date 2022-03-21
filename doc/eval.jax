@@ -3351,7 +3351,7 @@ text...
 				:  execute "silent 1,$delete"
 				:endif
 <
-			スクリプトの可読性向上のため、|Vim9| script では
+			|Vim9| script では、スクリプトの可読性向上のため
 			`:endif` は短縮できない。
 			NOTE: `:append` と `:insert` コマンドは `:if` と
 			`:endif` の間では正しく動かない。
@@ -3360,13 +3360,13 @@ text...
 :el[se]			対応する `:if` ブロックが実行されなかった場合には、こ
 			れに対応する `:else` か `:endif` までのコマンドが実行
 			される。
-			スクリプトの可読性向上のため、|Vim9| script では
+			|Vim9| script では、スクリプトの可読性向上のため
 			`:else` は短縮できない。
 
 					*:elseif* *:elsei* *E582* *E584*
 :elsei[f] {expr1}	`:else` `:if` の省略形。`:endif` を付け加える (入れ子
 			にする) 手間を省くことができる。
-			スクリプトの可読性向上のため、|Vim9| script では
+			|Vim9| script では、スクリプトの可読性向上のため
 			`:elseif` は短縮できない。
 
 :wh[ile] {expr1}			*:while* *:endwhile* *:wh* *:endw*
@@ -3382,7 +3382,7 @@ text...
 				   :let lnum = lnum + 1
 				:endwhile
 <
-			スクリプトの可読性向上のため、|Vim9| script では
+			|Vim9| script では、スクリプトの可読性向上のため
 			`:endwhile` は短縮できない。
 			NOTE: `:append` と `:insert` コマンドは `:while` と
 			`:for` ループの内側では正しく動かない。
@@ -3420,7 +3420,7 @@ text...
 			り返す。|List| とは異なり、|Blob| を変更しても繰り返し
 			には影響しない。
 
-			スクリプトの可読性向上のため、|Vim9| script では
+			|Vim9| script では、スクリプトの可読性向上のため
 			`:endfor` は短縮できない。
 
 :for [{var1}, {var2}, ...] in {listlist}
@@ -3441,7 +3441,7 @@ text...
 			合、全ての `:try` に対してこのプロセスが適用される。最
 			も外側の `:endtry` の後ループの開始位置まで戻る。
 
-			スクリプトの可読性向上のため、|Vim9| script では
+			|Vim9| script では、スクリプトの可読性向上のため
 			短縮系は `:cont` になる。
 						*:break* *:brea* *E587*
 :brea[k]		`:while` または `:for` ループの内側で使われたときは、
@@ -3453,7 +3453,7 @@ text...
 			合、全ての `:try` に対してこのプロセスが適用される。最
 			も外側の `:endtry` の後ループの後までジャンプする。
 
-			スクリプトの可読性向上のため、|Vim9| script では
+			|Vim9| script では、スクリプトの可読性向上のため
 			`:break` は短縮できない。
 :try						*:try* *:endt* *:endtry*
 						*E600* *E601* *E602* *E1032*
@@ -3487,7 +3487,7 @@ text...
 		try | sleep 100 | catch /^Vim:Interrupt$/ | endtry
 		try | edit | catch /^Vim(edit):E\d\+/ | echo "error" | endtry
 <
-			スクリプトの可読性向上のため、|Vim9| script では
+			|Vim9| script では,、スクリプトの可読性向上のため
 			`:endtry` は短縮できない。
 
 					*:cat* *:catch*
@@ -3516,7 +3516,7 @@ text...
 			NOTE: エラーメッセージの本文によって ":catch" すること
 			は確実ではない。メッセージはロケールによって異なるから
 			である。
-			スクリプトの可読性向上のため、|Vim9| script では
+			|Vim9| script では、スクリプトの可読性向上のため
 			`:catch` は短縮できない。
 
 					*:fina* *:finally* *E606* *E607*
@@ -3526,8 +3526,8 @@ text...
 			`:break`, `:finish`, `:return` を使った場合、エラー・
 			割り込み・例外が発生した場合(|:throw|を参照)のいずれの
 			場合であっても。
-			スクリプトの可読性向上と `:final` と混同するのを避ける
-			ため、|Vim9| script では `:finally` は短縮できない。
+			|Vim9| script では、スクリプトの可読性向上と `:final`
+			と混同するのを避けるため、 `:finally` は短縮できない。
 
 						*:th* *:throw* *E608* *E1129*
 :th[row] {expr1}	{expr1}を評価し、例外として投げる。`:try` と `:catch`
@@ -3548,7 +3548,7 @@ text...
 			るコマンド区切りが解釈されないような場合は "catch" は
 			行を分けて書く必要がある。
 
-			スクリプトの可読性向上のため、|Vim9| script では
+			|Vim9| script では、スクリプトの可読性向上のため
 			`:throw` は短縮できない。
 
 							*:ec* *:echo*
