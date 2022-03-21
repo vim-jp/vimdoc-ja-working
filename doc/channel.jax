@@ -1324,7 +1324,7 @@ Shift-CTRL-W を使用します)。ウィンドウを離れるとき挿入モー
 	" シェルコマンドの受け付けを開始する。
 	startinsert
 <
-The same in |Vim9| script: >
+|Vim9| script で同様に: >
 
 	vim9script
 
