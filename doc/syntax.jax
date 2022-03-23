@@ -5357,7 +5357,7 @@ types.vim: *.[ch]
 
 そして以下を.vimrcに加える: >
 
-   " 存在するなら、ハイライトするファイル types.vim をロードする
+   " 存在する場合、ハイライトファイル types.vim をロードする
    autocmd BufRead,BufNewFile *.[ch] let fname = expand('<afile>:p:h') .. '/types.vim'
    autocmd BufRead,BufNewFile *.[ch] if filereadable(fname)
    autocmd BufRead,BufNewFile *.[ch]   exe 'so ' .. fname
