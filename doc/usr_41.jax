@@ -1891,21 +1891,20 @@ Unix では特別なコメント書式を使って Vim script を実行形式に
 パッケージング
 --------------
 
-Sometimes you will want to use global variables or functions, so that they can
-be used anywhere.  A good example is a global variable that passes a
-preference to a  plugin.  To avoid other scripts using the same name, use a
-prefix that is very unlikely to be used elsewhere.  For example, if you have a
-"mytags" plugin, you could use: >
+そのうち、どこからでも利用できるはグローバル変数や関数が欲しくなるでしょう。良
+い例として設定をプラグインまで通すグローバル変数があります。他のスクリプトが同
+名を使うのを防ぐため、他が利用しているものとは滅多に競合しないようなプリフィッ
+クスを使いましょう。例えば、"mytags" プリフィックスの場合、このようにします: >
 
 	g:mytags_location = '$HOME/project'
 	g:mytags_style = 'fast'
 
-To minimize interference between plugins keep as much as possible local to the
-script.  |Vim9| script helps you with that, by default functions and variables
-are script-local.
+ローカルのスクリプトとプラグインとの間は必要なだけで干渉を最小化にします。
+|Vim9| script はデフォルトの関数と変数はスクリプトローカルにすることでこれ
+を助けます。
 
-If you split your plugin into parts, you can use `import` and `export` to
-share items between those parts.  See `:export` for the details.
+プラグインを部分に分ける場合、`import` と `export` で部分間で項目を共有できま
+す。詳細は `:export` を参照してください。
 
 ==============================================================================
 *41.11*	プラグインを書く				*write-plugin*
@@ -1930,11 +1929,11 @@ Vim script を書いて、それを多くの人に使ってもらうことがで
 
 最初にプラグインの名前を決めなければなりません。プラグインが提供する機能が名前
 から分かるようにしてください。また、他の人が作ったプラグインと名前がかぶらない
-ようにしてください。古い MS-Windows システムでの問題を避けるため、名前は 8 文
-字以内にしてください。
+ようにしてください。
 
 例えばタイプミス (type mistake) を修正 (correct) するためのスクリプトなら
-"typecorr.vim" という名前を付けたりします。ここではこれを例題として使います。
+"typecorrect.vim" という名前を付けたりします。ここではこれを例題として使いま
+す。
 
 プラグインが誰でも使えるようにするため、いくつかのガイドラインに従ってくださ
 い。ガイドラインは段階的に説明していきます。例題プラグインの完全なソースは最後
@@ -1959,6 +1958,18 @@ Vim script を書いて、それを多くの人に使ってもらうことがで
 ください。
 
 
+最初の行
+>
+  1	vim9script noclear
+
+`vimscript` コマンドはごく初期に使う必要があります。最良なのはごく最初の行に置
+くことです。
+
+このスクリプトでは2回目のロード時に `finish` コマンドで脱出するように書くこと
+ができます。引数 "noclear" を使うことでスクリプトで定義した項目を失うのを防ぎ
+ます。より詳細は |vim9-reload| にて。
+
+
 ヘッダー
 ------
 
@@ -1967,40 +1978,39 @@ Vim script を書いて、それを多くの人に使ってもらうことがで
 書いたのかを知りたいと思うでしょうし、感想を伝えたいと思うかもしれません。
 というわけで、次のようなヘッダーをプラグインに書いてください: >
 
-  1	" Vim global plugin for correcting typing mistakes
-  2	" Last Change:	2000 Oct 15
-  3	" Maintainer:	Bram Moolenaar <Bram@vim.org>
+  2	# Vim global plugin for correcting typing mistakes
+  3	# Last Change:	2021 Dec 30
+  4	# Maintainer:	Bram Moolenaar <Bram@vim.org>
 
 著作権とライセンスについて: プラグインがとても便利で、そして再配布を制限するほ
 どのものでない場合は、パブリックドメインか Vim ライセンス (|license|) の適用を
 検討してみてください。次の短い宣言をプラグインの先頭付近に書いておくだけで十分
 です: >
 
-  4	" License:	This file is placed in the public domain.
+  5	# License:	This file is placed in the public domain.
 
 
-行連結、副作用の回避					*use-cpo-save*
+行連結と副作用の回避					*use-cpo-save*
 --------------------
 
 上の例の 18 行目では行連結 (|line-continuation|) が使われています。ユーザーの
 環境で 'compatible' オプションがオンに設定されていると、この行でエラーが発生し
 ます。'compatible' オプションの設定には副作用があるので、勝手に設定をオフにす
-ることはできません。問題を避けるには、一時的に 'cpoptions' の値を Vim の初期値
-に設定し、後で元に戻します。そうすれば、行連結を使うことができ、スクリプトはほ
-とんどの環境で動作するようになります。設定の変更は次のようにします: >
+ることはできません。代わりに、一時的に 'cpoptions' の値を Vim の初期値に設定
+し、後で元に戻します。そうすれば、行連結を使うことができ、スクリプトはほとんど
+の環境で動作するようになります。設定の変更は次のようにします: >
 
- 11	let s:save_cpo = &cpo
+ 11	var save_cpo = &cpo
  12	set cpo&vim
  ..
- 42	let &cpo = s:save_cpo
- 43	unlet s:save_cpo
+ 42	&cpo = save_cpo
 
 最初に 'cpoptions' の値を s:save_cpo 変数に保存します。プラグインの最後でオプ
 ションの値を元に戻します。
 
-スクリプトローカル変数 (|s:var|) を使っていることに注目してください。グローバ
-ル変数は他の場所で使われている可能性があります。スクリプトの中だけで使う場合は
-スクリプトローカル変数を使ってください。
+"save_cpo" がスクリプトローカル変数であることに注目してください。グローバル変
+数は他の場所で使われている可能性があります。スクリプトの中だけで使う場合はスク
+リプトローカル変数を使ってください。
 
 
 ロードしない
@@ -2009,13 +2019,14 @@ Vim script を書いて、それを多くの人に使ってもらうことがで
 ユーザーが常にプラグインをロードしたいと思うとは限りません。また、システム管理
 者がシステムのプラグインディレクトリにプラグインを入れたが、ユーザーは自分で入
 れたプラグインを使いたいということもあります。したがって、指定したプラグインだ
-けを無効にできる必要があります。次のようにします: >
+けを無効にできる必要があります。次の行のようにします: >
 
-  6	if exists("g:loaded_typecorr")
-  7	  finish
-  8	endif
-  9	let g:loaded_typecorr = 1
+  7	if exists("g:loaded_typecorrect")
+  8	  finish
+  9	endif
+ 10	g:loaded_typecorrect = 1
 
+TODO ここから
 これはスクリプトの二重ロードを避ける効果もあります。スクリプトを二重にロードす
 ると、関数の再定義エラーが発生したり、自動コマンドが二重に追加されることでトラ
 ブルが起きたりします。
