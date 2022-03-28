@@ -1,4 +1,4 @@
-*options.txt*	For Vim version 8.2.  Last change: 2022 Feb 08
+*options.txt*	For Vim version 8.2.  Last change: 2022 Mar 13
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -1142,7 +1142,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	If you like to keep a lot of backups, you could use a BufWritePre
 	autocommand to change 'backupext' just before writing the file to
 	include a timestamp. >
-		:au BufWritePre * let &bex = '-' . strftime("%Y%b%d%X") . '~'
+		:au BufWritePre * let &bex = '-' .. strftime("%Y%b%d%X") .. '~'
 <	Use 'backupdir' to put the backup in a different directory.
 
 						*'backupskip'* *'bsk'*
@@ -1167,7 +1167,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 
 	Note that environment variables are not expanded.  If you want to use
 	$HOME you must expand it explicitly, e.g.: >
-		:let &backupskip = escape(expand('$HOME'), '\') . '/tmp/*'
+		:let &backupskip = escape(expand('$HOME'), '\') .. '/tmp/*'
 
 <	Note that the default also makes sure that "crontab -e" works (when a
 	backup would be made by renaming the original file crontab won't see
@@ -1218,10 +1218,10 @@ A jump table for the options with a short description can be found at |Q_op|.
 	The evaluation of the expression must not have side effects!
 	Example: >
     function MyBalloonExpr()
-	return 'Cursor is at line ' . v:beval_lnum .
-		\', column ' . v:beval_col .
-		\ ' of file ' .  bufname(v:beval_bufnr) .
-		\ ' on word "' . v:beval_text . '"'
+	return 'Cursor is at line ' .. v:beval_lnum ..
+		\ ', column ' .. v:beval_col ..
+		\ ' of file ' ..  bufname(v:beval_bufnr) ..
+		\ ' on word "' .. v:beval_text .. '"'
     endfunction
     set bexpr=MyBalloonExpr()
     set ballooneval
@@ -1537,7 +1537,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	If the default value taken from $CDPATH is not what you want, include
 	a modified version of the following command in your vimrc file to
 	override it: >
-	  :let &cdpath = ',' . substitute(substitute($CDPATH, '[, ]', '\\\0', 'g'), ':', ',', 'g')
+	  :let &cdpath = ',' .. substitute(substitute($CDPATH, '[, ]', '\\\0', 'g'), ':', ',', 'g')
 <	This option cannot be set from a |modeline| or in the |sandbox|, for
 	security reasons.
 	(parts of 'cdpath' can be passed to the shell to expand file names).
@@ -1582,8 +1582,8 @@ A jump table for the options with a short description can be found at |Q_op|.
 		set charconvert=CharConvert()
 		fun CharConvert()
 		  system("recode "
-			\ . v:charconvert_from . ".." . v:charconvert_to
-			\ . " <" . v:fname_in . " >" v:fname_out)
+			\ .. v:charconvert_from .. ".." .. v:charconvert_to
+			\ .. " <" .. v:fname_in .. " >" .. v:fname_out)
 		  return v:shell_error
 		endfun
 <	The related Vim variables are:
@@ -4038,7 +4038,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 'guitablabel' 'gtl'	string	(default empty)
 			global
 			{only available when compiled with GUI enabled}
-	When nonempty describes the text to use in a label of the GUI tab
+	When non-empty describes the text to use in a label of the GUI tab
 	pages line.  When empty and when the result is empty Vim will use a
 	default label.  See |setting-guitablabel| for more info.
 
@@ -4056,7 +4056,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 'guitabtooltip' 'gtt'	string	(default empty)
 			global
 			{only available when compiled with GUI enabled}
-	When nonempty describes the text to use in a tooltip for the GUI tab
+	When non-empty describes the text to use in a tooltip for the GUI tab
 	pages line.  When empty Vim will use a default tooltip.
 	This option is otherwise just like 'guitablabel' above.
 	You can include a line break.  Simplest method is to use |:let|: >
@@ -4887,7 +4887,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 			|+multi_lang| features}
 	Language to use for menu translation.  Tells which file is loaded
 	from the "lang" directory in 'runtimepath': >
-		"lang/menu_" . &langmenu . ".vim"
+		"lang/menu_" .. &langmenu .. ".vim"
 <	(without the spaces).  For example, to always use the Dutch menus, no
 	matter what $LANG is set to: >
 		:set langmenu=nl_NL.ISO_8859-1
@@ -5901,7 +5901,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 <	To use an environment variable, you probably need to replace the
 	separator.  Here is an example to append $INCL, in which directory
 	names are separated with a semi-colon: >
-		:let &path = &path . "," . substitute($INCL, ';', ',', 'g')
+		:let &path = &path .. "," .. substitute($INCL, ';', ',', 'g')
 <	Replace the ';' with a ':' or whatever separator is used.  Note that
 	this doesn't work when $INCL contains a comma or white space.
 
@@ -7459,7 +7459,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 			global or local to window |global-local|
 			{not available when compiled without the |+statusline|
 			feature}
-	When nonempty, this option determines the content of the status line.
+	When non-empty, this option determines the content of the status line.
 	Also see |status-line|.
 
 	The option consists of printf style '%' items interspersed with
@@ -7767,7 +7767,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 						*'tabline'* *'tal'*
 'tabline' 'tal'		string	(default empty)
 			global
-	When nonempty, this option determines the content of the tab pages
+	When non-empty, this option determines the content of the tab pages
 	line at the top of the Vim window.  When empty Vim will use a default
 	tab pages line.  See |setting-tabline| for more info.
 
@@ -7859,9 +7859,10 @@ A jump table for the options with a short description can be found at |Q_op|.
 	linear search can be avoided when case is ignored.  Use a value of '2'
 	in the "!_TAG_FILE_SORTED" line for this.  A tag file can be case-fold
 	sorted with the -f switch to "sort" in most unices, as in the command:
-	"sort -f -o tags tags".  For "Exuberant ctags" version 5.x or higher
-	(at least 5.5) the --sort=foldcase switch can be used for this as
-	well.  Note that case must be folded to uppercase for this to work.
+	"sort -f -o tags tags".  For Universal ctags and Exuberant ctags
+	version 5.x or higher (at least 5.5) the --sort=foldcase switch can be
+	used for this as well.  Note that case must be folded to uppercase for
+	this to work.
 
 	By default, tag searches are case-sensitive.  Case is ignored when
 	'ignorecase' is set and 'tagcase' is "followic", or when 'tagcase' is
@@ -8318,7 +8319,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	This option cannot be set in a modeline when 'modelineexpr' is off.
 
 	Example: >
-    :auto BufEnter * let &titlestring = hostname() . "/" . expand("%:p")
+    :auto BufEnter * let &titlestring = hostname() .. "/" .. expand("%:p")
     :set title titlestring=%<%F%=%l/%L-%P titlelen=70
 <	The value of 'titlelen' is used to align items in the middle or right
 	of the available space.
@@ -9087,6 +9088,14 @@ A jump table for the options with a short description can be found at |Q_op|.
 			feature}
 	A list of words that change how |cmdline-completion| is done.
 	The following values are supported:
+	  fuzzy		Use |fuzzy-matching| to find completion matches. When
+			this value is specified, wildcard expansion will not
+			be used for completion.  The matches will be sorted by
+			the "best match" rather than alphabetically sorted.
+			This will find more matches than the wildcard
+			expansion. Currently fuzzy matching based completion
+			is not supported for file and directory names and
+			instead wildcard expansion is used.
 	  pum		Display the completion matches using the popupmenu
 			in the same style as the |ins-completion-menu|.
 	  tagfile	When using CTRL-D to list matching tags, the kind of
