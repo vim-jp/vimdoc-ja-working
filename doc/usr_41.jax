@@ -48,7 +48,7 @@ Vim script 言語は vimrc ファイルや構文ファイルなど、さまざ�
 	そしてあなたが JavaScript に親しんでいるなら:
 	   https://w0rp.com/blog/post/vim-script-for-the-javascripter/
 
-Vim  scriptは2種類になりました: 旧来のものと |Vim9| です。このヘルプファイ
+Vim scriptは2種類になりました: 旧来のものと |Vim9| です。このヘルプファイ
 ルは新規ユーザーのためなので、より新しくより便利な |Vim9| の文法を教えます。
 
 Vim scriptを試すのに最適な方法はスクリプトファイルを編集して実行することで
