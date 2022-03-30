@@ -128,7 +128,7 @@ Universal/Exuberant Ctags は内蔵の多言語コードパーサーを使う。
 Universal/Exuberant Ctags を使用する他のVimのツールもたくさんある。
 Exuberant ctags は開発されなくなったので、Universal ctags を推奨する。
 
-次の所にある Universal Ctags をインストールしなければならない。
+以下から入手できる Universal Ctags をインストールする必要がある。
 https://ctags.io
 
 Universal/Exuberant Ctags のAdaパーサーはかなり新しく、完全な対応は期待しない
