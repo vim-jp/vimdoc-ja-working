@@ -125,7 +125,8 @@ Universal/Exuberant Ctags は内蔵の多言語コードパーサーを使う。
 ても高速で、大量の付加情報を生成する。また、コンパイルが通らないファイルに対し
 ても実行できる。
 
-Universal/Exuberant Ctags を利用するVimのツールはたくさんある。
+Universal/Exuberant Ctags を使用する他のVimのツールもたくさんある。
+Exuberant ctags は開発されなくなったので、Universal ctags を推奨する。
 
 次の所にある Universal Ctags をインストールしなければならない。
 https://ctags.io
