@@ -48,11 +48,10 @@ Vim script 言語は vimrc ファイルや構文ファイルなど、さまざ�
 	そしてあなたが JavaScript に親しんでいるなら:
 	   https://w0rp.com/blog/post/vim-script-for-the-javascripter/
 
-Vim scriptは2種類になりました: 旧来のものと |Vim9| です。このヘルプファイ
-ルは新規ユーザーのためなので、より新しくより便利な |Vim9| の文法を教えます。
+Vim script は2種類になりました: 旧来のものと |Vim9| です。このヘルプファイルは
+新規ユーザーのためなので、より新しくより便利な |Vim9| の文法を教えます。
 
-Vim scriptを試すのに最適な方法はスクリプトファイルを編集して実行することで
-す。
+Vim script を試すのに最適な方法はスクリプトファイルを編集して実行することです。
 基本型: >
 	:edit test.vim
 	[あなたが望むだけスクリプト行を挿入します]
@@ -2084,9 +2083,8 @@ Note: 上記のコマンドでは <unique> が使われています。これは�
 能性があります。例えば、Add() という関数を追加したとき、他のスクリプトでも同じ
 名前の関数が定義されているかもしれません。そのような場合は、スクリプトの中だけ
 で使える関数を定義します。
-Fortunately, in |Vim9| script this is the default.  In a legacy script you
-将来的に、|Vim9| script がデフォルトになります。旧来のスクリプトは名前に "s:"
-を付ける必要があります。
+ありがたいことに、|Vim9| script がデフォルトになります。旧来のスクリプトは名前
+に "s:" を付ける必要があります。
 
 新しい修正を追加するための関数を定義します: >
 
@@ -2199,14 +2197,14 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
 義コマンドでも使えます。我々の例に、修正の数を数えるための数行のコードを追加し
 ます
 
-The nice thing about |Vim9| script is that variables are local to the script
-by default.  You can prepend "s:" if you like, but you do not need to.  And
-functions in the script can also use the script variables without a prefix.
+|Vim9| script の良い所は変数がスクリプトにローカルなのがデフォルトなことです。
+それが必要ではないなら、"s:" を前置することができます。スクリプト内の関数もプ
+リフィックスなしでスクリプト変数を使うこができます。
 
-Script-local variables can also be used in functions, autocommands and user
-commands that are defined in the script.  Thus they are the perfect way to
-share information between parts of your plugin, without it leaking out.  In
-our example we can add a few lines to count the number of corrections: >
+スクリプトローカル変数はまた、スクリプト内で定義した関数、自動コマンド、ユー
+ザーコマンド内で使われます。そして、あなたのプラグイン内の部分間で情報を漏らさ
+ない、完全な共有手段になります。この例の中ではいくつかの行の補正した数をカウン
+トします: >
 
  19	var count = 4
  ..
@@ -2216,7 +2214,7 @@ our example we can add a few lines to count the number of corrections: >
  35	  echo "you now have " .. count .. " corrections"
  36	enddef
 
-"count" はスクリプトの中で 4 で宣言と初期化をされます。その後、Add() 関数が呼
+"count" はスクリプトの中で 4 で宣言と初期化がされます。その後、Add() 関数が呼
 び出されると、"count" が増加します。関数がどこから呼ばれたかにかかわらず、関数
 が定義されたスクリプトのローカル変数が使われます。
 
@@ -2753,9 +2751,10 @@ Unix では、このライブラリスクリプトは次のような場所に置
 Vim ユーザーは Vim のウェブサイト http://www.vim.org でスクリプトを探します。
 便利なスクリプトを作ったら、ぜひ共有しましょう！
 
-Another place is github.  But there you need to know where to find it!  The
-advantage is that most plugin managers fetch plugins from github.  You'll have
-to use your favorite search engine to find them.
+別の場所として githubがあります。しかし、そこが探される場所であるとあなたは知
+る必要があります!。多くのプラグインマネージャーがプラグインを github から取得
+するというアドバンテージがあります。あなたが使うであろうお気に入りのサーチエン
+ジンが見付けるのもそこになります。
 
 Vim script はどのシステムでも使えます。しかしながら ltar や gzip コマンドは存
 在しないことがあります。ファイルをまとめたり圧縮したりするには "zip" ユーティ
