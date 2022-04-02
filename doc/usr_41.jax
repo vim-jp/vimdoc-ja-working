@@ -1474,11 +1474,10 @@ Vim にすべての関数をコンパイルするように指示できます: >
 	3     endif ~
 	   endfunction ~
 
-To see the "Show" function you need to include the script prefix, since a
-"Show" function can be defined multiple times in different scripts.  To find
-the exact name you can use `function`, but the result may be a very long list.
-To only get the functions matching a pattern you can use the `filter` prefix:
->
+"Show" 関数を見るにはスクリプトのプリフィックスを含む必要があり、別のスクリプ
+トで複数回 "Show" 関数が定義できます。一致した名前を見付けるには `function` を
+使いますが、とても長いリストになります。パターンに一致した関数だけを取得するに
+は `filter` を付けます: >
 
 	:filter Show function
 <	def <SNR>86_Show(start: string, ...items: list<string>) ~
