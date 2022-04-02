@@ -2026,17 +2026,16 @@ Vim script を書いて、それを多くの人に使ってもらうことがで
   9	endif
  10	g:loaded_typecorrect = 1
 
-TODO ここから
-これはスクリプトの二重ロードを避ける効果もあります。スクリプトを二重にロードす
-ると、関数の再定義エラーが発生したり、自動コマンドが二重に追加されることでトラ
-ブルが起きたりします。
+これはスクリプトの二重ロードで関数が無意味に再定義されることと自動コマンドが二
+重に追加されるのを避ける効果もあります。
 
-変数の名前は "loaded_" で始めてプラグインのファイル名をそのまま付けるようにし
-てください。"g:" を付けることで関数の中で変数を使用したときに発生するミスを防
-いでいます (関数の中では "g:" を付けない変数はローカル変数になります)。
+変数の名前は "g:loaded_" で始めてプラグインのファイル名をそのまま付けるように
+してください。"g:" を付けることで変数をグローバルにし、他の箇所で機能があるか
+チェックできるようにします。"g:" を付けないとスクリプトにローカルになります。
 
-"finish" を使ってファイルの残りの部分の読み込みを停止しています。この方法は
-ファイル全体を if-endif で囲むよりも速いです。
+`finish` を使ってファイルの残りの部分の読み込みを停止しています。Vimはコマンド
+を解析して `endif` を見つける必要があるため、この方法はファイル全体を if-endif
+で囲むよりもはるかに高速です。
 
 
 マップ
@@ -2051,10 +2050,10 @@ TODO ここから
 
 "<Plug>TypecorrAdd;" は目的の動作をします。詳しくは後で説明します。
 
-使用したいキーを "mapleader" 変数に設定することで、マップの最初のキーを設定で
-きます。例えば、次のように設定すると: >
+使用したいキーを "g:mapleader" 変数に設定することで、マップの最初のキーを設定
+できます。例えば、次のように設定すると: >
 
-	let mapleader = "_"
+	g:mapleader = "_"
 
 マップは "_a" と定義されます。変数が設定されていない場合は初期設定 (バックス
 ラッシュ) が使われます。つまり "\a" というマップが定義されます。
@@ -2083,21 +2082,24 @@ Note: 上記のコマンドでは <unique> が使われています。これは�
 スクリプトが大きくなると、それを部品ごとに分けたくなります。それには関数やマッ
 プを使います。しかし、そうすると関数やマップが他のスクリプトのものと衝突する可
 能性があります。例えば、Add() という関数を追加したとき、他のスクリプトでも同じ
-名前の関数が定義されているかもしれません。そのような場合は、名前の前に "s:" を
-付けて、スクリプトの中だけで使える関数を定義します。
+名前の関数が定義されているかもしれません。そのような場合は、スクリプトの中だけ
+で使える関数を定義します。
+Fortunately, in |Vim9| script this is the default.  In a legacy script you
+将来的に、|Vim9| script がデフォルトになります。旧来のスクリプトは名前に "s:"
+を付ける必要があります。
 
 新しい修正を追加するための関数を定義します: >
 
- 30	function s:Add(from, correct)
- 31	  let to = input("type the correction for " .. a:from .. ": ")
- 32	  exe ":iabbrev " .. a:from .. " " .. to
+ 30	def Add(from: string, correct: bool)
+ 31	  var to = input("type the correction for " .. from .. ": ")
+ 32	  exe ":iabbrev " .. from .. " " .. to
  ..
- 36	endfunction
+ 36	enddef
 
-s:Add() 関数は同じスクリプトの中から呼び出すことができます。他のスクリプトが
-s:Add() を定義していた場合、それはそのスクリプトにローカルであり、関数が定義さ
-れたスクリプトの中からのみ呼び出すことができます。さらにグローバルの Add() 関
-数 ("s:" 無し) を定義することもでき、それはまた別の関数になります。
+Add() 関数は同じスクリプトの中から呼び出すことができます。他のスクリプトが
+Add() を定義していた場合、それはそのスクリプトにローカルであり、スクリプトの中
+からのみ呼び出すことができます。さらにグローバルの g:Add() 関数を定義すること
+もでき、それはまた別の関数になります。
 
 マップ定義では <SID> が使えます。これは、現在のスクリプトを識別するためのスク
 リプト ID を生成します。私たちの入力修正プラグインでは <SID> を次のように使い
@@ -2105,22 +2107,23 @@ s:Add() を定義していた場合、それはそのスクリプトにローカ
 
  24	noremap <unique> <script> <Plug>TypecorrAdd;  <SID>Add
  ..
- 28	noremap <SID>Add  :call <SID>Add(expand("<cword>"), 1)<CR>
+ 28	noremap <SID>Add  :call <SID>Add(expand("<cword>"), true)<CR>
 
 ユーザーが "\a" と入力すると、次の手順でキー入力が呼び出されます: >
 
-	\a  ->  <Plug>TypecorrAdd;  ->  <SID>Add  ->  :call <SID>Add()
+	\a  ->  <Plug>TypecorrAdd;  ->  <SID>Add  ->  :call <SID>Add(...)
 
 他のスクリプトで <SID>Add をマップすると、別のスクリプト ID が使われ、別のマッ
 プが生成されます。
 
-Note: s:Add() ではなく <SID>Add() と書いていることに注意してください。マップは
-スクリプトの外側でユーザーが入力するものだからです。<SID> はスクリプト ID に変
-換され、どのスクリプトの Add() 関数を呼べばいいのかわかるようになっています。
+Note: Add() ではなく <SID>Add() と書いていることに注意してください。マップはス
+クリプトコンテキストの外側でユーザーが入力するものだからです。<SID> はスクリプ
+ト ID に変換され、どのスクリプトの Add() 関数を呼べばいいのかわかるようになっ
+ています。
 
 これは少し複雑ですが、複数のプラグインを同時に使用するためには必要なことです。
 基本的なルールとしては、マップの中では <SID>Add() を使い、他の場所 (スクリプト
-の中、自動コマンド、ユーザー定義コマンド) では s:Add() を使います。
+の中、自動コマンド、ユーザー定義コマンド) では Add() を使います。
 
 マップと同じ方法で、メニューを追加することもできます: >
 
@@ -2171,13 +2174,16 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
 修正を追加するためのユーザー定義コマンドを追加します: >
 
  38	if !exists(":Correct")
- 39	  command -nargs=1  Correct  :call s:Add(<q-args>, 0)
+ 39	  command -nargs=1  Correct  :call Add(<q-args>, false)
  40	endif
 
 ユーザー定義コマンドは、同じ名前のコマンドがまだない場合のみ定義できます。既に
 定義されている場合はエラーになります。":command!" を使ってユーザー定義関数を上
 書きするのは良いアイデアとは言えません。ユーザーは、自分が定義したコマンドがな
 ぜ動かないのか不思議に思うでしょう。|:command|
+だれの責任でそうなってしまったのか見付けるには: >
+
+	verbose command Correct
 
 
 スクリプト変数
@@ -2191,18 +2197,27 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
 
 スクリプト変数は、同じスクリプトの中で定義された関数、自動コマンド、ユーザー定
 義コマンドでも使えます。我々の例に、修正の数を数えるための数行のコードを追加し
-ます: >
+ます
 
- 19	let s:count = 4
- ..
- 30	function s:Add(from, correct)
- ..
- 34	  let s:count = s:count + 1
- 35	  echo s:count .. " corrections now"
- 36	endfunction
+The nice thing about |Vim9| script is that variables are local to the script
+by default.  You can prepend "s:" if you like, but you do not need to.  And
+functions in the script can also use the script variables without a prefix.
 
-最初に s:count はスクリプトの中で 4 で初期化されます。その後、s:Add() 関数が呼
-び出されると、s:count が増加します。関数がどこから呼ばれたかにかかわらず、関数
+Script-local variables can also be used in functions, autocommands and user
+commands that are defined in the script.  Thus they are the perfect way to
+share information between parts of your plugin, without it leaking out.  In
+our example we can add a few lines to count the number of corrections: >
+
+ 19	var count = 4
+ ..
+ 30	def Add(from: string, correct: bool)
+ ..
+ 34	  count += 1
+ 35	  echo "you now have " .. count .. " corrections"
+ 36	enddef
+
+"count" はスクリプトの中で 4 で宣言と初期化をされます。その後、Add() 関数が呼
+び出されると、"count" が増加します。関数がどこから呼ばれたかにかかわらず、関数
 が定義されたスクリプトのローカル変数が使われます。
 
 
@@ -2211,17 +2226,17 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
 
 例題の完成形は以下のようになります: >
 
-  1	" Vim global plugin for correcting typing mistakes
-  2	" Last Change:	2000 Oct 15
-  3	" Maintainer:	Bram Moolenaar <Bram@vim.org>
-  4	" License:	This file is placed in the public domain.
-  5
-  6	if exists("g:loaded_typecorr")
-  7	  finish
-  8	endif
-  9	let g:loaded_typecorr = 1
- 10
- 11	let s:save_cpo = &cpo
+  1	vim9script noclear
+  2	# Vim global plugin for correcting typing mistakes
+  3	# Last Change:	2021 Dec 30
+  4	# Maintainer:	Bram Moolenaar <Bram@vim.org>
+  5	# License:	This file is placed in the public domain.
+  6
+  7	if exists("g:loaded_typecorrect")
+  8	  finish
+  9	endif
+ 10	g:loaded_typecorrect = 1
+ 11	var save_cpo = &cpo
  12	set cpo&vim
  13
  14	iabbrev teh the
@@ -2229,7 +2244,7 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
  16	iabbrev wnat want
  17	iabbrev synchronisation
  18		\ synchronization
- 19	let s:count = 4
+ 19	var count = 4
  20
  21	if !hasmapto('<Plug>TypecorrAdd;')
  22	  map <unique> <Leader>a  <Plug>TypecorrAdd;
@@ -2238,34 +2253,26 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
  25
  26	noremenu <script> Plugin.Add\ Correction      <SID>Add
  27
- 28	noremap <SID>Add  :call <SID>Add(expand("<cword>"), 1)<CR>
+ 28	noremap <SID>Add  :call <SID>Add(expand("<cword>"), true)<CR>
  29
- 30	function s:Add(from, correct)
- 31	  let to = input("type the correction for " .. a:from .. ": ")
- 32	  exe ":iabbrev " .. a:from .. " " .. to
- 33	  if a:correct | exe "normal viws\<C-R>\" \b\e" | endif
- 34	  let s:count = s:count + 1
- 35	  echo s:count .. " corrections now"
- 36	endfunction
+ 30	def Add(from: string, correct: bool)
+ 31	  var to = input("type the correction for " .. from .. ": ")
+ 32	  exe ":iabbrev " .. from .. " " .. to
+ 33	  if correct | exe "normal viws\<C-R>\" \b\e" | endif
+ 34	  count += 1
+ 35	  echo "you now have " .. count .. " corrections"
+ 36	enddef
  37
  38	if !exists(":Correct")
- 39	  command -nargs=1  Correct  :call s:Add(<q-args>, 0)
+ 39	  command -nargs=1  Correct  call Add(<q-args>, false)
  40	endif
  41
- 42	let &cpo = s:save_cpo
- 43	unlet s:save_cpo
+ 42	&cpo = save_cpo
 
 33 行目は説明がまだでした。これは、新しい修正をカーソルの下の単語に適用しま
 す。|:normal| コマンドを使って新しい略語を適用しています。Note: マップと略語は
 その場で展開されます。":noremap" で定義されたマップから関数が呼び出されたとし
 ても動作は同じです。
-
-'fileformat' オプションを "unix" に設定することが推奨されています。そうすれ
-ば、Vim script はどこでも動作します。'fileformat' が "dos" に設定されたスクリ
-プトは Unix では動作しません。|:source_crnl| も参照。設定が正しいことを確実に
-するため、ファイルを保存する前に次のコマンドを実行してください: >
-
-	:set fileformat=unix
 
 
 ドキュメント						*write-local-help*
@@ -2275,9 +2282,9 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
 ような場合には特に重要です。|add-local-help| ではどのようにしてドキュメントが
 インストールされるか説明されています。
 
-プラグインヘルプファイルの例を示します ("typecorr.txt"): >
+プラグインヘルプファイルの例を示します ("typecorrect.txt"): >
 
-  1	*typecorr.txt*	Plugin for correcting typing mistakes
+  1	*typecorrect.txt*	Plugin for correcting typing mistakes
   2
   3	If you make typing mistakes, this plugin will have them corrected
   4	automatically.
@@ -2292,7 +2299,7 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
  13	:Correct {word}
  14		Add a correction for {word}.
  15
- 16							*typecorr-settings*
+ 16							*typecorrect-settings*
  17	This plugin doesn't have any settings.
 
 書式に気をつけなければならないのは一行目だけです。一行目はコピーされ、help.txt
@@ -2301,8 +2308,8 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
 されたことを確認してください。
 
 ヘルプの中で ** で文字を囲むとタグを追加することができます。ただし、既存のヘル
-プタグと同じものを使わないでください。"typecorr-settings" のように、プラグイン
-の名前を使ってタグを作るといいかもしれません。
+プタグと同じものを使わないでください。"typecorrect-settings" のように、プラグ
+インの名前を使ってタグを作るといいかもしれません。
 
 ヘルプの他の部分を参照するときは || で囲みます。そうすれば、ユーザーは簡単にヘ
 ルプの関連した部分を参照することができます。
@@ -2315,7 +2322,7 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
 認識するためにコードを作成する必要があります。通常は、自動コマンドを使って、
 ファイル名がパターンにマッチしたときにファイルタイプを設定します。例: >
 
-	au BufNewFile,BufRead *.foo			set filetype=foofoo
+	au BufNewFile,BufRead *.foo		setlocal filetype=foofoo
 
 この一行を 'runtimepath' の最初のディレクトリの "ftdetect/foofoo.vim" に書き
 込みます。例えば、Unix なら "~/.vim/ftdetect/foofoo.vim" などです。ファイルタ
@@ -2330,7 +2337,7 @@ Note: 28 行目では ":noremap" を使って、他のマップでトラブル�
 
 プラグインで使用する特有事項の要約を示します:
 
-s:name			スクリプトローカル変数。
+var name		スクリプトローカル変数。
 
 <SID>			スクリプトID。マップや関数をスクリプトローカルにする
 			のに使う。
@@ -2341,9 +2348,9 @@ hasmapto()		スクリプトが提供している機能に対して、ユーザ�
 <Leader>		"mapleader" の値。ユーザーがその変数にキーを設定するこ
 			とで、プラグインのマップの開始キーを指定できる。
 
-:map <unique>		マップが既に定義されているなら警告を発する。
+map <unique>		マップが既に定義されているなら警告を発する。
 
-:noremap <script>	スクリプトローカルマップだけを使う。グローバルマップは
+noremap <script>	スクリプトローカルマップだけを使う。グローバルマップは
 			使わない。
 
 exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチェックする。
@@ -2368,19 +2375,20 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 を無効化できるようにしておく必要があります。プラグインの先頭に次のような記述を
 追加してください: >
 
-	" このバッファに対してまだ実行されていない場合のみ処理を実行する
+	# このバッファに対してまだ実行されていない場合のみ処理を実行する
 	if exists("b:did_ftplugin")
 	  finish
 	endif
-	let b:did_ftplugin = 1
+	b:did_ftplugin = 1
 
 これは同じプラグインが同じバッファで二重にロードされるのを防ぐためにも必要です
 (":edit" コマンドを引数なしで実行したときに発生します)。
 
-ユーザーは、次の一行だけを書いたファイルタイププラグインを作成することで、標準
-プラグインのロードを無効化できます: >
+ユーザーは、次の行を書いたファイルタイププラグインを作成することで、標準プラグ
+インのロードを無効化できます: >
 
-	let b:did_ftplugin = 1
+	vim9script
+	b:did_ftplugin = 1
 
 ただし、そのファイルを保存したファイルタイププラグインディレクトリが、
 'runtimepath' の中で $VIMRUNTIME よりも前にある必要があります。
@@ -2403,10 +2411,10 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 ファイルタイププラグインでは、カレントバッファの設定だけを変更するため、次のコ
 マンドを使ってオプションを設定してください: >
 
-	:setlocal
+	setlocal
 
 そして、バッファローカルなオプションだけを設定してください (どのオプションがそ
-うなのかはヘルプで確認してください)。|:setlocal| コマンドでグローバルオプショ
+うなのかはヘルプで確認してください)。`:setlocal` コマンドでグローバルオプショ
 ンやウィンドウローカルオプションを設定すると、たくさんのバッファの設定が変更さ
 れます。ファイルタイププラグインはそのような動作をすべきではありません。
 
@@ -2415,7 +2423,7 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 性もあるので注意してください。最初に初期設定に戻してから設定を変更するといいか
 もしれません。例: >
 
-	:setlocal formatoptions& formatoptions+=ro
+	setlocal formatoptions& formatoptions+=ro
 
 
 マップ
@@ -2423,7 +2431,7 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 
 カレントバッファの中だけで機能するマップを作るには次のコマンドを使います: >
 
-	:map <buffer>
+	map <buffer>
 
 上述したように、マップは二段階に分けて作る必要があります。ファイルタイププラグ
 インで機能を定義する例を示します: >
@@ -2447,9 +2455,9 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 ユーザーがファイルタイププラグインのマップを無効化できる仕組みを提供しなければ
 なりません。例えば、"mail" ファイルタイプのプラグインなら次のようにします: >
 
-	" マップを追加する。ユーザーが望まない場合は追加しない。
+	# マップを追加する。ユーザーが望まない場合は追加しない。
 	if !exists("no_plugin_maps") && !exists("no_mail_maps")
-	  " "> " を挿入して引用する
+	  # "> " を挿入して引用する
 	  if !hasmapto('<Plug>MailQuote;')
 	    vmap <buffer> <LocalLeader>q <Plug>MailQuote;
 	    nmap <buffer> <LocalLeader>q <Plug>MailQuote;
@@ -2459,8 +2467,8 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 	endif
 
 ここでは二つのグローバル変数が使われています:
-  |no_plugin_maps|	すべてのファイルタイププラグインのマップを無効化
-  |no_mail_maps|	"mail" ファイルタイプのマップを無効化
+|g:no_plugin_maps|	すべてのファイルタイププラグインのマップを無効化
+|g:no_mail_maps|	"mail" ファイルタイプのマップを無効化
 
 
 ユーザー定義コマンド
@@ -2469,15 +2477,15 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 ファイルタイプ用のユーザー定義コマンドを追加して、それを一つのバッファの中だけ
 で使えるようにするには、|:command| の引数に "-buffer" を指定します。例: >
 
-	:command -buffer  Make  make %:r.s
+	command -buffer  Make  make %:r.s
 
 
 変数
 -----
 
 ファイルタイププラグインは対応するすべてのバッファに対して実行されます。スクリ
-プトローカル変数 |s:var| はすべての実行で共有されます。バッファごとの変数を使
-いたい場合はバッファローカル変数 |b:var| を使ってください。
+プトローカル変数はすべての実行で共有されます。バッファごとの変数を使いたい場合
+はバッファローカル変数 |b:var| を使ってください。
 
 
 関数
@@ -2487,11 +2495,11 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 ファイルが開かれるたびに読み込まれます。次のようにすると関数が一度だけ定義され
 るようになります: >
 
-	:if !exists("*s:Func")
-	:  function s:Func(arg)
-	:    ...
-	:  endfunction
-	:endif
+	if !exists("*Func")
+	  def Func(arg)
+	    ...
+	  enddef
+	endif
 <
 
 アンドゥ					*undo_indent* *undo_ftplugin*
@@ -2512,6 +2520,8 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 
 インデントスクリプトの効果をアンドゥする為には、それに応じた b:undo_indent 変
 数を設定すべきです。
+
+これら両方の変数は旧来のスクリプトの文法で使われ、|Vim9| の文法では使いません。
 
 
 ファイル名
@@ -2536,14 +2546,14 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 			することで、ファイルタイププラグインのマップの開始キー
 			を指定できる。
 
-:map <buffer>		バッファローカルなマップを定義する。
+map <buffer>		バッファローカルなマップを定義する。
 
-:noremap <script>	同スクリプトで定義している <SID> で始まるマップだけを
+noremap <script>	同スクリプトで定義している <SID> で始まるマップだけを
 			再マップする。
 
-:setlocal		カレントバッファのオプションのみ設定する。
+setlocal		カレントバッファのオプションのみ設定する。
 
-:command -buffer	バッファローカルなユーザー定義コマンドを定義する。
+command -buffer	バッファローカルなユーザー定義コマンドを定義する。
 
 exists("*s:Func")	関数が定義済かどうかをチェックする。
 
@@ -2559,18 +2569,18 @@ exists("*s:Func")	関数が定義済かどうかをチェックする。
 百聞は一見に如かず。次のコマンドですべての標準コンパイラプラグインを開くことが
 できます: >
 
-	:next $VIMRUNTIME/compiler/*.vim
+	next $VIMRUNTIME/compiler/*.vim
 
-|:next| を使って次のプラグインファイルに移動してください。
+`:next` と打って次のプラグインファイルに移動してください。
 
 これらのファイルには二つの特有事項があります。一つは、標準ファイルに対して設定
 を追加したり上書きしたりできる仕組みです。標準ファイルの先頭は次のようになって
 います: >
 
-	:if exists("current_compiler")
-	:  finish
-	:endif
-	:let current_compiler = "mine"
+	if exists("g:current_compiler")
+	  finish
+	endif
+	g:current_compiler = "mine"
 
 コンパイラファイルを書いて、それを個人用のランタイムディレクトリ (例えば Unix
 なら ~/.vim/compiler) に置いたとき、"current_compiler" 変数を設定することで標
@@ -2614,8 +2624,9 @@ exists("*s:Func")	関数が定義済かどうかをチェックする。
 きに発生します。あなたがその機能を常に使うなら、これは逆に遅くなってしまいま
 す。
 
-Note Vim 7 以降では代わりの方法があります。|41.15| で説明されている |autoload|
-機能を使う方法です。
+ここでは FuncUndefined 自動コマンドを使います。Vim 7 以降では代わりの方法があ
+ります。|41.15| で説明されている |autoload| 機能を使う方法です。ここで使用した
+旧来のスクリプトの代わりに |Vim9| script も使えます。
 
 次に例を示します: >
 
@@ -2687,7 +2698,7 @@ BufNetWrite() 関数を定義します。
 	if !exists('*MyLibFunction')
 	   runtime library/mylibscript.vim
 	endif
-	call MyLibFunction(arg)
+	MyLibFunction(arg)
 
 'runtimepath' に設定されたディレクトリの中の "library/mylibscript.vim" の中で
 MyLibFunction() が定義されている必要があります。
@@ -2695,11 +2706,11 @@ MyLibFunction() が定義されている必要があります。
 これをより簡単にするために、Vim には autoload という仕組みがあります。同じこと
 を次のように書くことができます: >
 
-	call mylib#myfunction(arg)
+	mylib#myfunction(arg)
 
-この方がずっと簡単でしょう？ Vim は関数の名前を見て、それが未定義なら、
-'runtimepath' の中から "autoload/mylib.vim" を探します。そのスクリプトは関数
-"mylib#myfunction()" を定義していなければなりません。
+この方がずっと簡単でしょう？ Vim は # が含まれる関数の名前を見て、それが未定義
+なら、'runtimepath' の中から "autoload/mylib.vim" を探します。そのスクリプトは
+関数 "mylib#myfunction()" を定義していなければなりません。
 
 mylib.vim には他の関数も入れられます。ライブラリスクリプトの中では自由に関数を
 作ることができます。ただし、関数名の '#' より前の部分はスクリプトの名前と同じ
@@ -2709,7 +2720,7 @@ mylib.vim には他の関数も入れられます。ライブラリスクリプ�
 ライブラリスクリプトをたくさん書く場合は、サブディレクトリを使うといいかもしれ
 ません。例: >
 
-	call netlib#ftp#read('somefile')
+	netlib#ftp#read('somefile')
 
 Unix では、このライブラリスクリプトは次のような場所に置かれます: >
 
@@ -2717,21 +2728,21 @@ Unix では、このライブラリスクリプトは次のような場所に置
 
 関数は次のように定義します: >
 
-	function netlib#ftp#read(fname)
-		"  ftp を使ってファイルを読み込む
-	endfunction
+	def netlib#ftp#read(fname: string)
+		#  ftp を使ってファイルを読み込む
+	enddef
 
 関数定義と関数呼び出しではまったく同じ名前が使われます。最後の '#' より前の部
 分がサブディレクトリとスクリプトの名前に対応しています。
 
 同じ方法で変数を扱うこともできます: >
 
-	let weekdays = dutch#weekdays
+	var weekdays = dutch#weekdays
 
 これによって "autoload/dutch.vim" が読み込まれます。そのスクリプトには例えば次
 のようなコードが書かれています: >
 
-	let dutch#weekdays = ['zondag', 'maandag', 'dinsdag', 'woensdag',
+	var dutch#weekdays = ['zondag', 'maandag', 'dinsdag', 'woensdag',
 		\ 'donderdag', 'vrijdag', 'zaterdag']
 
 より詳しくは |autoload| を参照してください。
@@ -2742,9 +2753,13 @@ Unix では、このライブラリスクリプトは次のような場所に置
 Vim ユーザーは Vim のウェブサイト http://www.vim.org でスクリプトを探します。
 便利なスクリプトを作ったら、ぜひ共有しましょう！
 
-Vim script はどのシステムでも使えます。tar や gzip コマンドは存在しないことが
-あります。ファイルをまとめたり圧縮したりするには "zip" ユーティリティが推奨さ
-れています。
+Another place is github.  But there you need to know where to find it!  The
+advantage is that most plugin managers fetch plugins from github.  You'll have
+to use your favorite search engine to find them.
+
+Vim script はどのシステムでも使えます。しかしながら ltar や gzip コマンドは存
+在しないことがあります。ファイルをまとめたり圧縮したりするには "zip" ユーティ
+リティが推奨されています。
 
 可搬性を最大限に高めるには、Vim 自身を使ってスクリプトをパッケージ化します。そ
 れには Vimball ユーティリティを使います。|vimball| を参照。
