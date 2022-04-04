@@ -174,7 +174,7 @@ Ex コマンド修飾子: ~
 |v:numbersize|		数値型のビット数
 |v:collate|		現在のロケート設定の照合順
 |v:exiting|		Vim の終了コード
-|v:colornames|		色名と16進文字列の割り当て辞書
+|v:colornames|		カラー名と16進文字列の割り当て辞書
 |v:sizeofint|		int のバイト数
 |v:sizeoflong|		long のバイト数
 |v:sizeofpointer|	pointer のバイト数
