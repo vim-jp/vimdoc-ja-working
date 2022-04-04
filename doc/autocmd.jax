@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 8.2.  Last change: 2022 Mar 04
+*autocmd.txt*   For Vim バージョン 8.2.  Last change: 2022 Mar 27
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -697,7 +697,7 @@ CursorMoved			ノーマルモードかビジュアルモードでカーソルが
 				先行入力があるとき、スクリプトファイルのコマン
 				ドの実行中、オペレータが待機しているとき、また
 				は同じカーソル位置のまま別のウィンドウへ移動し
-				たときには発生しない。
+				たときには常に発生しない。
 				|match-parens|の例を参照。
 				Note: この自動イベントは `:noautocmd` を付けて
 				もスキップできない。
