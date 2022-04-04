@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim version 8.2.  Last change: 2022 Feb 04
+*syntax.txt*	For Vim version 8.2.  Last change: 2022 Mar 02
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -653,7 +653,7 @@ evaluate to get a unique string to append to each ID used in a given document,
 so that the full IDs will be unique even when combined with other content in a
 larger HTML document. Example, to append _ and the buffer number to each ID: >
 
-	:let g:html_id_expr = '"_".bufnr("%")'
+	:let g:html_id_expr = '"_" .. bufnr("%")'
 <
 To append a string "_mystring" to the end of each ID: >
 
@@ -3607,8 +3607,8 @@ Do you want to draw with the mouse?  Try the following: >
    :function! GetPixel()
    :   let c = getline(".")[col(".") - 1]
    :   echo c
-   :   exe "noremap <LeftMouse> <LeftMouse>r".c
-   :   exe "noremap <LeftDrag>	<LeftMouse>r".c
+   :   exe "noremap <LeftMouse> <LeftMouse>r" .. c
+   :   exe "noremap <LeftDrag>	<LeftMouse>r" .. c
    :endfunction
    :noremap <RightMouse> <LeftMouse>:call GetPixel()<CR>
    :set guicursor=n:hor20	   " to see the color beneath the cursor
@@ -3713,12 +3713,13 @@ DEFINING CASE						*:syn-case* *E390*
 	items until the next ":syntax case" command are affected.
 
 :sy[ntax] case
-	Show either "syntax case match" or "syntax case ignore" (translated).
+	Show either "syntax case match" or "syntax case ignore".
 
 
 DEFINING FOLDLEVEL					*:syn-foldlevel*
 
-:sy[ntax] foldlevel [start | minimum]
+:sy[ntax] foldlevel start
+:sy[ntax] foldlevel minimum
 	This defines how the foldlevel of a line is computed when using
 	foldmethod=syntax (see |fold-syntax| and |:syn-fold|):
 
@@ -3731,13 +3732,16 @@ DEFINING FOLDLEVEL					*:syn-foldlevel*
 	may close and open horizontally within a line.
 
 :sy[ntax] foldlevel
-	Show either "syntax foldlevel start" or "syntax foldlevel minimum".
+	Show the current foldlevel method, either "syntax foldlevel start" or
+	"syntax foldlevel minimum".
 
 	{not meaningful when Vim was compiled without |+folding| feature}
 
 SPELL CHECKING						*:syn-spell*
 
-:sy[ntax] spell [toplevel | notoplevel | default]
+:sy[ntax] spell toplevel
+:sy[ntax] spell notoplevel
+:sy[ntax] spell default
 	This defines where spell checking is to be done for text that is not
 	in a syntax item:
 
@@ -3752,8 +3756,8 @@ SPELL CHECKING						*:syn-spell*
 	To activate spell checking the 'spell' option must be set.
 
 :sy[ntax] spell
-	Show either "syntax spell toplevel", "syntax spell notoplevel" or
-	"syntax spell default" (translated).
+	Show the current syntax spell checking method, either "syntax spell
+	toplevel", "syntax spell notoplevel" or "syntax spell default".
 
 
 SYNTAX ISKEYWORD SETTING				*:syn-iskeyword*
@@ -4352,7 +4356,7 @@ IMPLICIT CONCEAL					*:syn-conceal-implicit*
 	given explicitly.
 
 :sy[ntax] conceal
-	Show either "syntax conceal on" or "syntax conceal off" (translated).
+	Show either "syntax conceal on" or "syntax conceal off".
 
 ==============================================================================
 8. Syntax patterns				*:syn-pattern* *E401* *E402*
@@ -4448,7 +4452,7 @@ Leading context			*:syn-lc* *:syn-leading* *:syn-context*
 
 Note: This is an obsolete feature, only included for backwards compatibility
 with previous Vim versions.  It's now recommended to use the |/\@<=| construct
-in the pattern.
+in the pattern.  You can also often use |/\zs|.
 
 The "lc" offset specifies leading context -- a part of the pattern that must
 be present, but is not considered part of the match.  An offset of "lc=n" will
@@ -5549,11 +5553,12 @@ WARNING: The longer the tags file, the slower this will be, and the more
 memory Vim will consume.
 
 Only highlighting typedefs, unions and structs can be done too.  For this you
-must use Exuberant ctags (found at http://ctags.sf.net).
+must use Universal Ctags (found at https://ctags.io) or Exuberant ctags (found
+at http://ctags.sf.net).
 
 Put these lines in your Makefile:
 
-# Make a highlight file for types.  Requires Exuberant ctags and awk
+# Make a highlight file for types.  Requires Universal/Exuberant ctags and awk
 types: types.vim
 types.vim: *.[ch]
 	ctags --c-kinds=gstu -o- *.[ch] |\
@@ -5563,9 +5568,9 @@ types.vim: *.[ch]
 And put these lines in your .vimrc: >
 
    " load the types.vim highlighting file, if it exists
-   autocmd BufRead,BufNewFile *.[ch] let fname = expand('<afile>:p:h') . '/types.vim'
+   autocmd BufRead,BufNewFile *.[ch] let fname = expand('<afile>:p:h') .. '/types.vim'
    autocmd BufRead,BufNewFile *.[ch] if filereadable(fname)
-   autocmd BufRead,BufNewFile *.[ch]   exe 'so ' . fname
+   autocmd BufRead,BufNewFile *.[ch]   exe 'so ' .. fname
    autocmd BufRead,BufNewFile *.[ch] endif
 
 ==============================================================================
