@@ -311,8 +311,8 @@ CJK フォントが ASCII 文字を持っていない場合があります。ま
 	:set printmbfont=r:WadaMin-Regular,b:WadaMin-Bold,c:yes
 <
 							*popt-option*
-'printoptions' 'popt'	string (default "")
-			global
+'printoptions' 'popt'	文字列 (初期値は "")
+			グローバル設定
 |:hardcopy| の出力を制御するためのオプションのリストを設定します。リストはコン
 マで区切ります:
 
