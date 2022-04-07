@@ -24,7 +24,7 @@ scripts.vim を参照してください)。ファイルの拡張子が .POD で�
 テキストであると想定します。
 
 Perl でタグを使うには、Universal/Exuberant Ctags が必要です。ここを訪れてくだ
-さい。
+さい:
 	Universal Ctags (推奨): https://ctags.io
 	Exuberant Ctags: http://ctags.sourceforge.net
 
