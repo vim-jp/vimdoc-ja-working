@@ -1,4 +1,4 @@
-*insert.txt*    For Vim バージョン 8.2.  Last change: 2022 Mar 13
+*insert.txt*    For Vim バージョン 8.2.  Last change: 2022 Apr 06
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -763,7 +763,7 @@ CTRL-Nは補完を開始し、CTRL-Pで最初の1文字 "M" に戻し、次の2�
 直前の補完が 'textwidth' よりも長いために分裂している場合、現在の行のテキスト
 だけが使用される。
 
-マッチ文字列が行末で見つかった場合には、次の行の最初の単語が挿入され "word
+マッチ文字列が行末で見つかった場合には、次の行の最初の単語が挿入され "Word
 from next line" というメッセージが表示される。さらに続けてCTRL-X CTRL-Pもしく
 はCTRL-X CTRL-Nで検索を行うと、その単語のある行で続く文字が検索される。
 
