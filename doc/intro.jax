@@ -1,4 +1,4 @@
-*intro.txt*     For Vim バージョン 8.2.  Last change: 2022 Mar 03
+*intro.txt*     For Vim バージョン 8.2.  Last change: 2022 Apr 03
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -213,7 +213,7 @@ Vim エディタは Stevie をベースにしており、下記の方々のソ�
 	Daniel Elstner		GTK+ 2 への移植
 	Eric Fischer		Macへの移植、'cindent'、その他の改良
 	Benji Fisher		たくさんのユーザーの質問に答えてくれた
-	Bill Foster		Athena GUIへの移植
+	Bill Foster		Athena GUIへの移植 (後で削除)
 	Google			週に一日 Vim の仕事をさせてくれる
 	Loic Grenie		xvim (マルチウィンドウバージョンのアイデア)
 	Sven Guckes		Vimのプロモーター、以前のWWWページ管理者

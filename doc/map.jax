@@ -1,4 +1,4 @@
-*map.txt*       For Vim バージョン 8.2.  Last change: 2022 Mar 03
+*map.txt*       For Vim バージョン 8.2.  Last change: 2022 Apr 03
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -692,6 +692,10 @@ Note: 変数 "mapleader" はマップを定義するときに使用されます�
 特別な文字列 "<Plug>" を使ってスクリプトの内部作業用のマップを定義できます。こ
 れはどのキー入力にもマッチしません。プラグインを作成するときに便利です
 |using-<Plug>|。
+
+							*<MouseMove>*
+特別な文字列 "<MouseMove>" を使ってマウスの移動を取り扱えます。そのためには
+'mousemoveevent' が有効になっている必要があります。現在 GUI でのみ動作します。
 
 							*<Char>* *<Char->*
 <Char> を使って、文字を10進数、8進数、16進数の数値指定でマップできます:
