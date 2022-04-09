@@ -1214,9 +1214,9 @@ User				自動的に実行されることはない。コマンド
 				Note: 該当する自動コマンドが存在しないときに
 				`:doautocmd User MyEvent` が使用された場合、エ
 				ラーが発生する。これを回避したい場合、
-				`exists('#User#MyEvent')` を使って定義されてる
-				かチェックするか、ダミーの自動コマンドを自身で
-				定義すること。
+				`exists('#User#MyEvent')` を使って定義されてい
+				るかチェックするか、ダミーの自動コマンドを自身
+				で定義すること。
 				例: >
 				    if exists('#User#MyEvent')
 					doautocmd User MyEvent
