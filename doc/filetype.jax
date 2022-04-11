@@ -166,7 +166,7 @@ NOTE: Vi互換とは全てのオプションがグローバルであることを
 	*.w		g:filetype_w	|ft-cweb-syntax|
 
 いくつかのファイル形式のグローバル変数はファイル形式を検知できなかったときのみ
-利用される:
+使用される:
 	*.r		g:filetype_r	|ft-rexx-syntax|
 
 							*filetype-ignore*
