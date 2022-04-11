@@ -1,4 +1,4 @@
-*quickref.txt*  For Vim version 8.2.  Last change: 2021 Dec 21
+*quickref.txt*  For Vim version 8.2.  Last change: 2022 Apr 06
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -643,6 +643,7 @@ Short explanation of each option:		*option-list*
 'cinkeys'	  'cink'    keys that trigger indent when 'cindent' is set
 'cinoptions'	  'cino'    how to do indenting when 'cindent' is set
 'cinwords'	  'cinw'    words where 'si' and 'cin' add an indent
+'cinscopedecls'	  'cinsd'   words that are recognized by 'cino-g' 
 'clipboard'	  'cb'	    use the clipboard as the unnamed register
 'cmdheight'	  'ch'	    number of lines to use for the command-line
 'cmdwinheight'	  'cwh'     height of the command-line window
@@ -814,6 +815,7 @@ Short explanation of each option:		*option-list*
 'mousefocus'	  'mousef'  keyboard focus follows the mouse
 'mousehide'	  'mh'	    hide mouse pointer while typing
 'mousemodel'	  'mousem'  changes meaning of mouse buttons
+'mousemoveevent'  'mousemev'  report mouse moves with <MouseMove>
 'mouseshape'	  'mouses'  shape of the mouse pointer in different modes
 'mousetime'	  'mouset'  max time between mouse double-click
 'mzquantum'	  'mzq'     the interval between polls for MzScheme threads
