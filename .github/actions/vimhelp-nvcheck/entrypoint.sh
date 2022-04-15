@@ -1,10 +1,14 @@
 #!/bin/sh
 
-cd "$GITHUB_WORKSPACE" || true
+if [ -n "${GITHUB_WORKSPACE}" ] ; then
+  cd "${GITHUB_WORKSPACE}" || exit
+  git config --global --add safe.directory "${GITHUB_WORKSPACE}" || exit 1
+fi
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
 reviewdog_exit_val="0"
+# shellcheck disable=SC2086
 find doc -name \*.jax -print0 | xargs -0 nvcheck        \
       | reviewdog -efm="%f:%l: %m"                      \
         -name="${INPUT_TOOL_NAME}"                      \
@@ -22,6 +26,7 @@ if [ "${INPUT_REPORTER}" = "github-pr-review" ]; then
   TMPFILE=$(mktemp)
   git diff >"${TMPFILE}"
 
+  # shellcheck disable=SC2086
   reviewdog                        \
     -name="nvcheck-fix"            \
     -f=diff                        \
@@ -37,7 +42,7 @@ if [ "${INPUT_REPORTER}" = "github-pr-review" ]; then
 fi
 
 # Throw error if an error occurred and fail_on_error is true
-if [ "${INPUT_FAIL_ON_ERROR}" = "true" -a "${reviewdog_exit_val}" != "0" ]; then
+if [ "${INPUT_FAIL_ON_ERROR}" = "true" ] && [ "${reviewdog_exit_val}" != "0" ]; then
   exit 1
 fi
 
