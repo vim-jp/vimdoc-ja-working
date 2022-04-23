@@ -1,4 +1,4 @@
-*filetype.txt*  For Vim バージョン 8.2.  Last change: 2022 Apr 07
+*filetype.txt*  For Vim バージョン 8.2.  Last change: 2022 Apr 09
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -161,6 +161,7 @@ NOTE: Vi互換とは全てのオプションがグローバルであることを
 	*.pp		g:filetype_pp	|ft-pascal-syntax|
 	*.prg		g:filetype_prg
 	*.src		g:filetype_src
+	*.sys		g:filetype_sys
 	*.sh		g:bash_is_sh	|ft-sh-syntax|
 	*.tex		g:tex_flavor	|ft-tex-plugin|
 	*.w		g:filetype_w	|ft-cweb-syntax|
