@@ -4602,8 +4602,6 @@ invert({expr})						*invert()*
 
 isabsolutepath({directory})				*isabsolutepath()*
 		結果は数値で、{path} が絶対パスであれば |TRUE| となる。
-		The result is a Number, which is |TRUE| when {path} is an
-		absolute path.
 		Unix では、'/' から開始するパスが絶対パスと考えられる。
 		MS-Windows では、ドライブのプリフィックスから開始し '\' か '/'
 		が続くパスが絶対パスと考えられる。UNC パスは常に絶対パスであ
