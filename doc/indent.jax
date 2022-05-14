@@ -296,9 +296,9 @@ CTRL-TやCTRL-Dを使用してインデントを変更した後では、Vimは�
 <
 							*cino-g*
 	gN    C++のスコープ宣言をそれが含まれるブロックのインデントから N の位
-	      置へ配置する。"public:", "protected:", "private:" がスコープ宣言
-	      になり得る。
-	      (省略値 'shiftwidth')
+	      置へ配置する。(省略値 'shiftwidth')。デフォルトでは、スコープ宣
+	      言は "public:", "protected:", "private:" のいずれか。これは
+	      'cinscopedecls' オプションで調整できる。
 
 		cino=		    cino=g0 >
 		  {		      {
