@@ -1954,7 +1954,6 @@ Vim script を書いて、それを多くの人に使ってもらうことがで
  16	iabbrev wnat want
  17	iabbrev synchronisation
  18		\ synchronization
- 19	let s:count = 4
 
 もちろん、実際のスクリプトはもっと巨大です。
 
