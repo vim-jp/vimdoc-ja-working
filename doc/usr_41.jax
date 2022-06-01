@@ -2556,7 +2556,7 @@ noremap <script>	同スクリプトで定義している <SID> で始まるマ�
 
 setlocal		カレントバッファのオプションのみ設定する。
 
-command -buffer	バッファローカルなユーザー定義コマンドを定義する。
+command -buffer		バッファローカルなユーザー定義コマンドを定義する。
 
 exists("*s:Func")	関数が定義済かどうかをチェックする。
 
