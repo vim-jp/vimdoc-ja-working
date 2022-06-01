@@ -2459,7 +2459,7 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 なりません。例えば、"mail" ファイルタイプのプラグインなら次のようにします: >
 
 	# マップを追加する。ユーザーが望まない場合は追加しない。
-	if !exists("no_plugin_maps") && !exists("no_mail_maps")
+	if !exists("g:no_plugin_maps") && !exists("g:no_mail_maps")
 	  # "> " を挿入して引用する
 	  if !hasmapto('<Plug>MailQuote;')
 	    vmap <buffer> <LocalLeader>q <Plug>MailQuote;
@@ -2756,7 +2756,7 @@ Unix では、このライブラリスクリプトは次のような場所に置
 Vim ユーザーは Vim のウェブサイト http://www.vim.org でスクリプトを探します。
 便利なスクリプトを作ったら、ぜひ共有しましょう！
 
-別の場所として githubがあります。しかし、そこが探される場所であるとあなたは知
+別の場所として github があります。しかし、そこが探される場所であるとあなたは知
 る必要があります!。多くのプラグインマネージャーがプラグインを github から取得
 するというアドバンテージがあります。あなたが使うであろうお気に入りのサーチエン
 ジンが見付けるのもそこになります。
