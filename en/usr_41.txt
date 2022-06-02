@@ -1,4 +1,4 @@
-*usr_41.txt*	For Vim version 8.2.  Last change: 2022 Apr 25
+*usr_41.txt*	For Vim version 8.2.  Last change: 2022 May 09
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -976,8 +976,12 @@ Buffers, windows and the argument list:
 	swapname()		get the swap file path of a buffer
 
 Command line:					*command-line-functions*
+	getcmdcompltype()	get the type of the current command line
+				completion
 	getcmdline()		get the current command line
 	getcmdpos()		get position of the cursor in the command line
+	getcmdscreenpos()	get screen position of the cursor in the
+				command line
 	setcmdpos()		set position of the cursor in the command line
 	getcmdtype()		return the current command-line type
 	getcmdwintype()		return the current command-line window type
@@ -2566,6 +2570,7 @@ Type `:next` to go to the next plugin file.
 There are two special items about these files.  First is a mechanism to allow
 a user to overrule or add to the default file.  The default files start with: >
 
+	vim9script
 	if exists("g:current_compiler")
 	  finish
 	endif
