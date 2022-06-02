@@ -1,4 +1,4 @@
-*usr_41.txt*	For Vim バージョン 8.2.  Last change: 2022 Apr 25
+*usr_41.txt*	For Vim バージョン 8.2.  Last change: 2022 May 09
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -960,8 +960,11 @@ Blob 操作:						*blob-functions*
 	swapname()		バッファのスワップファイルパスを得る
 
 コマンドライン:					*command-line-functions*
+	getcmdcompltype()	現在のコマンドライン補完の種別を取得
 	getcmdline()		現在のコマンドラインを取得
 	getcmdpos()		コマンドラインにおけるカーソル位置を取得
+	getcmdscreenpos()	コマンドラインでの現在の画面に対するカーソル位
+				置を取得
 	setcmdpos()		コマンドラインにおけるカーソル位置を設定
 	getcmdtype()		現在のコマンドラインの種類を返す
 	getcmdwintype()		現在のコマンドラインウィンドウの種類を返す
@@ -2580,6 +2583,7 @@ exists("*s:Func")	関数が定義済かどうかをチェックする。
 を追加したり上書きしたりできる仕組みです。標準ファイルの先頭は次のようになって
 います: >
 
+ 	vim9script
 	if exists("g:current_compiler")
 	  finish
 	endif
