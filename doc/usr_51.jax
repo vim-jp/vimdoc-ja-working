@@ -5,55 +5,59 @@
 			      プラグインを作る
 
 
-Plugins can be used to define settings for a specific type of file, syntax
-highlighting and many other things.  This chapter explains how to write the
-most common Vim plugins.
+プラグインを使用することで、特定のファイルの種別の設定、構文ハイライトやその他
+多くの設定を定義できます。
+この章ではVimプラグインでのもっとも共通な部分の書き方について説明します。
 
-|51.1|	Writing a generic plugin
-|51.2|	Writing a filetype plugin
-|51.3|	Writing a compiler plugin
-|51.4|	Writing a plugin that loads quickly
-|51.5|	Writing library scripts
-|51.6|	Distributing Vim scripts
+|51.1|	一般的なプラグインを書く
+|51.2|	ファイルタイププラグインを書く
+|51.3|	コンパイラプラグインを書く
+|51.4|	プラグインを書く (高速ロード版)
+|51.5|	ライブラリスクリプトを書く
+|51.6|	Vim script を配布する
 
 次章: |usr_52.txt|  Vim9 script でプラグインを作る
 前章: |usr_50.txt|  高度な Vim script の書き方
 目次: |usr_toc.txt|
 
 ==============================================================================
-*51.1*	Writing a generic plugin			*write-plugin*
+*51.1*	一般的なプラグインを書く			*write-plugin*
 
-You can write a Vim script in such a way that many people can use it.  This is
-called a plugin.  Vim users can drop your script in their plugin directory and
-use its features right away |add-plugin|.
+Vim script を書いて、それを多くの人に使ってもらうことができます。そのようなス
+クリプトはプラグインと呼ばれます。Vim ユーザーはあなたのスクリプトをプラグイン
+ディレクトリにコピーするだけで、すぐにその機能を使うことができます。
+|add-plugin| 参照。
 
-There are actually two types of plugins:
+プラグインには二種類あります:
 
-  global plugins: For all types of files.
-filetype plugins: Only for files of a specific type.
+      グローバルプラグイン : すべてのファイルで共通
+  ファイルタイププラグイン : ファイルの種類別
 
-In this section the first type is explained.  Most items are also relevant for
-writing filetype plugins.  The specifics for filetype plugins are in the next
-section |write-filetype-plugin|.
-
-
-NAME
-
-First of all you must choose a name for your plugin.  The features provided
-by the plugin should be clear from its name.  And it should be unlikely that
-someone else writes a plugin with the same name but which does something
-different.
-
-A script that corrects typing mistakes could be called "typecorrect.vim".  We
-will use it here as an example.
-
-For the plugin to work for everybody, it should follow a few guidelines.  This
-will be explained step-by-step.  The complete example plugin is at the end.
+この節ではグローバルプラグインについて説明します。ほとんどの説明はファイルタイ
+ププラグインに対してもあてはまります。ファイルタイププラグイン特有の説明は次節
+にあります |write-filetype-plugin|。
 
 
-BODY
+名前
+-----
 
-Let's start with the body of the plugin, the lines that do the actual work: >
+最初にプラグインの名前を決めなければなりません。プラグインが提供する機能が名前
+から分かるようにしてください。また、他の人が作ったプラグインと名前がかぶらない
+ようにしてください。
+
+例えばタイプミス (type mistake) を修正 (correct) するためのスクリプトなら
+"typecorrect.vim" という名前を付けたりします。ここではこれを例題として使いま
+す。
+
+プラグインが誰でも使えるようにするため、いくつかのガイドラインに従ってくださ
+い。ガイドラインは段階的に説明していきます。例題プラグインの完全なソースは最後
+に示します。
+
+
+ボディ
+------
+
+まずはプラグインの本体部分を見てみましょう。行番号は実際の番号です: >
 
  14	iabbrev teh the
  15	iabbrev otehr other
@@ -61,140 +65,142 @@ Let's start with the body of the plugin, the lines that do the actual work: >
  17	iabbrev synchronisation
  18		\ synchronization
 
-The actual list should be much longer, of course.
+もちろん、実際のスクリプトはもっと巨大です。
 
-The line numbers have only been added to explain a few things, don't put them
-in your plugin file!
+行番号は説明のために追加したものです。プラグインを書くときは行番号を付けないで
+ください。
 
 
-FIRST LINE
+最初の行
 >
   1	vim9script noclear
 
-You need to use `vimscript` as the very first command.  Best is to put it in
-the very first line.
+`vimi9script` を一番最初のコマンドとして使用する必要があります。一番最初の行に
+記述するのがベストです。
 
-The script we are writing will have a `finish` command to bail out when it is
-loaded a second time.  To avoid that the items defined in the script are lost
-the "noclear" argument is used.  More info about this at |vim9-reload|.
+作成しているスクリプトは、2回目にロードされたときに終了するための `finish` コ
+マンドがあります。スクリプトで定義された項目が失われるのを防ぐために、
+"noclear" 引数を使用します。詳しくは |vim9-reload| をご覧ください。
 
 
-HEADER
+ヘッダー
+------
 
-You will probably add new corrections to the plugin and soon have several
-versions lying around.  And when distributing this file, people will want to
-know who wrote this wonderful plugin and where they can send remarks.
-Therefore, put a header at the top of your plugin: >
+新しい単語を追加していくと、プラグインには複数のバージョンが存在することになり
+ます。ファイルを配布したとき、それを使った人は、誰がこの素晴らしいプラグインを
+書いたのかを知りたいと思うでしょうし、感想を伝えたいと思うかもしれません。
+というわけで、次のようなヘッダーをプラグインに書いてください: >
 
   2	# Vim global plugin for correcting typing mistakes
   3	# Last Change:	2021 Dec 30
   4	# Maintainer:	Bram Moolenaar <Bram@vim.org>
 
-About copyright and licensing: Since plugins are very useful and it's hardly
-worth restricting their distribution, please consider making your plugin
-either public domain or use the Vim |license|.  A short note about this near
-the top of the plugin should be sufficient.  Example: >
+著作権とライセンスについて: プラグインがとても便利で、そして再配布を制限するほ
+どのものでない場合は、パブリックドメインか Vim ライセンス (|license|) の適用を
+検討してみてください。次の短い宣言をプラグインの先頭付近に書いておくだけで十分
+です: >
 
   5	# License:	This file is placed in the public domain.
 
 
-LINE CONTINUATION AND AVOIDING SIDE EFFECTS		 *use-cpo-save*
+行継続と副作用の回避					*use-cpo-save*
+--------------------
 
-In line 18 above, the line-continuation mechanism is used |line-continuation|.
-Users with 'compatible' set will run into trouble here, they will get an error
-message.  We can't just reset 'compatible', because that has a lot of side
-effects.  Instead, we will set the 'cpoptions' option to its Vim default
-value and restore it later.  That will allow the use of line-continuation and
-make the script work for most people.  It is done like this: >
+上の例の 18 行目では行継続 (|line-continuation|) が使われています。ユーザーの
+環境で 'compatible' オプションがオンに設定されていると、この行でエラーが発生し
+ます。'compatible' オプションの設定には副作用があるので、勝手に設定をオフにす
+ることはできません。代わりに、一時的に 'cpoptions' の値を Vim のデフォルト値に
+設定し、後で元に戻します。そうすれば、行連結を使うことができ、スクリプトはほと
+んどの環境で動作するようになります。設定の変更は次のようにします: >
 
  11	var save_cpo = &cpo
  12	set cpo&vim
  ..
  42	&cpo = save_cpo
 
-We first store the old value of 'cpoptions' in the "save_cpo" variable.  At
-the end of the plugin this value is restored.
+最初に 'cpoptions' の値を "save_cpo" 変数に保存します。プラグインの最後でオプ
+ションの値を元に戻します。
 
-Notice that "save_cpo" is a script-local variable.  A global variable could
-already be in use for something else.  Always use script-local variables for
-things that are only used in the script.
+"save_cpo" がスクリプトローカル変数であることに注目してください。グローバル変
+数は他の場所で使われている可能性があります。スクリプトの中だけで使う場合はスク
+リプトローカル変数を使ってください。
 
 
-NOT LOADING
+ロードしない
+------------
 
-It is possible that a user doesn't always want to load this plugin.  Or the
-system administrator has dropped it in the system-wide plugin directory, but a
-user has his own plugin he wants to use.  Then the user must have a chance to
-disable loading this specific plugin.  These lines will make it possible: >
+ユーザーが常にプラグインをロードしたいと思うとは限りません。また、システム管理
+者がシステムのプラグインディレクトリにプラグインを入れたが、ユーザーは自分で入
+れたプラグインを使いたいということもあります。したがって、指定したプラグインだ
+けを無効にできる必要があります。次の行のようにします: >
 
   7	if exists("g:loaded_typecorrect")
   8	  finish
   9	endif
  10	g:loaded_typecorrect = 1
 
-This also avoids that when the script is loaded twice it would pointlessly
-redefine functions and cause trouble for autocommands that are added twice.
+これはスクリプトの2重ロードで関数が無意味に再定義されることと自動コマンドが2重
+に追加されるのを避ける効果もあります。
 
-The name is recommended to start with "g:loaded_" and then the file name of
-the plugin, literally.  The "g:" is prepended to make the variable global, so
-that other places can check whether its functionality is available.  Without
-"g:" it would be local to the script.
+変数の名前は "g:loaded_" で始めてプラグインのファイル名をそのまま付けるように
+してください。"g:" を付けることで変数をグローバルにし、他の箇所で機能があるか
+チェックできるようにします。"g:" を付けないとスクリプトローカルになります。
 
-Using `finish` stops Vim from reading the rest of the file, it's much quicker
-than using if-endif around the whole file, since Vim would still need to parse
-the commands to find the `endif`.
+`finish` を使ってファイルの残りの部分の読み込みを停止しています。Vimはコマンド
+を解析して `endif` を見つける必要があるため、この方法はファイル全体を if-endif
+で囲むよりもはるかに高速です。
 
 
-MAPPING
+マップ
+------
 
-Now let's make the plugin more interesting: We will add a mapping that adds a
-correction for the word under the cursor.  We could just pick a key sequence
-for this mapping, but the user might already use it for something else.  To
-allow the user to define which keys a mapping in a plugin uses, the <Leader>
-item can be used: >
+さて、プラグインをもっと魅力あるものに仕上げましょう。マップを追加して、カーソ
+ルの下の単語に対する修正を追加できるようにします。単純にキーを選んでマップを設
+定することもできますが、そのキーは既にユーザーが使っているかもしれません。マッ
+プに使用するキーをユーザーが選択できるようにするには、<Leader> を使います: >
 
  22	  map <unique> <Leader>a  <Plug>TypecorrAdd;
 
-The "<Plug>TypecorrAdd;" thing will do the work, more about that further on.
+"<Plug>TypecorrAdd;" は目的の動作をします。詳しくは後で説明します。
 
-The user can set the "g:mapleader" variable to the key sequence that he wants
-plugin mappings to start with.  Thus if the user has done: >
+使用したいキーを "g:mapleader" 変数に設定することで、プラグインのマップの最初
+のキーを設定できます。例えば、次のように設定すると: >
 
 	g:mapleader = "_"
 
-the mapping will define "_a".  If the user didn't do this, the default value
-will be used, which is a backslash.  Then a map for "\a" will be defined.
+マップは "_a" と定義されます。変数が設定されていない場合は初期設定 (バックス
+ラッシュ) が使われます。つまり "\a" というマップが定義されます。
 
-Note that <unique> is used, this will cause an error message if the mapping
-already happened to exist. |:map-<unique>|
+Note: 上記のコマンドでは <unique> が使われています。これは、同じマップが既に定
+義されていた場合にエラーを表示します。|:map-<unique>|
 
-But what if the user wants to define his own key sequence?  We can allow that
-with this mechanism: >
+マップするキーをユーザーが自分で定義できるようにするには、次のようにします: >
 
  21	if !hasmapto('<Plug>TypecorrAdd;')
  22	  map <unique> <Leader>a  <Plug>TypecorrAdd;
  23	endif
 
-This checks if a mapping to "<Plug>TypecorrAdd;" already exists, and only
-defines the mapping from "<Leader>a" if it doesn't.  The user then has a
-chance of putting this in his vimrc file: >
+"<Plug>TypecorrAdd;" に対するマップが既にあるかどうかを調べ、無い場合のみ
+"<Leader>a" にマップを定義します。ユーザーは自分の vimrc ファイルの中でマップ
+を定義することができます: >
 
 	map ,c  <Plug>TypecorrAdd;
 
-Then the mapped key sequence will be ",c" instead of "_a" or "\a".
+すると、マップのキーとして ",c" が使われます。"_a" や "\a" は使われません。
 
 
-PIECES
+ピース
+------
 
-If a script gets longer, you often want to break up the work in pieces.  You
-can use functions or mappings for this.  But you don't want these functions
-and mappings to interfere with the ones from other scripts.  For example, you
-could define a function Add(), but another script could try to define the same
-function.  To avoid this, we define the function local to the script.
-Fortunately, in |Vim9| script this is the default.  In a legacy script you
-would need to prefix the name with "s:".
+スクリプトが大きくなると、それを部品ごとに分けたくなります。それには関数やマッ
+プを使います。しかし、そうすると関数やマップが他のスクリプトのものと衝突する可
+能性があります。例えば、Add() という関数を追加したとき、他のスクリプトでも同じ
+名前の関数が定義されているかもしれません。そのような場合は、スクリプトの中だけ
+で使える関数を定義します。
+幸いにも、|Vim9| script では、これがデフォルトです。旧来のスクリプトでは、名前
+の前に "s:" を付ける必要があります。
 
-We will define a function that adds a new typing correction: >
+新しい修正を追加するための関数を定義します: >
 
  30	def Add(from: string, correct: bool)
  31	  var to = input("type the correction for " .. from .. ": ")
@@ -202,109 +208,118 @@ We will define a function that adds a new typing correction: >
  ..
  36	enddef
 
-Now we can call the function Add() from within this script.  If another
-script also defines Add(), it will be local to that script and can only
-be called from that script.  There can also be a global g:Add() function,
-which is again another function.
+Add() 関数は同じスクリプトの中から呼び出すことができます。他のスクリプトが
+Add() を定義していた場合、それはそのスクリプトにローカルであり、スクリプトの中
+からのみ呼び出すことができます。さらにグローバルの g:Add() 関数を定義すること
+もでき、それはまた別の関数になります。
 
-<SID> can be used with mappings.  It generates a script ID, which identifies
-the current script.  In our typing correction plugin we use it like this: >
+マップ定義では <SID> が使えます。これは、現在のスクリプトを識別するためのスク
+リプト ID を生成します。私たちの入力修正プラグインでは <SID> を次のように使い
+ます: >
 
  24	noremap <unique> <script> <Plug>TypecorrAdd;  <SID>Add
  ..
  28	noremap <SID>Add  :call <SID>Add(expand("<cword>"), true)<CR>
 
-Thus when a user types "\a", this sequence is invoked: >
+ユーザーが "\a" と入力すると、次の手順でキー入力が呼び出されます: >
 
 	\a  ->  <Plug>TypecorrAdd;  ->  <SID>Add  ->  :call <SID>Add(...)
 
-If another script also maps <SID>Add, it will get another script ID and
-thus define another mapping.
+他のスクリプトで <SID>Add をマップすると、別のスクリプト ID が使われ、別のマッ
+プが生成されます。
 
-Note that instead of Add() we use <SID>Add() here.  That is because the
-mapping is typed by the user, thus outside of the script context.  The <SID>
-is translated to the script ID, so that Vim knows in which script to look for
-the Add() function.
+Note: Add() ではなく <SID>Add() と書いていることに注意してください。マップはス
+クリプトコンテキストの外側でユーザーが入力するものだからです。<SID> はスクリプ
+ト ID に変換され、どのスクリプトの Add() 関数を呼べばいいのかわかるようになっ
+ています。
 
-This is a bit complicated, but it's required for the plugin to work together
-with other plugins.  The basic rule is that you use <SID>Add() in mappings and
-Add() in other places (the script itself, autocommands, user commands).
+これは少し複雑ですが、複数のプラグインを同時に使用するためには必要なことです。
+基本的なルールとしては、マップの中では <SID>Add() を使い、他の場所 (スクリプト
+の中、自動コマンド、ユーザー定義コマンド) では Add() を使います。
 
-We can also add a menu entry to do the same as the mapping: >
+マップと同じ方法で、メニューを追加することもできます: >
 
  26	noremenu <script> Plugin.Add\ Correction      <SID>Add
 
-The "Plugin" menu is recommended for adding menu items for plugins.  In this
-case only one item is used.  When adding more items, creating a submenu is
-recommended.  For example, "Plugin.CVS" could be used for a plugin that offers
-CVS operations "Plugin.CVS.checkin", "Plugin.CVS.checkout", etc.
+プラグインのメニューを追加する場合は "Plugin" メニューの下に登録することが推奨
+されています。この例ではメニューが一つだけですが、複数のメニューを追加する場合
+は、サブメニューの使用が推奨されています。例えば、"Plugin.CVS" 以下に
+"Plugin.CVS.checkin" や "Plugin.CVS.checkout" などの CVS の操作を登録します。
 
-Note that in line 28 ":noremap" is used to avoid that any other mappings cause
-trouble.  Someone may have remapped ":call", for example.  In line 24 we also
-use ":noremap", but we do want "<SID>Add" to be remapped.  This is why
-"<script>" is used here.  This only allows mappings which are local to the
-script. |:map-<script>|  The same is done in line 26 for ":noremenu".
-|:menu-<script>|
-
-
-<SID> AND <Plug>					*using-<Plug>*
-
-Both <SID> and <Plug> are used to avoid that mappings of typed keys interfere
-with mappings that are only to be used from other mappings.  Note the
-difference between using <SID> and <Plug>:
-
-<Plug>	is visible outside of the script.  It is used for mappings which the
-	user might want to map a key sequence to.  <Plug> is a special code
-	that a typed key will never produce.
-	To make it very unlikely that other plugins use the same sequence of
-	characters, use this structure: <Plug> scriptname mapname
-	In our example the scriptname is "Typecorr" and the mapname is "Add".
-	We add a semicolon as the terminator.  This results in
-	"<Plug>TypecorrAdd;".  Only the first character of scriptname and
-	mapname is uppercase, so that we can see where mapname starts.
-
-<SID>	is the script ID, a unique identifier for a script.
-	Internally Vim translates <SID> to "<SNR>123_", where "123" can be any
-	number.  Thus a function "<SID>Add()" will have a name "<SNR>11_Add()"
-	in one script, and "<SNR>22_Add()" in another.  You can see this if
-	you use the ":function" command to get a list of functions.  The
-	translation of <SID> in mappings is exactly the same, that's how you
-	can call a script-local function from a mapping.
+Note: 28 行目では ":noremap" を使って、他のマップでトラブルが起きないようにし
+ています。例えば、誰かが ":call" をマップしているかもしれないからです。24 行目
+でも ":noremap" を使っていますが、ここでは "<SID>Add" を再マップして欲しいの
+で、"<script>" を使っています。これを使うとスクリプトローカルなマップだけが再
+マップされます |:map-<script>|。26 行目でも ":noremenu" で同様のことをしていま
+す |:menu-<script>|。
 
 
-USER COMMAND
+<SID> と <Plug>						*using-<Plug>*
+---------------
 
-Now let's add a user command to add a correction: >
+<SID> と <Plug> は、入力したキーに対するマップと、他のマップの中だけで使われる
+マップが干渉しないようにするために使われます。<SID> と <Plug> の違いに注意して
+ください:
+
+<Plug>	これはスクリプトの外側からも見えます。ユーザーが自分でプラグインの機能
+	をマップできるようにするような場合に使います。<Plug> は特殊なコード
+	で、キーボードから入力されることはありません。
+	キー列が他のプラグインとかぶらないように、<Plug> スクリプト名 マップ
+	名、という形式で使ってください。
+	セミコロンを終端として追加しています。我々の例では、スクリプト名が
+	"Typecorr"、マップ名が "Add" なので、"<Plug>TypecorrAdd;" というキー列
+	になります。スクリプト名とマップ名の最初の文字だけを大文字にして、どこ
+	がマップ名なのかわかるようにします。
+
+<SID>	これはスクリプト ID (スクリプト固有の識別子) です。
+	Vim は内部で <SID> を "<SNR>123_" に変換します ("123" の部分はいろいろ
+	な数字が入ります)。つまり、関数 "<SID>Add()" は、あるスクリプトでは
+	"<SNR>11_Add()" という名前になり、別のスクリプトでは "<SNR>22_Add()"
+	になります。これは ":function" コマンドで関数一覧を表示すると確認する
+	ことができます。<SID> の変換はマップの中でも同様におこなわれるので、
+	マップの中からスクリプトローカル関数を呼び出すことができます。
+
+
+ユーザー定義コマンド
+------------------
+
+修正を追加するためのユーザー定義コマンドを追加します: >
 
  38	if !exists(":Correct")
  39	  command -nargs=1  Correct  :call Add(<q-args>, false)
  40	endif
 
-The user command is defined only if no command with the same name already
-exists.  Otherwise we would get an error here.  Overriding the existing user
-command with ":command!" is not a good idea, this would probably make the user
-wonder why the command he defined himself doesn't work.  |:command|
-If it did happen you can find out who to blame with: >
+ユーザー定義コマンドは、同じ名前のコマンドがまだない場合のみ定義できます。既に
+定義されている場合はエラーになります。":command!" を使ってユーザー定義関数を上
+書きするのは良いアイデアとは言えません。ユーザーは、自分が定義したコマンドがな
+ぜ動かないのか不思議に思うでしょう。|:command|
+だれの責任でそうなってしまったのか見付けるには: >
 
 	verbose command Correct
 
 
-SCRIPT VARIABLES
+スクリプト変数
+--------------
 
-When a variable starts with "s:" it is a script variable.  It can only be used
-inside a script.  Outside the script it's not visible.  This avoids trouble
-with using the same variable name in different scripts.  The variables will be
-kept as long as Vim is running.  And the same variables are used when sourcing
-the same script again. |s:var|
+先頭に "s:" が付いた変数はスクリプト変数です。これはスクリプトの中だけで使えま
+す。スクリプトの外からは見えません。同じ名前の変数を複数のスクリプトで使ってし
+まうようなトラブルを避けることができます。Vim が実行されている間、変数は保持さ
+れます。そして、同じスクリプトが再読み込みされると、再び同じ変数が使われます。
+|s:var|
 
-The nice thing about |Vim9| script is that variables are local to the script
-by default.  You can prepend "s:" if you like, but you do not need to.  And
-functions in the script can also use the script variables without a prefix.
+スクリプト変数は、同じスクリプトの中で定義された関数、自動コマンド、ユーザー定
+義コマンドでも使えます。我々の例に、修正の数を数えるための数行のコードを追加し
+ます
 
-Script-local variables can also be used in functions, autocommands and user
-commands that are defined in the script.  Thus they are the perfect way to
-share information between parts of your plugin, without it leaking out.  In
-our example we can add a few lines to count the number of corrections: >
+|Vim9| script の良いところは、変数がデフォルトでスクリプトローカルであるという
+ことです。必要に応じて "s:" を前に付けることができますが、そうする必要はありま
+せん。また、スクリプト内の関数も、プリフィックスなしでスクリプト変数を使用する
+ことができます。
+
+スクリプトローカル変数は、スクリプト内で定義した関数、自動コマンド、ユーザーコ
+マンド内でも使用できます。したがって、プラグイン内の部品間で情報を漏らさずに共
+有するための最適な方法です。この例では、修正回数を数えるための行をいくつか追加
+することができます: >
 
  19	var count = 4
  ..
@@ -314,15 +329,15 @@ our example we can add a few lines to count the number of corrections: >
  35	  echo "you now have " .. count .. " corrections"
  36	enddef
 
-"count" is declared and initialized to 4 in the script itself.  When later
-the Add() function is called, it increments "count".  It doesn't matter from
-where the function was called, since it has been defined in the script, it
-will use the local variables from this script.
+"count" はスクリプト内の 4 で宣言と初期化がされます。その後、Add() 関数が呼び
+出されると、"count" がインクリメントされます。関数がどこから呼ばれたかにかかわ
+らず、関数が定義されたスクリプトのローカル変数を使用します。
 
 
-THE RESULT
+まとめ
+------
 
-Here is the resulting complete example: >
+例題の完成形は以下のようになります: >
 
   1	vim9script noclear
   2	# Vim global plugin for correcting typing mistakes
@@ -367,19 +382,20 @@ Here is the resulting complete example: >
  41
  42	&cpo = save_cpo
 
-Line 33 wasn't explained yet.  It applies the new correction to the word under
-the cursor.  The |:normal| command is used to use the new abbreviation.  Note
-that mappings and abbreviations are expanded here, even though the function
-was called from a mapping defined with ":noremap".
+33 行目は説明がまだでした。これは、新しい修正をカーソルの下の単語に適用しま
+す。|:normal| コマンドを使って新しい略語を適用しています。Note: マップと略語は
+その場で展開されます。":noremap" で定義されたマップから関数が呼び出されたとし
+ても動作は同じです。
 
 
-DOCUMENTATION						*write-local-help*
+ドキュメント						*write-local-help*
+------------
 
-It's a good idea to also write some documentation for your plugin.  Especially
-when its behavior can be changed by the user.  See |add-local-help| for how
-they are installed.
+プラグインのドキュメントを書くのは良いアイデアです。ユーザーが動作を変更できる
+ような場合には特に重要です。|add-local-help| ではどのようにしてドキュメントが
+インストールされるか説明されています。
 
-Here is a simple example for a plugin help file, called "typecorrect.txt": >
+プラグインヘルプファイルの例を示します ("typecorrect.txt"): >
 
   1	*typecorrect.txt*	Plugin for correcting typing mistakes
   2
@@ -399,158 +415,162 @@ Here is a simple example for a plugin help file, called "typecorrect.txt": >
  16							*typecorrect-settings*
  17	This plugin doesn't have any settings.
 
-The first line is actually the only one for which the format matters.  It will
-be extracted from the help file to be put in the "LOCAL ADDITIONS:" section of
-help.txt |local-additions|.  The first "*" must be in the first column of the
-first line.  After adding your help file do ":help" and check that the entries
-line up nicely.
+書式に気をつけなければならないのは一行目だけです。一行目はコピーされ、help.txt
+の "LOCAL ADDITIONS:" の項に埋め込まれます |local-additions|。最初の "*" は一
+行目の一桁目に書いてください。ヘルプを追加したら ":help" を実行して項目が追加
+されたことを確認してください。
 
-You can add more tags inside ** in your help file.  But be careful not to use
-existing help tags.  You would probably use the name of your plugin in most of
-them, like "typecorrect-settings" in the example.
+ヘルプの中で ** で文字を囲むとタグを追加することができます。ただし、既存のヘル
+プタグと同じものを使わないでください。"typecorrect-settings" のように、プラグ
+インの名前を使ってタグを作るといいかもしれません。
 
-Using references to other parts of the help in || is recommended.  This makes
-it easy for the user to find associated help.
+ヘルプの他の部分を参照するときは || で囲みます。そうすれば、ユーザーは簡単にヘ
+ルプの関連した部分を参照することができます。
 
 
-FILETYPE DETECTION					*plugin-filetype*
+ファイルタイプの認識					*plugin-filetype*
+--------------------
 
-If your filetype is not already detected by Vim, you should create a filetype
-detection snippet in a separate file.  It is usually in the form of an
-autocommand that sets the filetype when the file name matches a pattern.
-Example: >
+ファイルタイプが Vim によって認識されない場合は、別ファイルにファイルタイプを
+認識するためにコードを作成する必要があります。通常は、自動コマンドを使って、
+ファイル名がパターンにマッチしたときにファイルタイプを設定します。例: >
 
 	au BufNewFile,BufRead *.foo		setlocal filetype=foofoo
 
-Write this single-line file as "ftdetect/foofoo.vim" in the first directory
-that appears in 'runtimepath'.  For Unix that would be
-"~/.vim/ftdetect/foofoo.vim".  The convention is to use the name of the
-filetype for the script name.
+この一行を 'runtimepath' の最初のディレクトリの "ftdetect/foofoo.vim" に書き
+込みます。例えば、Unix なら "~/.vim/ftdetect/foofoo.vim" などです。ファイルタ
+イプとスクリプトファイルの名前を同じにする決まりになっています。
 
-You can make more complicated checks if you like, for example to inspect the
-contents of the file to recognize the language.  Also see |new-filetype|.
+必要ならより複雑な処理をすることもできます。例えば、ファイルの中身を見て言語を
+判定したりできます。|new-filetype| も参照。
 
 
-SUMMARY							*plugin-special*
+要約							*plugin-special*
+-----
 
-Summary of special things to use in a plugin:
+プラグインで使用する特有事項の要約を示します:
 
-var name		Variable local to the script.
+var name		スクリプトローカル変数。
 
-<SID>			Script-ID, used for mappings and functions local to
-			the script.
+<SID>			スクリプトID。マップや関数をスクリプトローカルにする
+			のに使う。
 
-hasmapto()		Function to test if the user already defined a mapping
-			for functionality the script offers.
+hasmapto()		スクリプトが提供している機能に対して、ユーザーが既に
+			マップを定義したかどうかをチェックする関数。
 
-<Leader>		Value of "mapleader", which the user defines as the
-			keys that plugin mappings start with.
+<Leader>		"mapleader" の値。ユーザーがその変数にキーを設定するこ
+			とで、プラグインのマップの開始キーを指定できる。
 
-map <unique>		Give a warning if a mapping already exists.
+map <unique>		マップが既に定義されているなら警告を発する。
 
-noremap <script>	Use only mappings local to the script, not global
-			mappings.
+noremap <script>	スクリプトローカルマップだけを使う。グローバルマップは
+			使わない。
 
-exists(":Cmd")		Check if a user command already exists.
+exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチェックする。
 
 ==============================================================================
-*51.2*	Writing a filetype plugin	*write-filetype-plugin* *ftplugin*
+*51.2*	ファイルタイププラグインを書く	*write-filetype-plugin* *ftplugin*
 
-A filetype plugin is like a global plugin, except that it sets options and
-defines mappings for the current buffer only.  See |add-filetype-plugin| for
-how this type of plugin is used.
+ファイルタイププラグインはグローバルプラグインと似ていますが、カレントバッファ
+のマップやオプションだけを設定します。ファイルタイププラグインの使用方法につい
+ては |add-filetype-plugin| を参照してください。
 
-First read the section on global plugins above |51.1|.  All that is said there
-also applies to filetype plugins.  There are a few extras, which are explained
-here.  The essential thing is that a filetype plugin should only have an
-effect on the current buffer.
+先に |51.1| 節のグローバルプラグインの項を読んでください。そこで説明されている
+ことはすべてファイルタイププラグインにもあてはまります。この節ではファイルタイ
+ププラグイン特有の事項だけを説明します。ファイルタイププラグインはカレントバッ
+ファに対してのみ機能するということが最も大切です。
 
 
-DISABLING
+無効化
+------
 
-If you are writing a filetype plugin to be used by many people, they need a
-chance to disable loading it.  Put this at the top of the plugin: >
+ファイルタイププラグインを書いて多くの人に使ってもらおうとするなら、プラグイン
+を無効化できるようにしておく必要があります。プラグインの先頭に次のような記述を
+追加してください: >
 
-	# Only do this when not done yet for this buffer
+	# このバッファに対してまだ実行されていない場合のみ処理を実行する
 	if exists("b:did_ftplugin")
 	  finish
 	endif
 	b:did_ftplugin = 1
 
-This also needs to be used to avoid that the same plugin is executed twice for
-the same buffer (happens when using an ":edit" command without arguments).
+これは同じプラグインが同じバッファで二重にロードされるのを防ぐためにも必要です
+(":edit" コマンドを引数なしで実行したときに発生します)。
 
-Now users can disable loading the default plugin completely by making a
-filetype plugin with only these lines: >
+ユーザーは、次の行を書いたファイルタイププラグインを作成することで、標準プラグ
+インのロードを無効化できます: >
 
 	vim9script
 	b:did_ftplugin = 1
 
-This does require that the filetype plugin directory comes before $VIMRUNTIME
-in 'runtimepath'!
+ただし、そのファイルを保存したファイルタイププラグインディレクトリが、
+'runtimepath' の中で $VIMRUNTIME よりも前にある必要があります。
 
-If you do want to use the default plugin, but overrule one of the settings,
-you can write the different setting in a script: >
+標準プラグインを使いつつ、その設定を一つだけ変更したいという場合は、スクリプト
+の中で設定を変更することができます: >
 
 	setlocal textwidth=70
 
-Now write this in the "after" directory, so that it gets sourced after the
-distributed "vim.vim" ftplugin |after-directory|.  For Unix this would be
-"~/.vim/after/ftplugin/vim.vim".  Note that the default plugin will have set
-"b:did_ftplugin", but it is ignored here.
+このファイルを "after" ディレクトリに保存すると、(例えば filetype=vim なら) 標
+準配布の "vim.vim" が読み込まれた後に、保存したファイルが読み込まれるようにな
+ります |after-directory|。Unix ならファイルのパスは
+"~/.vim/after/ftplugin/vim.vim" です。Note: 標準プラグインは "b:did_ftplugin"
+を設定しますが、ここではそれを無視しています。
 
 
-OPTIONS
+オプション
+----------
 
-To make sure the filetype plugin only affects the current buffer use the >
+ファイルタイププラグインでは、カレントバッファの設定だけを変更するため、次のコ
+マンドを使ってオプションを設定してください: >
 
 	setlocal
 
-command to set options.  And only set options which are local to a buffer (see
-the help for the option to check that).  When using `:setlocal` for global
-options or options local to a window, the value will change for many buffers,
-and that is not what a filetype plugin should do.
+そして、バッファローカルなオプションだけを設定してください (どのオプションがそ
+うなのかはヘルプで確認してください)。`:setlocal` コマンドでグローバルオプショ
+ンやウィンドウローカルオプションを設定すると、たくさんのバッファの設定が変更さ
+れます。ファイルタイププラグインはそのような動作をすべきではありません。
 
-When an option has a value that is a list of flags or items, consider using
-"+=" and "-=" to keep the existing value.  Be aware that the user may have
-changed an option value already.  First resetting to the default value and
-then changing it is often a good idea.  Example: >
+オプションの値がフラグや設定項目のリストなら、"+=" や "-=" を使うことで既存の
+設定を維持することができます。ユーザーがそのオプションの設定を変更している可能
+性もあるので注意してください。最初に初期設定に戻してから設定を変更するといいか
+もしれません。例: >
 
 	setlocal formatoptions& formatoptions+=ro
 
 
-MAPPINGS
+マップ
+------
 
-To make sure mappings will only work in the current buffer use the >
+カレントバッファの中だけで機能するマップを作るには次のコマンドを使います: >
 
 	map <buffer>
 
-command.  This needs to be combined with the two-step mapping explained above.
-An example of how to define functionality in a filetype plugin: >
+上述したように、マップは二段階に分けて作る必要があります。ファイルタイププラグ
+インで機能を定義する例を示します: >
 
 	if !hasmapto('<Plug>JavaImport;')
 	  map <buffer> <unique> <LocalLeader>i <Plug>JavaImport;
 	endif
 	noremap <buffer> <unique> <Plug>JavaImport; oimport ""<Left><Esc>
 
-|hasmapto()| is used to check if the user has already defined a map to
-<Plug>JavaImport;.  If not, then the filetype plugin defines the default
-mapping.  This starts with |<LocalLeader>|, which allows the user to select
-the key(s) he wants filetype plugin mappings to start with.  The default is a
-backslash.
-"<unique>" is used to give an error message if the mapping already exists or
-overlaps with an existing mapping.
-|:noremap| is used to avoid that any other mappings that the user has defined
-interferes.  You might want to use ":noremap <script>" to allow remapping
-mappings defined in this script that start with <SID>.
+|hasmapto()| を使って、ユーザーが既に <Plug>JavaImport; に対してマップを定義し
+ているかどうかを調べます。未定義ならファイルタイププラグインの標準のマップを定
+義します。マップは <LocalLeader> で開始します。そうすることで、ファイルタイプ
+プラグインのマップを開始するキーをユーザーが選択できます。初期設定はバックス
+ラッシュです。
+"<unique>" を使って、マップが既に存在したとき、あるいは既存のマップと重複した
+ときにエラーメッセージが表示されるようにします。
+|:noremap| を使って、ユーザーが定義した他のマップの影響を受けないようにしま
+す。":noremap <script>" を使うと、スクリプトの中で定義した <SID> で始まるマッ
+プだけが再マップされます。
 
-The user must have a chance to disable the mappings in a filetype plugin,
-without disabling everything.  Here is an example of how this is done for a
-plugin for the mail filetype: >
+ユーザーがファイルタイププラグインのマップを無効化できる仕組みを提供しなければ
+なりません。例えば、"mail" ファイルタイプのプラグインなら次のようにします: >
 
-	# Add mappings, unless the user didn't want this.
+	# マップを追加する。ユーザーが望まない場合は追加しない。
 	if !exists("g:no_plugin_maps") && !exists("g:no_mail_maps")
-	  # Quote text by inserting "> "
+	  # "> " を挿入して引用する
 	  if !hasmapto('<Plug>MailQuote;')
 	    vmap <buffer> <LocalLeader>q <Plug>MailQuote;
 	    nmap <buffer> <LocalLeader>q <Plug>MailQuote;
@@ -559,31 +579,34 @@ plugin for the mail filetype: >
 	  nnoremap <buffer> <Plug>MailQuote; :.,$s/^/> /<CR>
 	endif
 
-Two global variables are used:
-|g:no_plugin_maps|	disables mappings for all filetype plugins
-|g:no_mail_maps|	disables mappings for the "mail" filetype
+ここでは二つのグローバル変数が使われています:
+|g:no_plugin_maps|	すべてのファイルタイププラグインのマップを無効化
+|g:no_mail_maps|	"mail" ファイルタイプのマップを無効化
 
 
-USER COMMANDS
+ユーザー定義コマンド
+--------------------
 
-To add a user command for a specific file type, so that it can only be used in
-one buffer, use the "-buffer" argument to |:command|.  Example: >
+ファイルタイプ用のユーザー定義コマンドを追加して、それを一つのバッファの中だけ
+で使えるようにするには、|:command| の引数に "-buffer" を指定します。例: >
 
 	command -buffer  Make  make %:r.s
 
 
-VARIABLES
+変数
+-----
 
-A filetype plugin will be sourced for each buffer of the type it's for.  Local
-script variables will be shared between all invocations.  Use local buffer
-variables |b:var| if you want a variable specifically for one buffer.
+ファイルタイププラグインは対応するすべてのバッファに対して実行されます。スクリ
+プトローカル変数はすべての実行で共有されます。バッファごとの変数を使いたい場合
+はバッファローカル変数 |b:var| を使ってください。
 
 
-FUNCTIONS
+関数
+-----
 
-When defining a function, this only needs to be done once.  But the filetype
-plugin will be sourced every time a file with this filetype will be opened.
-This construct makes sure the function is only defined once: >
+関数は一度だけ定義すれば十分です。しかし、ファイルタイププラグインは対応する
+ファイルが開かれるたびに読み込まれます。次のようにすると関数が一度だけ定義され
+るようになります: >
 
 	if !exists("*Func")
 	  def Func(arg)
@@ -592,129 +615,136 @@ This construct makes sure the function is only defined once: >
 	endif
 <
 
-UNDO						*undo_indent* *undo_ftplugin*
+アンドゥ					*undo_indent* *undo_ftplugin*
+--------
 
-When the user does ":setfiletype xyz" the effect of the previous filetype
-should be undone.  Set the b:undo_ftplugin variable to the commands that will
-undo the settings in your filetype plugin.  Example: >
+ユーザーが ":setfiletype xyz" としたとき、それ以前のファイルタイプの効果は無効
+になるべきです。b:undo_ftplugin 変数にコマンドを設定し、ファイルタイププラグイ
+ンの設定をアンドゥするようにしてください。例: >
 
 	let b:undo_ftplugin = "setlocal fo< com< tw< commentstring<"
 		\ .. "| unlet b:match_ignorecase b:match_words b:match_skip"
 
-Using ":setlocal" with "<" after the option name resets the option to its
-global value.  That is mostly the best way to reset the option value.
+":setlocal" でオプション名の後に "<" を付けると、そのオプションをグローバルな
+値でリセットします。オプションをリセットするにはこの方法が一番です。
 
-This does require removing the "C" flag from 'cpoptions' to allow line
-continuation, as mentioned above |use-cpo-save|.
+このように行継続を使うには 'cpoptions' から "C" フラグを取り除く必要がありま
+す。上述の |use-cpo-save| を参照してください。
 
-For undoing the effect of an indent script, the b:undo_indent variable should
-be set accordingly.
+インデントスクリプトの効果をアンドゥする為には、それに応じた b:undo_indent 変
+数を設定すべきです。
 
-Both these variables use legacy script syntax, not |Vim9| syntax.
+これら両方の変数は旧来のスクリプトの文法で使われ、|Vim9| の文法では使いません。
 
 
-FILE NAME
+ファイル名
+----------
 
-The filetype must be included in the file name |ftplugin-name|.  Use one of
-these three forms:
+ファイルタイププラグインのファイル名にはファイルタイプ名が含まれていなければな
+りません |ftplugin-name|。次の三つのうちのどれかにしてください:
 
 	.../ftplugin/stuff.vim
 	.../ftplugin/stuff_foo.vim
 	.../ftplugin/stuff/bar.vim
 
-"stuff" is the filetype, "foo" and "bar" are arbitrary names.
+"stuff" はファイルタイプ名、"foo" と "bar" は任意の名前です。
 
 
-SUMMARY							*ftplugin-special*
+要約							*ftplugin-special*
+-----
 
-Summary of special things to use in a filetype plugin:
+ファイルタイププラグインの特有事項を要約します:
 
-<LocalLeader>		Value of "maplocalleader", which the user defines as
-			the keys that filetype plugin mappings start with.
+<LocalLeader>		"maplocalleader" の値。ユーザーがその変数にキーを設定
+			することで、ファイルタイププラグインのマップの開始キー
+			を指定できる。
 
-map <buffer>		Define a mapping local to the buffer.
+map <buffer>		バッファローカルなマップを定義する。
 
-noremap <script>	Only remap mappings defined in this script that start
-			with <SID>.
+noremap <script>	同スクリプトで定義している <SID> で始まるマップだけを
+			再マップする。
 
-setlocal		Set an option for the current buffer only.
+setlocal		カレントバッファのオプションのみ設定する。
 
-command -buffer	Define a user command local to the buffer.
+command -buffer		バッファローカルなユーザー定義コマンドを定義する。
 
-exists("*s:Func")	Check if a function was already defined.
+exists("*s:Func")	関数が定義済かどうかをチェックする。
 
-Also see |plugin-special|, the special things used for all plugins.
+プラグイン全般に関する事項は |plugin-special| を参照してください。
 
 ==============================================================================
-*51.3*	Writing a compiler plugin		*write-compiler-plugin*
+*51.3*	コンパイラプラグインを書く		*write-compiler-plugin*
 
-A compiler plugin sets options for use with a specific compiler.  The user can
-load it with the |:compiler| command.  The main use is to set the
-'errorformat' and 'makeprg' options.
+コンパイラプラグインは特定のコンパイラを使うためのオプションを設定します。ユー
+ザーは |:compiler| コマンドでその設定を読み込むことができます。設定されるオプ
+ションは主に 'errorformat' と 'makeprg' です。
 
-Easiest is to have a look at examples.  This command will edit all the default
-compiler plugins: >
+百聞は一見に如かず。次のコマンドですべての標準コンパイラプラグインを開くことが
+できます: >
 
 	next $VIMRUNTIME/compiler/*.vim
 
-Type `:next` to go to the next plugin file.
+`:next` と打って次のプラグインファイルに移動してください。
 
-There are two special items about these files.  First is a mechanism to allow
-a user to overrule or add to the default file.  The default files start with: >
+これらのファイルには二つの特有事項があります。一つは、標準ファイルに対して設定
+を追加したり上書きしたりできる仕組みです。標準ファイルの先頭は次のようになって
+います: >
 
-	vim9script
+ 	vim9script
 	if exists("g:current_compiler")
 	  finish
 	endif
 	g:current_compiler = "mine"
 
-When you write a compiler file and put it in your personal runtime directory
-(e.g., ~/.vim/compiler for Unix), you set the "current_compiler" variable to
-make the default file skip the settings.
+コンパイラファイルを書いて、それを個人用のランタイムディレクトリ (例えば Unix
+なら ~/.vim/compiler) に置いたとき、"current_compiler" 変数を設定することで標
+準ファイルの設定をスキップすることができます。
 							*:CompilerSet*
-The second mechanism is to use ":set" for ":compiler!" and ":setlocal" for
-":compiler".  Vim defines the ":CompilerSet" user command for this.  However,
-older Vim versions don't, thus your plugin should define it then.  This is an
-example: >
+二つ目は、":compiler!" が使われたときは ":set" を使い、":compiler" が使われた
+ときは ":setlocal" を使う仕組みです。Vim はそのために ":CompilerSet" という
+ユーザーコマンドを定義します。古い Vim はそれを定義しないので、プラグインの中
+で定義してください。例: >
 
   if exists(":CompilerSet") != 2
     command -nargs=* CompilerSet setlocal <args>
   endif
-  CompilerSet errorformat&		" use the default 'errorformat'
+  CompilerSet errorformat&		" use the dfault 'errorformat'
   CompilerSet makeprg=nmake
 
-When you write a compiler plugin for the Vim distribution or for a system-wide
-runtime directory, use the mechanism mentioned above.  When
-"current_compiler" was already set by a user plugin nothing will be done.
+コンパイラプラグインを書いて、それを Vim の配布物に含めたり、システムのランタ
+イムディレクトリに入れたりする場合は、上記の方法を使ってください。
+"current_compiler" がユーザープラグインで設定された場合は何も実行しないように
+します。
 
-When you write a compiler plugin to overrule settings from a default plugin,
-don't check "current_compiler".  This plugin is supposed to be loaded
-last, thus it should be in a directory at the end of 'runtimepath'.  For Unix
-that could be ~/.vim/after/compiler.
+コンパイラプラグインを書いて標準プラグインの設定を上書きする場合は
+"current_compiler" をチェックしないようにします。そのプラグインは最後に読み込
+まれないといけないので、'runtimepath' の最後にあるディレクトリに置きます。例え
+ば、Unix なら ~/.vim/after/compiler などです。
 
 ==============================================================================
-*51.4*	Writing a plugin that loads quickly	*write-plugin-quickload*
+*51.4*	プラグインを書く (高速ロード版)		*write-plugin-quickload*
 
-A plugin may grow and become quite long.  The startup delay may become
-noticeable, while you hardly ever use the plugin.  Then it's time for a
-quickload plugin.
+プラグインが成長し、とても大きくなることがあります。すると、起動速度は遅くなっ
+てきます。例えそのプラグインをたまにしか使わないとしても遅くなります。そういう
+ときはクイックロードプラグインの出番です。
 
-The basic idea is that the plugin is loaded twice.  The first time user
-commands and mappings are defined that offer the functionality.  The second
-time the functions that implement the functionality are defined.
+基本的なアイデアはプラグインを二回に分けて読み込むということです。一回目はユー
+ザー定義コマンドやマップを定義して機能を提供します。二回目は機能を実装する関数
+を定義します。
 
-It may sound surprising that quickload means loading a script twice.  What we
-mean is that it loads quickly the first time, postponing the bulk of the
-script to the second time, which only happens when you actually use it.  When
-you always use the functionality it actually gets slower!
+スクリプトを二回読み込むことがクイックロードだというと驚かれるかもしれません。
+この手法の意味は、一回目は高速に読み込み、スクリプトの重い部分は二回目に後回し
+にするということです。二回目の読み込みは、ユーザーが実際にその機能を使用したと
+きに発生します。あなたがその機能を常に使うなら、これは逆に遅くなってしまいま
+す。
 
-This uses a FuncUndefined autocommand.  Since Vim 7 there is an alternative:
-use the |autoload| functionality |51.5|.  That will also use |Vim9| script
-instead of legacy script that is used here.
+ここでは FuncUndefined 自動コマンドを使います。Vim 7 以降では代わりの方法があ
+ります。|51.5| で説明されている |autoload| 機能を使う方法です。ここで使用した
+旧来のスクリプトの代わりに |Vim9| script も使えます。
 
-The following example shows how it's done: >
+次に例を示します: >
 
-	" Vim global plugin for demonstrating quick loading
+	" クイックロードのデモ用のグローバルプラグイン
 	" Last Change:	2005 Feb 25
 	" Maintainer:	Bram Moolenaar <Bram@vim.org>
 	" License:	This file is placed in the public domain.
@@ -730,128 +760,126 @@ The following example shows how it's done: >
 
 	function BufNetRead(...)
 		echo 'BufNetRead(' .. string(a:000) .. ')'
-		" read functionality here
+		" read 機能をここに書く
 	endfunction
 
 	function BufNetWrite(...)
 		echo 'BufNetWrite(' .. string(a:000) .. ')'
-		" write functionality here
+		" write 機能をここに書く
 	endfunction
 
-When the script is first loaded "s:did_load" is not set.  The commands between
-the "if" and "endif" will be executed.  This ends in a |:finish| command, thus
-the rest of the script is not executed.
+このスクリプトが最初に読み込まれたとき、"s:did_load" は設定されていません。
+"if" と "endif" の間のコマンドが実行されます。|:finish| コマンドによって終了
+し、スクリプトの残りの部分は実行されません。
 
-The second time the script is loaded "s:did_load" exists and the commands
-after the "endif" are executed.  This defines the (possible long)
-BufNetRead() and BufNetWrite() functions.
+二回目に読み込まれたときは "s:did_load" が存在するので、"endif" 以降のコマンド
+が実行されます。この部分では (長くなる可能性のある) BufNetRead() 関数と
+BufNetWrite() 関数を定義します。
 
-If you drop this script in your plugin directory Vim will execute it on
-startup.  This is the sequence of events that happens:
+このスクリプトをプラグインディレクトリに置くと、Vim の起動時に実行されます。処
+理の流れは次のようになります:
 
-1. The "BNRead" command is defined and the <F19> key is mapped when the script
-   is sourced at startup.  A |FuncUndefined| autocommand is defined.  The
-   ":finish" command causes the script to terminate early.
+1. 起動時にスクリプトが読み込まれる。"BNRead" コマンドが定義され、<F19> キーに
+   マップが設定される。自動コマンドの |FuncUndefined| が定義される。":finish"
+   コマンドによってスクリプトが終了する。
 
-2. The user types the BNRead command or presses the <F19> key.  The
-   BufNetRead() or BufNetWrite() function will be called.
+2. ユーザーが BNRead コマンド実行する、または <F19> キーを押す。BufNetRead()
+   関数か BufNetWrite() 関数が呼び出される。
 
-3. Vim can't find the function and triggers the |FuncUndefined| autocommand
-   event.  Since the pattern "BufNet*" matches the invoked function, the
-   command "source fname" will be executed.  "fname" will be equal to the name
-   of the script, no matter where it is located, because it comes from
-   expanding "<sfile>" (see |expand()|).
+3. Vim はその関数を見つけることができず、自動コマンドの |FuncUndefined| イベン
+   トを発行する。関数名が "BufNet*" というパターンにマッチするので、"source
+   fname" コマンドが実行される。"fname" はスクリプトの名前になります。スクリプ
+   トがどこに保存されていても、"<sfile>" が展開されてファイル名になります
+   (|expand()|参照)。
 
-4. The script is sourced again, the "s:did_load" variable exists and the
-   functions are defined.
+4. スクリプトが再び読み込まれる。"s:did_load" 変数が存在するので関数が定義され
+   る。
 
-Notice that the functions that are loaded afterwards match the pattern in the
-|FuncUndefined| autocommand.  You must make sure that no other plugin defines
-functions that match this pattern.
+遅延ロードされる関数の名前が |FuncUndefined| 自動コマンドのパターンにマッチし
+ていることに注意してください。他のプラグインがこのパターンにマッチする関数を定
+義しているとうまく動きません。
 
 ==============================================================================
-*51.5*	Writing library scripts			*write-library-script*
+*51.5*	ライブラリスクリプトを書く		*write-library-script*
 
-Some functionality will be required in several places.  When this becomes more
-than a few lines you will want to put it in one script and use it from many
-scripts.  We will call that one script a library script.
+いろいろな場所で同じ機能が必要になることがあります。コードが二、三行以上になる
+場合は、それを一つのスクリプトに入れて、他のスクリプトから使えるようにしたくな
+ると思います。そのようなスクリプトをライブラリスクリプトと呼びます。
 
-Manually loading a library script is possible, so long as you avoid loading it
-when it's already done.  You can do this with the |exists()| function.
-Example: >
+自分でライブラリスクリプトを読み込むことは可能ですが、同じスクリプトを二重に読
+み込まないようにする必要があります。それには |exists()| 関数を使います。例: >
 
 	if !exists('*MyLibFunction')
 	   runtime library/mylibscript.vim
 	endif
 	MyLibFunction(arg)
 
-Here you need to know that MyLibFunction() is defined in a script
-"library/mylibscript.vim" in one of the directories in 'runtimepath'.
+'runtimepath' に設定されたディレクトリの中の "library/mylibscript.vim" の中で
+MyLibFunction() が定義されている必要があります。
 
-To make this a bit simpler Vim offers the autoload mechanism.  Then the
-example looks like this: >
+これをより簡単にするために、Vim には autoload という仕組みがあります。同じこと
+を次のように書くことができます: >
 
 	mylib#myfunction(arg)
 
-That's a lot simpler, isn't it?  Vim will recognize the function name by the
-embedded "#" character and when it's not defined search for the script
-"autoload/mylib.vim" in 'runtimepath'.  That script must define the
-"mylib#myfunction()" function.
+この方がずっと簡単でしょう？ Vim は # が含まれる関数の名前を見て、それが未定義
+なら、'runtimepath' の中から "autoload/mylib.vim" を探します。そのスクリプトは
+関数 "mylib#myfunction()" を定義していなければなりません。
 
-You can put many other functions in the mylib.vim script, you are free to
-organize your functions in library scripts.  But you must use function names
-where the part before the '#' matches the script name.  Otherwise Vim would
-not know what script to load.
+mylib.vim には他の関数も入れられます。ライブラリスクリプトの中では自由に関数を
+作ることができます。ただし、関数名の '#' より前の部分はスクリプトの名前と同じ
+にする必要があります。そうしないと Vim はどのスクリプトを読み込めばいいのかわ
+かりません。
 
-If you get really enthusiastic and write lots of library scripts, you may
-want to use subdirectories.  Example: >
+ライブラリスクリプトをたくさん書く場合は、サブディレクトリを使うといいかもしれ
+ません。例: >
 
 	netlib#ftp#read('somefile')
 
-For Unix the library script used for this could be:
+Unix では、このライブラリスクリプトは次のような場所に置かれます: >
 
 	~/.vim/autoload/netlib/ftp.vim
 
-Where the function is defined like this: >
+関数は次のように定義します: >
 
 	def netlib#ftp#read(fname: string)
-		#  Read the file fname through ftp
+		#  ftp を使ってファイルを読み込む
 	enddef
 
-Notice that the name the function is defined with is exactly the same as the
-name used for calling the function.  And the part before the last '#'
-exactly matches the subdirectory and script name.
+関数定義と関数呼び出しではまったく同じ名前が使われます。最後の '#' より前の部
+分がサブディレクトリとスクリプトの名前に対応しています。
 
-You can use the same mechanism for variables: >
+同じ方法で変数を扱うこともできます: >
 
 	var weekdays = dutch#weekdays
 
-This will load the script "autoload/dutch.vim", which should contain something
-like: >
+これによって "autoload/dutch.vim" が読み込まれます。そのスクリプトには例えば次
+のようなコードが書かれています: >
 
 	var dutch#weekdays = ['zondag', 'maandag', 'dinsdag', 'woensdag',
 		\ 'donderdag', 'vrijdag', 'zaterdag']
 
-Further reading: |autoload|.
+より詳しくは |autoload| を参照してください。
 
 ==============================================================================
-*51.6*	Distributing Vim scripts			*distribute-script*
+*51.6*	Vim script を配布する			*distribute-script*
 
-Vim users will look for scripts on the Vim website: http://www.vim.org.
-If you made something that is useful for others, share it!
+Vim ユーザーは Vim のウェブサイト http://www.vim.org でスクリプトを探します。
+便利なスクリプトを作ったら、ぜひ共有しましょう！
 
-Another place is github.  But there you need to know where to find it!  The
-advantage is that most plugin managers fetch plugins from github.  You'll have
-to use your favorite search engine to find them.
+別の場所として github があります。しかし、そこが探される場所であるとあなたは知
+る必要があります!。多くのプラグインマネージャーがプラグインを github から取得
+するというアドバンテージがあります。あなたが使うであろうお気に入りのサーチエン
+ジンが見付けるのもそこになります。
 
-Vim scripts can be used on any system.  However, there might not be a tar or
-gzip command.  If you want to pack files together and/or compress them the
-"zip" utility is recommended.
+Vim script はどのシステムでも使えます。しかしながら tar や gzip コマンドは存在
+しないことがあります。ファイルをまとめたり圧縮したりするには "zip" ユーティリ
+ティが推奨されています。
 
-For utmost portability use Vim itself to pack scripts together.  This can be
-done with the Vimball utility.  See |vimball|.
+可搬性を最大限に高めるには、Vim 自身を使ってスクリプトをパッケージ化します。そ
+れには Vimball ユーティリティを使います。|vimball| を参照。
 
-It's good if you add a line to allow automatic updating.  See |glvs-plugins|.
+自動更新するための行を書いておくと便利です。|glvs-plugins| を参照。
 
 ==============================================================================
 
