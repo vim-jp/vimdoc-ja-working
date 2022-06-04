@@ -1,8 +1,8 @@
-*usr_51.txt*	For Vim version 8.2.  Last change: 2022 May 13
+*usr_51.txt*	For Vim バージョン 8.2.  Last change: 2022 May 13
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
-			      Write plugins
+			      プラグインを作る
 
 
 Plugins can be used to define settings for a specific type of file, syntax
@@ -16,9 +16,9 @@ most common Vim plugins.
 |51.5|	Writing library scripts
 |51.6|	Distributing Vim scripts
 
-     Next chapter: |usr_52.txt|  Write plugins using Vim9 script
- Previous chapter: |usr_50.txt|  Advanced Vim script writing
-Table of contents: |usr_toc.txt|
+次章: |usr_52.txt|  Vim9 script でプラグインを作る
+前章: |usr_50.txt|  高度な Vim script の書き方
+目次: |usr_toc.txt|
 
 ==============================================================================
 *51.1*	Writing a generic plugin			*write-plugin*
@@ -855,6 +855,6 @@ It's good if you add a line to allow automatic updating.  See |glvs-plugins|.
 
 ==============================================================================
 
-Next chapter: |usr_52.txt|  Write plugins using Vim9 script
+次章: |usr_52.txt|  Vim9 script でプラグインを作る
 
 Copyright: see |manual-copyright|  vim:tw=78:ts=8:noet:ft=help:norl:
