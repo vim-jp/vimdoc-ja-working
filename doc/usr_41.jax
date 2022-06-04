@@ -19,12 +19,6 @@ Vim script 言語は vimrc ファイルや構文ファイルなど、さまざ�
 |41.8|	リストと辞書
 |41.9|	例外
 |41.10|	注意事項
-|41.11|	プラグインを書く
-|41.12|	ファイルタイププラグインを書く
-|41.13|	コンパイラプラグインを書く
-|41.14|	プラグインを書く (高速ロード版)
-|41.15|	ライブラリスクリプトを書く
-|41.16|	Vim script を配布する
 
 次章: |usr_42.txt|  新しいメニューを追加する
 前章: |usr_40.txt|  新しいコマンドを作る
@@ -824,7 +818,7 @@ Blob 操作:						*blob-functions*
 	screencol()		カーソルのスクリーン列を取得する
 	screenrow()		カーソルのスクリーン行を取得する
 	screenpos()		テキスト文字のスクリーン行と列
-	virtcol2col()		byte index of a text character on screen
+	virtcol2col()		テキスト文字のスクリーンのバイト位置
 	getcurpos()		カーソルの位置を取得する
 	getpos()		カーソルやマークなどの位置を取得する
 	setpos()		カーソルやマークなどの位置を設定する
@@ -916,10 +910,10 @@ Blob 操作:						*blob-functions*
 	reltimestr()		reltime()の結果を文字列に変換する
 	reltimefloat()		reltime()の結果を浮動小数点に変換する
 
-Autocmds:					*autocmd-functions*
-	autocmd_add()		add a list of autocmds and groups
-	autocmd_delete()	delete a list of autocmds and groups
-	autocmd_get()		return a list of autocmds
+自動コマンド:					*autocmd-functions*
+	autocmd_add()		自動コマンドとグループのリストを追加する
+	autocmd_delete()	自動コマンドとグループのリストを削除する
+	autocmd_get()		自動コマンドのリストを返す
 
 			*buffer-functions* *window-functions* *arg-functions*
 バッファ、ウィンドウ、引数リスト:
@@ -1915,7 +1909,7 @@ Unix では特別なコメント書式を使って Vim script を実行形式に
 プラグインを部分に分ける場合、`import` と `export` で部分間で項目を共有できま
 す。詳細は `:export` を参照してください。
 
-More information about writing plugins is in |usr_51.txt|.
+プラグインを作ることについてのより詳細な情報は |usr_51.txt| にあります。
 
 ==============================================================================
 

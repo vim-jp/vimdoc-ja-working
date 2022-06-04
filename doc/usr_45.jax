@@ -1,4 +1,4 @@
-*usr_45.txt*	For Vim バージョン 8.2.  Last change: 2020 Jun 11
+*usr_45.txt*	For Vim バージョン 8.2.  Last change: 2022 May 13
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -14,7 +14,7 @@ Vim のメッセージは言語を変更できます。この章では、言語�
 |45.4|	異なるエンコーディングのファイルを編集する
 |45.5|	言語のテキストを入力する
 
-次章: |usr_46.txt|  Vim9 script でプラグインを作る
+次章: |usr_50.txt|  Vim9 script でプラグインを作る
 前章: |usr_44.txt|  構文ファイルを作成する
 目次: |usr_toc.txt|
 
