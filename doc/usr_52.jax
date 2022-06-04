@@ -1,4 +1,4 @@
-*usr_52.txt*	For Vim バージョン 8.2.  Last change: 2022 May 13
+*usr_52.txt*	For Vim バージョン 8.2.  Last change: 2022 May 21
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -108,35 +108,32 @@ Vim9 script の変数は一度だけ `:let` もしくは `:const` コマンド�
 ==============================================================================
 *52.3*	関数と型
 
-旧来の Vim script は型のチェックがありましたが、ランタイムつまりコード実行時に
-実施していました。そしてそれは寛容で、ときどきエラー報告ではなく処理によって不
-明な値となっていました。結果として関数が定義できかつ正常であると思えても、問題
-が発覚するのは常に呼び出した後でした: >
-	let s:collected = ''
-	func ExtendAndReturn(add)
-	   let s:collected += a:add
-	   return s:collected
+旧来の Vim script はコード実行時にのみ型のチェックがありました。そしてそれは寛
+容で、ときどきエラー報告ではなく処理によって不明な値となっていました。結果とし
+て関数が定義できかつ正常であると思えても、問題が通知されるのは常に関数の呼び出
+し後でした: >
+	func Concatenate(base, add)
+	   return a:base + a:add
 	endfunc
 
 どの箇所に問題があると思いますか? 次を試してください: >
-	echo ExtendAndReturn('text')
-すると0が見えるでしょう。なぜか? それは旧来の Vim script は "+=" が引数を数値
-に変換し、そして数値のない任意の文字列では結果が0となるのです!
+	echo Concatenate('base', 'text')
+すると0が見えるでしょう。なぜか? それは旧来の Vim script は "+" が引数を数値
+に変換し、そして数値のない任意の文字列では結果が0となるのです! これはあなたが
+期待したものではありません。
 
-`:def` だと型チェックが関数のコンパイル時に行われます。それによってあなたは引
-数の型と戻り値の型の指定が必要になります。また引数は "a:" のプリフィックス無し
-で使われることに注意してください: >
-	let s:collected = ''
-	def ExtendAndReturn(add: string): string
-	   s:collected += add
-	   return s:collected
+`:def` だと型チェックが関数のコンパイル時に行われます。あなたは引数の型と戻り
+値の型の指定が必要になります。また引数の名前は "a:" のプリフィックス無しで使わ
+れることに注意してください: >
+	def Concatenate(base: string, add: string): string
+	   return base + add
 	enddef
-	defcompile
+	defcompile Concatenate
 
 ここでは直ちにコンパイルを実行するために `:defcompile` を使っており、それがな
-いなら関数が呼ばれるときにコンパイルされるでしょう。Vim はあなたが間違っている
-と警告します: >
-	E1013: type mismatch, expected number but got string
+いなら関数が最初に呼ばれるときにコンパイルされるでしょう。Vim はあなたが間違っ
+ていると警告します: >
+	E1051: Wrong argument type for +
 
 Vim9 script は厳密で、"+" 演算子は数値か浮動小数点数でしか使えません。文字の結
 合であれば ".." を使わなくてはなりません。これが間違いを防ぎ、上にあるような驚

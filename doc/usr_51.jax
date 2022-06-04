@@ -1,4 +1,4 @@
-*usr_51.txt*	For Vim バージョン 8.2.  Last change: 2022 May 13
+*usr_51.txt*	For Vim バージョン 8.2.  Last change: 2022 May 14
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -203,8 +203,8 @@ Note: 上記のコマンドでは <unique> が使われています。これは�
 新しい修正を追加するための関数を定義します: >
 
  30	def Add(from: string, correct: bool)
- 31	  var to = input("type the correction for " .. from .. ": ")
- 32	  exe ":iabbrev " .. from .. " " .. to
+ 31	  var to = input($"type the correction for {from}: ")
+ 32	  exe $":iabbrev {from} {to}"
  ..
  36	enddef
 
