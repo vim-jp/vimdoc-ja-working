@@ -40,6 +40,7 @@ echo -n "|:---" >> ${outf}
 echo -n "|:---" >> ${outf}
 echo "|" >> ${outf}
 
+rm -f ${outf}.presort
 
 for fp in `ls -1 ${new_doc_dir}/*.txt`; do
 	fname=`basename ${fp}`
@@ -86,9 +87,27 @@ for fp in `ls -1 ${new_doc_dir}/*.txt`; do
 	lines+=("|")
 	if ${is_output}; then
 		line="$(IFS=; echo "${lines[*]}")"
-		echo ${line[@]} >> ${outf}
+		echo ${line[@]} >> ${outf}.presort
 	fi
 done
+
+# Detect deleted files.
+for fp in `ls -1 ${old_doc_dir}/*.txt`; do
+	fname=`basename ${fp}`
+	new_fp=${new_doc_dir}/${fname}
+
+	lines=()
+	if [ ! -e ${new_fp} ]; then
+		lines+=("|${fname}")
+		set `wc -l ${fp}`
+		lines+=("|${1}")
+		lines+=("|Del||||")
+		line="$(IFS=; echo "${lines[*]}")"
+		echo ${line[@]} >> ${outf}.presort
+	fi
+done
+
+sort ${outf}.presort >> ${outf}
 
 echo "" >> ${outf}
 echo "更新不要の ${unchanged_file_count} ファイルの表示は省略しています。" >> ${outf}
