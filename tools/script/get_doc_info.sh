@@ -101,7 +101,7 @@ for fp in `ls -1 ${old_doc_dir}/*.txt`; do
 		lines+=("|${fname}")
 		set `wc -l ${fp}`
 		lines+=("|${1}")
-		lines+=("|Del||||")
+		lines+=("|Deleted||||")
 		line="$(IFS=; echo "${lines[*]}")"
 		echo ${line[@]} >> ${outf}.presort
 	fi
