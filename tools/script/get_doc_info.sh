@@ -12,6 +12,7 @@ old_doc_dir=${GITHUB_WORKSPACE}/work/en
 # 出力ファイル名
 outf=doc_info.md
 rm -f ${outf}
+rm -f ${outf}.presort
 
 # 除外ファイル
 exclude_files_str='
@@ -39,8 +40,6 @@ echo -n "|---:" >> ${outf}
 echo -n "|:---" >> ${outf}
 echo -n "|:---" >> ${outf}
 echo "|" >> ${outf}
-
-rm -f ${outf}.presort
 
 for fp in `ls -1 ${new_doc_dir}/*.txt`; do
 	fname=`basename ${fp}`
@@ -108,6 +107,7 @@ for fp in `ls -1 ${old_doc_dir}/*.txt`; do
 done
 
 sort ${outf}.presort >> ${outf}
+rm -f ${outf}.presort
 
 echo "" >> ${outf}
 echo "更新不要の ${unchanged_file_count} ファイルの表示は省略しています。" >> ${outf}
