@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 8.2.  Last change: 2022 Apr 17
+*autocmd.txt*   For Vim バージョン 8.2.  Last change: 2022 May 24
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -46,6 +46,28 @@
   る場合がたまにある)。可能であれば、イベント File* や Buf* には同じ自動コマン
   ドを使うのはよい考えだ。
 
+推奨される使用法:
+- 常にグループを利用することで、自動コマンドの削除が容易になる。
+- コマンド自体を短く維持し、より多くの仕事をする関数を呼ぶようにする。
+- 定義したスクリプトを複数回ソースしても自動コマンドは繰り替えさないようにす
+  る。
+
+Vim9 script での例: >
+   autocmd_add({replace: true,
+		group:   'DemoGroup',
+		event:   'BufEnter',
+		pattern: '*.txt',
+		cmd:     'call DemoBufEnter()'
+		})
+
+旧来のスクリプトの例: >
+   call autocmd_add(#{replace: v:true,
+		    \ group: 'DemoGroup',
+   		    \ event: 'BufEnter',
+		    \ pattern: '*.txt',
+		    \ cmd: 'call DemoBufEnter()'
+		    \ })
+
 ==============================================================================
 2. 自動コマンドの定義					*autocmd-define*
 
@@ -78,6 +100,10 @@
 		  setlocal matchpairs+=<:>
 		  /<start
 		}
+
+|autocmd_add()| 関数で自動コマンドとそのグループのリストを Vim script から追加
+することができる。あたなが `:autocmd` を伴う `:execute` を利用する必要がある場
+合にこれが推奨される。
 
 Note: ":autocmd" コマンドの後には、パターンが期待される位置に '|' が現れる場合
 にのみ別のコマンドを続けることができる。これは動作する: >
@@ -144,6 +170,9 @@ Note [group] はあらかじめ定義されていなければならないこと�
 ==============================================================================
 3. 自動コマンドの除去					*autocmd-remove*
 
+以下で説明するコマンドに加えて、|autocmd_delete()| 関数で自動コマンドとそのグ
+ループのリストで Vim script から削除することができる。
+
 :au[tocmd]! [group] {event} {aupat} [++once] [++nested] {cmd}
 			{event} と {aupat} に関連づけられた全ての自動コマンド
 			を除去し、コマンド {cmd} を加える。
@@ -197,6 +226,8 @@ Note [group] はあらかじめ定義されていなければならないこと�
 
 バッファローカルな自動コマンドを列挙するには、<buffer>または<buffer=N>という形
 のパターンを使う。|autocmd-buflocal|を参照。
+
+|autocmd_get()| 関数で自動コマンドのリストを Vim script から取得できる。
 
 							*:autocmd-verbose*
 'verbose' がゼロでないならば、自動コマンドを列挙するときに、それが最後にどこで
