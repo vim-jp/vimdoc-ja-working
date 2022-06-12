@@ -1,4 +1,4 @@
-*map.txt*       For Vim バージョン 8.2.  Last change: 2022 May 09
+*map.txt*       For Vim バージョン 8.2.  Last change: 2022 Jun 02
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -61,6 +61,7 @@
 			す。マップを入れ子にしたり再帰的にすることができます。
 			Note: 空白は有効なノーマルモードのコマンドであるため、
 			末尾の空白は {rhs} に含まれます。
+			|map-trailing-white| を参照。
 
 						*:nore* *:norem*
 :no[remap]  {lhs} {rhs}		|mapmode-nvo|	*:no*  *:noremap* *:nor*
@@ -99,10 +100,8 @@
 			削除します。他のモードのマップは残ります。
 			{lhs} がマッピングの {rhs} にマッチするときも機能しま
 			す。これは略語が適用された場合に使用します。
-			Note: 末尾の空白は {lhs} に含まれます。次の unmap コマ
-			ンドは機能しません: >
-				:map @@ foo
-				:unmap @@ | print
+			Note: 末尾の空白は {lhs} に含まれます。
+			|map-trailing-white| を参照。
 
 :mapc[lear]			|mapmode-nvo|		*:mapc*   *:mapclear*
 :nmapc[lear]			|mapmode-n|		*:nmapc*  *:nmapclear*
@@ -166,6 +165,27 @@
 の文字が必要になります。そのため、"aa" が入力された時点ではまだマップは適用さ
 れず、次の入力まで待機状態になります。例えば空白文字を入力すれば "foo" と空白
 文字が挿入されます。"a" を入力すれば "bar" が挿入されます。
+
+末尾空白 ~
+							*map-trailing-white*
+このunmapコマンドは動作しません: >
+	:map @@ foo
+	:unmap @@ | print
+
+なぜなら unmap "@@ " を試行するとき、コマンド区切りの "|" の前の空白を含んでい
+るためです。他の末尾空白の例として: >
+	unmap @@ 
+	unmap @@     # Vim9 script コメント
+	unmap @@     " 旧来のコメント
+
+これで発生するエラーは、認識するのは非常に困難で、なぜなら `unmap @@ ` の終端
+にある空白が不可視だからです。
+
+一般的な解決策はマップしたキーの後の右にコマンド区切りの "|" を置くことです。
+その後に空白とコメントを続けます: >
+
+	unmap @@|    # Vim9 script コメント
+	unmap @@|    " 旧来のコメント
 
 
 1.2 特別な引数						*:map-arguments*
