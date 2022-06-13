@@ -267,7 +267,7 @@ test_override({name}, {val})				*test_override()*
 
 		{name}	     {val} が非 0 のときの効果 ~
 		autoload    `import autoload` でスクリプトを正しい手順でロード
-			     し、項目の利用までの延期はしない
+			     し、項目が使用されるまで延期はしない
 		char_avail   char_avail() 関数を無効化する
 		nfa_fail     古い正規表現エンジンに戻すために、NFA regexp エン
 			     ジンを失敗させる
