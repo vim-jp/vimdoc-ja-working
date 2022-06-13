@@ -43,9 +43,9 @@ GUIバージョンはGeorge V. ReillyとRobert Webbによって作成された�
 コンパイルする場合は "src/INSTALLpc.txt" を参照。	*win32-compiling*
 
 							*WSL*
-WSL(Windows Subsystem for Linux) 上のVimの利用の場合はここでの説明は適用でき
-ず、そのとき `has('win32')` は偽を返す。WSL 上でVimを動作させているかを知る必
-要がある場合は `exists('$WSLENV')` を使うことができる。
+WSL(Windows Subsystem for Linux) 上で Vim を使用する場合、ここでの説明は適用さ
+れず、`has('win32')` は偽を返す。WSL 上で Vim が 実行されているかどうかを知る
+必要がある場合は、`exists('$WSLENV')` を使用する。
 
 ==============================================================================
 1. 知られている問題点					*win32-problems*
