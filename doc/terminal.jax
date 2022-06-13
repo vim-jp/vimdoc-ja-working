@@ -1420,9 +1420,9 @@ gdb は奇妙な動作をしていますが、プラグインはその問題を�
 
 カスタマイズ ~
 				*termdebug-customizing* *g:termdebug_config*
-以前はいくつかのグローバル変数を設定に利用していました。これらは非推奨になり、
-辞書 g:termdebug_config の利用が推奨されます。g:termdebug_config が存在する時
-は他のグローバル変数は利用されません。
+以前はいくつかのグローバル変数を設定に使用していました。これらは非推奨になり、
+辞書 g:termdebug_config の使用が推奨されます。g:termdebug_config が存在する時
+は他のグローバル変数は使用されません。
 
 
 GDBコマンド ~
