@@ -5262,10 +5262,10 @@ mapcheck({name} [, {mode} [, {abbr}]])			*mapcheck()*
 
 
 maplist([{abbr}])					*maplist()*
-		全マッピングのリスト |List| を返す。各リストの項目は辞書
-		|Dict| で、|maparg()| で返すものと同じになる。|mapping-dict|
-		を参照。{abbr} が存在し |TRUE| であれば、マッピングの代わりに
-		短縮入力を使う。
+		全マッピングの |List| を返す。各リストの項目は |Dict|
+		で、|maparg()| で返すものと同じになる。|mapping-dict| を参照。
+		{abbr} が存在し |TRUE| であれば、マッピングの代わりに短縮入力
+		を使う。
 
 		'MultiMatch' が rhs に含まれる全マッピングを表示する例: >
 			vim9script
