@@ -1,4 +1,4 @@
-*starting.txt*  For Vim バージョン 8.2.  Last change: 2022 Jun 04
+*starting.txt*  For Vim バージョン 8.2.  Last change: 2022 Jun 14
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -427,6 +427,13 @@ VMSでは全てのオプション引数は小文字であるとみなされる�
 		警告が表示され2秒間の遅延が発生するのを避けられる。
 		"Reading from stdin..." のメッセージを避けることもできる。
 		"N files to edit" のメッセージを避けることもできる。
+
+--gui-dialog-file {name}				*--gui-dialog-file*
+		GUIの使用時、ダイアログを表示する代わりとして、ファイル {name}
+		へダイアログのタイトルとメッセージを書き込む。このファイルは作
+		成されるか追記される。テストにみ有用で、ダイアログを見ることが
+		できないためにテストが中断されるのを防ぐ。GUI以外ではこの引数
+		は無視される。
 
 							*--ttyfail*
 --ttyfail	標準入力か標準出力が端末(tty)でない場合、すぐに終了する。
