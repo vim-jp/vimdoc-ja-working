@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim バージョン 8.2.  Last change: 2022 Jun 03
+*syntax.txt*	For Vim バージョン 8.2.  Last change: 2022 Jun 10
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -5192,8 +5192,8 @@ StatusLineNC	非カレントウィンドウのステータスライン。
 							*hl-StatusLineTerm*
 StatusLineTerm	|terminal| ウィンドウのカレントウィンドウのステータスライン。
 							*hl-StatusLineTermNC*
-StatusLineTermNC   |terminal| ウィンドウの非カレントウィンドウのステータスライ
-		ン。
+StatusLineTermNC	|terminal| ウィンドウの非カレントウィンドウのステータ
+			スライン。
 							*hl-TabLine*
 TabLine		タブページの行の、アクティブでないタブページのラベル。
 							*hl-TabLineFill*
