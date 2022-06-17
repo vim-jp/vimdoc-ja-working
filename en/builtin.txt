@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim version 8.2.  Last change: 2022 Mar 08
+*builtin.txt*	For Vim version 8.2.  Last change: 2022 Apr 25
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -161,7 +161,8 @@ exists_compiled({expr})		Number	|TRUE| if {expr} exists at compile time
 exp({expr})			Float	exponential of {expr}
 expand({expr} [, {nosuf} [, {list}]])
 				any	expand special keywords in {expr}
-expandcmd({expr})		String	expand {expr} like with `:edit`
+expandcmd({string} [, {options}])
+				String	expand {string} like with `:edit`
 extend({expr1}, {expr2} [, {expr3}])
 				List/Dict insert items of {expr2} into {expr1}
 extendnew({expr1}, {expr2} [, {expr3}])
@@ -294,6 +295,7 @@ inputsecret({prompt} [, {text}]) String	like input() but hiding the text
 insert({object}, {item} [, {idx}]) List	insert {item} in {object} [before {idx}]
 interrupt()			none	interrupt script execution
 invert({expr})			Number	bitwise invert
+isabsolutepath({path})		Number	|TRUE| if {path} is an absolute path
 isdirectory({directory})	Number	|TRUE| if {directory} is a directory
 isinf({expr})			Number	determine if {expr} is infinity value
 					(positive or negative)
@@ -336,6 +338,7 @@ maparg({name} [, {mode} [, {abbr} [, {dict}]]])
 					rhs of mapping {name} in mode {mode}
 mapcheck({name} [, {mode} [, {abbr}]])
 				String	check for mappings matching {name}
+maplist([{abbr}])		List	list of all mappings, a dict for each
 mapnew({expr1}, {expr2})	List/Dict/Blob/String
 					like |map()| but creates a new List or
 					Dictionary
@@ -1562,14 +1565,15 @@ confirm({msg} [, {choices} [, {default} [, {type}]]])
 		or another valid interrupt key, confirm() returns 0.
 
 		An example: >
-   :let choice = confirm("What do you want?", "&Apples\n&Oranges\n&Bananas", 2)
-   :if choice == 0
-   :	echo "make up your mind!"
-   :elseif choice == 3
-   :	echo "tasteful"
-   :else
-   :	echo "I prefer bananas myself."
-   :endif
+		   let choice = confirm("What do you want?",
+		   			\ "&Apples\n&Oranges\n&Bananas", 2)
+		   if choice == 0
+		   	echo "make up your mind!"
+		   elseif choice == 3
+		   	echo "tasteful"
+		   else
+		   	echo "I prefer bananas myself."
+		   endif
 <		In a GUI dialog, buttons are used.  The layout of the buttons
 		depends on the 'v' flag in 'guioptions'.  If it is included,
 		the buttons are always put vertically.  Otherwise,  confirm()
@@ -1752,7 +1756,10 @@ deepcopy({expr} [, {noref}])				*deepcopy()* *E698*
 
 delete({fname} [, {flags}])				*delete()*
 		Without {flags} or with {flags} empty: Deletes the file by the
-		name {fname}.  This also works when {fname} is a symbolic link.
+		name {fname}.
+
+		This also works when {fname} is a symbolic link.  The symbolic
+		link itself is deleted, not what it points to.
 
 		When {flags} is "d": Deletes the directory by the name
 		{fname}.  This fails when directory {fname} is not empty.
@@ -1761,8 +1768,6 @@ delete({fname} [, {flags}])				*delete()*
 		{fname} and everything in it, recursively.  BE CAREFUL!
 		Note: on MS-Windows it is not possible to delete a directory
 		that is being used.
-
-		A symbolic link itself is deleted, not what it points to.
 
 		The result is a Number, which is 0/false if the delete
 		operation was successful and -1/true when the deletion failed
@@ -2043,7 +2048,7 @@ execute({command} [, {silent}])					*execute()*
 		It is not possible to use `:redir` anywhere in {command}.
 
 		To get a list of lines use |split()| on the result: >
-			split(execute('args'), "\n")
+			execute('args')->split("\n")
 
 <		To execute a command in another window than the current one
 		use `win_execute()`.
@@ -2234,6 +2239,8 @@ expand({string} [, {nosuf} [, {list}]])				*expand()*
 					a function
 			<SID>		"<SNR>123_"  where "123" is the
 					current script ID  |<SID>|
+			<script>	sourced script file, or script file
+					where the current function was defined
 			<stack>		call stack
 			<cword>		word under the cursor
 			<cWORD>		WORD under the cursor
@@ -2267,6 +2274,9 @@ expand({string} [, {nosuf} [, {list}]])				*expand()*
 		is not defined, an empty string is used.  Using "%:p" in a
 		buffer with no name, results in the current directory, with a
 		'/' added.
+		When 'verbose' is set then expanding '%', '#' and <> items
+		will result in an error message if the argument cannot be
+		expanded.
 
 		When {string} does not start with '%', '#' or '<', it is
 		expanded like a file name is expanded on the command line.
@@ -2292,16 +2302,28 @@ expand({string} [, {nosuf} [, {list}]])				*expand()*
 		Can also be used as a |method|: >
 			Getpattern()->expand()
 
-expandcmd({string})					*expandcmd()*
+expandcmd({string} [, {options}])			*expandcmd()*
 		Expand special items in String {string} like what is done for
 		an Ex command such as `:edit`.  This expands special keywords,
 		like with |expand()|, and environment variables, anywhere in
 		{string}.  "~user" and "~/path" are only expanded at the
 		start.
-		Returns the expanded string.  Example: >
-			:echo expandcmd('make %<.o')
 
-<		Can also be used as a |method|: >
+		The following items are supported in the {options} Dict
+		argument:
+		    errmsg	If set to TRUE, error messages are displayed
+				if an error is encountered during expansion.
+				By default, error messages are not displayed.
+
+		Returns the expanded string.  If an error is encountered
+		during expansion, the unmodified {string} is returned.
+
+		Example: >
+			:echo expandcmd('make %<.o')
+			make /path/runtime/doc/builtin.o
+			:echo expandcmd('make %<.o', {'errmsg': v:true})
+<
+		Can also be used as a |method|: >
 			GetCommand()->expandcmd()
 <
 extend({expr1}, {expr2} [, {expr3}])			*extend()*
@@ -2397,7 +2419,8 @@ feedkeys({string} [, {mode}])				*feedkeys()*
 			all typeahead will be consumed by the last call.
 		'c'	Remove any script context when executing, so that
 			legacy script syntax applies, "s:var" does not work,
-			etc.
+			etc.  Note that if the keys being using set a script
+			context this still applies.
 		'!'	When used with 'x' will not end Insert mode. Can be
 			used in a test when a timer is set to exit Insert mode
 			a little later.  Useful for testing CursorHoldI.
@@ -2727,7 +2750,7 @@ foreground()	Move the Vim window to the foreground.  Useful when sent from
 		On Win32 systems this might not work, the OS does not always
 		allow a window to bring itself to the foreground.  Use
 		|remote_foreground()| instead.
-		{only in the Win32, Athena, Motif and GTK GUI versions and the
+		{only in the Win32, Motif and GTK GUI versions and the
 		Win32 console version}
 
 fullcommand({name})						*fullcommand()*
@@ -4650,6 +4673,24 @@ invert({expr})						*invert()*
 <		Can also be used as a |method|: >
 			:let bits = bits->invert()
 
+isabsolutepath({directory})				*isabsolutepath()*
+		The result is a Number, which is |TRUE| when {path} is an
+		absolute path.
+<		On Unix, a path is considered absolute when it starts with '/'.
+		On MS-Windows, it is considered absolute when it starts with an
+		optional drive prefix and is followed by a '\' or '/'. UNC paths
+		are always absolute.
+		Example: >
+			echo isabsolutepath('/usr/share/')	" 1
+			echo isabsolutepath('./foobar')		" 0
+			echo isabsolutepath('C:\Windows')	" 1
+			echo isabsolutepath('foobar')		" 0
+			echo isabsolutepath('\\remote\file')	" 1
+
+		Can also be used as a |method|: >
+			GetName()->isabsolutepath()
+
+
 isdirectory({directory})				*isdirectory()*
 		The result is a Number, which is |TRUE| when a directory
 		with the name {directory} exists.  If {directory} doesn't
@@ -4819,6 +4860,8 @@ json_encode({expr})					*json_encode()*
 		Note that NaN and Infinity are passed on as values.  This is
 		missing in the JSON standard, but several implementations do
 		allow it.  If not then you will get an error.
+		If a string contains an illegal character then the replacement
+		character 0xfffd is used.
 
 		Can also be used as a |method|: >
 			GetObject()->json_encode()
@@ -5213,7 +5256,8 @@ maparg({name} [, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 		When {dict} is omitted or zero: Return the rhs of mapping
 		{name} in mode {mode}.  The returned String has special
 		characters translated like in the output of the ":map" command
-		listing.
+		listing. When {dict} is TRUE a dictionary is returned, see
+		below. To get a list of all mappings see |maplist()|.
 
 		When there is no mapping for {name}, an empty String is
 		returned.  When the mapping for {name} is empty, then "<Nop>"
@@ -5240,7 +5284,7 @@ maparg({name} [, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 
 		When {dict} is there and it is |TRUE| return a dictionary
 		containing all the information of the mapping with the
-		following items:
+		following items:			*mapping-dict*
 		  "lhs"	     The {lhs} of the mapping as it would be typed
 		  "lhsraw"   The {lhs} of the mapping as raw bytes
 		  "lhsrawalt" The {lhs} of the mapping as raw bytes, alternate
@@ -5312,6 +5356,18 @@ mapcheck({name} [, {mode} [, {abbr}]])			*mapcheck()*
 
 		Can also be used as a |method|: >
 			GetKey()->mapcheck('n')
+
+
+maplist([{abbr}])					*maplist()*
+		Returns a |List| of all mappings.  Each List item is a |Dict|,
+		the same as what is returned by |maparg()|, see
+		|mapping-dict|.  When {abbr} is there and it is |TRUE| use
+		abbreviations instead of mappings.
+
+		Example to show all mappings with 'MultiMatch' in rhs: >
+			vim9script
+			echo maplist()->filter(
+				(_, m) => match(m.rhs, 'MultiMatch') >= 0)
 
 
 mapnew({expr1}, {expr2})					*mapnew()*
@@ -5561,7 +5617,7 @@ matchfuzzy({list}, {str} [, {dict}])			*matchfuzzy()*
 
 		If {list} is a list of dictionaries, then the optional {dict}
 		argument supports the following additional items:
-		    key		key of the item which is fuzzy matched against
+		    key		Key of the item which is fuzzy matched against
 				{str}. The value of this item should be a
 				string.
 		    text_cb	|Funcref| that will be called for every item
@@ -5569,6 +5625,8 @@ matchfuzzy({list}, {str} [, {dict}])			*matchfuzzy()*
 				This should accept a dictionary item as the
 				argument and return the text for that item to
 				use for fuzzy matching.
+		    limit	Maximum number of matches in {list} to be
+				returned.  Zero means no limit.
 
 		{str} is treated as a literal string and regular expression
 		matching is NOT supported.  The maximum supported {str} length
@@ -5580,6 +5638,9 @@ matchfuzzy({list}, {str} [, {dict}])			*matchfuzzy()*
 		If there are no matching strings or there is an error, then an
 		empty list is returned. If length of {str} is greater than
 		256, then returns an empty list.
+
+		When {limit} is given, matchfuzzy() will find up to this
+		number of matches in {list} and return them in sorted order.
 
 		Refer to |fuzzy-matching| for more information about fuzzy
 		matching strings.
@@ -6009,8 +6070,10 @@ printf({fmt}, {expr1} ...)				*printf()*
 		When used as a |method| the base is passed as the second
 		argument: >
 			Compute()->printf("result: %d")
+<
+		You can use `call()` to pass the items as a list.
 
-<		Often used items are:
+		Often used items are:
 		  %s	string
 		  %6S	string right-aligned in 6 display cells
 		  %6s	string right-aligned in 6 bytes
@@ -6679,7 +6742,7 @@ remote_foreground({server})				*remote_foreground()*
 		Can also be used as a |method|: >
 			ServerName()->remote_foreground()
 
-<		{only in the Win32, Athena, Motif and GTK GUI versions and the
+<		{only in the Win32, Motif and GTK GUI versions and the
 		Win32 console version}
 
 
@@ -10011,7 +10074,7 @@ footer			Compiled with GUI footer support. |gui-footer|
 fork			Compiled to use fork()/exec() instead of system().
 gettext			Compiled with message translation |multi-lang|
 gui			Compiled with GUI enabled.
-gui_athena		Compiled with Athena GUI.
+gui_athena		Compiled with Athena GUI (always false).
 gui_gnome		Compiled with Gnome support (gui_gtk is also defined).
 gui_gtk			Compiled with GTK+ GUI (any version).
 gui_gtk2		Compiled with GTK+ 2 GUI (gui_gtk is also defined).
