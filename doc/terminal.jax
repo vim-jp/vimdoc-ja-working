@@ -1385,13 +1385,13 @@ TermdebugStopPost		デバッグの終了後、gdb 関連ウィンドウが閉じ
 						*termdebug_use_prompt*
 プロンプトモードは、|+terminal| 機能が有効な場合でも使用できます: >
 	let g:termdebug_config['use_prompt'] = 1
-あるいは g:termdebug_config がないなら: >
+または、g:termdebug_config がない場合: >
 	let g:termdebug_use_prompt = 1
 <
 						*termdebug_map_K*
 K は通常 :Evaluate にマッピングされています。もしそうしたくないなら: >
 	let g:termdebug_config['map_K'] = 0
-あるいは g:termdebug_config がないなら: >
+または、g:termdebug_config がない場合: >
 	let g:termdebug_map_K = 0
 
 <
@@ -1400,7 +1400,7 @@ Asm ウィンドウをデフォルトで表示たいなら、このフラグに1
 "disasm_window_height" エントリがウィンドウの高さとして利用されます: >
 	let g:termdebug_config['disasm_window'] = 1
 	let g:termdebug_config['disasm_window_height'] = 15
-あるいは g:termdebug_config がないなら: >
+または、g:termdebug_config がない場合: >
 	let g:termdebug_disasm_window = 15
 1以上の任意の値を設定でき、その値が Asm ウィンドウの高さになります。
 
@@ -1431,12 +1431,12 @@ gdb コマンド以外のデバッガを使うには、`:Termdebug` を実行す
 g:termdebug_config の "debugger" エントリか "g:termdebugger" 変数を変更してく
 ださい: >
 	let g:termdebug_config['command'] = "mygdb"
-あるいは g:termdebug_config がないなら: >
+または、g:termdebug_config がない場合: >
 	let g:termdebugger = "mygdb"
 
 コマンドに引数が必要な場合はリストを使用してください: >
 	let g:termdebug_config['command'] = ['rr', 'replay', '--']
-あるいは g:termdebug_config がないなら: >
+または、g:termdebug_config がない場合: >
 	let g:termdebugger = ['rr', 'replay', '--']
 
 いくつかの引数はデバッガが make gdb を動かす際に追加されます。これを変更したい
@@ -1486,7 +1486,7 @@ TermDebugSendCommand() 関数を使用して、任意のウィンドウで動作
 	Evaluate		`:Evaluate`
 あなたがこれを望まないならば、それを無効にしてください: >
 	let g:termdebug_config['popup'] = 0
-あるいは g:termdebug_config がないなら: >
+または、g:termdebug_config がない場合: >
 	let g:termdebug_popup = 0
 
 
@@ -1495,7 +1495,7 @@ Vimのウィンドウ幅						*termdebug_wide*
 デバッグを開始した際に Vim のウィンドウ幅を変更し、垂直分割を利用するには次の
 ように設定します: >
 	let g:termdebug_config['wide'] = 163
-あるいは g:termdebug_config がないなら: >
+または、g:termdebug_config がない場合: >
   let g:termdebug_wide = 163
 
 これは `:Termdebug` を実行した際に 'columns' を 163 に設定します。元の値はデ
