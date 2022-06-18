@@ -1396,8 +1396,8 @@ K は通常 :Evaluate にマッピングされています。これが不要な�
 
 <
 						*termdebug_disasm_window*
-Asm ウィンドウをデフォルトで表示たいなら、このフラグに1を設定します。
-"disasm_window_height" エントリがウィンドウの高さとして利用されます: >
+Asm ウィンドウをデフォルトで表示させたい場合、このフラグに1を設定します。
+"disasm_window_height" エントリを使用してウィンドウの高さを設定できます: >
 	let g:termdebug_config['disasm_window'] = 1
 	let g:termdebug_config['disasm_window_height'] = 15
 または、g:termdebug_config がない場合: >
