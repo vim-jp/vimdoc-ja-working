@@ -1389,7 +1389,7 @@ TermdebugStopPost		デバッグの終了後、gdb 関連ウィンドウが閉じ
 	let g:termdebug_use_prompt = 1
 <
 						*termdebug_map_K*
-K は通常 :Evaluate にマッピングされています。もしそうしたくないなら: >
+K は通常 :Evaluate にマッピングされています。これが不要な場合は: >
 	let g:termdebug_config['map_K'] = 0
 または、g:termdebug_config がない場合: >
 	let g:termdebug_map_K = 0
@@ -1439,14 +1439,15 @@ g:termdebug_config の "debugger" エントリか "g:termdebugger" 変数を変�
 または、g:termdebug_config がない場合: >
 	let g:termdebugger = ['rr', 'replay', '--']
 
-いくつかの引数はデバッガが make gdb を動かす際に追加されます。これを変更したい
-なら、引数リストのフィルタの関数を追加します:>
+gdb がデバッガで適切に動作するように、いくつかの引数が追加されます。それらを変
+更したい場合は、引数リストをフィルタリングする関数を追加します: >
 	let g:termdebug_config['command_filter'] = MyDebugFilter
 
-引数の追加が不要であり、しかし "pty" の設定が必要な場合、追加が必要な引数に関
-数を追加して使います: >
+引数を追加したくないが、"pty" を設定する必要がある場合は、関数を使用して必要な
+引数を追加します: >
 	let g:termdebug_config['command_add_args'] = MyAddArguments
-この関数はいままでの引数のリスト、2つ目の引数にptyの名前とともに呼ばれます。
+この関数はいままでの引数のリストと、ptyの名前である2番目の引数とともに呼ばれま
+す。
 							*gdb-version*
 gdb と完全互換のあるデバッガのみが使えます。Vim は gdb の操作に GDB/MI インター
 フェイスを利用しています。 "new-ui" コマンドには、gdbバージョン7.12以降が必要
