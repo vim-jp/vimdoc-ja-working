@@ -1492,8 +1492,8 @@ JSON-RPC リクエストをサーバーに送信して応答を非同期に処�
     let req.params.position = #{line: 10, character: 3}
     let resp = ch_sendexpr(ch, req, #{callback: 'HoverFunc'})
 
-|ch_sendexpr()| 関数を使用してサーバーに送信し非同期 LSP リクエストのた未処理
-のものをキャンセルするには、リクエスト=時に返されたIDとともに |ch_sendexpr()|
+|ch_sendexpr()| 関数を使用してサーバーに送信した非同期 LSP リクエストの未処理
+のものをキャンセルするには、リクエスト時に返されたIDとともに |ch_sendexpr()|
 関数でキャンセル用メッセージをサーバーに送信します。例: >
 
     " send a completion request
@@ -1509,23 +1509,23 @@ JSON-RPC リクエストをサーバーに送信して応答を非同期に処�
     let notif.id = reqstatus.id
     call ch_sendexpr(ch, notif)
 
-To send a JSON-RPC notification message to the server, use the |ch_sendexpr()|
-function. As the server will not send a response message to the notification,
-don't specify the "callback" item.  Example: >
+JSON-RPC 通知メッセージをサーバーに送信するには、|ch_sendexpr()| 関数を使いま
+す。サーバーは通知のレスポンスメッセージを送信しません。"callback" 項目は指定
+をしてはいけない。例: >
 
     call ch_sendexpr(ch, #{method: 'initialized'})
 
-To respond to a JSON-RPC request message from the server, use the
-|ch_sendexpr()| function.  In the response message, copy the 'id' field value
-from the server request message. Example: >
+サーバーからの JSON-RPC リクエストメッセージへの返答には |ch_sendexpr()| 関数
+を使用します。レスポンスメッセージの中の 'id' フィールドの値はサーバーへのリク
+エストメッセージの応答メッセージからコピーします。例: >
 
     let resp = {}
     let resp.id = req.id
     let resp.result = 1
     call ch_sendexpr(ch, resp)
 
-The JSON-RPC notification messages from the server are delivered through the
-|channel-callback| function.
+サーバーからの JSON-RPC 通知メッセージは |channel-callback| 関数を通じて伝達さ
+れます。
 
 ユースケースに依存しますが、ch_evalexpr(), ch_sendexpr(), ch_sendraw() 関数を
 同じチャネルで使うことができます。
