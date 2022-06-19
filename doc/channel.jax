@@ -1457,11 +1457,11 @@ Vim |Dict| 内の LSP のリクエスト/通知メッセージをエンコード
 するか上記にあるように "out_cb" と "err_cb" で個別のコールバック関数を使って扱
 わなくてはならないことに注意。
 
-To synchronously send a JSON-RPC request to the server, use the
-|ch_evalexpr()| function. This function will wait and return the decoded
-response message from the server. You can use either the |channel-timeout| or
-the 'timeout' field in the {options} argument to control the response wait
-time.  If the request times out, then an empty |Dict| is returned.  Example: >
+サーバーにむけて JSON-RPC リクエストの同期送信をするには、|ch_evalexpr()| 関数
+を使います。この関数は応答を待ちサーバーからのレスポンスメッセージをデコードし
+て返します。|channel-timeout| を使うかあるいは引数 {options} の 'timeout'
+フィールドに値を設定することで応答の待ち時間の制御ができます。レスポンスがタイ
+ムアウトした場合、空の |Dict| を返す。例: >
 
     let req = {}
     let req.method = 'textDocument/definition'
