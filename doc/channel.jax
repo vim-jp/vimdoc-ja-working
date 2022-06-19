@@ -1412,36 +1412,35 @@ Shift-CTRL-W を使用します)。ウィンドウを離れるとき挿入モー
 ==============================================================================
 15. Language Server Protocol			*language-server-protocol*
 
-The language server protocol specification is available at:
+language server protocol の仕様は以下にあります:
 
     https://microsoft.github.io/language-server-protocol/specification
 
-Each LSP protocol message starts with a simple HTTP header followed by the
-payload encoded in JSON-RPC format.  This is described in:
+各 LSP プロトコルメッセージは単純な HTTP ヘッダ で始まり JSON-RPC フォーマット
+にエンコードされたペイロードが続きます。次で説明されています:
 
     https://www.jsonrpc.org/specification
 
-To encode and send a LSP request/notification message in a Vim |Dict| into a
-LSP JSON-RPC message and to receive and decode a LSP JSON-RPC
-response/notification message into a Vim |Dict|, connect to the LSP server
-with the |channel-mode| set to "lsp".
+Vim |Dict| 内の LSP のリクエスト/通知メッセージをエンコードして LSP JSON-RPC
+メッセージ に入れて送信をするのと LSP JSON-RPC 応答/通知メッセージの受信とデ
+コードをして Vim |Dict| 内に収めるには、|channel-mode| を "lsp" に設定して LSP
+サーバーに接続します。
 
-For messages received on a channel with |channel-mode| set to "lsp", Vim will
-process the HTTP header and decode the JSON-RPC payload into a Vim |Dict| type
-and call the |channel-callback| function or the specified
-|channel-onetime-callback| function.  When sending messages on a channel using
-the |ch_evalexpr()| or |ch_sendexpr()| functions, Vim will add the HTTP header
-and encode the Vim expression into JSON.  Refer to |json_encode()| and
-|json_decode()| for more information about how Vim encodes and decodes the
-builtin types into JSON.
+|channel-mode| を "lsp" に設定したチャネルからメッセージを受信したたなら、Vim
+は HTTP ヘッダを処理し、JSON-RPC ペイロードをデコードして Vim |Dict| 型に格納
+し、|channel-callback| 関数もしくは特別な |channel-onetime-callback| 関数を呼
+びます。|ch_evalexpr()| か |ch_sendexpr()| 関数を用いてチャネルからメッセージ
+を送信した時には、Vim は HTTP ヘッダを付与し Vim の式を JSON にエンコードしま
+す。Vim の JSON 方式の内蔵のエンコードとデコードがどのようになっているかのより
+詳細については |json_encode()| と |json_decode()| を参照してください。
 
-To open a channel using the 'lsp' mode, set the 'mode' item in the |ch_open()|
-{options} argument to 'lsp'.  Example: >
+'lsp' モードを使用してのチャネルを開くには、|ch_open()| の引数 {options} の
+'mode' 要素を 'lsp' にします。例: >
 
     let ch = ch_open(..., #{mode: 'lsp'})
 
-To open a channel using the 'lsp' mode with a job, set the 'in_mode' and
-'out_mode' items in the |job_start()| {options} argument to 'lsp'. Example: >
+'lsp' モードを使用したチャネルをジョブで開くには、|job_start()| の引数
+{options} の 'in_mode' と 'out_mode'  要素を 'lsp' にします。例: >
 
     let cmd = ['clangd', '--background-index', '--clang-tidy']
     let opts = {}
@@ -1453,10 +1452,10 @@ To open a channel using the 'lsp' mode with a job, set the 'in_mode' and
     let opts.exit_cb = function('LspExitCallback')
     let job = job_start(cmd, opts)
 
-Note that if a job outputs LSP messages on stdout and non-LSP messages on
-stderr, then the channel-callback function should handle both the message
-formats appropriately or you should use a separate callback function for
-"out_cb" and "err_cb" to handle them as shown above.
+このジョブは LSP メッセージを標準出力に非LSPメッセージを標準エラーに出す、その
+場合にチャネルのコールバック関数で両方のメッセージフォーマットに相応しい扱いを
+するか上記にあるように "out_cb" と "err_cb" で個別のコールバック関数を使って扱
+わなくてはならないことに注意。
 
 To synchronously send a JSON-RPC request to the server, use the
 |ch_evalexpr()| function. This function will wait and return the decoded
