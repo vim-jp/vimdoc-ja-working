@@ -1452,10 +1452,10 @@ Vim |Dict| 内の LSP のリクエスト/通知メッセージをエンコード
     let opts.exit_cb = function('LspExitCallback')
     let job = job_start(cmd, opts)
 
-このジョブは LSP メッセージを標準出力に非LSPメッセージを標準エラーに出す、その
-場合にチャネルのコールバック関数で両方のメッセージフォーマットに相応しい扱いを
-するか上記にあるように "out_cb" と "err_cb" で個別のコールバック関数を使って扱
-わなくてはならないことに注意。
+このジョブは LSP メッセージを標準出力に非LSPメッセージを標準エラーに出すので、
+その場合にチャネルのコールバック関数で両方のメッセージフォーマットに相応しい扱
+いをするか上記にあるように "out_cb" と "err_cb" で個別のコールバック関数を使っ
+て扱わなくてはならないことに注意してください。
 
 サーバーにむけて JSON-RPC リクエストの同期送信をするには、|ch_evalexpr()| 関数
 を使います。この関数は応答を待ちサーバーからのレスポンスメッセージをデコードし
@@ -1473,18 +1473,16 @@ Vim |Dict| 内の LSP のリクエスト/通知メッセージをエンコード
         ... <handle failure>
     endif
 
-Note that in the request message the 'id' field should not be specified. If it
-is specified, then Vim will overwrite the value with an internally generated
-identifier.  Vim currently supports only a number type for the 'id' field.
-The callback function will be invoked for both a successful and a failed RPC
-request.
+リクエストメッセージには 'id' フィールドを指定してはいけないことに注意してくだ
+さい。指定した場合、Vimは内部的に生成する識別子の値を上書きします。Vimは現在
+'id' フィールドの種別として数値のみをサポートします。RPC のリクエストの成功お
+よび失敗の両方でコールバック関数が呼び出されます。
 
-To send a JSON-RPC request to the server and asynchronously process the
-response, use the |ch_sendexpr()| function and supply a callback function.  If
-the "id" field is present in the request message, then Vim will overwrite it
-with an internally generated number.  This function returns a Dict with the
-identifier used for the message.  This can be used to send cancellation
-request to the LSP server (if needed).  Example: >
+JSON-RPC リクエストをサーバに送信して応答を非同期に処理するには、
+|ch_sendexpr()| 関数を使ってコールバック関数を与えます。リクエストメッセージに
+"id" フィールドが設定されている場合は、Vim は内部的に生成する識別子の値を上書
+きします。この関数はメッセージに使用した識別子を含む Dict を返します。キャンセ
+ルリクエストを LSP サーバに送信する(必要な場合)にも使用できます。例: >
 
     let req = {}
     let req.method = 'textDocument/hover'
