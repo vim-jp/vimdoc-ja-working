@@ -645,7 +645,6 @@ ch_logfile({fname} [, {mode}])					*ch_logfile()*
 		ファイルはメッセージ毎にフラッシュされる。
 
 		最初期にログを有効にし、初期化中に端末から何を受信したのかを参
-		terminal during startup, use |--log| (this uses mode "ao")
 		照するには、|--log| ("ao" モードを使用) を使う: >
 			vim --log logfile
 <
