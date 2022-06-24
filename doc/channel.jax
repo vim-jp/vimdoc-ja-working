@@ -597,7 +597,7 @@ ch_info({handle})						*ch_info()*
 		   "sock_timeout" タイムアウト(ミリ秒)
 
 		"path" は Unix ドメインソケットの場合だけ存在し、通常は
-		"hostname" と "port" ひとつづつ代わりに存在することに注意。
+		"hostname" と "port" が代わりに存在することに注意。
 
 		job_start() で開いた場合:
 		   "out_status"	  "open", "buffered" または "closed"
