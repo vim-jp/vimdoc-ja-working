@@ -1430,8 +1430,8 @@ Vim |Dict| 内の LSP のリクエスト/通知メッセージをエンコード
 し、|channel-callback| 関数もしくは指定された |channel-onetime-callback| 関数
 を呼びます。|ch_evalexpr()| か |ch_sendexpr()| 関数を用いてチャネルからメッセー
 ジを送信した時には、Vim は HTTP ヘッダを付与し Vim の式を JSON にエンコードし
-ます。Vim が組み込み型をどのように JSON へエンコードあるいはデコードをするか更
-なる情報は |json_encode()| と |json_decode()| を参照してください。
+ます。Vim が組み込み型をどのように JSON へエンコードあるいはデコードをするかの
+更なる情報は |json_encode()| と |json_decode()| を参照してください。
 
 'lsp' モードを使用してチャネルを開くには、|ch_open()| の引数 {options} の
 'mode' 要素を 'lsp' にします。例: >
