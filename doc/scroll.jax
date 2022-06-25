@@ -230,8 +230,8 @@ ze			カーソルのある位置がスクリーンの終わり(右側)に来る�
 |xterm-mouse-wheel|。デフォルトでは垂直スクロールホイールのみサポートされてい
 る。いくつかの GUI では水平スクロールホイールもサポートされている。
 
-MS-Windowsにて、スクロールの動作が入力フォーカスの問題を引き起こすなら
-ば、|intellimouse-wheel-problems|を参照。
+MS-Windowsにおいて、スクロールの動作が入力フォーカスの問題を引き起こす場合は、
+|intellimouse-wheel-problems| を参照。
 
 Win32 および X11 GUI (Motif、GTK) ではホイールを回すと <ScrollWheelUp>、
 <ScrollWheelDown>、<ScrollWheelLeft>、<ScrollWheelRight> などのキー入力が発生
@@ -253,8 +253,8 @@ Win32 および X11 GUI (Motif、GTK) ではホイールを回すと <ScrollWhee
 これはコマンドラインを編集する以外の、全てのモードで動作するだろう。
 
 値のNはシステムに依存する。デフォルトのVimのスクロールは垂直な移動では3行、水
-平な移動では6桁になる。MS-Windows では、各スクロールアクションでの行と桁の量はシステ
-ムの全体設定から取得する。
+平な移動では6桁になる。MS-Windows では、各スクロールアクションでの行と桁の量は
+システムの全体設定から取得する。
 
 Note: 水平スクロールは 'nowrap' が設定されているときのみ機能する。また、
 'guioptions' の "h" フラグが設定されていない場合は、スクロールするとカーソル行
