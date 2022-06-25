@@ -99,7 +99,7 @@ test_gui_event({event}, {args})
 
 		"dropfiles":
 		  指定したウィンドウへ1つ以上のファイルのドロップ。{args} でサ
-		  ポートする要素は:
+		  ポートする項目は:
 		    files:	ファイル名のリスト
 		    row:	ウィンドウの行番号
 		    col:	ウィンドウの桁番号
@@ -114,7 +114,7 @@ test_gui_event({event}, {args})
 
 		"findrepl":
 		  {検索/置換ダイアログを持つ GUI のときのみ有効}
-		  テキストの検索と置換を行う。{args} でサポートする要素は:
+		  テキストの検索と置換を行う。{args} でサポートする項目は:
 		    find_text:	検索する文字列。
 		    repl_text:	置換する文字列。
 		    flags:	検索/置換を制御するフラグ。サポートする値は:
@@ -276,7 +276,7 @@ test_override({name}, {val})				*test_override()*
 				復元されない
 		redraw       redrawing() 関数を無効化する
 		redraw_flag  RedrawingDisabled フラグを無視する
-		starting     "starting" 変数を初期化する、以下を参照
+		starting     "starting" 変数を初期化する、下記参照
 		term_props	バージョン文字列が検出された場合、すべてのター
 				ミナルプロパティをリセットする。
 		ui_delay	ui_delay() で使用するミリ秒単位の時間; メッ
