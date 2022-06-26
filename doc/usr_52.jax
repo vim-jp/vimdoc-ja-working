@@ -1,25 +1,26 @@
-*usr_52.txt*	For Vim バージョン 9.0.  Last change: 2022 May 21
+*usr_52.txt*	For Vim バージョン 9.0.  Last change: 2022 Jun 04
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
-			Vim9 script でプラグインを作る
+			巨大なプラグインを作る
 
 
-Vim9 script 言語はプラグイン、とりわけ複数のファイルからなる大きなものを書くの
-に使えます。この章ではプラグインをモジュールとして分割し、アイテムをインポート
-やエクスポートして局所性を維持する方法を解説します。
+プラグインがシンプル以上のことをするのであれば、巨大になる傾向があります。この
+ファイルでは ロードが高速であることを確認する方法とそのために小い部分への分割
+の方法について解説します。
 
-|52.1|	導入
-|52.2|	変数の宣言
-|52.3|	関数と型
-|52.4|	旧来のスクリプトから Vim9 script を使う
+|52.1|	エクスポートとインポート
+|52.2|	オートロード
+|52.3|	インポート/エクスポートなしのオートロード
+|52.4|	使用する他のメカニズム
+|52.5|	旧来のスクリプトから Vim9 script を使う
 
 次章: |usr_90.txt|  Vim のインストール
 前章: |usr_51.txt|  プラグインを作る
 目次: |usr_toc.txt|
 
 ==============================================================================
-*52.1*	導入						*vim9-script-intro*
+*52.1*	エクスポートとインポート
 
 Vim9 script は大きな Vim script を容易に書けるようにデザインされています。他の
 スクリプト言語、特に TypeScript のようになっています。また、処理内の関数はコン
@@ -27,152 +28,299 @@ Vim9 script は大きな Vim script を容易に書けるようにデザイン�
 なります。
 
 基本的な考え方はスクリプトファイルにあるアイテムをプライベートとし、そのスクリ
-プトファイル内からのみ利用し、そしてアイテムをエクスポートし、スクリプトファイ
-ルの外から使うというものです。エクスポートされたアイテムはインポートしたスクリ
-プトから使うことができます。これは定義された位置を非常に明確にできます。
+プトファイル内からのみ利用し、そしてアイテムをエクスポートし、それをインポート
+するスクリプトで利用できます。これは定義された位置を非常に明確にできます。
 
 さあサンプルから始めてみましょう、このスクリプトが1つの関数をエクスポートし、
 もう1つのプライベートな関数があります: >
 
-	vim9script  " Vim9 script ファイルであることを示します。
+	vim9script
 
-	export def GetMessage(): string
-	   let result = ''
-	   ...
-	   result = GetPart(count)
-	   ...
+	export def GetMessage(count: string): string
+	   var nr = str2nr(count)
+	   var result = $'To {nr} we say '
+	   result ..= GetReply(nr)
 	   return result
 	enddef
 
-	def GetPart(nr: number): string
-	  if nr == 4
+	def GetReply(nr: number): string
+	  if nr == 42
 	     return 'yes'
+	  elseif nr = 22
+	     return 'maybe'
 	  else
 	     return 'no'
 	  endif
 	enddef
 
-`vim9script` コマンドはファイルのごく最初のコマンドとして置かれなくてはいけま
-せん。これがないと Vim は旧来のスクリプトの文法であると見なします。
+`export` は |Vim9| script でのみ動くので `vim9script` コマンドが必要です。
 
-`export def GetMessage(): string` の行は `export` から始まっており、この関数は
-インポート可能で他のスクリプトから呼び出せることを意味します。
-`def GetPart(...` の行は `export` から始まっておらず、これがスクリプトローカル
-の関数で、このスクリプトファイル内からしか使えません。
+`export def GetMessage(...` の行は `export` から始まっていて、この関数が他のス
+クリプトから呼ぶことができることを意味します。行 `def GetReply(...` は
+`export` で始まっておらず、これがスクリプトローカルの関数で、このスクリプトファ
+イル内でのみ使えます。
 
-`export def GetMessage(): string` の行のコロンと戻り値の型に気付くでしょう。
-`def` で定義された Vim9 関数は引数および戻り値の型を指定する必要があります。こ
-れは Vim が効率的にコードをコンパイルできるようにするためです。GetPart 関数は
-引数 "nr" の型が "number" であると定義されています。
+次にインポートされるスクリプトについて説明します。この例の中ではこの配置を使用
+しており、これは "pack" ディレクトリ下のプラグインに適しています:
+	.../plugin/theplugin.vim
+	.../lib/getmessage.vim
 
-注意すべきは `result = GetPart(count)` の代入は `let` コマンドを使っていないこ
-とです。これについては次の節で説明します。
+"..." ディレクトリは 'runtimepath' に追加されていると仮定すれば、Vim はプラグ
+インの "plugin" ディレクトリを見ることができ、"theplugin.vim" をソースします。
+Vim は "lib" を識別せず、ここに任意のスクリプトを置くことができます。
+
+上のスクリプトは lib/getmessage.vim 内にある GetMessage() をエクスポートしま
+す。GetMessage() 関数は plugin/theplugin.vim 内にて使用されます: >
+
+	vim9script
+
+	import "../lib/getmessage.vim"
+	command -nargs=1 ShowMessage echomsg getmessage.GetMessage(<f-args>)
+
+`import` コマンドは相対パス -ここでは1つ上のディレクトリの意味する "../" から
+始まっているもの- を使用します。パスの他の種類については `:import` コマンドを
+参照してください。
+
+このようにプラグインが提供するコマンドを試せます: >
+	ShowMessage 1
+<	To 1 we say no ~
+>
+	ShowMessage 22
+<	To 22 we say maybe ~
+
+関数 GetMessage() はインポートしたスクリプト名 "getmessage" が前置されることに
+注意してください。使用するすべてのインポートした関数について、どのスクリプトか
+らインポートしたか分かるようにそうなっています。いくつかのスクリプトをインポー
+トした場合にそれぞれで GetMessage() 関数を定義できます: >
+
+	vim9script
+
+	import "../lib/getmessage.vim"
+	import "../lib/getother.vim"
+	command -nargs=1 ShowMessage echomsg getmessage.GetMessage(<f-args>)
+	command -nargs=1 ShowOther echomsg getother.GetMessage(<f-args>)
+
+インポートしたスクリプトの名前が長いあるいは色々な箇所で使う場合、引数に "as"
+を追加するとことで短くできます: >
+	import "../lib/getmessage.vim" as msg
+	command -nargs=1 ShowMessage echomsg msg.GetMessage(<f-args>)
+
+
+再読み込み
+
+覚えておくべき1つのこと: インポートされた "lib/getmessage.vim" スクリプトは 1
+度だけソースされます。インポート済みで2度目にソースされた時はスキップされ、要
+素は最初に作成された以降そのままです。これはインポートコマンドが他のスクリプト
+であるか、再ソースした同じスクリプト内であるかは関係ありません。
+
+これはプラグインの時に効果的ですが、しかしプラグインの開発まではインポート済み
+の "lib/getmessage.vim" を変更しても効果がないことを意味します。Vim を終了と再
+度開始する必要があります。(理由: スクリプト内で定義された要素はコンパイルされ
+た関数内で利用されるので、スクリプトの再ソースで関数を壊してしまうことがあるた
+めです)
+
+
+グローバルの利用
+
+どこでも利用可能な、グローバル変数や関数を使用したい場合がときどきあります。プ
+ラグインの設定をグローバル変数で渡したい場合などが良い例です。他のスクリプトが
+同じ名前を使用するのを阻止するため、他でも使っていたらとても不運ですが、プリ
+フィックスを使います。例として、"mytags" プラグインであるなら、このように使用
+ます: >
+
+	g:mytags_location = '$HOME/project'
+	g:mytags_style = 'fast'
 
 ==============================================================================
-*52.2*	変数の宣言					*vim9-declarations*
+*52.2*	オートロード
 
-Vim9 script の変数は一度だけ `:let` もしくは `:const` コマンドによって宣言され
-ます。値は `:let` 無しで代入され変数を `:unlet` することはできません。
+あなたの巨大なスクリプトを部分に分割した後も、全行がスクリプト実行時にロードと
+実行されるのは維持されます。各 `import` は要素の定義がされた箇所を検索しそのイ
+ンポート済みスクリプトをロードします。これはエラーが早急に見付かるけれども、時
+間もかかります。この機能をよく使うのでなければ役に立ちません。
 
-よくあるケースとして、変数の宣言と初期化を同時にしたい時: >
-	let myText = 'some text'
-	...
-	myText = 'other text'
+代わりに `import` で必要になるまで遅延させその時にスクリプトを即時にロードする
+手段を持ちます。上の例を使い、plugin/theplugin.vim スクリプト内を1箇所だけ変更
+してしています: >
+	import autoload "../lib/getmessage.vim"
 
-変数の型は式から推論されます。この場合は文字列となり、数値で初期化した場合は型
-は数値となります: >
-	let myNumber = 1234
-	...
-	myNumber = 0
+スクリプトの残りの部分は何も変更する必要はありません。 ただし、型はチェックさ
+れません。既存の GetMessage() 関数と同等ではなく、使用されるまでチェックされま
+せん。スクリプトでより重要なのかを決定する必要があります: 高速な初期化か早期に
+エラーが分るか。また、全部がうまく動くかチェックした後に、 "autoload" 引数を後
+で追加することもできます。
 
-もし、この変数に文字列を代入したなら、エラーが検出されます: >
-	let myNumber = 'this fails!'
 
-稀なケースとして任意の型の値を取る変数が欲しい場合、"any" 型を指定しなければな
-りません: >
-	let myVar: any = 1234
-	myVar = 'text also works'
+オートロード ディレクトリ
 
-値の代入なしで変数を宣言することもできます。このケースでは Vim は0もしくは空文
-字列として初期化します: >
-	let word: string
-	if condition
-	  word = 'yes'
-	else
-	  word = 'no'
+もう1つの形式は絶対パスでも相対パスでもないスクリプト名で autoload を使用する
+ことです: >
+	import autload "monthlib.vim"
+
+これはスクリプト "monthlib.vim" を 'runtimepath' のオートロード ディレクトリの
+中から検索します。Unix ではディレクトリの1つとして "~/.vim/autoload" がよくあ
+ります。
+
+この方法の主要な利点として、このスクリプトを他のスクリプトと共有するのが容易で
+あることです。Vim が 'runtimepath' 内の "autoload" ディレクトリから検索するた
+め、スクリプト名は一意である必要があり、プラグインはいくつかのプラグインマネー
+ジャーとともに利用される場合では、'runtimepath' にディレクトリを追加されること
+があり、それぞれが  "autoload" ディレクトリを持っているためです。
+
+オートロードなしは: >
+	import "monthlib.vim"
+
+Vim は 'runtimepath' のディレクトリ内からスクリプト "monthlib.vim" をインポー
+トします。"autoload" の追加や削除する場合はスクリプトが見付かる場所が変わるこ
+とに注意してください。位置が相対および絶対のパスであるなら変化はありません。
+
+==============================================================================
+*52.3*	インポート/エクスポートなしのオートロード
+
+						*write-library-script*
+インポート/エクスポート以前のメカニズムは依然として利用でき一部ユーザーは多少
+単純であると感じるかもしれません。それは特別な名前によって関数を呼ぶというアイ
+デアです。その関数はオートロードスクリプト内にあります。そのスクリプトのことを
+ライブラリスクリプトと呼びます。
+
+オートロードのメカニズムは関数名が "#" 文字を持っているというのが基礎になって
+います: >
+
+	mylib#myfunction(arg)
+
+Vim は埋め込まれた "#" 文字によって関数名を認識し、まだ定義がないのであれば
+'runtimepath' 内のスクリプト "autoload/mylib.vim" を検索します。そのスクリプト
+は "mylib#myfunction()" 関数を定義する必要があります。名前 "mylib" を "#" の前
+部分と ".vim" を追加して、スクリプトの名前に使用するというのが一目瞭然です。
+
+mylib.vim スクリプト内に他に多数の関数を置ことができ、ライブラリスクリプト内の
+構成が自由です。しかし '#' の前部分がスクリプト名に一致する関数名を使用する必
+要があります。そうでないと、Vim はロードするスクリプトが何であるか分らなくなり
+ます。この点がインポート/エクスポートメカニズムとの違いになります。
+
+実際に夢中になり多数のライブラリスクリプトを書くのであれば、サブディレクトリを
+使用したいでしょう。例: >
+
+	netlib#ftp#read('somefile')
+
+関数名の最後の "#" より上からスクリプト名が取れます。途中にある "#" はスラッ
+シュに置き換え、最後の1つは ".vim" にします。つまり、"netlib/ftp.vim" が得られ
+ます。Unix の場合、これに使用されるライブラリスクリプトは次のようになります:
+
+	~/.vim/autoload/netlib/ftp.vim
+
+ここで関数の定義はこうなります: >
+
+	def netlib#ftp#read(fname: string)
+		#  Read the file fname through ftp
+	enddef
+
+関数の名前は呼び出して利用する関数の名前と厳密に同じに定義されていることに注意
+しましょう。そして最後の '#' の前部分がサブディレクトリとスクリプト名と厳密に
+一致します。
+
+変数にも同じメカニズムが使用できます: >
+
+	var weekdays = dutch#weekdays
+
+これにより スクリプト "autoload/dutch.vim" がロードされ、次のような内容が含ま
+れる必要があります: >
+
+	var dutch#weekdays = ['zondag', 'maandag', 'dinsdag', 'woensdag',
+		\ 'donderdag', 'vrijdag', 'zaterdag']
+
+参考文献: |autoload|。
+
+==============================================================================
+*52.4*	使用する他のメカニズム
+
+複数のファイルを使用するのが面倒で、すべてを1つのスクリプトにまとめておくのを
+好む人もいます。その結果として起動が遅くなるのを回避するため、小さく一部を定義
+し残りを実際に使用するまで遅延するメカニズムがあります。
+						*write-plugin-quickload*
+
+基本的なアイデアはプラグインを2回ロードするというものです。初回は機能を呼び出
+すユーザーコマンドとマッピングを定義します。2回目では機能を実装している関数を
+定義する。
+
+高速ロードがスクリプトの2回ロードを意味するのは意外に思えるかもしません。これ
+は初回は素早く、2回目は延期したスクリプトのかたまりのロードを意味し、実際に使
+用する時のみ起きます。常に機能を使用のであれば実際のところ遅くなってしまいます!
+
+これには FuncUndefined 自動コマンドを使用します。これは上で説明した |autoload|
+の機能とは違った動きです。
+
+如何の例ではどのようにすべきかを示しています: >
+
+	" Vim global plugin for demonstrating quick loading
+	" Last Change:	2005 Feb 25
+	" Maintainer:	Bram Moolenaar <Bram@vim.org>
+	" License:	This file is placed in the public domain.
+
+	if !exists("s:did_load")
+		command -nargs=* BNRead  call BufNetRead(<f-args>)
+		map <F19> :call BufNetWrite('something')<CR>
+
+		let s:did_load = 1
+		exe 'au FuncUndefined BufNet* source ' .. expand('<sfile>')
+		finish
 	endif
 
-とはいえ、これは短くできます: >
-	let word = condition ? 'yes' : 'no'
+	function BufNetRead(...)
+		echo 'BufNetRead(' .. string(a:000) .. ')'
+		" read functionality here
+	endfunction
+
+	function BufNetWrite(...)
+		echo 'BufNetWrite(' .. string(a:000) .. ')'
+		" write functionality here
+	endfunction
+
+スクリプトの初回ロード時は "s:did_load" は未設定です。"if" と "endif" の間のコ
+マンドが実行されます。これは |:finish| コマンドで終わり、残りのスクリプトは実
+行されません。
+
+スクリプトの2回目ロード時は "s:did_load" は存在し "endif" 以降のコマンドが実行
+されます。これは(長い可能性のある) BufNetRead() と BufNetWrite() 関数を定義し
+ます。
+
+あなたのプラグインディレクト内にスクリプトを置くと Vim は初期化時に実行します。
+このような流れでイベントが発生します:
+
+1. スクリプトが初期化時にソースされ "BNRead" コマンドが定義され <F19> キーに
+   マッピングされます。|FuncUndefined| 自動コマンドが定義されます。":finish"
+   コマンドによりスクリプトは早期に終了します。
+
+2. ユーザーが BNRead コマンドをタイプするか <F19> キーを押します。 BufNetRead()
+   かBufNetWrite() 関数が呼ばれます。
+
+3. Vim は関数を見付けることができず、|FuncUndefined| 自動コマンドイベントが発
+   生します。関数呼び出しが "BufNet*" パターンにマッチしたのなら、コマンドとし
+   て "source fname" が実行されます。"fname" はスクリプトの名前に等しく、どこ
+   にあるかは問題ないです、なぜなら "<sfile>" を展開して取っているからです
+   (|expand()| を参照)。
+
+4. スクリプトは再度ソースされて、"s:did_load" 変数は存在し関数が定義されます。
+
+ロードされた後の関数が |FuncUndefined| 自動コマンドのパターンにマッチすること
+に注意してください。他のプラグインで定義するパターンにマッチする関数がないよう
+にしないといけません。
 
 ==============================================================================
-*52.3*	関数と型
-
-旧来の Vim script はコード実行時にのみ型のチェックがありました。そしてそれは寛
-容で、ときどきエラー報告ではなく処理によって不明な値となっていました。結果とし
-て関数が定義できかつ正常であると思えても、問題が通知されるのは常に関数の呼び出
-し後でした: >
-	func Concatenate(base, add)
-	   return a:base + a:add
-	endfunc
-
-どの箇所に問題があると思いますか? 次を試してください: >
-	echo Concatenate('base', 'text')
-すると0が見えるでしょう。なぜか? それは旧来の Vim script は "+" が引数を数値
-に変換し、そして数値のない任意の文字列では結果が0となるのです! これはあなたが
-期待したものではありません。
-
-`:def` だと型チェックが関数のコンパイル時に行われます。あなたは引数の型と戻り
-値の型の指定が必要になります。また引数の名前は "a:" のプリフィックス無しで使わ
-れることに注意してください: >
-	def Concatenate(base: string, add: string): string
-	   return base + add
-	enddef
-	defcompile Concatenate
-
-ここでは直ちにコンパイルを実行するために `:defcompile` を使っており、それがな
-いなら関数が最初に呼ばれるときにコンパイルされるでしょう。Vim はあなたが間違っ
-ていると警告します: >
-	E1051: Wrong argument type for +
-
-補足: ここでは旧来のスクリプトでの話です。Vim9 script を使う場合はスクリプトの
-最後に `:defcompile` を置くことで、定義されるすべての関数の定義によるエラーが
-チェックされます。
-
-Vim9 script は厳密で、"+" 演算子は数値か浮動小数点数でしか使えません。文字の結
-合であれば ".." を使わなくてはなりません。これが間違いを防ぎ、上にあるような驚
-きの結果をもたらす自動型変換を回避します。そして関数の最初の行をこう変化させれ
-ば: >
-	   s:collected ..= add
-動くようになります。
-
-もし関数が何も返さないなら、戻り値の型は無くてよいです: >
-	def ReportResult(result: string)
-	   echo 'The result is: ' .. result
-	enddef
-
-これもまたチェックされ、もし値を返そうとすると、エラーとなるでしょう。
-
-あなたが型をケアしない場合や関数が多型で動くなら、"any" 型を使うことができます:
->
-	def Store(key: string, value: any)
-	  resultDict[key] = value
-	enddef
-
-==============================================================================
-*52.4*	旧来のスクリプトから Vim9 script を使う		*source-vim9-script*
+*52.5*	旧来のスクリプトから Vim9 script を使う		*source-vim9-script*
 
 いくつかの場合として持っている旧来の Vim script にて Vim9 script のアイテムを
 使いたいことがあります。たとえばあなたの .vimrc がプラグインの初期化をする場合
 などです。最良の方法は `:import` を使うことです。例: >
 
-	import Init as NiceInit from 'myNicePlugin.vim'
-	call NiceInit('today')
+	import 'myNicePlugin.vim'
+	call myNicePlugin.NiceInit('today')
 
-これは Vim9 script からエクスポートされた "Init" 関数を見付けそれをスクリプト
-ローカルなアイテム "NiceInit" として利用可能にします。"s:" を指定しなくても
-`:import` は常にスクリプトの名前空間を使います。もし "myNicePlugin.vim" がすで
-に読み込み済みであれば再度読み込まれることはありません。
+これは Vim9 script からエクスポートされた "NiceInit" 関数を見付けそれをスクリ
+プトローカルなアイテム "myNicePlugin.NiceInit" として利用可能にします。"s:" を
+指定しなくても `:import` は常にスクリプトの名前空間を使います。もし
+"myNicePlugin.vim" がすでに読み込み済みであれば再度読み込まれることはありませ
+ん。
 
 その上アイテムがグローバルの名前空間に置かれるのを防ぎ (名前の衝突が不測の問題
 になり得ます)、そしてたとえ何度もアイテムをインポートしても、スクリプトの読み
@@ -188,5 +336,6 @@ script ではこうしたグローバルのアイテムで確実にユニーク�
 ==============================================================================
 
 次章: |usr_90.txt|  Vim のインストール
+
 
 Copyright: see |manual-copyright|  vim:tw=78:ts=8:noet:ft=help:norl:
