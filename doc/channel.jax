@@ -1,4 +1,4 @@
-*channel.txt*      For Vim バージョン 8.2.  Last change: 2022 Jun 04
+*channel.txt*      For Vim バージョン 8.2.  Last change: 2022 Jun 23
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -471,8 +471,10 @@ v:none、RAW または NL チャネルでは空の文字列です。|ch_canread(
 
 使用可能な RAW チャネルからすべての通常出力を読み込むには: >
 	let output = ch_readraw(channel)
-エラー出力を読むには: >
+使用可能な RAW チャネルからすべてのエラー出力を読み込むには: >
 	let output = ch_readraw(channel, {"part": "err"})
+チャネルが NL モードの場合、ch_readraw() は各呼び出しで1行しか返さないことに注
+意。
 
 ch_read() と ch_readraw() はチャネルタイムアウトを使用します。その時間内に何も
 読み込めない場合、空の文字列が返されます。別のタイムアウトをミリ秒で指定するに
@@ -1558,4 +1560,5 @@ LSP 通知メッセージは以下のフォーマット(Vim Dict で表現)を�
 	"params": <list|dict>
     }
 
+<
  vim:tw=78:ts=8:noet:ft=help:norl:
