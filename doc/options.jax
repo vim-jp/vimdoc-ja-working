@@ -8085,9 +8085,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 		:set termwinkey=<C-L>
 <	この文字列は 1 つのキーストロークでなければならないが、マルチバイトで
 	も良い。
-	未設定の場合は CTRL-W が使用されるため、CTRL-W : はコマンドラインに移
-	動する。'termwinkey' が CTRL-L に設定されている場合、CTRL-L : はコマン
-	ドラインに移動する。
+	未設定の場合は CTRL-W が使用されるため、CTRL-W : でコマンドラインに移
+	動する。'termwinkey' が CTRL-L に設定されている場合は、CTRL-L : でコマ
+	ンドラインに移動する。
 
 						*'termwinscroll'* *'twsl'*
 'termwinscroll' 'twsl'	数値	(既定では 10000)
