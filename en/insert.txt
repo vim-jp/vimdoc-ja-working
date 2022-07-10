@@ -1,4 +1,4 @@
-*insert.txt*    For Vim version 8.2.  Last change: 2022 Apr 06
+*insert.txt*    For Vim version 9.0.  Last change: 2022 Apr 06
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -671,7 +671,7 @@ Note: The keys that are valid in CTRL-X mode are not mapped.  This allows for
 ends CTRL-X mode (any key that is not a valid CTRL-X mode command) is mapped.
 Also, when doing completion with 'complete' mappings apply as usual.
 
-							*E578* *E565*
+								*E565*
 Note: While completion is active Insert mode can't be used recursively and
 buffer text cannot be changed.  Mappings that somehow invoke ":normal i.."
 will generate an E565 error.
