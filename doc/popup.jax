@@ -1020,6 +1020,7 @@ popup_filter_menu() をショートカットで拡張できるようにする: >
 		    popup_close(id, 3)
 		else
 		    # ショートカットキーではない場合は通常のフィルタに渡す
+		    return popup_filter_menu(id, key)
 		endif
 		return true
 	    },
