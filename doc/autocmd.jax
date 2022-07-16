@@ -101,9 +101,9 @@ Vim9 script での例: >
 		  /<start
 		}
 
-|autocmd_add()| 関数は、Vim script から autocmds や autocmd グループのリストを
-追加するために使用できる。`:autocmd` で `:execute` を使用する必要があるような
-場合は、この関数を使用することが好ましい。
+|autocmd_add()| 関数は、Vim script から自動コマンドやグループのリストを追加す
+るために使用できる。`:autocmd` で `:execute` を使用する必要があるような場合は、
+この関数を使用することが好ましい。
 
 Note: ":autocmd" コマンドの後には、パターンが期待される位置に '|' が現れる場合
 にのみ別のコマンドを続けることができる。これは動作する: >
@@ -171,7 +171,7 @@ Note [group] はあらかじめ定義されていなければならないこと�
 3. 自動コマンドの除去					*autocmd-remove*
 
 以下で説明するコマンドに加えて、|autocmd_delete()| 関数を使用し Vim script か
-ら autocmd および autocmd グループのリストを削除できる。
+ら自動コマンドおよびグループのリストを削除できる。
 
 :au[tocmd]! [group] {event} {aupat} [++once] [++nested] {cmd}
 			{event} と {aupat} に関連づけられた全ての自動コマンド
