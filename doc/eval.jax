@@ -1378,7 +1378,7 @@ Note この最後の呼び出しでは "(getFuncRef())" 関数の解決で "args
 
 							*expr11*
 数
-------
+--
 number			数定数				*expr-number*
 
 			*0x* *hex-number* *0o* *octal-number* *binary-number*
@@ -1507,7 +1507,7 @@ Note シングルクォートが使われていることに注意。
 
 
 文字列補間					*$quote* *interp-string* *E256*
---------------------
+----------
 $"string"		補間された文字列定数			*expr-$quote*
 $'string'		補間されたリテラル文字列定数		*expr-$'*
 
@@ -1560,7 +1560,7 @@ $'string'		補間されたリテラル文字列定数		*expr-$'*
 
 
 入れ子						*expr-nesting* *E110*
--------
+------
 (expr1)			式の入れ子
 
 
