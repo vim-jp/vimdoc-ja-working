@@ -1647,6 +1647,22 @@ syntax/fortran.vim スクリプトにはヒントとなるコメントが含ま�
 
 Fortranに関するその他の情報は|ft-fortran-indent|や|ft-fortran-plugin|を参照。
 
+FREEBASIC				*freebasic.vim* *ft-freebasic-syntax*
+
+FreeBASIC のファイルは利用可能な4つの方言、"fb", "qb", "fblite", "deprecated"
+ごとに異なる方法でハイライトされる。適切な方言の選択の方法は
+|ft-freebasic-plugin| を参照のこと。
+
+以下の変数を通じてハイライトをより詳細に設定可能である。
+
+変数				ハイライト ~
+*freebasic_no_comment_fold*	複数行コメントの折り畳みを無効化
+*freebasic_operators*		非英字オペレータ
+*freebasic_space_errors*	末尾空白と空白の前の<Tab>
+*freebasic_type_suffixes*	QuickBASIC 形式の型接尾語
+
+
+
 FVWM CONFIGURATION FILES			*fvwm.vim* *ft-fvwm-syntax*
 
 *fvwmrc*または*fvwm2rc*というパターンにマッチしないFvwm設定ファイルを認識させ
@@ -4813,14 +4829,18 @@ gui	GUI
 1. highlightコマンドの引数(通常のターミナル用)
 
 					*bold* *underline* *undercurl*
-					*inverse* *italic* *standout*
-					*nocombine* *strikethrough*
+					*underdouble* *underdotted*
+					*underdashed* *inverse* *italic*
+					*standout* *nocombine* *strikethrough*
 term={attr-list}			*attr-list* *highlight-term* *E418*
 	attr-listはコンマ区切りのリスト(スペースは入れない)で、要素は以下の通
 	り(順序はどうでもよい):
 		bold
 		underline
 		undercurl	必ずしも使用できるとは限らない
+		underdouble	必ずしも使用できるとは限らない
+		underdotted	必ずしも使用できるとは限らない
+		underdashed	必ずしも使用できるとは限らない
 		strikethrough	必ずしも使用できるとは限らない
 		reverse
 		inverse		reverseと同じ
@@ -4831,14 +4851,25 @@ term={attr-list}			*attr-list* *highlight-term* *E418*
 
 	この引数で "bold" を指定してもよいし、太文字のフォントを指定してもよ
 	い。どちらも表示は同じになる。
-	"undercurl" は波線のこと。"undercurl" が使用できないときは "underline"
-	が使われる。一般的には "undercurl" および "strikethrough" はGUIといく
-	つかの端末で使用できる。
-	その色は |highlight-guisp| か |highlight-ctermul| で設定できる。
-	端末で波下線が動くようにするにはこれらの termcap エントリを試してみる
-	とよい: >
+							*underline-codes*
+	"undercurl" は波下線のこと。"undercurl" が使用できないときは
+	""underline" が使われる。一般的には "undercurl" および "strikethrough"
+	はGUIといくつかの端末で使用できる。その色は |highlight-guisp| か
+	|highlight-ctermul| で設定できる。端末で波下線が動くようにするにはこれ
+	らの termcap エントリを試してみるとよい: >
 	    let &t_Cs = "\e[4:3m"
 	    let &t_Ce = "\e[4:0m"
+
+<	"underdouble" は二重下線で、"underdotted" はドット下線、"underdashed"
+	は破線の下線。これらは一部の端末でのみサポートされる。端末がこれらをサ
+	ポートしているなら次のようなコードを指定する必要がある: >
+	    let &t_Us = "\e[4:2m"
+	    let &t_ds = "\e[4:4m"
+	    let &t_Ds = "\e[4:5m"
+<	波下線(undercurl)と同様に これらは |t_Ce| とともにリセットする。
+	t_Us, t_ds, t_Ds のいずれかが設定されてない時は、underline の利用に
+	フォールバックする。
+
 
 start={term-list}				*highlight-start* *E422*
 stop={term-list}				*term-list* *highlight-stop*
