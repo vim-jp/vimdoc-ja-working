@@ -1470,7 +1470,7 @@ gdb と完全互換のあるデバッガのみが使えます。Vim は gdb の�
   hi debugBreakpoint term=reverse ctermbg=red guibg=red
 
 
-ショートカット~
+ショートカット ~
 							*termdebug_shortcuts*
 
 TermDebugSendCommand() 関数を使用して、任意のウィンドウで動作する gdb を制御す
