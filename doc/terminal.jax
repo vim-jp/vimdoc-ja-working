@@ -1479,7 +1479,7 @@ TermDebugSendCommand() 関数を使用して、任意のウィンドウで動作
 引数は gdb コマンドです。
 
 
-ポップアップメニュー~
+ポップアップメニュー ~
 							*termdebug_popup*
 
 デフォルトでTermdebugプラグインは 'mousemodel' を "popup_setpos" に設定し、こ
