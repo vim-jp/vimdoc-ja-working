@@ -1493,7 +1493,7 @@ TermDebugSendCommand() 関数を使用して、任意のウィンドウで動作
 	let g:termdebug_popup = 0
 
 
-Vimのウィンドウ幅~
+Vimのウィンドウ幅 ~
 							*termdebug_wide*
 
 デバッグを開始した際に Vim のウィンドウ幅を変更し、垂直分割を利用するには次の
