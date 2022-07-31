@@ -27,6 +27,7 @@ Netbeans インターフェイスもチャネルを使っています。|netbean
 14. プロンプトバッファを使う		|prompt-buffer|
 15. Language Server Protocol		|language-server-protocol|
 
+							*E1277*
 {Vim が |+channel| 機能付きでコンパイルされたときのみ有効}
 	`has('channel')` でこれを確認できる
 {Vim が |+job| 機能付きでコンパイルされたときのみ有効}
