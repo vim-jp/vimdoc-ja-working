@@ -4854,7 +4854,7 @@ term={attr-list}			*attr-list* *highlight-term* *E418*
 	い。どちらも表示は同じになる。
 							*underline-codes*
 	"undercurl" は波下線のこと。"undercurl" が使用できないときは
-	""underline" が使われる。一般的には "undercurl" および "strikethrough"
+	"underline" が使われる。一般的には "undercurl" および "strikethrough"
 	はGUIといくつかの端末で使用できる。その色は |highlight-guisp| か
 	|highlight-ctermul| で設定できる。端末で波下線が動くようにするにはこれ
 	らの termcap エントリを試してみるとよい: >
@@ -4863,13 +4863,13 @@ term={attr-list}			*attr-list* *highlight-term* *E418*
 
 <	"underdouble" は二重下線で、"underdotted" はドット下線、"underdashed"
 	は破線の下線。これらは一部の端末でのみサポートされる。端末がこれらをサ
-	ポートしているなら次のようなコードを指定する必要がある: >
+	ポートしている場合は、次のようなコードを指定する必要がある: >
 	    let &t_Us = "\e[4:2m"
 	    let &t_ds = "\e[4:4m"
 	    let &t_Ds = "\e[4:5m"
-<	波下線(undercurl)と同様に これらは |t_Ce| とともにリセットする。
-	t_Us, t_ds, t_Ds のいずれかが設定されてない時は、underline の利用に
-	フォールバックする。
+<	これらは、波下線(undercurl)と同様に |t_Ce| でリセットされる。t_Us, t_ds
+	または t_Ds が設定されてない場合は、underline がフォールバックとして使
+	用される。
 
 
 start={term-list}				*highlight-start* *E422*
@@ -5102,8 +5102,8 @@ guisp={color-name}					*highlight-guisp*
 以下はデフォルトのハイライトグループである。これらのグループはデフォルトでオプ
 ション 'highlight' によって使われる。ただしハイライトは 'background' の値に依
 存することに注意。":highlight" コマンドで現在の設定を知ることができる。
-可能であれば名前は使用している色でハイライトされる。これによりビジュアル選択を
-使うと読めなくなるかもしれない。
+可能な場合、名前は使用されている色でハイライトされる。これにより読み取り不能に
+なる場合は、ビジュアル選択を使用すること。
 
 							*hl-ColorColumn*
 ColorColumn	'colorcolumn' で設定された列の表示に使われる
