@@ -137,7 +137,7 @@ IPv6 アドレスを使う時、角カッコでくくった中に納めてくだ
 
 {options} はオプションのエントリを持つ辞書です:		*channel-open-options*
 
-"mode" でモード (通信フォーマット) を指定します:	*channel-mode*
+"mode" は次のいずれかです:				*channel-mode*
 	"json" - JSONを使う (詳しくは下記を参照。もっとも使いやすい方法。既定)
 	"js"   - JS (JavaScript) エンコーディングを使用し、JSON よりも効率的。
 	"nl"   - NL 文字で終わるメッセージを使う
