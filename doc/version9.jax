@@ -1,4 +1,4 @@
-*version9.txt*  For Vim バージョン 9.0.  Last change: 2022 Mar 08
+*version9.txt*  For Vim バージョン 9.0.  Last change: 2022 Jun 28
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -6,7 +6,7 @@
 
 				*vim-9.0* *vim-9* *version-9.0* *version9.0*
 ようこそ Vim 9 へ! 以前のリリースから数年が経過しました。多数のバグが修正され、
-いくつかの素敵な機能と Vim9 script 文法が追加されています。このファイルは Vim
+いくつかの素敵な機能と Vim9 script 文法が追加されました! このファイルは Vim
 8.2.0 以降のすべての新規要素と既存の機能に対する変更に言及しています。Vim 8.2
 までのパッチはここで見られます: |vim-8.2|
 
@@ -14,17 +14,19 @@
 コマンドを使用してください: >
 	:version
 
-新機能					|new-9|
-	Vim script の拡張		|new-vim-script-9|
-	さまざまな新要素		|new-items-9|
+新機能						|new-9|
+   Vim script の拡張				|new-vim-script-9|
+   ポップアップメニュー内でのコマンドライン補完	|new-popup-compl|
+   カラースームの更新				|new-colorschemes-9|
+   さまざまな新要素				|new-items-9|
 
-非互換な変更				|incompatible-9|
+非互換な変更					|incompatible-9|
 
-改善点					|improvements-9|
+改善点						|improvements-9|
 
-コンパイル時の変更			|compile-changes-9|
+コンパイル時の変更				|compile-changes-9|
 
-パッチ					|patches-9|
+パッチ						|patches-9|
 
 
 Vi と Vim 9.0 の違いの概要については |vi_diff.txt| を参照してください。
@@ -34,7 +36,7 @@ Vimのバージョン間の違いについては |version4.txt|, |version5.txt|,
 このサイトで(Martin Tournoijによる)最重要な変更の概要を見付けることができます:
 https://www.arp242.net/vimlog/
 
-
+							*Sven-Guckes*
 Vim version 9.0 は、リリース準備中の2022年2月に亡くなられた Sven Guckes 氏に捧
 げます。Sven は Vim の長年のサポーターでした。彼は vim.org ドメインを登録し、
 最初の Vim の Web サイトを作成しました。私たちは彼を忘れません!
@@ -54,24 +56,44 @@ Vim script 言語は長年の間、後方互換性を保持しながら段階的
 
 Vim9 script は他の言語により似た文法を提供します。言い替えるなら: "風変りさが
 減りました"。コンパイルされた関数が大きな速度の改善のために提供されています。
-約10倍の早さが期待できます。この価値への支払いとして Vim9 script は後方互換性
-がありません。しかし心配はいりません、あなたの旧いスクリプトはまだ使うことがで
-き、新しいスクリプト言語は追加であり、旧来のスクリプトを置き換えません。
+約10倍、もしくはそれ以上の早さが期待できます。この価値への支払いとして Vim9
+script は後方互換性がありません。しかし心配はいりません、あなたの旧いスクリプ
+トはまだ使うことができ、新しいスクリプト言語は追加であり、旧来のスクリプトを置
+き換えません。
 
-Vim9 script のすべての情報はヘルプファイルの |Vim9| で見付けることができます。
-
-
-さまざまな新要素					*new-items-9*
------------------
-
-TODO: Visual/Insert/Cmdline モードのコマンドは?
+Vim9 script についての情報はヘルプファイルの |Vim9| で見付けることができます。
 
 
+ポップアップメニュー内でのコマンドライン補完 ~
+							*new-popup-compl*
+以前は 'wildmenu' オプションがあるので、これを使うことでステータスライン上のス
+ペースにマッチを表示することができました。少量のマッチのときのみに適合する方法
+です。
+
+現在は "wildoptions' に "pum" を設定することで、ポップアップメニューを使うこと
+ができます。これは多数のマッチを表示するのに適切です。この表示の際に複数回の再
+表示が必要になりますが、しかし現在のコンピュータは充分に早いため問題にはなりま
+せん。
+
+
+カラースームの更新 ~
+							*new-colorschemes-9*
+https://github.com/vim/colorschemes からカラースキームが取り込まれました。これ
+らは多様な種類の端末間で矛盾なく動作するように作られています。しかし多数派優先
+が関係した一般的な改善がされています。好むのであれば常に古いバージョンを取得す
+ることができます、以下を見てください:
+https://github.com/vim/colorschemes/blob/master/legacy_colors/
+
+
+さまざまな新要素 ~
+							*new-items-9*
 オプション: ~
 
 'autoshelldir'		シェルのカレントディレクトリにディレクトリを変更する
 'cdhome'		":cd" 時にホームディレクトリにディレクトリを変更する
+'cinscopedecls'		'cino-g' の対象として認識される単語
 'guiligatures'		GTK GUI: 変形に使える ASCII 文字
+'mousemoveevent'	<MouseMove> でマウスの移動を取り扱う
 'quickfixtextfunc'	quickfix ウィンドウのテキスト用関数
 'spelloptions'		スペルチェックのオプション
 'thesaurusfunc'		同義語補完に使う関数
@@ -80,26 +102,27 @@ TODO: Visual/Insert/Cmdline モードのコマンドは?
 
 Ex コマンド: ~
 
-|:abstract|
+|:abstract|		(将来の利用のための予約)
 |:argdedupe|		引数リストから重複を削除
 |:balt|			":badd" と同様だが代替ファイルを設定する
-|:class|		将来の利用のための予約
+|:class|		(将来の利用のための予約)
 |:def|			Vim9 のユーザー関数を定義する
 |:defcompile|		現在のスクリプト内の Vim9 のユーザー関数をコンパイルす
 			る
 |:disassemble|		Vim9 のユーザー関数を逆アセンブルする
 |:echoconsole|		:echomsg と同様だが、出力を stdout に行う
-|:endinterface|		将来の利用のための予約
-|:endclass|		将来の利用のための予約
+|:endinterface|		(将来の利用のための予約)
+|:endclass|		(将来の利用のための予約)
 |:enddef|		:def で始まるユーザー関数の終了
-|:endenum|		将来の利用のための予約
-|:enum|			将来の利用のための予約
+|:endenum|		(将来の利用のための予約)
+|:enum|			(将来の利用のための予約)
+|:eval|			式の評価と結果の破棄
 |:export|		Vim9: スクリプトから要素をエクスポートする
 |:final|		Vim9 で不変変数を宣言する
 |:import|		Vim9: 他のスクリプトから要素をインポートする
-|:interface|		将来の利用のための予約
-|:static|		将来の利用のための予約
-|:type|			将来の利用のための予約
+|:interface|		(将来の利用のための予約)
+|:static|		(将来の利用のための予約)
+|:type|			(将来の利用のための予約)
 |:var|			Vim9 で変数を宣言する
 |:vim9script|		Vim9 script ファイルであることを示す
 
@@ -113,6 +136,9 @@ Ex コマンド修飾子: ~
 新規および拡張された関数: ~
 
 |assert_nobeep()|	コマンドがビープ音を鳴らさないことをテストする
+|autocmd_add()|		自動コマンドとグループのリストの追加
+|autocmd_delete()|	自動コマンドとグループのリストの削除
+|autocmd_get()|		自動コマンドリストを返す
 |blob2list()|		Blobから数値のリストを取得する
 |charclass()|		文字のクラス
 |charcol()|		カーソルかマークの文字カラム番号
@@ -129,13 +155,17 @@ Ex コマンド修飾子: ~
 |fullcommand()|		完全なコマンド名を取得
 |getcharpos()|		カーソル、マーク他の文字位置の取得
 |getcharstr()|		ユーザーから1文字を文字列として取得
+|getcmdcompltype()|	現在のコマンドラインの補完タイプを返す
+|getcmdscreenpos()|	現在のコマンドラインのカーソル位置を返す
 |getcursorcharpos()|	カーソル位置の文字の取得
 |getmarklist()|		グローバル/ローカルのマークのリスト
 |getreginfo()|		レジスタ情報の取得
 |gettext()|		翻訳メッセージの検索
 |hlget()|		highlight group の属性を取得
 |hlset()|		highlight group の属性を設定
+|isabsolutepath()|	絶対パスかをチェックする
 |list2blob()|		数値のリストからBlobを取得する
+|maplist()|		全マッピングについてそれぞれを辞書としたリストを返す
 |mapnew()|		変更した要素の新しいリストを作る
 |mapset()|		マッピングの復元
 |matchfuzzy()|		文字列のリストに文字列でファジーマッチ
@@ -161,6 +191,7 @@ Ex コマンド修飾子: ~
 |test_unknown()|	unknown型の値を返す
 |test_void()|		void型の値を返す
 |typename()|		変数の型名のテキスト
+|virtcol2col()|		画面の文字についてのバイトインデックス
 |win_gettype()|		ウィンドウの型を取得
 |win_move_separator()|	ウィンドウの垂直セパレータの移動
 |win_move_statusline()|	ウィンドウのステータス行の移動
@@ -183,15 +214,22 @@ Ex コマンド修飾子: ~
 
 新しい自動コマンドイベント: ~
 
-|CompleteDonePre|	挿入モード補完が完了したときで、情報がクリアされる前
+|CompleteDonePre|	挿入モード補完が完了して、情報がクリアされる前
 |DirChangedPre|		作業ディレクトリが変更される前
-|InsertLeavePre| 	挿入モードを離れる前
+|InsertLeavePre|	挿入モードを離れる前
 |ModeChanged|		モード変更後
 |SigUSR1|		SIGUSR1 シグナルを検知した後
 |WinClosed|		ウィンドウを閉じた後
+|WinScrolled|		スクロール後もしくはウィンドウのリサイズ後
 |VimSuspend|		Vim がサスペンドした時
 |VimResume|		Vim がサスペンド後の復帰時
 
+
+新しい演算子: ~
+
+|>>|			ビット単位の右シフト
+|<<|			ビット単位の左シフト
+|??|			Falsy 演算子
 
 新しい runtime ファイル: ~
 
@@ -200,23 +238,260 @@ Ex コマンド修飾子: ~
 ==============================================================================
 非互換な変更						*incompatible-9*
 
-これらの変更は以前のリリースとは互換性がありません。もしもあなたが Vim 8.2.0
-から 9.0 に更新した際に問題が起きたなら、この一覧を確認してください。
+ここにある唯一の変更は以前のリリースとは互換性がありません:
 
-TODO
+- Lua の配列は現在0ベースです、0ベースで使用してください。
+
+Note |Vim9| script を使用する時にはいくつかの動作が違います、
+|vim9-differences| を参照してください。
 
 ==============================================================================
 改善点							*improvements-9*
 
-多くのメモリリーク、不正なメモリアクセスとクラッシュを修正しています。
-以下のパッチリストを参照。
+Vim 8.2 から多数の小さくて便利な改善がなされました、ここに概要を示します。
 
-TODO
+多くのメモリリーク、不正なメモリアクセスとクラッシュを修正。
+以下のパッチリストを参照: |bug-fixes-9|.
+
+文字列内の Vim の式を評価をサポート。 |interp-string|
+heredoc内での Vim の式を評価をサポート。 |:let-heredoc|
+
+ファジーマッチのサポート:
+- リストされた文字列群の文字列で。 |fuzzy-matching|
+- 'wildoptions' を使うことでコマンドラインの補完での補完サポート。
+- |:vimgrep| にて。
+
+|Haiku| OS のサポート追加。
+
+"lsp" チャネルモードでのシンプルな LSP サーバーの RPC 通信のサポート
+|language-server-protocol|。|channel| での Unix ドメインソケット利用のサポー
+ト。チャネルのアドレス(|channel-address|)での IPv6 サポート。
+
+現在のバッファの行からの source のサポート。 |:source-range|
+
+端末ウィンドウの改善:
+- 端末ウィンドウをポップアップで開くのをサポート。 |popup-terminal|
+- 端末内の下線でカラー設定を受け付けるように。
+- 端末内でフォーカスイベントの検知(|FocusGained| および |FocusLost|)。
+- 端末内でのベルのサポート追加。('belloff')
+- 端末ウィンドウ内でのマウスでの左右スクロールのサポート。
+
+Vim script のプロファイリングの停止: `:profile stop` およびレポートのファイル
+へのダンプ: `:profile dump` のサポート。 |:profile|
+
+補完の改善:
+- |:breakadd|, |:breakdel|, |:diffget|, |:diffput|, |:profile|, |:profdel|,
+  |:scriptnames| コマンドでの引数の補完をサポート。
+- 補完関数にて user_data で任意の Vim の型の使用をサポート(|complete-items|)。
+- 挿入モードの補完をテキスト変更なしでの停止(|i_CTRL-X_CTRL-Z|)。
+- コマンドライン引数を返す  "cmdline" オプションを |getcompletion()| に追加。
+
+'foldtext', 'completefunc', 'omnifunc', 'operatorfunc', 'thesaurusfunc',
+'quickfixtextfunc', 'tagfunc', 'imactivatefunc', 'imstatusfunc'、これらのオプ
+ションにて関数への参照、ラムダ関数、スクリプトローカル関数の設定をサポート。
+
+'balloonexpr', 'charconvert' 'foldexpr', 'formatexpr', 'includeexpr',
+'printexpr', 'patchexpr', 'indentexpr', 'modelineexpr', 'diffexpr','printexpr'
+これらのオプションにてスクリプトローカル関数の直接設定をサポート。
+
+'fillchars' の改善:
+- 折り畳みの開始部分、閉じた折り畳み表示、折り畳み分割表示についてマークとして
+  使用する文字のについて 'fillchars' 内の "foldopen", "foldclose", "foldsep"
+  を使用して反映させる設定のサポート。
+- 'fillchars' 内の "eob" を使用して行がないことを表す文字の設定のサポート。
+- 'fillchars' オプション内の "stl", "stlnc", "foldopen", "foldclose",
+  "foldsep" 項目についてマルチバイトの使用のサポート。
+
+XChaCha20 暗号化メソッドのサポート。 'cryptmethod'
+
+スペルチェック:
+- 'spell' がオフでもカレントの単語を |z=| でスペルチェック。
+- 'spellsuggest' でのスペルサジェストの検索時間の制限として "timeout" を追加。
+- 'spelloptions' に "camel" を追加することでキャメルケースな(CamelCased)単語で
+  のスペルチェックのサポートを追加。
+
+|<Cmd>| と |<ScriptCmd>| を使用することで現在のモードを変更せずに map 内で Ex
+コマンドを実行するのをサポート。
+
+|:cquit| にオプショナルなエラーコードを追加。
+
+'nrformats' に "unsigned" が設定されているときの符号無しな数値の評価。
+
+expand('<SID>') を使用してスクリプトIDを expand('<script>') を使用してスクリプ
+ト名を展開する。 |expand()|
+
+|g<Tab>| を使用して最後にアクセスしたタブページへのジャンプと |:tabnext| およ
+びその他の内で最後にアクセスしたタブページのサポート。
+
+|:sort| および |sort()| 使用でロケール依存なソート。
+
+|:sleep!| 使用でのスリープ時のカーソル非表示。
+
+'listchars' に "multispace" を追加し2以上のスペースがどこにあっても表示。
+'listchars' に "leadmultispace" を追加し2以上の行頭のスペースを表示。
+'listchars' に "lead" を追加し行頭のスペースに設定した文字を使用して表示。
+'listchars' で文字を特定するのに16進記法の使用をサポート(\x, \u, \U)。
+
+'listchars', 'virtualedit', 'thesaurusfunc' オプションはグローバルローカルに
+なった。
+
+`:for` を使用した文字列のループ処理のサポート。
+
+'diffopt' 内に "followwrap" 設定時は diff ウィンドウで 'wrap' をリセットしな
+い。
+
+'statusline' の式がステータスラインフォーマットの文字列(%{% expr %})なら再評価
+を行うのをサポート。
+
+末尾空白を追加しないブロックモードで貼り付けをする |zp| および |zP| を追加。
+末尾空白なしのブロックモードでコピーする |zy| を追加。
+
+ビジュアルモード内で削除テキストを無名レジスタに追加しないでテキストを貼り付け
+る 'P' コマンドをビジュアルモードに追加。 |put-Visual-mode|
+
+現在カーソルがいる行を基準にマッチする \%.l, \%<.l, \%>.l アトムを追加。
+詳細は |/\%l| を参照。
+
+番号付きあるいは箇条書きのリストに追加分のインデントを追加する "list" を
+'breakindentopt' に追加。特定の桁のソフト折り返しでインデントする "column" を
+'breakindentopt' に追加。
+
+'cursorline' において目印のハイライトを調整するデフォルトのハイライトグループ
+|hl-CursorLineSign| と |hl-CursorLineFold|を追加。
+
+現在の検索でマッチのデフォルトのハイライトグループ |hl-CurSearch|を追加。
+
+Vim 起動時のログ取得のサポートを追加(|--log|)。
+
+'quickfixtextfunc' を使用して quickfix バッファの内容のカスタマイズサポートを
+追加。|errorformat|にて "note" エラー種別(%t)をサポート。
+'errorformat' の使用で終端行番号(%e)と終端桁番号(%k)のパースサポートを追加。
+
+|settagstack()| を使用してのタグのスタックの切り詰めをサポート。
+
+! を設定した |:set| 利用時に各オプションを別の行に表示。
+
+|CTRL-W| および |CTRL-U| でもまた挿入の先頭でバックスペースが使用できるよう
+'backspace' に "nostop" を追加。
+
+'fsync' が設定された場合にアンドゥファイルを同期。
+
+'sessionoptions' 内に "skiprtp" ありで使用すると、セッションファイルから
+'runtimepath' および 'packpath' オプションを除外するのをサポート。
+
+|getbufinfo()| を使用してバッファの行数(行カウント)の取得をサポート。
+
+|filter()| および |map()| での blob と文字列型のサポート。
+
+タグ種別でのマルチバイト文字利用のサポート。 |tags-file-format|
+
+|exists()| を使用して関数名が有効かチェックするためのサポートを追加。
+
+xdiff を version 2.33 へ更新。ibvterm を revision 789 へ更新。
+
+Python/Lua/Perl/Tcl/Ruby/MzScheme インターフェイスの heredoc で 'trim' をサポー
+ト。
+
+下線および波下線用の termcap のコード |t_AU| と |t_8u| を追加。フォーカスイベ
+ント検知の termcap のコード t_fd と t_fe を追加。
+
+通常のコード同様のCプラグマのインデントのサポート。 (|cino-P|)
+
+構文の折り畳みレベルの定義サポートの追加。(|:syn-foldlevel|)
+
+文字列内で文字先頭に修飾子を追加し \<*xxx> の使用サポート追加。(|expr-quote|)
+
+|trim()| 使用して文字列の開始もしくは終了の文字削除サポートの追加。
+
+":verbose pwd" にてディレクトリのスコープ表示を行う。|:pwd-verbose|
+
+明確な8進数の記法として "0o" を追加。 |scriptversion-4|
+
+"tcd -" および "lcd -" を使用してタブローカルおよびウィンドウローカルでの直前
+のディレクトリに変更するのをサポート。 (|:tcd-| and |:lcd-|)
+
+|search()| の使用でスキップする式のサポートを追加。
+
+関数 |readdir()| および 関数 |readdirex()| で大文字小文字でのソートしたディレ
+クトリ内容を返すサポートを追加。
+
+レジスタが行継続な内容での実行(|:@|)のサポート追加。
+
+Lua サポート:
+- Lua から Vim の関数の呼び出し(vim.call() および vim.fn())。
+- Lua 関数およびクロージャを Vim の関数への参照に変換し Vim script からアクセ
+  スできるように(|lua-funcref|)。
+- 非後方互換性: Lua の配列を1ベースに。
+- Vim のリストで関数 table.insert() と関数 table.remove() の使用サポートを追
+  加。
+- vim.command() の使用で複数のExモードコマンドの実行をサポート。
+- vim.lua_version での Lua バージョン取得の追加。
+- Lua から Vim の名前空間辞書へのアクセスのサポート追加(|lua-vim-variables|)。
+
+Unicode release 13 から新しい UTF-8 文字のサポート。
+
+|:command| あるいは |:autocmd| での定義時にコマンドブロック(|:command-repl|)の
+使用サポート。
+
+|:z!| を使用して、Vim カレントウィンドウの高さの代わりに画面の高さ使用のサポー
+ト。
+
+":delcommand -buffer {cmd}" を使用してバッファローカルなコマンドの削除をサポー
+ト。
+
+文の後ろにある // コメントのフォーマット時、行コメントの開始を検索して、コメン
+ト開始文字列を挿入しコメントとしてインデントを行う(|fo-/|)。
+
+目印がされた行の行番号でハイライトグループを分離するのに使用する `:sign
+define` の引数 "numhl" を追加。
+
+$SHELL が "nologin" か "false" で終わる場合、Vim を制限モードで開始する。
+
+TermDebug の拡張:
+- 逆アセンブルコードを分割ウィンドウで表示するのをサポート。
+- GDB の until コマンドのサポート。
+- 目印で分割したグループの使用。
+
+xxd: 10進数でのオフセット表示(-d)のサポート。
+
+C オムニ補完プラグイン(|ft-c-omni|)の、ファイルタイプ検知スクリプト(ft.vim)と
+構文メニュー生成スクリプト(makemenu.vim)が Vim9 script を使用して書き直された。
+
+Vim の機能を検証する多数のテストが追加された。多くの旧来スタイルのテストは新し
+いスタイルの関数 assert_* を使用する新しいテストに変換された。
+
+多数の Coverity の静的解析のワーニングを修正。
 
 ==============================================================================
+
 コンパイル時の変更					*compile-changes-9*
 
-TODO
+以下の機能は全ビルドで現在有効になります:
+  |+cindent|
+  |+jumplist|
+  |+lispindent|
+  |+num64|
+  |+smartindent|
+  |+tag_binary|
+  |+title|
+
+以下の機能は削除されました。これらは廃れたか動作しないためです:
+  - Athena および neXTaw GUI のサポート (代わりに Motif を使用します)
+  - EBCDIC サポート
+  - Atari MiNT および BeOS
+  - Mac Carbon GUI (代わりに MacVim を使用します)
+
+rgb.txt ファイルはもはや含まれません。代わりに colors/lists/default.vim を使用
+します。
+
+いくつかの巨大なソースファイルは分割され、主にコードカバレッジ情報の収集をする
+のが容易になりまました。ソースファイルはまたメンテナンス性のためのリファクタリ
+ングがされました。
+
+MS-Windows で Mingw64 clang コンパイラでの Vim のビルドがサポートされます。
+
+Python 3.10, Lua 5.4.4, Perl 5.34, Ruby 3.1.0 と合せた Vim のビルドがサポート
+されます。
 
 ==============================================================================
 パッチ						*patches-9* *bug-fixes-9*
