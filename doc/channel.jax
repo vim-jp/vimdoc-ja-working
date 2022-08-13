@@ -1438,12 +1438,12 @@ Vim |Dict| 内の LSP のリクエスト/通知メッセージをエンコード
 ては、|json_encode()| と |json_decode()| を参照してください。
 
 'lsp' モードを使用してチャネルを開くには、|ch_open()| の引数 {options} の
-'mode' 要素を 'lsp' にします。例: >
+'mode' 項目を 'lsp' にします。例: >
 
     let ch = ch_open(..., #{mode: 'lsp'})
 
 'lsp' モードを使用したチャネルをジョブで開くには、|job_start()| の引数
-{options} の 'in_mode' と 'out_mode'  要素を 'lsp' にします。例: >
+{options} の 'in_mode' と 'out_mode' 項目を 'lsp' にします。例: >
 
     let cmd = ['clangd', '--background-index', '--clang-tidy']
     let opts = {}
