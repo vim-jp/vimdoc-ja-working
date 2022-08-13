@@ -533,7 +533,8 @@ ch_evalexpr({handle}, {expr} [, {options}])			*ch_evalexpr()*
 		ンコードされる。この関数は生のチャネルでは使用できない。
 		|channel-use| を参照。
 		{handle} はチャネルもしくはチャネルを持つジョブであっても良い。
-		"lsp" モードでチャネル使用時は、{expr} は |Dict| の必要がある。
+		"lsp" モードでチャネル使用時は、{expr} は |Dict| でなければな
+		らない。
 								*E917*
 		{options} は辞書でなければならない。また "callback" のエントリ
 		を持ってはならない。また個別のリクエストに対して "timeout" を
@@ -711,7 +712,8 @@ ch_sendexpr({handle}, {expr} [, {options}])			*ch_sendexpr()*
 		|channel-use| を参照。
 		{handle} はチャネルもしくはチャネルを持つジョブであっても良い。
 		チャネルは開いていなければならない。
-		"lsp" モードでチャネル使用時は、{expr} は |Dict| の必要がある。
+		"lsp" モードでチャネル使用時は、{expr} は |Dict| でなければな
+		らない。
 
 		チャネルのモードが "lsp" の場合、辞書を返す。それ以外は空の文
 		字列を返す。{options} に "callback" の項目が存在する場合、リク
