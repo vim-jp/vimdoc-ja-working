@@ -1,4 +1,4 @@
-FROM golang:1.15.6-alpine
+FROM golang:1.18.5-alpine3.16
 
 ENV REVIEWDOG_VERSION=v0.14.1
 
@@ -7,7 +7,7 @@ RUN apk --no-cache add git
 
 RUN wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b /usr/local/bin/ ${REVIEWDOG_VERSION}
 
-RUN go get github.com/koron/nvcheck
+RUN go install github.com/koron/nvcheck@latest
 
 COPY entrypoint.sh /entrypoint.sh
 
