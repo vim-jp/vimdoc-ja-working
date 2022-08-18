@@ -1500,7 +1500,7 @@ JSON-RPC リクエストをサーバーに送信して応答を非同期に処�
     let req.params.textDocument = #{uri: 'a.c'}
     let req.params.position = #{line: 10, character: 3}
     let reqstatus = ch_sendexpr(ch, req, #{callback: 'LspComplete'})
-    " send a cancellation notification
+    " キャンセル通知を送信
     let notif = {}
     let notif.method = '$/cancelRequest'
     let notif.id = reqstatus.id
