@@ -1946,8 +1946,8 @@ v:completed_item
 		最も最近補完された単語が含まれた|complete-items|の|Dictionary|
 		が|CompleteDone|イベント後に設定される。補完に失敗した時、その
 		|Dictionary|は空である。
-		Note: プラグインではこの値の変更することで組み込みの
-		|CompleteDone| イベントの挙動を模倣する。
+		Note: プラグインは、組み込みの |CompleteDone| イベントの動作を
+		エミュレートするために、この値を変更することができる。
 
 					*v:count* *count-variable*
 v:count		最後に実行されたノーマルモードコマンドに渡されたカウント数。
