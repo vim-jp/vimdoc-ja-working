@@ -1764,7 +1764,7 @@ range()が生成するリストの最初の要素は0であることに注意し
 	let &cpo = s:save_cpo
 	unlet s:save_cpo
 
-いくつかのより詳細について: |line-continuation| で見付けることができます。
+詳細についてはこちらを確認ください: |line-continuation|
 
 |Vim9| script ではバックスラッシュをまだ使いますが、多くの箇所で不要となります
 : >
@@ -1836,7 +1836,7 @@ Unix では特別なコメント書式を使って Vim script を実行形式に
 行末の文字はシステムに依存します。Vim script では Unix のファイルフォーマット
 が常に推奨されます。これはまた他のシステムでも動作します。この方法でならあなた
 の Vim script を MS-Windows から Unix にコピーしても動くようにすることができま
-す。|:source_crnl| を参照。確実に正しく設定さてるには、ファイルを書き込む前に
+す。|:source_crnl| を参照。確実に正しく設定されるには、ファイルを書き込む前に
 次のようにします: >
 
 	:setlocal fileformat=unix
