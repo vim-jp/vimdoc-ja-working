@@ -7,7 +7,7 @@
 
 # 自分の環境にあわせて変更する必要がある
 new_doc_dir=${GITHUB_WORKSPACE}/vim/runtime/doc
-old_doc_dir=${GITHUB_WORKSPACE}/work/en
+old_doc_dir=${GITHUB_WORKSPACE}/vimdoc-ja-working/en
 
 # 出力ファイル名
 outf=doc_info.md
