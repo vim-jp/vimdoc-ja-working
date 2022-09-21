@@ -149,6 +149,7 @@ NOTE: Vi互換とは全てのオプションがグローバルであることを
 	*.asp		g:filetype_asp	|ft-aspvbs-syntax| |ft-aspperl-syntax|
 	*.bas		g:filetype_bas	|ft-basic-syntax|
 	*.cfg		g:filetype_cfg
+	*.cls		g:filetype_cls
 	*.csh		g:filetype_csh	|ft-csh-syntax|
 	*.dat		g:filetype_dat
 	*.frm		g:filetype_frm	|ft-form-syntax|
@@ -162,6 +163,7 @@ NOTE: Vi互換とは全てのオプションがグローバルであることを
 	*.pp		g:filetype_pp	|ft-pascal-syntax|
 	*.prg		g:filetype_prg
 	*.r		g:filetype_r
+	*.sig		g:filetype_sig
 	*.sql		g:filetype_sql	|ft-sql-syntax|
 	*.src		g:filetype_src
 	*.sys		g:filetype_sys
@@ -544,11 +546,28 @@ fortran_have_tabsについての議論とソース形式の判定法について
 |ft-fortran-syntax|を参照。
 
 
+フリーベーシック(FREEBASIC)				*ft-freebasic-plugin*
+
+このプラグインの目的は、FreeBASIC方言である"fb", "qb", "fblite", "deprecated"の
+4つをそれぞれ別の言語として扱うことを目的である。
+
+これらの方言は、g:freebasic_lang か、編集中のファイルの #lang ディレクティブま
+たは$langメタコマンド、あるいはg:freebasic_forcelang のうちの最初の名前に設定さ
+れる。これらのグローバル変数は、概念的にはfbcオプションの-forcelangと-langに対
+応する。方言が明示的に指定されていない場合は、"fb "が使用される。
+
+たとえば、方言をデフォルトの "fblite "に設定し、#langディレクティブのオーバーラ
+イドを許可するには、次のコマンドを使用する。>
+
+     let g:freebasic_lang = "fblite"
+
+
 GIT COMMIT                                              *ft-gitcommit-plugin*
 
 現在のコミットの差分をプレビューウィンドウに表示する :DiffGitCached というコマ
 ンドが提供されている。このコマンドを実行すると、その引数をつけて "git diff
 --cached" が実行される。
+
 
 GPROF							*ft-gprof-plugin*
 
@@ -558,6 +577,7 @@ gprof ファイルタイププラグインは gprof のフラットプロファ�
 
 このマッピングを無効にするには: >
 	let g:no_gprof_maps = 1
+
 
 メール(MAIL)						*ft-mail-plugin*
 
@@ -635,15 +655,15 @@ MANPAGER				      *manpager.vim*
 bash, zsh, ksh もしくは dash の場合、設定ファイル (.bashrc, .zshrc, ...) に以
 下の設定を追加する。
 
-	export MANPAGER="vim -M +MANPAGER -"
+	export MANPAGER="vim +MANPAGER --not-a-term -"
 
 (t)csh の場合、設定ファイルに以下の設定を追加する。
 
-	setenv MANPAGER "vim -M +MANPAGER -"
+	setenv MANPAGER "vim +MANPAGER --not-a-term -"
 
 fish の場合、設定ファイルに以下の設定を追加する。
 
-	set -x MANPAGER "vim -M +MANPAGER -"
+	set -x MANPAGER "vim +MANPAGER --not-a-term -"
 
 
 MARKDOWN                                                *ft-markdown-plugin*
