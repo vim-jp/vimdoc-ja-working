@@ -145,20 +145,20 @@ Vi において # は行番号付きでテキストを表示します。Vim9 scr
 	var name = value # コメント
 	var name = value# エラー!
 <							*E1170*
-Do not start a comment with #{, it looks like the legacy dictionary literal
-and produces an error where this might be confusing.  #{{ or #{{{ are OK,
-these can be used to start a fold.
+コメントを #{ で始めてはいけません。旧来の Vim script の辞書リテラルとにてお
+り、どちらか判別がつきにくいところではエラーになるからです。折り畳みの開始に使
+える #{{ や #{{{ はコメントの始まりになっても良いです。
 
-When starting to read a script file Vim doesn't know it is |Vim9| script until
-the `vim9script` command is found.  Until that point you would need to use
-legacy comments: >
-	" legacy comment
+スクリプトファイルの先頭では、Vim は `vim9script` コマンドが見つかるまでそのス
+クリプトが |Vim9| スクリプトかを知るすべがありません。なのでその行までは旧来の
+コメントを使う必要があります。: >
+	" 旧来のコメント
 	vim9script
-	# Vim9 comment
+	# Vim9 のコメント
 
-That looks ugly, better put `vim9script` in the very first line: >
+これは不恰好なので、`vim9script` を一番最初の行に書くのが良いでしょう: >
 	vim9script
-	# Vim9 comment
+	# Vim9 コメント
 
 旧来の Vim script では # は代替ファイル名としても使われます。Vim9 scriptでは、
 代わりに %% を使う必要があります。## の代わりに %%% を使います。(すべての引数
@@ -175,34 +175,39 @@ Vim9 関数 ~
 
 コンパイルは以下のいずれかのタイミングで実行されます:
 - 関数が最初に呼び出されるとき
-- when the `:defcompile` command is encountered in the script after the
-  function was defined
+- 関数が定義された後ろの位置で、スクリプト中に `:defcompile` コマンドが見つ
+  かったとき
 - 関数に対してコマンド `:disassemble` が実行されたとき
 - コンパイルされた関数から呼び出されたり、関数リファレンスとして使用されたとき
   (引数と戻り値の型をチェックできるようにするため)
 						*E1091* *E1191*
-If compilation fails it is not tried again on the next call, instead this
-error is given: "E1091: Function is not compiled: {name}".
-Compilation will fail when encountering a user command that has not been
-created yet.  In this case you can call `execute()` to invoke it at runtime. >
+もし関数のコンパイルに失敗した場合は、次その関数が呼ばれるときまで再度コンパイ
+ルを試みることはなく、代わりに "E1091: Function is not compiled: {name}" とい
+うエラーを発生させます。
+{訳注: 日本語メッセージの場合: "E1091: 関数はコンパイルされていません: {name}"}
+コンパイルはまだ作成されていないユーザーコマンドと遭遇したときに失敗するでしょ
+う。この場合は `execute()` を使うことでエラーを関数の実行時に発生するようにす
+ることができます。 >
 	def MyFunc()
 	  execute('DefinedLater')
 	enddef
 
-`:def` has no options like `:function` does: "range", "abort", "dict" or
-"closure".  A `:def` function always aborts on an error (unless `:silent!` was
-used for the command or the error was caught a `:try` block), does not get a
-range passed, cannot be a "dict" function, and can always be a closure.
+`:def` は `:function` が持っているようなオプションを持っていません:
+"range"、"abort"、"dict" や "closure" のこと。`:def` で定義される関数は常にエ
+ラーが発生し次第、実行を中断します (`:silent!` がコマンドに対して使われた場合
+やエラーが `:try` ブロック内で捕捉された場合でない限り) 。また与えられた「範
+囲」も受け取らず、"dict" 属性を持つ関数になることもできません。そして常にク
+ロージャとなれます。
 						*vim9-no-dict-function*
-Later classes will be added, which replaces the "dict function" mechanism.
-For now you will need to pass the dictionary explicitly: >
+いずれ、「辞書関数」機構を置き換えるクラスが追加されるでしょう。当面は明示的に
+辞書を渡す必要があります。: >
 	def DictFunc(self: dict<any>, arg: string)
 	   echo self[arg]
 	enddef
 	var ad = {item: 'value', func: DictFunc}
 	ad.func(ad, 'item')
 
-You can call a legacy dict function though: >
+一方、旧来の辞書関数を呼ぶことはできます: >
 	func Legacy() dict
 	  echo self.value
 	endfunc
@@ -224,32 +229,32 @@ You can call a legacy dict function though: >
 	   for item in itemlist
 	     ...
 
-When a function argument is optional (it has a default value) passing `v:none`
-as the argument results in using the default value.  This is useful when you
-want to specify a value for an argument that comes after an argument that
-should use its default value.  Example: >
+関数の引数が任意 (引数に規定値が指定されいる場合) のときは、その引数に
+`v:none` を渡すことでその規定値を使うことができる。これは規定値を使いたい引数
+の後ろの引数に値を指定したいときに便利です。例: >
 	def MyFunc(one = 'one', last = 'last')
 	  ...
 	enddef
-	MyFunc(v:none, 'LAST')  # first argument uses default value 'one'
+	MyFunc(v:none, 'LAST')  # 第一引数は規定値の 'one' を使う
 <
 					*vim9-ignored-argument* *E1181*
-The argument "_" (an underscore) can be used to ignore the argument.  This is
-most useful in callbacks where you don't need it, but do need to give an
-argument to match the call.  E.g. when using map() two arguments are passed,
-the key and the value, to ignore the key: >
+引数 "_" (アンダースコア) は引数を無視するのに使えます。これは使わないが呼び出
+す際に一致するように引数を与えないといけないようなコールバックにおいて一番便利
+です。たとえば、map() を使っていて、キーと値の 2 つの引数が与えられる時に引数
+のキーを無視するには: >
 	map(numberList, (_, v) => v * 2)
-There is no error for using the "_" argument multiple times.  No type needs to
-be given.
+引数に "_" を複数回使ってもエラーにはなりません。また、型も指定する必要はあり
+ません。
 
 
 関数と変数はデフォルトでスクリプトローカル ~
 							*vim9-scopes*
-Vim9 script でスクリプト直下に `:function` や `:def` を使って関数を定義すると、
-関数はプリフィックス "s:" をつけた際のように、スクリプトローカルで定義されま
-す。グローバルスコープの関数や変数を定義するにはプリフィックス "g:" をつける必
-要があります。 For functions in a script that is to be imported and in an
-autoload script "export" needs to be used for those to be used elsewhere. >
+Vim9 script でスクリプト直下に `:function` や `:def` を使って関数を定義する
+と、関数はプリフィックス "s:" をつけた際のように、スクリプトローカルで定義され
+ます。グローバルスコープの関数や変数を定義するにはプリフィックス "g:" をつける
+必要があります。 スクリプト内の関数のうち他のスクリプトからインポートされるも
+のとオートロードスクリプト内の関数について、他のスクリプトで利用できるようにす
+るためには "export" をつける必要があります。 >
 	def ThisFunction()          # スクリプトローカル
 	def g:ThatFunction()        # グローバル
 	export def Function()       # for import and import autoload
