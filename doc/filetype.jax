@@ -548,8 +548,8 @@ fortran_have_tabsについての議論とソース形式の判定法について
 
 フリーベーシック(FREEBASIC)				*ft-freebasic-plugin*
 
-このプラグインの目的は、FreeBASIC 方言である "fb", "qb", "fblite", "deprecated"
-の4つをそれぞれ別の言語として扱うことを目的である。
+このプラグインは、FreeBASIC 方言である "fb", "qb", "fblite", "deprecated" の4
+つをそれぞれ別の言語として扱うことを目的としている。
 
 これらの方言は、最初に g:freebasic_forcelang で見つかる名前、次に編集しはじめた
 ファイル内のディレクティブもしくはメタコマンド、最終的には g:freebasic_lang に
