@@ -1,4 +1,4 @@
-*usr_toc.txt*	For Vim バージョン 9.0.  Last change: 2022 Jun 03
+*usr_toc.txt*	For Vim バージョン 9.0.  Last change: 2022 Jun 20
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -47,7 +47,7 @@
 Vim script を書く ~
 |usr_50.txt|  高度な Vim script の書き方
 |usr_51.txt|  プラグインを作る
-|usr_52.txt|  Vim9 script でプラグインを作る
+|usr_52.txt|  巨大なプラグインを作る
 
 インストール ~
 |usr_90.txt|  Vimのインストール
