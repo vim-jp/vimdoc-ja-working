@@ -89,7 +89,7 @@ Vim9 script は大きな Vim script を容易に書けるようにデザイン�
 	ShowMessage 22
 <	To 22 we say maybe ~
 
-関数 GetMessage() には、インポートしたスクリプト名 "getmessage" がプレフィック
+関数 GetMessage() には、インポートしたスクリプト名 "getmessage" がプリフィック
 スとして付けられていることに注意してください。こうすることで、使用されるすべて
 のインポートされた関数について、それがどのスクリプトからインポートされたかが分
 かります。複数のスクリプトをインポートする場合、それぞれで GetMessage() 関数を
