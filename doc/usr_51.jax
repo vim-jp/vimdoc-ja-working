@@ -555,8 +555,8 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 	  enddef
 	endif
 <
-スクリプトが 2 回目に読み込まれた時に関数が削除されるのを防ぐため、
-`vim9script` コマンドに "noclear" を使用することを忘れないでください。
+スクリプトが2回目に読み込まれた時に関数が削除されるのを防ぐため、`vim9script`
+コマンドに "noclear" を使用することを忘れないでください。
 
 
 ☆アンドゥ					*undo_indent* *undo_ftplugin*
@@ -597,9 +597,9 @@ exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチ�
 
 	au BufNewFile,BufRead *.foo		setlocal filetype=foofoo
 
-この 1 行のファイルを  "ftdetect/foofoo.vim" として、'runtimepath' に表示され
-る最初のディレクトリに書き込みます。Unix の場合、"~/.vim/ftdetect/foofoo.vim"
-になります。規則では、スクリプト名にファイルタイプ名を使用します。
+この1行のファイルを  "ftdetect/foofoo.vim" として、'runtimepath' に表示される
+最初のディレクトリに書き込みます。Unix の場合、"~/.vim/ftdetect/foofoo.vim" に
+なります。規則では、スクリプト名にファイルタイプ名を使用します。
 
 必要に応じて、ファイルの内容を調べて言語を認識するなど、より複雑なチェックを行
 うことができます。|new-filetype| も参照。
