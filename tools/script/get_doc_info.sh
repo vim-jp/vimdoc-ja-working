@@ -1,12 +1,16 @@
 #! /bin/bash
 #
-# ローカルの vimdoc-ja-working/en/*.txt と vim/runtime/doc/*.txt を比較して
+# vimdoc-ja-working/en/*.txt(old) と vim/runtime/doc/*.txt(new) を比較して
 # 変更行数情報をMarkdownのtable形式でファイルに出力する。
 #
-# 2018-05-31 h_east
+# 2018-05-31 h_east       : Create initial file.
+# 2022-10-02 Tsuyoshi CHO : Update comment and some settings.
 
-# 自分の環境にあわせて変更する必要がある
+# ローカルに利用する場合は自分の環境にあわせて変更する必要がある
+# リポジトリには GitHub workflow で利用する設定で格納する
+# GitHub workflow では vim/vim は ${GITHUB_WORKSPACE}/vim へ clone している
 new_doc_dir=${GITHUB_WORKSPACE}/vim/runtime/doc
+# GitHub workflow では vim-jp/vimdoc-ja-working は ${GITHUB_WORKSPACE}/work へ clone している
 old_doc_dir=${GITHUB_WORKSPACE}/work/en
 
 # 出力ファイル名
