@@ -70,7 +70,7 @@ Vim9 script についての情報はヘルプファイルの |Vim9| で見付け
 ペースにマッチを表示することができました。少量のマッチのときのみに適合する方法
 です。
 
-現在は "wildoptions' に "pum" を設定することで、ポップアップメニューを使うこと
+現在は 'wildoptions' に "pum" を設定することで、ポップアップメニューを使うこと
 ができます。これは多数のマッチを表示するのに適切です。この表示の際に複数回の再
 表示が必要になりますが、しかし現在のコンピュータは充分に早いため問題にはなりま
 せん。
@@ -28239,7 +28239,7 @@ Files:      runtime/doc/repeat.txt, src/scriptfile.c, src/vim9script.c,
             src/proto/vim9script.pro, src/testdir/test_source.vim
 
 Patch 8.2.4608
-Problem:    getcompletion() does not work properly when 'wildoptions
+Problem:    getcompletion() does not work properly when 'wildoptions'
             contains "fuzzy".
 Solution:   Do not use addstar(). (Yegappan Lakshmanan, closes #9992,
             closes #9986)
