@@ -1,4 +1,4 @@
-*fold.txt*      For Vim バージョン 9.0.  Last change: 2022 Jan 22
+*fold.txt*      For Vim バージョン 9.0.  Last change: 2022 Oct 01
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -72,12 +72,14 @@
 クリプトとして実行される。例:
 タブで始まる一連の行範囲を1つの折り畳みにまとめる: >
 	:set foldexpr=getline(v:lnum)[0]==\"\\t\"
-折り畳みレベルを計算するのに Vim script の関数を呼び出す: >
-	:set foldexpr=MyFoldLevel(v:lnum)
 空行で仕切られた「段落」を折り畳みとする: >
     :set foldexpr=getline(v:lnum)=~'^\\s*$'&&getline(v:lnum+1)=~'\\S'?'<1':1
 同じ事(「段落」を折り畳みに)をする別の表現: >
     :set foldexpr=getline(v:lnum-1)=~'^\\s*$'&&getline(v:lnum)=~'\\S'?'>1':1
+
+最も効果的なのはコンパイル済み関数を引数なしで呼ぶ: >
+	:set foldexpr=MyFoldLevel()
+関数は v:lnum を使用しなくてはいけない。|expr-option-function| を参照。
 
 バックスラッシュ(日本では \ 記号)が ":set" の流儀で、通常とは異なるキャラクタ
 (空白文字、バックスラッシュ、ダブルクォート、その他、詳細は|option-backslash|
@@ -499,7 +501,7 @@ zk		カーソルより上方の折り畳みへ移動する。閉じられた折�
 
 これは折り畳みの最初の1行を、"/*" と "*/" を追加し "{{{" を削除して表示する。
 多めのバックスラッシュ(\ 記号)はある文字が ":set" コマンドに解釈されてしまうの
-を避けるために使用されている。これは以下のように関数を定義するとより簡単になる:
+を避けるために使用されている。これは以下のように関数を定義すると最も簡単になる:
 >
 
     :set foldtext=MyFoldText()
@@ -508,6 +510,9 @@ zk		カーソルより上方の折り畳みへ移動する。閉じられた折�
     :  let sub = substitute(line, '/\*\|\*/\|{{{\d\=', '', 'g')
     :  return v:folddashes .. sub
     :endfunction
+
+引数なしでの関数呼び出しを使用する利点は高速なことである、
+|expr-option-function| を参照のこと。
 
 'foldtext' は|sandbox|環境下で実行評価される。現在のウィンドウはそのラインの属
 するウィンドウへ設定される。コンテキストはオプションを最後に設定したスクリプト
