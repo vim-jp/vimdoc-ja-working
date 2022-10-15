@@ -1,4 +1,4 @@
-*pattern.txt*   For Vim バージョン 9.0.  Last change: 2022 Mar 04
+*pattern.txt*   For Vim バージョン 9.0.  Last change: 2022 Sep 24
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -132,6 +132,11 @@ CTRL-C			現在の(検索)コマンドを中止します。MS-Windowsでは
 			CTRL-Breakを使ってください |dos-CTRL-Break|。
 			ノーマルモードでは、入力済みの、まだ実行されていないコ
 			マンドをすべて中止します。
+			出力をリダイレクトして Vim を開始し変更されたバッファ
+			がない場合は CTRL-C は Vim を終了させます。これは "vim
+			file | grep word" として使用し抜け出す方法がわからない
+			ユーザーを支援するためです(闇雲にでも :qa<CR> と入力し
+			ても問題ありません)。
 
 							*:noh* *:nohlsearch*
 :noh[lsearch]		'hlsearch' オプションによる強調表示をやめます。検索コ
