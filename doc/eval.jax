@@ -3081,12 +3081,12 @@ text...
 			|Vim9| script では index が使用される。現在の要素よりも
 			前の要素が削除された場合、次の要素はスキップされる。
 
-			{object}が |Blob| の場合、Vimは常にコピーを作成して繰
+			{object} が |Blob| の場合、Vimは常にコピーを作成して繰
 			り返す。|List| とは異なり、|Blob| を変更しても繰り返し
 			には影響しない。
 
-			When {object} is a |String| each item is a string with
-			one character, plus any combining characters.
+			{object} が |String| の場合は各要素は1つの文字、それと
+			任意の結合文字による文字列になる。
 
 			|Vim9| script では、スクリプトの可読性向上のため
 			`:endfor` は短縮できない。
