@@ -351,6 +351,11 @@ popup_filter_yesno({id}, {key})				*popup_filter_yesno()*
 		|popup_dialog-example| を参照。
 
 
+popup_findecho()					*popup_findecho()*
+		メッセージを表示している `:echowindow` コマンドのポップアップ
+		の |window-ID| を取得する。存在しなければ0を返す。
+		主にポップアップを非表示にするのに便利である。
+
 popup_findinfo()					*popup_findinfo()*
 		ポップアップメニューで使用されているポップアップ情報ウィンドウ
 		の |window-ID| を取得する。|complete-popup| を参照。ポップアッ
