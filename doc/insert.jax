@@ -1038,7 +1038,7 @@ CTRL-P			カーソルの直前と同じキーワードで始まる単語を、
 CTRL-X CTRL-Z		テキストを変更せずに補完を停止する。
 
 
-補完候補を検索する関数					*complete-functions*
+☆補完候補を検索する関数				*complete-functions*
 
 ここでは 'completefunc', 'thesaurusfunc', 'omnifunc' について説明する。
 
@@ -1240,7 +1240,7 @@ Note 最初の呼び出し以降にカーソルが移動した可能性があり
 	set completefunc=CompleteMonths
 <
 
-補完ポップアップメニュー				*ins-completion-menu*
+☆補完ポップアップメニュー				*ins-completion-menu*
 							*popupmenu-completion*
 候補を簡単なポップアップメニューで表示することができる。
 
