@@ -1122,7 +1122,7 @@
 |c_CTRL-T|	CTRL-T		   'incsearch' が有効時、前のマッチへ
 |:history|	:his[tory]	   コマンドライン履歴を表示
 
-文脈依存の補完機能
+文脈依存の補完機能:
 
 |c_wildchar|	'wildchar'	(デフォルト: <Tab>)
 				カーソルの直前のパターンに合せた補完を実施
