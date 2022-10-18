@@ -104,7 +104,7 @@ Vim では、可変数の引数を持つ関数を定義できます。例えば�
 <	start is Title  Arg 0 is one  Arg 1 is two  Arg 2 is three ~
 
 これは `echohl` コマンドを使用して以降の `echo` コマンドをハイライトするように
-指定しています。`echohl None` で再度停止します。`echon` コマンドは  `echo` と同
+指定しています。`echohl None` で再度停止します。`echon` コマンドは `echo` と同
 様に動作しますが、改行を出力しません。
 
 引数を1つで呼び出したときは "items" リストは空になります。`range(len(items))`
