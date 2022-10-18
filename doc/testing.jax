@@ -278,7 +278,7 @@ test_override({name}, {val})				*test_override()*
 
 		{name}	     {val} が非 0 のときの効果 ~
 		alloc_lines  確保したメモリ内に各バッファの行のコピーを作り、
-			     そしてそのメモリアクセスのエラーが valgrind で検
+			     それによりメモリアクセスのエラーが valgrind で検
 			     出できる
 		autoload    `import autoload` でスクリプトを正しい手順でロード
 			     し、項目が使用されるまで延期はしない
