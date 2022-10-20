@@ -10,7 +10,7 @@
 Win32 版の Vim は Windows 7, 8, 10, 11 で実行可能である。コンソール版と GUI 版
 がある。
 
-Windows XP あるいは Vista を所有しているなら Vim 9.0 のパッチレベル 495 まで
+Windows XP または Vista を所有している場合は、Vim 9.0 のパッチレベル 495 まで
 使用できる。
 
 32 ビット版 Vim は 64 ビット版 MS-Windows システム上でも実行可能である。
