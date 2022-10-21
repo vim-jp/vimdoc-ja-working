@@ -94,6 +94,7 @@ test_gui_event({event}, {args})
 		    "findrepl"  search and replace text.
 		    "mouse"	mouse button click event.
 		    "scrollbar" move or drag the scrollbar.
+		    "sendevent" send a low-level GUI event.
 		    "tabline"	select a tab page by mouse click.
 		    "tabmenu"	select a tabline menu entry.
 
@@ -176,6 +177,16 @@ test_gui_event({event}, {args})
 				length, assuming 'wrap' is not set.
 		    dragging:	1 to drag the scrollbar and 0 to click in the
 				scrollbar.
+
+		"sendevent":
+		  Send a low-level GUI event (e.g. key-up or down).
+		  Currently only supported on MS-Windows.
+		  The supported items in {args} are:
+		    event:	The supported string values are:
+				    keyup   generate a keyup event
+				    keydown generate a keydown event
+		    keycode:    Keycode to use for a keyup or a keydown event.
+								*E1291*
 
 		"tabline":
 		  Inject a mouse click event on the tabline to select a
@@ -268,6 +279,9 @@ test_override({name}, {val})				*test_override()*
 		Current supported values for {name} are:
 
 		{name}	     effect when {val} is non-zero ~
+		alloc_lines  make a copy of every buffer line into allocated
+			     memory, so that memory access errors can be found
+			     by valgrind
 		autoload     `import autoload` will load the script right
 			     away, not postponed until an item is used
 		char_avail   disable the char_avail() function
@@ -287,7 +301,8 @@ test_override({name}, {val})				*test_override()*
 		uptime 	     overrules sysinfo.uptime
 		vterm_title  setting the window title by a job running in a
 			     terminal window
-		ALL	     clear all overrides ({val} is not used)
+		ALL	     clear all overrides, except alloc_lines ({val} is
+			     not used)
 
 		"starting" is to be used when a test should behave like
 		startup was done.  Since the tests are run by sourcing a
