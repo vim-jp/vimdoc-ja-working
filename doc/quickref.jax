@@ -1,4 +1,4 @@
-*quickref.txt*  For Vim バージョン 9.0.  Last change: 2022 Oct 02
+*quickref.txt*  For Vim バージョン 9.0.  Last change: 2022 Oct 15
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -802,7 +802,8 @@
 'lines'			    表示行数
 'linespace'	  'lsp'     行間のピクセル数
 'lisp'			    Lisp用自動インデント
-'lispwords'	  'lw'      Lisp用インデントの動作定義
+'lispoptions'	  'lop'     Lisp用インデントの動作定義
+'lispwords'	  'lw'      Lispでインデントする単語の定義
 'list'			    <Tab>や<EOL>を表示する
 'listchars'	  'lcs'     'list' オン時に使う文字
 'loadplugins'	  'lpl'     起動時にプラグインスクリプトを読み込む
