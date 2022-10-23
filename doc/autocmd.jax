@@ -1221,8 +1221,7 @@ TextChangedI			挿入モードでカレントバッファのテキストが変�
 							*TextChangedP*
 TextChangedP			挿入モードでカレントバッファのテキストが変更さ
 				れたとき。ただしポップアップメニューが表示され
-				ている場合に限られる。
-				他は TextChanged と同じ。
+				ている場合に限られる。他は TextChanged と同じ。
 							*TextChangedT*
 TextChangedT			端末モードのカレントバッファのテキストが変更さ
 				れたとき。
