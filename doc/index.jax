@@ -1397,8 +1397,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:hide|		:hid[e]		コマンドを実行し、必要ならカレントバッファを
 				隠れ(hidden)バッファにする
 |:history|	:his[tory]	コマンドラインの履歴を表示
-|:horizontal|	:hor[izontal]	次のコマンドをウィンドウを水平分割して動作させ
-				る
+|:horizontal|	:hor[izontal]	次のウィンドウコマンドを水平方向に動作させる
 |:insert|	:i[nsert]	テキストを挿入
 |:iabbrev|	:ia[bbrev]	挿入モードを対象とする ":abbrev" コマンド
 |:iabclear|	:iabc[lear]	挿入モードを対象とする ":abclear" コマンド
