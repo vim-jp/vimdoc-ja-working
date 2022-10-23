@@ -1346,7 +1346,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:echomsg|	:echom[sg]	:echoと同じだが、履歴に残す
 |:echon|	:echon		:echo と同じ、ただし <EOL> を出力しない
 |:echowindow|	:echow[indow]	:echomsg と同じ、ただしポップアップウィンドウ
-				で使用する
+				を使用する
 |:else|		:el[se]		:if コマンドと一緒に使用する
 |:elseif|	:elsei[f]	:if コマンドと一緒に使用する
 |:emenu|	:em[enu]	名前を指定してメニューを実行
