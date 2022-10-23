@@ -1,4 +1,4 @@
-*intro.txt*     For Vim バージョン 9.0.  Last change: 2022 Sep 12
+*intro.txt*     For Vim バージョン 9.0.  Last change: 2022 Oct 12
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -120,10 +120,10 @@ http://www.vim.org/maillist.php
 バグレポート:				*bugs* *bug-reports* *bugreport.vim*
 
 バグを報告するには3つの方法があります:
-1. GitHub に issue を立ててください: https://github.com/vim/vim/issues
-   文章は vim-dev メーリングリストにも転送されます。
-2. ランタイムのファイルについてのissueは、ヘッダにある email アドレス宛てか他
+1. ランタイムのファイルについてのissueは、ヘッダにある email アドレス宛てか他
    の方法でメンテナーにレポートを送ってください。
+2. GitHub に issue を立ててください: https://github.com/vim/vim/issues
+   文章は vim-dev メーリングリストにも転送されます。
 3. バグレポートは Vim 開発陣 <vim-dev@vim.org> に送ってください。
    これはメーリングリストです。最初にメンバーになる必要があります。たくさんの
    人がそのメッセージを見ます。それが不都合な場合は (例えばセキュリティ関係)、
