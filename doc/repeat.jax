@@ -615,9 +615,9 @@ Vim が起動した時、.vimrcを処理した後、'packpath' に含まれる "
 'runtimepath' に追加される。次に全てのプラグインがロードされる。
 これら2つのステップがどのように役立つかについては、|packload-two-steps| 参照。
 
-あなたの .vimrc の処理でパッケージの中の関数が呼び出が許される
-か、|:colorscheme| と |autoload| で共に 'runtimepath' 自動的に追加されてるのと
-同じように 'packpath' も検索する。各詳細ドキュメントを参照のこと。
+.vimrc のパース中にパッケージの機能を呼び出せるようにするため、
+|:colorscheme| と |autoload| はどちらも 'runtimepath' に加え 'packpath' 以下も
+同じように自動的に検索する。各詳細ドキュメントを参照のこと。
 
 上記の例では "pack/foo/start/foobar/plugin/foo.vim" を見つけて
 "~/.vim/pack/foo/start/foobar" を 'runtimepath' に追加する。
