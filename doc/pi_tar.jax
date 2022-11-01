@@ -78,7 +78,7 @@ Copyright 2005-2017:					*tar-copyright*
 3. オプション						*tar-options*
 
    これらの変数を <.vimrc> ファイルなどで設定してください。
-   変数			初期設定 説明
+   変数			 初期設定 説明
    *g:tar_browseoptions*  "Ptf"   ファイル一覧を取得するときに使われる
    *g:tar_readoptions*	  "OPxf"  tar ファイルを展開するときに使われる
    *g:tar_cmd*		  "tar"   tar プログラムの名前
