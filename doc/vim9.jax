@@ -99,18 +99,14 @@ Vim9 script と `:def` で定義する関数を使用する際に最もよく遭
 	`:Print`
 	`:append`
 	`:change`
-	`:d`  directly followed by 'd' or 'p'.
+	`:d`  直接 'd' か 'p' かが続いているもの。
 	`:insert`
 	`:k`
 	`:mode`
 	`:open`
-	`:s`  with only flags
+	`:s`  フラグのみ与えて使用されたとき
 	`:t`
 	`:xit`
-// TODO: :d と :s: をエラーにするのはまだ未実装？要確認。
-// 参考：
-//  - not_in_vim9() in vim9script.c
-//  - E1100 in test_vim9_script.vim
 - 一部のコマンド、特に制御構文として使われるコマンドは、省略することはできませ
   ん。たとえば、`:throw` を `:th` と書くことはできません。 *vim9-no-shorten*
 - 波括弧変数は使用できません。
@@ -257,41 +253,44 @@ Vim9 script でスクリプト直下に `:function` や `:def` を使って関�
 るためには "export" をつける必要があります。 >
 	def ThisFunction()          # スクリプトローカル
 	def g:ThatFunction()        # グローバル
-	export def Function()       # for import and import autoload
+	export def Function()       # import と import autoload 関数
 <						*E1058* *E1075*
-When using `:function` or `:def` to specify a nested function inside a `:def`
-function and no namespace was given, this nested function is local to the code
-block it is defined in.  It cannot be used in `function()` with a string
-argument, pass the function reference itself: >
+`:def` で定義される関数内で `:function` か `:def` でネストした関数を名前空間の
+指定なしに作成したときは、ネストした関数はその関数が定義されたブロックにローカ
+ルな関数になります。またその関数は `function()` に文字列を用いて渡渡渡すことは
+できず、その関数自身の参照を渡さなければいけません: >
 	def Outer()
 	  def Inner()
 	    echo 'inner'
 	  enddef
 	  var Fok = function(Inner)     # OK
-	  var Fbad = function('Inner')  # does not work
+	  var Fbad = function('Inner')  # 動作しない
 
 関数をプリフィックス "s:" や "g:" をつけずに参照した場合、Vim は関数を次のよう
 に探します:
 - 同じ関数の中、ブロックスコープの中
-- in the script scope
+- スクリプトスコープの中
 
-Imported functions are found with the prefix from the `:import` command.
+インポートされた関数は、`:import` コマンドで決まる名前を前置して見つけられま
+す。
 
-Since a script-local function reference can be used without "s:" the name must
-start with an upper case letter even when using the "s:" prefix.  In legacy
-script "s:funcref" could be used, because it could not be referred to with
-"funcref".  In Vim9 script it can, therefore "s:Funcref" must be used to avoid
-that the name interferes with builtin functions.
+スクリプトローカル関数の参照が "s:" をつけることなく使えるので、スクリプトロー
+カル関数の名前は前置詞 "s:" をつけて宣言した場合でも大文字から始まる必要があり
+ます。旧来の Vim script では "s:funcref" とすることができました。なぜな
+ら、"s:funcref" を "funcref" として参照することができなかったからです。しかし
+Vim9 script ではそれが可能なので、組み込み関数との名前の干渉を避けるために
+"s:Funcref" のように名前が指定される必要があります。
 						*vim9-s-namespace* *E1268*
-The use of the "s:" prefix is not supported at the Vim9 script level.  All
-functions and variables without a prefix are script-local.
+Vim9 script において、スクリプトレベルでの前置詞 "s:" の使用はサポートされてい
+ません。前置詞のない全ての関数と変数は全てスクリプトローカルになります。
 
-In :def functions the use of "s:" depends on the script: Script-local
-variables and functions in a legacy script do use "s:", while in a Vim9 script
-they do not use "s:".  This matches what you see in the rest of the file.
+`:def` で定義される関数内においては、"s:" の使用はスクリプト依存です: 旧来の
+Vim script 内ではスクリプトローカルな関数と変数に対して "s:" を使いますが、
+Vim9 script 内では使いません。これはこのドキュメントの以下の説明でも同様です。
 
-In legacy functions the use of "s:" for script items is required, as before.
-No matter if the script is Vim9 or legacy.
+旧来の Vim script スタイルの関数内においては、スクリプトローカルなアイテムに
+対しての "s:" の指定は従来通り必要です。これはスクリプトが Vim9 script であろ
+うが旧来の Vim script であろうが関係ありません。
 
 いずれの場合でも、関数は使用されるよりも前に定義されていなくてはなりません。使
 用されるタイミングは、コマンド `:defcompile` によってコンパイルされるとき、ま
@@ -300,8 +299,9 @@ No matter if the script is Vim9 or legacy.
 
 その結果として、名前空間を持たない関数や変数は通常、スクリプト内で定義されてい
 るか、インポートされたものかのどちらかで見つけることができます。グローバルな関
-数や変数はどこでも定義できます（どこで定義されているか、見つかるといいです
-ね！ You can often see where it was last set using |:verbose|）。
+数や変数はどこでも定義できます (どこで定義されているか、見つかるといいですね！
+しばしば |:verbose| を使ってどこで最後に値がセットされたか調べることができま
+す) 。
 							*E1102*
 グローバル関数は引き続き、ほとんどいつでも定義し、削除することができます。Vim9
 script でのスクリプトローカル関数は、スクリプトが読み込まれたときに一度定義さ
@@ -328,8 +328,8 @@ Vim9 script を2回目に読み込んだときは、存在するすべてのス�
 	vim9script noclear
 
 これを使用することで、再読み込みの際に任意の場所で `finish` コマンドにより脱出
-することができます。E.g. when a buffer local option is set to a
-function, the function does not need to be defined more than once: >
+することができます。たとえば、バッファローカルオプションが関数に設定され、
+その関数を二回以上定義する必要がないとき: >
 	vim9script noclear
 	setlocal completefunc=SomeFunc
 	if exists('*SomeFunc')
@@ -373,7 +373,7 @@ function, the function does not need to be defined more than once: >
 	endif
 	echo inner
 
-Although this is shorter and faster for simple values: >
+こちらの方が単純な値については簡潔で早くはありますが。: >
 	var inner = 0
 	if cond
 	   inner = 5
@@ -387,8 +387,7 @@ Although this is shorter and faster for simple values: >
 	}
 	echo temp  # エラー!
 
-This is especially useful in a user command: >
-
+これは特にユーザーコマンドで便利です: >
 	command -range Rename {
 		 var save = @a
 		 @a = 'some expression'
@@ -396,54 +395,45 @@ This is especially useful in a user command: >
 		 @a = save
 	    }
 
-And with autocommands: >
-
+また、自動コマンドでも便利です: >
    au BufWritePre *.go {
 		 var save = winsaveview()
 		 silent! exe ':%! some formatting command'
 		 winrestview(save)
 	   }
 
-Although using a :def function probably works better.
+多分 `:def` で定義される関数を使う方が良く動くでしょうが。
 
-変数を型付きで、かつ初期値なしで宣言した場合、その値はゼロ、False、または空で
-初期化されます。 // TODO: remove
 				*E1022* *E1103* *E1130* *E1131* *E1133*
 				*E1134*
-Declaring a variable with a type but without an initializer will initialize to
-false (for bool), empty (for string, list, dict, etc.) or zero (for number,
-any, etc.).  This matters especially when using the "any" type, the value will
-default to the number zero.  For example, when declaring a list, items can be
-added: >
+変数を型を指定し、初期値なしで宣言した場合、変数は false (bool 型のとき)、空
+(string、list、dict などの型のとき)、あるいはゼロ (number、any などの型のとき)
+で初期化されます。これは "any" 型を使う時に特に重要で、初期値は数字のゼロとな
+ります。たとえば、リストを宣言したとき、要素を追加することができます: >
 	var myList: list<number>
 	myList->add(7)
 
-Initializing a variable to a null value, e.g. `null_list`, differs from not
-initializing the variable.  This throws an error: >
+変数を null、例えば `null_list`、で初期化することは変数を初期化しないこととは
+異なります。これはエラーになります: >
 	var myList = null_list
-	myList->add(7)  # E1130: Cannot add to null list
+	myList->add(7)  # E1130: null リストには追加できません
 
 <						*E1016* *E1052* *E1066*
 
-// TODO: s/題して/対して ?
-// TODO: Update translation.
-Vim9 script では `:let` は使用できません。すでに存在する変数に題してはコマンド
-を使用せずに代入します。グローバル変数、ウィンドウ変数、タブ変数、バッファ変
-数、そして Vim の定義済変数についても同様です。
-変数は `:unlet` によって削除することもできます。
-In Vim9 script `:let` cannot be used.  An existing variable is assigned to
-without any command.  The same for global, window, tab, buffer and Vim
-variables, because they are not really declared.  Those can also be deleted
-with `:unlet`.
+Vim9 script では `:let` は使用できません。すでに存在する変数に対してはコマンド
+を使用せずに代入します。実際に宣言されることがないので、グローバル変数、ウィン
+ドウ変数、タブ変数、バッファ変数、そして Vim の定義済変数についてもコマンドを
+使用せずに代入します。またそれらの変数は `:unlet` によって削除することもできま
+す。
 							*E1065*
-You cannot use `:va` to declare a variable, it must be written with the full
-name `:var`.  Just to make sure it is easy to read.
+変数を `:va` で宣言することはできず、それは必ず完全な名前の `:var` として書か
+れなければなりません。これはコードを読みやすくするためのものです。
 							*E1178*
-`:lockvar` does not work on local variables.  Use `:const` and `:final`
-instead.
+`:lockvar` はローカル変数に対しては動作しません。代わりに `:const` か `:final`
+を使ってください。
 
-The `exists()` and `exists_compiled()` functions do not work on local variables
-or arguments.
+`exists()` 関数と `exists_compiled()` 関数はローカル変数あるいは引数に対しては
+動作しません。
 				*E1006* *E1041* *E1167* *E1168* *E1213*
 変数と関数と関数の引数は、同じスクリプトファイル内で、すでに定義された、または
 インポートされた変数と関数をシャドーイングすることはできません。一方で変数は
@@ -456,54 +446,54 @@ Ex コマンドをシャドーイングするので、必要であれば変数�
 	g:global = 'value'
 	var Funcref = g:ThatFunction
 
-Global functions must be prefixed with "g:": >
+グローバル関数は必ず先頭に "g:" を付けなければなりません: >
 	vim9script
 	def g:GlobalFunc(): string
 	  return 'text'
 	enddef
 	echo g:GlobalFunc()
-The "g:" prefix is not needed for auto-load functions.
+前置詞 "g:" はオートロード関数に対しては必要ありません。
 
 					*vim9-function-defined-later*
-Although global functions can be called without the "g:" prefix, they must
-exist when compiled.  By adding the "g:" prefix the function can be defined
-later.  Example: >
+グローバル関数は前置詞 "g:" なしに呼び出すことができますが、それらは
+コンパイル時に存在していなければなりません。前置詞を "g:" をつけることで、
+関数が後で定義されても良くなります。例: >
 	def CallPluginFunc()
 	  if exists('g:loaded_plugin')
 	    g:PluginFunc()
 	  endif
 	enddef
 
-If you do it like this, you get an error at compile time that "PluginFunc"
-does not exist, even when "g:loaded_plugin" does not exist: >
+もしこのようにすると、たとえ "g:loaded_plugin" が存在しない場合でも、コンパイ
+ル時に "PluginFunc" が存在しないというエラーが発生します: >
 	def CallPluginFunc()
 	  if exists('g:loaded_plugin')
 	    PluginFunc()   # Error - function not found
 	  endif
 	enddef
 
-You can use exists_compiled() to avoid the error, but then the function would
-not be called, even when "g:loaded_plugin" is defined later: >
+`exists_compiled()` を使うことでエラーを回避できますが、この場合は
+"g:loaded_plugin" が後で定義されている場合でもその関数は呼ばれません: >
 	def CallPluginFunc()
 	  if exists_compiled('g:loaded_plugin')
-	    PluginFunc()   # Function may never be called
+	    PluginFunc()   # 関数が呼ばれることはないかもしれない
 	  endif
 	enddef
 
 現在、`&opt = value` は "opt" オプションに値を設定する目的で使用されているた
 め、`:substitute` コマンドをリピートする目的 ":&" を使用することはできません。
 							*vim9-unpack-ignore*
-For an unpack assignment the underscore can be used to ignore a list item,
-similar to how a function argument can be ignored: >
+アンパック代入において、アンダースコアは、関数の引数を無視するのと似たように
+リストの要素を無視するのに使えます: >
 	[a, _, c] = theList
-To ignore any remaining items: >
+残りの要素全部を無視するには: >
 	[a, b; _] = longList
 <							*E1163* *E1080*
-Declaring more than one variable at a time, using the unpack notation, is
-possible.  Each variable can have a type or infer it from the value: >
+アンパックの記法を用いて、一つ以上の変数を一度に宣言することが可能です。
+それぞれの変数は型を持つか、値から型を推測することができます: >
 	var [v1: number, v2] = GetValues()
-Use this only when there is a list with values, declaring one variable per
-line is much easier to read and change later.
+これは値を持つリストがある時にのみ利用してください。1行に 1変数を宣する
+方がより読みやすく、後の変更も行いやすいです。
 
 
 定数 ~
@@ -563,10 +553,10 @@ Vim9ではこのどちらも定義することができます。
 コロンを前置することでコマンドを代わりに使用することができます: >
 	:substitute(pattern (replacement (
 
-If the expression starts with "!" this is interpreted as a shell command, not
-negation of a condition.  Thus this is a shell command: >
+もし式が "!" で始まっているのであれば、それは条件の否定ではなくシェルコマンド
+であると解釈されます。したがって、これはシェルコマンドとなります: >
 	!shellCommand->something
-Put the expression in parentheses to use the "!" for negation: >
+"!" を否定として用いるには、式を丸カッコで囲んでください: >
 	(!expression)->Method()
 
 Note 変数は使用する前に宣言する必要がありますが、関数は宣言するより前に使用で
@@ -584,8 +574,8 @@ function() は不要に ~
 	var Funcref = MyFunction
 
 `function()` を使って "func" 型のリファレンスを得た場合、その関数は任意の個数
-の引数と任意の戻り値の型 (includinv void) を持つものとされます。この場合、関数
-は後から宣言できます if the argument is in quotes。
+の引数と任意の戻り値の型 (void を含めて) を持つものとされます。この場合、もし
+関数名がクォートで囲まれてるなら、その関数は後から宣言できます。
 
 
 ラムダ式には -> の代わりに => を使う ~
@@ -599,9 +589,9 @@ function() は不要に ~
 	var Lambda = (arg) => expression
 	var Lambda = (arg): type => expression
 <							*E1157*
-"=>" まで含めて、ラムダ式の引数の定義の中では改行することはできません(so
-that Vim can tell the difference between an expression in parentheses and
-lambda arguments)。 これは OKです: >
+"=>" まで含めて、ラムダ式の引数の定義の中では改行することはできません (Vim が
+丸カッコで囲まれた式とラムダ式の引数の区別をつけられるようにするため)。 これは
+OKです: >
 	filter(list, (k, v) =>
 			v > 0)
 以下のように記述することはできません: >
@@ -615,13 +605,13 @@ lambda arguments)。 これは OKです: >
 		\	v)
 		\	=> v > 0)
 <					*vim9-lambda-arguments* *E1172*
-In legacy script a lambda could be called with any number of extra arguments,
-there was no way to warn for not using them.  In Vim9 script the number of
-arguments must match.  If you do want to accept any arguments, or any further
-arguments, use "..._", which makes the function accept
-|vim9-variable-arguments|.  Example: >
+旧来の Vim script においては、ラムダ関数はいくつもの余分な引数を与えて呼ぶこと
+ができ、そしてその余分な引数を使わないことに対しての警告をする方法がありません
+でした。Vim9 script では引数の数は必ず一致しなければなりません。もし任意の
+引数、またはその他の引数を受け入れたい場合は、関数が |vim9-variable-arguments|
+を受け入れられるようにする "..._" を使ってください。例: >
 	var Callback = (..._) => 'anything'
-	echo Callback(1, 2, 3)  # displays "anything"
+	echo Callback(1, 2, 3)  # "anything" を表示する
 
 <						*inline-function* *E1171*
 加えて、ラムダ式には {} に複数のステートメントを含むことができます: >
@@ -629,42 +619,43 @@ arguments, use "..._", which makes the function accept
 		g:was_called = 'yes'
 		return expression
 	    }
-This can be useful for a timer, for example: >
+これはタイマーに便利です。たとえば: >
 	var count = 0
- 	var timer = timer_start(500, (_) => {
+	var timer = timer_start(500, (_) => {
 		 count += 1
 		 echom 'Handler called ' .. count
 	     }, {repeat: 3})
 
-The ending "}" must be at the start of a line.  It can be followed by other
-characters, e.g.: >
+閉じの "}" は行の先頭にこなければなりません。後ろに他の文字が続いても良いで
+す。例: >
 	var d = mapnew(dict, (k, v): string => {
 	     return 'value'
 	   })
-No command can follow the "{", only a comment can be used there.
+いかなるコマンドも "{" の後ろに続いてはいけません。コメントのみが利用可能で
+す。
 
 						*command-block* *E1026*
-The block can also be used for defining a user command.  Inside the block Vim9
-syntax will be used.
+ブロックはユーザーコマンドを定義するのにも使えます。ブロックの内側では Vim9
+script の文法が使われます。
 
-If the statements include a dictionary, its closing bracket must not be
-written at the start of a line.  Otherwise, it would be parsed as the end of
-the block.  This does not work: >
+もしブロックが辞書を含むのであれば、辞書の閉じカッコは行頭に書かれてはいけませ
+ん。さもなくば閉じカッコがブロックの終了としてパースされてしまいます。これは動
+作しません: >
 	command NewCommand {
 	     g:mydict = {
 	       'key': 'value',
-	       }  # ERROR: will be recognized as the end of the block
+	       }  # エラー: ブロックの終了として認識される
 	   }
-Put the '}' after the last item to avoid this: >
+これを避けるには、 '}' を最後の要素の後ろにおいてください: >
 	command NewCommand {
 	     g:mydict = {
 	       'key': 'value' }
 	   }
 
-Rationale: The "}" cannot be after a command because it would require parsing
-the commands to find it.  For consistency with that no command can follow the
-"{".  Unfortunately this means using "() => {  command  }" does not work, line
-breaks are always required.
+根拠: "}" がコマンドの後にきてはならないのは、ブロックの閉じカッコを見つけるの
+にコマンドのパースが必要だろうからです。一貫性のために、いかなるコマンドも "{"
+に続けることはできません。残念ながら、これは "() => { command }" が動作せず、
+常に改行が必要であることを意味します。
 
 							*vim9-curly*
 辞書リテラルの "{" がステートメントブロックと認識されてしまうのを回避するため
@@ -691,7 +682,7 @@ breaks are always required.
 		one: 1,
 		two: 2,
 		}
-With a function call 関数の呼び出し: >
+関数の呼び出しで: >
 	var result = Func(
 			arg1,
 			arg2
@@ -724,35 +715,37 @@ With a function call 関数の呼び出し: >
 		|   echo 'match'
 		| endif
 
-Note that this means that in heredoc the first line cannot start with a bar: >
+Note これはヒアドキュメントの最初の行は | で始めることができないことを意意しま
+す。
 	var lines =<< trim END
-	   | this doesn't work
+	   | これは動作しない
 	END
-Either use an empty line at the start or do not use heredoc.  Or temporarily
-add the "C" flag to 'cpoptions': >
+ヒアドキュメントの先頭行を空行にする、あるいはヒアドキュメントを使わないように
+してください。あるいは一時的にフラグ "C" を 'cpoptions' に追加してください: >
 	set cpo+=C
 	var lines =<< trim END
-	   | this works
+	   | これは動作する
 	END
 	set cpo-=C
-If the heredoc is inside a function 'cpoptions' must be set before :def and
-restored after the :enddef.
+もしヒアドキュメントが関数の中で使われているのであれば、'cpoptions' は :def の
+前で変更され、かつ :enddef の後ろで元に戻されなければなりません。
 
-In places where line continuation with a backslash is still needed, such as
-splitting up a long Ex command, comments can start with '#\ ': >
+たとえば長い Ex コマンドを分割しているときのような、依然として行連結にバックス
+ラッシュが必要な場所では、'#\ ' でコメントを開始することができます: >
 	syn region Text
 	      \ start='foo'
-	      #\ comment
+	      #\ コメント
 	      \ end='bar'
-Like with legacy script '"\ ' is used.  This is also needed when line
-continuation is used without a backslash and a line starts with a bar: >
+これは旧来の Vim script で '"\ ' が使われているのと似ています。またこれはバッ
+クスラッシュ抜きで行連結が使用され、かつ行が | で開始しているときにも必要で
+す: >
 	au CursorHold * echom 'BEFORE bar'
-	      #\ some comment
+	      #\ 何かのコメント
 	      | echom 'AFTER bar'
 <
 							*E1050*
 行頭の演算子と識別できるようにするために、範囲指定の前にはコロンを置きま
-す。"start" と print をつなげる例: >
+す。"start" と "print" をつなげる例: >
 	var result = start
 	+ print
 これは以下の記述と同じです: >
@@ -762,8 +755,9 @@ continuation is used without a backslash and a line starts with a bar: >
 	var result = start
 	:+ print
 
-After the range an Ex command must follow.  Without the colon you can call a
-function without `:call`, but after a range you do need it: >
+「範囲」の後ろには必ず Ex コマンドが続かなければなりません。コロンを付けてい
+ない時は `:call` 抜きで関数を呼ぶことができますが、「範囲」の後ろではそれが必
+要です。
 	MyFunc()
 	:% call MyFunc()
 
@@ -807,40 +801,41 @@ Notes:
 <  以下のように記述することはできません: >
 	echo [1, 2]
 		[3, 4]
-- In some cases it is difficult for Vim to parse a command, especially when
-  commands are used as an argument to another command, such as `windo`.  In
-  those cases the line continuation with a backslash has to be used.
+- いくつかの場合、特に `:windo` のようなコマンドが他のコマンドの引数として使わ
+  れるような場合では、Vim にとってコマンドのパースが困難です。このような場合で
+  では、バックスラッシュを使った行継続を使わなければなりません。
 
 
-White space ~
+ホワイトスペース ~
 			*E1004* *E1068* *E1069* *E1074* *E1127* *E1202*
-Vim9 script enforces proper use of white space.  This is no longer allowed: >
-	var name=234	# Error!
-	var name= 234	# Error!
-	var name =234	# Error!
-There must be white space before and after the "=": >
+Vim9 script ではホワイトスペースの適切な使用を強制します。これはもはや許可され
+ません: >
+	var name=234	# エラー!
+	var name= 234	# エラー!
+	var name =234	# エラー!
+"=" の前後にホワイトスペースがなければいけません: >
 	var name = 234	# OK
-White space must also be put before the # that starts a comment after a
-command: >
-	var name = 234# Error!
+コマンドの後ろでコメントを開始する # の前にもホワイトスペースが置かれなければ
+なりません: >
+	var name = 234# エラー!
 	var name = 234 # OK
 
-White space is required around most operators.
+ホワイトスペースは大抵の演算子の周りで必須です。
 
-White space is required in a sublist (list slice) around the ":", except at
-the start and end: >
-	otherlist = mylist[v : count]  	# v:count has a different meaning
-	otherlist = mylist[:]		# make a copy of the List
+始まりと終わりと除いて、サブリスト (リストのスライス) の ":" の周りにホワイト
+スペースが必要です。
+	otherlist = mylist[v : count]  	# v:count は異なる意味を持つ
+	otherlist = mylist[:]		# リストのコピーを作る
 	otherlist = mylist[v :]
 	otherlist = mylist[: v]
 
-White space is not allowed:
-- Between a function name and the "(": >
-	Func (arg)	   # Error!
+ホワイトスペースは許可されません:
+- 関数名と "(" の間: >
+	Func (arg)	   # エラー!
 	Func
-	     \ (arg)	   # Error!
+	     \ (arg)	   # エラー!
 	Func
-	      (arg)	   # Error!
+	      (arg)	   # エラー!
 	Func(arg)	   # OK
 	Func(
 	      arg)	   # OK
@@ -848,8 +843,8 @@ White space is not allowed:
 	      arg	   # OK
 	      )
 <							*E1205*
-White space is not allowed in a `:set` command between the option name and a
-following "&", "!", "<", "=", "+=", "-=" or "^=".
+`:set` コマンドでのオプション名と続く "&"、"!"、"<"、"="、"+="、"-=" や "^="
+の間にはホワイトスペースは許可されません。
 
 
 波括弧変数の廃止 ~
@@ -857,11 +852,11 @@ following "&", "!", "<", "=", "+=", "-=" or "^=".
 波括弧変数 |curly-braces-names| は使用できません。
 
 
-Command modifiers are not ignored ~
+コマンド修飾子は無視されない ~
 								*E1176*
-Using a command modifier for a command that does not use it gives an error.
+コマンド修飾子を使わないコマンドにコマンド修飾子を使うとエラーになります。
 								*E1082*
-Also, using a command modifier without a following command is now an error.
+同様に、続くコマンドなしにコマンド修飾子を使うことも今はエラーになります。
 
 
 辞書リテラル ~
@@ -889,14 +884,15 @@ Also, using a command modifier without a following command is now an error.
 できます: >
 	var dict = {["key" .. nr]: value}
 
-キーの型には、文字列、数値、bool、floatのいずれかを指定できます。その他の型の
-場合はエラーが発生します。 Without using [] the value is used as a string,
-keeping leading zeros.  An expression given with [] is evaluated and then
-converted to a string.  Leading zeros will then be dropped: >
+キーの型には、文字列、数値、真偽値、浮動小数点のいずれかを指定できます。その他
+の型の場合はエラーが発生します。[] を使わない場合は文字列として扱われ、先頭の
+0 を保持します。[] を使って式が与えられた場合は、式を評価し、文字列に変換しま
+す。先頭の 0 は省かれます: >
 	var dict = {000123: 'without', [000456]: 'with'}
 	echo dict
 	{'456': 'with', '000123': 'without'}
-A float only works inside [] because the dot is not accepted otherwise: >
+[] 外ではドットは受け入れられないので、浮動小数点数は [] の中でのみ動作しま
+す: >
 	var dict = {[00.013]: 'float'}
 	echo dict
 	{'0.013': 'float'}
@@ -911,22 +907,23 @@ A float only works inside [] because the dot is not accepted otherwise: >
 
 比較 ~
 
-オプション 'ignorecase' は文字列の比較には作用しません。
-Thus "=~" works like "=~#".
+オプション 'ignorecase' は文字列の比較には作用しません。なので、"=~" は "=~#"
+と同じように動作します。
 
-"is" and "isnot" (|expr-is| and |expr-isnot|) when used on strings now return
-false.  In legacy script they just compare the strings, in |Vim9| script they
-check identity, and strings are copied when used, thus two strings are never
-the same (this might change some day if strings are not copied but reference
-counted).
+現状では、"is" と "isnot" (|expr-is| と |expr-isnot|) を文字列に対して使うと
+常に偽を返します。旧来の Vim script では文字列の比較を行うだけでしたが、Vim9
+script ではそれらは文字列オブジェクトが同一であることをチェックします。文字列
+は使われるときに複製されるので、二つの文字列は同一と判定されることはありませ
+ん。 (この挙動はいつか文字列が複製されるのではなく、参照カウントで管理されるよ
+うになると変更されるかもしれません)
 
 
-Abort after error ~
+エラー後の中断 ~
 
-In legacy script, when an error is encountered, Vim continues to execute
-following lines.  This can lead to a long sequence of errors and need to type
-CTRL-C to stop it.  In Vim9 script execution of commands stops at the first
-error.  Example: >
+旧来の Vim script では、エラーに遭遇したとき、Vim は後続の行の実行を続けます。
+これは長いエラーの列を生みかねず、そしてそのエラーを止めるための CTRL-C の入力
+が必要になります。Vim9 script ではコマンドの実行は最初のエラーに遭遇した段階で
+終了します。例: >
 	vim9script
 	var x = does-not-exist
 	echo 'not executed'
@@ -934,11 +931,11 @@ error.  Example: >
 
 For ループ ~
 							*E1254*
-The loop variable must not be declared yet: >
+ループ変数は先に宣言されていてはいけません: >
 	var i = 1
-	for i in [1, 2, 3]   # Error!
+	for i in [1, 2, 3]   # エラー!
 
-It is possible to use a global variable though: >
+ただ、グローバル変数を使うことは可能です: >
 	g:i = 1
 	for g:i in [1, 2, 3]
 	  echo g:i
@@ -989,7 +986,7 @@ falsy か truthy として評価されます。これは JavaScript とほぼ同
 	blob		空ブロブ以外
 	list		空リスト以外 (JavaScript とは異なります)
 	dictionary	空辞書以外 (JavaScript とは異なります)
-	func		when there is a function name
+	func		関数名があるとき
 	special		true または v:true
 	job		非 NULL
 	channel		非 NULL
@@ -1021,7 +1018,7 @@ falsy か truthy として評価されます。これは JavaScript とほぼ同
 単純型とは、文字列 (string)、数値 (float)、特殊値 (special) と真偽値 (bool) で
 す。他の型では |string()| を使う必要があります。
 						*false* *true* *null* *E1034*
-In Vim9 script one can use the following predefined values: >
+Vim9 script では以下の定義済みの値が使えます: >
 	true
 	false
 	null
@@ -1033,30 +1030,32 @@ In Vim9 script one can use the following predefined values: >
 	null_list
 	null_partial
 	null_string
-`true` is the same as `v:true`, `false` the same as `v:false`, `null` the same
-as `v:null`.
+`true` は `v:true` と同じ、`false` は `v:false` と同じ、そして`null` は
+`v:null` と同じです。
 
-While `null` has the type "special", the other "null_" types have the type
-indicated by their name.  Quite often a null value is handled the same as an
-empty value, but not always.  The values can be useful to clear a script-local
-variable, since they cannot be deleted with `:unlet`.  E.g.: >
+`null` の型が "special" であるのに対し、他の "null_" の値の型ははそれぞれの名
+前で示される型になります。かなり多くの場面で null 値は空の値と同値と扱われます
+が、いつでもそうだというわけではありません。スクリプトローカル変数は `:unlet`
+で削除することができないので、これらの null 値はスクリプトローカル変数をクリア
+するのに便利です。例: >
 	var theJob = job_start(...)
-	# let the job do its work
+	# ジョブに仕事をさせる
 	theJob = null_job
 
-The values can also be useful as the default value for an argument: >
+また、それらの値は引数の規定値とするのにも便利です: >
 	def MyFunc(b: blob = null_blob)
 	   if b == null_blob
-	      # b argument was not given
+	      # 引数 b が与えられなかった
 
-It is possible to compare `null`  with any value, this will not give a type
-error.  However, comparing `null` with a number, float or bool will always
-result in `false`.  This is different from legacy script, where comparing
-`null` with zero or `false` would return `true`.
+`null` はどんな値と比較すること可能で、型エラーが発生することはありません。
+しかし、`null` と数値、浮動小数点数、真偽値との比較は常に `false` になります。
+これは `null` と 0 あるいは `false` を比較した時に `true` になる旧来の Vim
+script とは異なる点です。
 
-When converting a boolean to a string `false` and `true` are used, not
-`v:false` and `v:true` like in legacy script.  `v:none` has no `none`
-replacement, it has no equivalent in other languages.
+真偽値を文字列に変換するときは、旧来の Vim script のように `v:false` と
+`v:true` が使われるのではなく、`false` と `true` が使われます。`v:none` につい
+ては、他の言語に同等のものが存在しないので、`v:none` が `none` に変換されるよ
+うになることはありません。
 
 文字列に対してインデックス [idx] や [idx : idx] を使用すると、バイト単位ではな
 く文字単位のインデックスとして扱われます。結合文字が含まれています。例: >
@@ -1066,7 +1065,7 @@ replacement, it has no equivalent in other languages.
 負のインデックスを指定すると、文字列の末尾から数えられます。"[-1]" は最後の文
 字です。
 最後の文字を除外するには |slice()| を使用します。
-To count composing characters separately use |strcharpart()|.
+合成文字を分けてカウントするには |strcharpart()| を使ってください。
 インデックスが範囲外の場合は、空文字列になります。
 
 旧来のスクリプトでは "++var" と "--var" は寡黙に処理され、何の効果ももたらしま
@@ -1099,19 +1098,19 @@ Exコマンドの範囲指定にはコロンを前置する必要があります
 	g:name = value    # 代入
 	:g:pattern:cmd	  # :グローバルコマンド
 
-To avoid confusion between a `:global` or `:substitute` command and an
-expression or assignment, a few separators cannot be used when these commands
-are abbreviated to a single character: ':', '-' and '.'. >
-	g:pattern:cmd	  # invalid command - ERROR
-	s:pattern:repl	  # invalid command - ERROR
-	g-pattern-cmd	  # invalid command - ERROR
-	s-pattern-repl	  # invalid command - ERROR
-	g.pattern.cmd	  # invalid command - ERROR
-	s.pattern.repl	  # invalid command - ERROR
+コマンド `:global` や `:substitute` と式や代入文が紛らわしくなるのを避けるた
+め、これらのコマンドが一文字に省略されているとき、一部のセパレータは使うことが
+できません: ':'、'-' と '.' が利用不可です。: >
+	g:pattern:cmd	  # 無効なコマンド - エラー
+	s:pattern:repl	  # 無効なコマンド - エラー
+	g-pattern-cmd	  # 無効なコマンド - エラー
+	s-pattern-repl	  # 無効なコマンド - エラー
+	g.pattern.cmd	  # 無効なコマンド - エラー
+	s.pattern.repl	  # 無効なコマンド - エラー
 
-Also, there cannot be a space between the command and the separator: >
-	g /pattern/cmd	  # invalid command - ERROR
-	s /pattern/repl	  # invalid command - ERROR
+同様に、コマンドとセパレータの間にスペースがあってはいけません: >
+	g /pattern/cmd	  # 無効なコマンド - エラー
+	s /pattern/repl	  # 無効なコマンド - エラー
 
 `:def` で定義した関数はすべてコンパイルされます。旧来の関数は途中で脱出するこ
 とができ、それ以降の行はパースされません: >
@@ -1146,7 +1145,7 @@ Vim9 関数はすべてコンパイルされます: >
 	    use-feature
 	  endif
 	enddef
-The `exists_compiled()` function can also be used for this.
+これには `exists_compiled()` 関数も同様に使えます。
 							*vim9-user-command*
 関数のコンパイルによる他の副作用として、ユーザーコマンドの存在がコンパイルの時
 点でチェックされます。ユーザーコマンドが後で定義されている場合、エラーとなりま
@@ -1183,137 +1182,140 @@ Note 認識されていないコマンドを "|" でつなぐと、その後の�
 て書かれました: https://github.com/lacygoill/wiki/blob/master/vim/vim9.md
 
 							*:++* *:--*
-The ++ and -- commands have been added.  They are very similar to adding or
-subtracting one: >
+++ と -- コマンドが追加されました。1 を足し引きするのとそっくりです。
 		++var
 		var += 1
 		--var
 		var -= 1
 
-Using ++var or --var in an expression is not supported yet.
+式中で ++var や --var を使うことはまだサポートされていません。
 
 ==============================================================================
 
-3. New style functions					*fast-functions*
+3. 新しいスタイルの関数					*fast-functions*
 
 							*:def* *E1028*
 :def[!] {name}([arguments])[: {return-type}]
-			Define a new function by the name {name}.  The body of
-			the function follows in the next lines, until the
-			matching `:enddef`. *E1073*
+			{name} という名前の新しい関数を定義します。関数の本体
+			は次の行から `:enddef` と一致するまで続きます。
+			*E1073*
 							*E1011*
-			The {name} must be less than 100 bytes long.
+			{name} は必ず 100 バイト未満でなければなりません。
 					*E1003* *E1027* *E1056* *E1059*
-			The type of value used with `:return` must match
-			{return-type}.  When {return-type} is omitted or is
-			"void" the function is not expected to return
-			anything.
+			`:return` で返される値の型は必ず {return-type} と一致
+			しなければなりません。{return-type} が省略された、ある
+			いは "void" である場合は、その関数は何も返さないと想定
+			されます。
 							*E1077* *E1123*
-			{arguments} is a sequence of zero or more argument
-			declarations.  There are three forms:
+			{arguments} は 0 あるいはそれ以上の引数の宣言列です。
+			引数の宣言には 3 つの書式があります:
 				{name}: {type}
 				{name} = {value}
 				{name}: {type} = {value}
-			The first form is a mandatory argument, the caller
-			must always provide them.
-			The second and third form are optional arguments.
-			When the caller omits an argument the {value} is used.
+			最初の書式は必須の引数の書式で、呼び出す側は必ず実引数
+			を与える必要があります。
+			2 つ目と 3 つ目の書式は任意の引数の書式です。呼び出す
+			側が実引数を省略した場合は、{value} が使われます。
 
-			The function will be compiled into instructions when
-			called, or when `:disassemble` or `:defcompile` is
-			used.  Syntax and type errors will be produced at that
-			time.
+			関数は呼び出された時、`:disassemble` が使われたとき、
+			あるいは `:defcompile` が使われたときに命令列にコンパ
+			イルされます。文法および型のエラーはこの時に提示されま
+			す。
 
-			It is possible to nest `:def` inside another `:def` or
-			`:function` up to about 50 levels deep.
+			`:def` を他の `:def` や `:function` の内側で大体 50 階
+			層の深さまでまでネストすることが可能です。
 							*E1117*
-			[!] is used as with `:function`.  Note that
-			script-local functions cannot be deleted or redefined
-			later in Vim9 script.  They can only be removed by
-			reloading the same script.
+			[!] は `:function` と同様に使われます。Note Vim9
+			script において、スクリプトローカル関数は後で削除され
+			たり再定義されたりしてはいけません。スクリプトローカル
+			のさ削除は、同じスクリプトの再読み込みによってのみ行え
+			ます。
 
 					*:enddef* *E1057* *E1152* *E1173*
-:enddef			End of a function defined with `:def`. It should be on
-			a line by its own.
+:enddef			`:def` で定義された関数の終了。 `:enddef` はそれだけで
+			行にあるべきです。
 
-You may also find this wiki useful.  It was written by an early adopter of
-Vim9 script: https://github.com/lacygoill/wiki/blob/master/vim/vim9.md
+また、このwikiも参考になるでしょう。これはVim9 scriptのアーリーアダプターによっ
+て書かれました: https://github.com/lacygoill/wiki/blob/master/vim/vim9.md
 
-If the script the function is defined in is Vim9 script, then script-local
-variables can be accessed without the "s:" prefix.  They must be defined
-before the function is compiled.  If the script the function is defined in is
-legacy script, then script-local variables must be accessed with the "s:"
-prefix if they do not exist at the time of compiling.
+もし関数が定義されたスクリプトが Vim9 script であるなら、スクリプトローカル
+変数は前置詞 "s:" なしでアクセスすることができます。それらは関数がコンパイルさ
+れる前に定義されている必要があります。もし関数が定義されたスクリプトが旧来の
+Vim script であるなら、スクリプトローカル変数は、コンパイル時に存在しない場
+合は、前置詞 "s:" をつけてアクセスする必要があります。
 							*E1269*
-Script-local variables in a |Vim9| script must be declared at the script
-level.  They cannot be created in a function, also not in a legacy function.
+|Vim9| script では、スクリプトローカル変数はスクリプトレベルで宣言されなければ
+なりません。それらは関数内で、旧来の関数内でも作成することはできません。
 
 						*:defc* *:defcompile*
-:defc[ompile]		Compile functions defined in the current script that
-			were not compiled yet.
-			This will report any errors found during compilation.
+:defc[ompile]		現在のスクリプトで定義されている関数のうち、まだコンパ
+			イルされていないものをコンパイルします。これはコンパイ
+			ル時に見つかったいかなるエラーも報告します。
 
 :defc[ompile] {func}
 :defc[ompile] debug {func}
 :defc[ompile] profile {func}
-			Compile function {func}, if needed.  Use "debug" and
-			"profile" to specify the compilation mode.
-			This will report any errors found during compilation.
+			必要であれば関数 {func} をコンパイルします。"debug" と
+			"profile" はコンパイルモードを指定するのに使います。こ
+			れはコンパイル時に見つかったいかなるエラーも報告しま
+			す。
 
 						*:disa* *:disassemble*
-:disa[ssemble] {func}	Show the instructions generated for {func}.
-			This is for debugging and testing. *E1061*
-			Note that for command line completion of {func} you
-			can prepend "s:" to find script-local functions.
+:disa[ssemble] {func}	{func} 用に生成された命令列を表示します。これはデバ
+			ッグ及びテスト用です。*E1061*
+			Note {func} のコマンドライン補完において、スクリプト
+			ローカル関数を見つけるのに "s:" を前置することができ
+			ます。
 
 :disa[ssemble] profile {func}
-			Like `:disassemble` but with the instructions used for
-			profiling.
+			`:disassemble` と似ていますが、プロファイルをとるとき
+			に使われる命令列を表示します。
 
 :disa[ssemble] debug {func}
-			Like `:disassemble` but with the instructions used for
-			debugging.
+			`:disassemble` と似ていますが、デバッグをするときに使
+			われる命令列を表示します。
 
-Limitations ~
+制約 ~
 
-Local variables will not be visible to string evaluation.  For example: >
+ローカル変数は文字列式からは見えません。例: >
 	def MapList(): list<string>
 	  var list = ['aa', 'bb', 'cc', 'dd']
 	  return range(1, 2)->map('list[v:val]')
 	enddef
 
-The map argument is a string expression, which is evaluated without the
-function scope.  Instead, use a lambda: >
+このマップの引数は関数のスコープ抜きに評価される文字列式です。代わりにラムダ式
+を使ってください: >
 	def MapList(): list<string>
 	  var list = ['aa', 'bb', 'cc', 'dd']
 	  return range(1, 2)->map((_, v) => list[v])
 	enddef
 
-For commands that are not compiled, such as `:edit`, backtick expansion can be
-used and it can use the local scope.  Example: >
+`:edit` のような、コンパイルされないコマンドには、バッククォートによる展開が
+使え、またそれはローカルスコープを使うことができます。例: >
 	def Replace()
 	  var fname = 'blah.txt'
 	  edit `=fname`
 	enddef
 
-Closures defined in a loop will share the same context.  For example: >
+ループ内で定義されたクロージャは同じコンテキストを共有します。例: >
 	var flist: list<func>
 	for i in range(5)
 	  var inloop = i
 	  flist[i] = () => inloop
 	endfor
 	echo range(5)->map((i, _) => flist[i]())
-	# Result: [4, 4, 4, 4, 4]
+	# 結果: [4, 4, 4, 4, 4]
 <							*E1271*
-A closure must be compiled in the context that it is defined in, so that
-variables in that context can be found.  This mostly happens correctly, except
-when a function is marked for debugging with `breakadd` after it was compiled.
-Make sure to define the breakpoint before compiling the outer function.
+クロージャはそのコンテキスト内の変数を見つけられるように、必ずそれが定義された
+コンテキストでコンパイルされます。これは関数がコンパイルされた後に `:breakadd`
+で関数がデバッグ対象だとマークされたときを除いて、これは大体正しく行われます。
+必ず外側の関数がコンパイルされるより前にブレークポイントを定義するように気をつ
+けてください。
 
-The "inloop" variable will exist only once, all closures put in the list refer
-to the same instance, which in the end will have the value 4.  This is
-efficient, also when looping many times.  If you do want a separate context
-for each closure, call a function to define it: >
+「ループ中」の変数は一度しか存在しません。リストに入れた全てのクロージャは同じ
+インスタンス、すなわち最後に 4 の値をもつインスタンスを参照します。これは効率
+的で、何回もループする場合でも同様です。もしそれぞれのクロージャでコンテキスト
+を分けたいのであれば、コンテキストを定義するため関数を呼んでください: >
 	def GetClosure(i: number): func
 	  var infunc = i
 	  return () => infunc
@@ -1324,22 +1326,21 @@ for each closure, call a function to define it: >
 	  flist[i] = GetClosure(i)
 	endfor
 	echo range(5)->map((i, _) => flist[i]())
-	# Result: [0, 1, 2, 3, 4]
+	# 結果: [0, 1, 2, 3, 4]
 
-In some situations, especially when calling a Vim9 closure from legacy
-context, the evaluation will fail.  *E1248*
+いくらかの場面で、特に旧来の Vim script のコンテキストから Vim9 のクロージャを
+呼ぶとき、評価は失敗するでしょう。 *E1248*
 
-Note that at the script level the loop variable will be invalid after the
-loop, also when used in a closure that is called later, e.g. with a timer.
-This will generate error |E1302|: >
+Note スクリプトレベルにおいて、ループ変数はループの後では無効になります。これ
+はループ変数が後で呼ばれるクロージャで使われている場合、たとえばタイマーと組み
+合わせる場合、でも同様です。これは |E1302| エラーを発生させます: >
 	for n in range(4)
 	    timer_start(500 * n, (_) => {
 	          echowin n
 	       })
 	endfor
 
-You need to use a block and define a variable there, and use that one in the
-closure: >
+ブロックを使って変数を定義し、その変数をクロージャで使う必要があります: >
 	for n in range(4)
 	{
 	   var nr = n
@@ -1349,62 +1350,63 @@ closure: >
 	}
 	endfor
 
-Using `echowindow` is useful in a timer, the messages go into a popup and will
-not interfere with what the user is doing when it triggers.
+タイマーにおいて `:echowindow` を使うのは便利です。メッセージはポップアップに
+表示され、タイマーがトリガーされたときにユーザーが行っていることに干渉しませ
+ん。
 
 
-Converting a function from legacy to Vim9 ~
+旧来の Vim script の関数から Vim9 script の関数への変換 ~
 					*convert_legacy_function_to_vim9*
-These are the most changes that need to be made to convert a legacy function
-to a Vim9 function:
+これらが旧来の Vim script の関数から Vim9 script の関数へ変換するために行われ
+る必要のある変更の大部分です。
 
-- Change `func` or `function` to `def`.
-- Change `endfunc` or `endfunction` to `enddef`.
-- Add types to the function arguments.
-- If the function returns something, add the return type.
-- Change comments to start with # instead of ".
+- `func` や `function` を `def` に変更する。
+- `endfunc` や `endfunction` を `enddef` に変更する。
+- 関数の引数に型をつける。
+- もし関数が何か返すのであれば、戻り値の型をつける。
+- コメントが " に代わって # で始まるように変更する。
 
-  For example, a legacy function: >
+  たとえば旧来の Vim script の関数: >
 	func MyFunc(text)
-	  " function body
+	  " 関数の本体
 	endfunc
-<  Becomes: >
+<  がこうなる: >
 	def MyFunc(text: string): number
-	  # function body
+	  # 関数の本体
 	enddef
 
-- Remove "a:" used for arguments. E.g.: >
+- 引数に使われる "a:" を削除する。 例: >
 	return len(a:text)
-<  Becomes: >
+<  がこうなる: >
 	return len(text)
 
-- Change `let` used to declare a variable to `var`.
-- Remove `let` used to assign a value to a variable.  This is for local
-  variables already declared and b: w: g: and t: variables.
+- 変数の宣言に使われる `let` を `var` に変更する。
+- 変数への値の代入に使われる `let` を削除する。これは既に宣言されているローカ
+  ル変数と b: w: g: t: 変数が対象である。
 
-  For example, legacy function: >
+  たとえば旧来の Vim script の関数: >
 	  let lnum = 1
 	  let lnum += 3
 	  let b:result = 42
-<  Becomes: >
+<  がこうなる: >
 	  var lnum = 1
 	  lnum += 3
 	  b:result = 42
 
-- Insert white space in expressions where needed.
-- Change "." used for concatenation to "..".
+- 式中の必要なところへホワイトスペースを挿入する。
+- 結合に使われる "." を ".." に変更する。
 
-  For example, legacy function: >
+  たとえば旧来の Vim script の関数: >
 	  echo line(1).line(2)
-<  Becomes: >
+<  がこうなる: >
 	  echo line(1) .. line(2)
 
-- line continuation does not always require a backslash: >
+- 常に行継続にバックスラッシュが必要なわけではない: >
   	echo ['one',
 		\ 'two',
 		\ 'three'
 		\ ]
-<  Becomes: >
+<  がこうなる: >
 	echo ['one',
 		'two',
 		'three'
@@ -1412,10 +1414,10 @@ to a Vim9 function:
 
 ==============================================================================
 
-4. Types					*vim9-types*
+4. 型					*vim9-types*
 					*E1008* *E1009* *E1010* *E1012*
 					*E1013* *E1029* *E1030*
-The following builtin types are supported:
+以下の組み込み型がサポートされています:
 	bool
 	number
 	float
@@ -1431,57 +1433,51 @@ The following builtin types are supported:
 	func({type}, ...): {type}
 	void
 
-Not supported yet:
+まだサポートされていません:
 	tuple<a: {type}, b: {type}, ...>
 
-These types can be used in declarations, but no simple value will actually
-have the "void" type.  Trying to use a void (e.g. a function without a
-return value) results in error *E1031*  *E1186* .
+これらの型は宣言において使えますが、いかなる単純値も実際に "void" 型を持つこと
+はありません。void (たとえば、戻り値のない関数) を使おうとするとエラーがでま
+す。*E1031*  *E1186* 
 
-There is no array type, use list<{type}> instead.  For a list constant an
-efficient implementation is used that avoids allocating lot of small pieces of
-memory.
+配列型はありません。代わりに list<{type}> を使ってください。不変のリストに
+対しては大量の細かいメモリを割り当てするのを避ける効率的な実装が使われます。
 							*E1005* *E1007*
-A partial and function can be declared in more or less specific ways:
-func				any kind of function reference, no type
-				checking for arguments or return value
-func: void			any number and type of arguments, no return
-				value
-func: {type}			any number and type of arguments with specific
-				return type
+部分適用と関数は幾らかの方法で宣言することができます:
+func				任意の種類の関数参照。引数や戻り値への型チェッ
+				クはない。
+func: void			任意の数および型の引数で、戻り値はない。
+func: {type}			任意の数および型の引数で、特定の型の戻り値があ
+				る。
 
-func()				function with no argument, does not return a
-				value
-func(): void			same
-func(): {type}			function with no argument and return type
+func()				引数がなく、値を返さない関数。
+func(): void			同上
+func(): {type}			引数がなく、戻り値の型がある関数。
 
-func({type})			function with argument type, does not return
-				a value
-func({type}): {type}		function with argument type and return type
-func(?{type})			function with type of optional argument, does
-				not return a value
-func(...{type})			function with type of variable number of
-				arguments, does not return a value
+func({type})			引数の型があり、値を返さない関数。
+func({type}): {type}		引数の型と戻り値の型がある関数。
+func(?{type})			任意の引数の型があり、値を返さない関数。
+func(...{type})			可変長の引数の型があり、値を返さない関数。
 func({type}, ?{type}, ...{type}): {type}
-				function with:
-				- type of mandatory argument
-				- type of optional argument
-				- type of variable number of arguments
-				- return type
+				以下をもつ関数:
+				- 必須の引数の型
+				- 任意の引数の型
+				- 可変長引数の型
+				- 戻り値の型
 
-If the return type is "void" the function does not return a value.
+もし戻り値の型が "void" なら、関数は値を返しません。
 
-The reference can also be a |Partial|, in which case it stores extra arguments
-and/or a dictionary, which are not visible to the caller.  Since they are
-called in the same way the declaration is the same.
+関数参照はそれが呼び出し側から見えない追加の引数および・あるいは辞書を保存して
+いる場合、 |Partial| にすることもできます。それらは同じように呼び出されるた
+め、宣言も同じです。
 
-Custom types can be defined with `:type`: >
+`:type` を使ってカスタム型を定義できます: >
 	:type MyList list<string>
-Custom types must start with a capital letter, to avoid name clashes with
-builtin types added later, similarly to user functions.
+ユーザー関数と似たように、後から追加される組み込み型との名前の衝突を避けるた
+め、カスタム型は大文字から始まらなければなりません。
 {not implemented yet}
 
-And classes and interfaces can be used as types: >
+そしてクラスとインターフェースも型として使えます: >
 	:class MyClass
 	:var mine: MyClass
 
@@ -1498,136 +1494,133 @@ And classes and interfaces can be used as types: >
 {not implemented yet}
 
 
-Variable types and type casting	~
+変数の型と型キャスト	~
 							*variable-types*
-Variables declared in Vim9 script or in a `:def` function have a type, either
-specified explicitly or inferred from the initialization.
+Vim9 script か `:def` で定義される関数内で宣言された変数は明示的に示された型
+か、初期値から推測された型のどちらかの型を持っています。
 
-Global, buffer, window and tab page variables do not have a specific type, the
-value can be changed at any time, possibly changing the type.  Therefore, in
-compiled code the "any" type is assumed.
+グローバル、バッファ、ウィンドウ、タブページ変数は特定の型を持たず、値はつでも
+書き換えられ、そしてそれは型の変更も含み得ます。なので、コンパイルされたコード
+では "any" 型が仮定されます。
 
-This can be a problem when the "any" type is undesired and the actual type is
-expected to always be the same.  For example, when declaring a list: >
+これは "any" 型が望ましくなく、実際の型が常に同じであると想定されるときに問題
+になり得ます。例えば、リストを宣言したとき: >
 	var l: list<number> = [1, g:two]
-At compile time Vim doesn't know the type of "g:two" and the expression type
-becomes list<any>.  An instruction is generated to check the list type before
-doing the assignment, which is a bit inefficient.
+コンパイル時には Vim は "g:two" の型を知らず、式の型は list<any> になります。
+左辺への代入の前にリストの型をチェックするための命令が生成され、少々非効率で
+す。
 						*type-casting* *E1104*
-To avoid this, use a type cast: >
+これを避けるには、型キャストを使ってください: >
 	var l: list<number> = [1, <number>g:two]
-The compiled code will then only check that "g:two" is a number and give an
-error if it isn't.  This is called type casting.
+コンパイルされたコードは今度は "g:two" が数値かどうかをチェックするだけで、も
+しそうでないならエラーを与えます。これは型キャストと呼ばれます。
 
-The syntax of a type cast is:  "<" {type} ">".  There cannot be white space
-after the "<" or before the ">" (to avoid them being confused with
-smaller-than and bigger-than operators).
+型キャストの文法は: "<" {type} ">" です。"<" の後ろ、あるいは ">" の前にワイト
+スペースがあってはいけません (小なりと大なりの演算子との混乱を避けるためで
+す)。
 
-The semantics is that, if needed, a runtime type check is performed.  The
-value is not actually changed.  If you need to change the type, e.g. to change
-it to a string, use the |string()| function.  Or use |str2nr()| to convert a
-string to a number.
+意味としては、必要であれば実行時の型チェックが行われます。実際に値が変更される
+こことはありません。もし型を変える必要があるのであれば、たとえば文字列に変換す
+るのであれば |string()| 関数を使ってください。あるいは文字列を数値に変換するの
+であれば |str2nr()| 関数を使ってください。
 
-If a type is given where it is not expected you can get *E1272* .
+もし想定されない場所で型が与えられた場合、*E1272* を得るかもしれません。
 
 
-Type inference ~
+型インターフェース ~
 							*type-inference*
-In general: Whenever the type is clear it can be omitted.  For example, when
-declaring a variable and giving it a value: >
-	var name = 0		# infers number type
-	var name = 'hello'	# infers string type
+一般的に: 型が明確な時はいつも型を省略することができます。たとえば、変数を宣言
+し、値を与えた時: >
+	var name = 0		# 数値型と推測する
+	var name = 'hello'	# 文字列型と推測する
 
-The type of a list and dictionary comes from the common type of the values.
-If the values all have the same type, that type is used for the list or
-dictionary.  If there is a mix of types, the "any" type is used. >
+リストと辞書の型は、要素の値の型の共通のものからきます。もしその値が全て同じ型
+をもつなら、その型がリストか辞書に使われます。もし型が混在しているなら、"any"
+型が使われます。 >
 	[1, 2, 3]	list<number>
 	['a', 'b', 'c']	list<string>
 	[1, 'x', 3]	list<any>
 
-The common type of function references, if they do not all have the same
-number of arguments, uses "(...)" to indicate the number of arguments is not
-specified.  For example: >
+関数参照の共通の型は、もしそれらが全て同じ数の引数をもつのでなければ、引数の
+数が指定されていないことを示すため "(...)" を使います。例: >
 	def Foo(x: bool)
 	enddef
 	def Bar(x: bool, y: bool)
 	enddef
 	var funclist = [Foo, Bar]
 	echo funclist->typename()
-Results in:
+結果はこうなります:
 	list<func(...)>
 
-For script-local variables in Vim9 script the type is checked, also when the
-variable was declared in a legacy function.
+Vim9 script のスクリプトローカル変数は型がチェックされ、それは変数が旧来の Vim
+script の関数内で宣言されたときでも同様です。
 
-When a type has been declared this is attached to a List or Dictionary.  When
-later some expression attempts to change the type an error will be given: >
+型が宣言されたとき、これはリストや辞書に付け加えられます。後のある式がその型を
+変えようとすると、エラーが与えられます: >
 	var ll: list<number> = [1, 2, 3]
-	ll->extend(['x'])  # Error, 'x' is not a number
+	ll->extend(['x'])  # エラー、'x' は数値ではない
 
-If the type is not declared then it is allowed to change: >
-	[1, 2, 3]->extend(['x'])  # result: [1, 2, 3, 'x']
+もし型が宣言されていないのであれば、そのときは変えることは許可されます: >
+	[1, 2, 3]->extend(['x'])  # 結果: [1, 2, 3, 'x']
 
-For a variable declaration an inferred type matters: >
+変数の宣言においては、推測された型は重要です: >
 	var ll = [1, 2, 3]
-	ll->extend(['x'])  # Error, 'x' is not a number
-That is because the declaration looks like a list of numbers, thus is
-equivalent to: >
+	ll->extend(['x'])  # エラー、'x' は数値ではない
+理由は、宣言が数値のリストの宣言のようで、それゆえ以下と等しいからです: >
 	var ll: list<number> = [1, 2, 3]
-If you do want a more permissive list you need to declare the type: >
+もし、もっと寛容なリストが欲しいのであれば、型を宣言する必要があります: >
 	var ll: list<any = [1, 2, 3]
 	ll->extend(['x'])  # OK
 
 
-Stricter type checking ~
+より厳格な型チェック ~
 							*type-checking*
-In legacy Vim script, where a number was expected, a string would be
-automatically converted to a number.  This was convenient for an actual number
-such as "123", but leads to unexpected problems (and no error message) if the
-string doesn't start with a number.  Quite often this leads to hard-to-find
-bugs. e.g.: >
+旧来の Vim script では、数値が予期されるところでは、文字列は自動的に数値に変換
+されます。これは "123" のような実際の数値にに対しては便利でしたが、もし文字
+列が数字で始まらないときは予期しない問題 (加えてエラーメッセージなしで) を引き
+起こします。これは頻繁に見つけにくいバグを引き起こします。例: >
 	echo 123 == '123'
 <	1 ~
-With an accidental space: >
+思いがけないスペースがあるとき: >
 	echo 123 == ' 123'
 <	0 ~
 							*E1206* *E1210* *E1212*
-In Vim9 script this has been made stricter.  In most places it works just as
-before if the value used matches the expected type.  There will sometimes be
-an error, thus breaking backwards compatibility.  For example:
-- Using a number other than 0 or 1 where a boolean is expected.  *E1023*
-- Using a string value when setting a number option.
-- Using a number where a string is expected.   *E1024* *E1105*
+Vim9 script ではこれは厳格にされています。使われている値が予期される型と一致す
+る場合は、ほとんどの場所で前と同じように動作します。時々エラーになり、それゆえ
+後方互換性が壊れています。例:
+- 真偽値が期待されるところで、値が 0 か 1 でない数値を使う。  *E1023*
+- 数値のオプションを設定するときに文字列を使う。   *E1024* *E1105*
+- 文字列が期待されるところで数値を用いる。
 
-One consequence is that the item type of a list or dict given to |map()| must
-not change, if the type was declared.  This will give an error in Vim9
-script: >
+一つの影響として、型が宣言された場合は |map()| に渡されたリストか辞書の要素の
+型は変更されてはいけません。これは Vim9 script ではエラーを与えます: >
 	var mylist: list<number> = [1, 2, 3]
 	echo map(mylist, (i, v) => 'item ' .. i)
 <	E1012: Type mismatch; expected number but got string in map() ~
+	{訳注: 日本語メッセージの場合: "E1012: 型が不一致です。number が必要で
+	すが string でした (map() 内)"}
 
-Instead use |mapnew()|, it creates a new list: >
+代わりに、新しくリストを作成する |mapnew()| を使ってください: >
 	var mylist: list<number> = [1, 2, 3]
 	echo mapnew(mylist, (i, v) => 'item ' .. i)
 <	['item 0', 'item 1', 'item 2'] ~
 
-If the item type was not declared or determined to be "any" it can change to a
-more specific type.  E.g. when a list of mixed types gets changed to a list of
-strings: >
+もし要素の型が宣言されていない、あるいは "any" と決定されてされているなら、
+型はより具体的なものに変更することができます。たとえば、型の混ざったリストが
+文字列のリストに変更される場合: >
 	var mylist = [1, 2.0, '3']
 	# typename(mylist) == "list<any>"
 	map(mylist, (i, v) => 'item ' .. i)
-	# typename(mylist) == "list<string>", no error
+	# typename(mylist) == "list<string>"、エラーなし
 
-There is a subtle difference between using a list constant directly and
-through a variable declaration.  Because of type inference, when using a list
-constant to initialize a variable, this also sets the declared type: >
+リスト定数を直接使うのと、変数宣言を通して使うのには少しの差異があります。
+理由は型推論で、リスト定数を変数を初期化するのに使うとき、それは同時に宣言した
+型をつけます: >
 	var mylist = [1, 2, 3]
 	# typename(mylist) == "list<number>"
-	echo map(mylist, (i, v) => 'item ' .. i)  # Error!
+	echo map(mylist, (i, v) => 'item ' .. i)  # エラー!
 
-When using the list constant directly, the type is not declared and is allowed
-to change: >
+リスト定数を直接使うときは、型は宣言されず、変更することが許可されます: >
 	echo map([1, 2, 3], (i, v) => 'item ' .. i)  # OK
 
 The reasoning behind this is that when a type is declared and the list is
