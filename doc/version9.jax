@@ -57,7 +57,7 @@ Vim script 言語は長年の間、後方互換性を保持しながら段階的
 Vim9 script は他の言語により似た文法を提供します。言い替えるなら: "風変りさが
 減りました"。コンパイルされた関数が大きな速度の改善のために提供されています。
 約10倍、もしくはそれ以上の早さが期待できます。この価値への支払いとして Vim9
-script は後方互換性がありません。しかし心配はいりません、あなたの旧いスクリプ
+script は後方互換性がありません。しかし心配はいりません、あなたの古いスクリプ
 トはまだ使うことができ、新しいスクリプト言語は追加であり、旧来のスクリプトを置
 き換えません。
 
@@ -190,7 +190,7 @@ Ex コマンド修飾子: ~
 |test_unknown()|	unknown型の値を返す
 |test_void()|		void型の値を返す
 |typename()|		変数の型名のテキスト
-|virtcol2col()|		画面の文字についてのバイトインデックス
+|virtcol2col()|		画面上の文字のバイトインデックス
 |win_gettype()|		ウィンドウの型を取得
 |win_move_separator()|	ウィンドウの垂直セパレータの移動
 |win_move_statusline()|	ウィンドウのステータス行の移動
@@ -239,7 +239,7 @@ Ex コマンド修飾子: ~
 
 ここにある唯一の変更は以前のリリースとは互換性がありません:
 
-- Lua の配列は現在0ベースです、0ベースで使用してください。
+- Lua の配列は今は1ベースです。以前は0ベースでした。
 
 Note |Vim9| script を使用する時にはいくつかの動作が違います、
 |vim9-differences| を参照してください。
@@ -252,11 +252,11 @@ Vim 8.2 から多数の小さくて便利な改善がなされました、ここ
 多くのメモリリーク、不正なメモリアクセスとクラッシュを修正。
 以下のパッチリストを参照: |bug-fixes-9|.
 
-文字列内の Vim の式を評価をサポート。 |interp-string|
-heredoc内での Vim の式を評価をサポート。 |:let-heredoc|
+文字列内の Vim の式を評価をサポート。|interp-string|
+heredoc内での Vim の式を評価をサポート。|:let-heredoc|
 
 ファジーマッチのサポート:
-- リストされた文字列群の文字列で。 |fuzzy-matching|
+- リストされた文字列群の文字列で。|fuzzy-matching|
 - 'wildoptions' を使うことでコマンドラインの補完での補完サポート。
 - |:vimgrep| にて。
 
@@ -266,24 +266,24 @@ heredoc内での Vim の式を評価をサポート。 |:let-heredoc|
 |language-server-protocol|。|channel| での Unix ドメインソケット利用のサポー
 ト。チャネルのアドレス(|channel-address|)での IPv6 サポート。
 
-現在のバッファの行からの source のサポート。 |:source-range|
+現在のバッファの行からの source のサポート。|:source-range|
 
 端末ウィンドウの改善:
-- 端末ウィンドウをポップアップで開くのをサポート。 |popup-terminal|
+- 端末ウィンドウをポップアップで開くのをサポート。|popup-terminal|
 - 端末内の下線でカラー設定を受け付けるように。
 - 端末内でフォーカスイベントの検知(|FocusGained| および |FocusLost|)。
 - 端末内でのベルのサポート追加。('belloff')
 - 端末ウィンドウ内でのマウスでの左右スクロールのサポート。
 
 Vim script のプロファイリングの停止: `:profile stop` およびレポートのファイル
-へのダンプ: `:profile dump` のサポート。 |:profile|
+へのダンプ: `:profile dump` のサポート。|:profile|
 
 補完の改善:
 - |:breakadd|, |:breakdel|, |:diffget|, |:diffput|, |:profile|, |:profdel|,
   |:scriptnames| コマンドでの引数の補完をサポート。
 - 補完関数にて user_data で任意の Vim の型の使用をサポート(|complete-items|)。
 - 挿入モードの補完をテキスト変更なしでの停止(|i_CTRL-X_CTRL-Z|)。
-- コマンドライン引数を返す  "cmdline" オプションを |getcompletion()| に追加。
+- コマンドライン引数を返す "cmdline" オプションを |getcompletion()| に追加。
 
 'foldtext', 'completefunc', 'omnifunc', 'operatorfunc', 'thesaurusfunc',
 'quickfixtextfunc', 'tagfunc', 'imactivatefunc', 'imstatusfunc'、これらのオプ
@@ -295,8 +295,8 @@ Vim script のプロファイリングの停止: `:profile stop` およびレポ
 
 'fillchars' の改善:
 - 折り畳みの開始部分、閉じた折り畳み表示、折り畳み分割表示についてマークとして
-  使用する文字のについて 'fillchars' 内の "foldopen", "foldclose", "foldsep"
-  を使用して反映させる設定のサポート。
+  使用する文字について 'fillchars' 内の "foldopen", "foldclose", "foldsep" を
+  使用して反映させる設定のサポート。
 - 'fillchars' 内の "eob" を使用して行がないことを表す文字の設定のサポート。
 - 'fillchars' オプション内の "stl", "stlnc", "foldopen", "foldclose",
   "foldsep" 項目についてマルチバイトの使用のサポート。
@@ -317,19 +317,19 @@ XChaCha20 暗号化メソッドのサポート。 'cryptmethod'
 'nrformats' に "unsigned" が設定されているときの符号無しな数値の評価。
 
 expand('<SID>') を使用してスクリプトIDを expand('<script>') を使用してスクリプ
-ト名を展開する。 |expand()|
+ト名を展開する。|expand()|
 
 |g<Tab>| を使用して最後にアクセスしたタブページへのジャンプと |:tabnext| およ
 びその他の内で最後にアクセスしたタブページのサポート。
 
-|:sort| および |sort()| 使用でロケール依存なソート。
+|:sort| および |sort()| を使ったロケール依存なソート。
 
 |:sleep!| 使用でのスリープ時のカーソル非表示。
 
 'listchars' に "multispace" を追加し2以上のスペースがどこにあっても表示。
 'listchars' に "leadmultispace" を追加し2以上の行頭のスペースを表示。
 'listchars' に "lead" を追加し行頭のスペースに設定した文字を使用して表示。
-'listchars' で文字を特定するのに16進記法の使用をサポート(\x, \u, \U)。
+'listchars' で文字を指定するのに16進記法の使用をサポート(\x, \u, \U)。
 
 'listchars', 'virtualedit', 'thesaurusfunc' オプションはグローバルローカルに
 なった。
@@ -346,7 +346,7 @@ expand('<SID>') を使用してスクリプトIDを expand('<script>') を使用
 末尾空白なしのブロックモードでコピーする |zy| を追加。
 
 ビジュアルモード内で削除テキストを無名レジスタに追加しないでテキストを貼り付け
-る 'P' コマンドをビジュアルモードに追加。 |put-Visual-mode|
+る 'P' コマンドをビジュアルモードに追加。|put-Visual-mode|
 
 現在カーソルがいる行を基準にマッチする \%.l, \%<.l, \%>.l アトムを追加。
 詳細は |/\%l| を参照。
@@ -356,21 +356,21 @@ expand('<SID>') を使用してスクリプトIDを expand('<script>') を使用
 'breakindentopt' に追加。
 
 'cursorline' において目印のハイライトを調整するデフォルトのハイライトグループ
-|hl-CursorLineSign| と |hl-CursorLineFold|を追加。
+|hl-CursorLineSign| と |hl-CursorLineFold| を追加。
 
-現在の検索でマッチのデフォルトのハイライトグループ |hl-CurSearch|を追加。
+現在の検索でマッチのデフォルトのハイライトグループ |hl-CurSearch| を追加。
 
 Vim 起動時のログ取得のサポートを追加(|--log|)。
 
 'quickfixtextfunc' を使用して quickfix バッファの内容のカスタマイズサポートを
-追加。|errorformat|にて "note" エラー種別(%t)をサポート。
+追加。|errorformat| にて "note" エラー種別(%t)をサポート。
 'errorformat' の使用で終端行番号(%e)と終端桁番号(%k)のパースサポートを追加。
 
 |settagstack()| を使用してのタグのスタックの切り詰めをサポート。
 
 ! を設定した |:set| 利用時に各オプションを別の行に表示。
 
-|CTRL-W| および |CTRL-U| でもまた挿入の先頭でバックスペースが使用できるよう
+|CTRL-W| および |CTRL-U| でも挿入の先頭でバックスペースが使用できるよう
 'backspace' に "nostop" を追加。
 
 'fsync' が設定された場合にアンドゥファイルを同期。
@@ -382,7 +382,7 @@ Vim 起動時のログ取得のサポートを追加(|--log|)。
 
 |filter()| および |map()| での blob と文字列型のサポート。
 
-タグ種別でのマルチバイト文字利用のサポート。 |tags-file-format|
+タグ種別でのマルチバイト文字利用のサポート。|tags-file-format|
 
 |exists()| を使用して関数名が有効かチェックするためのサポートを追加。
 
@@ -394,20 +394,21 @@ Python/Lua/Perl/Tcl/Ruby/MzScheme インターフェイスの heredoc で 'trim'
 下線および波下線用の termcap のコード |t_AU| と |t_8u| を追加。フォーカスイベ
 ント検知の termcap のコード t_fd と t_fe を追加。
 
-通常のコード同様のCプラグマのインデントのサポート。 (|cino-P|)
+通常のコード同様のCプラグマのインデントのサポート。(|cino-P|)
 
 構文の折り畳みレベルの定義サポートの追加。(|:syn-foldlevel|)
 
-文字列内で文字先頭に修飾子を追加し \<*xxx> の使用サポート追加。(|expr-quote|)
+\<*xxx> を使って文字列内で文字の前に修飾子を追加することのサポートを追加。
+(|expr-quote|)
 
 |trim()| 使用して文字列の開始もしくは終了の文字削除サポートの追加。
 
 ":verbose pwd" にてディレクトリのスコープ表示を行う。|:pwd-verbose|
 
-明確な8進数の記法として "0o" を追加。 |scriptversion-4|
+明確な8進数の記法として "0o" を追加。|scriptversion-4|
 
 "tcd -" および "lcd -" を使用してタブローカルおよびウィンドウローカルでの直前
-のディレクトリに変更するのをサポート。 (|:tcd-| and |:lcd-|)
+のディレクトリに変更するのをサポート。(|:tcd-| and |:lcd-|)
 
 |search()| の使用でスキップする式のサポートを追加。
 
