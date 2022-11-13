@@ -1,4 +1,4 @@
-*os_vms.txt*    For Vim バージョン 8.1.  Last change: 2018 May 06
+*os_vms.txt*    For Vim バージョン 9.0.  Last change: 2022 Sep 30
 
 
 			  VIMリファレンスマニュアル
@@ -103,6 +103,8 @@ OpenVMS特有のソースコードにはCTAGSのソースコードファイル�
 GUIでGTKアイコンを使いたい場合には、OpenVMS用のGTKをダウンロードしてインストー
 ルする必要がある。もしくは polarhome.com で提供されるLIBGTKという共有可能なラ
 ンタイムイメージが必要になるだろう。
+OpenVMS上の最後のGTKが 1.2.10 である傍ら、7.2以降のVimはGTK2+を使用する。その
+ため、GTKビルドはもう利用できない。
 
 これ以上に高度な質問は、Vim on VMSのメーリングリストに送って欲しい。アドレスは
 	<vim-vms@polarhome.com>
@@ -200,10 +202,10 @@ NOTE: システム設定ファイル(全てのユーザーにとってのデフ�
 
 LOGIN.COMの例: >
 
-	$ define/nolog VIM RF10:[UTIL.VIM]
+	$ define/nolog VIM DKA0:[UTIL.VIM81]
 	$ vi*m :== mcr VIM:VIM.EXE
 	$ gv*im:== spawn/nowait/input=NLA0 mcr VIM:VIM.EXE -g -GEOMETRY 80x40
-	$ set disp/create/node=192.168.5.223/trans=tcpip
+	$ set disp/create/node=192.168.10.202/trans=tcpip
 
 NOTE: 独立サーバーやクラスタ環境で使用しているならばこの設定で充分であろう。し
 かしノード間エディタとしてVimを使用する場合には次のようにした方がより使いやす
@@ -328,10 +330,11 @@ NOTE: これらのうちからどれか1つを選ぶ必要がある。もっと�
 8.1 バックスペースとデリート
 
 VMSにはバックスペースとデリートキーについて矛盾がある。
-:fixdel ではこの問題を解決できないので、次のようにする必要がある: >
+:fixdel ではこの問題を解決できないので、次のようにする必要がある('cpo' が "<"
+を含まない): >
 
-	:inoremap ^? ^H		" CUI(端末)モード用
-	:inoremap <Del> ^H	" GUIモード用
+	:inoremap <C-?> <C-H>	" CUI(端末)モード用
+	:inoremap <Del> <C-H>	" GUIモード用
 
 詳細は8.6章(端末の問題)を参照。
 (Bruce Hunsaker <BNHunsaker@chq.byu.edu> Vim 5.3)
@@ -430,7 +433,6 @@ Terminal entry not found in termcap
     builtin_gui
     builtin_riscos
     builtin_amiga
-    builtin_beos-ansi
     builtin_ansi
     builtin_vt320
     builtin_vt52
@@ -602,13 +604,13 @@ GNU: をそのディレクトリを指すよう作成するといいだろう。
 	function MyDiff()
 	   let opt = ""
 	   if &diffopt =~ "icase"
-	     let opt = opt . "-i "
+	     let opt = opt .. "-i "
 	   endif
 	   if &diffopt =~ "iwhite"
-	     let opt = opt . "-b "
+	     let opt = opt .. "-b "
 	   endif
-	   silent execute "!mc GNU:diff.exe -a " . opt . v:fname_in . " " .  v:fname_new .
-		\  " > " . v:fname_out
+	   silent execute "!mc GNU:diff.exe -a " .. opt .. v:fname_in .. " " ..  v:fname_new ..
+		\  " > " .. v:fname_out
 	endfunction
       endif
 
@@ -762,6 +764,25 @@ GNU_TOOLS.ZIP の [GNU]gnu_tools.com スクリプトである。
 ==============================================================================
 
 9. VMS関連の変更点					*vms-changes*
+
+Version 8.2
+- 全プラットフォームの VMS Vim 8.2 クリーンビルドで必要となる全ての変更を実施
+- mkdir 呼び出しバグの修正 (vicente_polo@yahoo.es)
+- VSI OpenVMS Alpha と Itanium プラットフォーム上のテスト
+- LUA サポートを追加
+- XPM サポートを追加 - すべてのプラットフォームのツールバー付きMotif GUI
+- XPM v3.4.11 ライブラリの IA64、AXP、VAX 版を追加
+- 新テストスクリプト統合を開始
+
+Version 8.1
+- VMSで v8.1 をビルドするために必要な変更
+
+Version 8.0
+- キーストロークを待っている間、CPU使用率 100% の問題を解決
+- INFINITY(json.c で使用)の取り扱いに関するVMSの警告とエラーを修正
+- 小さなVMSの移植に関連した変更
+- make_vms.mms file を 8.0用に修正
+- [.TESTDIR]make_vms.mms を 8.0用に修正
 
 Version 7.4
 - Undo: VMS はファイル名に複数のドットを使えないので "dir/name" -> "dir/_un_name" とする

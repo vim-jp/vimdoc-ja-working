@@ -1,4 +1,4 @@
-*map.txt*       For Vim バージョン 8.1.  Last change: 2018 May 13
+*map.txt*       For Vim バージョン 9.0.  Last change: 2022 Jun 18
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -6,7 +6,7 @@
 
 キーマップ、短縮入力、ユーザー定義コマンドについて。
 
-ユーザーマニュアルの|05.3|、|24.7|、|40.1|でこの機能について紹介しています。
+ユーザーマニュアルの|05.4|、|24.7|、|40.1|でこの機能について紹介しています。
 
 1. マップ			|key-mapping|
    1.1 マップコマンド			|:map-commands|
@@ -19,7 +19,8 @@
    1.8 例				|map-examples|
    1.9 マップを使う			|map-typing|
    1.10 Altキーを使ったマップ		|:map-alt-keys|
-   1.11 オペレータの作成		|:map-operator|
+   1.11 modifyOtherKeys モードのマップ	|modifyOtherKeys|
+   1.12 オペレータの作成		|:map-operator|
 2. 短縮入力			|abbreviations|
 3. ローカルマップとローカル関数	|script-local|
 4. ユーザー定義コマンド		|user-commands|
@@ -51,32 +52,37 @@
 :om[ap]	{lhs} {rhs}		|mapmode-o|		*:om* *:omap*
 :map!	{lhs} {rhs}		|mapmode-ic|		*:map!*
 :im[ap]	{lhs} {rhs}		|mapmode-i|		*:im* *:imap*
-:lm[ap]	{lhs} {rhs}		|mapmode-l|		*:lm* *:lmap*
+:lm[ap]	{lhs} {rhs}		|mapmode-l|		*:lm* *:lma* *:lmap*
 :cm[ap]	{lhs} {rhs}		|mapmode-c|		*:cm* *:cmap*
 :tma[p]	{lhs} {rhs}		|mapmode-t|		*:tma* *:tmap*
 			キー入力 {lhs} を {rhs} に割り当てます。作成したマップ
 			は、マップコマンドに対応したモードで使用できます。マッ
 			プが使用されたときに {rhs} が調べられ、再マップされま
 			す。マップを入れ子にしたり再帰的にすることができます。
+			Note: 空白は有効なノーマルモードのコマンドであるため、
+			末尾の空白は {rhs} に含まれます。
+			|map-trailing-white| を参照。
 
 						*:nore* *:norem*
 :no[remap]  {lhs} {rhs}		|mapmode-nvo|	*:no*  *:noremap* *:nor*
 :nn[oremap] {lhs} {rhs}		|mapmode-n|	*:nn*  *:nnoremap*
 :vn[oremap] {lhs} {rhs}		|mapmode-v|	*:vn*  *:vnoremap*
 :xn[oremap] {lhs} {rhs}		|mapmode-x|	*:xn*  *:xnoremap*
-:snor[emap] {lhs} {rhs}		|mapmode-s|	*:snor* *:snoremap*
+:snor[emap] {lhs} {rhs}		|mapmode-s|	*:snor* *:snore* *:snoremap*
 :ono[remap] {lhs} {rhs}		|mapmode-o|	*:ono* *:onoremap*
 :no[remap]! {lhs} {rhs}		|mapmode-ic|	*:no!* *:noremap!*
-:ino[remap] {lhs} {rhs}		|mapmode-i|	*:ino* *:inoremap*
+:ino[remap] {lhs} {rhs}		|mapmode-i|	*:ino* *:inor* *:inoremap*
 :ln[oremap] {lhs} {rhs}		|mapmode-l|	*:ln*  *:lnoremap*
-:cno[remap] {lhs} {rhs}		|mapmode-c|	*:cno* *:cnoremap*
+:cno[remap] {lhs} {rhs}		|mapmode-c|	*:cno* *:cnor* *:cnoremap*
 :tno[remap] {lhs} {rhs}		|mapmode-t|	*:tno* *:tnoremap*
-			キー入力 {lhs} を {rhs} に割り当てます。作成したマッ
-			プ、はマップコマンドに対応したモードで使用できます。
+			キー入力 {lhs} を {rhs} に割り当てます。作成したマップ
+			は、マップコマンドに対応したモードで使用できます。
 			{rhs} は再マップされないので、マップが入れ子になったり
 			再帰的になることはありません。コマンドを再定義するとき
 			によく使われます。
-			{Vi にはありません}
+			Note: {rhs} に <Plug> が表れる場合は再マップが許可され
+			ていなくてもその部分には常に適用{訳註:再マップ}されま
+			す。
 
 
 :unm[ap]  {lhs}			|mapmode-nvo|		*:unm*  *:unmap*
@@ -88,14 +94,14 @@
 :unm[ap]! {lhs}			|mapmode-ic|		*:unm!* *:unmap!*
 :iu[nmap] {lhs}			|mapmode-i|		*:iu*   *:iunmap*
 :lu[nmap] {lhs}			|mapmode-l|		*:lu*   *:lunmap*
-:cu[nmap] {lhs}			|mapmode-c|		*:cu*   *:cunmap*
+:cu[nmap] {lhs}			|mapmode-c|		*:cu*   *:cun* *:cunmap*
 :tunma[p] {lhs}			|mapmode-t|		*:tunma* *:tunmap*
 			マップコマンドに対応したモードの {lhs} というマップを
 			削除します。他のモードのマップは残ります。
-			Note: 末尾の空白は {lhs} に含まれます。次の unmap コマ
-			ンドは機能しません: >
-				:map @@ foo
-				:unmap @@ | print
+			{lhs} がマッピングの {rhs} にマッチするときも機能しま
+			す。これは略語が適用された場合に使用します。
+			Note: 末尾の空白は {lhs} に含まれます。
+			|map-trailing-white| を参照。
 
 :mapc[lear]			|mapmode-nvo|		*:mapc*   *:mapclear*
 :nmapc[lear]			|mapmode-n|		*:nmapc*  *:nmapclear*
@@ -109,10 +115,12 @@
 :cmapc[lear]			|mapmode-c|		*:cmapc*  *:cmapclear*
 :tmapc[lear]			|mapmode-t|		*:tmapc*  *:tmapclear*
 			マップコマンドに対応したモードのすべてのマップを削除し
-			ます。{Vi にはありません}
+			ます。
 			バッファローカルなマップを削除するには <buffer> 引数を
 			付けてください |:map-<buffer>|。
-			警告: 標準設定のマップも削除されます。
+			警告: Mac の標準マップ |mac-standard-mappings| と
+			MS-DOS の標準マップ |dos-standard-mappings| も削除され
+			ます。
 
 :map				|mapmode-nvo|
 :nm[ap]				|mapmode-n|
@@ -142,7 +150,6 @@
 :tma[p] {lhs}			|mapmode-t|		*:tmap_l*
 			マップコマンドに対応したモードの {lhs} で始まるマップ
 			を一覧表示します。
-			{Vi にはありません}
 
 マップコマンドを使うと、単キーまたは複数キーの入力を別の文字列にマップできま
 す。ファンクションキーにコマンド列を割り当てたり、あるキーを別のキーに変換した
@@ -158,7 +165,27 @@
 の文字が必要になります。そのため、"aa" が入力された時点ではまだマップは適用さ
 れず、次の入力まで待機状態になります。例えば空白文字を入力すれば "foo" と空白
 文字が挿入されます。"a" を入力すれば "bar" が挿入されます。
-{Vi はあいまいなマップを許可しません}
+
+末尾空白 ~
+							*map-trailing-white*
+このunmapコマンドは動作しません: >
+	:map @@ foo
+	:unmap @@ | print
+
+なぜなら unmap "@@ " を試行するとき、コマンド区切りの "|" の前の空白を含んでい
+るためです。他の末尾空白の例として: >
+	unmap @@ 
+	unmap @@     # Vim9 script コメント
+	unmap @@     " 旧来のスクリプトのコメント
+
+`unmap @@ ` の末尾が空白文字のためエラーになりますが、これは見えないので特定す
+るのが非常に困難です。
+
+一般的な解決策はマップしたキーの後の右にコマンド区切りの "|" を置くことです。
+その後に空白とコメントを続けます: >
+
+	unmap @@|    # Vim9 script コメント
+	unmap @@|    " 旧来のスクリプトのコメント
 
 
 1.2 特別な引数						*:map-arguments*
@@ -167,7 +194,8 @@
 "<unique>" を指定できます。マップコマンドの直後 (他の引数の前) に置いてくださ
 い。
 
-				*:map-local* *:map-<buffer>* *E224* *E225*
+				    *:map-local* *:map-<buffer>* *:map-buffer*
+				    *E224* *E225*
 カレントバッファだけで使用できるマップを作成するには、マップコマンドの引数に
 "<buffer>" を指定します。例: >
 	:map <buffer>  ,w  /[.,;]<CR>
@@ -190,6 +218,12 @@
 引数に <nowait> を追加します。そしてそのマップは一致する場合に使用され、Vimは
 それ以上入力される文字を待ちません。しかし、既に文字が入力されていた場合はそれ
 が使われます。
+Note: これが動作するのは <nowait> なマッピングが完全にマッチし、なんらかの部分
+マッチの前に見付かるときです。これが動作するのは:
+- バッファローカルなマッピングで唯一のマッチがあるとき。なぜなら常にグローバル
+  なマッピングより先に見付かるからです。
+- これとは別のバッファローカルなマッピングが部分マッチするが、より早く定義され
+  ているとき (最後に定義したマッピングが最初に見付かる)。
 
 						*:map-<silent>* *:map-silent*
 実行するコマンドがコマンドラインに表示されないようにするには、マップコマンドの
@@ -219,7 +253,7 @@ Note: ":map <script>" と ":noremap <script>" の動作は同じです。コマ�
 "<script>" の効果が優先されます。再マップが制限されることが明確になるため
 ":noremap <script>" を使う方がいいでしょう。
 
-						*:map-<unique>* *E226* *E227*
+				*:map-<unique>* *:map-unique* *E226* *E227*
 マップや短縮入力を定義するときに "<unique>" 引数を指定すると、同じ名前のものが
 すでに定義されていた場合に、コマンドは失敗します。例: >
 	:map <unique> ,w  /[#&!]<CR>
@@ -234,13 +268,43 @@ Note: ":map <script>" と ":noremap <script>" の動作は同じです。コマ�
 マップや短縮入力を定義するときに "<expr>" 引数を指定すると、引数が式 (スクリプ
 ト) として扱われます。マップが実行されたときに、式が評価され、その値が {rhs}
 として使われます。例: >
-	:inoremap <expr> . InsertDot()
-InsertDot() 関数の戻り値が挿入されます。カーソルの前のテキストをチェックして、
-ある条件に一致するなら omni 補完を開始する、というようなことができます。
+	:inoremap <expr> . <SID>InsertDot()
+s:InsertDot() 関数の戻り値が挿入されます。カーソルの前のテキストをチェックし
+て、ある条件に一致するなら omni 補完を開始する、というようなことができます。
+グローバルな名前空間の汚染を回避するには、スクリプトローカル関数を利用すること
+が望しいです。RHS内に <SID> を使ってマッピングが定義されたスクリプトを見付けら
+れるようにします。
 
 短縮入力では、入力されて短縮入力展開のトリガーとなった文字が |v:char| にセット
 されます。これを使って {lhs} の展開方法を決めることもできます。自分で v:char
 を挿入したり変更したりすべきではありません。
+
+マッピングで何も実行させない場合は、評価結果が空文字列になるようにします。も
+し、なんからの{訳註:状態などの}変更で Vim がメインループを通過する必要があるも
+のなら (例えば、画面の更新など)、"\<Ignore>" を返すようにします。
+これは、"何もしない" と同義ですが Vim はループから入力待ちに戻ります。例: >
+	func s:OpenPopup()
+	  call popup_create(... arguments ...)
+	  return "\<Ignore>"
+	endfunc
+	nnoremap <expr> <F3> <SID>OpenPopup()
+
+前のコマンドが実行される前に、先行入力を探す時に式が評価されることがあることを
+覚えておいてください。例: >
+	func StoreColumn()
+	  let g:column = col('.')
+	  return 'x'
+	endfunc
+	nnoremap <expr> x StoreColumn()
+	nmap ! f!x
+g:column に "f!" 実行前の値がある、つまり "x" が評価されるのが "f!" の実行前で
+あることに気付くでしょう。
+これは評価のマッピングの文字の前に <Ignore> を挿入することで解決できます: >
+	nmap ! f!<Ignore>x
+
+|Vim9| script 内でのマッピング定義時は、式がそのスクリプトのコンテキストで評価
+されます。これは式内でスクリプトローカルの要素についてアクセスできることを意味
+します。
 
 副作用に注意してください。式は文字の取得中に評価されるため、簡単に異常動作を起
 こせてしまいます。そのため、次のものは制限されます:
@@ -248,7 +312,8 @@ InsertDot() 関数の戻り値が挿入されます。カーソルの前のテ�
 - 他のバッファの編集。
 - |:normal| コマンド。
 - カーソルの移動は可能ですが、後で元に戻されます。
-以上のことを実現したい場合は、そのためのコマンド文字列を返してください。
+以上のことを実現したい場合は、そのためのコマンド文字列を返してください。もしく
+は代わりに |<Cmd>| マッピングを使用してください。
 
 getchar() が使用できます。先行入力があればそれが消費されます。例えば次のような
 マップを定義します: >
@@ -266,7 +331,7 @@ getchar() によって取得され、返されます。
 
 	func ListItem()
 	  let g:counter += 1
-	  return g:counter . '. '
+	  return g:counter .. '. '
 	endfunc
 
 	func ListReset()
@@ -277,22 +342,64 @@ getchar() によって取得され、返されます。
 CTRL-L で次の番号を挿入し、CTRL-R で番号をリセットします。CTRL-R は空文字列を
 返すので、何も挿入されません。
 
-Note: 特殊キーが機能するようにしたり、テキスト中の CSI バイトをエスケープした
-りするために、特別な処理が行われています。|:map| コマンドも同様の処理を行うの
-で、それが二重に実行されるのを防ぐ必要があります。次のものは機能しません: >
-	:imap <expr> <F3> "<Char-0x611B>"
-なぜなら、<Char- で表記した文字 (あるいは本物の文字) のバイト列は |:imap| コマ
-ンドが解釈されるときにエスケープされ、<expr> で使われるときにもう一度エスケー
-プされるからです。次のものは機能します: >
-	:imap <expr> <F3> "\u611B"
-テキストの末尾以外で 0x80 をシングルバイトとして使った場合、それは機能しませ
-ん。特殊キーとして認識されます。
+Note: テキストの末尾以外で 0x80 をシングルバイトとして使った場合、それは機能し
+ません。特殊キーとして認識されます。
+
+						*<Cmd>* *:map-cmd*
+特別な文字列 <Cmd> は "コマンドマッピング" を開始し、モードを変化させずにコマ
+ンドを直に実行します。マッピングの {rhs} で ":...<CR>" を使うなら、代わりに
+"<Cmd>...<CR>" が使えます。例: >
+	noremap x <Cmd>echo mode(1)<CR>
+<
+これはビジュアルおよびオペレータ待機モードでの `:<C-U>`、挿入モードでの
+`<C-O>:` より柔軟で、なぜなら常にノーマルモードへ移行する代わりにコマンド実行
+が現在のモードのままでだからです。ビジュアルモードでは |gv| での{訳註:選択の}
+維持のトリックが不要です。コマンドをコマンドラインモードで直に動かせます (これ
+でないならタイマーでのハックが必要です)。
+挿入モードを跨いで <Cmd> を使う例: >
+	nnoremap <F3> aText <Cmd>echo mode(1)<CR> Added<Esc>
+<
+<expr> マッピングとは異なり、<Cmd> コマンドに特別な制約はありません: あたかも
+(制約のない) |autocommand| が呼び出されたかのように実行されます。
+
+						*<ScriptCmd>*
+<ScriptCmd> は <Cmd> に似ていますが、コマンド実行時のコンテキストはマッピング
+が定義された箇所のスクリプトのものが設定されます。これは |Vim9| script で特に
+便利です。また、インポートでの参照でも動作するので、autoload スクリプトを使用
+するプラグインで便利です: >
+	vim9script
+	import autoload 'implementation.vim' as impl
+	nnoremap <F4> <ScriptCmd>impl.DoTheWork()<CR>
+
+<F4> がどこで入力されたとしても、"impl" のインポートはマッピングが定義された
+場所のスクリプトのコンテキストで検出されます。また、これは autoload のインポー
+トなので、マッピングが定義された時ではなく、一度 <F4> が入力された時にのみ
+"implementation.vim" スクリプトがロードされます。
+
+Note:
+- <Cmd> と <ScriptCmd> はモード変更を回避するので、ユーザーの介入を必要としな
+  いため、|CmdlineEnter| と |CmdlineLeave| イベントをトリガーしません。
+- 同じ理由により、<C-R><C-W> のようなキーコード |keycodes| は通常の、マッピン
+  グされていないキーとして解釈されます。
+- コマンドは echo されません、<silent> は不要です。
+- {rhs} は、マッピングが再帰的であっても、短縮入力や他のマッピングの対象にはな
+  りません。
+- ビジュアルモードでは、`line('v')` と `col('v')` を使って、ビジュアルエリアの
+  一端を取得でき、カーソルは反対の端にいます。
+
+							*E1255* *E1136*
+<Cmd> と <ScriptCmd> コマンドではマッピング定義の {rhs} が <CR> で終わる必要が
+あります。|Command-line| に入ることはありません。
+
+							*E1137*
+<Cmd> と <ScriptCmd> コマンドは通常の文字を含み、ファンクションキーのような特
+殊文字を含みません。
 
 
 1.3 マップとモード					*:map-modes*
 			*mapmode-nvo* *mapmode-n* *mapmode-v* *mapmode-o*
 
-マップには 6 つの種類があります。
+マップには 7 つの種類があります。
 - ノーマルモード:  ノーマルモードのコマンドを入力するとき。
 - ビジュアルモード:  ビジュアルモードのコマンドを入力するとき。
 - 選択モード: ビジュアルモードに似ていますが入力したテキストによって選択範囲が
@@ -301,13 +408,14 @@ Note: 特殊キーが機能するようにしたり、テキスト中の CSI バ
   後)。|omap-info| 参照。
 - 挿入モード:  置換モードでも使われます。
 - コマンドラインモード:  ":" もしくは "/" コマンドを入力したとき。
+- 端末モード: 端末 |:terminal| バッファでの入力時。
 
 例外として、ノーマルモードでカウント(コマンドの繰り返し回数)を入力しているとき
 は、0 (ゼロ)に対するマップは適用されません。これは 0 がマップされていても、カ
 ウントの指定でゼロを入力できるようにするためです。
 
 						*map-overview* *map-modes*
-マップコマンドとモードの対応表。詳細は以後に。
+マップコマンドとモードの対応。詳細は以後に。
      コマンド                    モード ~
 :map   :noremap  :unmap     ノーマル、ビジュアル、選択、オペレータ待機
 :nmap  :nnoremap :nunmap    ノーマル
@@ -322,6 +430,23 @@ Note: 特殊キーが機能するようにしたり、テキスト中の CSI バ
 :tmap  :tnoremap :tunmap    端末ジョブ
 
 {訳注: Lang-Argについては |language-mapping| を参照}
+
+上記のマップコマンドの対応表:
+							*map-table*
+       モード  | Norm | Ins | Cmd | Vis | Sel | Opr | Term | Lang | ~
+コマンド       +------+-----+-----+-----+-----+-----+------+------+ ~
+[nore]map      | yes  |  -  |  -  | yes | yes | yes |  -   |  -   |
+n[nore]map     | yes  |  -  |  -  |  -  |  -  |  -  |  -   |  -   |
+[nore]map!     |  -   | yes | yes |  -  |  -  |  -  |  -   |  -   |
+i[nore]map     |  -   | yes |  -  |  -  |  -  |  -  |  -   |  -   |
+c[nore]map     |  -   |  -  | yes |  -  |  -  |  -  |  -   |  -   |
+v[nore]map     |  -   |  -  |  -  | yes | yes |  -  |  -   |  -   |
+x[nore]map     |  -   |  -  |  -  | yes |  -  |  -  |  -   |  -   |
+s[nore]map     |  -   |  -  |  -  |  -  | yes |  -  |  -   |  -   |
+o[nore]map     |  -   |  -  |  -  |  -  |  -  | yes |  -   |  -   |
+t[nore]map     |  -   |  -  |  -  |  -  |  -  |  -  | yes  |  -   |
+l[nore]map     |  -   | yes | yes |  -  |  -  |  -  |  -   | yes  |
+
 
     コマンド				      モード ~
 				    ノーマル  ビジュアル+選択  オペレータ待機~
@@ -357,7 +482,7 @@ NOTE: 選択モードで印字可能文字にマップを定義するとユー�
 :cmap  :cnoremap  :cunmap  :cmapclear	     -	       yes	   -
 :lmap  :lnoremap  :lunmap  :lmapclear	    yes*       yes*       yes*
 
-{訳注: Lang-Argについては |language-mapping| を参照}
+* もし 'iminsert' が 1 ならば、下記 |language-mapping| を参照してください。
 
 オリジナルの Vi はノーマルモード、ビジュアルモード、オペレータ待機モード、でひ
 とまとまり、挿入モード、コマンドラインモード、でさらにひとまとまりのマップを持
@@ -372,8 +497,10 @@ Vim では ":nmap"、":vmap"、":omap"、":cmap"、":imap" を使い分けるこ
 
 							*omap-info*
 オペレータ待機マップを使うと、移動コマンドを定義できます。そして、オペレータと
-組み合わせて使うことができます。簡単な例: ":omap { w" を定義した場合、"y{"
-が"yw" として、"d{" が "dw" として機能するようになります。
+組み合わせて使うことができます。簡単な例: >
+	:omap { w
+を定義した場合、"y{" が "yw" として、"d{" が "dw" として機能するようになりま
+す。
 
 マップ適用時のカーソル位置を無視し、異なるテキストを選択するには、omap 内でビ
 ジュアルモードを開始して対象となるテキストを選択してください。例えば、現在行の
@@ -388,6 +515,7 @@ CTRL-U (<C-U>) を使って (Vimによって挿入される) 範囲指定を削�
 レータ待機モードのマップだけを削除します: >
 	:map	xx something-difficult
 	:ounmap xx
+
 ビジュアルモードとオペレータ待機モードの場合や、ノーマルモードとオペレータ待機
 モードの場合も同様にします。
 
@@ -444,8 +572,8 @@ Note: ビジュアルモードのマップでは "'<" マークが使えます�
 ファで選択されていた範囲の開始位置を示しています|'<|。
 
 何がマッピングされているか調べるのに |:filter| コマンドを使うことができます。
-パターンは {lhs} と {rhs} に対しては、生の形式で(訳注:実際のキャラクターコード
-を用いて)マッチします。
+パターンは {lhs} と {rhs} に対しては、生の形式で {訳注: 実際のキャラクターコー
+ドを用いて} マッチします。
 
 							*:map-verbose*
 'verbose' がゼロ以外のときにマップ一覧を表示すると、どこで定義されたのかも表示
@@ -585,6 +713,11 @@ Note: 変数 "mapleader" はマップを定義するときに使用されます�
 特別な文字列 "<Plug>" を使ってスクリプトの内部作業用のマップを定義できます。こ
 れはどのキー入力にもマッチしません。プラグインを作成するときに便利です
 |using-<Plug>|。
+
+							*<MouseMove>*
+特別な文字列 "<MouseMove>" を使ってマウスの移動を取り扱えます。そのためには
+'mousemoveevent' が有効になっている必要があります。現在、GUI でのみ動作します。
+|getmousepos()| 関数がマウスの位置を取得するのに使えます。
 
 							*<Char>* *<Char->*
 <Char> を使って、文字を10進数、8進数、16進数の数値指定でマップできます:
@@ -767,6 +900,9 @@ GUI では、Vim は Alt キーを直接取り扱うので、ALT キーを使っ
 します。CUI 端末では、Vim は受け取ったバイト列から、ALT キーが押されているかど
 うかを割り出さなければなりません。
 
+端末が modifyOtherKeys モードをサポートし、有効になっている場合、Vim はより多
+くのキーの組み合わせを認識できます。|modifyOtherKeys| 以下を参照してください。
+
 初期設定では、ALT キーが押されているときは、文字の 8 ビット目が設定されるもの
 と仮定しています。xterm、aterm、rxvt など、ほとんどの端末はこの方法で問題あり
 ません。<A-k> のようなマップが動作しない場合は、その端末が、文字の前に ESC を
@@ -804,7 +940,48 @@ xterm のような端末では、起動しているときに、メニューの "
 いう場合にこのリソースを使うと便利です。
 
 
-1.11 オペレータの作成					*:map-operator*
+1.11 modifyOtherKeys モードのマップ			*modifyOtherKeys*
+
+xterm と他のいくつかの端末は、修飾子付きのキーが特別なエスケープコードで送信さ
+れるモードにすることができます。Vim はこれらのコードを認識し、Backspace が文字
+の 8 を送信した場合でも、CTRL-H と Backspace を区別できます。さらに多くの特別
+なキーがあります。
+
+xterm の場合、組み込みの termcap エントリで modifyOtherKeys が有効になっていま
+す。これを使用しない場合は、vimrc にこれらの行を追加して modifyOtherKeys を有
+効にできます: >
+      let &t_TI = "\<Esc>[>4;2m"
+      let &t_TE = "\<Esc>[>4;m"
+
+modifyOtherKeys モードで問題が発生する場合は、無効にすることができます: >
+      let &t_TI = ""
+      let &t_TE = ""
+これはすぐには有効になりません。Vim を再起動せずにこの作業を行うには、シェルコ
+マンドを実行します。例: `!ls`。あるいはこれらの行を |vimrc| に書いてください。
+
+modifyOtherKeys が有効化されているときは <C-[> と <C-S-{> をマップすることがで
+きます: >
+	imap <C-[> [[[
+	imap <C-{> {{{
+modifyOtherKeys 無しだと <C-[> と <C-{> は Esc と区別することができません。
+Note この <C-{> は使用されて <C-S-[> もしくは <C-S-{> は使用されません。多くの
+キーボードで動作します。同様に、<C-}> は <C-S-]> もしくは <C-S-}> のそして
+<C-|> は <C-S-\> もしくは <C-S-|> の代わりに使用されます。Note '|' はマッピン
+グにおいて特別な意味を持ちます、|map-bar| を参照。
+
+警告: <C-[> をマップした場合、非常に多くのEscから開始するキーコードを破壊する
+ことがあります。他のマッピングの「後」であることを確認してください。
+
+既知の副作用として、挿入モードでは、CTRL-V キーの後に生のエスケープシーケンス
+が挿入されます。これは、modifyOtherKeys が有効になっているかどうかを確認するた
+めに使用できます。挿入モードで CTRL-SHIFT-V CTRL-V と入力し、1 バイトが得られ
+たら modifyOtherKeys はオフで、<1b>27;5;118~ が得られたらオンです。
+
+'esckeys' オプションがオフの時、修飾子付きのすべてのキーが挿入モードを終了させ
+るのを防ぐため、挿入モードで modifyOtherKeys は無効化されます。
+
+
+1.12 オペレータの作成					*:map-operator*
 
 オペレータは {motion} コマンドと合わせて使われます。独自のオペレータを定義する
 には、最初に 'operatorfunc' を設定し、そして、|g@| オペレータを呼びます。ユー
@@ -819,41 +996,93 @@ g@{motion}		'operatorfunc' に設定された関数を実行します。
 			    "line"  {motion} は行単位 |linewise|
 			    "char"  {motion} は文字単位 |characterwise|
 			    "block" {motion} は矩形 |blockwise-visual|
-			"block" はたまにしか使われません。ビジュアルモードの場
-			合だけ渡されるのですが、"g@" と合わせてもそれほど便利
-			ではないからです。
+			タイプは強制することができます。|forced-motion| を参照し
+			てください。
 			{|+eval| が有効な場合のみ利用できます}
 
 例を示します。これは <F4> を使ってスペースの数を数えます: >
 
-	nmap <silent> <F4> :set opfunc=CountSpaces<CR>g@
-	vmap <silent> <F4> :<C-U>call CountSpaces(visualmode(), 1)<CR>
+	nnoremap <expr> <F4> CountSpaces()
+	xnoremap <expr> <F4> CountSpaces()
+	" <F4> 2回で行に作用
+	nnoremap <expr> <F4><F4> CountSpaces() .. '_'
 
-	function! CountSpaces(type, ...)
-	  let sel_save = &selection
-	  let &selection = "inclusive"
-	  let reg_save = @@
-
-	  if a:0  " ビジュアルモードから呼び出すのに、gv コマンドを使用します。
-	    silent exe "normal! gvy"
-	  elseif a:type == 'line'
-	    silent exe "normal! '[V']y"
-	  else
-	    silent exe "normal! `[v`]y"
+	function CountSpaces(context = {}, type = '') abort
+	  if a:type == ''
+	    let context = #{
+	      \ dot_command: v:false,
+	      \ extend_block: '',
+	      \ virtualedit: [&l:virtualedit, &g:virtualedit],
+	      \ }
+	    let &operatorfunc = function('CountSpaces', [context])
+	    set virtualedit=block
+	    return 'g@'
 	  endif
 
-	  echomsg strlen(substitute(@@, '[^ ]', '', 'g'))
+	  let save = #{
+	    \ clipboard: &clipboard,
+	    \ selection: &selection,
+	    \ virtualedit: [&l:virtualedit, &g:virtualedit],
+	    \ register: getreginfo('"'),
+	    \ visual_marks: [getpos("'<"), getpos("'>")],
+	    \ }
 
-	  let &selection = sel_save
-	  let @@ = reg_save
+	  try
+	    set clipboard= selection=inclusive virtualedit=
+	    let commands = #{
+	      \ line: "'[V']",
+	      \ char: "`[v`]",
+	      \ block: "`[\<C-V>`]",
+	      \ }[a:type]
+	    let [_, _, col, off] = getpos("']")
+	    if off != 0
+	      let vcol = getline("'[")->strpart(0, col + off)->strdisplaywidth()
+	      if vcol >= [line("'["), '$']->virtcol() - 1
+	        let a:context.extend_block = '$'
+	      else
+	        let a:context.extend_block = vcol .. '|'
+	      endif
+	    endif
+	    if a:context.extend_block != ''
+	      let commands ..= 'oO' .. a:context.extend_block
+	    endif
+	    let commands ..= 'y'
+	    execute 'silent noautocmd keepjumps normal! ' .. commands
+	    echomsg getreg('"')->count(' ')
+	  finally
+	    call setreg('"', save.register)
+	    call setpos("'<", save.visual_marks[0])
+	    call setpos("'>", save.visual_marks[1])
+	    let &clipboard = save.clipboard
+	    let &selection = save.selection
+	    let [&l:virtualedit, &g:virtualedit] = get(a:context.dot_command ? save : a:context, 'virtualedit')
+	    let a:context.dot_command = v:true
+	  endtry
 	endfunction
+
+<<expr> のマッピングを使うことでなんらかのカウントかレジスタの接頭詞を取ること
+が可能になります。それにより、CmdlineEnter と CmdlineLeave の自動コマンドをト
+リガーするコマンドラインの使用も回避します。
 
 Note: 一時的に 'selection' を "inclusive" に設定し、'[ から '] まで選択した範
 囲を正しくヤンクできるようにしています。
 
-Note: ビジュアルモードのために別のマップを定義しています。ビジュアルモードで
-":" を押した場合に挿入される "'<,'>" を削除し、関数に visualmode() の値と追加
-の引数を渡しています。
+Note: 'clipboard' オプションの値に `unnamed` か `unnamedplus` が含まれている場
+合、レジスタの `"*` や `"+` が上書きされることを防ぐため、一時的に空に設定され
+ます。
+
+`mode()` 関数はオペレータが適用された後の状態を返します。
+
+この例では現在行のテキストの外側にクォートを追加するノーマルモードのオペレータ
+を作成するのにラムダ関数を使用しています: >
+
+	nnoremap <F4> <Cmd>let &opfunc='{t ->
+				\ getline(".")
+				\ ->split("\\zs")
+				\ ->insert("\"", col("'']"))
+				\ ->insert("\"", col("''[") - 1)
+				\ ->join("")
+				\ ->setline(".")}'<CR>g@
 
 ==============================================================================
 2. 短縮入力 (Abbreviations)		*abbreviations* *Abbreviations*
@@ -909,7 +1138,8 @@ full-id   マッチした場所の前が非キーワード文字、行頭、挿�
 end-id	  マッチした場所の前が非キーワード文字、スペース、タブ、行頭、挿入を開
 	  始した場所、であること。
 
-non-id	  マッチした場所の前がタブ、行頭、挿入を開始した場所、であること。
+non-id	  マッチした場所の前がスペース、タブ、行頭、挿入を開始した場所、である
+	  こと。
 
 例: ({CURSOR}は非キーワード文字を入力する場所です) >
    :ab foo   four old otters
@@ -991,7 +1221,8 @@ non-id	  マッチした場所の前がタブ、行頭、挿入を開始した�
 			さい。
 
 						*:una* *:unabbreviate*
-:una[bbreviate] {lhs}	{lhs} という短縮入力を全て削除します。見つからなかった
+:una[bbreviate] [<buffer>] {lhs}
+			{lhs} という短縮入力を全て削除します。見つからなかった
 			場合は、{lhs} に入力した文字を各短縮入力の {rhs} から
 			探して見つかったものを削除します。これは短縮入力が展開
 			されてしまった状態でも削除できるようにするためです。短
@@ -1001,47 +1232,45 @@ non-id	  マッチした場所の前がタブ、行頭、挿入を開始した�
 						*:norea* *:noreabbrev*
 :norea[bbrev] [<expr>] [<buffer>] [lhs] [rhs]
 			":ab" と同じですが、展開後にマップを適用しません。
-			{Vi にはありません}
 
-						*:ca* *:cabbrev*
+						*:ca* *:cab* *:cabbrev*
 :ca[bbrev] [<expr>] [<buffer>] [lhs] [rhs]
 			":ab" と同じですが、コマンドラインモード用の短縮入力の
-			み対象です。{Vi にはありません}
+			み対象です。
 
 						*:cuna* *:cunabbrev*
-:cuna[bbrev] {lhs}	":una" と同じですが、コマンドラインモード用の短縮入力
-			のみ対象です。{Vi にはありません}
+:cuna[bbrev] [<buffer>] {lhs}
+			":una" と同じですが、コマンドラインモード用の短縮入力
+			のみ対象です。
 
 						*:cnorea* *:cnoreabbrev*
 :cnorea[bbrev] [<expr>] [<buffer>] [lhs] [rhs]
 			":ab" と同じですが、コマンドラインモード用の短縮入力の
 			み対象で、展開後にマップを適用しません。
-			{Vi にはありません}
 
 						*:ia* *:iabbrev*
 :ia[bbrev] [<expr>] [<buffer>] [lhs] [rhs]
 			":ab" と同じですが、挿入モード用の短縮入力のみ対象で
-			す。{Vi にはありません}
+			す。
 
 						*:iuna* *:iunabbrev*
-:iuna[bbrev] {lhs}	":una" と同じですが、挿入モード用の短縮入力のみ対象で
-			す。{Vi にはありません}
+:iuna[bbrev] [<buffer>] {lhs}
+			":una" と同じですが、挿入モード用の短縮入力のみ対象で
+			す。
 
 						*:inorea* *:inoreabbrev*
 :inorea[bbrev] [<expr>] [<buffer>] [lhs] [rhs]
 			":ab" と同じですが、挿入モード用の短縮入力のみ対象で、
-			展開後にマップを適用しません。{Vi にはありません}
+			展開後にマップを適用しません。
 
 							*:abc* *:abclear*
-:abc[lear] [<buffer>]	すべての短縮入力を削除します。{Vi にはありません}
+:abc[lear] [<buffer>]	すべての短縮入力を削除します。
 
 							*:iabc* *:iabclear*
 :iabc[lear] [<buffer>]	挿入モード用の短縮入力を削除します。
-			{Vi にはありません}
 
 							*:cabc* *:cabclear*
 :cabc[lear] [<buffer>]	コマンドラインモード用の短縮入力を削除します。
-			{Vi にはありません}
 
 							*using_CTRL-V*
 特殊な文字を短縮入力の{rhs}で使うことができます。非印字可能文字の特殊な意味を
@@ -1099,9 +1328,10 @@ non-id	  マッチした場所の前がタブ、行頭、挿入を開始した�
 これは "<SNR>23_Add" といったマップを定義します。
 
 スクリプトで関数を作成するときに、関数名の前に "s:" を付けると、ローカル関数を
-作成できます。しかし、その関数をマップで使用する場合、そのマップをスクリプト以
-外の場所で実行すると、その関数がどのスクリプトで定義されたのか分かりません。こ
-れを解決するには、マップ中で "s:" ではなく "<SID>" を使用します。この場合も
+作成できます(|Vim9| script ではプリフィックスなしの関数はスクリプトローカルに
+なります)。しかし、その関数をマップで使用する場合、そのマップをスクリプト以外
+の場所で実行すると、その関数がどのスクリプトで定義されたのか分かりません。これ
+を解決するには、マップ中で "s:" ではなく "<SID>" を使用します。この場合も
 "<SID>" は上記の例と同じように置換されます。これでローカル関数の呼び出しを含む
 マップを定義できます。
 
@@ -1110,17 +1340,21 @@ non-id	  マッチした場所の前がタブ、行頭、挿入を開始した�
 す。その場合、その関数自身と同じスクリプト番号が使用されます。"s:var" といった
 スクリプトローカル変数も同様です。
 
-オートコマンドやユーザー定義コマンドもそれを定義したスクリプトのコンテキストで
-実行されます。そのコマンドからローカル関数を呼び出したり、ローカルマップを使用
-することができます。
+自動コマンドやユーザー定義コマンドもそれを定義したスクリプトのコンテキストで実
+行されます。そのコマンドからローカル関数を呼び出したり、ローカルマップを使用す
+ることができます。
+
+<SID> が正しく展開されないコンテキストで値が使われる場合は、expand() 関数を使
+います: >
+	let &includexpr = expand('<SID>') .. 'My_includeexpr()'
 
 スクリプト以外の場所で "<SID>" を使うとエラーになります。
 
 複雑な処理をするスクリプトで、スクリプト番号が必要な場合は、次の関数で番号を得
 られます: >
-	function s:SID()
-	  return matchstr(expand('<sfile>'), '<SNR>\zs\d\+\ze_SID$')
-	endfun
+	func s:ScriptNumber()
+	  return matchstr(expand('<SID>'), '<SNR>\zs\d\+\ze_')
+	endfunc
 
 関数やマップを一覧表示するときには "<SNR>" も表示されます。それらがどのように
 定義されているのか調べるときに便利です。
@@ -1128,8 +1362,7 @@ non-id	  マッチした場所の前がタブ、行頭、挿入を開始した�
 コマンド|:scriptnames|を使って、それまでに実行されたスクリプトとそのスクリプト
 番号を確認できます。
 
-これらはすべて {Vi にはありません}。
-{|+eval| が有効な場合のみ利用できます}
+これらはすべて {|+eval| が有効な場合のみ利用できます}
 
 ==============================================================================
 4. ユーザー定義コマンド (User-defined command)		*user-commands*
@@ -1175,9 +1408,10 @@ non-id	  マッチした場所の前がタブ、行頭、挿入を開始した�
 
 :com[mand]						*:com* *:command*
 			すべてのユーザー定義コマンドを一覧表示します。表示中の
-			行頭の2文字は次の意味です
+			行頭の文字は次の意味です:
 			    !	-bang 属性を持つコマンド
 			    "	-register 属性を持つコマンド
+			    |	-bar 属性を持つコマンド
 			    b	カレントバッファのローカルコマンド
 			(属性に関する詳細は下記参照)
 			一覧は |:filter| を用いてコマンド名でフィルタできま
@@ -1188,8 +1422,8 @@ non-id	  マッチした場所の前がタブ、行頭、挿入を開始した�
 :com[mand] {cmd}	{cmd} で始まるユーザー定義コマンドを一覧表示します。
 
 							*:command-verbose*
-'verbose' がゼロ以外のときにコマンド一覧を表示すると、どこで定義されたのかも表
-示されます。例: >
+'verbose' がゼロ以外のときにコマンド一覧を表示すると、そのコマンドが最後に定義
+された場所と補完の引数も表示します。例: >
 
     :verbose command TOhtml
 <	Name	    Args Range Complete  Definition ~
@@ -1199,20 +1433,28 @@ non-id	  マッチした場所の前がタブ、行頭、挿入を開始した�
 詳しくは |:verbose-cmd| を参照してください。
 
 							*E174* *E182*
-:com[mand][!] [{attr}...] {cmd} {rep}
+:com[mand][!] [{attr}...] {cmd} {repl}
 			ユーザー定義コマンドを定義します。コマンド名は {cmd}
-			でそれを置き換えるテキストが {rep} です。{attr} はコマ
-			ンド属性(下記参照)です。既にコマンドが存在している場合
-			はエラーになります。! を指定した場合は再定義されます。
+			でそれを置き換えるテキストが {repl} です。{attr} はコ
+			マンド属性(下記参照)です。既にコマンドが存在している場
+			合はエラーになります。! を指定した場合は再定義されま
+			す。1つ例外があります: スクリプトを再読み込みする場合、
+			そのスクリプトで以前に定義されていたコマンドは、静かに
+			置き換えられます。
+
 
 :delc[ommand] {cmd}				*:delc* *:delcommand* *E184*
 			ユーザー定義コマンド {cmd} を削除します。
 
+:delc[ommand] -buffer {cmd}					*E1237*
+			カレントバッファで定義されたユーザー定義コマンド {cmd}
+			を削除します。
+
 :comc[lear]						*:comc* *:comclear*
 			すべてのユーザー定義コマンドを削除します。
 
-コマンド属性
-
+コマンド属性 ~
+                                                       *command-attributes*
 ユーザー定義コマンドは、他のビルトインコマンドと同様に扱われます。引数や範囲も
 指定できます。引数の入力時にはファイル名やバッファ名などを補完することができま
 す。どのように動作するかはコマンドを定義するときに指定したコマンド属性に依存し
@@ -1222,7 +1464,8 @@ non-id	  マッチした場所の前がタブ、行頭、挿入を開始した�
 方、特殊なケース、の4つの分野に分けることができます。以下、分野別に説明しま
 す。
 
-引数の扱い方					*E175* *E176* *:command-nargs*
+引数の扱い方 ~
+						*E175* *E176* *:command-nargs*
 
 属性を指定しなかった場合、ユーザー定義コマンドは引数を取りません(引数が与えら
 れた場合はエラーになります)。-nargs属性を指定すると、ユーザー定義コマンドが引
@@ -1252,13 +1495,14 @@ Note: 引数は Vim script の式としてではなく、テキストとして�
 script2.vimを実行すると "None" が表示されます。期待した結果とは違うでしょう。
 代わりに関数呼び出しを使ってください。
 
-補完の種類					*:command-completion* *E179*
-					*E180* *E181* *:command-complete*
+補完の動作 ~
+				*:command-completion* *E179* *E180* *E181*
+				*:command-complete*
 属性を指定しない場合、ユーザー定義コマンドの入力時に引数は補完されません。下記
 の属性のうちいずれか1つを指定することで、引数が補完されるようになります。
 
 	-complete=arglist	引数リスト内のファイル名
-	-complete=augroup	オートコマンドのグループ
+	-complete=augroup	自動コマンドのグループ
 	-complete=buffer	バッファ
 	-complete=behave	|:behave| サブオプション
 	-complete=color		カラースキーム
@@ -1267,7 +1511,7 @@ script2.vimを実行すると "None" が表示されます。期待した結果�
 	-complete=cscope	|:cscope| サブオプション
 	-complete=dir		ディレクトリ
 	-complete=environment	環境変数
-	-complete=event		オートコマンドのイベント
+	-complete=event		自動コマンドのイベント
 	-complete=expression	Vimの式
 	-complete=file		ファイルとディレクトリ
 	-complete=file_in_path	|'path'| 内のファイルとディレクトリ
@@ -1294,12 +1538,14 @@ script2.vimを実行すると "None" が表示されます。期待した結果�
 	-complete=custom,{func} {func}によるユーザー定義の補完
 	-complete=customlist,{func} {func}によるユーザー定義の補完
 
+補完するものがないとき(デフォルトは -nargs=0)に補完を指定すると *E1208* になり
+ます。
 Note: いくつかの補完方法は環境変数を展開します。
 
 
-ユーザー定義の補完			*:command-completion-custom*
-					*:command-completion-customlist*
-					*E467* *E468*
+ユーザー定義の補完 ~
+				*:command-completion-custom*
+				*:command-completion-customlist* *E467* *E468*
 補完方法に "custom,{func}"、"customlist,{func}" を指定すると独自の補完を使用で
 きます。{func}には次のような関数を指定します。 >
 
@@ -1317,12 +1563,13 @@ Note: いくつかの補完方法は環境変数を展開します。
 	ArgLead		すでに入力されている補完対象の文字列
 	CmdLine		コマンドライン全体
 	CursorPos	カーソル位置 (バイト単位のインデックス)
-これらの引数を使えば文脈を判断することができるでしょう。"custom" を使った場
-合、補完候補のリストからArgLeadにそぐわない候補(ArgLeadで始まらない文字)を取り
-除く必要はありません。Vimは補完関数を実行した後にふさわしくない候補を取り除き
-ます。おそらくその方がほとんどの場面で有用です。"customlist" を使った場合、Vim
-は補完候補のリストをフィルタしません。補完候補のリストを自分でフィルタしてくだ
-さい。
+これらの引数を使えば文脈を判断することができるでしょう。"custom" を使った場合、
+補完候補のリストからArgLeadにそぐわない候補(ArgLeadで始まらない文字)を取り除く
+必要はありません。Vimは補完関数を実行した後に自身の正規表現エンジンでふさわし
+くない候補を取り除きます、おそらくその方がほとんどの場面で有用です。
+'wildoptions' が "fuzzy" を含む場合、候補はファジーマッチ |fuzzy-matching| を
+使用してフィルタされます。"customlist" 引数の場合、Vim は返された補完候補をフィ
+ルタしないので、ユーザーが指定した関数が候補をフィルタする必要があります。
 
 次の例はFingerコマンドでユーザー名を補完します >
     :com -complete=custom,ListUsers -nargs=1 Finger !finger <args>
@@ -1340,9 +1587,8 @@ Note: いくつかの補完方法は環境変数を展開します。
 この例はファイル名にスペースが含まれていると機能しません!
 
 
-範囲指定				*E177* *E178* *:command-range*
-							*:command-count*
-
+範囲指定 ~
+				*E177* *E178* *:command-range* *:command-count*
 属性を指定しない場合、ユーザー定義コマンドは行番号による範囲指定を受け付けませ
 ん。-range属性を指定して、コマンドが範囲指定を受け付けるようにできます。任意の
 カウント値を取るようにすることもできます。この場合、行番号の位置(|:split|コマ
@@ -1356,8 +1602,8 @@ Note: いくつかの補完方法は環境変数を展開します。
 	-range=N    カウント(無指定時はN)を行番号位置に指定できます
 		    (例 |:split|)。行番号に 0 を指定可能になる。
 	-count=N    カウント(無指定時はN)を行番号位置か、初期化引数に指定でき
-		    ます (例 |:Next|)。-count(無指定時の値なし)とした場合
-		    は-count=0と同じです。
+		    ます (例 |:Next|)。
+	-count      -count=0 と同じです
 
 Note: -range=Nと-count=Nは相互に排他的であるということに注意してください。どち
 らか一方のみを指定することができます。
@@ -1367,17 +1613,22 @@ Note: -range=Nと-count=Nは相互に排他的であるということに注意�
 バッファ全体を表します。これらは引数、(ロードされた)バッファ、ウィンドウ及び
 タブページに関連付けすることができます。
 
-次の値を利用できます:
-	-addr=lines		行 (デフォルト)
-	-addr=arguments		引数
-	-addr=buffers		バッファ (ロードされていないバッファも)
-	-addr=loaded_buffers	ロードされたバッファ
-	-addr=windows		ウィンドウ
-	-addr=tabs		タブページ
+次の値を利用できます (2列目は一覧表示で使われる短い名前です):
+    -addr=lines			行 (-range のデフォルトです)
+    -addr=arguments	  arg	引数
+    -addr=buffers	  buf	バッファ (ロードされていないバッファも)
+    -addr=loaded_buffers  load	ロードされたバッファ
+    -addr=windows	  win	ウィンドウ
+    -addr=tabs		  tab	タブページ
+    -addr=quickfix	  qf	quickfix のエントリ
+    -addr=other		  ?	他の種類の範囲; "lines" をつけるのと同様に".",
+				"$", "%" が使えます (-count のデフォルトです)
 
-特殊なケース				*:command-bang* *:command-bar*
+
+特殊なケース ~
+					*:command-bang* *:command-bar*
 					*:command-register* *:command-buffer*
-
+					*:command-keepscript*
 特殊なケースがいくつかあります:
 
 	-bang	    コマンドは!修飾子を取ることができます(:qや:wのように)
@@ -1387,6 +1638,8 @@ Note: -range=Nと-count=Nは相互に排他的であるということに注意�
 	-register   コマンドの1つ目の引数にレジスタ名を指定することができます
 		    (:del、:put、:yankのように)。
 	-buffer	    コマンドはカレントバッファでのみ利用できます。
+	-keepscript 詳細メッセージにユーザーコマンドが定義された場所は使用せ
+		    ず、ユーザーコマンドが呼び出された場所を使用します。
 
 ユーザー定義コマンドの定義に-countや-registerが指定された場合に、その省略可能
 な引数が与えられた場合、それは引数リストから削除され、それぞれの引数に対応する
@@ -1394,13 +1647,26 @@ Note: -range=Nと-count=Nは相互に排他的であるということに注意�
 Note これらの引数は省略できますが、これは廃止される機能です。新しいスクリプト
 では完全な名前を使用して下さい。
 
-置き換えテキスト
+置き換えテキスト ~
+							*:command-repl*
+引数 {repl} は通常は1つの長い文字列で、分割のコマンド "|" と合せて利用できま
+す。特殊な場合として引数が "{" であるなら、"}" で始まる行までのそれ以降の行が
+利用され |Vim9| の文法が適用されます。
+例: >
+	:command MyCommand {
+		echo 'hello'
+		g:calledMyCommand = true
+	    }
+<							*E1231*
+"{" の前に空白が必要です。ネストはサポートされず、インライン関数は使用できませ
+ん。式の引数を持つコマンドなど、引数に "|" が出現する可能性のあるコマンドは、
+"|" の後に別のコマンドを続けることはできません。
 
-ユーザー定義コマンドでは、<...>表記を使った特別な文字列を使用できます。その文
-字列はコマンドラインに入力された実際の引数に置き換えられます。その他のテキスト
-は変更されません。そして特別な文字列を実際の引数で置換したものがExコマンドとし
-て実行されます。<> 表記が置き換えられないようにするには、最初の < の代わりに
-<lt> を使ってください。例えば、"<bang>" をリテラル文字として使うには
+ユーザー定義コマンドでは、<...>表記を使った特別な文字列 {repl} を使用できます。
+その文字列はコマンドラインに入力された実際の引数に置き換えられます。その他のテ
+キストは変更されません。そして特別な文字列を実際の引数で置換したものがExコマン
+ドとして実行されます。<> 表記が置き換えられないようにするには、最初の < の代わ
+りに <lt> を使ってください。例えば、"<bang>" をリテラル文字として使うには
 "<lt>bang>" とします。
 
 次のものを使用できます
@@ -1416,7 +1682,7 @@ Note これらの引数は省略できますが、これは廃止される機能
 						*<bang>*
 	<bang>	('-bang' 属性を参照) コマンドが ! 修飾子付きで実行された場合に
 		! に置換されます。指定なしの場合は空文字列になります。
-						*<mods>*
+					*<mods>* *<q-mods>* *:command-modifiers*
 	<mods>  指定されている場合はコマンド修飾子。されていない場合は何も展開
 		しません。対応している修飾子は以下の通り:
 		|:aboveleft|, |:belowright|,
@@ -1429,12 +1695,12 @@ Note これらの引数は省略できますが、これは廃止される機能
 		例: >
 		    command! -nargs=+ -complete=file MyEdit
 				\ for f in expand(<q-args>, 0, 1) |
-				\ exe '<mods> split ' . f |
+				\ exe '<mods> split ' .. f |
 				\ endfor
 
 		    function! SpecialEdit(files, mods)
 			for f in expand(a:files, 0, 1)
-			    exe a:mods . ' split ' . f
+			    exe a:mods .. ' split ' .. f
 			endfor
 		    endfunction
 		    command! -nargs=+ -complete=file Sedit
@@ -1480,7 +1746,7 @@ Note これらの引数は省略できますが、これは廃止される機能
    " 現在行から最後行までを削除します
    :com Ddel +,$d
 
-   " 現在のバッファ名を変更します
+   " カレントバッファ名を変更します
    :com -nargs=1 -bang -complete=file Ren f <args>|w<bang>
 
    " 指定された範囲をあるファイルの内容に置き換えます
@@ -1504,7 +1770,7 @@ Note これらの引数は省略できますが、これは廃止される機能
    :   let i = 0
    :   while i < argc()
    :	  if filereadable(argv(i))
-   :	     execute "e " . argv(i)
+   :	     execute "e " .. argv(i)
    :	     execute a:command
    :	   endif
    :	   let i = i + 1
@@ -1520,6 +1786,10 @@ Allargsコマンドは、引数としてどのVimコマンドでも取ること�
 これは、次のものを起動します: >
 	:call Allargs("%s/foo/bar/ge|update")
 <
+コマンドが Vim9 script (スクリプトが `:vim9script` で始まるのと `:def` 関数内)
+で定義されていると {repl} は Vim9 script として実行されます。したがってこれは
+コマンドが定義された位置に依存し、使われた位置ではありません。
+
 スクリプトでユーザー定義コマンドを定義するとき、そのスクリプトのローカル関数や
 ローカルマップを使用できます。ユーザー定義コマンドはユーザー定義コマンドを定義
 したスクリプトのコンテキストで実行されます。これはユーザー定義コマンドで

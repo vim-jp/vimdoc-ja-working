@@ -1,4 +1,4 @@
-*usr_41.txt*	For Vim バージョン 8.1.  Last change: 2018 Apr 11
+*usr_41.txt*	For Vim バージョン 9.0.  Last change: 2022 Oct 07
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -17,14 +17,10 @@ Vim script 言語は vimrc ファイルや構文ファイルなど、さまざ�
 |41.6|	関数を使う
 |41.7|	関数を定義する
 |41.8|	リストと辞書
-|41.9|	例外
-|41.10|	注意事項
-|41.11|	プラグインを書く
-|41.12|	ファイルタイププラグインを書く
-|41.13|	コンパイラプラグインを書く
-|41.14|	プラグインを書く (高速ロード版)
-|41.15|	ライブラリスクリプトを書く
-|41.16|	Vim script を配布する
+|41.9|	空白
+|41.10|	行継続
+|41.11|	コメント
+|41.12|	ファイルフォーマット
 
 次章: |usr_42.txt|  新しいメニューを追加する
 前章: |usr_40.txt|  新しいコマンドを作る
@@ -34,28 +30,36 @@ Vim script 言語は vimrc ファイルや構文ファイルなど、さまざ�
 *41.1*	はじめに				*vim-script-intro* *script*
 
 誰もが最初に触れる Vim script は vimrc ファイルです。Vim が起動するときに読み
-込まれ、書かれているコマンドが実行されます。それにより好きなように設定を変更で
-きます。vimrc の中ではすべてのコロンコマンドが使えます (":" で始まるコマンドの
-こと。Ex コマンドやコマンドラインコマンドと呼ばれることもある)。
+込まれ、書かれているコマンドが実行されます。それにより好きなように設定の変更、
+マッピングの定義、プラグインの選択、そしてより多くのことができます。vimrc の中
+ではすべてのコロンコマンドが使えます (":" で始まるコマンドのこと。Ex コマンド
+やコマンドラインコマンドと呼ばれることもある)。
+
 シンタックスファイルも Vim script です。シンタックスファイルは、ファイルタイプ
 別にオプションを設定するファイルの一種です。複雑なマクロ定義を別ファイルに分け
 て保存しておくこともできます。このように、いろいろな使用方法が考えられます。
 
+Vim script は2種類になりました: 旧来のものと |Vim9| です。このヘルプファイルは
+新規ユーザーのためなので、より新しくより便利な |Vim9| の文法を教えます。
+旧来のスクリプトは Vim に特有ですが、|Vim9| script は JavaScript や TypeScript
+などの他の言語により似ています。
+
+Vim script を試すのに最適な方法はスクリプトファイルを編集して実行することです。
+基本型: >
+	:edit test.vim
+	[あなたが望むだけスクリプト行を挿入します]
+	:w
+	:source %
+
 簡単な例から始めましょう: >
 
-	:let i = 1
-	:while i < 5
-	:  echo "count is" i
-	:  let i += 1
-	:endwhile
+	vim9script
+	var i = 1
+	while i < 5
+	  echo "count is" i
+	  i += 1
+	endwhile
 <
-	Note:
-	実際には ":" を書く必要はありません。":" が必要なのはコマンドラインで
-	入力するときだけです。Vim script ファイルを書くときは省略できます。
-	このヘルプでは、コロンコマンドであることを強調し、ノーマルモードと区別
-	するためにコロンを表記しています。
-	Note:
-	例文をヤンクして :@" コマンドで実際に実行できます。
 
 出力は次のようになります:
 
@@ -64,64 +68,117 @@ Vim script 言語は vimrc ファイルや構文ファイルなど、さまざ�
 	count is 3 ~
 	count is 4 ~
 
-一行目では ":let" コマンドで変数に値を代入しています。書式は次のとおりです: >
+最初の行の `vim9script` コマンドで、これが新しい |Vim9| script ファイルである
+と明確にしています。これは、ファイルの残りの部分がどのように使用されるかという
+ことで重要です。コメントの前の、最初の行に配置することを推奨します。
+							*vim9-declarations*
+`var i = 1` コマンドは変数 "i" の宣言と初期化になります。
+書式は次のとおりです: >
 
-	:let {変数名} = {式}
+	var {変数名} = {式}
 
 例では、変数名が "i"、式が 1 です。
-":while" コマンドでループを開始します。書式は次のとおりです: >
+`:while` コマンドでループを開始します。書式は次のとおりです: >
 
-	:while {条件式}
-	:  {ステートメント}
-	:endwhile
+	while {条件式}
+	  {ステートメント}
+	endwhile
 
-条件式が真である間、ステートメントが実行されます。例では、条件式は "i < 5" で
-す。これは、i が 5 より小さい場合に真になります。
+条件式が真である間、`endwhile` に到達するまでのステートメントが実行されます。
+例では、条件式は "i < 5" です。これは、i が 5 より小さい場合に真になります。
 	Note:
 	何かのミスで while ループが止まらなかった場合は、CTRL-C を押せば中断で
 	きます (MS-Windows では CTRL-Break)。
 
-":echo" コマンドは引数を出力します。例では、"count is" という文字列と、変数 i
+`echo` コマンドは引数を出力します。例では、"count is" という文字列と、変数 i
 の値を出力しています。i が 1 なら、次のように表示されます:
 
 	count is 1 ~
 
-":let i += 1" は ":let i = i + 1" と同じ意味です。変数 i に 1 を加算し、新しい
-値を同じ変数に代入します。
+`i += 1` は "i = i + 1" と同じ意味です。変数 i に 1 を加算し、新しい値を同じ変
+数に代入します。
 
 上述の例は、実際にはもっと簡潔に書くことができます: >
 
-	:for i in range(1, 4)
-	:  echo "count is" i
-	:endfor
+	for i in range(1, 4)
+	  echo $"count is {i}"
+	endfor
 
-|:for| と |range()| の説明はもっと先です。すぐに知りたい人はリンク先にジャンプ
-してください。
+`for`, `range()`, `$"string"` の説明はもっと先です。すぐに知りたい人はリンク先
+にジャンプしてください。
 
 
-三種類の数値
-------------
+☆例を試す
 
-数値は10進数、16進数、8進数のいずれかで表記します。16進数は "0x" か "0X" で開
-始します。例えば "0x1f" は10進数の 31 です。8進数は "0" で開始します。例えば
-"017" は10進数の 15 です。注意: 10進数で書くときは先頭に "0" を付けないでくだ
-さい。8進数として扱われてしまいます。
-":echo" コマンドは常に10進数で出力します。例: >
+コマンドをファイルに保存しなくても、これらのヘルプファイルのほとんどの例を簡単
+に試すことができます。例えば、上記の "for" ループを試すには:
+1. カーソルを "for" 上へ置く
+2. "v" でビジュアルモードを開始する
+3. "endfor" まで移動する
+4. コロンを押し、その後 "so" とエンターを押す
 
-	:echo 0x7f 036
+コロンを押した後、ビジュアル選択したテキストの範囲である ":'<,'>" が表示されま
+す。
+
+いくつかのコマンドは、|Vim9| scriptとして実行されることが重要です。しかし、入
+力されたコマンドは通常、旧来のスクリプトの文法が使われるので、以下の例のような
+場合にはそれが原因で E1004 エラーになります。そのような場合は、この4番目の手順
+を使用してください:
+4. コロンを押し、その後 "vim9 so" とエンターを押す
+
+"vim9" は `vim9cmd` の短縮形で、|Vim9| の文法内で以降のコマンドを実行するコマ
+ンド修飾子です。
+
+Note スクリプトのコンテキストが要求される例については動作しません。
+
+
+☆4種類の数値
+
+数値は10進数、16進数、8進数そして2進数で表記できます。
+
+16進数は "0x" か "0X" で開始します。例えば "0x1f" は10進数の 31 で 0x1234 は10
+進数の 4660 です。
+
+8進数は "0o" か "0O" で開始します。"0o17" は10進数の 15 です。
+
+2進数は "0b" か "0B" で開始します。例えば "0b101" は10進数の 5 です。
+
+10進数は数値そのままです。注意: 旧来のスクリプトで10進数で書くときは先頭に "0"
+を付けないでください。8進数として扱われてしまいます！ これが |Vim9| script を
+使う理由のひとつです。
+
+`echo` コマンドは引数を評価し、数値の場合は常に10進数形式で出力します。例: >
+
+	echo 0x7f 0o36
 <	127 30 ~
 
-数値にマイナス記号を付けると負数になります。8進数や16進数も負数にできます。マ
-イナス記号は減算記号としても使われます。次の例を上の例と比べてみてください: >
+数値にマイナス記号を付けると負数になります。8進数、16進数や2進数も負数にできま
+す: >
 
-	:echo 0x7f -036
-<	97 ~
+	echo -0x7f
+<	-127 ~
 
-式の途中にある空白は無視されますが、可読性を高めるために、適切に空白で区切るこ
-とをお勧めします。例えば上記の数値が負数であると勘違いしてしまわないように、マ
-イナス記号と数値の間に空白をいれましょう: >
+マイナス記号は減算記号としても使われます。これは時々混乱を招いてしまいます。
+もし、マイナス記号を両方の数字の前に置いたならエラーになります: >
 
-	:echo 0x7f - 036
+	echo -0x7f -0o36
+<	E1004: White space required before and after '-' at "-0o36" ~
+
+Note: |Vim9| script を使わずにこれらのコマンドを試すと、旧来のスクリプトとして
+実行されてしまいます。そして echo コマンドは2つめのマイナス記号を減算と見なし
+ます。このエラーを確認するには、コマンドのプリフィックスとして `vim9cmd` を付
+けてください: >
+
+	vim9cmd echo -0x7f -0o36
+<	E1004: White space required before and after '-' at "-0o36" ~
+
+式中の空白は可読性を高めるためとエラーの回避によく必要になります。上の "-0o36"
+は負数を作ると考えらえれますが、実際には減算と見られてしまいます。
+
+実際にマイナス記号を負数のために使うには、2番目の式を括弧で囲みます: >
+
+	echo -0x7f (-0o36)
+<	-127 -30 ~
 
 ==============================================================================
 *41.2*	変数
@@ -132,30 +189,54 @@ Vim script 言語は vimrc ファイルや構文ファイルなど、さまざ�
 	counter
 	_aap3
 	very_long_variable_name_with_underscores
-	FuncLength
+	CamelCaseName
 	LENGTH
 
-"foo+var" や "6var" のような名前は使えません。
-例に挙げた変数はグローバル変数です。定義されている変数の一覧を見るのは次のコマ
-ンドを使います: >
+"foo.var" や "6var" のような名前は使えません。
+
+いくつかの変数はグローバルです。現在定義されているグローバル変数のリストを見る
+にはこのコマンドを入力します: >
 
 	:let
 
-グローバル変数はどこでも使えます。そのため、あるスクリプトファイルで "count"
-という変数を使ったとき、その変数は他のスクリプトでも使われている可能性がありま
-す。これは混乱を招きますし、トラブルの元です。それを避けるには "s:" を付けてス
-クリプトローカル変数を使います。例えば、次のように使います: >
+グローバル変数はどこでも使用できます。ただし、2つの無関係なスクリプトで同じ名
+前を使用するのはとても簡単です。したがって、スクリプトで宣言された変数は、その
+スクリプトに対してローカルです。例えば、これが "script1.vim" にあって: >
 
-	:let s:count = 1
-	:while s:count < 5
-	:  source other.vim
-	:  let s:count += 1
-	:endwhile
+	vim9script
+	var counter = 5
+	echo counter
+<	5 ~
 
-"s:count" はスクリプトローカル変数なので、他のスクリプトファイルによって変更さ
-れる心配はありません。他のスクリプトファイルで "s:count" 変数が使われていたと
-しても、それは別の変数です。スクリプトローカル変数についての詳細は
-|script-variable| を参照してください。
+"script2.vim" で変数を使おうとすると: >
+
+	vim9script
+	echo counter
+<	E121: Undefined variable: counter ~
+
+スクリプトローカル変数を使用すると、そのスクリプト内でのみ変更され、他の場所で
+は変更されないことを明確にできます。
+
+スクリプト間で変数を共有したい場合は、"g:" プリフィックスを使用して値を直接割
+り当てます。`var` は使用しないでください。そして間違いを防止するために特定の名
+前を使います。したがって、"script1.vim" では: >
+
+	vim9script
+	g:mash_counter = 5
+	echo g:mash_counter
+<	5 ~
+
+そして "script2.vim" では: >
+
+	vim9script
+	echo g:mash_counter
+<	5 ~
+
+グローバル変数はコマンドラインからもアクセスできます、例えばこう打ちます: >
+	echo g:mash_counter
+これはスクリプトローカル変数では動作しません。
+
+スクリプトローカル変数についての詳細は |script-variable| を参照してください。
 
 変数の種類は他にもあります。|internal-variables| 参照。次の変数がよく使われま
 す:
@@ -166,77 +247,102 @@ Vim script 言語は vimrc ファイルや構文ファイルなど、さまざ�
 	v:name		Vim が定義する変数
 
 
-変数の削除
-----------
+☆変数の削除
 
-変数はメモリを消費します。":let" コマンドの出力にも表示されます。変数を削除す
-るには ":unlet" コマンドを使います。例: >
+変数はメモリを消費します。`let` コマンドの出力にも表示されます。グローバル変数
+を削除するには `unlet` コマンドを使います。例: >
 
-	:unlet s:count
+	unlet g:counter
 
-スクリプトローカル変数の "s:count" が削除され、使用されていたメモリが開放され
-ます。変数が存在しない場合でもエラーを起こしたくない場合は ! を付けてください:
+これは、グローバル変数 "g:counter" を削除し、使用するメモリを解放します。その
+変数が存在するかどうか分からず、存在しない場合のエラーメッセージが必要なけれ
+ば、! を付けてください: >
 >
-	:unlet! s:count
+	unlet! g:counter
 
-スクリプトの実行が終了したとき、ローカル変数は自動的には削除されません。次に同
-じスクリプトを実行したときにその変数を使うことができます。例: >
+|Vim9| script 内ではスクリプトローカル変数を `unlet` できず、できるのは旧来の
+スクリプトの中のみです。
 
-	:if !exists("s:call_count")
-	:  let s:call_count = 0
-	:endif
-	:let s:call_count = s:call_count + 1
-	:echo "called" s:call_count "times"
+スクリプトを最後まで処理しきったとき、宣言したローカル変数は削除されません。そ
+のスクリプトで定義された関数が使うことができます。例: >
 
-"exists()" 関数は変数が定義されているかどうかをチェックします。引数に調べたい
-変数の名前を指定します。変数自体を指定するのではありません。例えば: >
+	vim9script
+	var counter = 0
+	def g:GetCount(): number
+	  counter += 1
+	  return counter
+	enddef
 
-	:if !exists(s:call_count)
+関数を呼ぶたびに次のカウントを返します: >
+	:echo g:GetCount()
+<	1 ~
+>
+	:echo g:GetCount()
+<	2 ~
 
-これは、s:call_count の値を変数名として exists() 関数を呼び出しているので、意
-味が違ってしまいます。
-感嘆符 (! 記号) は値を反転します。値が真なら偽になり、偽なら真になります。この
-記号は "not" と読むことができます。つまり、"if !exists()" は "if not exists()"
-と読むことができます。
-Vim では、0 以外の値はすべて真です。0 は偽です。
-	Note:
-	数値が必要なところで文字列を使ったとき、文字列は自動的に数値に変換され
-	ます。文字列の先頭が数字ではなかった場合は 0 に変換されます。つまり: >
-		:if "true"
-<	"true" は 0 に変換されるので偽になります。
+スクリプトローカル変数が大量のメモリを消費していることが心配な場合は、不要に
+なった後で空かnullの値を設定してください。例: >
+	var lines = readfile(...)
+	...
+	lines = []
 
+Note: 以下では、関連するコマンドに集中するため、例から `vim9script` の行を省略
+しますが、スクリプトファイルの先頭には、この行を記述する必要があります。
 
-文字列変数と定数
-----------------
+☆文字列変数と定数
 
 ここまでは変数の値に数値だけを使っていましたが、文字列を使うこともできます。
-Vim は数値と文字列を基本型としてサポートしています。変数は動的に型付けされま
-す。型は ":let" コマンドで変数に値を代入するたびに変化します。詳しくは|41.8|
-を参照してください。
-変数に文字列を代入するには文字列定数を使う必要があります。文字列定数には二つの
-種類があります。一つはダブルクォート文字列です: >
+Vim は数値と文字列を基本型としてサポートしています。
+例: >
 
-	:let name = "peter"
-	:echo name
-<	peter ~
+	var name = "Peter"
+	echo name
+<	Peter ~
 
-文字列の中でダブルクォートを使いたい場合は、バックスラッシュを前置してくださ
-い: >
+すべての変数には型があります。多くの場合、この例のように値を代入することで型が
+定義されます。これは型推論と呼ばれます。まだ変数に値を与えたくない場合は、型を
+指定する必要があります: >
 
-	:let name = "\"peter\""
-	:echo name
-<	"peter" ~
+	var name: string
+	var age: number
+	if male
+	   name = "Peter"
+	   age = 42
+	else
+	   name = "Elisa"
+	   age = 45
+	endif
+
+間違えて誤った型の値を代入しようとした場合はエラーになります: >
+
+	age = "Peter"
+<	E1012: Type mismatch; expected number but got string ~
+
+型についてのより詳細は |41.8| を参照。
+
+変数に文字列値を割り当てるには、文字列定数を使うことができます。それには2種類
+あります。1つめはすでに使用したように、ダブルクォート文字列です。文字列の中に
+ダブルクォートを含める場合は、その前にバックスラッシュを付けます: >
+
+	var name = "he is \"Peter\""
+	echo name
+<	he is "Peter" ~
 
 バックスラッシュを使いたくない場合はシングルクォート文字列を使ってください: >
 
-	:let name = '"peter"'
-	:echo name
-<	"peter" ~
+	var name = 'he is "Peter"'
+	echo name
+<	he is "Peter" ~
 
 シングルクォート文字列の中ではすべての文字がそのまま使われます。ただし、シング
 ルクォートだけは特別で、一つのシングルクォートを表すためには二つのシングル
 クォートを書く必要があります。バックスラッシュはそのまま使われるので、特殊文字
-は使えません。
+は使えません: >
+
+	var name = 'P\e''ter'''
+	echo name
+<	P\e'ter' ~
+
 ダブルクォート文字列の中では特殊文字が使えます。次のようなものがあります:
 
 	\t		<Tab>
@@ -251,41 +357,42 @@ Vim は数値と文字列を基本型としてサポートしています。変�
 
 最後の二つはただの一例です。"\<name>" 形式で "name" という特殊キーを使うことが
 できます。
+
 文字列で使える特殊表記については |expr-quote| を参照してください。
 
 ==============================================================================
 *41.3*	式
 
-Vim の式は高機能でシンプルです。式の定義については |expression-syntax| を参照
-してください。ここでは基本的なことだけを説明します。
+Vim は式の取り扱いはかなり標準的です。式の定義については |expression-syntax|
+を参照してください。ここでは基本的なことだけを説明します。
+
 数値と文字列と変数はそれ自体が式です。つまり、式が必要なところでは数値でも文字
 列でも変数でも使えます。他にも次のようなものが使えます:
 
 	$NAME		環境変数
-	&name		オプション
-	@r		レジスタ
+	&name		オプション値
+	@r		レジスタの内容
 
 例: >
 
-	:echo "The value of 'tabstop' is" &ts
-	:echo "Your home directory is" $HOME
-	:if @a > 5
+	echo "The value of 'tabstop' is" &ts
+	echo "Your home directory is" $HOME
+	if @a == 'text'
 
-&name 形式を使うと、オプションを保存し、別の値に設定し、何かを実行して、オプ
-ションを元に戻す、というようなことができます。例: >
+&name 形式は、オプションの値を設定し、何かを行い、古い値を復元するために使用す
+ることもできます。例: >
 
-	:let save_ic = &ic
-	:set noic
-	:/The Start/,$delete
-	:let &ic = save_ic
+	var save_ic = &ic
+	set noic
+	s/The Start/The Beginning/
+	&ic = save_ic
 
 'ignorecase' オプションをオフにしてから "The Start" パターンを検索しています。
 しかし設定は変更されません。(パターンに "\C" を加える方法でも同じことができま
 す。|/\C| 参照。)
 
 
-数値計算
---------
+☆数値計算
 
 基本的な要素を組み合わせると面白くなってきます。まずは数値計算です:
 
@@ -297,82 +404,99 @@ Vim の式は高機能でシンプルです。式の定義については |expre
 
 演算子の優先順位は一般的な規則と同じです: >
 
-	:echo 10 + 5 * 2
+	echo 10 + 5 * 2
 <	20 ~
 
 カッコを使って優先順位を変更できます: >
 
-	:echo (10 + 5) * 2
+	echo (10 + 5) * 2
 <	30 ~
 
-文字列は "." で連結できます: >
 
-	:echo "foo" . "bar"
-<	foobar ~
+☆その他
 
-":echo" コマンドに複数の引数を指定すると、スペースで区切られて表示されます。こ
+文字列は ".." で連結できます(|expr6| 参照)。例: >
+
+	echo "Name: " .. name
+	Name: Peter
+
+"echo" コマンドに複数の引数を指定すると、スペースで区切られて表示されます。こ
 れらの例では一つの式しか使われていないので、スペースは挿入されていません。
 
-C 言語と同じ条件演算子も使えます:
+連結が気に入らない場合は、波括弧で囲んだ式を受け付ける $"string" 形式を使用す
+ることができます: >
+	echo $"Name: {name}"
+
+詳細は |interp-string| を参照してください。
+
+C 言語と同じ条件演算子も使えます: >
 
 	a ? b : c
 
 "a" が真なら "b" が使われ、そうでなければ "c" が使われます。例: >
 
-	:let i = 4
-	:echo i > 5 ? "i is big" : "i is small"
-<	i is small ~
+	var nr = 4
+	echo nr > 5 ? "nr is big" : "nr is small"
+<	nr is small ~
 
-被演算子の部分は優先的に評価されるので、次のように見なすことができます:
+被演算子の部分は優先的に評価されるので、次のように見なすことができます: >
 
 	(a) ? (b) : (c)
+
+また Falsy 演算子もあります: >
+	echo name ?? "No name given"
+|??| を参照してください。
 
 ==============================================================================
 *41.4*	条件式
 
-":if" コマンドは条件が真の場合に ":endif" までのステートメントを実行します。書
-式は次のとおり:
+`if` コマンドは条件が真の場合に `endif` までのステートメントを実行します。書式
+は次のとおり:
 
-	:if {condition}
+	if {condition}
 	   {statements}
-	:endif
+	endif
 
-{condition} を評価した結果が真 (0以外) であれば、{statements} の内容が実行され
-ます。{statements} は正しく記述されている必要があります。不正な記述があると
-":endif" までたどり着けません。
-":else" を使うこともできます。書式は次のとおり:
+{condition} を評価した結果が真あるいは 1 であれば、{statements} の内容が実行さ
+れます。{statements} は実行されなくても正しいコマンドである必要があります。不
+正な記述があると `endif` にマッチする所までたどり着けません。
 
-	:if {condition}
+`else` を使うこともできます。書式は次のとおり:
+
+	if {condition}
 	   {statements}
-	:else
+	else
 	   {statements}
-	:endif
+	endif
 
-二つ目の {statements} は条件が偽の場合にだけ実行されます。
-":elseif" を使うこともできます:
+二つ目の {statements} ブロックは条件が偽の場合にだけ実行されます。
 
-	:if {condition}
+最後に、`elseif` を使うこともできます:
+
+	if {condition}
 	   {statements}
-	:elseif {condition}
+	elseif {condition}
 	   {statements}
-	:endif
+	endif
 
-これは ":else" に続けて "if" 文を使うのと同じ動作ですが、余計な ":endif" を使
-わなくて済みます。
+これは `else` に続けて `if` 文を使うのと同じ動作ですが、余計な `endif` を使わ
+なくて済みます。
+
 vimrc ファイルで便利に使える例を示しましょう。'term' オプションの値を調べ、そ
 の値に応じて処理を分けます: >
 
-	:if &term == "xterm"
-	:  " xterm 用の設定
-	:elseif &term == "vt100"
-	:  " vt100 端末用の設定
-	:else
-	:  " その他の端末用の設定
-	:endif
+	if &term == "xterm"
+	  # xterm 用の設定
+	elseif &term == "vt100"
+	  # vt100 端末用の設定
+	else
+	  # その他の端末用の設定
+	endif
+
+"#" で開始するコメントを使っています、これについては後程詳しく。
 
 
-論理演算子
-----------
+☆論理演算子
 
 今までの説明で既に論理演算子を使いました。次の演算子がよく使われます:
 
@@ -383,176 +507,200 @@ vimrc ファイルで便利に使える例を示しましょう。'term' オプ�
 	a <  b		より小さい
 	a <= b		より小さいか等しい
 
-条件が成立するなら 1、そうでなければ 0 が返ります。例: >
+条件が成立するなら true、そうでなければ false が返ります。例: >
 
-	:if v:version >= 700
-	:  echo "おめでとう"
-	:else
-	:  echo "古いバージョンを使っています。更新してね!"
-	:endif
+	if v:version >= 800
+	  echo "おめでとう"
+	else
+	  echo "古いバージョンを使っています。更新してね!"
+	endif
 
 "v:version" は Vim によって定義されている変数で、Vim のバージョンが入っていま
-す。バージョン 6.0 なら 600、バージョン 6.1 なら 601 です。これは複数のバージョ
-ンに対応するスクリプトを書くときに便利です。|v:version|
+す。バージョン 8.0 なら 800、バージョン 8.1 なら 801 です。これは複数のバージョ
+ンに対応するスクリプトを書くときに便利です。|v:version|。`has()` で特定の機能
+や特定のパッチを確認することもできます。|has-patch| を参照してください。
 
 論理演算子は数値でも文字列でも扱えます。文字列どうしを比較するときは数学的な差
 が比較されます。文字のバイト値を比較するので、一部の言語では正しい結果にならな
 いかもしれません。
-文字列と数値を比較するときは、文字列を数値に変換します。文字列が数字ではなかっ
-たときは 0 になるので注意してください。例: >
 
-	:if 0 == "one"
-	:  echo "yes"
-	:endif
+文字列と数字を比較した場合はエラーになります。
 
-これは "yes" と表示されます。"one" は数字ではないので 0 に変換されるのです。
+文字列にはさらに2つの便利な論理演算子があります:
 
-文字列にはさらに二つの論理演算子があります:
+	str =~ pat		パターンにマッチする
+	str !~ pat		パターンにマッチしない
 
-	a =~ b		パターンにマッチする
-	a !~ b		パターンにマッチしない
+左辺の "str" は文字列として扱われます。右辺の "pat" は検索パターンとして扱われ
+ます。例: >
 
-左辺の "a" は文字列として扱われます。右辺の "b" は検索パターンとして扱われま
-す。例: >
+	if str =~ " "
+	  echo "str にはスペースが含まれている"
+	endif
+	if str !~ '\.$'
+	  echo "str の末尾はピリオドではない"
+	endif
 
-	:if str =~ " "
-	:  echo "str にはスペースが含まれている"
-	:endif
-	:if str !~ '\.$'
-	:  echo "str の末尾はピリオドではない"
-	:endif
+パターンにシングルクォート文字列を使用していることに注意してください。これは便
+利です。なぜなら、パターンには多くのバックスラッシュが含まれる傾向があり、ダブ
+ルクォート文字列ではバックスラッシュを2重にする必要があるためです。
 
-パターンを指定するのにシングルクォート文字列を使うのがコツです。ダブルクォート
-文字列ではバックスラッシュを二重に書く必要があり、そして、検索パターンではバッ
-クスラッシュをよく使うので、バックスラッシュだらけになってしまいます。
+マッチ位置は固定されません。文字列全体を一致させたい場合は、"^" で始めて、"$"
+で終わります。
 
-文字列を比較するときは 'ignorecase' オプションが使われます。大文字小文字の区別
-を明示的に指定したい場合は比較演算子に "#" (区別する) または "?" (区別しない)
-をつけます。大文字小文字を区別せずに等しいかどうかを比較したい場合は "==?" を
-使います。"!~#" ならパターンにマッチしないことを、大文字と小文字を区別して確認
-できます。演算子の一覧は |expr-==| を参照してください。
+文字列を比較するときは 'ignorecase' オプションが使われません。大文字小文字の区
+別なしを明示的に指定したい場合 "?" をつけます。大文字小文字を区別せずに等しい
+かどうかを比較したい場合は "==?" を使います。これは大文字小文字を区別せずに2つ
+の文字列全体の比較をします。演算子の一覧は |expr-==| を参照してください。
 
 
-他のループコマンド
-------------------
+☆他のループコマンド
 
-":while" コマンドは既に説明しました。":while" ループの中では二つのステートメン
-トが使えます:
+`while` コマンドは既に説明しました。`while` と `endwhile` の中では二つのス
+テートメントが使えます:
 
-	:continue		ループの先頭にジャンプしてループを継続する。
-	:break			":endwhile" までジャンプしてループを脱ける。
+	continue		ループの先頭にジャンプしてループを継続する。
+	break			`endwile` までジャンプしてループを脱ける。
 
 例: >
 
-	:while counter < 40
-	:  call do_something()
-	:  if skip_flag
-	:    continue
-	:  endif
-	:  if finished_flag
-	:    break
-	:  endif
-	:  sleep 50m
-	:endwhile
+	var counter = 1
+	while counter < 40
+	  if skip_number(counter)
+	    continue
+	  endif
+	  if last_number(counter)
+	    break
+	  endif
+	  sleep 50m
+	  ++counter
+	endwhile
 
-":sleep" コマンドは Vim を一定時間停止します。"50m" は 50 ミリ秒です。
-":sleep 4" なら 4 秒間スリープします。
+`sleep` コマンドは Vim を一定時間停止します。"50m" は 50 ミリ秒です。`sleep 4`
+なら 4 秒間スリープします。
 
-":for" コマンドを使ってループすることもできます。|41.8|を参照。
+`for` と `endfor` の間では `continue` と `break` も使えます。
+`for` コマンドを使ってループすることもできます。|41.8|を参照。
 
 ==============================================================================
 *41.5*	式を実行する
 
-今まではコマンドを直接書いてきました。":execute" コマンドを使うと、式の評価結
-果をコマンドとして実行できます。これによってコマンドを動的に生成することができ
-ます。
-例えば、変数に格納された文字列を使ってタグジャンプするには次のようにします: >
-
-	:execute "tag " . tag_name
-
-文字列 "tag " と変数 "tag_name" の値を "." で連結しています。仮に "tag_name"
-の値が "get_cmd" だった場合、次のコマンドが実行されることになります: >
-
-	:tag get_cmd
-
-":execute" コマンドはコロンコマンドのみ実行できます。":normal" コマンドでノー
-マルモードコマンドを実行できますが、このコマンドの引数は文字がそのまま使われ、
-式としては評価されません。例: >
-
-	:normal gg=G
-
-このコマンドは一行目にジャンプしてから "=" オペレータですべての行を整形します。
-":normal" コマンドで式の値を使いたい場合は ":execute" と組み合わせてください。
-例: >
-
-	:execute "normal " . normal_commands
-
-変数 "normal_commands" にはノーマルモードコマンドを入れておく必要があります。
-":normal" には完結したコマンドを指定するようにしてください。引数が最後まで実行
-された段階でコマンドは中断されます。例えば、挿入モードを開始した場合は挿入モー
-ドを終了しなくてはなりません。次のコマンドは正しく動作します: >
-
-	:execute "normal Inew text \<Esc>"
-
-これは現在行に "new text" を挿入します。特殊キー "\<ESC>" を使っていることに注
-目してください。これによりスクリプトの中で本物の <Esc> 文字を使わないですみま
+今まではコマンドを直接書いてきました。`execute` コマンドを使うと、式の評価結果
+をコマンドとして実行できます。これによってコマンドを動的に生成することができま
 す。
 
-文字列を実行するのではなく、その式の値を得たい場合は、eval() 関数を使います: >
+例えば、変数に格納された文字列を使ってタグジャンプするには次のようにします: >
 
-	:let optname = "path"
-	:let optval = eval('&' . optname)
+	execute "tag " .. tag_name
+
+文字列 "tag " と変数 "tag_name" の値を ".." で連結しています。仮に "tag_name"
+の値が "get_cmd" だった場合、次のコマンドが実行されることになります: >
+
+	tag get_cmd
+
+`execute` コマンドはExコマンドのみ実行できます。`normal` コマンドでノーマルモー
+ドコマンドを実行できますが、このコマンドの引数は文字がそのまま使われ、式として
+は評価されません。例: >
+
+	normal gg=G
+
+このコマンドは一行目にジャンプしてから "=" オペレータですべての行を整形します。
+
+`normal` コマンドで式の値を使いたい場合は `execute` と組み合わせてください。
+例: >
+
+	execute "normal " .. count .. "j"
+
+これはカーソルを "count" 行下へ移動させます。
+
+`normal` には完結したコマンドを指定するようにしてください。引数の最後まで到達
+した段階でコマンドは静かに中断されます。例えば、削除のオペレータを開始した場合
+は、移動のコマンドも与えなくてはなりません。次のコマンドは正しく動作します:
+>
+
+	normal d$
+
+これは何もしません: >
+
+	normal d
+
+挿入モードを始めて Esc で終了しない場合でも、とにかく終了はします。次のコマン
+ドは "new text" を挿入します: >
+
+	execute "normal inew text"
+
+テキストの挿入後に何かしたい場合は挿入モードを終了する必要があります: >
+
+	execute "normal inew text\<Esc>b"
+
+これは "new text" を挿入し単語 "text" の最初の文字の上にカーソルを置きます。注
+目すべきは特殊キーの "\<Esc>" です。これはあなたのスクリプト内に実際の <Esc>
+文字を入力するのを回避します。そこでダブルクォート文字列での `execute` が役に
+立ちます。
+
+文字列をコマンドとして実行するのではなく、その式の結果を得たい場合は、eval()
+関数を使います: >
+
+	var optname = "path"
+	var optvalue = eval('&' .. optname)
 
 文字 "&" と "path" を連結しているので eval() の引数は "&path" になります。戻り
 値は 'path' オプションの値です。
-次のようにすることもできます: >
-	:exe 'let optval = &' . optname
 
 ==============================================================================
 *41.6*	関数を使う
 
 たくさんの関数があらかじめ定義され、豊富な機能が提供されています。このセクショ
-ンの説明にもいくつか登場します。関数の一覧は |functions| を参照してください。
+ンの説明にもいくつか登場します。関数の一覧は以下の |function-list| を参照して
+ください。
 
-関数は ":call" コマンドで呼び出します。引数はカッコで囲み、それぞれをコンマで
-区切ります。例: >
+関数は引数をカッコで囲み、それぞれをコンマで区切って呼び出します。例: >
 
-	:call search("Date: ", "W")
+	search("Date: ", "W")
 
 これは "Date: " と "W" を引数にして search() 関数を呼び出しています。search()
 関数は一つ目の引数を検索パターンとして使い、二つ目の引数をフラグとして使いま
 す。"W" フラグを指定するとファイル末尾で検索が終了します (折り返さない)。
 
+|Vim9| script では、`call` コマンドの使用はオプションです。旧来のスクリプトと
+コマンドラインでは必要となります: >
+
+	call search("Date: ", "W")
+
 関数は式の中で使うこともできます。例: >
 
-	:let line = getline(".")
-	:let repl = substitute(line, '\a', "*", "g")
-	:call setline(".", repl)
+	var line = getline(".")
+	var repl = substitute(line, '\a', "*", "g")
+	setline(".", repl)
 
 getline() 関数はカレントバッファから行を取得する関数です。引数には行番号を指定
 します。この例では "." ですが、これはカーソルのある行を示します。
-substitute() 関数は ":substitute" コマンドとほぼ同じです。最初の引数は置換対象
-の文字列、二つ目の引数はパターン、三つ目は置き換え文字列、最後はフラグです。
+
+substitute() 関数は `:substitute` コマンドとほぼ同じです。最初の引数 "line" は
+置換対象の文字列、二つ目の引数 '\a' はパターン、三つ目の引数 "*" は置き換え文
+字列、最後の引数は "g" はフラグです。
+
 setline() 関数は行の内容を置き換えます。最初の引数は行番号、二つ目の引数は置き
 換える文字列です。この例では、substitute() の結果で現在行を置き換えています。
 上記の三行のコマンドは次のコマンドと同じことをしています: >
 
 	:substitute/\a/*/g
 
-substitute() コマンドの前後にいろいろな処理を入れたりすると、もっと面白いこと
-ができるようになります。
+substitute() の呼び出しの前後にいろいろな処理を入れたりするときに、関数を使え
+ば面白いことができるようになります。
 
 
-関数一覧						*function-list*
---------
+☆関数一覧						*function-list*
 
 たくさんの関数があります。ここでは機能別に分類して紹介します。アルファベット順
-の一覧は |functions| を参照してください。関数の名前の上で CTRL-] を押すと、詳
-細な説明にジャンプできます。
+の一覧は |builtin-function-list| を参照してください。関数名の上で CTRL-] を押
+すと、詳細な説明にジャンプできます。
 
 文字列繰作:						*string-functions*
-	nr2char()		ASCII値から文字を得る
-	char2nr()		文字のASCII値を得る
+	nr2char()		数値から文字を得る
+	list2str()		数値のリストから文字列を得る
+	char2nr()		文字の数値を得る
+	str2list()		文字列から数値のリストを得る
 	str2nr()		文字列を数値に変換する
 	str2float()		文字列を浮動小数点数に変換する
 	printf()		書式付き文字列を整形する
@@ -561,31 +709,45 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	fnameescape()		Vim コマンド用にファイル名をエスケープ
 	tr()			ある文字の集合から別の文字の集合へ置換する
 	strtrans()		文字列を印字可能な状態とする
+	keytrans()		内部キーコードから |:map| で使用可能な表記にす
+				る
 	tolower()		文字列を小文字にする
 	toupper()		文字列を大文字にする
+	charclass()		文字のクラス
 	match()			文字列の中でパターンにマッチした位置
 	matchend()		文字列の中でパターンにマッチした末尾の位置
+	matchfuzzy()		リスト内の文字列についてファジーマッチした文字列
+	matchfuzzypos()		リスト内の文字列についてファジーマッチした文字列
 	matchstr()		文字列の中でパターンにマッチした文字列
 	matchstrpos()		文字列の中でパターンにマッチした文字列と位置
 	matchlist()		matchstr()と同様だが、部分マッチも返す
 	stridx()		文字列の中で部分文字列が見つかった最初の位置
 	strridx()		文字列の中で部分文字列が見つかった最後の位置
 	strlen()		文字列のバイト単位での長さ
-	strchars()		文字列の文字単位での長さ
+	strcharlen()		文字列の文字単位での長さ
+	strchars()		文字列内の文字数
 	strwidth()		表示された文字列のサイズ
 	strdisplaywidth()	表示された文字列のサイズ、タブを扱う
+	setcellwidths()		文字の幅の上書き設定
 	substitute()		パターンにマッチする文字列を置換
 	submatch()		":s" と substitute() の中で部分マッチを得る
 	strpart()		文字列の一部分を得る(バイト数指定)
 	strcharpart()		文字のインデックスで指定された部分文字列を得る
+	slice()			Vim9 script での文字インデックスを用いて、文字
+				列のスライスを取る
 	strgetchar()		文字のインデックスで指定された文字コードを得る
 	expand()		特殊キーワードを展開する
+	expandcmd()		`:edit` のようにコマンドを展開する
 	iconv()			テキストのエンコーディングを変換する
 	byteidx()		文字列中の文字のバイトインデックス
 	byteidxcomp()		byteidx() と同様だが合成文字を数に入れる
+	charidx()		文字列中のバイト値の文字インデックス
 	repeat()		文字列を複数回繰り返す
 	eval()			文字列を式として評価する
 	execute()		Ex コマンドを実行し出力を得る
+	win_execute()		execute() に似ているが指定ウィンドウで実行する
+	trim()			文字列から文字を取り除く
+	gettext()		翻訳メッセージの検索
 
 リスト操作:						*list-functions*
 	get()			要素を取得。存在しないインデックスでもエラーを
@@ -595,24 +757,33 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	insert()		リストの任意の位置に要素を挿入する
 	add()			リストに要素を追加する
 	extend()		リストにリストを連結する
+	extendnew()		あるリストとリストを結合して新しいリストを作成
+				する
 	remove()		リストから1個以上の要素を取り除く
 	copy()			リストの浅いコピーを作成する
 	deepcopy()		リストの完全なコピーを作成する
 	filter()		リストから選択された要素を取り除く
 	map()			リストの各要素を変換する
+	mapnew()		変換した要素で新しいリストを作成する
+	reduce()		リストの畳み込みの値を算出する
+	slice()			リストのスライスを取る
 	sort()			リストをソートする
-	reverse()		リストの並び順を反転させる
+	reverse()		リストあるいは Blob の並び順を反転させる
 	uniq()			隣接して繰り返される要素のコピーを削除する
 	split()			文字列を分割し、リストにする
 	join()			リストの要素を連結し、文字列にする
 	range()			数列リストを返す
 	string()		リストの文字列表現
 	call()			リストを引数として関数を呼ぶ
-	index()			リスト中の要素のインデックス
+	index()			リストあるいは Blob 中の要素のインデックス
+	indexof()		リストあるいは Blob で式の評価が真となった位置
+				のインデックス
 	max()			リスト中の最大値
 	min()			リスト中の最小値
 	count()			ある要素がリスト中に出現する回数を返す
 	repeat()		リストを複数回繰り返す
+	flatten()		リストの平坦化
+	flattennew()		リストのコピーを平坦化
 
 辞書操作:						*dict-functions*
 	get()			辞書の要素を返す。存在しないキーでもエラーを出
@@ -622,8 +793,11 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	empty()			辞書が空であるか判定する
 	remove()		辞書から要素を取り除く
 	extend()		ある辞書の要素をすべて別の辞書に追加する
+	extendnew()		ある辞書の要素と別の辞書を合せて新しい辞書を作
+				成する
 	filter()		辞書から選択された要素を取り除く
 	map()			辞書の各要素を変換する
+	mapnew()		変換した要素で新しい辞書を作成する
 	keys()			辞書の全キーのリストを取得する
 	values()		辞書の全値のリストを取得する
 	items()			辞書の全キー・値のペアを取得する
@@ -657,7 +831,12 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	sinh()			双曲線正弦 (ハイパボリックサイン)
 	cosh()			双曲線余弦 (ハイパボリックコサイン)
 	tanh()			双曲線正接 (ハイパボリックタンジェント)
+	isinf()			無限大かのチェック
 	isnan()			数値でないかどうかのチェック
+
+Blob 操作:						*blob-functions*
+	blob2list()		blobから数値のリストを取得する
+	list2blob()		数値のリストからblobを取得する
 
 その他の計算:						*bitwise-function*
 	and()			ビットごとの論理積
@@ -665,9 +844,12 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	or()			ビットごとの論理和
 	xor()			ビットごとの排他的論理和
 	sha256()		SHA-256 ハッシュ
+	rand()			疑似乱数を得る
+	srand()			rand() を使うためのシード値の初期化
 
 変数:							*var-functions*
-	type()			変数の型
+	type()			数値による変数の型
+	typename()		テキストによる変数の型
 	islocked()		変数がロックされているか判定する
 	funcref()		関数参照へのFuncrefを取得する
 	function()		関数名からFuncrefを取得する
@@ -690,14 +872,24 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	cursor()		カーソルを指定した位置に移動させる
 	screencol()		カーソルのスクリーン列を取得する
 	screenrow()		カーソルのスクリーン行を取得する
+	screenpos()		テキスト文字のスクリーン行と列
+	virtcol2col()		テキスト文字のスクリーンのバイト位置
 	getcurpos()		カーソルの位置を取得する
 	getpos()		カーソルやマークなどの位置を取得する
 	setpos()		カーソルやマークなどの位置を設定する
+	getmarklist()		グローバル/ローカルのマークのリスト
 	byte2line()		指定のバイト位置の行番号を取得する
 	line2byte()		指定の行のバイト位置を取得する
 	diff_filler()		ある行より上の詰め行の数を取得する
 	screenattr()		スクリーン列/行の属性を取得する
 	screenchar()		スクリーン列/行の文字コードを取得する
+	screenchars()		スクリーン列/行の文字コードのリストを取得する
+	screenstring()		スクリーン列/行の文字列を取得する
+	charcol()		カーソルもしくはマークにある文字の数値
+	getcharpos()		カーソル、マーク、その他の位置の文字の取得
+	setcharpos()		カーソル、マーク、その他の位置の文字の設定
+	getcursorcharpos()	カーソル位置の文字の取得
+	setcursorcharpos()	カーソル位置の文字の設定
 
 カレントバッファで動作するもの:				*text-functions*
 	getline()		バッファから行を得る
@@ -710,11 +902,18 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	prevnonblank()		前の非空行を探す
 	search()		パターンにマッチする場所を探す
 	searchpos()		パターンにマッチする場所を探す
+	searchcount()		カーソルの前後でマッチした数を得る
 	searchpair()		start/skip/end の対を探す
 	searchpairpos()		start/skip/end の対を探す
 	searchdecl()		名前が宣言されている場所を探す
 	getcharsearch()		文字検索情報を返す
 	setcharsearch()		文字検索情報を設定する
+
+他のバッファのテキストで動作するもの:
+	getbufline()		指定したバッファから行のリストを得る
+	setbufline()		指定したバッファ内の行を置き換える
+	appendbufline()		指定したバッファに行のリストを追加する
+	deletebufline()		指定したバッファから行を削除する
 
 					*system-functions* *file-functions*
 システム関数とファイル繰作:
@@ -734,28 +933,42 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	getfperm()		ファイルのパーミッションを得る
 	setfperm()		ファイルのパーミッションを設定する
 	getftype()		ファイルの種類を得る
+	isabsolutepath()	絶対パスであるかチェックする
 	isdirectory()		ディレクトリの存在をチェックする
 	getfsize()		ファイルのサイズを得る
 	getcwd()		カレントディレクトリを得る
-	haslocaldir()		カレントウィンドウが |:lcd| を使用したかどうか
-				をチェックする
+	haslocaldir()		カレントウィンドウが |:lcd| または |:tcd| を使
+				用したかどうかをチェックする
 	tempname()		一時ファイルの名前を得る
 	mkdir()			ディレクトリを作成する
+	chdir()			現在の作業ディレクトリを変更する
 	delete()		ファイルを削除する
 	rename()		ファイルの名前を変更する
 	system()		シェルコマンドを実行し、その結果を文字列で得る
 	systemlist()		シェルコマンドを実行し、その結果をリストで得る
+	environ()		すべての環境変数を得る
+	getenv()		環境変数を得る
+	setenv()		環境変数を設定する
 	hostname()		システムの名称を得る
 	readfile()		ファイルを読み込み、行のリストを得る
-	writefile()		行のリストをファイルに書き込む
+	readblob()		ファイルを読み込み、Blobに格納する
+	readdir()		ディレクトリ内のファイル名のリストを得る
+	readdirex()		ディレクトリ内のファイル情報のリストを得る
+	writefile()		行のリストまたは Blob をファイルに書き込む
 
 日付と時刻:				*date-functions* *time-functions*
 	getftime()		ファイルの最終更新日時を得る
 	localtime()		現在時刻を秒単位で得る
 	strftime()		時刻を文字列に変換する
+	strptime()		日付/時刻の文字列を時刻に変換する
 	reltime()		現在時刻または経過時間を正確に取得する
 	reltimestr()		reltime()の結果を文字列に変換する
 	reltimefloat()		reltime()の結果を浮動小数点に変換する
+
+自動コマンド:					*autocmd-functions*
+	autocmd_add()		自動コマンドとグループのリストを追加する
+	autocmd_delete()	自動コマンドとグループのリストを削除する
+	autocmd_get()		自動コマンドのリストを返す
 
 			*buffer-functions* *window-functions* *arg-functions*
 バッファ、ウィンドウ、引数リスト:
@@ -763,8 +976,10 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	argidx()		引数リスト中の現在の位置
 	arglistid()		引数リストのIDを得る
 	argv()			引数リストの中身を得る
+	bufadd()		バッファのリストにファイルを追加する
 	bufexists()		バッファの存在をチェックする
 	buflisted()		バッファが存在し、リストされているかどうか
+	bufload()		バッファがロードされていることを保証する
 	bufloaded()		バッファが存在し、ロードされているかどうか
 	bufname()		バッファの名前を得る
 	bufnr()			バッファの番号を得る
@@ -775,38 +990,52 @@ substitute() コマンドの前後にいろいろな処理を入れたりする�
 	bufwinid()		バッファのウィンドウIDを得る
 	bufwinnr()		バッファのウィンドウ番号を得る
 	winbufnr()		ウィンドウのバッファ番号を得る
-	getbufline()		バッファの行のリストを得る
+	listener_add()		変更を監視するためのコールバックを追加する
+	listener_flush()	リスナーコールバックを呼び出す
+	listener_remove()	リスナーコールバックを削除する
 	win_findbuf()		バッファが含まれるウィンドウを探す
 	win_getid()		ウィンドウのウィンドウIDを得る
+	win_gettype()		ウィンドウの種別を得る
 	win_gotoid()		IDで指定されたウィンドウへ移動する
 	win_id2tabwin()		IDで指定されたタブとウィンドウの番号を得る
 	win_id2win()		IDで指定されたウィンドウの番号を得る
+	win_move_separator()	ウィンドウの垂直セパレータの移動
+	win_move_statusline()	ウィンドウのステータス行の移動
+	win_splitmove()		分割したもう片方へウィンドウを移動する
 	getbufinfo()		バッファの情報一覧を得る
 	gettabinfo()		タブページの情報一覧を得る
 	getwininfo()		ウィンドウの情報一覧を得る
 	getchangelist()		変更リストのエントリ一覧を得る
 	getjumplist()		ジャンプリストのエントリ一覧を得る
 	swapinfo()		スワップファイルの情報を得る
+	swapname()		バッファのスワップファイルパスを得る
 
 コマンドライン:					*command-line-functions*
+	getcmdcompltype()	現在のコマンドライン補完の種別を取得
 	getcmdline()		現在のコマンドラインを取得
 	getcmdpos()		コマンドラインにおけるカーソル位置を取得
+	getcmdscreenpos()	コマンドラインでのカーソルの画面位置を取得
+	setcmdline()		現在のコマンドラインを設定
 	setcmdpos()		コマンドラインにおけるカーソル位置を設定
 	getcmdtype()		現在のコマンドラインの種類を返す
 	getcmdwintype()		現在のコマンドラインウィンドウの種類を返す
 	getcompletion()		マッチするコマンド補完リストを返す
+	fullcommand()		完全なコマンド名の取得
 
-Quickfixとロケーションリスト:			*quickfix-functions*
+Quickfixとlocationリスト:			*quickfix-functions*
 	getqflist()		quickfixエラーのリスト
 	setqflist()		quickfixを変更する
-	getloclist()		ロケーションリストの項目のリスト
-	setloclist()		ロケーションリストを変更する
+	getloclist()		locationリストの項目のリスト
+	setloclist()		locationリストを変更する
 
 挿入モード補完:					*completion-functions*
 	complete()		補完候補を設定する
 	complete_add()		補完候補を追加する
 	complete_check()	補完処理を終えるべきかどうかをチェックする
+	complete_info()		現在の補完情報を得る
 	pumvisible()		ポップアップメニューが表示されているかチェック
+	pum_getpos()		表示されているポップアップメニューの位置とサイ
+				ズを得る
 
 折り畳み:					*folding-functions*
 	foldclosed()		行が折り畳まれているかどうかをチェックする
@@ -821,6 +1050,8 @@ Quickfixとロケーションリスト:			*quickfix-functions*
 	getmatches()		|matchadd()|と|:match|コマンドで定義されたすべ
 				てのマッチを得る
 	hlexists()		ハイライトグループの存在をチェック
+	hlget()			ハイライトグループの属性を取得する
+	hlset()			ハイライトグループの属性を設定する
 	hlID()			ハイライトグループのIDを得る
 	synID()			指定位置のシンタックスIDを得る
 	synIDattr()		シンタックスIDから指定の属性を得る
@@ -851,7 +1082,10 @@ Quickfixとロケーションリスト:			*quickfix-functions*
 	browsedir()		ディレクトリ選択ダイアログを開く
 	confirm()		ユーザーに選択をさせる
 	getchar()		ユーザーが入力した文字を得る
+	getcharstr()		ユーザーが入力した文字を文字列として得る
 	getcharmod()		最後に入力した文字の修飾子(modifier)を得る
+	getmousepos()		最後に取得したマウスの位置を得る
+	echoraw()		文字をそのまま出力する
 	feedkeys()		先行入力キューに文字を入れる
 	input()			ユーザーが入力した行を得る
 	inputlist()		ユーザーにリストから項目を選択させる
@@ -867,6 +1101,7 @@ GUI:						*gui-functions*
 	getwinposy()		VimウィンドウのY座標
 	balloon_show()		バルーンの内容を設定する
 	balloon_split()		バルーン用にメッセージを分割する
+	balloon_gettext()	バルーンのテキストを得る
 
 Vimサーバー:					*server-functions*
 	serverlist()		サーバー名のリストを返す
@@ -883,18 +1118,27 @@ Vimサーバー:					*server-functions*
 	winheight()		ウィンドウの高さを取得
 	winwidth()		ウィンドウの幅を取得
 	win_screenpos()		ウィンドウのスクリーン座標を取得
+	winlayout()		タブページ内のウィンドウ配置を取得
 	winrestcmd()		ウィンドウサイズを復元するコマンドを返す
 	winsaveview()		カレントウィンドウのビューを取得
 	winrestview()		カレントウィンドウのビューを復元
 
-マッピング:					*mapping-functions*
+マッピングとメニュー:				*mapping-functions*
+	digraph_get()		|digraph| の取得
+	digraph_getlist()	全 |digraph| の取得
+	digraph_set()		|digraph| の登録
+	digraph_setlist()	複数 |digraph| の登録
 	hasmapto()		マップの存在をチェック
 	mapcheck()		マッチするマップの存在をチェック
 	maparg()		マップのrhs(展開結果)を得る
+	maplist()		全マップのリストを得る
+	mapset()		マップを復元
+	menu_info()		メニュー項目の情報を取得
 	wildmenumode()		wildmodeが有効かどうかをチェック
 
 テスト用:					*test-functions*
 	assert_equal()		2つの式が等しい事をテストする
+	assert_equalfile()	2つのファイルの内容が等しい事をテストする
 	assert_notequal()	2つの式が等しくない事をテストする
 	assert_inrange()	式が範囲内にある事をテストする
 	assert_match()		値がパターンにマッチする事をテストする
@@ -903,20 +1147,34 @@ Vimサーバー:					*server-functions*
 	assert_true()		式がtrueかどうかテストする
 	assert_exception()	コマンドが例外を投げる事をテストする
 	assert_beeps()		コマンドがビープ音を鳴らすことをテストする
+	assert_nobeep()		コマンドがビープ音を鳴らさないことをテストする
 	assert_fails()		コマンドが失敗する事をテストする
 	assert_report()		テストの失敗をレポートする
 	test_alloc_fail()	メモリの確保を失敗させる
 	test_autochdir()	起動中に 'autochdir' を有効にする
 	test_override()		Vimの内部処理を置き換えてテストする
 	test_garbagecollect_now()   直ちにメモリを解放する
+	test_garbagecollect_soon()  メモリを解放のフラグを設定する
+	test_getvalue()		内部変数の値を取得する
+	test_gui_event()	テスト用の GUI イベントを生成する
 	test_ignore_error()	特定のエラーメッセージを無視する
+	test_null_blob()	null の Blob を返す
 	test_null_channel()	null のチャネルを返す
 	test_null_dict()	null の辞書を返す
+	test_null_function()	null の Funcref を返す
 	test_null_job()		null の Job を返す
 	test_null_list()	null のリストを返す
 	test_null_partial()	null の部分適用を返す
 	test_null_string()	null の文字列を返す
 	test_settime()		Vimが内部的に用いる時間を設定する
+	test_setmouse()		マウスの位置を設定する
+	test_feedinput()	インプットバッファにキーシーケンスを追加する
+	test_option_not_set()	オプションが設定されていることを示すフラグをリ
+				セットする
+	test_refcount()		式の参照カウントを返す
+	test_srand_seed()	srand() のテスト用の種を設定する
+	test_unknown()		unknown 型の値を返す
+	test_void()		void 型の値を返す
 
 プロセス間通信:					*channel-functions*
 	ch_canread()		何か読むものがあるかチェックする
@@ -924,6 +1182,7 @@ Vimサーバー:					*server-functions*
 	ch_close()		チャネルを閉じる
 	ch_close_in()		チャネルの入力パートを閉じる
 	ch_read()		チャネルからメッセージを読み取る
+	ch_readblob()		チャネルから Blob を読み取る
 	ch_readraw()		チャネルからrawメッセージを読み取る
 	ch_sendexpr()		チャネルにJSONメッセージを送る
 	ch_sendraw()		チャネルにrawメッセージを送る
@@ -941,7 +1200,7 @@ Vimサーバー:					*server-functions*
 	js_encode()		式をJSONの文字列にエンコードする
 	js_decode()		JSONの文字列をVimの型にデコードする
 
-Jobs:		    			        *job-functions*
+ジョブ:						*job-functions*
 	job_start()		Job を開始する
 	job_stop()		Job を停止する
 	job_status()		Job のステータスを取得する
@@ -949,44 +1208,140 @@ Jobs:		    			        *job-functions*
 	job_info()		Job の情報を取得する
 	job_setoptions()	Job のオプションを設定する
 
-Terminal window:				*terminal-functions*
-	term_start()		ターミナルウィンドウを開いてジョブを開始する
-	term_list()		ターミナルバッファのリストを取得する
-	term_sendkeys()		ターミナルにキーストロークを送る
+目印:						*sign-functions*
+	sign_define()		目印を定義または更新する
+	sign_getdefined()	定義されている目印のリストを取得する
+	sign_getplaced()	設置されている目印のリストを取得する
+	sign_jump()		目印へ移動する
+	sign_place()		目印を設置する
+	sign_placelist()	目印のリストを設置する
+	sign_undefine()		定義された目印を削除する
+	sign_unplace()		設置された目印を解除する
+	sign_unplacelist()	設置された目印のリストを解除する
+
+端末ウィンドウ:					*terminal-functions*
+	term_start()		端末ウィンドウを開いてジョブを開始する
+	term_list()		端末バッファのリストを取得する
+	term_sendkeys()		端末にキーストロークを送る
 	term_wait()		スクリーンがアップデートされるのを待つ
-	term_getjob()		ターミナルに関連するジョブを取得する
-	term_scrape()		ターミナルスクリーンの列を取得する
-	term_getline()		ターミナルからテキストの行を取得する
+	term_getjob()		端末に関連するジョブを取得する
+	term_scrape()		端末スクリーンの列を取得する
+	term_getline()		端末からテキストの行を取得する
 	term_getattr()		{what} の属性値を取得する
-	term_getcursor()	ターミナルのカーソル位置を取得する
-	term_getscrolled()	ターミナルのスクロール数を取得する
+	term_getcursor()	端末のカーソル位置を取得する
+	term_getscrolled()	端末のスクロール数を取得する
 	term_getaltscreen()	代替のスクリーンフラグを取得する
-	term_getsize()		ターミナルのサイズを取得する
-	term_getstatus()	ターミナルのステータスを取得する
-	term_gettitle()		ターミナルのタイトルを取得する
-	term_gettty()		ターミナルの tty 名を取得する
+	term_getsize()		端末のサイズを取得する
+	term_getstatus()	端末のステータスを取得する
+	term_gettitle()		端末のタイトルを取得する
+	term_gettty()		端末の tty 名を取得する
 	term_setansicolors()	GUI で使用される 16 色の ANSI カラーパレットを
 				設定する
 	term_getansicolors()	GUI で使用される 16 色の ANSI カラーパレットを
 				取得する
+	term_dumpdiff()		2つの画面ダンプ間の差分を表示する
+	term_dumpload()		ウィンドウに端末スクリーンダンプを読み込む
+	term_dumpwrite()	端末スクリーンの内容をファイルにダンプする
+	term_setkill()		端末内のジョブを停止するシグナルを設定する
+	term_setrestore()	端末を復元させるためのコマンドを設定する
+	term_setsize()		端末のサイズを設定する
+	term_setapi()		端末の JSON API 関数名のプリフィックスを設定す
+				る
 
-Timers:						*timer-functions*
+ポップアップウィンドウ:				*popup-window-functions*
+	popup_create()		画面中央にポップアップを作成する
+	popup_atcursor()	カーソル位置のすぐ上にポップアップを作成する、
+				カーソルが離れると閉じる
+	popup_beval()		v:beval_ 変数によって示される位置、
+				マウスが離れると閉じる
+	popup_notification()	3秒間通知を表示する
+	popup_dialog()		パディングとボーダー付きで中央にポップアップを
+				作成する
+	popup_menu()		リストから項目を選択するためのプロンプト
+	popup_hide()		ポップアップを一時的に隠す
+	popup_show()		以前に隠されたポップアップを表示する
+	popup_move()		ポップアップの位置とサイズを変更する
+	popup_setoptions()	ポップアップのオプションを上書きする
+	popup_settext()		ポップアップバッファの内容を置き換える
+	popup_close()		1つのポップアップを閉じる
+	popup_clear()		全てのポップアップを閉じる
+	popup_filter_menu()	リストの項目から選択する
+	popup_filter_yesno()	'y' か 'n' が押されるまでブロックする
+	popup_getoptions()	ポップアップの現在のオプションを取得する
+	popup_getpos()		ポップアップの実際の位置とサイズを取得する
+	popup_findecho()	`:echowindow` で使用しているポップアップのウィ
+				ンドウIDを取得
+	popup_findinfo()	ポップアップ情報ウィンドウのウィンドウIDを取得
+				する
+	popup_findpreview()	ポップアッププレビューウィンドウのウィンドウID
+				を取得する
+	popup_list()		全ポップアップのウィンドウIDのリストを取得する
+	popup_locate()		スクリーン上の指定の位置にあるポップアップの
+				ウィンドウIDを取得する
+
+Registers:					*register-functions*
+	getreg()		レジスタの値を得る
+	getreginfo()		レジスタの情報を得る
+	getregtype()		レジスタのタイプを得る
+	setreg()		レジスタの値を設定する
+	reg_executing()		実行中のレジスタ名を返す
+	reg_recording()		記録中のレジスタ名を返す
+
+タイマー:					*timer-functions*
 	timer_start()		タイマーを作る
 	timer_pause()		タイマーを一時停止もしくは再開する
 	timer_stop()		タイマーを止める
 	timer_stopall()		全てのタイマーを止める
 	timer_info()		タイマーの情報を得る
+タグ:						*tag-functions*
+	taglist()		マッチするタグのリストを取得する
+	tagfiles()		タグファイルのリストを取得する
+	gettagstack()		ウィンドウのタグスタックを取得する
+	settagstack()		ウィンドウのタグスタックを変更する
+
+プロンプトバッファ:				*promptbuffer-functions*
+	prompt_getprompt()	バッファで使われているプロンプトテキストを取得
+				する
+	prompt_setcallback()	バッファのプロンプトコールバックを設定する
+	prompt_setinterrupt()	バッファの割り込みコールバックを設定する
+	prompt_setprompt()	バッファのプロンプトテキストを設定する
+
+テキストプロパティ:				*text-property-functions*
+	prop_add()		指定位置にプロパティを付加する
+	prop_add_list()		複数の指定位置にプロパティを付加する
+	prop_clear()		指定行からプロパティをすべて削除する
+	prop_find()		プロパティを検索する
+	prop_list()		指定行のすべてのプロパティのリストを返す
+	prop_remove()		指定行からプロパティを削除する
+	prop_type_add()		プロパティタイプの追加/定義
+	prop_type_change()	プロパティタイプの変更
+	prop_type_delete()	テキストのプロパティタイプの削除
+	prop_type_get()		プロパティタイプのプロパティを返す
+	prop_type_list()	すべてのプロパティタイプをリストで返す
+
+サウンド:					*sound-functions*
+	sound_clear()		再生している全サウンドを停止する
+	sound_playevent()	イベントサウンドを再生する
+	sound_playfile()	サウンドファイルを再生する
+	sound_stop()		サウンドの再生を停止する
 
 その他:						*various-functions*
 	mode()			現在の編集モードを得る
+	state()			現在のビジー状態を得る
 	visualmode()		最後に使われたビジュアルモードの種類
 	exists()		変数、関数の存在をチェック
+	exists_compiled()	exists() と同様だが、コンパイル時にチェック
 	has()			機能がサポートされているかをチェック
 	changenr()		最近の変更番号を返す
 	cscope_connection()	cscope接続をチェック
-	did_filetype()		FileTypeオートコマンドが使用されたかどうか
+	did_filetype()		FileType自動コマンドが使用されたかどうか
 	eventhandler()		イベントハンドラによって起動されたかどうか
 	getpid()		Vim のプロセスIDを得る
+	getscriptinfo()		読み込んだ Vim script のリストを取得
+	getimstatus()		IME のステータスがアクティブかをチェック
+	interrupt()		スクリプトの実行を中断する
+	windowsversion()	MS-Windows バージョンの取得
+	terminalprops()		端末の属性
 
 	libcall()		外部ライブラリの関数を呼ぶ
 	libcallnr()		同上、数値を返す
@@ -994,18 +1349,9 @@ Timers:						*timer-functions*
 	undofile()		アンドゥファイルの名前を得る
 	undotree()		アンドゥツリーの状態を返す
 
-	getreg()		レジスタの値を得る
-	getregtype()		レジスタのタイプを得る
-	setreg()		レジスタの値を設定する
-	reg_executing()		実行中のレジスタ名を返す
-	reg_recording()		記録中のレジスタ名を返す
-
 	shiftwidth()		'shiftwidth' の実際の値
 
 	wordcount()		バッファ内のバイト数/単語数/文字数などを得る
-
-	taglist()		マッチするタグのリストを取得
-	tagfiles()		タグファイルのリストを取得
 
 	luaeval()		|Lua|の式を評価する
 	mzeval()		|MzScheme| の式を評価する
@@ -1013,15 +1359,18 @@ Timers:						*timer-functions*
 	py3eval()		|Python|の式を評価する (|+python3|)
 	pyeval()		|Python|の式を評価する (|+python|)
 	pyxeval()		|python_x| の式を評価する
+	rubyeval()		|Ruby| の式を評価する
+
+	debugbreak()		デバッグ中のプログラムを中断する
 
 ==============================================================================
 *41.7*	関数を定義する
 
 自分で関数を定義することができます。基本的な関数定義は次のとおり: >
 
-	:function {name}({var1}, {var2}, ...)
-	:  {body}
-	:endfunction
+	def {name}({var1}, {var2}, ...): return-type
+	  {body}
+	enddef
 <
 	Note:
 	関数名は大文字で開始する必要があります。
@@ -1029,155 +1378,127 @@ Timers:						*timer-functions*
 小さな関数を定義してみましょう。二つの数値のうち小さい方を返す関数を作ります。
 関数は次のような行で始まります: >
 
-	:function Min(num1, num2)
+	def Min(num1: number, num2: number): number
 
-関数の名前が "Min" であり、二つの引数 ("num1" と "num2") を取る、ということを
-表しています。
+これは、関数が "Min" という名前で、数値である2つの引数: "num1" と "num2" を取
+り、数値を返すことを Vim に伝えています。
+
 最初にしなければならないのは、どちらの数値が小さいかをチェックすることです: >
 
-	:  if a:num1 < a:num2
+	if num1 < num2
 
-"a:" は特殊なプリフィックスで、この変数が関数の引数であることを示します。小さ
-い方の値を変数 "smaller" に代入しましょう: >
+小さい方の値を変数 "smaller" に代入しましょう: >
 
-	:  if a:num1 < a:num2
-	:    let smaller = a:num1
-	:  else
-	:    let smaller = a:num2
-	:  endif
+	var smaller: number
+	if num1 < num2
+	  smaller = num1
+	else
+	  smaller = num2
+	endif
 
-変数 "smaller" はローカル変数です。関数の中で使われた変数はローカル変数になり
-ます。ただし、"g:"、"a:"、"s:" などのプリフィックスを付けた場合は別です。
+変数 "smaller" はローカル変数です。これは Vim が何らかの間違いを警告できるよう
+に、数値であると宣言されています。関数内で使用される変数は、"g:", "w:" または
+"b:" のようなものが付いていない限りローカルです。
 
 	Note:
 	関数の内からグローバル変数にアクセスするには "g:" を付ける必要がありま
 	す。つまり、関数内では "g:today" はグローバル変数 "today" を示し、
-	"today" ならそれとは別の変数、すなわちローカル変数になります。
+	"today" ならそれとは別の変数、すなわち関数もしくはスクリプトにローカル
+	な変数になります。
 
-":return" ステートメントを使って、小さい方の値を呼び出し元に返しましょう。そし
+`return` ステートメントを使って、小さい方の値を呼び出し元に返しましょう。そし
 て、関数を閉じます: >
 
-	:  return smaller
-	:endfunction
+	  return smaller
+	enddef
 
 関数定義の全体は次のようになります: >
 
-	:function Min(num1, num2)
-	:  if a:num1 < a:num2
-	:    let smaller = a:num1
-	:  else
-	:    let smaller = a:num2
-	:  endif
-	:  return smaller
-	:endfunction
+	def Min(num1: number, num2: number): number
+	  var smaller: number
+	  if num1 < num2
+	    smaller = num1
+	  else
+	    smaller = num2
+	  endif
+	  return smaller
+	enddef
 
-関数を短く書きたい場合は、次のようにもできます: >
+この例は明かに冗長です。2つの return コマンドを使うことで短くできます: >
 
-	:function Min(num1, num2)
-	:  if a:num1 < a:num2
-	:    return a:num1
-	:  endif
-	:  return a:num2
-	:endfunction
+	def Min(num1: number, num2: number): number
+	  if num1 < num2
+	    return num1
+	  endif
+	  return num2
+	enddef
+
+そしてあなたが条件演算子を覚えているなら、必要なら1行にもできます: >
+
+	def Min(num1: number, num2: number): number
+	  return num1 < num2 ? num1 : num2
+	enddef
 
 ユーザー定義関数は組み込み関数とまったく同じ方法で呼び出すことができます。違う
 のは名前だけです。Min 関数は次のように使用できます: >
 
-	:echo Min(5, 8)
+	echo Min(5, 8)
 
-関数が実行され、関数の中身が Vim によって解釈されます。未定義の変数や関数を使
+関数が実行され、関数の中身が Vim によって解析されます。未定義の変数や関数を使
 うなどの間違いがあったときは、エラーメッセージが表示されます。関数定義の時点で
-はそれらのエラーは検出されません。
+はそれらのエラーは検出されません。より早くエラーを検知したい場合は、Vim にスク
+リプト内のすべての関数をコンパイルするように指示できます: >
 
-関数が ":endfunction" まで実行されたとき、あるいは引数無しで ":return" を使っ
-たときは 0 が返ります。
+	defcompile
 
-既存の関数を再定義したい場合は ":function" コマンドに "!" を付けてください: >
+関数のコンパイルには少し時間がかかりますが、エラーは早期に報告されます。作業中
+にスクリプトの最後で `:defcompile` を使用し、問題がなければコメントアウトしま
+す。
 
-	:function!  Min(num1, num2, num3)
+何も返さない関数の場合は、単純に戻り値の型を省略します: >
+
+	def SayIt(text: string)
+	  echo text
+	enddef
+
+任意の型の値を返したいのであれば、"any" を戻り値の型に使えます: >
+	def GetValue(): any
+戻り値の型チェックが無効になるので、必要な時だけにしてください。
+
+旧来の関数も `function` と `endfunction` で定義できます。これらには型がなくコ
+ンパイルされません。そのため実行がより遅いです。
 
 
-範囲指定を使う
---------------
+☆範囲指定を使う
 
-":call" コマンドは行範囲を受け取ることができます。範囲指定の使用方法は二つあり
-ます。関数を定義するときに "range" キーワードを使った場合は、関数自身が範囲指
-定を処理します。
-関数には "a:firstline" と "a:lastline" という二つの変数が暗黙的に渡されます。
-この二つの変数には範囲指定された行番号が代入されています。例: >
+関数呼び出しは行範囲付きで行えます。関数は範囲の各行ごとに1回呼び出され、カー
+ソルはその行になります。例: >
 
-	:function Count_words() range
-	:  let lnum = a:firstline
-	:  let n = 0
-	:  while lnum <= a:lastline
-	:    let n = n + len(split(getline(lnum)))
-	:    let lnum = lnum + 1
-	:  endwhile
-	:  echo "found " . n . " words"
-	:endfunction
-
-この関数は次のように呼び出すことができます: >
-
-	:10,30call Count_words()
-
-関数が一度だけ実行され、単語の数が表示されます。
-関数を定義するときに "range" キーワードを使わなかった場合は、指定された範囲の
-それぞれの行に対して関数が呼ばれます (カーソルはその行の上)。例: >
-
-	:function  Number()
-	:  echo "line " . line(".") . " contains: " . getline(".")
-	:endfunction
+	def Number()
+	  echo "line " .. line(".") .. " contains: " .. getline(".")
+	enddef
 
 次のように実行すると: >
 
-	:10,15call Number()
+	:10,15Number()
 
-関数は 6 回実行されます。
-
-
-可変長引数
-----------
-
-可変個の引数を取る関数を定義できます。例えば、次の関数は、必ず 1 つの引数
-(start) を取り、最大で 20 個までの引数を取ることができます: >
-
-	:function Show(start, ...)
-
-変数 "a:1" に 1 つ目のオプション引数が代入されます。2 つ目が "a:2" で、3 つ目
-が "a:3" です。"a:0" にはオプション引数の数が入ります。
-例: >
-
-	:function Show(start, ...)
-	:  echohl Title
-	:  echo "start is " . a:start
-	:  echohl None
-	:  let index = 1
-	:  while index <= a:0
-	:    echon "  Arg " . index . " is " . a:{index}
-	:    let index = index + 1
-	:  endwhile
-	:  echo ""
-	:endfunction
-
-この関数は ":echohl" を使って ":echo" の出力に色を付けています。":echohl None"
-で色付けをやめます。":echon" コマンドは ":echo" と同じ機能ですが、改行を出力し
-ません。
-
-変数 a:000 を使うこともできます。これは "..." 引数がすべて入ったリストです。
-|a:000|を参照。
+関数は 6 回実行され、10行目から開始し終了は15行目です。
 
 
-関数の一覧
-----------
+☆関数の一覧
 
-":function" コマンドでユーザー定義関数の一覧を表示できます: >
+`function` コマンドでユーザー定義関数の一覧を表示できます: >
 
 	:function
-<	function Show(start, ...) ~
+<	def <SNR>86_Show(start: string, ...items: list<string>) ~
 	function GetVimIndent() ~
 	function SetSyn(name) ~
 
-関数の中身を見たいときは関数名を指定してください: >
+"<SNR>" プリフィックスは関数がスクリプトローカルであることを意味します。|Vim9|
+の関数は "def" で始まり引数と戻り値の型を含みます。旧来の関数は "function" で
+リストされます。
+
+関数の中身を見たいときは `function` に関数名を指定してください: >
 
 	:function SetSyn
 <	1     if &syntax == '' ~
@@ -1185,54 +1506,68 @@ Timers:						*timer-functions*
 	3     endif ~
 	   endfunction ~
 
+複数の "Show" 関数を異なるスクリプトで定義できるため、"Show" 関数を見るには、
+スクリプトプリフィックスを含める必要があります。正確な名前を見つけるには
+`function` が使用できますが、結果として非常に長いリストになる可能性があります。
+パターンに一致する関数のみを取得するには、`filter` プリフィックスが使用できま
+す: >
+	:filter Show function
+<	def <SNR>86_Show(start: string, ...items: list<string>) ~
+>
+	:function <SNR>86_Show
+<	1    echohl Title ~
+	2    echo "start is " .. start ~
+	etc.
 
-デバッグ
---------
+
+☆デバッグ
 
 エラーメッセージが表示されたとき、あるいはデバッグ中に、行番号が表示されると便
 利です。デバッグモードについては |debug-scripts| を参照してください。
+
 'verbose' オプションに 12 以上の値を設定すると、すべての関数呼び出しが表示され
 ます。15 以上にすると、実行されたすべての行が表示されます。
 
 
-関数の削除
-----------
+☆関数の削除
 
-例えば Show() 関数を削除するのは次のようにします: >
+例えば SetSyn() 関数を削除するには次のようにします: >
 
-	:delfunction Show
+	:delfunction SetSyn
 
-関数が存在しない場合はエラーになります。
+削除はグローバル関数と旧来のスクリプトの関数に対してのみ機能し、|Vim9| script
+内で定義した関数に対しては機能しません。
+
+関数が存在しないか削除できない場合はエラーになります。
 
 
-関数への参照
-------------
+☆関数への参照
 
-変数に関数を代入できると便利なことがあります。それには function() 関数を使いま
-す。function() は関数の名前を受け取り、関数への参照を返します: >
+変数に関数を代入できると便利なことがあります。それには関数の参照の変数を使いま
+す。よく "funcref" と略されます。例: >
 
-	:let result = 0		" or 1
-	:function! Right()
-	:  return 'Right!'
-	:endfunc
-	:function! Wrong()
-	:  return 'Wrong!'
-	:endfunc
-	:
-	:if result == 1
-	:  let Afunc = function('Right')
-	:else
-	:  let Afunc = function('Wrong')
-	:endif
-	:echo call(Afunc, [])
+	def Right(): string
+	  return 'Right!'
+	enddef
+	def Wrong(): string
+	  return 'Wrong!'
+	enddef
+
+	var Afunc = g:result == 1 ? Right : Wrong
+	echo Afunc()
 <	Wrong! ~
+
+ここでは "g:result" が1ではないことを前提としています。詳細は |Funcref| を参照
+してください。
 
 Note 関数への参照を保持する変数の名前は大文字で始めなければなりません。そうで
 ないと組み込み関数の名前と紛らわしくなります。
-変数が参照している関数を呼び出すには call() 関数を使います。call() 関数の最初
-の引数は関数への参照で、2 番目の引数は引数のリストです。
 
-関数への参照は、次節で説明される辞書と組み合わせたときもっとも役に立ちます。
+☆参考文献
+
+可変長引数の使用については、 |50.2| 章で紹介しています。
+
+あなたが定義した関数についての情報は: |user-functions|。
 
 ==============================================================================
 *41.8*	リストと辞書
@@ -1244,106 +1579,116 @@ Note 関数への参照を保持する変数の名前は大文字で始めなけ
 のリスト、リストのリスト、あるいは複数の型が混在したリストでも作れます。例え
 ば、3 個の文字列からなるリストを作るには次のようにします: >
 
-	:let alist = ['aap', 'mies', 'noot']
+	var alist = ['aap', 'noot', 'mies']
 
 リストの要素は角括弧で囲み、コンマで区切ります。空のリストを作るには次のように
 します: >
 
-	:let alist = []
+	var alist = []
 
 関数add()を使うとリストに要素を追加することができます: >
 
-	:let alist = []
-	:call add(alist, 'foo')
-	:call add(alist, 'bar')
-	:echo alist
+	var alist = []
+	add(alist, 'foo')
+	add(alist, 'bar')
+	echo alist
 <	['foo', 'bar'] ~
 
 リストの連結には + を使います: >
 
-	:echo alist + ['foo', 'bar']
-<	['foo', 'bar', 'foo', 'bar'] ~
+	var alist = ['foo', 'bar']
+	alist = alist + ['and', 'more']
+	echo alist
+<	['foo', 'bar', 'and', 'more'] ~
 
-直接リストを拡張するには次のようにします: >
+直接リストを関数で拡張するには次のように、`extend()` を使います: >
 
-	:let alist = ['one']
-	:call extend(alist, ['two', 'three'])
-	:echo alist
+	var alist = ['one']
+	extend(alist, ['two', 'three'])
+	echo alist
 <	['one', 'two', 'three'] ~
 
-add()とは効果が異なることに注意してください: >
+`add()` は `extend()` とは効果が異なることに注意してください: >
 
-	:let alist = ['one']
-	:call add(alist, ['two', 'three'])
-	:echo alist
+	var alist = ['one']
+	add(alist, ['two', 'three'])
+	echo alist
 <	['one', ['two', 'three']] ~
 
-add()の第二引数は1つの要素として追加されます。
+add() の第2引数は1つの要素として追加され、この場合は入れ子になったリストになり
+ます。
 
 
-FOR ループ
-----------
+☆FOR ループ
 
 リストを使ってできる素晴らしいことの1つが、リストに対する繰り返しです: >
 
-	:let alist = ['one', 'two', 'three']
-	:for n in alist
-	:  echo n
-	:endfor
+	var alist = ['one', 'two', 'three']
+	for n in alist
+	  echo n
+	endfor
 <	one ~
 	two ~
 	three ~
 
-上の例は、リスト "alist" の各要素に対して、その値を変数 "n" に代入しながらルー
-プを行います。forループの書式は次の通りです: >
+上の例は、リスト "alist" の各要素に対して、その各値を変数 "n" に代入しながら
+ループを行います。forループの書式は次の通りです: >
 
-	:for {varname} in {listexpression}
-	:  {commands}
-	:endfor
+	for {varname} in {list-expression}
+	  {commands}
+	endfor
 
 ある回数だけループするには、その長さのリストを使います。関数range()を使うと、
 そのようなリストを作成できます: >
 
-	:for a in range(3)
-	:  echo a
-	:endfor
+	for a in range(3)
+	  echo a
+	endfor
 <	0 ~
 	1 ~
 	2 ~
 
 range()が生成するリストの最初の要素は0であることに注意してください。そのため、
-最後の要素はリストの長さより1小さい値になります。
+最後の要素はリストの長さより1小さい値になります。詳細: range() の内部では実際
+にはリストは作られないため、巨大な範囲のループが効果的に動作します。それ以外の
+時は、範囲は実際のリストになり、長いリストのためにより時間がかかります。
+
 最大値、ステップ幅を指定することもでき、逆方向に進むこともできます: >
 
-	:for a in range(8, 4, -2)
-	:  echo a
-	:endfor
+	for a in range(8, 4, -2)
+	  echo a
+	endfor
 <	8 ~
 	6 ~
 	4 ~
 
-より有用な例として、バッファ中の行に対するループ: >
+より有用な例として、バッファ中のすべての行に対するループ: >
 
-	:for line in getline(1, 20)
-	:  if line =~ "Date: "
-	:    echo matchstr(line, 'Date: \zs.*')
-	:  endif
-	:endfor
+	for line in getline(1, 50)
+	  if line =~ "Date: "
+	    echo line
+	  endif
+	endfor
 
-1行目から20行目(両端を含む)を調べ、そこに含まれる日付を全て表示しています。
+1行目から50行目(両端を含む)を調べ、そこに含まれる日付を全て表示しています。
 
+さらなる情報については |Lists| を参照してください。
 
-辞書
------
+☆辞書
 
 辞書はキーと値のペアを保持します。キーを指定することで高速に値を検索できます。
 辞書は波括弧で作ります: >
 
-	:let uk2nl = {'one': 'een', 'two': 'twee', 'three': 'drie'}
+	var uk2nl = {one: 'een', two: 'twee', three: 'drie'}
 
 そして角括弧の中にキーを書くことで単語を検索します: >
 
-	:echo uk2nl['two']
+	echo uk2nl['two']
+<	twee ~
+
+キーが特殊文字を含まない場合は、ドット記法が使えます: >
+
+	echo uk2nl.two
 <	twee ~
 
 辞書の定義の書式は次の通りです: >
@@ -1357,18 +1702,18 @@ range()が生成するリストの最初の要素は0であることに注意し
 辞書にはいろいろな使い道があります。辞書を扱う関数もたくさんあります。例えば、
 キーのリストを取得してそれに対してループするには次のようにします: >
 
-	:for key in keys(uk2nl)
-	:  echo key
-	:endfor
+	for key in keys(uk2nl)
+	  echo key
+	endfor
 <	three ~
 	one ~
 	two ~
 
 キーはソートされていません。特定の順序に並べるにはリストをソートします: >
 
-	:for key in sort(keys(uk2nl))
-	:  echo key
-	:endfor
+	for key in sort(keys(uk2nl))
+	  echo key
+	endfor
 <	one ~
 	three ~
 	two ~
@@ -1376,228 +1721,20 @@ range()が生成するリストの最初の要素は0であることに注意し
 要素が定義された順序を得ることはできません。そのような目的にはリストを使ってく
 ださい。リストは順序を保って要素を保持します。
 
-
-辞書の関数
-----------
-
-辞書の要素は角括弧でインデックスを指定して取得します: >
-
-	:echo uk2nl['one']
-<	een ~
-
-記号を使わない方法もあります: >
-
-	:echo uk2nl.one
-<	een ~
-
-この方法はキーがアルファベット、数字、アンダースコアなどの ASCII 文字だけで構
-成されている場合に使えます。この方法で値を代入することもできます: >
-
-	:let uk2nl.four = 'vier'
-	:echo uk2nl
-<	{'three': 'drie', 'four': 'vier', 'one': 'een', 'two': 'twee'} ~
-
-関数の定義と辞書への代入を同時に記述することができます: >
-
-	:function uk2nl.translate(line) dict
-	:  return join(map(split(a:line), 'get(self, v:val, "???")'))
-	:endfunction
-
-これを実行してみましょう: >
-
-	:echo uk2nl.translate('three two five one')
-<	drie twee ??? een ~
-
-":function" の行の末尾に "dict" と書かれています。これは、その関数が辞書から使
-われることを示します。ローカル変数 "self" がその辞書を指すようになります。
-次に、複雑なreturnコマンドを分解してみましょう: >
-
-	split(a:line)
-
-関数split()は文字列を空白文字で区切り、リストにして返します。そのため、この例
-での戻り値は次のようになります: >
-
-	:echo split('three two five one')
-<	['three', 'two', 'five', 'one'] ~
-
-このリストがmap()関数の第一引数になります。map()はリストの各要素を "v:val" に
-代入した状態で第二引数を評価します。これによりforループより短いコードが書けま
-す。このコードは: >
-
-	:let alist = map(split(a:line), 'get(self, v:val, "???")')
-
-次のコードと同じです: >
-
-	:let alist = split(a:line)
-	:for idx in range(len(alist))
-	:  let alist[idx] = get(self, alist[idx], "???")
-	:endfor
-
-関数get()はそのキーが辞書に入っているかをチェックします。入っていればその値を
-返します。入っていなければデフォルト値(この例では '???')を返します。キーが入っ
-ていなくてもエラーを起こしたくないような場合に便利です。
-
-関数join()はsplit()の逆の処理をします。つまり単語のリストをスペースでつなげま
-す。
-split()、map()、join() を組み合わせると、単語からなる行を簡潔に処理することが
-できます。
-
-
-オブジェクト指向プログラミング
-------------------------------
-
-辞書には値と関数を入れることができるので、辞書をオブジェクトとして使うことがで
-きます。
-上述の例ではオランダ語から英語に翻訳するために辞書を使いました。同じことが他の
-言語でもできると面白いかもしれませんね。まず翻訳関数を持ったオブジェクト (つま
-り辞書) を作ります。翻訳する単語はまだ定義しません: >
-
-	:let transdict = {}
-	:function transdict.translate(line) dict
-	:  return join(map(split(a:line), 'get(self.words, v:val, "???")'))
-	:endfunction
-
-単語を翻訳するのに 'self.words' を使う点が上述の例と少し違います。しかし、
-self.words はまだありません。よって、これは抽象クラスと呼ぶことができます。
-
-オランダ語を翻訳するオブジェクトをインスタンス化してみましょう: >
-
-	:let uk2nl = copy(transdict)
-	:let uk2nl.words = {'one': 'een', 'two': 'twee', 'three': 'drie'}
-	:echo uk2nl.translate('three one')
-<	drie een ~
-
-さらにドイツ語の翻訳機を作ります: >
-
-	:let uk2de = copy(transdict)
-	:let uk2de.words = {'one': 'eins', 'two': 'zwei', 'three': 'drei'}
-	:echo uk2de.translate('three one')
-<	drei eins ~
-
-copy() 関数を使って "transdict" 辞書をコピーし、そのコピーに対して単語を追加し
-ています。元の辞書はもちろん変更されません。
-
-さらに一歩進んで、適切な言語を選択できるようにしてみます: >
-
-	:if $LANG =~ "de"
-	:  let trans = uk2de
-	:else
-	:  let trans = uk2nl
-	:endif
-	:echo trans.translate('one two three')
-<	een twee drie ~
-
-"trans" は2つのオブジェクト(辞書)のうちどちらか1つを参照します。コピーは作られ
-ていません。リストと辞書の同一性についてのより詳しい情報は|list-identity|と
-|dict-identity|にあります。
-
-未対応の言語を使う場合は、translate() 関数を上書きして何もしないようにするとい
-いかもしれません: >
-
-	:let uk2uk = copy(transdict)
-	:function! uk2uk.translate(line)
-	:  return a:line
-	:endfunction
-	:echo uk2uk.translate('three one wladiwostok')
-<	three one wladiwostok ~
-
-! を使って既に存在している関数への参照を上書きしています。続いて、未対応の言語
-に対して "uk2uk" を使うように変更します: >
-
-	:if $LANG =~ "de"
-	:  let trans = uk2de
-	:elseif $LANG =~ "nl"
-	:  let trans = uk2nl
-	:else
-	:  let trans = uk2uk
-	:endif
-	:echo trans.translate('one two three')
-<	one two three ~
-
-さらなる情報については|List|と|Dictionaries|を参照してください。
+さらなる情報については |Dictionaries| を参照してください。
 
 ==============================================================================
-*41.9*	例外
+*41.9*	空白
 
-まずは例題を見てください: >
+空の行はスクリプト内にあっても構いません。無視されます。
 
-	:try
-	:   read ~/templates/pascal.tmpl
-	:catch /E484:/
-	:   echo "パスカル用のテンプレートファイルは見つかりませんでした。"
-	:endtry
+"trim" 無しで |:let-heredoc| を使用する場合以外、行頭の空白 (スペースとTAB) は
+は無視されます。
 
-":read" コマンドはファイルがなければ失敗します。そのエラーをキャッチして、エ
-ラーメッセージの代わりにより親切なメッセージを表示しています。
-
-":try" と ":endtry" の間で起きたエラーは例外に変わります。例外は文字列です。エ
-ラーが例外に変わったとき、文字列にはエラーメッセージが含まれます。また、全ての
-エラーメッセージは番号を持っています。例題では "E484:" を含んだエラーをキャッ
-チしています。この番号は変わらないことが保証されています (テキストは翻訳される
-などして変わるかもしれません)。
-
-":read" コマンドが他のエラーを起こした場合、"E484:" というパターンはマッチしな
-いでしょう。したがって、その例外はキャッチされず、通常のエラーメッセージが表示
-されます。
-
-次のように書くこともできます: >
-
-	:try
-	:   read ~/templates/pascal.tmpl
-	:catch
-	:   echo "パスカル用のテンプレートファイルは見つかりませんでした。"
-	:endtry
-
-全ての例外がキャッチされます。しかしこれでは "E21: Cannot make changes,
-'modifiable' is off" のような有効なエラーに気づくことができません。
-
-":finally" という便利なコマンドもあります: >
-
-	:let tmp = tempname()
-	:try
-	:   exe ".,$write " . tmp
-	:   exe "!filter " . tmp
-	:   .,$delete
-	:   exe "$read " . tmp
-	:finally
-	:   call delete(tmp)
-	:endtry
-
-カーソル行からファイル末尾までを "filter" コマンド (ファイル名を引数に取るコマ
-ンド) でフィルタ処理しています。":try" と ":finally" の間で問題が起きても、
-ユーザーが CTRL-C を押して操作をキャンセルしても、"call delete(tmp)" は必ず呼
-ばれます。一時ファイルが残ってしまう心配はありません。
-
-例外についてさらに詳しい情報はリファレンスマニュアルの|exception-handling|を
-参照してください。
-
-==============================================================================
-*41.10*	注意事項
-
-Vim script において注意すべきことの概要を簡単に説明します。他の場所にも同じよ
-うな説明はありますが、手頃なチェックリストに使えるでしょう。
-
-改行記号はシステムによって異なります。Unix では <NL> 文字が使われますが、
-MS-DOS、Windows、OS/2 などでは <CR><LF> が使われます。末尾が <CR> になってい
-るマップを使うときは注意してください。|:source_crnl| 参照。
-
-
-空白
------
-
-空の行はあっても構いません。無視されます。
-
-行頭の空白 (スペースとTAB) は常に無視されます。引数と引数の間には空白がいくつ
-あっても構いません (例えば下記の "set" と "cpoptions" の間)。空白は一つのスペー
-スにまとめられ、セパレータの役目をします。最後の文字より後ろにある空白文字は状
-況によって無視されたりされなかったりします。下記参照。
-
-":set" コマンドで "=" 記号を使うとき: >
-
-	:set cpoptions    =aABceFst
-
-"=" の直前にある空白は無視されます。しかし、"=" の後ろに空白をはさむことはでき
-ません。
+末尾の空白は多くの場合無視されますが、常にではありません。`map` というコマンド
+は末尾空白を含みます。それに気を付けなくてはいけませんが、分かりにくい間違いを
+引き起す原因になります。一般的な解決策としては、本当に必要になるとき以外は末尾
+空白を使わないことです。
 
 オプション値に空白を含めるときは、バックスラッシュ ("\") でエスケープする必要
 があります: >
@@ -1614,962 +1751,113 @@ MS-DOS、Windows、OS/2 などでは <CR><LF> が使われます。末尾が <CR
 	:set nice
 	:set file
 
+|Vim9| script は、空白に関しては非常にうるさいです。これは、確実にスクリプトを
+読みやすくし、間違いが避けらるようにするために意図的に行われています。空白を合
+理的に使えばちゃんと動作します。そうでないなら空白が不足しているか削除が必要な
+その場所を示すエラーメッセージが表示されるでしょう。
 
-コメント
---------
+==============================================================================
+*41.10*	行継続
 
-コメントは " (ダブルクォート) 記号で開始します。行末までのすべての文字がコメン
-トとして解釈され、無視されます。ただし、コメントを書くことができないコマンドも
-あります (以下に例を示します)。コメントは行のどこからでも開始できます。
+旧来の Vim のスクリプトで行継続をするには継続する行の先頭をバックスラッシュに
+します: >
+	let mylist = [
+			\ 'one',
+			\ 'two',
+			\ ]
+
+これには 'cpo' オプションに "C" フラグが含まれないことが必要になります。通常は
+スクリプトの開始にてこの処理を置くことでそうします: >
+	let s:save_cpo = &cpo
+	set cpo&vim
+
+そしてスクリプトの終了でオプションを戻します: >
+	let &cpo = s:save_cpo
+	unlet s:save_cpo
+
+詳細についてはこちらを確認ください: |line-continuation|
+
+|Vim9| script ではバックスラッシュをまだ使えますが、多くの箇所で不要となります
+: >
+	var mylist = [
+			'one',
+			'two',
+			]
+
+また、'cpo' オプションを変更することは必要なくなります。詳細は
+|vim9-line-continuation| を参照してください。
+
+==============================================================================
+*41.11*	 コメント
+
+|Vim9| script では、コメントは # 記号で開始します。行末までのすべての文字がコ
+メントとして解釈され、無視されます。ただし、コメントを書くことができないコマン
+ドもあります (以下に例を示します)。コメントは行のどこからでも開始できます、し
+かしコマンドの一部の時はそうではありません、例、文字列の中。
+
+旧来の script では、文字 " (二重引用符)でコメントを開始します。
+これについて二重引用符の文字列をコメントとして認識されないようにするためにはい
+くつか巧妙さが伴います(|Vim9| script を好む理由の1つです)。
 
 コメントとして簡単な注釈を付けたとします。例: >
 
-	:abbrev dev development		" shorthand
-	:map <F3> o#include		" insert include
-	:execute cmd			" do it
-	:!ls *.c			" list C files
+	abbrev dev development	# shorthand
+	map <F3> o#include	# insert include
+	execute cmd		# do it
+	!ls *.c			# list C files
 
-短縮形 'dev' は 'development     " shorthand' に展開されます。<F3> には
-'o#....' から '" insert include' までの全部がマップされます。"execute" コマン
-ドはエラーを起こします。"!" コマンドはすべての文字をシェルに渡すので、" 記号が
-閉じられていないことでエラーが起こります。
-":map"、":abbreviate"、":execute"、"!" などのコマンドはその後ろにコメントを書
+- 短縮形 'dev' は 'development  # shorthand' に展開されます。
+- <F3> には 'o#....' から '# insert include' までの全部がマップされます。
+- `execute` コマンドはエラーを起こします。
+- `!` コマンドはすべての文字をシェルに渡すので、エラーを引き起すことがありま
+  す。
+
+`map`、`abbreviate`、`execute`、`!` などのコマンドはその後ろにコメントを書
 くことができません (そのようなコマンドは他にもあります)。ただし、無理やりコメ
 ントを書く方法もあります: >
 
-	:abbrev dev development|" shorthand
-	:map <F3> o#include|" insert include
-	:execute cmd			|" do it
+	abbrev dev development|# shorthand
+	map <F3> o#include|# insert include
+	execute '!ls *.c'	|# do it
 
-'|' 文字でコマンドを区切り、次のコマンドを書くことができます。この例では二つ目
-のコマンドはコメントのみです。"!" の場合は |:execute| と '|' を使わなければな
-りません: >
-	:exe '!ls *.c'			|" list C files
+'|' 文字でコマンドを区切り、次のコマンドを書くことができます。そして次のコマン
+ドはコメントのみになります。最後のコマンドは `execute` を使う汎用の解決策です、
+これはすべてのコメントを受け付けないコマンドや '|' で次のコマンドを分けられな
+いコマンドで動きます。
 
-":map" と ":abbreviate" の場合は '|' の前に空白を置かないように注意してくださ
+短縮入力やキーマップの場合は '|' の前に空白を置かないように注意してくださ
 い。これらのコマンドは行末か '|' までのすべての文字を使います。そのため、意図
 せずに末尾に空白を入れてしまうかもしれません: >
 
-	:map <F4> o#include  
+	map <F4> o#include  
 
-vimrc を編集するときに 'list' オプションをオンに設定しておくと、この問題が発見
-しやすくなります。
+ここでは意図してやっていますが、他の場合には偶発的である可能性があります。末尾
+空白をハイライトすることで、この問題が発見しやすくなります: >
+	match Search /\s\+$/
 
-Unix では特別なコメント書式を使って Vim script を実行形式にすることができま
-す: >
+Unix では特別なコメント書式を使って Vim script を実行形式にすることができ、ま
+た旧来のスクリプトでも動きます: >
 	#!/usr/bin/env vim -S
 	echo "this is a Vim script"
 	quit
 
-"#" コマンドは行を行番号付きで表示しますが、'!' をつけると何もしなくなります。
-よってファイルを実行するためのシェルコマンドを記述することができます。
-|:#!| |-S|
+==============================================================================
+*41.12*	ファイルフォーマット
 
+行末の文字はシステムに依存します。Vim script では Unix のファイルフォーマット
+が常に推奨されます。行は改行文字 (注:<NL>) で区切られます。これはまた他のシス
+テムでも動作します。この方法でならあなたの Vim script を MS-Windows から Unix
+にコピーしても動くようにすることができます。|:source_crnl| を参照。確実に正し
+く設定されるには、ファイルを書き込む前に次のようにします: >
 
-落とし穴
---------
+	:setlocal fileformat=unix
 
-次の例には大きな問題があります: >
-
-	:map ,ab o#include
-	:unmap ,ab 
-
-この unmap コマンドはうまく動きません。なぜなら ",ab " を unmap しようとしてい
-るからです。そのようなマップは存在しません。エラーが表示されますが、スペースは
-目に見えないので、エラーの原因を見つけるのは困難です。
-
-":unmap" コマンドの後にコメントを書いた場合も同様です: >
-
-	:unmap ,ab     " comment
-
-コメントは無視されますが、Vim は ',ab     ' を unmap しようとします。次のよう
-に書いてください: >
-
-	:unmap ,ab|    " comment
-
-
-ビューの復元
-------------
-
-何らかの変更を加えてから、カーソルのあった場所に戻りたい時があります。そのとき
-に、画面に表示されていた行範囲も復元されるとすてきです。
-次の例は、現在行をヤンクしてファイルの先頭にプットし、ビューを復元します: >
-
-	map ,p ma"aYHmbgg"aP`bzt`a
-
-これは次のことをしています: >
-	ma"aYHmbgg"aP`bzt`a
-<	ma			現在のカーソル位置にマーク a を設定
-	  "aY			現在行をレジスタ a にヤンク
-	     Hmb		ウィンドウの一行目に移動してマーク b を設定
-		gg		ファイルの一行目に移動
-		  "aP		ヤンクした行をその上にプット
-		     `b		ウィンドウの一行目に戻る
-		       zt	ウィンドウの表示範囲を以前と同じにする
-			 `a	保存しておいたカーソル位置に移動
-
-
-パッケージング
---------------
-
-関数の名前が他の人の関数とかぶらないように、次の方法を使ってください:
-- ユニークな文字列を名前の前に付ける。私はよく略語を使います。例えば、オプショ
-  ンウィンドウ (option window) のための関数なら "OW_" などです。
-- 関数を一つのファイルにまとめて、関数がロードされているかどうかを示すグローバ
-  ル変数を設定する。ファイルが二回目に読み込まれたとき、最初にそれらの関数をア
-  ンロードする。
-例: >
-
-	" This is the XXX package
-
-	if exists("XXX_loaded")
-	  delfun XXX_one
-	  delfun XXX_two
-	endif
-
-	function XXX_one(a)
-		... body of function ...
-	endfun
-
-	function XXX_two(b)
-		... body of function ...
-	endfun
-
-	let XXX_loaded = 1
+"dos" ファイルフォーマット使用時は、行は CR-NL の二文字で区切られます。CR 文字
+はさまざまな問題の原因なので、これは回避するのが良いです。
 
 ==============================================================================
-*41.11*	プラグインを書く				*write-plugin*
 
-Vim script を書いて、それを多くの人に使ってもらうことができます。そのようなス
-クリプトはプラグインと呼ばれます。Vim ユーザーはあなたのスクリプトをプラグイン
-ディレクトリにコピーするだけで、すぐにその機能を使うことができます。
-|add-plugin| 参照。
-
-プラグインには二種類あります:
-
-      グローバルプラグイン : すべてのファイルで共通
-  ファイルタイププラグイン : ファイルの種類別
-
-この節ではグローバルプラグインについて説明します。ほとんどの説明はファイルタイ
-ププラグインに対してもあてはまります。ファイルタイププラグイン特有の説明は次節
-にあります |write-filetype-plugin|。
-
-
-名前
------
-
-最初にプラグインの名前を決めなければなりません。プラグインが提供する機能が名前
-から分かるようにしてください。また、他の人が作ったプラグインと名前がかぶらない
-ようにしてください。古い Windows システムでの問題を避けるため、名前は 8 文字以
-内にしてください。
-
-例えばタイプミス (type mistake) を修正 (correct) するためのスクリプトなら
-"typecorr.vim" という名前を付けたりします。ここではこれを例題として使います。
-
-プラグインが誰でも使えるようにするため、いくつかのガイドラインに従ってくださ
-い。ガイドラインは段階的に説明していきます。例題プラグインの完全なソースは最後
-に示します。
-
-
-ボディ
-------
-
-まずはプラグインの本体部分を見てみましょう。行番号は実際の番号です: >
-
- 14	iabbrev teh the
- 15	iabbrev otehr other
- 16	iabbrev wnat want
- 17	iabbrev synchronisation
- 18		\ synchronization
- 19	let s:count = 4
-
-もちろん、実際のスクリプトはもっと巨大です。
-
-行番号は説明のために追加したものです。プラグインを書くときは行番号を付けないで
-ください。
-
-
-ヘッダー
-------
-
-新しい単語を追加していくと、プラグインには複数のバージョンが存在することになり
-ます。ファイルを配布したとき、それを使った人は、誰がこの素晴らしいプラグインを
-書いたのかを知りたいと思うでしょうし、感想を伝えたいと思うかもしれません。
-というわけで、次のようなヘッダーをプラグインに書いてください: >
-
-  1	" Vim global plugin for correcting typing mistakes
-  2	" Last Change:	2000 Oct 15
-  3	" Maintainer:	Bram Moolenaar <Bram@vim.org>
-
-著作権とライセンスについて: プラグインがとても便利で、そして再配布を制限するほ
-どのものでない場合は、パブリックドメインか Vim ライセンス (|license|) の適用を
-検討してみてください。次の短い宣言をプラグインの先頭付近に書いておくだけで十分
-です: >
-
-  4	" License:	This file is placed in the public domain.
-
-
-行連結、副作用の回避					*use-cpo-save*
---------------------
-
-上の例の 18 行目では行連結 (|line-continuation|) が使われています。ユーザーの
-環境で 'compatible' オプションがオンに設定されていると、この行でエラーが発生し
-ます。'compatible' オプションの設定には副作用があるので、勝手に設定をオフにす
-ることはできません。問題を避けるには、一時的に 'cpoptions' の値を Vim の初期値
-に設定し、後で元に戻します。そうすれば、行連結を使うことができ、スクリプトはほ
-とんどの環境で動作するようになります。設定の変更は次のようにします: >
-
- 11	let s:save_cpo = &cpo
- 12	set cpo&vim
- ..
- 42	let &cpo = s:save_cpo
- 43	unlet s:save_cpo
-
-最初に 'cpoptions' の値を s:save_cpo 変数に保存します。プラグインの最後でオプ
-ションの値を元に戻します。
-
-スクリプトローカル変数 (|s:var|) を使っていることに注目してください。グローバ
-ル変数は他の場所で使われている可能性があります。スクリプトの中だけで使う場合は
-スクリプトローカル変数を使ってください。
-
-
-ロードしない
-------------
-
-ユーザーが常にプラグインをロードしたいと思うとは限りません。また、システム管理
-者がシステムのプラグインディレクトリにプラグインを入れたが、ユーザーは自分で入
-れたプラグインを使いたいということもあります。したがって、指定したプラグインだ
-けを無効にできる必要があります。次のようにします: >
-
-  6	if exists("g:loaded_typecorr")
-  7	  finish
-  8	endif
-  9	let g:loaded_typecorr = 1
-
-これはスクリプトの二重ロードを避ける効果もあります。スクリプトを二重にロードす
-ると、関数の再定義エラーが発生したり、自動コマンドが二重に追加されることでトラ
-ブルが起きたりします。
-
-変数の名前は "loaded_" で始めてプラグインのファイル名をそのまま付けるようにし
-てください。"g:" を付けることで関数の中で変数を使用したときに発生するミスを防
-いでいます (関数の中では "g:" を付けない変数はローカル変数になります)。
-
-"finish" を使ってファイルの残りの部分の読み込みを停止しています。この方法は
-ファイル全体を if-endif で囲むよりも速いです。
-
-
-マップ
-------
-
-さて、プラグインをもっと魅力あるものに仕上げましょう。マップを追加して、カーソ
-ルの下の単語に対する修正を追加できるようにします。単純にキーを選んでマップを設
-定することもできますが、そのキーは既にユーザーが使っているかもしれません。マッ
-プに使用するキーをユーザーが選択できるようにするには、<Leader> を使います: >
-
- 22	  map <unique> <Leader>a  <Plug>TypecorrAdd
-
-"<Plug>TypecorrAdd" は目的の動作をします。詳しくは後で説明します。
-
-使用したいキーを "mapleader" 変数に設定することで、マップの最初のキーを設定で
-きます。例えば、次のように設定すると: >
-
-	let mapleader = "_"
-
-マップは "_a" と定義されます。変数が設定されていない場合は初期設定 (バックス
-ラッシュ) が使われます。つまり "\a" というマップが定義されます。
-
-Note: 上記のコマンドでは <unique> が使われています。これは、同じマップが既に定
-義されていた場合にエラーを表示します。|:map-<unique>|
-
-マップするキーをユーザーが自分で定義できるようにするには、次のようにします: >
-
- 21	if !hasmapto('<Plug>TypecorrAdd')
- 22	  map <unique> <Leader>a  <Plug>TypecorrAdd
- 23	endif
-
-"<Plug>TypecorrAdd" に対するマップが既にあるかどうかを調べ、無い場合のみ
-"<Leader>a" にマップを定義します。ユーザーは自分の vimrc ファイルの中でマップ
-を定義することができます: >
-
-	map ,c  <Plug>TypecorrAdd
-
-すると、マップのキーとして ",c" が使われます。"_a" や "\a" は使われません。
-
-
-ピース
-------
-
-スクリプトが大きくなると、それを部品ごとに分けたくなります。それには関数やマッ
-プを使います。しかし、そうすると関数やマップが他のスクリプトのものと衝突する可
-能性があります。例えば、Add() という関数を追加したとき、他のスクリプトでも同じ
-名前の関数が定義されているかもしれません。そのような場合は、名前の前に "s:" を
-付けて、スクリプトの中だけで使える関数を定義します。
-
-新しい修正を追加するための関数を定義します: >
-
- 30	function s:Add(from, correct)
- 31	  let to = input("type the correction for " . a:from . ": ")
- 32	  exe ":iabbrev " . a:from . " " . to
- ..
- 36	endfunction
-
-s:Add() 関数は同じスクリプトの中から呼び出すことができます。他のスクリプトが
-s:Add() を定義していた場合、それはそのスクリプトにローカルであり、関数が定義さ
-れたスクリプトの中からのみ呼び出すことができます。さらにグローバルの Add() 関
-数 ("s:" 無し) を定義することもでき、それはまた別の関数になります。
-
-マップ定義では <SID> が使えます。これは、現在のスクリプトを識別するためのスク
-リプト ID を生成します。私たちの入力修正プラグインでは <SID> を次のように使い
-ます: >
-
- 24	noremap <unique> <script> <Plug>TypecorrAdd  <SID>Add
- ..
- 28	noremap <SID>Add  :call <SID>Add(expand("<cword>"), 1)<CR>
-
-ユーザーが "\a" と入力すると、次の手順でキー入力が呼び出されます: >
-
-	\a  ->  <Plug>TypecorrAdd  ->  <SID>Add  ->  :call <SID>Add()
-
-他のスクリプトで <SID>Add をマップすると、別のスクリプト ID が使われ、別のマッ
-プが生成されます。
-
-Note: s:Add() ではなく <SID>Add() と書いていることに注意してください。マップは
-スクリプトの外側でユーザーが入力するものだからです。<SID> はスクリプト ID に変
-換され、どのスクリプトの Add() 関数を呼べばいいのかわかるようになっています。
-
-これは少し複雑ですが、複数のプラグインを同時に使用するためには必要なことです。
-基本的なルールとしては、マップの中では <SID>Add() を使い、他の場所 (スクリプト
-の中、自動コマンド、ユーザー定義コマンド) では s:Add() を使います。
-
-マップと同じ方法で、メニューを追加することもできます: >
-
- 26	noremenu <script> Plugin.Add\ Correction      <SID>Add
-
-プラグインのメニューを追加する場合は "Plugin" メニューの下に登録することが推奨
-されています。この例ではメニューが一つだけですが、複数のメニューを追加する場合
-は、サブメニューの使用が推奨されています。例えば、"Plugin.CVS" 以下に
-"Plugin.CVS.checkin" や "Plugin.CVS.checkout" などの CVS の操作を登録します。
-
-Note: 28 行目では ":noremap" を使って、他のマップでトラブルが起きないようにし
-ています。例えば、誰かが ":call" をマップしているかもしれないからです。24 行目
-でも ":noremap" を使っていますが、ここでは "<SID>Add" を再マップして欲しいの
-で、"<script>" を使っています。これを使うとスクリプトローカルなマップだけが再
-マップされます |:map-<script>|。26 行目でも ":noremenu" で同様のことをしていま
-す |:menu-<script>|。
-
-
-<SID> と <Plug>						*using-<Plug>*
----------------
-
-<SID> と <Plug> は、入力したキーに対するマップと、他のマップの中だけで使われる
-マップが干渉しないようにするために使われます。<SID> と <Plug> の違いに注意して
-ください:
-
-<Plug>	これはスクリプトの外側からも見えます。ユーザーが自分でプラグインの機能
-	をマップできるようにするような場合に使います。<Plug> は特殊なコード
-	で、キーボードから入力されることはありません。
-	キー列が他のプラグインとかぶらないように、<Plug> スクリプト名 マップ
-	名、という形式で使ってください。
-	我々の例では、スクリプト名が "Typecorr"、マップ名が "Add" なので、
-	"<Plug>TypecorrAdd" というキー列になります。スクリプト名とマップ名の最
-	初の文字だけを大文字にして、どこがマップ名なのかわかるようにします。
-
-<SID>	これはスクリプト ID (スクリプト固有の識別子) です。
-	Vim は内部で <SID> を "<SNR>123_" に変換します ("123" の部分はいろいろ
-	な数字が入ります)。つまり、関数 "<SID>Add()" は、あるスクリプトでは
-	"<SNR>11_Add()" という名前になり、別のスクリプトでは "<SNR>22_Add()"
-	になります。これは ":function" コマンドで関数一覧を表示すると確認する
-	ことができます。<SID> の変換はマップの中でも同様におこなわれるので、
-	マップの中からスクリプトローカル関数を呼び出すことができます。
-
-
-ユーザー定義コマンド
-------------------
-
-修正を追加するためのユーザー定義コマンドを追加します: >
-
- 38	if !exists(":Correct")
- 39	  command -nargs=1  Correct  :call s:Add(<q-args>, 0)
- 40	endif
-
-ユーザー定義コマンドは、同じ名前のコマンドがまだない場合のみ定義できます。既に
-定義されている場合はエラーになります。":command!" を使ってユーザー定義関数を上
-書きするのは良いアイデアとは言えません。ユーザーは、自分が定義したコマンドがな
-ぜ動かないのか不思議に思うでしょう。|:command|
-
-
-スクリプト変数
---------------
-
-先頭に "s:" が付いた変数はスクリプト変数です。これはスクリプトの中だけで使えま
-す。スクリプトの外からは見えません。同じ名前の変数を複数のスクリプトで使ってし
-まうようなトラブルを避けることができます。Vim が実行されている間、変数は保持さ
-れます。そして、同じスクリプトが再読み込みされると、再び同じ変数が使われます。
-|s:var|
-
-スクリプト変数は、同じスクリプトの中で定義された関数、自動コマンド、ユーザー定
-義コマンドでも使えます。我々の例に、修正の数を数えるための数行のコードを追加し
-ます: >
-
- 19	let s:count = 4
- ..
- 30	function s:Add(from, correct)
- ..
- 34	  let s:count = s:count + 1
- 35	  echo s:count . " corrections now"
- 36	endfunction
-
-最初に s:count はスクリプトの中で 4 で初期化されます。その後、s:Add() 関数が呼
-び出されると、s:count が増加します。関数がどこから呼ばれたかにかかわらず、関数
-が定義されたスクリプトのローカル変数が使われます。
-
-
-まとめ
-------
-
-例題の完成形は以下のようになります: >
-
-  1	" Vim global plugin for correcting typing mistakes
-  2	" Last Change:	2000 Oct 15
-  3	" Maintainer:	Bram Moolenaar <Bram@vim.org>
-  4	" License:	This file is placed in the public domain.
-  5
-  6	if exists("g:loaded_typecorr")
-  7	  finish
-  8	endif
-  9	let g:loaded_typecorr = 1
- 10
- 11	let s:save_cpo = &cpo
- 12	set cpo&vim
- 13
- 14	iabbrev teh the
- 15	iabbrev otehr other
- 16	iabbrev wnat want
- 17	iabbrev synchronisation
- 18		\ synchronization
- 19	let s:count = 4
- 20
- 21	if !hasmapto('<Plug>TypecorrAdd')
- 22	  map <unique> <Leader>a  <Plug>TypecorrAdd
- 23	endif
- 24	noremap <unique> <script> <Plug>TypecorrAdd  <SID>Add
- 25
- 26	noremenu <script> Plugin.Add\ Correction      <SID>Add
- 27
- 28	noremap <SID>Add  :call <SID>Add(expand("<cword>"), 1)<CR>
- 29
- 30	function s:Add(from, correct)
- 31	  let to = input("type the correction for " . a:from . ": ")
- 32	  exe ":iabbrev " . a:from . " " . to
- 33	  if a:correct | exe "normal viws\<C-R>\" \b\e" | endif
- 34	  let s:count = s:count + 1
- 35	  echo s:count . " corrections now"
- 36	endfunction
- 37
- 38	if !exists(":Correct")
- 39	  command -nargs=1  Correct  :call s:Add(<q-args>, 0)
- 40	endif
- 41
- 42	let &cpo = s:save_cpo
- 43	unlet s:save_cpo
-
-33 行目は説明がまだでした。これは、新しい修正をカーソルの下の単語に適用しま
-す。|:normal| コマンドを使って新しい略語を適用しています。Note: マップと略語は
-その場で展開されます。":noremap" で定義されたマップから関数が呼び出されたとし
-ても動作は同じです。
-
-'fileformat' オプションを "unix" に設定することが推奨されています。そうすれ
-ば、Vim script はどこでも動作します。'fileformat' が "dos" に設定されたスクリ
-プトは Unix では動作しません。|:source_crnl| も参照。設定が正しいことを確実に
-するため、ファイルを保存する前に次のコマンドを実行してください: >
-
-	:set fileformat=unix
-
-
-ドキュメント						*write-local-help*
-------------
-
-プラグインのドキュメントを書くのは良いアイデアです。ユーザーが動作を変更できる
-ような場合には特に重要です。|add-local-help| ではどのようにしてドキュメントが
-インストールされるか説明されています。
-
-プラグインヘルプファイルの例を示します ("typecorr.txt"): >
-
-  1	*typecorr.txt*	Plugin for correcting typing mistakes
-  2
-  3	If you make typing mistakes, this plugin will have them corrected
-  4	automatically.
-  5
-  6	There are currently only a few corrections.  Add your own if you like.
-  7
-  8	Mappings:
-  9	<Leader>a   or   <Plug>TypecorrAdd
- 10		Add a correction for the word under the cursor.
- 11
- 12	Commands:
- 13	:Correct {word}
- 14		Add a correction for {word}.
- 15
- 16							*typecorr-settings*
- 17	This plugin doesn't have any settings.
-
-書式に気をつけなければならないのは一行目だけです。一行目はコピーされ、help.txt
-の "LOCAL ADDITIONS:" の項に埋め込まれます |local-additions|。最初の "*" は一
-行目の一桁目に書いてください。ヘルプを追加したら ":help" を実行して項目が追加
-されたことを確認してください。
-
-ヘルプの中で ** で文字を囲むとタグを追加することができます。ただし、既存のヘル
-プタグと同じものを使わないでください。"typecorr-settings" のように、プラグイン
-の名前を使ってタグを作るといいかもしれません。
-
-ヘルプの他の部分を参照するときは || で囲みます。そうすれば、ユーザーは簡単にヘ
-ルプの関連した部分を参照することができます。
-
-
-ファイルタイプの認識					*plugin-filetype*
---------------------
-
-ファイルタイプが Vim によって認識されない場合は、別ファイルにファイルタイプを
-認識するためにコードを作成する必要があります。通常は、自動コマンドを使って、
-ファイル名がパターンにマッチしたときにファイルタイプを設定します。例: >
-
-	au BufNewFile,BufRead *.foo			set filetype=foofoo
-
-この一行を 'runtimepath' の最初のディレクトリの "ftdetect/foofoo.vim" に書き
-込みます。例えば、Unix なら "~/.vim/ftdetect/foofoo.vim" などです。ファイルタ
-イプとスクリプトファイルの名前を同じにする決まりになっています。
-
-必要ならより複雑な処理をすることもできます。例えば、ファイルの中身を見て言語を
-判定したりできます。|new-filetype| も参照。
-
-
-要約							*plugin-special*
------
-
-プラグインで使用する特有事項の要約を示します:
-
-s:name			スクリプトローカル変数。
-
-<SID>			スクリプトID。マップや関数をスクリプトローカルにする
-			のに使う。
-
-hasmapto()		スクリプトが提供している機能に対して、ユーザーが既に
-			マップを定義したかどうかをチェックする関数。
-
-<Leader>		"mapleader" の値。ユーザーがその変数にキーを設定するこ
-			とで、プラグインのマップの開始キーを指定できる。
-
-:map <unique>		マップが既に定義されているなら警告を発する。
-
-:noremap <script>	スクリプトローカルマップだけを使う。グローバルマップは
-			使わない。
-
-exists(":Cmd")		ユーザー定義コマンドが既にあるかどうかをチェックする。
-
-==============================================================================
-*41.12*	ファイルタイププラグインを書く	*write-filetype-plugin* *ftplugin*
-
-ファイルタイププラグインはグローバルプラグインと似ていますが、カレントバッファ
-のマップやオプションだけを設定します。ファイルタイププラグインの使用方法につい
-ては |add-filetype-plugin| を参照してください。
-
-先に |41.11| 節のグローバルプラグインの項を読んでください。そこで説明されてい
-ることはすべてファイルタイププラグインにもあてはまります。この節ではファイルタ
-イププラグイン特有の事項だけを説明します。ファイルタイププラグインはカレント
-バッファに対してのみ機能するということが最も大切です。
-
-
-無効化
-------
-
-ファイルタイププラグインを書いて多くの人に使ってもらおうとするなら、プラグイン
-を無効化できるようにしておく必要があります。プラグインの先頭に次のような記述を
-追加してください: >
-
-	" このバッファに対してまだ実行されていない場合のみ処理を実行する
-	if exists("b:did_ftplugin")
-	  finish
-	endif
-	let b:did_ftplugin = 1
-
-これは同じプラグインが同じバッファで二重にロードされるのを防ぐためにも必要です
-(":edit" コマンドを引数なしで実行したときに発生します)。
-
-ユーザーは、次の一行だけを書いたファイルタイププラグインを作成することで、標準
-プラグインのロードを無効化できます: >
-
-	let b:did_ftplugin = 1
-
-ただし、そのファイルを保存したファイルタイププラグインディレクトリが、
-'runtimepath' の中で $VIMRUNTIME よりも前にある必要があります。
-
-標準プラグインを使いつつ、その設定を一つだけ変更したいという場合は、スクリプト
-の中で設定を変更することができます: >
-
-	setlocal textwidth=70
-
-このファイルを "after" ディレクトリに保存すると、(例えば filetype=vim なら) 標
-準配布の "vim.vim" が読み込まれた後に、保存したファイルが読み込まれるようにな
-ります |after-directory|。Unix ならファイルのパスは
-"~/.vim/after/ftplugin/vim.vim" です。Note: 標準プラグインは "b:did_ftplugin"
-を設定しますが、ここではそれを無視しています。
-
-
-オプション
-----------
-
-ファイルタイププラグインでは、カレントバッファの設定だけを変更するため、次のコ
-マンドを使ってオプションを設定してください: >
-
-	:setlocal
-
-そして、バッファローカルなオプションだけを設定してください (どのオプションがそ
-うなのかはヘルプで確認してください)。|:setlocal| コマンドでグローバルオプショ
-ンやウィンドウローカルオプションを設定すると、たくさんのバッファの設定が変更さ
-れます。ファイルタイププラグインはそのような動作をすべきではありません。
-
-オプションの値がフラグや設定項目のリストなら、"+=" や "-=" を使うことで既存の
-設定を維持することができます。ユーザーがそのオプションの設定を変更している可能
-性もあるので注意してください。最初に初期設定に戻してから設定を変更するといいか
-もしれません。例: >
-
-	:setlocal formatoptions& formatoptions+=ro
-
-
-マップ
-------
-
-カレントバッファの中だけで機能するマップを作るには次のコマンドを使います: >
-
-	:map <buffer>
-
-上述したように、マップは二段階に分けて作る必要があります。ファイルタイププラグ
-インで機能を定義する例を示します: >
-
-	if !hasmapto('<Plug>JavaImport')
-	  map <buffer> <unique> <LocalLeader>i <Plug>JavaImport
-	endif
-	noremap <buffer> <unique> <Plug>JavaImport oimport ""<Left><Esc>
-
-|hasmapto()| を使って、ユーザーが既に <Plug>JavaImport に対してマップを定義し
-ているかどうかを調べます。未定義ならファイルタイププラグインの標準のマップを定
-義します。マップは <LocalLeader> で開始します。そうすることで、ファイルタイプ
-プラグインのマップを開始するキーをユーザーが選択できます。初期設定はバックス
-ラッシュです。
-"<unique>" を使って、マップが既に存在したとき、あるいは既存のマップと重複した
-ときにエラーメッセージが表示されるようにします。
-|:noremap| を使って、ユーザーが定義した他のマップの影響を受けないようにしま
-す。":noremap <script>" を使うと、スクリプトの中で定義した <SID> で始まるマッ
-プだけが再マップされます。
-
-ユーザーがファイルタイププラグインのマップを無効化できる仕組みを提供しなければ
-なりません。例えば、"mail" ファイルタイプのプラグインなら次のようにします: >
-
-	" マップを追加する。ユーザーが望まない場合は追加しない。
-	if !exists("no_plugin_maps") && !exists("no_mail_maps")
-	  " "> " を挿入して引用する
-	  if !hasmapto('<Plug>MailQuote')
-	    vmap <buffer> <LocalLeader>q <Plug>MailQuote
-	    nmap <buffer> <LocalLeader>q <Plug>MailQuote
-	  endif
-	  vnoremap <buffer> <Plug>MailQuote :s/^/> /<CR>
-	  nnoremap <buffer> <Plug>MailQuote :.,$s/^/> /<CR>
-	endif
-
-ここでは二つのグローバル変数が使われています:
-  |no_plugin_maps|	すべてのファイルタイププラグインのマップを無効化
-  |no_mail_maps|	"mail" ファイルタイプのマップを無効化
-
-
-ユーザー定義コマンド
---------------------
-
-ファイルタイプ用のユーザー定義コマンドを追加して、それを一つのバッファの中だけ
-で使えるようにするには、|:command| の引数に "-buffer" を指定します。例: >
-
-	:command -buffer  Make  make %:r.s
-
-
-変数
------
-
-ファイルタイププラグインは対応するすべてのバッファに対して実行されます。スクリ
-プトローカル変数 |s:var| はすべての実行で共有されます。バッファごとの変数を使
-いたい場合はバッファローカル変数 |b:var| を使ってください。
-
-
-関数
------
-
-関数は一度だけ定義すれば十分です。しかし、ファイルタイププラグインは対応する
-ファイルが開かれるたびに読み込まれます。次のようにすると関数が一度だけ定義され
-るようになります: >
-
-	:if !exists("*s:Func")
-	:  function s:Func(arg)
-	:    ...
-	:  endfunction
-	:endif
-<
-
-アンドゥ					*undo_indent* *undo_ftplugin*
---------
-
-ユーザーが ":setfiletype xyz" としたとき、それ以前のファイルタイプの効果は無効
-になるべきです。b:undo_ftplugin 変数にコマンドを設定し、ファイルタイププラグイ
-ンの設定をアンドゥするようにしてください。例: >
-
-	let b:undo_ftplugin = "setlocal fo< com< tw< commentstring<"
-		\ . "| unlet b:match_ignorecase b:match_words b:match_skip"
-
-":setlocal" でオプション名の後に "<" を付けると、そのオプションをグローバルな
-値でリセットします。オプションをリセットするにはこの方法が一番です。
-
-このように行継続を使うには 'cpoptions' から "C" フラグを取り除く必要がありま
-す。上述の |use-cpo-save| を参照してください。
-
-インデントスクリプトの効果をアンドゥする為には、それに応じた b:undo_indent 変
-数を設定すべきです。
-
-
-ファイル名
-----------
-
-ファイルタイププラグインのファイル名にはファイルタイプ名が含まれていなければな
-りません |ftplugin-name|。次の三つのうちのどれかにしてください:
-
-	.../ftplugin/stuff.vim
-	.../ftplugin/stuff_foo.vim
-	.../ftplugin/stuff/bar.vim
-
-"stuff" はファイルタイプ名、"foo" と "bar" は任意の名前です。
-
-
-要約							*ftplugin-special*
------
-
-ファイルタイププラグインの特有事項を要約します:
-
-<LocalLeader>		"maplocalleader" の値。ユーザーがその変数にキーを設定
-			することで、ファイルタイププラグインのマップの開始キー
-			を指定できる。
-
-:map <buffer>		バッファローカルなマップを定義する。
-
-:noremap <script>	同スクリプトで定義している <SID> で始まるマップだけを
-			再マップする。
-
-:setlocal		カレントバッファのオプションのみ設定する。
-
-:command -buffer	バッファローカルなユーザー定義コマンドを定義する。
-
-exists("*s:Func")	関数が定義済かどうかをチェックする。
-
-プラグイン全般に関する事項は |plugin-special| を参照してください。
-
-==============================================================================
-*41.13*	コンパイラプラグインを書く		*write-compiler-plugin*
-
-コンパイラプラグインは特定のコンパイラを使うためのオプションを設定します。ユー
-ザーは |:compiler| コマンドでその設定を読み込むことができます。設定されるオプ
-ションは主に 'errorformat' と 'makeprg' です。
-
-百聞は一見に如かず。次のコマンドですべての標準コンパイラプラグインを開くことが
-できます: >
-
-	:next $VIMRUNTIME/compiler/*.vim
-
-|:next| を使って次のプラグインファイルに移動してください。
-
-これらのファイルには二つの特有事項があります。一つは、標準ファイルに対して設定
-を追加したり上書きしたりできる仕組みです。標準ファイルの先頭は次のようになって
-います: >
-
-	:if exists("current_compiler")
-	:  finish
-	:endif
-	:let current_compiler = "mine"
-
-コンパイラファイルを書いて、それを個人用のランタイムディレクトリ (例えば Unix
-なら ~/.vim/compiler) に置いたとき、"current_compiler" 変数を設定することで標
-準ファイルの設定をスキップすることができます。
-							*:CompilerSet*
-二つ目は、":compiler!" が使われたときは ":set" を使い、":compiler" が使われた
-ときは ":setlocal" を使う仕組みです。Vim はそのために ":CompilerSet" という
-ユーザーコマンドを定義します。古い Vim はそれを定義しないので、プラグインの中
-で定義してください。例: >
-
-  if exists(":CompilerSet") != 2
-    command -nargs=* CompilerSet setlocal <args>
-  endif
-  CompilerSet errorformat&		" use the dfault 'errorformat'
-  CompilerSet makeprg=nmake
-
-コンパイラプラグインを書いて、それを Vim の配布物に含めたり、システムのランタ
-イムディレクトリに入れたりする場合は、上記の方法を使ってください。
-"current_compiler" がユーザープラグインで設定された場合は何も実行しないように
-します。
-
-コンパイラプラグインを書いて標準プラグインの設定を上書きする場合は
-"current_compiler" をチェックしないようにします。そのプラグインは最後に読み込
-まれないといけないので、'runtimepath' の最後にあるディレクトリに置きます。例え
-ば、Unix なら ~/.vim/after/compiler などです。
-
-==============================================================================
-*41.14*	プラグインを書く (高速ロード版)		*write-plugin-quickload*
-
-プラグインが成長し、とても大きくなることがあります。すると、起動速度は遅くなっ
-てきます。例えそのプラグインをたまにしか使わないとしても遅くなります。そういう
-ときはクイックロードプラグインの出番です。
-
-基本的なアイデアはプラグインを二回に分けて読み込むということです。一回目はユー
-ザー定義コマンドやマップを定義して機能を提供します。二回目は機能を実装する関数
-を定義します。
-
-スクリプトを二回読み込むことがクイックロードだというと驚かれるかもしれません。
-この手法の意味は、一回目は高速に読み込み、スクリプトの重い部分は二回目に後回し
-にするということです。二回目の読み込みは、ユーザーが実際にその機能を使用したと
-きに発生します。あなたがその機能を常に使うなら、これは逆に遅くなってしまいま
-す。
-
-Note Vim 7 以降では代わりの方法があります。|41.15| で説明されている |autoload|
-機能を使う方法です。
-
-次に例を示します: >
-
-	" クイックロードのデモ用のグローバルプラグイン
-	" Last Change:	2005 Feb 25
-	" Maintainer:	Bram Moolenaar <Bram@vim.org>
-	" License:	This file is placed in the public domain.
-
-	if !exists("s:did_load")
-		command -nargs=* BNRead  call BufNetRead(<f-args>)
-		map <F19> :call BufNetWrite('something')<CR>
-
-		let s:did_load = 1
-		exe 'au FuncUndefined BufNet* source ' . expand('<sfile>')
-		finish
-	endif
-
-	function BufNetRead(...)
-		echo 'BufNetRead(' . string(a:000) . ')'
-		" read 機能をここに書く
-	endfunction
-
-	function BufNetWrite(...)
-		echo 'BufNetWrite(' . string(a:000) . ')'
-		" write 機能をここに書く
-	endfunction
-
-このスクリプトが最初に読み込まれたとき、"s:did_load" は設定されていません。
-"if" と "endif" の間のコマンドが実行されます。|:finish| コマンドによって終了
-し、スクリプトの残りの部分は実行されません。
-
-二回目に読み込まれたときは "s:did_load" が存在するので、"endif" 以降のコマンド
-が実行されます。この部分では (長くなる可能性のある) BufNetRead() 関数と
-BufNetWrite() 関数を定義します。
-
-このスクリプトをプラグインディレクトリに置くと、Vim の起動時に実行されます。処
-理の流れは次のようになります:
-
-1. 起動時にスクリプトが読み込まれる。"BNRead" コマンドが定義され、<F19> キーに
-   マップが設定される。自動コマンドの |FuncUndefined| が定義される。":finish"
-   コマンドによってスクリプトが終了する。
-
-2. ユーザーが BNRead コマンド実行する、または <F19> キーを押す。BufNetRead()
-   関数か BufNetWrite() 関数が呼び出される。
-
-3. Vim はその関数を見つけることができず、自動コマンドの |FuncUndefined| イベン
-   トを発行する。関数名が "BufNet*" というパターンにマッチするので、"source
-   fname" コマンドが実行される。"fname" はスクリプトの名前になります。スクリプ
-   トがどこに保存されていても、"<sfile>" が展開されてファイル名になります
-   (|expand()|参照)。
-
-4. スクリプトが再び読み込まれる。"s:did_load" 変数が存在するので関数が定義され
-   る。
-
-遅延ロードされる関数の名前が |FuncUndefined| 自動コマンドのパターンにマッチし
-ていることに注意してください。他のプラグインがこのパターンにマッチする関数を定
-義しているとうまく動きません。
-
-==============================================================================
-*41.15*	ライブラリスクリプトを書く		*write-library-script*
-
-いろいろな場所で同じ機能が必要になることがあります。コードが二、三行以上になる
-場合は、それを一つのスクリプトに入れて、他のスクリプトから使えるようにしたくな
-ると思います。そのようなスクリプトをライブラリスクリプトと呼びます。
-
-自分でライブラリスクリプトを読み込むことは可能ですが、同じスクリプトを二重に読
-み込まないようにする必要があります。それには |exists()| 関数を使います。例: >
-
-	if !exists('*MyLibFunction')
-	   runtime library/mylibscript.vim
-	endif
-	call MyLibFunction(arg)
-
-'runtimepath' に設定されたディレクトリの中の "library/mylibscript.vim" の中で
-MyLibFunction() が定義されている必要があります。
-
-これをより簡単にするために、Vim には autoload という仕組みがあります。同じこと
-を次のように書くことができます: >
-
-	call mylib#myfunction(arg)
-
-この方がずっと簡単でしょう？ Vim は関数の名前を見て、それが未定義なら、
-'runtimepath' の中から "autoload/mylib.vim" を探します。そのスクリプトは関数
-"mylib#myfunction()" を定義していなければなりません。
-
-mylib.vim には他の関数も入れられます。ライブラリスクリプトの中では自由に関数を
-作ることができます。ただし、関数名の '#' より前の部分はスクリプトの名前と同じ
-にする必要があります。そうしないと Vim はどのスクリプトを読み込めばいいのかわ
-かりません。
-
-ライブラリスクリプトをたくさん書く場合は、サブディレクトリを使うといいかもしれ
-ません。例: >
-
-	call netlib#ftp#read('somefile')
-
-Unix では、このライブラリスクリプトは次のような場所に置かれます: >
-
-	~/.vim/autoload/netlib/ftp.vim
-
-関数は次のように定義します: >
-
-	function netlib#ftp#read(fname)
-		"  ftp を使ってファイルを読み込む
-	endfunction
-
-関数定義と関数呼び出しではまったく同じ名前が使われます。最後の '#' より前の部
-分がサブディレクトリとスクリプトの名前に対応しています。
-
-同じ方法で変数を扱うこともできます: >
-
-	let weekdays = dutch#weekdays
-
-これによって "autoload/dutch.vim" が読み込まれます。そのスクリプトには例えば次
-のようなコードが書かれています: >
-
-	let dutch#weekdays = ['zondag', 'maandag', 'dinsdag', 'woensdag',
-		\ 'donderdag', 'vrijdag', 'zaterdag']
-
-より詳しくは |autoload| を参照してください。
-
-==============================================================================
-*41.16*	Vim script を配布する			*distribute-script*
-
-Vim ユーザーは Vim のウェブサイト http://www.vim.org でスクリプトを探します。
-便利なスクリプトを作ったら、ぜひ共有しましょう！
-
-Vim script はどのシステムでも使えます。tar や gzip コマンドは存在しないことが
-あります。ファイルをまとめたり圧縮したりするには "zip" ユーティリティが推奨さ
-れています。
-
-可搬性を最大限に高めるには、Vim 自身を使ってスクリプトをパッケージ化します。そ
-れには Vimball ユーティリティを使います。|vimball| を参照。
-
-自動更新するための行を書いておくと便利です。|glvs-plugins| を参照。
-
-==============================================================================
+Vim script を書く事前情報は |usr_50.txt| にあります。
 
 次章: |usr_42.txt|  新しいメニューを追加する
 

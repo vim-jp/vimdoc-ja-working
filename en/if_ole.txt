@@ -1,4 +1,4 @@
-*if_ole.txt*    For Vim version 8.1.  Last change: 2008 Aug 16
+*if_ole.txt*    For Vim version 9.0.  Last change: 2022 Oct 08
 
 
 		  VIM REFERENCE MANUAL    by Paul Moore
@@ -12,10 +12,8 @@ The OLE Interface to Vim				*ole-interface*
 4. Registration			|ole-registration|
 5. MS Visual Studio integration	|MSVisualStudio|
 
-{Vi does not have any of these commands}
-
-OLE is only available when compiled with the |+ole| feature.  See
-src/if_ole.INSTALL.
+{only available when compiled with the |+ole| feature.  See
+src/if_ole.INSTALL}
 An alternative is using the client-server communication |clientserver|.
 
 ==============================================================================
@@ -41,7 +39,7 @@ instance), code similar to the following should be used:
 	$vim = new Win32::OLE 'Vim.Application';
 
 [C#] >
-        // Add a reference to Vim in your project. 
+        // Add a reference to Vim in your project.
         // Choose the COM tab.
         // Select "Vim Ole Interface 1.1 Type Library"
 	Vim.Vim vimobj = new Vim.Vim();
@@ -158,18 +156,14 @@ To avoid the message box that pops up to report the result, prepend "-silent":
 	gvim -silent -unregister
 
 ==============================================================================
-5. MS Visual Studio integration			*MSVisualStudio* *VisVim*
+5. MS Visual Studio integration				*MSVisualStudio*
 
-The OLE version can be used to run Vim as the editor in Microsoft Visual
-Studio.  This is called "VisVim".  It is included in the archive that contains
-the OLE version.  The documentation can be found in the runtime directory, the
-README_VisVim.txt file.
+The old "VisVim" integration was removed from Vim in patch 9.0.0698.
 
 
 Using Vim with Visual Studio .Net~
 
-With .Net you no longer really need VisVim, since .Net studio has support for
-external editors.  Follow these directions:
+.Net studio has support for external editors.  Follow these directions:
 
 In .Net Studio choose from the menu Tools->External Tools...
 Add

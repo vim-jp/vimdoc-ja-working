@@ -1,0 +1,45 @@
+name: reviewdog
+on: pull_request
+permissions:
+  pull-requests: write
+
+jobs:
+  nvcheck:
+    name: runner / nvcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: nvcheck-github-pr-review
+        uses: ./.github/actions/vimhelp-nvcheck/
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          level: error
+          fail_on_error: true
+
+      # on: [push, pull_request]
+      # - name: nvcheck-github-check
+      #   uses: ./.github/actions/vimhelp-nvcheck/
+      #   with:
+      #     github_token: ${{ secrets.github_token }}
+      #     reporter: github-check
+      #
+      # if need mix setting, limit push/pull_request
+      #   if: github.event_name != 'pull_request'
+      #   if: github.event_name == 'pull_request'
+      #
+      # on: pull_request
+      # - name: nvcheck-github-pr-check
+      #   uses: ./.github/actions/vimhelp-nvcheck/
+      #   with:
+      #     github_token: ${{ secrets.github_token }}
+      #     reporter: github-pr-check
+      #
+      # - name: nvcheck-github-pr-review
+      #   uses: ./.github/actions/vimhelp-nvcheck/
+      #   with:
+      #     github_token: ${{ secrets.github_token }}
+      #     reporter: github-pr-review

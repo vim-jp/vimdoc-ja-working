@@ -1,0 +1,41 @@
+name: Update report
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'en/**'
+  schedule:
+    - cron: '30 15 * * SAT'
+  workflow_dispatch:
+permissions:
+  issues: write
+
+jobs:
+  report:
+    name: Update help diff report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+      - name: Checkout vimdoc-ja-working
+        uses: actions/checkout@v2
+        with:
+          path: work
+      - name: Checkout vim
+        uses: actions/checkout@v2
+        with:
+          repository: vim/vim
+          path: vim
+      - name: Build report
+        run: |
+          bash work/tools/script/get_doc_info.sh
+          echo Update ${{ steps.current-time.outputs.ISOTime }} >> doc_info.md
+      - name: Create or Update issue
+        uses: peter-evans/create-issue-from-file@v3
+        with:
+          title: 'Vim help : number of untranslated lines diff status'
+          content-filepath: ./doc_info.md
+          issue-number: 968
+            # issue-number: if removed, create new issue/if define issue num, update numbered issue.

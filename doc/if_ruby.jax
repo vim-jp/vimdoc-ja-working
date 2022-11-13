@@ -1,4 +1,4 @@
-*if_ruby.txt*   For Vim バージョン 8.1.  Last change: 2018 Mar 15
+*if_ruby.txt*   For Vim バージョン 9.0.  Last change: 2019 Jul 21
 
 
 		 VIM リファレンスマニュアル    by Shugo Maeda
@@ -11,13 +11,12 @@ Rubyインターフェイス					*ruby* *Ruby*
 3. Vim::Buffer オブジェクト	|ruby-buffer|
 4. Vim::Window オブジェクト	|ruby-window|
 5. グローバル変数		|ruby-globals|
-6. 動的ローディング		|ruby-dynamic|
+6. rubyeval() Vim 関数		|ruby-rubyeval|
+7. 動的ローディング		|ruby-dynamic|
 
-{Vi にはこれらのコマンドはない}
 			*E266* *E267* *E268* *E269* *E270* *E271* *E272* *E273*
 
-Rubyインターフェイスは|+ruby|機能を有効化してVimをコンパイルした時にのみ動作す
-る。
+{Vim が |+ruby| 機能付きでコンパイルされている場合にのみ利用できる}
 
 Rubyのホームページは http://www.ruby-lang.org/ である。ここでRubyをダウンロー
 ドできる。
@@ -29,18 +28,21 @@ Rubyのホームページは http://www.ruby-lang.org/ である。ここでRuby
 :rub[y] {cmd}		Rubyのコマンド{cmd}を実行する。次のようにして使う: >
 				:ruby print "Hello"
 
-:rub[y] << {endpattern}
+:rub[y] << [trim] [{endmarker}]
 {script}
-{endpattern}
+{endmarker}
 			Rubyスクリプト{script}を実行する。
-			{endpattern}の行では直前に空白文字を先行させてはいけな
-			い。{endpattern}が省略された場合、|:append|や|:insert|
-			コマンド同様に '.' (ドット)がデフォルトである。この形
-			式の|:ruby|コマンドは主にVim scriptにRubyコードを埋め
-			込むのに便利。
-			Note: このコマンドはRuby機能をコンパイル時に指定しな
-			かった時には動作しない。エラーを避けるには
-			|script-here|を参照。
+
+			[endmarker]が省略された場合、|:append|や|:insert|コマ
+			ンド同様にドット '.' がデフォルトである。詳細について
+			は |:let-heredoc| を参照。
+
+			この形式の|:ruby|コマンドは主にVim scriptにRubyコード
+			を埋め込むのに便利である。
+
+			Note: Ruby のサポートを有効にしてコンパイルされていな
+			いとこのコマンドは機能しない。エラーを回避するには
+			|script-here| を参照。
 
 Vim script の例: >
 
@@ -110,6 +112,10 @@ Rubyのコードは全てのVimへのアクセスをVimモジュール経由で�
 Vim::message({msg})
 	メッセージ{msg}を表示する。
 
+							*ruby-blob*
+Vim::blob({arg})
+	{arg}から |Blob| リテラル文字列を返す。
+
 							*ruby-set_option*
 Vim::set_option({arg})
 	Vimのオプションを設定する。{arg}は ":set" コマンドが受け付けるものであ
@@ -124,11 +130,11 @@ Vim::command({cmd})
 Vim::evaluate({expr})
 	Vim内部の実行エンジンを使ってスクリプト{expr}を実行評価する
 	(|expression|参照)。実行結果は次のように返される:
-	- Vimの実行結果が number の場合は Integer 
-	- Vimの実行結果が float の場合は Float 
-	- Vimの実行結果が string の場合は String 
-	- Vimの実行結果がVimの list の場合は Array 
-	- Vimの実行結果がVimの dictionary の場合は Hash 
+	- Vimの実行結果が number の場合は Integer
+	- Vimの実行結果が float の場合は Float
+	- Vimの実行結果が string の場合は String
+	- Vimの実行結果がVimの list の場合は Array
+	- Vimの実行結果がVimの dictionary の場合は Hash
 	辞書とリストは再帰的に展開される。
 
 ==============================================================================
@@ -144,7 +150,7 @@ self[{n}]	番号{n}のバッファオブジェクトを返す。最初の番号�
 
 メソッド:
 
-name		バッファの名前を返す。
+name		バッファの完全な名前を返す。
 number		バッファの番号を返す。
 count		行数を返す。
 length		行数を返す。
@@ -177,6 +183,7 @@ height = {n}	ウィンドウの高さを{n}に設定する。
 width		ウィンドウの幅を返す。
 width = {n}	ウィンドウの幅を{n}に設定する。
 cursor		カーソルの位置を[行数, カラム]の形で配列にして返す。
+		最初の行番号は 1 で、最初の桁番号は 0 である。
 cursor = [{row}, {col}]
 		カーソルの位置を{row} 行の {col}カラムに設定する。
 
@@ -189,7 +196,16 @@ $curwin		現在のウィンドウオブジェクト
 $curbuf		現在のバッファオブジェクト
 
 ==============================================================================
-6. 動的ローディング					*ruby-dynamic*
+6. rubyeval() Vim 関数					*ruby-rubyeval*
+
+双方向インターフェイスを促進するため、|rubyeval()| 関数を使用して Ruby 式を評
+価しそれらの値を Vim script に渡すことができる。
+
+Ruby の値 "true", "false" および "nil" は、それぞれ v:true, v:false および
+v:null に変換される。
+
+==============================================================================
+7. 動的ローディング					*ruby-dynamic*
 
 MS-WindowsとUnixではRubyライブラリを動的に読み込むことが可能である。これを行う
 と|:version|の出力に|+ruby/dyn|が含まれるようになる。

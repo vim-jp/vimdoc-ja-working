@@ -1,4 +1,4 @@
-*if_perl.txt*   For Vim version 8.1.  Last change: 2017 Nov 24
+*if_perl.txt*   For Vim version 9.0.  Last change: 2022 Mar 13
 
 
 		  VIM REFERENCE MANUAL    by Sven Verdoolaege
@@ -11,9 +11,7 @@ Perl and Vim				*perl* *Perl*
 3. Using the Perl interface		|perl-using|
 4. Dynamic loading			|perl-dynamic|
 
-{Vi does not have any of these commands}
-
-The Perl interface only works when Vim was compiled with the |+perl| feature.
+{only available when Vim was compiled with the |+perl| feature}
 
 ==============================================================================
 1. Editing Perl files					*perl-editing*
@@ -24,9 +22,9 @@ line of a file, regardless of the filename suffix, to check if a file is a
 Perl script (see scripts.vim in Vim's syntax directory).  Vim assumes a file
 is POD text if the filename has a .POD suffix.
 
-To use tags with Perl, you need a recent version of Exuberant ctags.  Look
-here:
-	http://ctags.sourceforge.net
+To use tags with Perl, you need Universal/Exuberant Ctags.  Look here:
+	Universal Ctags (preferred): https://ctags.io
+	Exuberant Ctags: http://ctags.sourceforge.net
 
 Alternatively, you can use the Perl script pltags.pl, which is shipped with
 Vim in the $VIMRUNTIME/tools directory.  This script has currently more
@@ -44,8 +42,9 @@ The Perl patches for Vim were made by:
 	Sven Verdoolaege <skimo@breughel.ufsia.ac.be>
 	Matt Gerassimof
 
-Perl for MS-Windows can be found at: http://www.perl.com/
-The ActiveState one should work.
+Perl for MS-Windows (and other platforms) can be found at:
+	http://www.perl.org/
+The ActiveState one should work, Strawberry Perl is a good alternative.
 
 ==============================================================================
 3. Using the Perl interface				*perl-using*
@@ -56,15 +55,18 @@ The ActiveState one should work.
 			working: >
 				:perl VIM::Msg("Hello")
 
-:pe[rl] << {endpattern}
+:pe[rl] << [trim] [{endmarker}]
 {script}
-{endpattern}
+{endmarker}
 			Execute Perl script {script}.
-			{endpattern} must NOT be preceded by any white space.
-			If {endpattern} is omitted, it defaults to a dot '.'
+			The {endmarker} after {script} must NOT be preceded by
+			any white space.
+
+			If [endmarker] is omitted, it defaults to a dot '.'
 			like for the |:append| and |:insert| commands.  Using
 			'.' helps when inside a function, because "$i;" looks
 			like the start of an |:insert| command to Vim.
+
 			This form of the |:perl| command is mainly useful for
 			including perl code in vim scripts.
 			Note: This command doesn't work when the Perl feature
@@ -101,8 +103,7 @@ Here are some things you can try: >
   :perldo $_ = reverse($_);1
   :perl VIM::Msg("hello")
   :perl $line = $curbuf->Get(42)
-<
-							*E299*
+<							*E299*
 Executing Perl commands in the |sandbox| is limited.  ":perldo" will not be
 possible at all.  ":perl" will be evaluated in the Safe environment, if
 possible.
@@ -178,7 +179,7 @@ VIM::Windows([{wn}...])	With no arguments, returns a list of all the windows
 VIM::DoCommand({cmd})	Executes Ex command {cmd}.
 
 							*perl-Eval*
-VIM::Eval({expr})	Evaluates {expr} and returns (success, value) in list 
+VIM::Eval({expr})	Evaluates {expr} and returns (success, value) in list
 			context or just value in scalar context.
 			success=1 indicates that val contains the value of
 			{expr}; success=0 indicates a failure to evaluate
@@ -189,6 +190,9 @@ VIM::Eval({expr})	Evaluates {expr} and returns (success, value) in list
 			the command-line are valid for {expr}.
 			A |List| is turned into a string by joining the items
 			and inserting line breaks.
+
+							*perl-Blob*
+VIM::Blob({expr})	Return |Blob| literal string 0zXXXX from scalar value.
 
 							*perl-SetHeight*
 Window->SetHeight({height})

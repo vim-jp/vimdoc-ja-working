@@ -1,4 +1,4 @@
-*ft_sql.txt*	For Vim バージョン 8.1.  Last change: 2013 May 15
+*ft_sql.txt*	For Vim バージョン 9.0.  Last change: 2022 Apr 06
 
 by David Fishburn
 
@@ -108,8 +108,8 @@ SQL ファイルを編集するとき、以下のノーマルモード|Normal|�
 んどと、多くの追加的なオブジェクトを定義しています。これを可能な限りフレキシブ
 ルにするために、|vimrc| でオブジェクトのリストを上書きできるようになっています。
 次のようにします: >
-    let g:ftplugin_sql_objects = 'function,procedure,event,table,trigger' .
-		\ ',schema,service,publication,database,datatype,domain' .
+    let g:ftplugin_sql_objects = 'function,procedure,event,table,trigger' ..
+		\ ',schema,service,publication,database,datatype,domain' ..
 		\ ',index,subscription,synchronization,view,variable'
 
 上記のリストを対象として、以下のノーマルモード|Normal|とビジュアルモード
@@ -130,10 +130,10 @@ SQL ファイルを編集するとき、以下のノーマルモード|Normal|�
     create index i1 on t1 (c1);
 
 g:ftplugin_sql_objects の既定値は以下の通りです: >
-    let g:ftplugin_sql_objects = 'function,procedure,event,' .
-		\ '\\(existing\\\\|global\\s\\+temporary\\s\\+\\)\\\{,1}' .
-		\ 'table,trigger' .
-		\ ',schema,service,publication,database,datatype,domain' .
+    let g:ftplugin_sql_objects = 'function,procedure,event,' ..
+		\ '\\(existing\\\\|global\\s\\+temporary\\s\\+\\)\\\{,1}' ..
+		\ 'table,trigger' ..
+		\ ',schema,service,publication,database,datatype,domain' ..
 		\ ',index,subscription,synchronization,view,variable'
 
 上記の設定は以下の場合にも対応しています: >
@@ -221,7 +221,7 @@ Vim の機能に対応しています: >
 残念なことに、複数の構文ルールを切り替えるには以下のどれかを作成しなければなり
 ません:
     1.  新しいファイルタイプ
-    2.  独自のオートコマンド
+    2.  独自の自動コマンド
     3.  コマンド手動実行
 
 大多数の人は1つのベンダーのデータベース製品しか扱わないため、|vimrc| で既定値
@@ -316,7 +316,7 @@ SQLSetType コマンドには変更を加える必要はありません。SQLSet
 Vim 7 にはプラグイン開発者が任意の言語用のコード補完を作るためのインターフェイ
 スと関数が備わっています。Vim 7 には SQL 言語用のコード補完が含まれています。
 
-SQL 補完プラグインには static と dynamic という2つのモードがあります。static 
+SQL 補完プラグインには static と dynamic という2つのモードがあります。static
 モードは 現在の構文強調ルールから生成されたデータをもとにポップアップを表示し
 ます。dynamic モードはデータベースから直接抽出したデータをもとにポップアップを
 表示します。このデータにはテーブルのリスト、カラムのリスト、プロシージャ名など
@@ -370,9 +370,9 @@ static マップ(構文強調グループに基づいている)は以下の形�
 			    キャッシュします。構文のリストはsyntaxcomplete プ
 			    ラグインを使って抽出されます。
 
-'syntax' キーワードを使うのは特別な場合です。これは syntaxcomplete プラグイン 
+'syntax' キーワードを使うのは特別な場合です。これは syntaxcomplete プラグイン
 にすべての構文アイテムを抽出するよう指示します。そのためこれは Vim のどの SQL
-構文ファイルに対しても有効です。これを書いている時点でこれは SQL 方言用の10 
+構文ファイルに対しても有効です。これを書いている時点でこれは SQL 方言用の10
 個の構文ファイルを含んでいます(上の セクション3 |sql-dialects| を参照)。
 
 構文ファイルから抽出される項目の例を以下に示します: >
@@ -396,7 +396,7 @@ dynamic モードではデータベースから直接抽出したデータを元
 ます。dynamic 機能を有効にするためには dbext.vim をインストールしなければなり
 ません(http://vim.sourceforge.net/script.php?script_id=356)。
 
-dynamic モードは SQL 補完プラグインのいくつかの機能から使われています。dbext 
+dynamic モードは SQL 補完プラグインのいくつかの機能から使われています。dbext
 プラグインをインストールしたら dbext-tutorial の設定と使い方を読んでください。
 dbext を使うと SQL 補完プラグインがテーブル、プロシージャ、ビュー、カラムのリ
 ストを表示できるようになります。 >
@@ -489,7 +489,7 @@ dbext.vim を正しく設定したら、テストするためにコマンド :DB
 既に dbext のチュートリアルをやっていれば、<C-C>t でテーブルのリストを表示でき
 ることをご存知でしょう。dbext がテーブルリストを作成する間、少々時間がかかりま
 す。リストが表示されたら <C-W> を押してください。するとポップアップウィンドウ
-と既に選択されたテーブル名の両方が消えます。 >
+と既に選択されたテーブル名の両方が消えます。
 
  4.3.1 テーブル補完				*sql-completion-tables*
 
@@ -497,11 +497,11 @@ dbext により接続したデータベース内のテーブルのリストを�
 します。
 NOTE: SQL 補完ポップアップはすべてキーマップの前のプリフィックスに対応していま
 す。プリフィックスを指定すると、ポップアップウィンドウの内容がその文字列で始ま
-るものだけに制限されます。 >
+るものだけに制限されます。
 
  4.3.2 カラム補完				*sql-completion-columns*
 
-SQL 補完プラグインは特定のテーブルのカラムのリストを表示することもできます。 
+SQL 補完プラグインは特定のテーブルのカラムのリストを表示することもできます。
 このカラム補完は <C-C>c で起動できます。
 
 NOTE: 以下の例ではポップアップウィンドウの表示中に <Right> でカラムリストを
@@ -567,13 +567,13 @@ select 文を書くための特別な機能があります。次の文を書く�
 ムのリストがポップアップ表示します。これは、select 文の開始位置を見て FROM 句
 で指定されたテーブルのリストを探しています。この場合は文字列 "customer c"
 ("c" は customer テーブルのエイリアス)が発見されます。省略可能なキーワード
-"AS" にも対応しています。例: "customer AS c" >
+"AS" にも対応しています。例: "customer AS c"
 
 
  4.3.3 プロシージャ補完:			*sql-completion-procedures*
 
 テーブルリストと同様に、<C-C>p でデータベースに登録されているストアドプロシー
-ジャのリストを表示できます。 >
+ジャのリストを表示できます。
 
  4.3.4 ビュー補完:				*sql-completion-views*
 
@@ -660,7 +660,7 @@ static モードのマップ
 <       - 'sqlType' と定義された構文アイテムを全て表示します。 >
     <C-C>s
 <       - 'sqlStatement' と定義された構文アイテムを全て表示します。 >
- 
+
 dynamic モードのマップ
 ------------
 以下は dbext.vim プラグインを使用して補完リストを作成するマップです。 >
@@ -701,10 +701,10 @@ dynamic モードのマップ
 フォームでは動作しない場合、次の変数を |vimrc| で定義してください: >
     let g:omni_sql_no_default_maps = 1
 
-ftplugin/sql.vimを直接編集することはやめてください。このファイルを変更しても、
-将来アップデートしたときその変更は上書きされてしまいます。Vim は、ディストリ
-ビューションに含まれているファイルを変更することなくカスタマイズを行うために
-after というディレクトリ構造を備えています。マップをカスタマイズするには
+ftplugin/sql.vimを直接編集しないでください! このファイルを変更しても、将来アッ
+プデートしたときその変更は上書きされてしまいます。Vim は、ディストリビューショ
+ンに含まれているファイルを変更することなくカスタマイズを行うために after とい
+うディレクトリ構造を備えています。マップをカスタマイズするには
 after/ftplugin/sql.vim を作成します(|after-directory|を参照)。そしてその中で
 ftplugin/sql.vim に書かれているのと同じマップを、好みのキーストロークに対して
 定義します。<C-C> が選ばれたのは、それが Windows、*nix のどちらでも動作するか

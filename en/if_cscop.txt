@@ -1,4 +1,4 @@
-*if_cscop.txt*  For Vim version 8.1.  Last change: 2018 Jan 21
+*if_cscop.txt*  For Vim version 9.0.  Last change: 2022 Jan 08
 
 
 		  VIM REFERENCE MANUAL    by Andy Kahn
@@ -21,7 +21,6 @@ functions as you normally would with |tags|.
 7. Availability & Information	|cscope-info|
 
 This is currently for Unix and Win32 only.
-{Vi does not have any of these commands}
 
 ==============================================================================
 1. Cscope introduction					*cscope-intro*
@@ -90,7 +89,7 @@ suggested use.)
 ==============================================================================
 2. Cscope related commands				*cscope-commands*
 
-		*:cscope* *:cs* *:scs* *:scscope* *E259* *E262* *E561* *E560*
+		*:cscope* *:cs* *:scs* *:scscope* *E259* *E262* *E560* *E561*
 All cscope commands are accessed through suboptions to the cscope commands.
 	`:cscope` or `:cs` is the main command
 	`:scscope` or `:scs` does the same and splits the window

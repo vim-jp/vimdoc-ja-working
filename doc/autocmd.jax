@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 8.1.  Last change: 2018 May 03
+*autocmd.txt*   For Vim バージョン 9.0.  Last change: 2022 May 24
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -20,7 +20,6 @@
 10.自動コマンドの使用			|autocmd-use|
 11.自動コマンドを無効にする		|autocmd-disable|
 
-{Vi にはこれらのコマンドはない}
 
 ==============================================================================
 1. はじめに						*autocmd-intro*
@@ -47,27 +46,69 @@
   る場合がたまにある)。可能であれば、イベント File* や Buf* には同じ自動コマン
   ドを使うのはよい考えだ。
 
+推奨される使用法:
+- 常にグループを使用することで、自動コマンドの削除が容易になる。
+- コマンド自体を短く維持し、より多くの仕事をする関数を呼ぶようにする。
+- 定義されているスクリプトを、自動コマンドを繰り返さずに数回ソースできるように
+  する。
+
+Vim9 script での例: >
+   autocmd_add({replace: true,
+		group:   'DemoGroup',
+		event:   'BufEnter',
+		pattern: '*.txt',
+		cmd:     'call DemoBufEnter()'
+		})
+
+旧来のスクリプトの例: >
+   call autocmd_add(#{replace: v:true,
+		    \ group: 'DemoGroup',
+   		    \ event: 'BufEnter',
+		    \ pattern: '*.txt',
+		    \ cmd: 'call DemoBufEnter()'
+		    \ })
+
 ==============================================================================
 2. 自動コマンドの定義					*autocmd-define*
 
 							*:au* *:autocmd*
-:au[tocmd] [group] {event} {pat} [nested] {cmd}
-			{pat} |autocmd-patterns| に一致するファイルで、{event}
-			のときに自動的に実行するコマンドのリストに、{cmd} を加
-			える。
+:au[tocmd] [group] {event} {aupat} [++once] [++nested] {cmd}
+			{aupat} |autocmd-patterns| に一致するファイルで、
+			{event} のときに自動的に実行するコマンドのリストに、
+			{cmd} を加える。
+			{event} には "*" は使えない。 *E1155*
 			Note: クォートは :autocmd への引数と見なされ、コメント
 			を開始しない。
 			{cmd} は常に既存の自動コマンドの後に追加されるので、
-			自動コマンドは指定された順に実行される。 [nested] につ
-			いては|autocmd-nested| を参照。
+			自動コマンドは指定された順に実行される。
+			[nested] については |autocmd-nested| を参照。後方互換
+			性のために、"nested" (++ なし)も使用できるが、|Vim9|
+			script では使用できない。 *E1078*
+							*autocmd-once*
+			[++once] が指定されている場合、コマンドは1回実行される
+			と削除される("one shot")。
 
 特殊なパターン<buffer>や<buffer=N>はバッファローカルな自動コマンドを定義する。
-|autocmd-buflocal|を参照。
+|autocmd-buflocal| を参照。
 
-Note: '|' が {cmd} の前にある場合、":autocmd" コマンドの後には別のコマンドを続
-けることができる。これは動作する: >
+`:autocmd` が Vim9 script (スクリプトが `:vim9script` で始まるのと `:def` 関数
+内) にあると {cmd} は Vim9 script として実行される。したがってこの依存は自動コ
+マンドが定義された位置に依存し、トリガーされた位置ではない。
+
+{cmd} は `:command` のようにブロックにできる。|:command-repl| を参照。例: >
+	au BufReadPost *.xml {
+		  setlocal matchpairs+=<:>
+		  /<start
+		}
+
+|autocmd_add()| 関数は、Vim script から自動コマンドやグループのリストを追加す
+るために使用できる。`:autocmd` で `:execute` を使用する必要があるような場合は、
+この関数を使用することが好ましい。
+
+Note: ":autocmd" コマンドの後には、パターンが期待される位置に '|' が現れる場合
+にのみ別のコマンドを続けることができる。これは動作する: >
 	:augroup mine | au! BufRead | augroup END
-しかし、これは定義されたコマンドの一部として "augroup" を見る: >
+しかし、これは定義されたコマンドの一部として "augroup" を見做す: >
 	:augroup mine | au! BufRead * | augroup END
 	:augroup mine | au BufRead * set tw=70 | augroup END
 代わりにグループ名をコマンドの中に置くことができる: >
@@ -77,6 +118,7 @@ Note: '|' が {cmd} の前にある場合、":autocmd" コマンドの後には�
 	:augroup mine | exe "au! BufRead *" | augroup END
 	:augroup mine | exe "au BufRead * set tw=70" | augroup END
 
+<							*autocmd-expand*
 Note ":autocmd" の引数の中の特別な文字 (例えば "%" や "<cword>" 等) は、自動コ
 マンドが定義されたときに展開されるのではなく、イベントの発生が認識され、{cmd}
 が実行されるときに展開されることに注意せよ。唯一の例外は、"<sfile>" が自動コマ
@@ -128,18 +170,22 @@ Note [group] はあらかじめ定義されていなければならないこと�
 ==============================================================================
 3. 自動コマンドの除去					*autocmd-remove*
 
-:au[tocmd]! [group] {event} {pat} [nested] {cmd}
-			{event} と {pat} に関連づけられた全ての自動コマンドを
-			除去し、コマンド {cmd} を加える。 [nested] については
-			|autocmd-nested| を参照。
+以下で説明するコマンドに加えて、|autocmd_delete()| 関数を使用し Vim script か
+ら自動コマンドおよびグループのリストを削除できる。
 
-:au[tocmd]! [group] {event} {pat}
-			{event} と {pat} に関連づけられた全ての自動コマンドを
-			除去する。
+:au[tocmd]! [group] {event} {aupat} [++once] [++nested] {cmd}
+			{event} と {aupat} に関連づけられた全ての自動コマンド
+			を除去し、コマンド {cmd} を加える。
+			[++once] については |autocmd-once| を参照。
+			[++nested] については |autocmd-nested| を参照。
 
-:au[tocmd]! [group] * {pat}
-			{pat} に関連づけられた、全てのイベントに関する自動コマ
-			ンドを全て除去する。
+:au[tocmd]! [group] {event} {aupat}
+			{event} と {aupat} に関連づけられた全ての自動コマンド
+			を除去する。
+
+:au[tocmd]! [group] * {aupat}
+			{aupat} に関連づけられた、全てのイベントに関する自動コ
+			マンドを全て除去する。
 
 :au[tocmd]! [group] {event}
 			{event} に関連づけられた「全ての」自動コマンドを除去す
@@ -160,13 +206,13 @@ Note [group] はあらかじめ定義されていなければならないこと�
 ==============================================================================
 4. 自動コマンドの列挙					*autocmd-list*
 
-:au[tocmd] [group] {event} {pat}
-			{event} と {pat} に関連づけられた全ての自動コマンドを
-			表示する。
+:au[tocmd] [group] {event} {aupat}
+			{event} と {aupat} に関連づけられた全ての自動コマンド
+			を表示する。
 
-:au[tocmd] [group] * {pat}
-			{pat} に関連づけられた、全てのイベントに関する自動コマ
-			ンドを表示する。
+:au[tocmd] [group] * {aupat}
+			{aupat} に関連づけられた、全てのイベントに関する自動コ
+			マンドを表示する。
 
 :au[tocmd] [group] {event}
 			{event} に関連づけられた全ての自動コマンドを表示する。
@@ -180,6 +226,8 @@ Note [group] はあらかじめ定義されていなければならないこと�
 
 バッファローカルな自動コマンドを列挙するには、<buffer>または<buffer=N>という形
 のパターンを使う。|autocmd-buflocal|を参照。
+
+|autocmd_get()| 関数で自動コマンドのリストを Vim script から取得できる。
 
 							*:autocmd-verbose*
 'verbose' がゼロでないならば、自動コマンドを列挙するときに、それが最後にどこで
@@ -269,7 +317,6 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |BufCreate|		バッファリストにバッファを追加した直後
 |BufDelete|		バッファリストからバッファを削除する前
 |BufWipeout|		完全にバッファを削除する前
-|TerminalOpen|		端末バッファが生成された後
 
 |BufFilePre|		カレントバッファの名前を変える前
 |BufFilePost|		カレントバッファの名前を変えた後
@@ -280,7 +327,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |BufWinLeave|		バッファがウィンドウから削除される前
 
 |BufUnload|		バッファをアンロードする前
-|BufHidden|		バッファが隠れバッファになった直後
+|BufHidden|		バッファが隠れバッファになる直前
 |BufNew|		新規バッファを作成した直後
 
 |SwapExists|		既存のスワップファイルを検出したとき
@@ -303,12 +350,20 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |VimLeavePre|		Vimを終了する前、viminfoファイルを書き出す前
 |VimLeave|		Vimを終了する前、viminfoファイルを書き出した後
 
+|VimSuspend|		Vimがサスペンドした時
+|VimResume|		Vimがサスペンド後復帰した時
+
+	端末
+|TerminalOpen|		端末バッファが生成された後
+|TerminalWinOpen|	新しいウィンドウで端末バッファが生成された後
+
 	その他
 |FileChangedShell|	編集を始めた後にファイルが変更されたことを検出したとき
 |FileChangedShellPost|	編集を始めた後にファイルが変更されたことに対処した後
 |FileChangedRO|		読み込み専用ファイルに対して最初に変更を加える前
 
 |DiffUpdated|		差分が更新された後
+|DirChangedPre|		作業ディレクトリが変更される前
 |DirChanged|		作業ディレクトリが変更された後
 
 |ShellCmdPost|		シェルコマンドを実行した後
@@ -320,6 +375,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 			とき
 |SpellFileMissing|	スペリングファイルを使おうとしたが見つからなかったとき
 |SourcePre|		Vim script を読み込む前
+|SourcePost|		Vim script を読み込んだ後
 |SourceCmd|		Vim script を読み込む前 |Cmd-event|
 
 |VimResized|		Vimのウィンドウサイズが変わったとき
@@ -332,6 +388,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 
 |WinNew|		新しいウィンドウを作成した後
 |TabNew|		新しいタブページを作成した後
+|WinClosed|		ウィンドウを閉じた後
 |TabClosed|		タブページを閉じた後
 |WinEnter|		別のウィンドウに入った後
 |WinLeave|		ウィンドウから離れる前
@@ -347,15 +404,22 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |InsertEnter|		挿入モードを開始したとき
 |InsertChange|		挿入や置換モードで<Insert>をタイプしたとき
 |InsertLeave|		挿入モードを抜けるとき
+|InsertLeavePre| 	挿入モードを抜ける直前
 |InsertCharPre|		挿入モードで文字が入力されたとき、その文字が挿入される
 			前
+
+|ModeChanged|		モード変更後
 
 |TextChanged|		ノーマルモードでテキストが変更された後
 |TextChangedI|		ポップアップメニューが表示されていないときに、挿入モー
 			ドでテキストが変更された後
 |TextChangedP|		ポップアップメニューが表示されているときに、挿入モード
 			でテキストが変更された後
+|TextChangedT|		端末モードでテキストが変更された後
 |TextYankPost|		テキストがヤンクもしくは削除された後
+
+|SafeState|		保留中のものはなく、ユーザーの文字入力を待つとき
+|SafeStateAgain|	繰り返された SafeState
 
 |ColorSchemePre|	カラースキームを読み込む前
 |ColorScheme|		カラースキームを読み込んだ後
@@ -368,9 +432,14 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |SessionLoadPost|	セッションファイルを読み込んだ後
 
 |MenuPopup|		ポップアップメニューを表示する直前
-|CompleteDone|		挿入モード補完が完了したとき
+|CompleteChanged|	挿入モード補完メニューが変更されたとき
+|CompleteDonePre|	挿入モード補完が完了したとき、情報がクリアされる前
+|CompleteDone|		挿入モード補完が完了したとき、情報がクリアされた後
 
-|User|			":doautocmd"との組合せで使われる
+|User|			":doautocmd" との組合せで使われる
+|SigUSR1|		SIGUSER1シグナルを受けとった後
+
+|WinScrolled|		ウィンドウがスクロールもしくはサイズ変更した後
 
 自動コマンドイベントのアルファベット順リスト:		*autocmd-events-abc*
 
@@ -379,6 +448,7 @@ BufAdd or BufCreate		バッファリストに追加されるバッファを作�
 				か、バッファをバッファリストに追加した直後。
 				バッファリスト内のバッファがリネームされた直後
 				にも発生する。
+				起動中に作成された初期バッファでは発生しない。
 				イベント BufCreate は歴史上の理由で存在してい
 				る。
 				NOTE: このイベントで自動コマンドが実行された
@@ -409,10 +479,10 @@ BufFilePost			現在のバッファの名前をコマンド ":file" または
 BufFilePre			現在のバッファの名前をコマンド ":file" または
 				":saveas" で変更する前。
 							*BufHidden*
-BufHidden			バッファが隠れ状態 (hidden) になった直後。つま
-				りそのバッファを表示するウィンドウがもう存在し
-				ないのに、バッファが解放されなかったり、削除さ
-				れないとき。":qa" や "q" でVimを終了するときに
+BufHidden			バッファが隠れ状態 (hidden) になる直前。つまり
+				そのバッファを表示するウィンドウがもう存在しな
+				いのに、バッファが解放されなかったり、削除され
+				ないとき。":qa" や "q" でVimを終了するときに
 				は使われない。
 				NOTE: このイベントで自動コマンドが実行された
 				ときは、"%" で表されるカレントバッファと
@@ -439,14 +509,16 @@ BufNewFile			存在しないファイルの編集を始めたとき。スケル�
 BufRead or BufReadPost		新しいバッファの編集を始めたときの、ファイルを
 				バッファに読み込んだ後で、モードラインを実行す
 				る前。モードラインを実行した後に何かするには
-				|BufWinEnter|を参照すること。これは ":r file"
-				には「動作しない」。ファイルが存在しないときも
-				使えない。またファイルの復旧に成功したときにも
-				使われる。
-				また、":filetype detect" を実行したとき、ある
-				いは無名バッファを保存してバッファに名前がつい
-				たとき、filetypedetect グループを対象として発
-				行される。
+				|BufWinEnter|を参照すること。
+				発行される場合:
+				- 無名バッファを保存してバッファに名前がついた
+				  とき
+				- ファイルのリカバリーが成功した後
+				- filetypedetect グループを対象として
+				  ":filetype detect" を実行したとき
+				発行されない場合:
+				- `:read file` コマンド
+				- ファイルが存在しないとき
 							*BufReadCmd*
 BufReadCmd			新しいバッファの編集を始める前。ファイルをバッ
 				ファ内に読み込む役目を負う。 |Cmd-event|
@@ -543,14 +615,18 @@ CmdlineChanged			コマンドラインのテキストに変更が加えられた
 				|cmdwin-char|
 							*CmdlineEnter*
 CmdlineEnter			ユーザーがコマンドを入力もしくは文字列を検索で
-				きるコマンドラインにカーソルが移動した後。
+				きるコマンドラインにカーソルが移動した後、非イ
+				ンタラクティブなマッピング内での ":" 利用を含
+				むが、|<Cmd>| の利用は含まない。
 				<afile> はコマンドラインの種類を示す 1 文字に
 				設定される。
 				|cmdwin-char|
 							*CmdlineLeave*
-CmdlineLeave			カーソルがコマンドラインを離れる前。CTRL-C も
-				しくは <Esc> の入力によってコマンドラインを放
-				棄する場合も同様。
+CmdlineLeave			カーソルがコマンドラインを離れる前、非インタラ
+				クティブなマッピング内での ":" 利用を含むが、
+				|<Cmd>| の利用は含まない。CTRL-C もしくは
+				<Esc> の入力によってコマンドラインを放棄する場
+				合も同様。
 				コマンドの結果がエラーとなる場合は、コマンドラ
 				インは引き続き実行中となる。
 				<afile> はコマンドラインの種類を示す 1 文字に
@@ -559,19 +635,19 @@ CmdlineLeave			カーソルがコマンドラインを離れる前。CTRL-C も
 							*CmdwinEnter*
 CmdwinEnter			Command-lineウィンドウに入った後。この特殊な
 				ウィンドウに対してのみオプションを設定するのに
-				便利である。このイベントは BufEnter や
-				WinEnter の「代わりに」発生する。
+				便利である。
 				<afile> は、command-lineの種類を示す1文字に設
 				定される。 |cmdwin-char|
 							*CmdwinLeave*
 CmdwinLeave			Command-lineウィンドウから出る前。イベント
 				CmdwinEnter で行ったグローバル設定を消去するの
-				に便利である。このイベントは BufLeave や
-				WinLeave の「代わりに」発生する。
+				に便利である。
 				<afile> は、command-lineの種類を示す1文字に設
 				定される。 |cmdwin-char|
 							*ColorScheme*
 ColorScheme			カラースキームを読み込んだ後。 |:colorscheme|
+				カラースキームが見つからない場合は、トリガーさ
+				れない。
 				パターンはカラースキーム名にマッチする。
 				<afile> はこのオプションを設定したファイルの名
 				前になる。<amatch> はカラースキーム名になる。
@@ -581,18 +657,48 @@ ColorSchemePre			カラースキームを読み込む前。|:colorscheme|
 				あるカラースキームが読み込まれる前に、それ以前
 				に別のカラースキームによって追加されたものを取
 				り除くのに便利。
+CompleteChanged						*CompleteChanged*
+				挿入モード補完メニューが変更される度。ポップ
+				アップメニューが非表示時には発生しない。そのた
+				めには |CompleteDonePre| または |CompleteDone|
+				を使用すること。再帰的に発生することはない。
+
+				これらの |v:event| キーを設定する:
+				    completed_item	|complete-items| 参照
+				    height		表示項目数
+				    width		画面セル数
+				    row			画面上端の行
+				    col			画面最左の桁
+				    size		全項目数
+				    scrollbar		表示時 TRUE
+
+				テキストの |textlock| を変更することはできない。
+
+				ポップアップのサイズと位置は、|pum_getpos()|
+				を呼び出すことでも得られる。
+
+							*CompleteDonePre*
+CompleteDonePre			挿入モード補完が完了したとき。補完が実行されて
+				も中止されても発行される。 |ins-completion|
+				|complete_info()| を使うことができる。情報は
+				CompleteDonePre が発行された後にクリアされる。
+				変数 |v:completed_item| には補完された候補につい
+				ての情報が含まれている。
 
 							*CompleteDone*
 CompleteDone			挿入モード補完が完了したとき。補完が実行されて
 				も中止されても発行される。 |ins-completion|
+				|complete_info()| を使うことができる。情報は
+				CompleteDone が発行される前にクリアされる。必
+				要ならば CompleteDonePre を使うこと。
 				変数 |v:completed_item| には補完された候補につい
 				ての情報が含まれている。
 
 							*CursorHold*
 CursorHold			'updatetime' の時間の間、ユーザーがキーを押さ
-				なかったとき。ユーザーが何かキーを押すまで、再
-				び発生することはない (例えば、もしあなたがコー
-				ヒーを入れるためにVimの前を離れても、その間の
+				なかったとき。ユーザーが何かキーを押すまで、発
+				生することはない (例えば、もしあなたがコーヒー
+				を入れるためにVimの前を離れても、その間の
 				'updatetime' ミリ秒ごと発生することはない :-)。
 				タグをプレビューするためには、
 				|CursorHold-example| を参照。
@@ -616,8 +722,8 @@ CursorHold			'updatetime' の時間の間、ユーザーがキーを押さ
 				ヒント: ステータスラインの更新を強制的に行うに
 				は、これを使うこと: >
 					:let &ro = &ro
-<				{VimのAmiga版、Unix版、Win32版、MSDOS版および
-				全てのGUI 版でのみ有効}
+<				{VimのAmiga版、Unix版、Win32版および全てのGUI
+				版でのみ有効}
 							*CursorHoldI*
 CursorHoldI			CursorHoldと同様だが、挿入モードのとき発生す
 				る。例えば別のキーを待っているとき、例えば
@@ -627,9 +733,13 @@ CursorHoldI			CursorHoldと同様だが、挿入モードのとき発生す
 CursorMoved			ノーマルモードかビジュアルモードでカーソルが移
 				動した後。カーソル行のテキストが変更されたとき
 				にも発生する(例: "x", "rx", "p"などで)。
-				先行入力があったりオペレータが実行待ちになって
-				いる場合は発生しない。
+				先行入力があるとき、スクリプトファイルのコマン
+				ドの実行中、オペレータが待機しているとき、また
+				は同じカーソル位置のまま別のウィンドウへ移動し
+				たときには常に発生しない。
 				|match-parens|の例を参照。
+				Note: この自動イベントは `:noautocmd` を付けて
+				もスキップできない。
 				注意: このイベントは頻繁に発生するので、ユーザー
 				が予期しないことや時間のかかる処理は行わないこ
 				と。
@@ -637,12 +747,40 @@ CursorMoved			ノーマルモードかビジュアルモードでカーソルが
 CursorMovedI			挿入モードでカーソルが移動した後。ポップアップ
 				メニューが表示されているときは発行されない。
 				それ以外はCursorMovedと同じ。
+                                                       *DiffUpdated*
+DiffUpdated			差分が更新された後。使用されているdiffコマンド
+				の種類(内部または外部)に応じて、変更毎か
+				|:diffupdate| 実行時に発生する。
+							*DirChangedPre*
+DirChangedPre			|DirChanged| と同じように、作業ディレクトリが
+				変更されようとしているとき。パターンは
+				|DirChanged| と同様。新しいディレクトリ名は
+				v:event.directory にある。
+							*DirChanged*
+DirChanged			|:cd|, |:tcd| もしくは |:lcd| コマンドによって、
+				もしくは 'autochdir' オプションの結果として作業
+				ディレクトリが変更された後。
+				パターンは以下のようになる:
+					"window"  `:lcd` により発生する
+					"tabpage" `:tcd` により発生する
+					"global"  `:cd` により発生する
+					"auto"    'autochdir' により発生する
+					"drop"    ファイルの編集により発生する
+				<afile> は新ディレクトリ名に設定される。
 							*EncodingChanged*
 EncodingChanged			オプション 'encoding' が変更されたとき。例えば、
 				フォント等の設定に便利である。
+							*ExitPre*
+ExitPre				Vim を終了させる `:quit`, `:wq` もしくは
+				`:qall` を使用したときで、|QuitPre| の直後。不
+				必要なウィンドウを閉じるのに使うことができる。
+				自動的に保存されない変更済みのバッファがある場
+				合には、終了はまだキャンセルされる可能性があ
+				る。本当に終了するときのためには |VimLeavePre|
+				を使用すること。
 							*FileAppendCmd*
 FileAppendCmd			ファイルに追加する前。ファイルへの追加の役目を
-				負う。 |Cmd-event|
+				負う。|Cmd-event|
 							*FileAppendPost*
 FileAppendPost			ファイルに追加した後。
 							*FileAppendPre*
@@ -660,33 +798,11 @@ FileChangedRO			読み込み専用ファイルに最初の変更を加える前�
 				動作は、定義されていない。
 							*E788*
 				ここで他のバッファに変更をしてはならない。バッ
-				ファを再読み込みするとはよいが、他のバッファを
+				ファを再読み込みするのはよいが、他のバッファを
 				編集してはならない。
 							*E881*
 				行数が変化した場合 undo のための保存は失敗し、
 				その変更は中止されるだろう。
-                                                       *DiffUpdated*
-DiffUpdated			差分が更新された後。使用されているdiffコマンド
-				の種類(内部または外部)に応じて、変更毎か
-				|:diffupdate| 実行時に発生する。
-							*DirChanged*
-DirChanged			|:cd| もしくは |:lcd| コマンドによって、もしく
-				は 'autochdir' オプションの結果として作業ディ
-				レクトリが変更された後。
-				パターンは以下のようになる:
-					"window" `:lcd` により発生する
-					"global" `:cd` により発生する
-					"auto"   'autochdir' により発生する
-					"drop"   ファイルの編集により発生する
-				<afile> は新ディレクトリ名に設定される。
-							*ExitPre*
-ExitPre				Vim を終了させる `:quit`, `:wq` もしくは
-				`:qall` を使用したときで、|QuitPre| の直後。不
-				必要なウィンドウを閉じるのに使うことができる。
-				自動的に保存されない変更済みのバッファがある場
-				合には、終了はまだキャンセルされる可能性があ
-				る。本当に終了するときのためには |VimLeavePre|
-				を使用すること。
 							*FileChangedShell*
 FileChangedShell		ファイルのタイムスタンプが、ファイルの編集が始
 				まってから変更されたことを発見したとき。
@@ -759,14 +875,15 @@ FilterReadPre			フィルタコマンドからファイルを読み込む前。V
 				名前ではなく、現在のバッファの名前に対してパター
 				ンを調べる。
 							*FilterWritePost*
-FilterWritePost			フィルタコマンド用のファイルを書き込んだり、差
-				分表示用のファイルを作った後。
+FilterWritePost			フィルタコマンド用のファイルを書き込んだり、外
+				部diffで差分表示用のファイルを作った後。(内部
+				diffについては |DiffUpdated| を参照)
 				Vimは FilterWritePre と同様、現在のバッファの
 				名前に対してパターンをチェックする。
 				'shelltemp' がオフのときは発生しない。
 							*FilterWritePre*
-FilterWritePre			フィルタコマンド用のファイルを書き込んだり、差
-				分表示用のファイルを作る前。
+FilterWritePre			フィルタコマンド用のファイルを書き込んだり、外
+				部diffで差分表示用のファイルを作る前。
 				Vimはフィルタコマンドの出力である一時ファイル
 				の名前ではなく、現在のバッファの名前に対してパ
 				ターンをチェックする。
@@ -785,6 +902,7 @@ FuncUndefined			ユーザー定義関数が使われたが、定義されてい�
 				ある。パターンは関数名に対して照合される。
 				<amatch> と <afile> の両方とも関数名に設定され
 				る。
+				コンパイルされた |Vim9| 関数では発生しない。
 				NOTE: Vim script を書くときには autoload 関数
 				を使う方がよい。
 				|autoload-functions|を参照。
@@ -822,31 +940,76 @@ InsertEnter			挿入モード・置換モード・仮想置換モードを開始
 				ユーザーが予期しないことは行わないように注意。
 				カーソルはコマンド実行後に復元される。復元され
 				たくない場合は |v:char| に非空文字を設定する。
+							*InsertLeavePre*
+InsertLeavePre			挿入モードを抜ける前。CTRL-O |i_CTRL-O| を使っ
+				た時も発生する。問題の原因になりうるのでモード
+				の変更や `:normal` の使用には注意すること。
 							*InsertLeave*
-InsertLeave			挿入モードを抜けるとき。CTRL-O |i_CTRL-O| を
+InsertLeave			挿入モードを抜けた直後。CTRL-O |i_CTRL-O| を
 				使ったときにも発生する。|i_CTRL-C| のときは発
 				生しない。
 							*MenuPopup*
 MenuPopup			(マウス右ボタンで)ポップアップメニューを表示す
 				る直前。カーソル下やマウスポインタの下にあるも
 				のによってメニューを調整するのに便利。
-				パターンにはモードを表す文字を記述する:
+				パターンにはモードを表す1文字か2文字を記述する:
 					n	ノーマル
 					v	ビジュアル
 					o	オペレータ実行待ち
 					i	挿入
 					c	コマンドライン
-							*OptionSet*
+					tl	端末
+							*ModeChanged*
+ModeChanged			モード変更後。パターンは `'old_mode:new_mode'`
+				に対してマッチングされ、例えば、|CmdlineEnter|
+				をシミュレートするには、`*:c*` に対してマッチ
+				させる。
+				|v:event| には以下の値が設定される:
+				   old_mode	変更前のモード。
+				   new_mode	非0の引数で呼び出された
+						|mode()| によっても返される新
+						しいモード。
+				ModeChanged が発行された時、old_mode は最後に
+				発行された時の new_mode の値を持つ。
+				各マイナーモードが変更されるたびに発行される。
+				使い方の例としてビジュアルモードに入ったら相対
+				行番号を使うもの: >
+	:au ModeChanged [vV\x16]*:* let &l:rnu = mode() =~# '^[vV\x16]'
+	:au ModeChanged *:[vV\x16]* let &l:rnu = mode() =~# '^[vV\x16]'
+	:au WinEnter,WinLeave * let &l:rnu = mode() =~# '^[vV\x16]'
+<							*OptionSet*
 OptionSet			オプションが設定された後。パターンは長い(短縮
 				しない)オプション名に対してマッチする。
-				変数 |v:option_old| に変更前の値が格納され、
-				|v:option_new| には新しく設定された値が格納さ
-				れ、 |v:option_type| にはオプションの変更のス
-				コープがグローバルかローカルかが格納される。
 				|<amatch>| は対象のオプション名が設定される。
 
-				'key' の変更の際にはあえてイベントが発生しない
-				ようにしている。
+				|v:option_type| はオプションの変更のスコープが
+				グローバルかローカルかが格納される。
+				|v:option_command| はどのコマンドで値が設定さ
+				れたかが格納される。(タグのジャンプ先にある表
+				を参照)
+				|v:option_new| は新しく設定された値が格納され
+				る。
+				|v:option_oldlocal| は変更前のローカルの値が格
+				納される。
+				|v:option_oldglobal| は変更前のグローバルの値
+				が格納される。
+				|v:option_old| は変更前の値が格納される。
+
+				|v:option_oldlocal| には |:set| か
+				|:setlocal|、|modeline| のいずれかが使用された
+				場合に値が格納される。同様に
+				|v:option_oldglobal| には |:set| か
+				|:setglobal| が使用された場合に値が格納される。
+
+				|global-local| なオプションと |:set| を利用し
+				て文字列をセットした場合、|v:option_old| には
+				古いグローバルの値が格納されるが、それ以外の場
+				合(例えばローカルな文字列や |global-local| な
+				数値、等)は古いローカルの値が格納されるので注
+				意。
+
+				OptionSet は起動時と 'key' の変更の際にはあえ
+				てイベントが発生しないようにしている。
 
 				使用例: 'backupdir' や 'undodir' で指定された
 				ディレクトリが存在しているかチェックし、もしな
@@ -859,7 +1022,6 @@ OptionSet			オプションが設定された後。パターンは長い(短縮
 
 				自動コマンド内で |:set| を使用しても、イベント
 				は再びトリガーされない。
-
 							*QuickFixCmdPre*
 QuickFixCmdPre			QuickFixコマンドが実行される前 (|:make|,
 				|:lmake|, |:grep|, |:lgrep|, |:grepadd|,
@@ -885,11 +1047,12 @@ QuickFixCmdPost			QuickFixCmdPreと同様だが、QuickFixコマンドが実
 				初のエラーに移動する前に実行される。
 				|QuickFixCmdPost-example| を参照。
 							*QuitPre*
-QuitPre				`:quit`, `:wq`, `:qall` を使ったとき、カレント
-				ウィンドウを閉じるのか、Vim を終了するのかを決
-				定する前に発行される。例えば、普通のウィンドウ
-				がカレントウィンドウだけだったときに、他の余分
-				なウィンドウを閉じることができる。
+QuitPre				`:quit`、`:wq` または `:qall` を使ったときで、
+				カレントウィンドウを閉じるか Vim を終了するか
+				を決定する前。`:wq` では QuitPre が発生する前
+				にバッファが書き込まれる。カレントウィンドウが
+				最後の通常のウィンドウで、余分なウィンドウを閉
+				じたいときに使える。
 				|ExitPre| も参照。
 							*RemoteReply*
 RemoteReply			サーバーとして働くVimからの応答を受け取ったとき
@@ -902,6 +1065,32 @@ RemoteReply			サーバーとして働くVimからの応答を受け取ったと
 				を読み込むのには、読み込んだ応答を処理できるよ
 				うに関数 |remote_read()| を使うべきであること
 				に注意。
+							*SafeState*
+SafeState			何も保留されておらず、ユーザーの文字入力を待つ
+				とき。
+				次の場合はトリガーされない:
+				- オペレータ待機中
+				- レジスタが "r で入力された
+				- コマンドの実行途中
+				- マップの実行中
+				- 先行入力がある
+				- 挿入モード補完がアクティブ
+				- コマンドライン補完がアクティブ
+				`mode()` を使用して、Vimの状態を確認できる。
+				それは以下かもしれない:
+				- ビジュアルモード
+				- ノーマルモード
+				- 挿入モード
+				- コマンドラインモード
+				やりたいことによっては、`state()` でさらに
+				チェックすることもできる。例えば、画面がメッ
+				セージのためにスクロールされたかどうか。
+							*SafeStateAgain*
+SafeStateAgain			SafeState に似ているが、メッセージを処理し、
+				コールバックを呼び出した後。これは頻繁にトリ
+				ガーされる可能性があるので、時間がかかるような
+				ことはしないこと。
+
 							*SessionLoadPost*
 SessionLoadPost			|:mksession|で作られたセッションファイルを読み
 				込んだ後。
@@ -916,6 +1105,12 @@ ShellFilterPost			":{range}!cmd", ":w !cmd", ":r !cmd"を使って
 							*SourcePre*
 SourcePre			Vim script を読み込む前。|:source|
 				<afile> は読み込まれるファイルの名前となる。
+							*SourcePost*
+SourcePost			Vim scriptを読み込んだ後。|:source|
+				<afile>は読み込んだファイルの名前となる。読み
+				込みが中断された場合はトリガーされない。
+				自動コマンド SourceCmd がトリガーされた後にも
+				トリガーされる。
 							*SourceCmd*
 SourceCmd			Vim script を読み込むとき。|:source|
 				<afile>は読み込まれるファイルの名前となる。こ
@@ -992,6 +1187,12 @@ TerminalOpen			`:terminal` もしくは |term_start()| により端末
 				バッファが生成された直後。このイベントは、
 				++hidden オプションによってウィンドウなしに
 				バッファが生成された場合でも発生する。
+							*TerminalWinOpen*
+TerminalWinOpen			`:terminal` もしくは |term_start()| により端末
+				バッファが作成された直後。このイベントは、バッ
+				ファがウィンドウと共に作成された場合にのみ発生
+				する。端末ウィンドウのウィンドウローカルオプ
+				ションの設定に使用できる。
 							*TermResponse*
 TermResponse			|t_RV| に対する応答をターミナルから受け取った
 				とき。Vim変数 |v:termresponse| の値を使って、
@@ -1002,9 +1203,12 @@ TermResponse			|t_RV| に対する応答をターミナルから受け取った
 							*TextChanged*
 TextChanged			ノーマルモードでカレントバッファのテキストが変
 				更されたとき。つまり |b:changedtick| が更新さ
-				れるとき。
+				れた後。(自動コマンド TextChanged が定義される
+				前にそれが起こったときも同様)
 				未処理のキー入力がまだあるとき、またはオペレー
 				タを待機しているときは、発生しない。
+				Note: この自動イベントは `:noautocmd` を付けて
+				もスキップできない。
 				注意: このイベントは頻繁に発生するので、ユー
 				ザーが予期しないことや時間のかかる処理は行わな
 				いこと。
@@ -1015,35 +1219,59 @@ TextChangedI			挿入モードでカレントバッファのテキストが変�
 				しない。
 				他は TextChanged と同じ。
 							*TextChangedP*
-TextChangedP			挿入モードでカレントバッファのテキストに変更が
-				加えられた後で、ポップアップメニューが表示され
-				ている場合に限られる。そうでなければ
-				TextChanged と同じ。
+TextChangedP			挿入モードでカレントバッファのテキストが変更さ
+				れたとき。ただしポップアップメニューが表示され
+				ている場合に限られる。他は TextChanged と同じ。
+							*TextChangedT*
+TextChangedT			端末モードのカレントバッファのテキストが変更さ
+				れたとき。
+				他は TextChanged と同じ。
 							*TextYankPost*
 TextYankPost			カレントバッファでテキストがヤンクもしくは削除
 				された後。|v:event| の以下の値は、この autocmd
 				を発生させた操作を特定するのに使用できる:
-				   operator	オペレーションが実行された。
-				   regcontents	行のリストとしてレジスタに格納
-						されたテキスト、例: >
+				   inclusive	移動が |inclusive| の時に真と
+						なり、|exclusive| のときはそう
+						ではない。
+				   operator	実行されたオペレータ。
+				   regcontents	レジスタに格納された行区切りの
+						テキストのリスト。以下と同様: >
 						getreg(r, 1, 1)
 <				   regname	レジスタの名前、もしくは無名レ
-						ジスタの場合は空文字列。
+						ジスタの場合は空文字列、
+						|registers| を参照。
 				   regtype	レジスタの種類、|getregtype()|
 						を参照。
+				   visual	オペレーションが |Visual| エリ
+						ア内で実行された場合Trueとなる。
 				|quote_| が使用された場合、もしくは再帰的に呼
 				び出された場合には発生しない。
 				バッファのテキストを変更することは許されていな
-				い、|textlock| を参照。
+				い、|textlock| を参照。 *E1064*
 				{+eval 機能付きでコンパイルされた場合のみ有効}
+
 							*User*
 User				自動的に実行されることはない。コマンド
 				":doautocmd" によってのみ実行される自動コマン
 				ドのために使用される。
 				Note: 該当する自動コマンドが存在しないときに
 				`:doautocmd User MyEvent` が使用された場合、エ
-				ラーが発生する。これを回避したい場合、ダミーの
-				自動コマンドを自身で定義すること。
+				ラーが発生する。これを回避したい場合、
+				`exists('#User#MyEvent')` を使って定義されてい
+				るかチェックするか、ダミーの自動コマンドを自身
+				で定義すること。
+				例: >
+				    if exists('#User#MyEvent')
+					doautocmd User MyEvent
+				    endif
+<
+							*SigUSR1*
+SigUSR1				SIGUSR1シグナルを受けとった後。Vimに通知する他
+				の方法では実現できない場合に使われる。例えば、
+				長い時間かかるビルド結果をチェックするためや、
+				モーションセンサーが発火したとき。
+				{Unix版のみ}
+
 							*UserGettingBored*
 UserGettingBored		ユーザーが同じキーを 42 回押したとき。
 				ただの冗談！ :-)
@@ -1067,6 +1295,7 @@ VimLeave			Vim を終了する前で、ファイル .viminfo を書き込
 				異常終了の検出には |v:dying| を使うこと。
 				終了時に v:dying が 2 以上のときはこのイベント
 				は発生しない。
+				終了コードは |v:exiting| から得る。
 							*VimLeavePre*
 VimLeavePre			Vim を終了する前で、ファイル .viminfo を書き込
 				む直前。これは終了時にたまたまカレントバッファ
@@ -1077,10 +1306,27 @@ VimLeavePre			Vim を終了する前で、ファイル .viminfo を書き込
 <				異常終了の検出には |v:dying| を使うこと。
 				終了時に v:dying が 2 以上のときはこのイベント
 				は発生しない。
+				終了コードは |v:exiting| から得る。
 							*VimResized*
 VimResized			Vimウィンドウのサイズが変わったとき。よって
 				'lines' と 'columns' が変更される。しかし開始
 				時には発生しない。
+							*VimResume*
+VimResume			Vimがサスペンドと |VimSuspend| がトリガーした
+				後、Vimのインスタンスが復帰したとき。
+				|:checktime| を実行してVimがサスペンド中にバッ
+				ファ内容に変化がなかったことを保証するのに便利
+				である: >
+	:autocmd VimResume * checktime
+<							*VimSuspend*
+VimSuspend			Vimのインスタンスがサスペンドしたとき。Vim内で
+				CTRL-Z がタイプされた時、もしくは SIGTSTP シグ
+				ナルがVimに送られた時で、SIGSTOP ではない。
+							*WinClosed*
+WinClosed			ウィンドウが閉じた後。パターンは |window-ID|
+				に対して照合される。<amatch> と <afile> は共に
+				|window-ID| を設定する。再帰的に発生しない(こ
+				のイベントで自分自身を発行しない)。
 							*WinEnter*
 WinEnter			別のウィンドウに入った後。Vimの開始直後、1個目
 				のウィンドウに入ったときは発生しない。ウィンド
@@ -1102,18 +1348,31 @@ WinNew				新しいウィンドウが作成されたとき。Vim がちょう
 				ど開始したとき、最初のウィンドウのためには行わ
 				れない。WinEnter イベントの前。
 
-==============================================================================
-6. パターン					*autocmd-patterns* *{pat}*
+							*WinScrolled*
+WinScrolled			ウィンドウのコンテンツがスクロールした後、もし
+				くはウィンドウのサイズ変更後。
+				パターンは |window-ID| に対してマッチする。
+				<amatch> と <afile> はどちらも |window-ID| が
+				設定される。
+				再帰的に発生しない(このイベントで自分自身を発
+				行しない)。しかしながら、コマンド由来でウィン
+				ドウのスクロールあるいはサイズの変化があると別
+				の WinScrolled イベントが後で発行される。
+				コマンドの追加時には発行されず、その後の最初の
+				スクロールかサイズ変更でのみ発行される。
 
-引数 {pat} にはコンマ区切りのリストを指定することができる。これによりコマンド
-は指定されたそれぞれのパターンについて実行される。例えばこのコマンド: >
+==============================================================================
+6. パターン					*autocmd-patterns* *{aupat}*
+
+引数 {aupat} にはコンマ区切りのリストを指定することができる。これによりコマン
+ドは指定されたそれぞれのパターンについて実行される。例えばこのコマンド: >
 	:autocmd BufRead *.txt,*.info set et
 は下記と等しくなる:
 	:autocmd BufRead *.txt set et
 	:autocmd BufRead *.info set et
 
-ファイルパターン {pat} がファイル名とマッチするかどうかは、2通りの方法で調べら
-れる。
+ファイルパターン {aupat} がファイル名とマッチするかどうかは、2通りの方法で調べ
+られる:
 1. パターンに '/' が含まれないとき: Vimはファイル名の後ろの部分からのみマッチ
    を調べる (ファイル名の前につくディレクトリパスは除く)。
 2. パターンに '/' が含まれるとき: Vimは短いファイル名 (ユーザーが打ち込んだも
@@ -1177,8 +1436,8 @@ Note: パスの途中だけにマッチさせ、ルートディレクトリに�
 	[^ch]	は 'c' と 'h' 以外の文字にマッチ
 
 '/' という文字は、全てのシステムでパスの区切り文字に使われることに注意すること
-(MS-DOSとOS/2でさえも)。これは、パターン内でバックスラッシュを使うことが難しい
-上に、別々のシステムでも自動コマンドが動作するようにするためである。
+(MS-Windowsでさえも)。これは、パターン内でバックスラッシュを使うことが難しい上
+に、別々のシステムでも自動コマンドが動作するようにするためである。
 
 |pattern| を使うことができる。上記の翻訳が行われているため、期待通りに機能しな
 い可能性がある。
@@ -1304,6 +1563,13 @@ Note: パスの途中だけにマッチさせ、ルートディレクトリに�
 これで自動コマンドを (例えばファイル .vimrc を再び読み込んだ後) 2回定義するこ
 とが防げる。
 
+						*FileExplorer*
+Vim によって認識されるグループが1つある: FileExplorer。このグループが存在する
+なら Vim はディレクトリが編集可能であると想定しディレクトリ内のファイルを列挙
+するプラグインが呼ばれる。これは |netrw| プラグインによって使われる。これによ
+り次のことが可能になる: >
+	browse edit
+
 ==============================================================================
 9. 自動コマンドの実行				*autocmd-execute*
 
@@ -1314,7 +1580,7 @@ Note: パスの途中だけにマッチさせ、ルートディレクトリに�
 NOTE オプション 'eventignore' はここにも適用されることに注意。ここに列挙された
 イベントでは、どんな自動コマンドも実行されない。
 
-					*:do* *:doau* *:doautocmd* *E217*
+				*:do* *:doau* *:doaut* *:doautocmd* *E217*
 :do[autocmd] [<nomodeline>] [group] {event} [fname]
 			[fname] (省略するとカレントファイルの名前) にマッチす
 			る、{event} のための自動コマンドをカレントバッファに
@@ -1347,9 +1613,19 @@ NOTE オプション 'eventignore' はここにも適用されることに注意
 						*:doautoa* *:doautoall*
 :doautoa[ll] [<nomodeline>] [group] {event} [fname]
 			":doautocmd" と似ているが、読み込まれたバッファそれぞ
-			れに自動コマンドを適用する。[fname]は自動コマンドを選
-			択するのに使われる。コマンドを適用するバッファではな
-			い。{訳注: |:autocmd|の{pat}に使う?}
+			れに自動コマンドを適用する。カレントバッファは最後に処
+			理される。
+
+			Note [fname] は自動コマンドを選択するのに使われる。コ
+			マンドを適用するバッファではない。例: >
+				augroup mine
+				  autocmd!
+				  autocmd FileType * echo expand('<amatch>')
+				augroup END
+				doautoall mine FileType Loaded-Buffer
+<			このスクリプトを読み込むと、読み込まれたバッファの数だ
+			け "Loaded-Buffer" が表示される。
+
 			Note: このコマンドで、バッファを削除したり、バッファを
 			変えたり、バッファの内容を変えるような自動コマンドを実
 			行しないこと。結果は予期できない。このコマンドは、オプ
@@ -1404,7 +1680,7 @@ Note イベント *WritePost による自動コマンドは、イベント *Writ
   :  autocmd BufReadPre,FileReadPre	*.gz set bin
   :  autocmd BufReadPost,FileReadPost	*.gz '[,']!gunzip
   :  autocmd BufReadPost,FileReadPost	*.gz set nobin
-  :  autocmd BufReadPost,FileReadPost	*.gz execute ":doautocmd BufReadPost " . expand("%:r")
+  :  autocmd BufReadPost,FileReadPost	*.gz execute ":doautocmd BufReadPost " .. expand("%:r")
   :  autocmd BufWritePost,FileWritePost	*.gz !mv <afile> <afile>:r
   :  autocmd BufWritePost,FileWritePost	*.gz !gzip <afile>:r
 >
@@ -1436,11 +1712,11 @@ VimLeave によって実行された自動コマンドは、バッファの被�
 る。
 
 						*autocmd-nested* *E218*
-既定では、自動コマンドはネストしない (入れ子にならない)。自動コマンド内で ":e"
-や ":w" を使っても、これらに対してはイベント BufRead や BufWrite による
-自動コマンドは実行されない。もしこれを実行してほしいなら、ネストしてほしいコマ
-ンド内でフラグ "nested" を使うこと。例: >
-	:autocmd FileChangedShell *.c nested e!
+既定では、自動コマンドはネストしない (入れ子にならない)。例えば、自動コマンド
+内で ":e" や ":w" を使っても、これらに対してはイベント BufRead や BufWrite に
+よる自動コマンドは実行されない。もしこれを実行してほしいなら、ネストしてほしい
+コマンド内でフラグ "nested" を使うこと。例: >
+  :autocmd FileChangedShell *.c ++nested e!
 再帰的ループを避けるために、ネストは10段階までに制限されている。
 
 自動コマンドの中でコマンド ":au" を使うこともできる。これは自己修正的 {訳注:
@@ -1505,7 +1781,7 @@ KoRoN氏作成のautodate.vimを使った方がよい} >
   :  else
   :    let l = line("$")
   :  endif
-  :  exe "1," . l . "g/Last modified: /s/Last modified: .*/Last modified: " .
+  :  exe "1," .. l .. "g/Last modified: /s/Last modified: .*/Last modified: " ..
   :  \ strftime("%Y %b %d")
   :endfun
 
@@ -1582,6 +1858,9 @@ BufReadCmd に対して自動コマンドを定義すると、クラッシュし
 	:noautocmd w fname.gz
 
 これはgzipプラグインで定義された自動コマンドを発生させずにファイルを書き込む。
+
+Note 処理の最中ではなく、終わった後で呼び出される自動コマンドもある。特に
+|CursorMoved| や |TextChanged| があてはまる。
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:

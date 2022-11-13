@@ -1,11 +1,11 @@
-*os_amiga.txt*  For Vim バージョン 8.1.  Last change: 2010 Aug 14
+*os_amiga.txt*  For Vim バージョン 9.0.  Last change: 2010 Aug 14
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
 
 
 							*Amiga*
-このファイルは Amiga version の Vim 特有の事柄に関して記述されています。
+このファイルは Amiga 版の Vim 特有の事柄に関して記述されています。
 下には特別に|MorphOS|についてのセクションが設けられています。
 
 NOTE: Amiga 用のコードはまだソースに含まれていますが、メンテナンスもテストもさ

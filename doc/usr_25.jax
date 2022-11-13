@@ -1,4 +1,4 @@
-*usr_25.txt*	For Vim バージョン 8.1.  Last change: 2016 Mar 28
+*usr_25.txt*	For Vim バージョン 9.0.  Last change: 2016 Mar 28
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -97,7 +97,7 @@ Vim はワードプロセッサーではありません。ワードプロセッ�
 Note: 特定の書式に従った文章なら自動的に整形することもできます。
 |auto-format| 参照。
 
-"gp" はオペレータなので、ビジュアルモード、カーソルモーション、テキストオブジェ
+"gq" はオペレータなので、ビジュアルモード、カーソルモーション、テキストオブジェ
 クト、の三つの方法で適用範囲を選択できます。
 上記の例は "gq4j" とすることもできます。これはコマンドは短くなりますが、行数を
 数えないといけません。"}" というモーションコマンドを使えばもっと簡単です。これ
@@ -341,12 +341,13 @@ window" はウィンドウに表示されている範囲を示しています。
 
 	g0		行の右端に移動
 	g^		行の右端の最初の非空白文字に移動
-	gm		行の中央に移動
+	gm		画面行の中央に移動
+	gM		行のテキストの中央に移動
 	g$		行の左端に移動
 
-		|<--	 window    -->|
-	some long    text, part of which is visible ~
-		 g0  g^    gm	     g$
+		|<--	  window     -->|
+	some long    text, part of which is visible in one line ~
+		 g0  g^    gm	   gM g$
 
 
 禁則処理					*edit-no-break*

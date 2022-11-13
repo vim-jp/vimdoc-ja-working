@@ -1,4 +1,4 @@
-*gui_w32.txt*   For Vim バージョン 8.1.  Last change: 2017 Oct 27
+*gui_w32.txt*   For Vim バージョン 9.0.  Last change: 2022 Mar 09
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -19,7 +19,6 @@ Win32でのVimのグラフィカルユーザーインターフェイス	*gui-w32
 |gui.txt|	GUIの一般的な要素。
 |os_win32.txt|	Win32特有の要素。
 
-{Vi にはWindowsのGUIは無い}
 
 ==============================================================================
 1. GUIを始める						*gui-w32-start*
@@ -31,6 +30,16 @@ GUIは常にWindowsのサブシステムとして実行される。ほとんど�
 た直後にコマンドプロンプトへ自動的に復帰する。そうでなかったら、"start" コマン
 ドを使うと良い: >
 	start gvim [options] file ..
+<							*E988*
+コンソールバージョンに |-g| オプションを付けても gvim.exe が実行されて GUI を
+スタートできる。
+	vim -g [options] file ..
+この機能を動作させるには、gvim.exe が vim.exe と同一のディレクトリに存在し、か
+つこの機能を有効にしてコンパイルされていなければならない。
+
+コンソールバージョンから `:gui` を使うこともできる。しかし、これは実験的な機能
+で、かつこの機能を有効にしてコンパイルされていなければならない。
+セッションファイルを使って現在のコンソール Vim の状態が GUI Vim で再生成される。
 
 Note: 全てのフォント(太字、斜体)は同じ大きさでなければならない!!! そうしない
 場合、文字が欠けたり表示がゴチャゴチャになったりしてしまうだろう。Vimはフォン
@@ -96,16 +105,13 @@ Vimを全画面で起動したい時には、openのアクションとして次�
 Vimを "送る" メニューに追加することもできる:
 1. Windowsのエクスプローラーを起動する。
 2. "送る" のためのディレクトリに移動する:
-   Windows NT: %windir%\profiles\%user%\sendto (e.g.
-	       "c:\winnt\profiles\mattha\sendto")
-   Windows XP: C:\Documents and Settings\%user%\SendTo
-   Windows Vista: C:\Users\%user%\AppData\Roaming\Microsoft\Windows\SendTo .
+   C:\Users\%user%\AppData\Roaming\Microsoft\Windows\SendTo
 3. ファイル表示枠の上で右クリックして新規作成→ショートカット。
 4. ショートカットウィザードに従ってVIM/GVIMへのフルパスを指定。
 
-Vimにファイルを送ると、Vimはファイルのあるディレクトリに移動する。しかし長い
-ディレクトリ名は短い(MS-DOS形式)で表示されてしまうことに注意。これはWindowsの
-"送る" の仕組みによる制限である。
+Vimにファイルを送ると、Vimはファイルのあるディレクトリに移動する。しかしいくつ
+かのWindowsのバージョンでは長いディレクトリ名は短い(MS-DOS)形式で表示されてし
+まうことに注意。これはWindowsの "送る" の仕組みによる制限である。
 
 						*notepad*
 notepad.exe(メモ帳)をgvim.exeに置き換えてしまうこともできるが、これには副作用
@@ -161,16 +167,16 @@ HKLM\Software\Vim\Gvim に DisableEditWithExisting という名前のエント�
 					    Vim Shell Extension
    HKEY_LOCAL_MACHINE\Software\Vim\Gvim
 		path			    {path}\gvim.exe
-   HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\vim 5.6
-		DisplayName		    Vim 5.6: Edit with Vim popup menu entry
-		UninstallString		    {path}\uninstal.exe
+   HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\vim 8.2
+		DisplayName		    Vim 8.2: Edit with Vim popup menu entry
+		UninstallString		    {path}\uninstall.exe
 
    {path}は実行可能ファイルのあるディレクトリパスに置き換える。
    {default}はキー自身の値なので、タイプしない。
 
 ポップアップメニューから "Edit with Vim" を削除するには、上記のレジストリ項目
-を削除すればよい。uninstal.exeプログラムは同じことをしてくれる。Windows標準の
-"アプリケーションの追加と削除" のリストの、エントリを使うこともできる。
+を削除すればよい。uninstall.exeプログラムは同じことをしてくれる。Windows標準
+の "アプリケーションの追加と削除" のリストの、エントリを使うこともできる。
 
 このエントリがファイルタイプの関連付けを抑制してしまうことに気がついたら、手動
 で関連付けをやり直す(上記を参考に、Windowsのエクスプローラーを使って)。これは
@@ -193,8 +199,8 @@ with Vim" メニューの方が使いやすい。
 これを追加する理由の一つがインターネットエクスプローラーから直接ファイルを編集
 できるようにするためである。これを有効にするには "Tools" メニューから
 "Internet Options..." を選択し、出てきたダイアログウィンドウの "Programs" タ
-ブの "HTML editor" にVimを選択する。そこにVimがなければインストールは完了し
-ていない。
+ブの "HTML editor" にVimを選択する。そこにVimがなければインストールは正常に完
+了していない。
 
 このスクリプトを使って手作業で設定できる。
 
@@ -208,7 +214,7 @@ REGEDIT4
 [HKEY_CLASSES_ROOT\Applications\gvim.exe\shell\edit]
 
 [HKEY_CLASSES_ROOT\Applications\gvim.exe\shell\edit\command]
-@="c:\\vim\\vim62\\gvim.exe \"%1\""
+@="c:\\vim\\vim82\\gvim.exe \"%1\""
 
 [HKEY_CLASSES_ROOT\.htm\OpenWithList\gvim.exe]
 
@@ -216,7 +222,7 @@ REGEDIT4
 
 ----------------------------------------------------------
 
-"c:\\vim\\vim62" をgvim.exeが実際にある場所に変更すること。
+"c:\\vim\\vim82" をgvim.exeが実際にある場所に変更すること。
 
 これをアンインストールするにはVimのアンインストーラを使うか "regedit" を使って
 手作業でレジストリエントリを削除する。
@@ -232,7 +238,8 @@ Windowsにはテキストを一時的に格納(コピー)し、取り出す(ペ�
 
 'clipboard' オプションに文字列 "unnamed" が含まれている時には、名前なしレジス
 タが同じになる。こうすることで、ヤンク(Vimにおけるコピー "y")やペースト(Vimに
-おける貼り付け "p")にクリップボードを、"* を付けることなく使用できる。
+おける貼り付け "p")にクリップボードを、"* を付けることなく使用できる。これが動
+作しない場合は 'clipboard' オプションに文字列 "unnamedplus" を使用する。
 
 デフォルトでは 'guioptions' に 'a' フラグは含まれていない。これはその操作を行っ
 た時にだけ、テキストがクリップボードへ送られることを意味している。単に視覚的に
@@ -319,21 +326,10 @@ Sys_WindowText
 Gray, Grey, LightYellow, SeaGreen, Orange, Purple, SlateBlue, Violet,
 
 								*rgb.txt*
-付け加えて、"rgb.txt" で定義される色も使うことができる。このファイルはX11のも
-のとして知られている。何行かを抜粋する: >
-
-  255 218 185		   peach puff
-  205 133  63		   peru
-  255 181 197		   pink
-
-これはファイルのレイアウトを示している: 最初に赤、緑、そして青の輝度を10進数で
-記述し、続いて色の名前を定義している。4つのフィールドはスペースで区切られてい
-る。
-
-rgb.txtはX11のディストリビューションから手に入れることができる。
-"/usr/X11R6/lib/X11/" あたりのディレクトリにおいてあることが多い。Vimでは
-$VIMRUNTIMEディレクトリに置く。だから "$VIMRUNTIME/rgb.txt" にファイルが見つけ
-ることができる。
+付け加えて、デフォルトのカラーリストで定義される色も使うことができる。詳細は
+|:colorscheme| を参照のこと。これらの色は以前は $VIMRUNTIME/rgb.txt で定義され
+ていたもので、現在は $VIMRUNTIME/colors/lists/default.vim にて初期化された値が
+|v:colornames| にある。
 
 ==============================================================================
 6. ダイアログとブラウズ				*gui-w32-dialogs* *dialog*
@@ -398,7 +394,7 @@ Win32 GUI版ではMotifの「切取メニュー」をエミュレートする。
 タがインストールされていれば次のようにできるだろう。 >
 	:w >>prn
 
-Vimでは多くのMS Windows標準の機能をサポートしている。それらの幾つかは別の場所
+Vimでは多くのMS-Windows標準の機能をサポートしている。それらの幾つかは別の場所
 で説明されている: |'mouse'|、|win32-hidden-menus|を参照。
 
 							*drag-n-drop-win32*
@@ -407,7 +403,7 @@ Vimのウィンドウに1つもしくは複数のファイルをドラッグ&ド
 
 							*:simalt* *:sim*
 :sim[alt] {key}		Alt と {key} の同時押しをシミュレートする。
-			{Vi にはない} {Win32バージョンだけの機能}
+			{Win32バージョンだけの機能}
 			Note: ":si" は "i" フラグ付きの ":s" になる。
 
 通常、Vimでは使用可能なマッピングを増やすために、Alt-<Key>の全ての組み合わせを
@@ -420,8 +416,8 @@ Vimのウィンドウに1つもしくは複数のファイルをドラッグ&ド
 現在の状態に依存することは許さない。
 これを回避するために、('winaltkeys' が "yes" でない時に) :simaltコマンドで、
 WindowsのスタイルでAltキーを押すふりを、Vimにさせることができる。これを使って
-Windows標準のアクションを興すための、Altキーの組み合わせ(ほかのものでも)をマッ
-ピングすることができる。いくつか例を示そう: >
+Windows標準のアクションを実行するための、Altキーの組み合わせ(ほかのものでも)を
+マッピングすることができる。いくつか例を示そう: >
 
 	:map <M-f> :simalt f<CR>
 これでAlt-Fを押すとキーストロークのAlt→Fがシミュレートされ、'ファイル(F)' メ
@@ -445,14 +441,18 @@ Control-Nに、Alt-SpaceにNを続けるマッピングを施す。これはシ�
 
 XPM サポート						*w32-xpm-support*
 
-Gvim は、MS-Windows で XPM ファイルのサポート付きでビルドすることができる。
+GVim は、MS-Windows で XPM ファイルのサポート付きでビルドすることができる。
 |+xpm_w32|
 詳細は Make_mvc.mak ファイルを見て、XPM で検索すること。
 
 XPM サポートが動作するか試すには、以下を行うこと: >
 	:help
-	:exe 'sign define vimxpm icon=' . $VIMRUNTIME . '\\vim16x16.xpm'
-	:exe 'sign place 1 line=1 name=vimxpm file=' . expand('%:p')
+	:let runtime = escape($VIMRUNTIME, ' \')
+	:exe 'sign define vimxpm icon=' .. runtime .. '\\vim16x16.xpm'
+	:exe 'sign place 1 line=1 name=vimxpm file=' .. expand('%:p')
 <
+github から vim16x16.xpm ファイルを入手する必要があるかもしれない:
+https://github.com/vim/vim/blob/master/runtime/vim16x16.xpm
+
 
  vim:tw=78:sw=4:ts=8:noet:ft=help:norl:

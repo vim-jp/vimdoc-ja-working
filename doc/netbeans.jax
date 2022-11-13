@@ -1,10 +1,10 @@
-*netbeans.txt*  For Vim バージョン 8.1.  Last change: 2016 Jul 15
+*netbeans.txt*  For Vim バージョン 9.0.  Last change: 2022 Apr 03
 
 
 		  VIMリファレンスマニュアル    by Gordon Prieur et al.
 
 
-					*netbeans* *netbeans-support*
+					*netbeans* *NetBeans* *netbeans-support*
 
 Vim NetBeans プロトコル: Vim と IDE を統合するためのソケットインターフェイス
 
@@ -24,7 +24,6 @@ Vim NetBeans プロトコル: Vim と IDE を統合するためのソケット�
     10.4. External Editor モジュールの入手	|obtaining-exted|
     10.5. NetBeans の設定			|netbeans-setup|
 
-{Vi にはこれらの機能はありません}
 {|+netbeans_intg| 機能つきでコンパイルされたときのみ利用可能}
 
 ==============================================================================
@@ -41,21 +40,26 @@ Vim の NetBeans プロトコルは、古典的な TCP ソケットを使った�
 て Vim をコントロールできます。C, C++, Python, Java の実装がすでに存在してい
 ます。歴史的な理由により NetBeans の名前が今も残されています。
 
-NetBeans プロトコルを使ったプロジェクトは現在のところ、以下のものがあります:
-- VimIntegration, Vim の統合を行っている様々なプロジェクトの説明
+NetBeans プロトコルを使ったアクティブなプロジェクト:
+- Eclim, http://eclim.org/
+
+VimIntegration, Vim の統合を行っている様々なプロジェクトの説明
 	http://www.freehackers.org/VimIntegration
-- Agide, AAP プロジェクト用の IDE。Python で書かれている。
-	http://www.a-a-p.org
-- Clewn, gdb 統合。C で書かれている。
+
+NetBeans プロトコルを使っているか使っていたプロジェクト:
+- Agide, AAP プロジェクト用の IDE。Python で書かれている (現在は |:Termdebug|
+  に置き換えられている): http://www.a-a-p.org
+- Clewn, gdb 統合。C で書かれている:
 	http://clewn.sourceforge.net/
-- Pyclewn, gdb 統合。Python で書かれている。
+- Pyclewn, gdb 統合。Python で書かれている:
 	http://pyclewn.sourceforge.net/
-- VimPlugin, Eclipse の内部に Vim を取り込む。
-	http://vimplugin.sourceforge.net/wiki/pmwiki.php
-- PIDA, Python で書かれた IDE。
-	http://pida.co.uk/
-- VimWrapper, Vim と IDE を簡単に統合するためのライブラリ
+- VimWrapper, Vim と IDE を簡単に統合するためのライブラリ:
 	http://www.freehackers.org/VimWrapper
+時代遅れになったプロジェクト (リンクは機能しません):
+- VimPlugin, Eclipse の内部に Vim を取り込む:
+	http://vimplugin.sourceforge.net/wiki/pmwiki.php
+- PIDA, Python で書かれた IDE:
+	http://pida.co.uk/
 
 詳しくは、それぞれのプロジェクトページを参照してください。
 
@@ -119,11 +123,20 @@ NetBeans インターフェイスを有効にしたくない場合は、Makefile
 "--disable-netbeans" の行のコメントアウトを解除すれば無効にできます。
 
 現在 NetBeans インターフェイスは端末動作の Vim と GUI (GTK, GNOME, Windows,
-Athena, Motif) の gvim でのみサポートされています。
+Motif) の gvim でのみサポートされています。
 
-Motif をサポートするためには XPM ライブラリが必要です。XPM の最新バージョン
-を入手する方法については |workshop-xpm| を参照してください。
+							*netbeans-xpm*
+Motif をサポートするためには XPM ライブラリが必要です。
+XPM ライブラリは、Motif を使用して Vim 内に画像を表示するために必要です。それ
+がなければ、ツールバーと目印(sign)は無効になります。
 
+XPMライブラリは、フランス国立コンピュータ科学研究所の Arnaud Le Hors によって
+提供されています。それは http://cgit.freedesktop.org/xorg/lib/libXpm からダウ
+ンロードすることができます。これを書いている時点での現在のリリースは
+xpm-3.4k-solaris.tgz で、これは gzip された tarファイルです。 ディレクトリ
+/usr/local/xpm を作成してそこにファイルを展開すると、Makefileのコメントアウト
+されていない行を変更せずに使用できます。 他のxpmディレクトリを使用する場合は、
+src/Makefile の XPM_DIR を変更する必要があります。
 
 MS-Windows では:
 ----------------
@@ -405,9 +418,9 @@ defineAnnoType typeNum typeName tooltip glyphFile fg bg
 		   bg		color	行の背景色
 		Vim はこの annotation に対して目印を定義します。
 		色を数値で指定するときは "#rrggbb" で赤緑青での色指定になり
-		(|gui-colors| 参照) GVim でのみ定義されます。
+		(|gui-colors| 参照) gVim でのみ定義されます。
 		色を名前で指定するときはその色はカラー端末上で動作する Vim と
-		GVim の両方で定義されたものです。
+		gVim の両方で定義されたものです。
 		"fg" と "bg" が両方とも "none" の場合、行は強調されません
 		(version 2.1 から)。
 		"glyphFile" が空の場合、テキストの目印は使われません
@@ -446,15 +459,16 @@ guard off len
 		を指定します。
 
 initDone	バッファの準備ができたとマークします。暗黙的にそのバッファを
-		カレントバッファにします。オートコマンドイベント BufReadPost
-		を発生させます。
+		カレントバッファにします。自動コマンドイベント BufReadPost を
+		発生させます。
 
-insertDone
-		Vim コントローラから Vim へ、最初のファイルの挿入が行われた
-		ことを通知します。これにより、ファイル読み込みのメッセージが表
-		示されます。version 2.3 より前は、ファイルを開いた後にメッセー
-		ジが表示されませんでした。
-		version 2.3 から。
+insertDone starteol readonly
+		Vim コントローラから Vim へ、最初のファイルの挿入が行われたこ
+		とを通知します。これにより、ファイル読み込みのメッセージが表示
+		されます。最後の行に EOL がない場合は "starteol" が "F" になり
+		ます。ファイルが readonly としてマークされていると "readonly"
+		が "T" になります。version 2.3 より前では、ファイルを開いた後にメッセー
+		ジが表示されませんでした。version 2.3 から。
 
 moveAnnoToFront serNum
 		未実装。
@@ -543,9 +557,10 @@ setModtime time
 		す。バッファの変更時刻を更新します。
 		version 2.3 から。
 
-setReadOnly
-		ファイルを読み込み専用にします。
-		version 2.3 で実装されました。
+setReadOnly readonly
+		boolean引数 "readonly" が True の "T" のとき、バッファを読み込
+		み専用とマークします。False の "F" のときは、読み込み専用では
+		ないとマークします。version 2.3で実装されました。
 
 setStyle	未実装。
 

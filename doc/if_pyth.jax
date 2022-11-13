@@ -1,4 +1,4 @@
-*if_pyth.txt*   For Vim バージョン 8.1.  Last change: 2018 Jan 30
+*if_pyth.txt*   For Vim バージョン 9.0.  Last change: 2022 Feb 22
 
 
 		  VIMリファレンスマニュアル    by Paul Moore
@@ -19,13 +19,14 @@ VimのPythonインターフェイス				*python* *Python*
 11. Python X					|python_x|
 12. Python 対応付きでビルドする			|python-building|
 
-{Vi にはこれらのコマンドはありません}
-
 Python 2.x インターフェイスは Vim が |+python| 機能付きでコンパイルされたとき
 のみ利用できます。
 Python 3 インターフェイスは Vim が |+python3| 機能付きでコンパイルされたときの
 み利用できます。
 両方を同時に利用することはできますが、|python-2-and-3| をお読みください。
+
+NOTE: Python 2 は古く、もう開発されていません。Python 3 を使用することを強くお
+勧めします。Python 2 は正常に動作しなくなった時点でサポートを打ち切ります。
 
 ==============================================================================
 1. コマンド						*python-commands*
@@ -36,16 +37,17 @@ Python 3 インターフェイスは Vim が |+python3| 機能付きでコンパ
 			マンドが機能するか簡単にチェックするには: >
 				:python print "Hello"
 
-:[range]py[thon] << {endmarker}
+:[range]py[thon] << [trim] [{endmarker}]
 {script}
 {endmarker}
 			Pythonのスクリプト{script}を実行します。
-			Note: このコマンドはPython用の機能を含めてコンパイルさ
-			れていないときは機能しません。エラーを抑制するには
-			|script-here|を参照してください。
+			Note: Python のサポートを有効にしてコンパイルされてい
+			ないとこのコマンドは機能しません。エラーを回避するには
+			|script-here| を参照してください。
 
-{endmarker}の前に空白を置かないでください。"<<" の後に{endmarker}を省略した時
-は |:append| や |:insert| のように '.' が使われます。
+"<<" の後に [endmarker] を省略した時は |:append| や |:insert| のようにドット
+'.' が使われます。詳細については |:let-heredoc| を参照。
+
 この形の |:python| コマンドはVim scriptにPythonコードを埋め込むのに特に便利で
 す。
 
@@ -59,8 +61,14 @@ Python 3 インターフェイスは Vim が |+python3| 機能付きでコンパ
 	endfunction
 
 使っている Python のバージョンを見るには: >
-	:python import sys
 	:python print(sys.version)
+
+sys をインポートする必要はありません。これはデフォルトで行われます。
+
+							*python-environment*
+Vim で設定した環境変数は Python で常に利用できるとは限りません。Vim と Python
+がどのようにビルドされたかに依存します。以下も参照
+https://docs.python.org/3/library/os.html#os.environ
 
 Note: Pythonはインデントに関して非常に繊細です。"class" の行と "EOF" の行はまっ
 たくインデントしないでください。
@@ -72,17 +80,28 @@ Note: Pythonはインデントに関して非常に繊細です。"class" の行
 			を返さなければなりません。文字列を返すと行がその文字列
 			で置換されます。[range] を指定しなかった場合は "1,$"
 			(ファイル全体) が範囲となります。
-			{Vi にはない}
 
 例:
 >
 	:pydo return "%s\t%d" % (line[::-1], len(line))
 	:pydo if line: return "%4d: %s" % (linenr, line)
 <
+Pythonを使って範囲をフィルタリングするには、`:py` と組み合わせた `:pydo` を使
+用することができます。例えば: >
+
+	:py3 << EOF
+	needle = vim.eval('@a')
+	replacement = vim.eval('@b')
+
+	def py_vim_string_replace(str):
+		return str.replace(needle, replacement)
+	EOF
+	:'<,'>py3do return py_vim_string_replace(line)
+<
 							*:pyfile* *:pyf*
 :[range]pyf[ile] {file}
 			{file}内のPythonスクリプトを実行します。引数はそのまま
-			一つのファイル名として使われます。{Vi にはありません}
+			一つのファイル名として使われます。
 
 これら２つのコマンドは、本質的には同じことを行います - つまり、Pythonのコード
 を、与えられた "現在の範囲" |python-range| に対して実行します。
@@ -94,7 +113,6 @@ Pythonのコマンドは|sandbox|の中では使えません。
 
 引数を渡すためには明示的に sys.argv[] を使って設定してください。例: >
 
-	:python import sys
 	:python sys.argv = ["foo", "bar"]
 	:pyfile myscript.py
 
@@ -163,10 +181,15 @@ vim.eval(str)						*python-eval*
 	- Vimの式を評価した結果がVimの辞書ならば辞書
 	辞書とリストは再帰的に展開されます。
 	例: >
+	    :" 'textwidth' オプションの値
 	    :py text_width = vim.eval("&tw")
-	    :py str = vim.eval("12+12")		# 結果は文字列であることに注意！
-						# 数に変換するには、
-						# string.atoi()を使うこと。
+	    :
+	    :" レジスタ 'a' の内容
+	    :py a_reg = vim.eval("@a")
+	    :
+	    :" 結果は文字列であることに注意！数値に変換するには、string.atoi()
+	    :" を使うこと。
+	    :py str = vim.eval("12+12")
 
 	    :py tagList = vim.eval('taglist("eval_expr")')
 <	最後のコマンドはPython辞書のPythonリストを返します。例:
@@ -181,19 +204,19 @@ vim.bindeval(str)					*python-bindeval*
 
 vim.strwidth(str)					*python-strwidth*
 	|strwidth()| と同じ。str の画面上の幅を数値で返す。タブ文字は 1 幅とし
-	てカウントされる。
+	てカウントされます。
 
 vim.foreach_rtp(callable)				*python-foreach_rtp*
-	'runtimepath' の各パスについてコーラブル (callable) を呼び出す。コーラ
-	ブルが None 以外の値を返すか、例外が発生するか、パスの最後まで処理が進
-	むと停止する。コーラブルが None 以外の値を返して停止した場合は、
-	vim.foreach_rtp 関数はその値を返す。
+	'runtimepath' の各パスについてコーラブル (callable) を呼び出します。
+	コーラブルが None 以外の値を返すか、例外が発生するか、パスの最後まで処
+	理が進むと停止します。コーラブルが None 以外の値を返して停止した場合
+	は、vim.foreach_rtp 関数はその値を返します。
 
 vim.chdir(*args, **kwargs)				*python-chdir*
 vim.fchdir(*args, **kwargs)				*python-fchdir*
-	os.chdir、os.fchdir を実行し、Vim にそのことを通知する。
-	Note: これらの関数は直接は使用しない。代わりに os.chdir と os.fchdir
-	      を使う。os.fchdir が存在しない場合の vim.fchdir の動作は未定義。
+	os.chdir、os.fchdir を実行し、Vim にそのことを通知します。Note: これら
+	の関数は直接は使用しません。代わりに os.chdir と os.fchdirを使います。
+	os.fchdir が存在しない場合の vim.fchdir の動作は未定義です。
 
 "vim" モジュールのエラーオブジェクト
 
@@ -338,8 +361,8 @@ Python では、'runtimepath' のパスのリストを使う代わりに、vim.V
             fmr = find_module(fullname, path)
             return load_module(fullname, *fmr)
 
-    # It uses vim module itself in place of VimPathFinder class: it does not 
-    # matter for python which object has find_module function attached to as 
+    # It uses vim module itself in place of VimPathFinder class: it does not
+    # matter for python which object has find_module function attached to as
     # an attribute.
     class VimPathFinder(object):
         @classmethod
@@ -742,17 +765,28 @@ Vim をコンパイルする時に用いた Python 2.x または Python 3 のバ
 10. Python 3						*python3*
 
 							*:py3* *:python3*
-|:py3| コマンドと |:python3| コマンドは |:python| と同様に機能します。`:py3`
-コマンドが機能するか簡単にチェックするには: >
-	:py3 print("Hello")
+:[range]py3 {stmt}
+:[range]py3 << [trim] [{endmarker}]
+{script}
+{endmarker}
 
-使っている Python のバージョンを見るには: >
-	:py3 import sys
-	:py3 print(sys.version)
+:[range]python3 {stmt}
+:[range]python3 << [trim] [{endmarker}]
+{script}
+{endmarker}
+	`:py3` コマンドと `:python3` コマンドは `:python` と同様に機能します。
+	`:py3` コマンドが機能するか簡単にチェックするには: >
+		:py3 print("Hello")
+<
+	使っている Python のバージョンを見るには: >
+		:py3 import sys
+		:py3 print(sys.version)
 <							*:py3file*
-`:py3file` コマンドは `:pyfile` と同様に機能します。
+:[range]py3f[ile] {file}
+	`:py3file` コマンドは `:pyfile` と同様に機能します。
 							*:py3do*
-`:py3do` コマンドは `:pydo` と同様に機能します。
+:[range]py3do {body}
+	`:py3do` コマンドは `:pydo` と同様に機能します。
 
 
 Vim のビルドは 4 種類あります (:version の出力):
@@ -790,9 +824,23 @@ Vim の動作はコンフィグを実行したシステムに依存します。P
    れは Vim がクラッシュするようになるでしょう。
 
 							*E880*
-Python 内で SystemExit 例外を発生させても Vim は終了しない。次のようにする: >
+Python 内で SystemExit 例外を発生させても Vim は終了しません。次のようにします:
+>
 	:py vim.command("qall!")
 <
+							*E1266*
+このエラーは Python 3 が要求するモジュールがロードできないときに発生します。こ
+れはあなたの Python 3 が正しくインストールされていない、もしくはあなたの設定に
+間違いがあることを意味します。次の項目を確認してください:
+1. Python 3 が正しくインストールされていることを確認する。また Python のバー
+   ジョンを確認する。
+2. 'pythonthreedll' オプションを確認する。
+3. 'pythonthreehome' オプションを確認する。
+4. 'pythonthreedll' を設定していない場合、環境変数 PATH を確認する。
+   MS-Windows では where.exe でどの dll がロードされるかを確認できる。
+   例 >
+	where.exe python310.dll
+5. 環境変数 PYTHONPATH と PYTHONHOME を確認する。
 
 							*has-python*
 どのバージョンの Python が利用可能になっているかは次のコマンドで確認できます:
@@ -830,7 +878,7 @@ Note: Python の 2 と 3 の両方が利用可能で、Python が動的ロード
 ==============================================================================
 11. Python X						*python_x* *pythonx*
 
-多くの python コードは、python 2.6+ と python 3 の両方で動くことができるように
+多くの python コードは、Python 2.6+ と Python 3 の両方で動くことができるように
 書けるため、pyx* 関数とコマンドが用意されました。それらは、Python 2 や 3 向け
 の変種とまったく同じように動作しますが、'pyxversion' 設定を用いて Python のバー
 ジョンを選択できる点が異なります。
@@ -871,7 +919,7 @@ Python コマンドに Python 2 と 3 のどちらを使いたいかに応じて
 							*has-pythonx*
 pyx* コマンドが使用できるかどうかを調べるには以下が使えます: >
 	if has('pythonx')
-	  echo 'pyx* commands are available. (Python ' . &pyx . ')'
+	  echo 'pyx* commands are available. (Python ' .. &pyx .. ')'
 	endif
 
 |+python| または |+python3| のどちらか一方のみでコンパイルされている場合は、

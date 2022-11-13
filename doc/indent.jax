@@ -1,4 +1,4 @@
-*indent.txt*    For Vim バージョン 8.1.  Last change: 2018 Apr 04
+*indent.txt*    For Vim バージョン 9.0.  Last change: 2022 May 21
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -21,9 +21,6 @@ VimにはCスタイルの言語を自動的にインデントするためのオ�
 プションはインデントだけに影響し、その他の整形は行わない。その他の整形について
 は、|format-comments|, |fo-table|, |gq|, |formatting| を参照。
 
-コンパイル時に|+smartindent| か |+cindent|機能を無効にした時には、これが動作し
-ないことに注意。
-
 実際のところインデントには4つの主な方法がある。後のものが有効にされると、前の
 ものより優先される('indentexpr' は空でない文字列がセットされたとき)。
 'autoindent'	一つ前の行に基づくインデント
@@ -41,11 +38,12 @@ VimにはCスタイルの言語を自動的にインデントするためのオ�
 レベル関数が第1桁が '{' で始まっていることである。そうなっていないと宣言との区
 別が困難である。
 
-Cのインデントはこの4つのオプションで制御されている:
+Cのインデントはこの5つのオプションで制御されている:
 'cindent'	Cの自動インデントを有効化する。
 'cinkeys'	再インデントの引金となる挿入モードでのキーを指定する。
 'cinoptions'	好みのインデントスタイルを設定する。
 'cinwords'	次の行から特別なインデントを開始するキーワードを定義する。
+'cinscopedecls'	C++ スコープ宣言として認識される文字列を定義する。
 
 オプション 'lisp' がオフで 'equalprg' が空ならば、オペレータ "=" は外部プログ
 ラムではなくVimの内蔵アルゴリズムを使用してインデントを行う。
@@ -64,12 +62,13 @@ Cのファイルに対して自動的に 'cindent' をオンにしてそれ以�
 空でない時には代わりに 'indentkeys' が使われる。'cinkeys' と 'indentkeys' の書
 式は同じ。
 
-デフォルトは "0{,0},0),:,0#,!^F,o,O,e" で、これにより次のような時にインデント
-が行われる:
+デフォルトは "0{,0},0),0],:,0#,!^F,o,O,e" で、これにより次のような時にインデン
+トが行われる:
 
 	"0{"	行の先頭で '{' をタイプした時
 	"0}"	行の先頭で '}' をタイプした時
 	"0)"	行の先頭で ')' をタイプした時
+	"0]"	行の先頭で ']' をタイプした時
 	":"	ラベルやcase文のあとで ':' をタイプした時
 	"0#"	行の先頭で '#' をタイプした時
 	"!^F"	CTRL-Fをタイプした時 (CTRL-F自体は入力されない)
@@ -294,9 +293,9 @@ CTRL-TやCTRL-Dを使用してインデントを変更した後では、Vimは�
 <
 							*cino-g*
 	gN    C++のスコープ宣言をそれが含まれるブロックのインデントから N の位
-	      置へ配置する。"public:", "protected:", "private:" がスコープ宣言
-	      になり得る。
-	      (省略値 'shiftwidth')
+	      置へ配置する。(省略値 'shiftwidth')。デフォルトでは、スコープ宣
+	      言は "public:", "protected:" または "private:" である。これは
+	      'cinscopedecls' オプションで調整できる。
 
 		cino=		    cino=g0 >
 		  {		      {
@@ -538,7 +537,7 @@ CTRL-TやCTRL-Dを使用してインデントを変更した後では、Vimは�
 			that: this,
 			some: ok,
 		    },
-		    "bar":{ 
+		    "bar":{
 			a : 2,
 			b: "123abc",
 			x: 4,
@@ -566,10 +565,17 @@ CTRL-TやCTRL-Dを使用してインデントを変更した後では、Vimは�
 	      セッサー行は認識される。"#" で始まる行に対する右シフトは機能しな
 	      い。
 
+								*cino-P*
+	PN    N がゼロでないときはC言語のプラグマを認識し、他のコードと同様の
+	      インデントにする。他のプリプロセッサディレクティブには関心を持た
+	      ない。
+	      N がゼロのとき (初期設定): C言語のプラグマを認識せず、他のすべて
+	      のプリプロセッサディレクティブと同じ扱いにする。
+
 
 省略値を全て並べるとこうなる:
 	cinoptions=>s,e0,n0,f0,{0,}0,^0,L-1,:s,=s,l0,b0,gs,hs,N0,E0,ps,ts,is,+s,
-			c3,C0,/0,(2s,us,U0,w0,W0,k0,m0,j0,J0,)20,*70,#0
+			c3,C0,/0,(2s,us,U0,w0,W0,k0,m0,j0,J0,)20,*70,#0,P0
 
 次のような場合にはVimは行頭を1列目に持っていく:
 - 'cinkeys' が '#0' を含み行が '#' (プリプロセッサー命令)で始まる場合
@@ -583,8 +589,9 @@ CTRL-TやCTRL-Dを使用してインデントを変更した後では、Vimは�
 融通の利くインデントの基本はユーザーマニュアルの|30.3|節で説明されている。
 
 独自にインデントファイルを書きたいならば、オプション 'indentexpr' を設定しなけ
-ればならない。同時にオプション 'indentkeys' を設定すると便利だろう。インデント
-ファイルの例は $VIMRUNTIME/indent ディレクトリを参照。
+ればならない。同時にオプション 'indentkeys' を設定すると便利だろう。
+ヒントは $VIMRUNTIME/indent/README.txt ファイルを参照。
+例は $VIMRUNTIME/indent ディレクトリを参照。
 
 
 インデントファイルについての覚書 ~
@@ -594,26 +601,24 @@ CLOJURE					*ft-clojure-indent* *clojure-indent*
 
 Clojure のインデントは伝統的な Lisp とは若干異なる。それは角カッコや波カッコの
 扱いや、コミュニティの習慣などによる。それらの習慣は普遍的ではないので、
-Clojure のインデントスクリプトは以下に挙げる設定可能オプションを用意している。
+Clojure のインデントスクリプトは設定のオプションを用意している。
 
-使用している vim に searchpairpos() がない場合は通常の 'lisp' インデントに
-フォールバックする。その場合、以下のオプションは無視される。
+(使用している Vim に |searchpairpos()| がない場合は通常の 'lisp' インデントに
+フォールバックする。その場合、以下のオプションは無視される。)
 
 							*g:clojure_maxlines*
 
-searchpairpos() による検索の最大範囲を設定する。大きな値を指定すれば、フォーム
-が長い場合に、パフォーマンスと引き換えに正しい結果を得ることができる。0 を指定
-すると制限なしになる。
->
-	" 初期設定
-	let g:clojure_maxlines = 100
-<
+`searchpairpos()` による検索の最大範囲を設定する。大きな値を指定すれば、フォー
+ムが長い場合に、パフォーマンスと引き換えに正しい結果を得ることができる。0 を指
+定すると制限なしになる。デフォルトは300。
+
+
 						*g:clojure_fuzzy_indent*
 					*g:clojure_fuzzy_indent_patterns*
 					*g:clojure_fuzzy_indent_blacklist*
 
 'lispwords' オプションはコンマ区切りの単語のリストで、サブフォームをスペース 2
-個でインデントする特別なフォームを指定する。
+個でインデントする必要のある特別なフォームを指定する。
 
 例:
 >
@@ -631,15 +636,12 @@ searchpairpos() による検索の最大範囲を設定する。大きな値を�
 	let g:clojure_fuzzy_indent_patterns = ['^with', '^def', '^let']
 	let g:clojure_fuzzy_indent_blacklist =
 		\ ['-fn$', '\v^with-%(meta|out-str|loading-context)$']
-
-	" 古い設定方法。文字列をコンマ区切りで指定する。現在は上記のリストによ
-	" る設定が推奨される。Note: パターンは暗黙的に ^ と $ で固定される。
-	let g:clojure_fuzzy_indent_patterns = 'with.*,def.*,let.*'
 <
 |g:clojure_fuzzy_indent_patterns| と |g:clojure_fuzzy_indent_blacklist| はパ
-ターンのリストで、unquoted symbol や unqualified symbol に対してマッチする。
-つまり、"^foo" というパターンは、"foobar"、"my.ns/foobar"、"#'foobar" などに
+ターンのリストで、unquoted symbol や unqualified symbol に対してマッチする。つ
+まり、`"^foo"` というパターンは、`foobar`, `my.ns/foobar`, `#'foobar` などに
 マッチする。
+
 
 各単語は次の順番で検査される:
 
@@ -648,16 +650,18 @@ searchpairpos() による検索の最大範囲を設定する。大きな値を�
 	3. 単語が |g:clojure_fuzzy_indent_patterns| にマッチしたら真を返す
 	4. それ以外は、偽を返し、通常どおりにインデントする
 
+
 					*g:clojure_special_indent_words*
 
-Clojure のいくつかのフォームは、'lispwords' に依らず、すべてのサブフォームがス
-ペース 2 個でインデントされる。そのような特異なインデントで扱いたい構造が他に
-もある場合は、そのシンボルを次の初期値に加えること。
+Clojure のいくつかのフォームは、'lispwords' に依らず、すべてのサブフォームはス
+ペース2個のみでインデントされる。そのような特異なインデントで扱いたい構造が他に
+もある場合は、そのシンボルを次の初期値リストに加えること。
 >
 	" 初期設定
 	let g:clojure_special_indent_words =
 	   \ 'deftype,defrecord,reify,proxy,extend-type,extend-protocol,letfn'
 <
+
 					*g:clojure_align_multiline_strings*
 
 複数行文字列を、クォート文字と同じ列で揃えるのではなく、クォート文字の一つ後ろ
@@ -677,11 +681,7 @@ Clojure のいくつかのフォームは、'lispwords' に依らず、すべて
 	   enim ad minim veniam, quis nostrud exercitation ullamco laboris
 	   nisi ut aliquip ex ea commodo consequat.")
 <
-このオプションは初期設定でオフになっている。
->
-	" 初期設定
-	let g:clojure_align_multiline_strings = 0
-<
+
 						*g:clojure_align_subforms*
 
 初期設定では、括弧で囲まれた関数呼び出しのような形でその最初の subform が括弧
@@ -692,17 +692,12 @@ Clojure のいくつかのフォームは、'lispwords' に依らず、すべて
 	  bar
 	  baz)
 <
-このオプションを設定すると、clojure-mode.el のデフォルトの振る舞いのように、す
-べての subform を同じカラムに揃えることができる:
+このオプションを `1` に設定すると、clojure-mode.el のデフォルトの振る舞いのよ
+うに、すべての subform を同じカラムに揃えることができる:
 >
 	(foo
 	 bar
 	 baz)
-<
-このオプションは初期設定ではオフになっている。
->
-	" 初期設定
-	let g:clojure_align_subforms = 0
 <
 FORTRAN							*ft-fortran-indent*
 
@@ -765,7 +760,16 @@ HTML				*ft-html-indent* *html-indent* *html-indenting*
       値	意味 ~
       "zero"	ゼロインデント
       "auto"	自動インデント (ブロックタグのインデントと同じ)
-      "inc"	自動インデント + 1 インデント増加
+      "inc"	自動インデント + 1つ分インデント増加
+
+開いている <tag の後の行のインデント値を設定できる: >
+
+      :let g:html_indent_attribute = 1
+<
+      値	意味 ~
+      1		自動インデント、<tag よりも 1つ分インデント増加
+      2		自動インデント、2つ分インデント増加(デフォルト)
+      > 2	自動インデント、数値分のインデント増加
 
 初期設定では多くのタグで、続くタグのインデントが増加される (このスクリプトの
 "Add Indent Tags" 参照)。そのように扱うタグを追加するには: >
@@ -793,6 +797,16 @@ HTML				*ft-html-indent* *html-indent* *html-indenting*
       <style>  : {カスタマイズ可}   ブロックの最初の号
 	       : GetCSSIndent()	    その他
       <!-- --> : -1
+
+
+MATLAB                 *ft-matlab-indent* *matlab-indent* *matlab-indenting*
+
+MATLAB エディタ/デバッガの言語設定における関数のインデント書式の設定。以下に対
+応する: >
+    :let g:MATLAB_function_indent = {0, 1 or 2 (default)}
+
+0 の場合はクラシック、1 は入れ子関数のインデント、2 はすべての関数のインデント
+である。
 
 
 PHP				*ft-php-indent* *php-indent* *php-indenting*
@@ -856,7 +870,7 @@ N = 1 の場合、次のようになる:
 							*PHP_outdentphpescape*
 PHP エスケープタグを囲まれているPHPではないコードとしてインデントする (PHPエス
 ケープタグにのみ影響): >
-:let g:PHP_outdentphpescape = 0
+    :let g:PHP_outdentphpescape = 0
 -------------
 
 							*PHP_removeCRwhenUnix*
@@ -868,7 +882,7 @@ PHP エスケープタグを囲まれているPHPではないコードとして�
 							*PHP_BracesAtCodeLevel*
 波カッコ {} をその内側と同じインデントレベルにするには: >
     :let g:PHP_BracesAtCodeLevel = 1
-    
+
 すると、次のようになる: >
     if ($foo)
 	{
@@ -884,7 +898,7 @@ NOTE:	このオプションをオンにすると、最適化の一部が効か�
 	ントが少し遅くなる。
 -------------
 
-							*PHP_vintage_case_default_indent*
+					*PHP_vintage_case_default_indent*
 switch() ブロック内の 'case:' と 'default:' をインデントさせるには: >
     :let g:PHP_vintage_case_default_indent = 1
 
@@ -911,6 +925,41 @@ PHP では 'case/default' ブロックの中で波カッコは不要なので、
         ->age()
         ->info();
 
+-------------
+
+					*PHP_IndentFunctionCallParameters*
+複数行の関数呼び出しでパラメーターに追加する追加のインデントレベル。 >
+    let g:PHP_IndentFunctionCallParameters = 1
+
+関数呼び出し引数は 1レベル余分にインデントする。2スペースのインデントの場合: >
+
+    function call_the_thing(
+      $with_this,
+      $and_that
+    ) {
+      $this->do_the_thing(
+          $with_this,
+          $and_that
+      );
+    }
+
+-------------
+
+				*PHP_IndentFunctionDeclarationParameters*
+複数行の関数定義の引数に追加する追加のインデントレベル。 >
+    let g:PHP_IndentFunctionDeclarationParameters = 1
+
+宣言内の関数引数は 1レベル余分にインデントする。2スペースのインデントの場合: >
+
+    function call_the_thing(
+        $with_this,
+        $and_that
+    ) {
+      $this->do_the_thing(
+        $with_this,
+        $and_that
+      );
+    }
 
 
 PYTHON							*ft-python-indent*
@@ -919,11 +968,22 @@ PYTHON							*ft-python-indent*
 後で 'shiftwidth' の値を変更するために変数に式を設定しておく。
 
 開き括弧の後のインデント: >
-	let g:pyindent_open_paren = '&sw * 2'
+	let g:pyindent_open_paren = 'shiftwidth() * 2'
 ネストした括弧の後のインデント: >
-	let g:pyindent_nested_paren = '&sw'
+	let g:pyindent_nested_paren = 'shiftwidth()'
 継続行のインデント: >
-	let g:pyindent_continue = '&sw * 2'
+	let g:pyindent_continue = 'shiftwidth() * 2'
+
+このメソッドは、|searchpair()| を使用して閉じられていない括弧に戻る。これは時々
+遅くなる可能性があるため、150ミリ秒後にタイムアウトする。もし、インデントが正
+しくないことに気付いた時は、より大きなタイムアウトをミリ秒で設定できる: >
+	let g:pyindent_searchpair_timeout = 500
+
+閉じ括弧を遡って振り返るのがまだ遅すぎる場合、特にコピー&ペースト操作の間、あ
+るいは複数行の括弧の内側をインデントする必要がない場合は、この機能を完全に無効
+にすることができる: >
+	let g:pyindent_disable_parentheses_indenting = 1
+
 
 R								*ft-r-indent*
 
@@ -960,6 +1020,10 @@ r_indent_comment_column の値を設定すること。次のようにする:
        paste(x)                                      paste(x)
    }                                             }
 <
+コードは、パターン `'\(&\||\|+\|-\|\*\|/\|=\|\~\|%\|->\)\s*$'` に一致する行の
+後にインデントされる。別のパターンと一致する行の後ろに字下げをしたい場合は、
+|vimrc| で `r_indent_op_pattern` の値を適切に設定する必要がある。
+
 
 SHELL							*ft-sh-indent*
 
@@ -1009,7 +1073,7 @@ Verilogのファイルにだけこの変数を設定するには、次の設定�
 (省略値 'shiftwidth'): >
 
   let b:verilog_indent_width = 4
-  let b:verilog_indent_width = &sw * 2
+  let b:verilog_indent_width = shiftwidth() * 2
 
 さらに、デバッグ目的でverboseモードを有効化できる: >
 
@@ -1056,7 +1120,7 @@ generic/port 文の桁揃えが自動的に行われる。これによって、�
              (sig_b OR sig_c)) OR
              (bus_a(0) AND sig_d);
 
-これをオフにするには次を ~/.vimrc に加える。
+これをオフにするには次を ~/.vimrc に加える。 >
 
   let g:vhdl_indent_rhsassign = 0
 
@@ -1126,11 +1190,11 @@ generic/port 文の桁揃えが自動的に行われる。これによって、�
 
 
 VIM							*ft-vim-indent*
-
+							*g:vim_indent_cont*
 Vim script に対しては継続行(バックスラッシュで始まる行)のインデント量を指定
 する変数が1つある: >
 
-	:let g:vim_indent_cont = &sw * 3
+	:let g:vim_indent_cont = shiftwidth() * 3
 
 shiftwidth の 3 倍が既定値である。
 

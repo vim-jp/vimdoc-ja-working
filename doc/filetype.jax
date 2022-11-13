@@ -1,4 +1,4 @@
-*filetype.txt*  For Vim バージョン 8.1.  Last change: 2018 Apr 18
+*filetype.txt*  For Vim バージョン 9.0.  Last change: 2022 Apr 09
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -12,7 +12,6 @@
 
 |autocmd.txt|も参照。
 
-{Vi にはこれらのコマンドはない}
 
 ==============================================================================
 1. ファイル形式					*filetypes* *file-types*
@@ -35,8 +34,7 @@ NOTE: Vi互換とは全てのオプションがグローバルであることを
 詳細: ":filetype on" コマンドは次のファイルのうち1つをロードする。
 		Amiga	    $VIMRUNTIME/filetype.vim
 		Mac	    $VIMRUNTIME:filetype.vim
-		MS-DOS	    $VIMRUNTIME\filetype.vim
-		RiscOS	    Vim:Filetype
+		MS-Windows  $VIMRUNTIME\filetype.vim
 		Unix	    $VIMRUNTIME/filetype.vim
 		VMS	    $VIMRUNTIME/filetype.vim
 	このファイルはBufNewFileとBufReadイベントに対する自動実行コマンドを定
@@ -140,23 +138,43 @@ NOTE: Vi互換とは全てのオプションがグローバルであることを
 初めに有効化される。
 
 							*filetype-overrule*
-同じ拡張子が2つのファイル形式で使用されている時には、Vimはファイルがどのような
-種類であるかを推測する。これは常に動作するわけではない。ある拡張子に対してどの
-ファイル形式を使うか明示的に指定するのに、幾つかのグローバル変数を使うことがで
-きる:
+同じ拡張子が複数のファイル形式で使用されている時には、Vimはファイルがどのよう
+な種類であるかを推測する。これは常に動作するわけではない。ある拡張子に対してど
+のファイル形式を使うか明示的に指定するのに、幾つかのグローバル変数を使うことが
+できる:
 
 	ファイル名	変数 ~
 	*.asa		g:filetype_asa	|ft-aspvbs-syntax| |ft-aspperl-syntax|
-	*.asp		g:filetype_asp	|ft-aspvbs-syntax| |ft-aspperl-syntax|
 	*.asm		g:asmsyntax	|ft-asm-syntax|
-	*.prg		g:filetype_prg
-	*.pl		g:filetype_pl
-	*.inc		g:filetype_inc
-	*.w		g:filetype_w	|ft-cweb-syntax|
+	*.asp		g:filetype_asp	|ft-aspvbs-syntax| |ft-aspperl-syntax|
+	*.bas		g:filetype_bas	|ft-basic-syntax|
+	*.cfg		g:filetype_cfg
+	*.cls		g:filetype_cls
+	*.csh		g:filetype_csh	|ft-csh-syntax|
+	*.dat		g:filetype_dat
+	*.frm		g:filetype_frm	|ft-form-syntax|
+	*.fs		g:filetype_fs	|ft-forth-syntax|
 	*.i		g:filetype_i	|ft-progress-syntax|
+	*.inc		g:filetype_inc
+	*.lsl		g:filetype_lsl
+	*.m		g:filetype_m	|ft-mathematica-syntax|
+	*.mod		g:filetype_mod
 	*.p		g:filetype_p	|ft-pascal-syntax|
+	*.pl		g:filetype_pl
+	*.pp		g:filetype_pp	|ft-pascal-syntax|
+	*.prg		g:filetype_prg
+	*.r		g:filetype_r
+	*.sig		g:filetype_sig
+	*.sql		g:filetype_sql	|ft-sql-syntax|
+	*.src		g:filetype_src
+	*.sys		g:filetype_sys
 	*.sh		g:bash_is_sh	|ft-sh-syntax|
 	*.tex		g:tex_flavor	|ft-tex-plugin|
+	*.w		g:filetype_w	|ft-cweb-syntax|
+
+いくつかのファイル形式のグローバル変数はファイル形式を検知できなかったときのみ
+使用される:
+	*.r		g:filetype_r	|ft-rexx-syntax|
 
 							*filetype-ignore*
 特定のファイルが検査されないようにするには、g:ft_ignore_pat 変数を使う。この変
@@ -173,7 +191,7 @@ A. デフォルトのファイルタイプの検査をくつがえす。
    この方法はファイルタイプごとにファイルを作ることで機能する。不便な点は
    ファイルがたくさんになってしまうこと。便利な点は適切なディレクトリにファ
    イルを置くだけで機能すること。
-							*ftdetect* 
+							*ftdetect*
    1. ユーザーランタイムディレクトリを作成する。通常は 'runtimepath' オプション
       に記載される最初の項目を使えば良い。次にそのディレクトリに "ftdetect" と
       いうディレクトリを作成する。UNIXを例に挙げる: >
@@ -314,13 +332,13 @@ OSによる「形式」を利用するには自動実行コマンドの検出パ
 
 次の内容が出力される:
 
-	runtimepath=/etc/vim,~/.vim,/usr/local/share/vim/vim60 ~
+	runtimepath=/etc/vim,~/.vim,/usr/local/share/vim/vim82 ~
 
 この時Vimは以下に示すディレクトリとそれ以下にある全てのプラグインを読み込む:
 
 	/etc/vim/plugin/ ~
 	~/.vim/plugin/ ~
-	/usr/local/share/vim/vim60/plugin/ ~
+	/usr/local/share/vim/vim82/plugin/ ~
 
 最後の1つは$VIMRUNTIMEが展開されたものであることに注意。
 
@@ -361,12 +379,12 @@ Note: プラグインマネージャーや |packages| を使っている場合�
    独自のキーマップはプラグインが読み込まれる (つまりその形式のファイルが読み
    込まれる) 前に定義する必要がある。そうすればプラグインはデフォルトキーマッ
    ピングのインストールを行わない。
-						*no_mail_maps*
+					*no_mail_maps* *g:no_mail_maps*
 3. 特定のファイル形式についてキーマップを無効化するならば、そのファイル形式名
    を含むある変数を設定する。ファイル形式 "mail" のキーマップを無効にするには
    次のようにする: >
 	:let no_mail_maps = 1
-<						*no_plugin_maps*
+<					*no_plugin_maps* *g:no_plugin_maps*
 4. ファイル形式による全てのキーマップを無効化するには次の変数を設定する: >
 	:let no_plugin_maps = 1
 <
@@ -403,7 +421,13 @@ Note: プラグインマネージャーや |packages| を使っている場合�
 3.  標準で付属する形式別プラグインの解説		*ftplugin-docs*
 
 
-チェンジログ(CHANGELOG)					*ft-changelog-plugin*
+AWK							*ft-awk-plugin*
+
+@include のような、GNU Awk 固有の機能のサポートは、以下の設定で有効にできる: >
+	let g:awk_is_gawk = 1
+
+
+CHANGELOG						*ft-changelog-plugin*
 
 {訳注: エントリ=日付ごとの区切り アイテム=日付内の項目}
 
@@ -510,7 +534,7 @@ b:changelog_entry_prefix
 ムを加える。なければ新しいエントリとアイテムをファイルの先頭に加える。
 
 
-フォートラン(FORTRAN)					*ft-fortran-plugin*
+FORTRAN							*ft-fortran-plugin*
 
 オプション:
 'expandtab'	.vimrcでfortran_have_tabsが指定されなければ、フォートラン標準
@@ -523,6 +547,23 @@ fortran_have_tabsについての議論とソース形式の判定法について
 |ft-fortran-syntax|を参照。
 
 
+FREEBASIC						*ft-freebasic-plugin*
+
+このプラグインは、FreeBASIC 方言である "fb", "qb", "fblite", "deprecated" の4
+つをそれぞれ別の言語として扱うことを目的としている。
+
+方言は、g:freebasic_forcelang、編集中のファイルの #lang ディレクティブ、または
+$lang メタコマンドで見つかった最初の名前、または最終的に g:freebasic_lang に設
+定される。これらのグローバル変数は、概念的には fbc オプションの -forcelang お
+よび -lang に対応している。方言が明示的に指定されていない場合は、"fb" が使用さ
+れる。
+
+例えば、方言のデフォルトを "fblite" に設定するが、#lang ディレクティブの上書き
+を許可するには、次のコマンドを使用する: >
+
+     let g:freebasic_lang = "fblite"
+
+
 GIT COMMIT                                              *ft-gitcommit-plugin*
 
 現在のコミットの差分をプレビューウィンドウに表示する :DiffGitCached というコマ
@@ -530,7 +571,17 @@ GIT COMMIT                                              *ft-gitcommit-plugin*
 --cached" が実行される。
 
 
-メール(MAIL)						*ft-mail-plugin*
+GPROF							*ft-gprof-plugin*
+
+gprof ファイルタイププラグインは gprof のフラットプロファイルもしくはコールグ
+ラフの関数エントリからコールグラフの関数の詳細へジャンプする <C-]> マッピング
+を定義する。
+
+このマッピングを無効にするには: >
+	let g:no_gprof_maps = 1
+
+
+MAIL							*ft-mail-plugin*
 
 オプション:
 'modeline'	トロイの木馬の危険を避けるのと、「件名」に含まれる "Vim:" がエ
@@ -549,17 +600,17 @@ GIT COMMIT                                              *ft-gitcommit-plugin*
 
 MAN					*ft-man-plugin* *:Man* *man.vim*
 
-マニュアルページを洗練された方法で表示する。ユーザーマニュアルの
-|find-manpage|も参照のこと。
+このプラグインはマニュアルページを洗練された方法で表示する。ユーザーマニュアル
+の詳細な情報は |find-manpage| も参照のこと。
 
-マニュアルページを読み込む前に ":Man" を利用するには、起動vimrcファイルでこの
-スクリプトを読み込む必要がある: >
+マニュアルページが読み込まれる前に |:Man| を利用するには、起動 |vimrc| ファイ
+ルでこのスクリプトを読み込む必要がある: >
 
 	runtime ftplugin/man.vim
 
 オプション:
-'iskeyword'	マニュアルページの名前の上でCTRL-]を使えるようにするために文字
-		'.' が追加される。
+'iskeyword'	マニュアルページの名前の上で CTRL-] の利用をサポートするように
+		するために文字 '.' が追加される。
 
 コマンド:
 Man {name}	{name} についてのマニュアルページを表示する。
@@ -569,24 +620,29 @@ Man {number} {name}
 
 グローバルキーマップ:
 <Leader>K	カーソル下の単語についてのマニュアルページを表示する。
-<Plug>ManPreGetPage  同上、マッピングを使うことを可能にする: >
-			nmap <F1> <Plug>ManPreGetPage<CR>
+<Plug>ManPreGetPage
+		同上、マッピングを使うことを可能にする: >
+			nmap <F1> <Plug>ManPreGetPage
 
 ローカルキーマップ:
 CTRL-]		カーソルの下の単語についてのマニュアルページへ移動する。
 CTRL-T		直前のマニュアルページへ戻る。
-q		":quit" と同じ
+q		|:quit| コマンドと同じ。
 
 水平の代わりに垂直分割を使用するには: >
 	let g:ft_man_open_mode = 'vert'
 新しいタブを使うには: >
 	let g:ft_man_open_mode = 'tab'
 
-折畳を有効にするにはこの変数を使う: >
-  	let g:ft_man_folding_enable = 1
-もしデフォルトの折畳が好みではないのなら、代わりに autocommand を使って望んだ
-折畳スタイルを追加できる。例: >
-        autocmd FileType man setlocal foldmethod=indent foldenable
+折り畳み |folding| を有効にするにはこの変数を使う: >
+	let g:ft_man_folding_enable = 1
+もしデフォルトの折り畳みが好みではないのなら、代わりに |autocommand| を使って
+望んだ折り畳みスタイルを追加できる。例: >
+	autocmd FileType man setlocal foldmethod=indent foldenable
+
+:Man {number} {name} が man {number} {name} のように振る舞い、ページが見つから
+ない場合に man {name} を実行させたくなければ、これを使用する: >
+	let g:ft_man_no_sect_fallback = 1
 
 'keywordprg' を設定して、|K| コマンドを Vim ウィンドウのマニュアルページにもで
 きる: >
@@ -595,21 +651,28 @@ q		":quit" と同じ
 
 MANPAGER				      *manpager.vim*
 
-:Man コマンドを使うと、Vim をマンページにできる(その構文はマンページをハイライ
-ト表示し、CTRL-] でヒットしたリンク先のマンページをたどる)。
+|:Man| コマンドを使うと、Vim をマンページにできる(その構文はマンページをハイラ
+イト表示し、CTRL-] でヒットしたリンク先のマンページをたどる)。
 
 bash, zsh, ksh もしくは dash の場合、設定ファイル (.bashrc, .zshrc, ...) に以
 下の設定を追加する。
 
-	export MANPAGER="vim -M +MANPAGER -"
+	export MANPAGER="vim +MANPAGER --not-a-term -"
 
 (t)csh の場合、設定ファイルに以下の設定を追加する。
 
-	setenv MANPAGER "vim -M +MANPAGER -"
+	setenv MANPAGER "vim +MANPAGER --not-a-term -"
 
 fish の場合、設定ファイルに以下の設定を追加する。
 
-	set -x MANPAGER "vim -M +MANPAGER -"
+	set -x MANPAGER "vim +MANPAGER --not-a-term -"
+
+
+MARKDOWN                                                *ft-markdown-plugin*
+
+折り畳みを有効にするには、次のようにする: >
+	let g:markdown_folding = 1
+<
 
 PDF							*ft-pdf-plugin*
 
@@ -636,6 +699,16 @@ PYTHON						*ft-python-plugin* *PEP8*
 	let g:python_recommended_style = 0
 
 
+QF QUICKFIX					    *qf.vim* *ft-qf-plugin*
+
+"qf" ファイルタイプは quickfix ウィンドウに使用される。|quickfix-window| を参
+照。
+
+quickfix ファイルタイププラグインは quickfix リストを生成したコマンドを
+|status-line| に表示するための設定を含む。この設定を無効にするには、以下のよう
+に設定する: >
+       :let g:qf_disable_statusline = 1
+
 
 R MARKDOWN						*ft-rmd-plugin*
 
@@ -655,6 +728,15 @@ R RESTRUCTURED TEXT					*ft-rrst-plugin*
 される。'formatexpr' が設定されていない方が良い場合は、以下をあなたの |vimrc|
 に追加する: >
 	let rrst_dynamic_comments = 0
+
+
+RESTRUCTUREDTEXT					*ft-rst-plugin*
+
+以下のフォーマット設定がオプションで利用可能である: >
+	setlocal expandtab shiftwidth=3 softtabstop=3 tabstop=8
+
+この機能を有効にするには、あなたのvimrcに次の変数を設定する: >
+	let g:rst_style = 1
 
 
 RPM SPEC						*ft-spec-plugin*

@@ -1,4 +1,4 @@
-*if_mzsch.txt*  For Vim バージョン 8.1.  Last change: 2017 Oct 08
+*if_mzsch.txt*  For Vim バージョン 9.0.  Last change: 2020 Oct 14
 
 
 		  VIMリファレンスマニュアル    by Sergey Khorev
@@ -15,10 +15,7 @@ Vim の MzScheme インターフェイス			*mzscheme* *MzScheme*
 7. 動的ローディング			|mzscheme-dynamic|
 8. MzSchemeのセットアップ		|mzscheme-setup|
 
-{Vi にはこれらのコマンドはありません}
-
-MzScheme インターフェイスは、Vim が |+mzscheme| 機能付きでコンパイルされたとき
-のみ利用できます。
+{Vim が |+mzscheme| 機能付きでコンパイルされたときのみ利用できます}
 
 Brent Fulgham の作業にもとづいています。
 動的ローディングは Sergey Khorev によって追加されました。
@@ -40,19 +37,22 @@ Racket 5.x (5.3.1も含む) の futures と places は Vim から作成された
 							*:mzscheme* *:mz*
 :[range]mz[scheme] {stmt}
 			MzScheme のステートメント {stmt} を実行します。
-			{Vi にはありません}
 
-:[range]mz[scheme] << {endmarker}
+:[range]mz[scheme] << [trim] [{endmarker}]
 {script}
 {endmarker}
 			MzScheme のスクリプト {script} を実行します。
-			Note: このコマンドは MzScheme 用の機能を含めてコンパイ
-			ルされていないときは機能しません。エラーを抑制するには
-			|script-here|を参照してください。
+			Note: MzScheme のサポートを有効にしてコンパイルされて
+			いないとこのコマンドは機能しません。エラーを回避するに
+			は |script-here| を参照してください。
+
+			"<<" の後の [endmarker] を省略した場合は |:append| や
+			|:insert| コマンドのようにドット '.' で {script} を閉
+			じます。詳細については |:let-heredoc| を参照してくださ
+			い。
 
 							*:mzfile* *:mzf*
 :[range]mzf[ile] {file}	{file} 内の MzScheme スクリプトを実行します。
-			{Vi にはありません}
 
 これらのコマンドは、本質的には同じことを行います - つまり、MzScheme のコードを、
 与えられた "現在の範囲" に対して実行します。

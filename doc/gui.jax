@@ -1,4 +1,4 @@
-*gui.txt*       For Vim バージョン 8.1.  Last change: 2018 Mar 06
+*gui.txt*       For Vim バージョン 9.0.  Last change: 2022 Apr 03
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -11,22 +11,22 @@ Vimのグラフィカルユーザーインターフェイス		*gui* *GUI*
 3. マウス制御			|gui-mouse|
 4. GUI選択の作成		|gui-selections|
 5. メニュー			|menus|
-6. 付記				|gui-extras|
-7. シェルコマンド		|gui-shell|
+6. フォント			|gui-font|
+7. 付記				|gui-extras|
+8. シェルコマンド		|gui-shell|
 
 他のGUIドキュメント:
 |gui_x11.txt|	X11 GUIに特有の項目について。
 |gui_w32.txt|	Win32 GUIに特有の項目について。
 
-{Vi にはこれらのコマンドはない}
 
 ==============================================================================
 1. GUIの開始					*gui-start* *E229* *E233*
 
 まずはVimがGUIに対応したバージョンであるか確認する必要がある。それは ":version"
 コマンドで調べることができる。その出力が "with xxx GUI" または "MS-Windows 32
-bit GUI version" を含んでいれば問題ない。ここで "xxx" は X11-Motif,
-X11-Athena, Photon, GTK2, GTK3, などである。
+bit GUI version" を含んでいれば問題ない。ここで "xxx" は X11-Motif, Photon,
+GTK2, GTK3, などである。
 
 どのようにGUIで起動するかは使用しているシステムに依存する。たいていはこのよう
 にしてGUI版のVimを実行できる:
@@ -86,7 +86,7 @@ NOTE: Vimを起動するときに、"-U" 引数を指定せずに "-u NONE" も�
 これらは全て、ユーザーの.vimrcファイルを読み込む、というような、通常のVimの初
 期化の後に実行される。|initialization|を参照。
 しかし、GUIウィンドウは全ての初期化が実行された後に開かれる。
-GUIウィンドウを開いた直後にいくつかのコマンドを実行したいなら、オートコマンド
+GUIウィンドウを開いた直後にいくつかのコマンドを実行したいなら、自動コマンド
 の|GUIEnter|イベントを使用する。例えば: >
 	:autocmd GUIEnter * winpos 100 50
 
@@ -95,10 +95,11 @@ GUIウィンドウを開いた直後にいくつかのコマンドを実行し�
 
 ユーザーの個人的なGUI初期化ファイルを置くのに推奨される場所:
 	Unix		    $HOME/.gvimrc、$HOME/.vim/gvimrc
-	OS/2		    $HOME/.gvimrc、$HOME/vimfiles/gvimrc、$VIM/.gvimrc
-	MS-DOSとWin32       $HOME/_gvimrc、$HOME/vimfiles/gvimrc、$VIM/_gvimrc
-	Amiga		    s:.gvimrc、home:.gvimrc、home:vimfiles:gvimrc、
-			    $VIM/.gvimrc
+	Win32		    $HOME/_gvimrc、$HOME/vimfiles/gvimrc
+			    または $VIM/_gvimrc
+	Amiga		    s:.gvimrc、home:.gvimrc、home:vimfiles:gvimrc
+			    または $VIM/.gvimrc
+	Haiku		    $HOME/config/settings/vim/gvimrc
 
 個人的な初期化ファイルは上記の順に検索され、最初に見つかったものだけが読み込ま
 れる。
@@ -107,8 +108,8 @@ GUI版のVimでだけ意味を持つオプションがある。'guicursor'、'gu
 'guioptions' である。それらは他の全てのオプションと共に|options.txt|で説明され
 ている。
 
-GUIのMotifかAthenaバージョン(GTK+やWin32バージョンではない)を使用しているなら
-ば、多くのXのリソースが有効である。|gui-resources|を参照。
+GUIのMotifバージョン(GTK+やWin32バージョンではない)を使用しているならば、多く
+のXのリソースが有効である。|gui-resources|を参照。
 
 
 端末の設定をする以外に文字の色を設定する方法はハイライトを設定することである。
@@ -147,16 +148,17 @@ Vimは起動時に、スクリーンに合わせてウィンドウの位置を�
 						    *:win* *:winsize* *E465*
 :win[size] {width} {height}
 		{width}(幅)と{height}(高さ)を指定してウィンドウの大きさを設定
-		する。このコマンドは古いコマンド(Obsolete)なので、
-		":set lines=11 columns=22" を使用するようにすること。
+		する。
+		数字の意味がよりわかりやすいので、代わりに `:set lines=11
+		columns=22` を使用することを推奨する。
 		期待したよりも高さが低くなるなら、'guiheadroom' オプションを確
 		認すること。
 
 X Window Systemでは、これらのコマンドでVimのウィンドウの情報を得られる: >
 	:!xwininfo -id $WINDOWID
 	:!xprop -id $WINDOWID
-	:execute '!xwininfo -id ' . v:windowid
-	:execute '!xprop -id ' . v:windowid
+	:execute '!xwininfo -id ' .. v:windowid
+	:execute '!xprop -id ' .. v:windowid
 <
 							*gui-IME* *iBus*
 X で各国の文字を入力するためのインプットメソッドで XIM フレームワークに依るも
@@ -231,7 +233,7 @@ X で各国の文字を入力するためのインプットメソッドで XIM �
 プを好まないなら、'guioptions' に 'h' を含めると、スクロールはカーソルのある行
 の長さに制限される。
 
-							*athena-intellimouse*
+							*motif-intellimouse*
 インテリマウスを持っていて、Xサーバーがホイールをサポートしているなら、gvimで
 テキストを上下にスクロールするのにホイールを使うことができる。これはXFree86
 4.0以降のバージョンで機能する。古いバージョンでもパッチを当てれば利用可能にな
@@ -255,6 +257,8 @@ GUIに切り替わるときに、'mouse' がまだ設定されていなければ
 		|gui-mouse-focus|
 'mousemodel'	マウスのボタンがどのような動作をするか
 'mousehide'	テキストを入力している間マウスポインタを隠す
+'mousemoveevent' マウス移動イベントを有効にし、<MouseMove> をマッピングできる
+		ようにする
 'selectmode'	選択時に選択モードとビジュアルモードのどちらを使うか
 
 素早くこれらを設定するには ":behave" コマンドで行う。
@@ -301,9 +305,9 @@ CTRL-V、CTRL-X、CTRL-Cキーを用いるので、標準の操作と互換性�
 したときに、そのメニューに設定されたコマンドは常に一番上のウィンドウに適用され
 てしまうだろう。
 
-('mouse' が 'c'、'a'、'A' のどれかを含んでいるなら)コマンドラインモードや検索
-モード中にマウスの左ボタンか右ボタンをクリックすることで、コマンドラインの行の
-クリックした位置にカーソルを移動できる。
+('mouse' が 'c' か 'a' を含んでいるなら)コマンドラインモードや検索モード中にマ
+ウスの左ボタンか右ボタンをクリックすることで、コマンドラインの行のクリックした
+位置にカーソルを移動できる。
 
 どのような状況でも、マウスの中ボタンをクリックして、現在の選択を貼り付けること
 ができる。
@@ -399,13 +403,17 @@ Vimウィンドウの下のステータス行でマウスの左ボタンか右�
 するために、マウスの右ボタンを使わずに、Shiftキーを押しながら左ボタンを押す方
 法を設定している。
 
+<MouseMove> にマッピングできるが、マッピングに使うには 'mousemoveevent' を有効
+にしなくてはならない。
+
 修飾キーを使ったマウス操作のマッピングはモードレス選択では機能しない。
 
 
 3.7 ドラッグ&ドロップ						*drag-n-drop*
 
-Vimウィンドウに1つ、あるいは複数のファイルをドラッグ&ドロップすることができ
-る。ファイルは|:drop|コマンドを使ったときのように開かれる。
+Vimウィンドウに1つ、あるいは複数のファイルをドラッグ&ドロップすることができる。
+ファイルは |:drop| コマンドを使ったときのように開かれる。この機能がサポートさ
+れているかどうかは *drop_file* 機能で確認できる: `has('drop_file')`。
 
 Shiftキーを同時に押していると、Vimはカレントディレクトリをドロップされた最初の
 ファイルがあるディレクトリに変更する。Ctrlキーを同時に押していると、ファイルを
@@ -488,8 +496,8 @@ X11でこのレジスタを使うには、|x11-selection|も参照。これは�
 	:let did_install_default_menus = 1
 メニュー項目のSyntax(シンタックス)も無効にしたいなら: >
 	:let did_install_syntax_menu = 1
-Syntax メニューの最初の項目{訳注:「対応形式をメニューに表示」}を使うと、利用可
-能な全てのファイルタイプをメニューに表示できる(読み込みに少し時間がかかるかも
+Syntax メニューの最初の項目 {訳注:「対応形式をメニューに表示」} を使うと、利用
+可能な全てのファイルタイプをメニューに表示できる(読み込みに少し時間がかかるかも
 しれない)。起動時に全てのファイルタイプが表示されているようにしたければ次の行
 を加える: >
 	:let do_syntax_sel_menu = 1
@@ -545,20 +553,12 @@ Win32 GUIバージョンはMotifの切取りメニューをエミュレートす
 
 5.2 新しいメニューの作成				*creating-menus*
 
-				*:me*  *:menu*  *:noreme*  *:noremenu*
-				*:am*  *:amenu* *:an*      *:anoremenu*
-				*:nme* *:nmenu* *:nnoreme* *:nnoremenu*
-				*:ome* *:omenu* *:onoreme* *:onoremenu*
-				*:vme* *:vmenu* *:vnoreme* *:vnoremenu*
-				*:xme* *:xmenu* *:xnoreme* *:xnoremenu*
-				*:sme* *:smenu* *:snoreme* *:snoremenu*
-				*:ime* *:imenu* *:inoreme* *:inoremenu*
-				*:cme* *:cmenu* *:cnoreme* *:cnoremenu*
+				*:me*  *:menu*   *:noreme*  *:noremenu*
 				*E330* *E327* *E331* *E336* *E333*
 				*E328* *E329* *E337* *E792*
 新しいメニュー項目を作るには、":menu" コマンドを使用する。これはほとんど ":map"
-のコマンド群と同じだが最初の引数はメニュー項目の名前であり、'.' で区切ったメ
-ニューとサブメニューのパスとして与えられる。例えば: >
+のコマンド群 (|map-modes| を参照) と同じだが最初の引数はメニュー項目の名前であ
+り、'.' で区切ったメニューとサブメニューのパスとして与えられる。例えば: >
 
    :menu File.Save  :w<CR>
    :inoremenu File.Save  <C-O>:w<CR>
@@ -569,10 +569,16 @@ Win32 GUIバージョンはMotifの切取りメニューをエミュレートす
 う。"Big Changes" は "Delete All Spaces" という項目を含むサブメニューを持って
 いて、その項目を選択すると操作が実行される。
 
+端末モード用のメニューを作成するには、キーマッピング (|:tmap|) とは異なり、
+|:tmenu| ではなく |:tlmenu| を使用する。これは、|:tmenu| がすでにメニューのツー
+ルチップを定義するために使用されているためである。|terminal-typing| を参照。
+
 メニュー名での特殊文字:
+							*menu-shortcut*
 	&	この文字の次の文字はショートカットキーである。どのショートカッ
 		トキーも(サブ)メニューの中で1度だけしか使用されていないことを
 		確認すること。メニュー名に "&" を入れるには "&&" とする。
+							*menu-text*
 	<Tab>	メニューの名前をそこで区切って以降を右詰めにする。実行する操作
 		をそろえて表示するのに便利である。使いやすいように文字として
 		"<Tab>" をそのまま書けばいいようになっている。本当のTab文字を
@@ -586,9 +592,10 @@ Win32 GUIバージョンはMotifの切取りメニューをエミュレートす
 のメニューを使用できる。Openの項目は "Open     :e" のように表示される。":e" は
 右詰めされ、"O" にはショートカットであることを示すために下線が引かれる。
 
-":amenu" コマンドは全てのモードで使えるメニューの項目を1度に定義することができ
-る。コマンドを正確に機能させるために、いくつかのモード用に自動的に文字が付加さ
-れる:
+					*:am*  *:amenu*  *:an*      *:anoremenu*
+":amenu" コマンドは端末モードを除く全てのモードで使えるメニューの項目を1度に定
+義することができる。コマンドを正確に機能させるために、いくつかのモード用に自動
+的に文字が付加される:
 	モード			前に付加	後ろに付加	~
 	ノーマルモード		なし		なし
 	ビジュアルモード	<C-C>		<C-\><C-G>
@@ -618,6 +625,11 @@ CTRL-Oの仕様による。2つ以上のコマンドを使うには、":imenu" �
 
    :amenu Insert.foobar   "='foobar'<CR>P
 
+特殊なテキスト <Cmd> は "コマンドメニュー" を開始し、モードを変更せずにコマン
+ドを直接実行する。":...<CR>" を使う箇所で代わりに "<Cmd>...<CR>" を使うことが
+できる。詳細は |<Cmd>| を参照。例: >
+	anoremenu File.Next <Cmd>next<CR>
+
 Note: 'cpoptions' の中の '<' フラグと 'k' フラグが適用される(含まれていたとき
 には、<>による特殊キーの書式や生のキーコードは認識されない)。
 
@@ -625,6 +637,34 @@ Note: コマンドラインモードでの<Esc>はマッピングで使用され
 キャンセルするのではなく)コマンドを実行する。これはVi互換である。コマンドライ
 ンモードを終了するにはCTRL-Cを使用する。
 {訳注: |c_<Esc>|を参照}
+
+		*:nme* *:nmenu*  *:nnoreme* *:nnoremenu* *:nunme* *:nunmenu*
+メニューコマンドが "n" で始まるものはノーマルモードに作用する。|mapmode-n|
+
+		*:ome* *:omenu*  *:onoreme* *:onoremenu* *:ounme* *:ounmenu*
+メニューコマンドが "o" で始まるものはオペレータ待機モードに作用す
+る。|mapmode-o|
+
+		*:vme* *:vmenu*  *:vnoreme* *:vnoremenu* *:vunme* *:vunmenu*
+メニューコマンドが "v" で始まるものはビジュアルモードに作用する。|mapmode-v|
+
+		*:xme* *:xmenu*  *:xnoreme* *:xnoremenu* *:xunme* *:xunmenu*
+メニューコマンドが "x" で始まるものはビジュアルモードと選択モードに作用す
+る。|mapmode-x|
+
+		*:sme* *:smenu*  *:snoreme* *:snoremenu* *:sunme* *:sunmenu*
+メニューコマンドが "s" で始まるものは選択モードに作用する。|mapmode-s|
+
+		*:ime* *:imenu*  *:inoreme* *:inoremenu* *:iunme* *:iunmenu*
+メニューコマンドが "i" で始まるものは挿入モードに作用する。|mapmode-i|
+
+		*:cme* *:cmenu*  *:cnoreme* *:cnoremenu* *:cunme* *:cunmenu*
+メニューコマンドが "c" で始まるものはコマンドラインモードに作用す
+る。|mapmode-c|
+
+		*:tlm* *:tlmenu* *:tln*     *:tlnoremenu* *:tlu*   *:tlunmenu*
+メニューコマンドが "tl" で始まるものは端末{訳註:ノーマルとジョブ両方の}モード
+に作用する。|mapmode-t|
 
 						*:menu-<silent>* *:menu-silent*
 実行したコマンドをコマンドラインに表示しないようなメニューを定義するには、最初
@@ -719,9 +759,9 @@ Note: 区切りの定義にはコマンドの指定が必要である。その�
 でいい。
 
 							*gui-toolbar*
-ツールバーは今のところWin32、Athena、Motif、GTK+ (X11)、Photon GUIで利用可能で
-ある。いずれは他のGUIでも使えるようになるだろう。標準のツールバーはmenu.vimで
-定義されている。
+ツールバーは今のところWin32、Motif、GTK+ (X11)、Photon GUIで利用可能である。い
+ずれは他のGUIでも使えるようになるだろう。標準のツールバーはmenu.vimで定義され
+ている。
 ツールバーの表示は 'guioptions' の文字 'T' によって制御される。したがって、メ
 ニューとツールバーを同時に、あるいはどちらかだけを表示することもできるし、両方
 とも非表示にすることもできる。
@@ -784,8 +824,7 @@ Note: 区切りの定義にはコマンドの指定が必要である。その�
 12    SaveSesn		現在の状態をセッションファイルに保存する
 13    NewSesn		新しいセッションファイルに保存する
 14    LoadSesn		セッションファイルを読み込む
-15    RunScript		Vim scriptとして実行するためにファイルをブラウズ
-			する
+15    RunScript		Vim scriptとして実行するためにファイルをブラウズする
 16    Replace		置換コマンドのためのプロンプト
 17    WinClose		現在のウィンドウを閉じる
 18    WinMax		現在のウィンドウに使用する行数を最大にする
@@ -836,9 +875,9 @@ Note: これらのコマンドを実行しているとき、Vim はどのモー�
 い。
 
 							*popup-menu*
-Win32、GTK+、Motif、Athena、Photon GUIでは、特別なメニュー "PopUp" を定義する
-ことができる。これは、'mousemodel' がpopupあるいはpopup_setposに設定されている
-ときに、マウスの右ボタンが押されると表示されるメニューである。
+Win32、GTK+、Motif、Photon GUIでは、特別なメニュー "PopUp" を定義することがで
+きる。これは、'mousemodel' がpopupあるいはpopup_setposに設定されているときに、
+マウスの右ボタンが押されると表示されるメニューである。
 例: >
     nnoremenu 1.40 PopUp.&Paste        "+gP
     menu PopUp
@@ -856,6 +895,8 @@ Win32、GTK+、Motif、Athena、Photon GUIでは、特別なメニュー "PopUp"
 *	そのメニュー項目は再マッピングを避けるために "nore" を付けて定義された
 &	そのメニュー項目は再マッピングをスクリプトローカルに限定するために
 	"<script>" を付けて定義された
+s	そのメニュー項目のマッピングが実行されたとき、表示がないように
+	"<silent>" を付けて定義された
 -	そのメニュー項目は非表示である
 
 NOTE: menuコマンドでメニューの名前を入力しているときに<Tab>を打つと名前が補完
@@ -873,6 +914,16 @@ NOTE: menuコマンドでメニューの名前を入力しているときに<Tab
 				ニューを実行する。例: >
 	:emenu File.Exit
 
+:[range]em[enu] {mode} {menu}	上記と同様だが、{mode} 用のメニューを実行する:
+				    'n': |:nmenu|  ノーマルモード
+				    'v': |:vmenu|  ビジュアルモード
+				    's': |:smenu|  選択モード
+				    'o': |:omenu|  オペレータ待機モード
+				    't': |:tlmenu| 端末モード
+				    'i': |:imenu|  挿入モード
+				    'c': |:cmenu|  コマンドラインモード
+
+
 CUI版のvimをWANT_MENUを定義してコンパイルしたなら、:emenuを使ってGUIのときと同
 じように便利なメニューを使用できる。その際に 'wildmenu' を設定しておくと便利で
 ある。使用例は|console-menus|を参照。
@@ -885,13 +936,6 @@ CUI版のvimをWANT_MENUを定義してコンパイルしたなら、:emenuを�
 
 						*:unme*  *:unmenu*
 						*:aun*   *:aunmenu*
-						*:nunme* *:nunmenu*
-						*:ounme* *:ounmenu*
-						*:vunme* *:vunmenu*
-						*:xunme* *:xunmenu*
-						*:sunme* *:sunmenu*
-						*:iunme* *:iunmenu*
-						*:cunme* *:cunmenu*
 メニュー項目やサブメニュー全体を削除するには、unmapコマンドによく似たunmenuコ
 マンドを使用する。例えば: >
     :unmenu! Edit.Paste
@@ -907,7 +951,9 @@ NOTE: umenuコマンドでメニューの名前を入力しているときに<Ta
 			" り除く
 	:unmenu! *	" 挿入モードとコマンドラインモードの全てのメニューを取
 			" り除く
-	:aunmenu *	" 全てのモードの全てのメニューを取り除く
+	:aunmenu *	" 端末モードを除く全てのモードの全てのメニューを取り除
+			" く
+	:tlunmenu *	" 端末モードの全てのメニューを取り除く
 
 メニューバーを非表示にするには: >
 	:set guioptions-=m
@@ -947,6 +993,7 @@ NOTE: umenuコマンドでメニューの名前を入力しているときに<Ta
 は <CR> キーである。|<>|)
 
 
+							*tooltips* *menu-tips*
 5.8 ツールチップとメニューチップ
 
 ユーザーマニュアルの|42.4|を参照すること。
@@ -961,6 +1008,8 @@ NOTE: umenuコマンドでメニューの名前を入力しているときに<Ta
 							*:tunmenu* *:tu*
 :tu[nmenu] {menupath}		メニューやツールバーのチップを削除する。
 				{X11とWin32 GUIのみ}
+
+Note: 端末モードのメニューを作成するには、代わりに  |:tlmenu| を使用する。
 
 メニューの項目にチップが定義されていて、マウスがその項目の上にあるとき、その
 チップがコマンドラインに表示される。それはWindows標準でステータスバーに表示さ
@@ -1003,8 +1052,7 @@ Win32とGTK+ GUIでは、カーソルの位置にメニューをポップアッ�
 				メニューは少なくとも1つ以上の項目を持っている
 				必要がある。メニューバーに表示されている必要は
 				ない (|hidden-menus| を参照)。
-				{Win32 および GTK GUI、もしくは +insert_expand
-				付きでコンパイルした場合の端末内で利用可能}
+				{Win32 および GTK GUI もしくは端末内で利用可能}
 
 :popu[p]! {name}		上記と同様だが、カーソル位置でなくマウスポイン
 				タの位置にメニューを表示する。
@@ -1028,7 +1076,140 @@ Note: GUI では、:popup コマンドは選択がなされる前に直ちに終
 Note: ']' で始まるメニュー項目はメニューバーに表示されない。
 
 ==============================================================================
-6. 付記							*gui-extras*
+6. フォント
+
+このセクションではフォント関連のオプションについて説明する。
+
+GUIFONT							*gui-font*
+
+'guifont' はどのフォントを使うかをVimに指示するオプションである。最も単純な形
+式は、フォント名のみである。コンマで区切られたフォント名のリストにすることもで
+きる。最初の有効なフォントが使用される。有効なフォントが見つからない場合は、エ
+ラーメッセージが表示される。
+
+'guifontset' がサポートされているシステム(X11)で、かつ 'guifontset' が空ではな
+い時は、'guifont' は使用されない。|xfontset| を参照。
+
+Note: GTK GUI については、不正な名前に対してエラーは発生せず、常にリストの最初
+の要素が選ばれ、利用される。これは、GTK GUIが与えられた名前からフォントを特定
+するのではなく、パターンを構成するのに用い、利用可能なフォントからそのパターン
+を用いて最もよくマッチするフォントを探そうとするからである。これによりマッチン
+グは決して失敗しない。不正な名前を与えたとしても、名前以外のフォント属性により
+マッチングが行われるため、問題とはならない。
+
+コンマの後の空白は無視される。フォント名の中にコンマを指定するには、コンマの前
+に '\' を置くこと。さらにオプションの値の中で空白や '\' を使うには、それらの前
+に余分に '\' を置かなければならない。|option-backslash| も参照。例えば >
+    :set guifont=Screen15,\ 7x13,font\\,with\\,commas
+    {訳注: 結果は "Screen15, 7x13,font\,with\,commas"}
+<とすると、まずVimはフォント "Screen15" を使おうとし、だめなら代わりに"7x13"
+を、そして "font,with,commas" を使おうとする。
+
+フォントをどれも読み込めなかったら現在の設定のままになる。空のフォントリストが
+与えられると、他のリソース設定を試してみて (X では Vim.font リソースが使われ
+る)、それがだめなら、必ず存在するはずの組み込みの既定フォントを試す (Xの場合は
+"7x13")。指定されるフォント名は "normal" な{訳注: 太字や斜字体でない} フォント
+でなければならない。Vim は関連する太字体や斜字体を見つけようとする。
+
+Win32, GTK, Motif, Mac OS および Photon の場合: >
+    :set guifont=*
+これはフォント選択ダイアログを開く。そこで望みのフォントを選択することができ
+る。
+
+フォント名は使っているGUIに依存する。様々なシステムに対して 'guifont'を設定す
+る方法については |setting-guifont| を参照。
+
+GTK+ 2 と 3 ではフォント名は次のようになる: >
+    :set guifont=Andale\ Mono\ 11
+これだけである。もうXLFDは受け付けない。中国語の場合は以下の記述でうまくいくと
+報告されている: >
+    if has("gui_gtk2")
+      set guifont=Bitstream\ Vera\ Sans\ Mono\ 12,Fixed\ 12
+      set guifontwide=Microsoft\ Yahei\ 12,WenQuanYi\ Zen\ Hei\ 12
+    endif
+<
+(GTK+ 3 GUIの場合は gui_gtk2 を gui_gtk3 に置き換える)
+
+Mac OSXでは次のようにする: >
+    :set guifont=Monaco:h10
+
+等幅フォント						*E236*
+
+Note フォントは等幅でなければならない (全ての文字が同じ幅でなければならない)。
+例外はGTKである。どんなフォントでも受け付けるが、等幅フォントがもっともきれい
+に見える。
+
+X11でフォントのプレビューをするには、プログラム "xfontsel" が使えるかもしれな
+い。"xlsfonts" は、使用可能な全てのフォントのリストを与える。
+
+Win32のGUIについて					*E244* *E245*
+- フォント名には以下のオプションを指定できる。(オプションを区切るには ':' を使
+  用すること)。
+	hXX - 文字高が XX (単位はポイント。浮動小数点数でもよい)
+	wXX - 文字幅が XX (単位はポイント。浮動小数点数でもよい)
+	WXX - ウェイトが XX (下記のウェイトに関する Note を参照)
+	b   - ボールド (太字体)。これは、ウェイトを 700 に設定するのと同じであ
+	      る。
+	i   - イタリック (斜字体)
+	u   - 下線付き
+	s   - 打ち消し (文字を横切る線付き)
+	cXX - 文字セットが XX。有効な文字セットは: ANSI, ARABIC, BALTIC,
+	      CHINESEBIG5, DEFAULT, EASTEUROPE, GB2312, GREEK, HANGEUL,
+	      HEBREW, JOHAB, MAC, OEM, RUSSIAN, SHIFTJIS, SYMBOL, THAI,
+	      TURKISH および VIETNAMESE である。通常は "cDEFAULT"を使用する。
+	qXX - 品質が XX。有効な品質名は: PROOF, DRAFT, ANTIALIASED,
+	      NONANTIALIASED, CLEARTYPE または DEFAULT である。通常は
+	      "qDEFAULT" を使用する。
+	      いくつかの品質値はレガシーなOSではサポートされていない。
+- スペースの代わりに '_' を使用できるので、スペースをエスケープするためにバッ
+  クスラッシュを使用する必要はない。
+例: >
+    :set guifont=courier_new:h12:w5:b:cRUSSIAN
+    :set guifont=Andale_Mono:h7.5:w4.5
+
+|font-sizes| も参照。
+
+ウェイトに関する Note:
+フォントにはさまざまなウェイトがある。Windowsの "標準" ウェイトは 400 の値を持
+ち、未指定のままであれば、これがフォントを検索するときに使用される値である。
+Windowsは多くの場合、フォント名よりも高い優先順位でフォントのウェイトに基づい
+てフォントを照合する。つまり、Light または ExtraLight 異体を指定しても、Book
+または Medium 異体を意味するフォント名が使用されることがある。あなたがより重い
+ウェイトで置換されることを経験しているならば、より低いウェイト値を明示的に設定
+することはこの望まれない置換に対して軽減するかもしれない。
+
+
+GUIFONTWIDE						*gui-fontwide*
+
+空でない場合、'guifontwide' は、全角文字に使用されるフォントのコンマ区切りリス
+トを指定する。ロードできる最初のフォントが使用される。
+
+Note: これらのフォントのサイズは 'guifont' で指定されたものの2倍の幅かつ同じ高
+さでなければならない。不一致があると、テキストは正しく描画されない。
+
+GTK+ 以外のすべてのGUIバージョン:
+
+'guifontwide' は、'encoding' が "utf-8" に設定されていて、かつ 'guifontset' が
+空または無効の場合にのみ使用される。
+'guifont' が設定されていて、その中に有効なフォントが見つかり、'guifontwide' が
+空の場合、Vimは一致する倍幅フォントを見つけようと試み、それに 'guifontwide' を
+設定する。
+
+GTK+ GUIのみ:  			    	*guifontwide_gtk*
+
+設定されており、それが適切な値であるとき、'encoding' が "utf-8" でなくても常に
+2倍幅文字に対して 'guifontwide' が使われる。Vimは自動的に 'guifontwide' に適合
+する値を探そうとはしない。'guifontwide' が空ならばPango/Xftが 'guifont' で利用
+できない文字に対するフォントを選ぶ。そのため、Pango/Xftが選んだ値を上書きした
+いのでない限り、'guifontwide' を設定する必要はまったくない。
+
+Windows +multibyteのみ:			*guifontwide_win_mbyte*
+
+有効な値が設定されている場合、'guifont' の代わりに 'guifontwide' がIME の表示
+に使われる。
+
+==============================================================================
+7. 付記							*gui-extras*
 
 このセクションではGUIに関連したその他の特徴を説明する。
 
@@ -1043,7 +1224,8 @@ Note: ']' で始まるメニュー項目はメニューバーに表示されな�
        入力される。Shiftキーなら "<S-Del>"。}
 
 - GUIでは、修飾キーのSHIFT、CTRL、ALT(META)は特殊キーやマウスイベントのマッピ
-  ングで使用できる。例えば、:map <M-LeftDrag> <LeftDrag>
+  ングで使用できる。
+  例えば、:map <M-LeftDrag> <LeftDrag>
 
 - GUIでは、いくつかの普通のキーにマッピング等で修飾キーを付けて使用できる。そ
   のようなキーは<Space>、<Tab>、<NL>、<CR>、<Esc>である。
@@ -1076,7 +1258,7 @@ Note: ']' で始まるメニュー項目はメニューバーに表示されな�
 http://www.lexikan.com/mincho.htm
 
 ==============================================================================
-7. シェルコマンド					*gui-shell*
+8. シェルコマンド					*gui-shell*
 
 X11 GUIでは外部プログラムはgvimウィンドウの中で実行される。
 |gui-pty|を参照。

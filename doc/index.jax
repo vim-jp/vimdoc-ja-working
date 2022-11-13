@@ -1,4 +1,4 @@
-*index.txt*     For Vim バージョン 8.1.  Last change: 2018 Apr 19
+*index.txt*     For Vim バージョン 9.0.  Last change: 2022 Oct 15
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -18,12 +18,14 @@ Tip: 機能で検索するときは、検索コマンドを使用する。例え
    2.3. 角括弧コマンド			|[|
    2.4. 'g' で始まるコマンド		|g|
    2.5. 'z' で始まるコマンド		|z|
+   2.6. オペレータ待機モード		|operator-pending-index|
 3. ビジュアルモード			|visual-index|
 4. コマンドライン編集			|ex-edit-index|
-5. EX コマンド				|ex-cmd-index|
+5. 端末ジョブモード			|terminal-job-index|
+6. EX コマンド				|ex-cmd-index|
 
-オプションの概略は help.txt を参照。|option-list|
-組み込み関数の詳細は|functions|を参照。
+オプションの概略は|option-list|を参照。
+組み込み関数の概略は|functions|を参照。
 Vim変数の一覧は|vim-variable|を参照。
 全ヘルプ項目の一覧は |help-tags| を参照。
 
@@ -72,20 +74,24 @@ Vim変数の一覧は|vim-variable|を参照。
 				した単語で補完する。
 |i_CTRL-Q|	CTRL-Q		CTRL-V と同じ。端末制御に使用されている場合を
 				除く。
-|i_CTRL-R|	CTRL-R {0-9a-z"%#*:=}
+|i_CTRL-SHIFT-Q|  CTRL-SHIFT-Q {char}
+				CTRL-Q と同様だが |modifyOtherKeys| が有効
+|i_CTRL-R|	CTRL-R {register}
 				レジスタに保存されている文字列を挿入。
-|i_CTRL-R_CTRL-R| CTRL-R CTRL-R {0-9a-z"%#*:=}
+|i_CTRL-R_CTRL-R| CTRL-R CTRL-R {register}
 				レジスタに保存されている文字列そのものを挿入。
-|i_CTRL-R_CTRL-O| CTRL-R CTRL-O {0-9a-z"%#*:=}
+|i_CTRL-R_CTRL-O| CTRL-R CTRL-O {register}
 				レジスタに保存されている文字列そのものを挿入。
 				インデントは挿入しない。
-|i_CTRL-R_CTRL-P| CTRL-R CTRL-P {0-9a-z"%#*:=}
+|i_CTRL-R_CTRL-P| CTRL-R CTRL-P {register}
 				レジスタに保存されている文字列そのものを挿入。
 				インデントは固定。
-		CTRL-S		(端末制御に使用)
+		CTRL-S		未使用、もしくは端末制御に使用
 |i_CTRL-T|	CTRL-T		現在の行に shiftwidth 分のインデントを挿入する。
 |i_CTRL-U|	CTRL-U		現在の行に挿入したすべての文字を削除する。
 |i_CTRL-V|	CTRL-V {char}	続いて入力する数字以外の文字をそのまま挿入する
+|i_CTRL-SHIFT-V|  CTRL-SHIFT-V {char}
+				CTRL-V と同様だが |modifyOtherKeys| が有効
 |i_CTRL-V_digit| CTRL-V {number} 続いて入力する3桁の10進数で1バイト文字を指定
 				 して挿入
 |i_CTRL-W|	CTRL-W		カーソルの前にある単語を削除する。
@@ -128,9 +134,9 @@ Vim変数の一覧は|vim-variable|を参照。
 |i_<Down>|	<Down>		カーソルを1行下へ移動。
 |i_<S-Down>|	<S-Down>	<PageDown> と同じ。
 |i_<Home>|	<Home>		カーソルを行の先頭へ移動。
-|i_<C-Home>|	<C-Home>	カーソルを行の先頭へ移動。
+|i_<C-Home>|	<C-Home>	カーソルをファイルの先頭へ移動。
 |i_<End>|	<End>		カーソルを行末へ移動。
-|i_<C-End>|	<C-End>		カーソルを行末へ移動。
+|i_<C-End>|	<C-End>		カーソルをファイルの末尾へ移動。
 |i_<PageUp>|	<PageUp>	1画面上へスクロール。
 |i_<PageDown>|	<PageDown>	1画面下へスクロール。
 |i_<F1>|	<F1>		<Help> と同じ。
@@ -162,9 +168,23 @@ CTRL-X サブモードで使用するコマンド			*i_CTRL-X_index*
 |i_CTRL-X_CTRL-Y|	CTRL-X CTRL-Y	ウィンドウを下へスクロール。
 |i_CTRL-X_CTRL-U|	CTRL-X CTRL-U	'completefunc' による補完
 |i_CTRL-X_CTRL-V|	CTRL-X CTRL-V	コマンドラインと同様な補完
+|i_CTRL-X_CTRL-Z|	CTRL-X CTRL-Z	テキストをそのままにして、補完を停止
 |i_CTRL-X_CTRL-]|	CTRL-X CTRL-]	タグを補完。
 |i_CTRL-X_s|		CTRL-X s	スペリング補完
-{|+insert_expand| 機能付きでコンパイルしたときのみ利用可能}
+
+補完モードのコマンド(|popupmenu-keys| を参照)
+
+|complete_CTRL-E| CTRL-E	補完を中止し元のテキストに戻す
+|complete_CTRL-Y| CTRL-Y	選択した候補を受け入れて補完を中止する
+		CTRL-L		現在の候補から1文字を挿入する
+		<CR>		現在の選択した候補を挿入する
+		<BS>		1文字削除し候補を検索する
+		CTRL-H		<BS> と同じ
+		<Up>		上の候補を選択する
+		<Down>		下の候補を選択する
+		<PageUp>	数個上の候補を選択する
+		<PageDown>	数個下の候補を選択する
+		その他		補完を中止し入力された文字を挿入する
 
 ==============================================================================
 2. ノーマルモード					*normal-index*
@@ -203,9 +223,9 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |CTRL-N|	CTRL-N		1  "j" と同じ。
 |CTRL-O|	CTRL-O		1  N 個前のジャンプリストの場所へジャンプする。
 |CTRL-P|	CTRL-P		1  "k" と同じ。
-		CTRL-Q		   (端末制御に使用)
+		CTRL-Q		   未使用、もしくは端末制御に使用
 |CTRL-R|	CTRL-R		2  'u' でアンドゥした変更をリドゥする。
-		CTRL-S		   (端末制御に使用)
+		CTRL-S		   未使用、もしくは端末制御に使用
 |CTRL-T|	CTRL-T		   N 個前のタグリストの場所へジャンプする。
 |CTRL-U|	CTRL-U		   ウィンドウを N 行上へスクロール。
 				   (省略時は半画面)
@@ -229,10 +249,9 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 				2  Nmove のテキストを {filter} コマンドでフィ
 				   ルタする。
 |!!|		!!{filter}	2  N 行を {filter} コマンドでフィルタする。
-|quote|		"{a-zA-Z0-9.%#:-"}  削除、ヤンク、プットコマンドでレジスタ
-				   {a-zA-Z0-9.%#:-"} (大文字は既存のレジスタに
-				   追加する)を指定するために使用する。({.%#:}
-				   はプットコマンドでのみ有効)
+|quote|		"{register}  	   削除、ヤンク、プットコマンドで {register}
+				   を指定するために使用する。
+				   ({.%#:} はプットコマンドでのみ有効)
 |#|		#		1  カーソル位置の単語で後方検索し、N 番目に見
 				   つかった場所へ移動。
 |$|		$		1  カーソルを N 行下の行末へ移動。
@@ -268,7 +287,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |/|		/{pattern}<CR>	1  {pattern} で前方検索し、N 番目に見つかった
 				   位置へ移動。
 |/<CR>|		/<CR>		1  最後の検索の {pattern} で前方検索。
-|count|		0		1  カーソルを行頭文字へ移動。
+|0|		0		1  カーソルを行頭文字へ移動。
 |count|		1		   カウントを指定するためにコマンドの前に入力
 |count|		2			"
 |count|		3			"
@@ -331,9 +350,9 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |X|		["x]X		2  カーソルの前にある N 文字を削除する[レジスタ
 				   x に保存]。
 |Y|		["x]Y		   N 行[レジスタ x に]ヤンクする; "yy" と同じ。
-|ZZ|		ZZ		   カレントファイルが編集されていたら、保存し
-				   て編集を終了する。
-|ZQ|		ZQ		   カレントファイルの編集を終了する。
+|ZZ|		ZZ		   バッファが変更されていれば保存し、ウィンドウ
+				   を閉じる。
+|ZQ|		ZQ		   保存せずにウィンドウを閉じる。
 |[|		[{char}		   大括弧コマンド (下の|[|を参照)
 		\		   未使用
 |]|		]{char}		   大括弧コマンド (下の|]|を参照)
@@ -409,12 +428,11 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |<C-End>|	<C-End>		1  "G" と同じ。
 |<C-Home>|	<C-Home>	1  "gg" と同じ。
 |<C-Left>|	<C-Left>	1  "b" と同じ。
-|<C-Home>|	<C-Home>	2  "gg" と同じ。
-|<C-Left>|	<C-Left>	2  "b" と同じ。
 |<C-LeftMouse>|	<C-LeftMouse>	   マウスクリック位置のキーワードで ":ta" を実
 				   行する。
 |<C-Right>|	<C-Right>	1  "w" と同じ。
 |<C-RightMouse>| <C-RightMouse>	   "CTRL-T" と同じ。
+|<C-Tab>|	<C-Tab>		   "g<Tab>" と同じ。
 |<Del>|		["x]<Del>	2  "x" と同じ。
 |N<Del>|	{count}<Del>	   入力した {count} から最後の数字を削除する。
 |<Down>|	<Down>		1  "j" と同じ。
@@ -528,10 +546,8 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |CTRL-W_CTRL-]|	CTRL-W CTRL-]	   "CTRL-W ]" と同じ。
 |CTRL-W_CTRL-^|	CTRL-W CTRL-^	   "CTRL-W ^" と同じ。
 |CTRL-W_CTRL-_|	CTRL-W CTRL-_	   "CTRL-W _" と同じ。
-|CTRL-W_quote|	CTRL-W "	   端末ウィンドウ: レジスタをペーストする。
 |CTRL-W_+|	CTRL-W +	   カレントウィンドウの高さを N 行高くする。
 |CTRL-W_-|	CTRL-W -	   カレントウィンドウの高さを N 行低くする。
-|CTRL-W_.|	CTRL-W .	   端末ウィンドウ: CTRL-W を入力する。
 |CTRL-W_:|	CTRL-W :	   |:| と同じ。コマンドラインを編集する。
 |CTRL-W_<|	CTRL-W <	   カレントウィンドウの幅を N 列狭める
 |CTRL-W_=|	CTRL-W =	   すべてのウィンドウの高さと幅を同じにする。
@@ -540,8 +556,6 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |CTRL-W_J|	CTRL-W J	   カレントウィンドウを最も下に移動する。
 |CTRL-W_K|	CTRL-W K	   カレントウィンドウを最も上に移動する。
 |CTRL-W_L|	CTRL-W L	   カレントウィンドウを最も右に移動する。
-|CTRL-W_N|	CTRL-W N	   端末ウィンドウ: 端末ノーマルモードに移動す
-				   る。
 |CTRL-W_P|	CTRL-W P	   プレビューウィンドウへ移動する。
 |CTRL-W_R|	CTRL-W R	   ウィンドウ位置を上向きに N 回転させる。
 |CTRL-W_S|	CTRL-W S	   "CTRL-W s" と同じ。
@@ -575,6 +589,10 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |CTRL-W_gF|	CTRL-W g F	   カーソル位置のファイル名のファイルを新しい
 				   タブページで開き、ファイル名の後に書かれた
 				   行番号にジャンプする。
+|CTRL-W_gt|	CTRL-W g t	   `gt` と同じ: 次のタブページに移動
+|CTRL-W_gT|	CTRL-W g T	   `gT` と同じ: 前のタブページに移動
+|CTRL-W_g<Tab>|	CTRL-W g <Tab>	   |g<Tab>| と同じ: 最後にアクセスしたタブペー
+				   ジに移動。
 |CTRL-W_h|	CTRL-W h	   N 個左のウィンドウに移動(一番左のウィンドウ
 				   でストップ)
 |CTRL-W_i|	CTRL-W i	   ウィンドウを分割し、カーソル位置の識別子の
@@ -660,7 +678,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |[p|		[p		2  "P" と同様、さらに現在の行と同じインデント
 				   にする
 |[s|		[s		1  前のスペルミスのある単語へ移動
-|[z|		[z		1  開いている折畳の最初の行へ移動
+|[z|		[z		1  開いている折り畳みの最初の行へ移動
 |[{|		[{		1  後方へ N 番目に現れた対応する括弧のない '{'
 				   へカーソルを移動。
 |[<MiddleMouse>| [<MiddleMouse>	2  "[p" と同じ。
@@ -707,7 +725,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |]p|		]p		2  "p" と同様、さらにカレントラインにインデン
 				   トをあわせる
 |]s|		]s		1  次のスペルミスのある単語へ移動
-|]z|		]z		1  開いている折畳の最後の行へ移動
+|]z|		]z		1  開いている折り畳みの最後の行へ移動
 |]}|		]}		1  カーソルを N 先のマッチしていない '}' へ移
 				   動。
 |]<MiddleMouse>| ]<MiddleMouse>	2  "]p" と同じ。
@@ -779,9 +797,10 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 				   リーン行で N 行下へ移動
 |gk|		gk		1  "k" と同様、ただし 'wrap' がオンの時はスク
 				   リーン行で N 行上へ移動
+|gm|		gm		1  スクリーン行の中央の文字へジャンプ
+|gM|		gM		1  テキスト行の中央の文字へジャンプ
 |gn|		gn	      1,2  最後に使われた検索パターンを前方検索し、そ
 				   れをビジュアル選択する。
-|gm|		gm		1  スクリーン行の中央の文字へジャンプ
 |go|		go		1  バッファ中の N バイト目へジャンプ
 |gp|		["x]gp		2  N 回カーソルの後に(レジスタxの)テキストを挿
 				   入、カーソルは挿入テキストの直後へ移動
@@ -803,6 +822,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |g<LeftMouse>|	g<LeftMouse>	   <C-LeftMouse> と同じ。
 		g<MiddleMouse>	   <C-MiddleMouse> と同じ。
 |g<RightMouse>|	g<RightMouse>	   <C-RightMouse> と同じ。
+|g<Tab>|	g<Tab>		   最後にアクセスしたタブページに移動。
 |g<Up>|		g<Up>		1  "gk" と同じ。
 
 ==============================================================================
@@ -824,62 +844,82 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 				   部へ移動、カーソルは行のはじめの空白文字以
 				   外の文字へ移動。
 |z=|		z=		   スペリング補完を行う。
-|zA|		zA		   折畳を再帰的に開閉する
-|zC|		zC		   折畳を再帰的に閉じる
-|zD|		zD		   折畳を再帰的に削除する
-|zE|		zE		   折畳をすべて削除する
-|zF|		zF		   N 行の折畳を作成する
-|zG|		zG		   wordを正しくスペリングされた単語としてマー
-				   クする。
+|zA|		zA		   折り畳みを再帰的に開閉する
+|zC|		zC		   折り畳みを再帰的に閉じる
+|zD|		zD		   折り畳みを再帰的に削除する
+|zE|		zE		   折り畳みをすべて削除する
+|zF|		zF		   N 行の折り畳みを作成する
+|zG|		zG		   一時的に word を正しいスペリングの単語とし
+				   てマークする。
 |zH|		zH                 'wrap' がオフの時、スクリーンの幅の半分右へ
 				   スクロールする
 |zL|		zL                 'wrap' がオフの時、スクリーンの幅の半分左へ
 				   スクロールする
 |zM|		zM		   'foldlevel' を0に設定する
 |zN|		zN		   'foldenable' をオンにする
-|zO|		zO		   折畳を再帰的に開く
-|zR|		zR		   'foldlevel' を最も深い折畳と同じレベルに設
-				   定する
-|zW|		zW		   wordを間違ってスペリングされた単語として
-				   マークする。
+|zO|		zO		   折り畳みを再帰的に開く
+|zR|		zR		   'foldlevel' を最も深い折り畳みと同じレベル
+				   に設定する
+|zW|		zW		   一時的に word を間違ったスペリングの単語と
+				   してマークする。
 |zX|		zX		   'foldlevel' を再適用する
 |z^|		z^		   カーソルを N 行目に移動(省略時はウィンドウ
 				   の上の行)、その他は "z-" と同じ。
-|za|		za		   折畳を開閉する
+|za|		za		   折り畳みを開閉する
 |zb|		zb		   画面の再描画、カーソル行をウィンドウの最下
 				   部へ移動。
-|zc|		zc		   折畳を閉じる
-|zd|		zd		   折畳を削除する
+|zc|		zc		   折り畳みを閉じる
+|zd|		zd		   折り畳みを削除する
 |ze|		ze		   'wrap' オプションがオフの時、カーソルがスク
 				   リーンの右端になるように、水平方向にスク
 				   ロール。
-|zf|		zf{motion}	   Nmoveテキストの折畳を作成する
-|zg|		zg		   wordを正しくスペリングされた単語としてマー
-				   クする。
+|zf|		zf{motion}	   Nmoveテキストの折り畳みを作成する
+|zg|		zg		   恒久的に word を正しいスペリングの単語とし
+				   てマークする。
 |zh|		zh		   'wrap' オプションがオフの時、水平方向に N
 				   文字分右へスクロール。
 |zi|		zi		   'foldenable' を切り替える
-|zj|		zj		1  次の折畳の始めに移動する
-|zk|		zk		1  前の折畳の最後に移動する
+|zj|		zj		1  次の折り畳みの始めに移動する
+|zk|		zk		1  前の折り畳みの最後に移動する
 |zl|		zl		   'wrap' オプションがオフの時、水平方向に N
 				   文字分左へスクロール。
 |zm|		zm		   'foldlevel' を1低くする
 |zn|		zn		   'foldenable' をオフにする
-|zo|		zo		   折畳を開く
+|zo|		zo		   折り畳みを開く
+|zp|		zp		   ブロックモードで末尾のスペース無しでペース
+				   トする
+|zP|		zP		   ブロックモードで末尾のスペース無しでペース
+				   トする
 |zr|		zr		   'foldlevel' を1高くする
 |zs|		zs		   'wrap' オプションがオフの時、カーソルがスク
 				   リーンの左端になるように、水平方向にスクロー
 				   ル。
 |zt|		zt		   画面の再描画、カーソル行をウィンドウの最上
 				   部へ移動。
-|zv|		zv		   カーソル行が表示されるように折畳を開く
-|zw|		zw		   wordを間違ってスペリングされた単語として
-				   マークする。
+|zuw|		zuw		   |zw| を取り消す
+|zug|		zug		   |zg| を取り消す
+|zuW|		zuW		   |zW| を取り消す
+|zuG|		zuG		   |zG| を取り消す
+|zv|		zv		   カーソル行が表示されるように折り畳みを開く
+|zw|		zw		   恒久的に word を間違ったスペリングの単語と
+				   してマークする。
 |zx|		zx		   'foldlevel' を最適用して "zv" を実行する
+|zy|		zy		   末尾のスペース無しでヤンクする
 |zz|		zz		   画面の再描画、カーソル行をウィンドウの中央
 				   部へ移動。
 |z<Left>|	z<Left>		   "zh" と同じ。
 |z<Right>|	z<Right>	   "zl" と同じ。
+
+==============================================================================
+2.6 オペレータ待機モード			*operator-pending-index*
+
+これらはオペレータの後で {motion} が入力される前に使用できる。
+
+タグ		文字		オペレータ待機モードでの動作	~
+-----------------------------------------------------------------------
+|o_v|		v		オペレータに文字単位の動作を強制する
+|o_V|		V		オペレータに行単位の動作を強制する
+|o_CTRL-V|	CTRL-V		オペレータにブロック単位の動作を強制する
 
 ==============================================================================
 3. ビジュアルモード					*visual-index*
@@ -919,6 +959,8 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |v_J|		J		2  選択範囲の行を連結
 |v_K|		K		   選択した文字で 'keywordprg' を実行
 |v_O|		O		   選択範囲のもう一方の端にカーソルを移動する
+|v_P|		P		   ハイライトされている領域をレジスタの内容で
+				   置換する。レジスタは変化しない
 		Q		   Ex モードに移行しない(未使用)
 |v_R|		R		2  選択範囲の行を削除し、挿入を開始
 |v_S|		S		2  選択範囲の行を削除し、挿入を開始
@@ -979,6 +1021,9 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |v_i{|		i{		   iB と同じ。
 |v_i}|		i}		   iB と同じ。
 |v_o|		o		   選択範囲のもう一方の端にカーソルを移動する
+|v_p|		p		   ハイライトされている領域をレジスタの内容で
+				   置換する。削除したテキストは無名レジスタに
+				   入る
 |v_r|		r		2  選択範囲のすべての文字を、続いて入力する1文
 				   字で置き換える。
 |v_s|		s		2  選択範囲の文字を削除し、挿入開始
@@ -1033,13 +1078,14 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 				前の補完候補を表示
 				その他: 以前のコマンドラインを履歴から呼び出す
 |c_CTRL-Q|	CTRL-Q		CTRL-V と同じ (端末制御で使用されていなければ)
-|c_CTRL-R|	CTRL-R {0-9a-z"%#*:= CTRL-F CTRL-P CTRL-W CTRL-A}
+|c_CTRL-R|	CTRL-R {regname}
 				カーソル位置のオブジェクトまたはレジスタの内容
 				をキー入力したかのように挿入
-|c_CTRL-R_CTRL-R| CTRL-R CTRL-R {0-9a-z"%#*:= CTRL-F CTRL-P CTRL-W CTRL-A}
+|c_CTRL-R_CTRL-R| CTRL-R CTRL-R {regname}
+|c_CTRL-R_CTRL-O| CTRL-R CTRL-O {regname}
 				カーソル位置のオブジェクトまたはレジスタの内容
 				を文字通りに挿入
-		CTRL-S		(端末制御に使用)
+		CTRL-S		未使用、もしくは端末制御に使用
 |c_CTRL-T|	CTRL-T		'incsearch' がアクティブならば、前マッチへ移動
 |c_CTRL-U|	CTRL-U		すべての文字を削除
 |c_CTRL-V|	CTRL-V		続いて入力する、数字以外の文字をそのまま挿入
@@ -1057,7 +1103,6 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |c_CTRL-\_e|	CTRL-\ e {expr} コマンドラインを{expr}の結果で置き換える
 		CTRL-\ f - z	将来の拡張のために予約
 		CTRL-\ others	未使用
-		CTRL-]		未使用
 |c_CTRL-]|	CTRL-]		短縮入力を展開する
 |c_CTRL-^|	CTRL-^		マップ|:lmap|の有効無効を切り替える
 |c_CTRL-_|	CTRL-_		'allowrevins' がオンのとき、言語を切り替える。
@@ -1082,25 +1127,50 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |c_<Insert>|	<Insert>	挿入モード/置換モードを変更
 |c_<LeftMouse>|	<LeftMouse>	カーソルをマウスクリック位置へ移動
 
+==============================================================================
+5. 端末ジョブモード				*terminal-job-index*
+
+ウィンドウコマンド(|CTRL-W|)を除くほとんどのノーマルモードコマンドは、端末ウィ
+ンドウでは動作しない。それらを使用するには、端末ノーマルモードに切り替えるこ
+と。
+これは 'termwinkey' が設定されていないと仮定している。
+
+タグ		文字		端末ジョブモードでの動作 ~
+-----------------------------------------------------------------------
+|t_CTRL-\_CTRL-N| CTRL-\ CTRL-N	端末ノーマルモードに切り替える
+|t_CTRL-W_N|	CTRL-W N	同上
+|t_CTRL-W_:|	CTRL-W :	Exコマンドを入力する
+|t_CTRL-W_.|	CTRL-W .	端末内で CTRL-W を入力する
+		CTRL-W CTRL-\	端末内のジョブに CTRL-\ を送信する
+|t_CTRL-W_quote|  CTRL-W " {register}
+				端末内でレジスタをペーストする
+|t_CTRL-W_CTRL-C| CTRL-W CTRL-C	ジョブを強制停止する
+|t_CTRL-W_CTRL-W| CTRL-W CTRL-W	次のウィンドウにフォーカスを移動する
+|t_CTRL-W_gt|	CTRL-W gt	次のタブページに移動する。`gt` と同じ
+|t_CTRL-W_gT|	CTRL-W gT	前のタブページに移動する。`gT` と同じ
+
 ついに見つけたんだね、セイバー!			*holy-grail* *:smile*
 
 ==============================================================================
-5. EX コマンド					*ex-cmd-index* *:index*
+6. EX コマンド					*ex-cmd-index* *:index*
 
 以下に簡単ではあるがすべての ":" コマンドを列挙した。引数についての説明はして
 いない。コマンド名の省略可能な部分を [] で囲った。コマンドはコマンド名のうち省
 略できない部分を対象としてソートした。
 
-タグ	      コマンド	      動作 ~
+タグ		コマンド	動作 ~
 ------------------------------------------------------------------------------
+|:|		:		なし
+|:range|	:{range}	{range}の最終行へジャンプ
 |:!|		:!		行をフィルタにかける、または、外部コマンドを実
 				行する
 |:!!|		:!!		最後に実行した ":!" コマンドを繰り返す
 |:#|		:#		":number" と同じ。
 |:&|		:&		最後に実行した ":substitute" を繰り返す
-|:star|		:*		レジスタの内容を実行する
+|:star|		:*		最後のビジュアル選択領域を使用する、:'<,'> と
+				同様
 |:<|		:<		'shiftwidth' 1つ分だけ行を左へシフト
-|:=|		:=		カーソルのある行の行番号を表示
+|:=|		:=		最終行の行番号を表示
 |:>|		:>		'shiftwidth' 1つ分だけ行を右へシフト
 |:@|		:@		レジスタの内容を実行
 |:@@|		:@@		直前の ":@" を繰り返す
@@ -1117,6 +1187,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 				項目を追加
 |:args|		:ar[gs]		引数リストを表示
 |:argadd|	:arga[dd]	引数リストにファイルを追加する
+|:argdedupe|	:argded[upe]	引数リストから重複を削除する
 |:argdelete|	:argd[elete]	引数リストからファイルを削除する
 |:argedit|	:arge[dit]	引数リストにファイルを追加し、開く
 |:argdo|	:argdo		引数リストのすべてのファイルに対してコマンドを
@@ -1125,14 +1196,15 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:arglocal|	:argl[ocal]	ローカル引数リストを使用する
 |:argument|	:argu[ment]	引数リストの指定したファイルを開く
 |:ascii|	:as[cii]	カーソル位置の文字のASCIIコードを表示
-|:autocmd|	:au[tocmd]	オートコマンドの入力と表示
-|:augroup|	:aug[roup]	使用するオートコマンドグループの選択と表示
+|:autocmd|	:au[tocmd]	自動コマンドの入力と表示
+|:augroup|	:aug[roup]	使用する自動コマンドグループの選択と表示
 |:aunmenu|	:aun[menu]	すべてのモードに対してメニュー項目を削除
 |:buffer|	:b[uffer]	バッファリストの指定したバッファを開く
 |:bNext|	:bN[ext]	バッファリストの前のバッファを開く
 |:ball|		:ba[ll]		バッファリストのすべてのバッファをウィンドウを
 				作成して開く
 |:badd|		:bad[d]		バッファリストにバッファを追加
+|:balt|		:balt		":badd" と同様だが代替ファイル名も設定する
 |:bdelete|	:bd[elete]	バッファリストからバッファを削除
 |:behave|	:be[have]	マウス操作や選択の動作を設定する
 |:belowright|	:bel[owright]	ウィンドウが右もしくは下に分割されるようにする
@@ -1162,11 +1234,15 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 				コマンド
 |:cabclear|	:cabc[lear]	コマンドラインモードにおけるすべての
 				短縮入力を削除
+|:cabove|	:cabo[ve]	現在の行の上のエラーにジャンプ
 |:caddbuffer|	:cad[dbuffer]	バッファからエラーを追加する
 |:caddexpr|	:cadde[xpr]	式からエラーを追加する
 |:caddfile|	:caddf[ile]	現在のQuickFixリストにエラーメッセージを追加
+|:cafter|	:caf[ter]	現在のカーソルの後ろのエラーにジャンプ
 |:call|		:cal[l]		関数を実行する
 |:catch|	:cat[ch]	:tryコマンドの一部
+|:cbefore|	:cbef[ore]	現在のカーソルの前のエラーにジャンプ
+|:cbelow|	:cbel[ow]	現在の行の下のエラーにジャンプ
 |:cbottom|	:cbo[ttom]	QuickFixウィンドウの最下へスクロールする
 |:cbuffer|	:cb[uffer]	エラーメッセージを解釈し、最初のエラーへジャン
 				プ
@@ -1215,7 +1291,8 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:continue|	:con[tinue]	:while に戻って実行を続ける
 |:confirm|	:conf[irm]	コマンドを実行し、ユーザーの確認が必要ならプロ
 				ンプトを表示する
-|:copen|	:cope[n]	クイックフィックスウィンドウを開く
+|:const|	:cons[t]	定数として変数を作成する
+|:copen|	:cope[n]	quickfixウィンドウを開く
 |:cprevious|	:cp[revious]	直前のエラーへジャンプ
 |:cpfile|	:cpf[ile]	エラーリストの前のファイルの最後のエラーへ
 				ジャンプ
@@ -1228,13 +1305,17 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:cunabbrev|	:cuna[bbrev]	コマンドラインモードを対象とする ":unabbrev"
 				コマンド
 |:cunmenu|	:cunme[nu]	コマンドラインモードのメニューを削除
-|:cwindow|	:cw[indow]	クイックフィックスウィンドウを開閉する
+|:cwindow|	:cw[indow]	quickfixウィンドウを開閉する
 |:delete|	:d[elete]	行を削除
-|:delmarks|	:delm[arks]	マークを削除する
 |:debug|	:deb[ug]	コマンドをデバッグモードで実行する
 |:debuggreedy|	:debugg[reedy]	デバッグモードのコマンドを標準入力から読み込む
+|:def|		:def		Vim9 ユーザー関数の定義
+|:defcompile|	:defc[ompile]	カレントスクリプト内の Vim9 ユーザー関数を
+				コンパイルする
+|:defer|	:defer		現在の関数の完了時に関数を呼ぶ
 |:delcommand|	:delc[ommand]	ユーザー定義コマンドの削除
 |:delfunction|	:delf[unction]	ユーザー定義関数の削除
+|:delmarks|	:delm[arks]	マークを削除する
 |:diffupdate|	:dif[fupdate]	'diff' バッファを更新する
 |:diffget|	:diffg[et]	カレントバッファの差異を他方に合わせる
 |:diffoff|	:diffo[ff]	差分モードをオフにする
@@ -1244,13 +1325,13 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:diffthis|	:diffthis	カレントウィンドウを差分ウィンドウにする
 |:digraphs|	:dig[raphs]	ダイグラフの入力または表示
 |:display|	:di[splay]	レジスタの内容を表示
+|:disassemble|	:disa[ssemble]	Vim9 ユーザー関数の逆アセンブル
 |:djump|	:dj[ump]	#define へジャンプ
 |:dl|		:dl		'l' フラグ付き |:delete| の短縮形
-|:del|		:del[ete]l	'l' フラグ付き |:delete| の短縮形
 |:dlist|	:dli[st]	#define をリスト表示
-|:doautocmd|	:do[autocmd]	カレントバッファに対しオートコマンドを適用する
-|:doautoall|	:doautoa[ll]	ロードされているバッファすべてにオートコマンド
-				を適用する
+|:doautocmd|	:do[autocmd]	カレントバッファに対し自動コマンドを適用する
+|:doautoall|	:doautoa[ll]	ロードされているバッファすべてに自動コマンドを
+				適用する
 |:dp|		:d[elete]p	'p' フラグ付き |:delete| の短縮形
 |:drop|		:dr[op]		指定したファイルが表示されているウィンドウに
 				ジャンプするか、カレントウィンドウで開く
@@ -1259,19 +1340,24 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:edit|		:e[dit]		ファイルの編集
 |:earlier|	:ea[rlier]	バッファを時間的に前の状態に戻す。アンドゥ
 |:echo|		:ec[ho]		式の結果を表示する
+|:echoconsole|	:echoc[onsole]	:echomsgと同じだが、stdout に出力する
 |:echoerr|	:echoe[rr]	:echoと同じだが、エラー表示し、履歴に残す
 |:echohl|	:echoh[l]	echoコマンドで使用する強調表示を設定する
 |:echomsg|	:echom[sg]	:echoと同じだが、履歴に残す
 |:echon|	:echon		:echo と同じ、ただし <EOL> を出力しない
+|:echowindow|	:echow[indow]	:echomsg と同じ、ただしポップアップウィンドウ
+				を使用する
 |:else|		:el[se]		:if コマンドと一緒に使用する
 |:elseif|	:elsei[f]	:if コマンドと一緒に使用する
 |:emenu|	:em[enu]	名前を指定してメニューを実行
+|:enddef|	:enddef		:def で開始したユーザー定義関数の終了
 |:endif|	:en[dif]	直前の :if の終了
 |:endfor|	:endfo[r]	直前の :for の終了
-|:endfunction|	:endf[unction]	ユーザー定義関数の終了
+|:endfunction|	:endf[unction]	:function で開始したユーザー定義関数の終了
 |:endtry|	:endt[ry]	直前の:tryを終了する
 |:endwhile|	:endw[hile]	直前の :while の終了
 |:enew|		:ene[w]		新しい名無しバッファを開く
+|:eval|		:ev[al]		式を評価し、結果を破棄する
 |:ex|		:ex		":edit" と同じ。
 |:execute|	:exe[cute]	式の結果を実行する
 |:exit|		:exi[t]		":xit" と同じ。
@@ -1281,15 +1367,16 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:filetype|	:filet[ype]	ファイルタイプ検出の on/off 切換
 |:filter|	:filt[er]	コマンドの出力をフィルターする
 |:find|		:fin[d]		'path' の中からファイルを検索し、開く
+|:final|	:final		Vim9 での不変変数を宣言する
 |:finally|	:fina[lly]	:try コマンドの一部
 |:finish|	:fini[sh]	Vim script の読み込みを終了する
 |:first|	:fir[st]	引数リストの最初のファイルを開く
 |:fixdel|	:fix[del]	<Del> のキーコードを設定
-|:fold|		:fo[ld]		折畳を作成する
-|:foldclose|	:foldc[lose]	折畳を閉じる
-|:folddoopen|	:foldd[oopen]	閉じている折畳以外の行にコマンドを実行する
-|:folddoclosed|	:folddoc[losed]	閉じている折畳の中の行にコマンドを実行する
-|:foldopen|	:foldo[pen]	折畳を開く
+|:fold|		:fo[ld]		折り畳みを作成する
+|:foldclose|	:foldc[lose]	折り畳みを閉じる
+|:folddoopen|	:foldd[oopen]	閉じている折り畳み以外の行にコマンドを実行する
+|:folddoclosed|	:folddoc[losed]	閉じている折り畳みの中の行にコマンドを実行する
+|:foldopen|	:foldo[pen]	折り畳みを開く
 |:for|		:for		for ループ
 |:function|	:fu[nction]	ユーザー定義関数を定義
 |:global|	:g[lobal]	パターンにマッチした行でコマンドを実行する
@@ -1310,6 +1397,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:hide|		:hid[e]		コマンドを実行し、必要ならカレントバッファを
 				隠れ(hidden)バッファにする
 |:history|	:his[tory]	コマンドラインの履歴を表示
+|:horizontal|	:hor[izontal]	次のウィンドウコマンドを水平方向に動作させる
 |:insert|	:i[nsert]	テキストを挿入
 |:iabbrev|	:ia[bbrev]	挿入モードを対象とする ":abbrev" コマンド
 |:iabclear|	:iabc[lear]	挿入モードを対象とする ":abclear" コマンド
@@ -1319,6 +1407,8 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:imap|		:im[ap]		挿入モードを対象とした ":map" コマンド
 |:imapclear|	:imapc[lear]	挿入モードを対象とした ":mapclear" コマンド
 |:imenu|	:ime[nu]	挿入モードを対象にメニュー追加
+|:import|	:imp[ort]	Vim9: 他のスクリプトからアイテムをインポートす
+				る
 |:inoremap|	:ino[remap]	挿入モードを対象とした ":noremap" コマンド
 |:inoreabbrev|	:inorea[bbrev]	挿入モードを対象とした ":noreabbrev" コマンド
 |:inoremenu|	:inoreme[nu]	挿入モードを対象とした ":noremenu" コマンド
@@ -1336,75 +1426,79 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:keepjumps|	:keepj[umps]	マークやジャンプリストを変更せずにコマンドを実
 				行する
 |:keeppatterns|	:keepp[atterns] 検索パターン履歴を変更せずにコマンドを実行する
-|:lNext|	:lN[ext]	ロケーションリストの前の項目の位置へ移動
+|:lNext|	:lN[ext]	locationリストの前の項目の位置へ移動
 |:lNfile|	:lNf[ile]	前のファイルの最後の項目の位置へ移動
 |:list|		:l[ist]		行を表示
-|:laddexpr|	:lad[dexpr]	exprからロケーションリストの項目を追加
-|:laddbuffer|	:laddb[uffer]	バッファからロケーションリストの項目を追加
-|:laddfile|	:laddf[ile]	現在のロケーションリストに項目を追加
+|:labove|	:lab[ove]	現在の行の上のlocationにジャンプ
+|:laddexpr|	:lad[dexpr]	exprからlocationリストの項目を追加
+|:laddbuffer|	:laddb[uffer]	バッファからlocationリストの項目を追加
+|:laddfile|	:laddf[ile]	現在のlocationリストに項目を追加
+|:lafter|	:laf[ter]	現在のカーソルの後ろのlocationにジャンプ
 |:last|		:la[st]		引数リストの最後のファイルを編集
 |:language|	:lan[guage]	言語(ロケール)を設定する
 |:later|	:lat[er]	バッファを時間的に新しい状態に戻す。リドゥ
-|:lbottom|	:lbo[ttom]	ロケーションウィンドウの最下へスクロールする
-|:lbuffer|	:lb[uffer]	バッファからロケーションリストを解釈し、
-				最初のエラーへジャンプ
+|:lbefore|	:lbef[ore]	現在のカーソルの前のlocationにジャンプ
+|:lbelow|	:lbel[ow]	現在の行の下のlocationにジャンプ
+|:lbottom|	:lbo[ttom]	locationウィンドウの最下へスクロールする
+|:lbuffer|	:lb[uffer]	バッファからlocationリストを解釈し、最初のエ
+				ラーへジャンプ
 |:lcd|		:lc[d]		ウィンドウのカレントディレクトリを変更する
 |:lchdir|	:lch[dir]	ウィンドウのカレントディレクトリを変更する
-|:lclose|	:lcl[ose]	ロケーションウィンドウを閉じる
-|:lcscope|	:lcs[cope]      ":cscope" と同様だがロケーションリストを使う
-|:ldo|		:ld[o]		ロケーションリストの各項目に対してコマンドを実
+|:lclose|	:lcl[ose]	locationウィンドウを閉じる
+|:lcscope|	:lcs[cope]      ":cscope" と同様だがlocationリストを使う
+|:ldo|		:ld[o]		locationリストの各項目に対してコマンドを実行す
+				る
+|:lfdo|		:lfd[o]		locationリストの各ファイルに対してコマンドを実
 				行する
-|:lfdo|		:lfd[o]		ロケーションリストの各ファイルに対してコマンド
-				を実行する
 |:left|		:le[ft]		行を左寄せに整形
 |:leftabove|	:lefta[bove]	ウィンドウが左もしくは上に分割されるようにする
+|:legacy|	:leg[acy]	次のコマンドで旧来のスクリプトの文法を使用する
 |:let|		:let		変数またはオプションに値を設定する
-|:lexpr|	:lex[pr]	式からロケーションリストを読み込み、最初のエ
+|:lexpr|	:lex[pr]	式からlocationリストを読み込み、最初のエラーへ
+				ジャンプする
+|:lfile|	:lf[ile]	ファイルからlocationリストを読み込み、最初のエ
 				ラーへジャンプする
-|:lfile|	:lf[ile]	ファイルからロケーションリストを読み込み、最初
-				のエラーへジャンプする
-|:lfirst|	:lfir[st]	指定されたロケーションへジャンプする。デフォル
-				トは最初のロケーション。
-|:lgetbuffer|	:lgetb[uffer]	バッファからロケーションリストを取得する
-|:lgetexpr|	:lgete[xpr]	式からロケーションリストを取得する
-|:lgetfile|	:lg[etfile]	ファイルからロケーションリストを取得する
+|:lfirst|	:lfir[st]	指定されたlocationへジャンプする。デフォルトは
+				最初のlocation。
+|:lgetbuffer|	:lgetb[uffer]	バッファからlocationリストを取得する
+|:lgetexpr|	:lgete[xpr]	式からlocationリストを取得する
+|:lgetfile|	:lg[etfile]	ファイルからlocationリストを取得する
 |:lgrep|	:lgr[ep]	'grepprg' を実行し、最初のマッチへジャンプする
 |:lgrepadd|	:lgrepa[dd]	:grepと同様だが現在のリストに追加する
-|:lhelpgrep|	:lh[elpgrep]	":helpgrep" と同様だがロケーションリストを使う
-|:lhistory|	:lhi[story]	ロケーションリストの一覧を表示する
-|:ll|		:ll		特定のロケーションへ移動する
-|:llast|	:lla[st]	特定のロケーションへ移動する。デフォルトは最後
-				のロケーション
-|:llist|	:lli[st]	全てのロケーションをリストする
+|:lhelpgrep|	:lh[elpgrep]	":helpgrep" と同様だがlocationリストを使う
+|:lhistory|	:lhi[story]	locationリストの一覧を表示する
+|:ll|		:ll		特定のlocationへ移動する
+|:llast|	:lla[st]	特定のlocationへ移動する。デフォルトは最後の
+				location
+|:llist|	:lli[st]	全てのlocationをリストする
 |:lmake|	:lmak[e]	外部プログラム'makeprg'を実行、エラーメッセー
 				ジを解釈する。
 |:lmap|		:lm[ap]		":map!" と同じだが、Lang-Argモードも対象
 |:lmapclear|	:lmapc[lear]	":mapclear!" と同じだが、Lang-Argモードも対象
-|:lnext|	:lne[xt]	次のロケーションへ移動
-|:lnewer|	:lnew[er]	新しいロケーションリストへ移動
-|:lnfile|	:lnf[ile]	次のファイルの最初のロケーションへ移動
+|:lnext|	:lne[xt]	次のlocationへ移動
+|:lnewer|	:lnew[er]	新しいlocationリストへ移動
+|:lnfile|	:lnf[ile]	次のファイルの最初のlocationへ移動
 |:lnoremap|	:ln[oremap]	":noremap!" と同じだが、Lang-Argモードも対象
 |:loadkeymap|	:loadk[eymap]	次の行からEOFまでキーマップを読み込む
 |:loadview|	:lo[adview]	カレントウィンドウにビューを読み込む
 |:lockmarks|	:loc[kmarks]	マークを調整せずにコマンドを実行する
 |:lockvar|	:lockv[ar]	変数をロックする
-|:lolder|	:lol[der]	以前のロケーションリストへ移動
-|:lopen|	:lope[n]	ロケーションウィンドウを開く
-|:lprevious|	:lp[revious]	前のロケーションへ移動
-|:lpfile|	:lpf[ile]	前のファイルの最後のロケーションへ移動
-|:lrewind|	:lr[ewind]	指定されたロケーションへ移動。デフォルトは最初
-				のロケーション
+|:lolder|	:lol[der]	以前のlocationリストへ移動
+|:lopen|	:lope[n]	locationウィンドウを開く
+|:lprevious|	:lp[revious]	前のlocationへ移動
+|:lpfile|	:lpf[ile]	前のファイルの最後のlocationへ移動
+|:lrewind|	:lr[ewind]	指定されたlocationへ移動。デフォルトは最初
+				のlocation
 |:ls|		:ls		すべてのバッファを表示
-|:ltag|		:lt[ag]		タグへジャンプし、マッチしたタグをロケーション
-				リストに追加する
+|:ltag|		:lt[ag]		タグへジャンプし、マッチしたタグをlocationリス
+				トに追加する
 |:lunmap|	:lu[nmap]	":unmap!" と同じだが、Lang-Argモードも対象
 |:lua|		:lua		|Lua| コマンドを実行
 |:luado|	:luad[o]	各行に対して Lua コマンドを実行
 |:luafile|	:luaf[ile]	|Lua| スクリプトファイルを実行
 |:lvimgrep|	:lv[imgrep]	ファイルからパターンを検索する
-|:lvimgrepadd|	:lvimgrepa[dd]	:vimgrepと同様だが、ロケーションリストに追加す
-				る
-|:lwindow|	:lw[indow]	ロケーションウィンドウを開閉する
+|:lvimgrepadd|	:lvimgrepa[dd]	:vimgrepと同様だが、locationリストに追加する
+|:lwindow|	:lw[indow]	locationウィンドウを開閉する
 |:move|		:m[ove]		行を移動する
 |:mark|		:ma[rk]		マークを設定
 |:make|		:mak[e]		外部プログラム 'makeprg' を実行し、エラーメッ
@@ -1420,8 +1514,8 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:mkexrc|	:mk[exrc]	現在のマップと設定をファイルに書き出す
 |:mksession|	:mks[ession]	セッション情報をファイルに書き出す
 |:mkspell|	:mksp[ell]	スペルファイル .splを生成する
-|:mkview|	:mkvie[w]	カレントウィンドウのビューをファイルに保存する
 |:mkvimrc|	:mkv[imrc]	現在のマップと設定をファイルに書き出す
+|:mkview|	:mkvie[w]	カレントウィンドウのビューをファイルに保存する
 |:mode|		:mod[e]		スクリーンモードを表示または変更する
 |:mzscheme|	:mz[scheme]	MzSchemeコマンドを実行する
 |:mzfile|	:mzf[ile]	MzSchemeスクリプトファイルを実行する
@@ -1511,10 +1605,11 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:read|		:r[ead]		テキストにファイルを挿入
 |:recover|	:rec[over]	スワップファイルからファイルを復元
 |:redo|		:red[o]		1回のアンドゥをリドゥする
-|:redraw|	:redr[aw]	画面を再描画する
-|:redrawstatus|	:redraws[tatus]	ステータスラインを再描画する
 |:redir|	:redi[r]	ファイルまたはレジスタにメッセージをリダイレク
 				トする
+|:redraw|	:redr[aw]	  画面を再描画する
+|:redrawstatus|	:redraws[tatus]	  ステータスラインを再描画する
+|:redrawtabline|  :redrawt[abline]  タブページ行を再描画する
 |:registers|	:reg[isters]	レジスタの内容を表示
 |:resize|	:res[ize]	カレントウィンドウの高さを変更
 |:retab|	:ret[ab]	タブの大きさを変更
@@ -1556,8 +1651,10 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:sbrewind|	:sbr[ewind]	ウィンドウを分割してバッファリストの最初の
 				バッファを開く
 |:scriptnames|	:scr[iptnames]	実行済みVim script の名前を一覧表示する
-|:scriptencoding| :scripte[ncoding]	Vim script が使用しているエンコー
-					ディングを指定する
+|:scriptencoding| :scripte[ncoding]  Vim script が使用しているエンコーディング
+				   を指定する
+|:scriptversion|  :scriptv[ersion]   使用している Vim script のバージョンを指
+				   定する
 |:scscope|	:scs[cope]      ウィンドウを分割してcscopeコマンドを実行する
 |:set|		:se[t]		オプションを表示または設定する
 |:setfiletype|	:setf[iletype]	まだ設定されていなければ 'filetype' を設定する
@@ -1572,6 +1669,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:sign|		:sig[n]		目印を取り扱うコマンド
 |:silent|	:sil[ent]	実行したコマンドの出力を抑制する
 |:sleep|	:sl[eep]	数秒間何もしない
+|:sleep!|	:sl[eep]!	カーソルを表示せず、数秒間何もしない
 |:slast|	:sla[st]	ウィンドウを分割して引数リストの最後のファイル
 				を開く
 |:smagic|	:sm[agic]	'magic' オプションの下で :substitute を実行
@@ -1589,6 +1687,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:spelldump|	:spelld[ump]	ウィンドウを分割し、正しい単語を列挙する
 |:spellgood|	:spe[llgood]	スペルチェック用に正しい単語を登録する
 |:spellinfo|	:spelli[nfo]	読み込んでいるスペルファイルの情報を表示する
+|:spellrare|	:spellra[re]	スペルチェック用にレアな単語を追加する
 |:spellrepall|	:spellr[epall]	最後の|z=|と同様にすべての間違った単語を置換
 |:spellundo|	:spellu[ndo]	正しいまたは間違った単語を削除
 |:spellwrong|	:spellw[rong]	スペリングの間違いを登録する
@@ -1634,7 +1733,9 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:tab|		:tab		新しいウィンドウを開くとき新しいタブを作る
 |:tag|		:ta[g]		タグを検索しジャンプする
 |:tags|		:tags		タグスタックの内容を表示
-|:tcl|		:tc[l]		Tcl コマンドを実行
+|:tcd|		:tc[d]		タブページのカレントディレクトリを変更する
+|:tchdir|	:tch[dir]	タブページのカレントディレクトリを変更する
+|:tcl|		:tcl		Tcl コマンドを実行
 |:tcldo|	:tcld[o]	各行の Tcl コマンドを実行
 |:tclfile|	:tclf[ile]	Tcl スクリプトファイルを実行
 |:tearoff|	:te[aroff]	メニューを切り離す
@@ -1644,20 +1745,23 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:tjump|	:tj[ump]	":tselect" と同様、ただし一致したタグが1つし
 				かない場合、その場所へジャンプ
 |:tlast|	:tl[ast]	直前に一致したタグ位置へジャンプ
-|:tmapclear|	:tmapc[lear]	端末ジョブモードのすべてのマップを削除する。
+|:tlmenu|	:tlm[enu]	端末ジョブモードのメニューを追加する
+|:tlnoremenu|	:tln[oremenu]	":noremenu" と同様だが端末ジョブモード用
+|:tlunmenu|	:tlu[nmenu]	端末ジョブモードのメニューを削除する
+|:tmapclear|	:tmapc[lear]	端末ジョブモードのすべてのマップを削除する
 |:tmap|		:tma[p]		":map" と同様。端末ジョブモード用
 |:tmenu|	:tm[enu]	ツールチップメニューを定義する
 |:tnext|	:tn[ext]	タグを前方検索し、ジャンプ
 |:tnoremap|	:tno[remap]	":noremap" と同様。端末ジョブモード用
-|:tprevious|	:tp[revious]	タグを後方検索し、ジャンプ
 |:topleft|	:to[pleft]	ウィンドウが最も左もしくは最も上に分割されるよ
 				うにする
+|:tprevious|	:tp[revious]	タグを後方検索し、ジャンプ
 |:trewind|	:tr[ewind]	最初に一致したタグ位置へジャンプ
+|:try|		:try		コマンドを実行し発生したエラーや例外を処理する
 |:tselect|	:ts[elect]	一致したタグを一覧表示し、ジャンプ先のタグ
 				を選択
 |:tunmap|	:tunma[p]	":unmap" と同様。端末ジョブモード用
 |:tunmenu|	:tu[nmenu]	ツールチップメニューを削除
-|:try|		:try		コマンドを実行し発生したエラーや例外を処理する
 |:undo|		:u[ndo]		最後の変更を取り消す
 |:undojoin|	:undoj[oin]	次の変更を前のアンドゥブロックと連結する
 |:undolist|	:undol[ist]	アンドゥツリーのリーフを列挙する
@@ -1672,9 +1776,12 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:update|	:up[date]	バッファ内容が変更されていれば、ファイルに書
 				き出す
 |:vglobal|	:v[global]	パターンにマッチしない行でコマンドを実行する
+|:var|		:var		Vim9 での変数を宣言する
 |:version|	:ve[rsion]	バージョン番号その他の情報を表示
 |:verbose|	:verb[ose]	'verbose' を一時設定してコマンドを実行する
 |:vertical|	:vert[ical]	ウィンドウが垂直分割されるようにする
+|:vim9cmd|	:vim9[cmd]	次のコマンドで Vim9 script の文法を使用する
+|:vim9script|	:vim9s[cript]	Vim9 script ファイルであることを示す
 |:vimgrep|	:vim[grep]	複数ファイルからパターンを検索する
 |:vimgrepadd|	:vimgrepa[dd]	:vimgrepと同様だが現在のリストに追加
 |:visual|	:vi[sual]	":edit" と同じ、ただし "Ex" モードから抜ける。
@@ -1702,8 +1809,8 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:while|	:wh[ile]	与えた条件を満たしている限りループする
 |:winsize|	:wi[nsize]	ウィンドウサイズを取得もしくはセットする (古
 				いコマンド)
-|:winpos|	:winp[os]	ウィンドウの位置を取得もしくはセットする
 |:wincmd|	:winc[md]	ウィンドウコマンド(CTRL-W)を実行する
+|:winpos|	:winp[os]	ウィンドウの位置を取得もしくはセットする
 |:wnext|	:wn[ext]	ファイルに保存して、引数リストの次のファイル
 				を開く
 |:wprevious|	:wp[revious]	ファイルに保存して、引数リストの直前のファイ
@@ -1713,13 +1820,13 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:wqall|	:wqa[ll]	すべての変更済みバッファを保存し、Vim を終了
 |:wundo|	:wu[ndo]	アンドゥ情報をファイルに保存する
 |:wviminfo|	:wv[iminfo]	viminfo ファイルに保存
-|:wsverb|	:ws[verb]	workshopに命令をIPCで送信する
-|:xit|		:x[it]		バッファが変更されていたら保存し、ウィンドウ
-				もしくは Vim を終了
+|:xit|		:x[it]		バッファが変更されていたら保存し、ウィンドウを
+				閉じる
 |:xall|		:xa[ll]		":wqall" と同じ。
 |:xmapclear|	:xmapc[lear]	ビジュアルモード時のマッピングを全て削除する
 |:xmap|		:xm[ap]		":map" と同様。ビジュアルモード用
 |:xmenu|	:xme[nu]	ビジュアルモード時にメニューを追加する
+|:xrestore|	:xr[estore]	Xサーバーの接続を復元する
 |:xnoremap|	:xn[oremap]	":noremap" と同様。ビジュアルモード用
 |:xnoremenu|	:xnoreme[nu]	":noremenu" と同様。ビジュアルモード用
 |:xunmap|	:xu[nmap]	":unmap" と同様。ビジュアルモード用

@@ -1,4 +1,4 @@
-*various.txt*   For Vim バージョン 8.1.  Last change: 2018 Mar 29
+*various.txt*   For Vim バージョン 9.0.  Last change: 2022 May 21
 
 
 		VIM リファレンスマニュアル    by Bram Moolenaar
@@ -28,6 +28,11 @@ CTRL-L			画面を消去して再描画します。すでに入力されてい�
 			す。
 			'statusline' に自動更新されない項目が含まれている場合
 			に、ステータスラインを更新するのに便利です。
+
+						*:redrawt* *:redrawtabline*
+:redrawt[abline]	タブページ行を再描画します。'tabline' に自動更新されな
+			い項目が含まれている場合に、タブページ行を更新するのに
+			便利です。
 
 							*N<Del>*
 <Del>			ノーマルモードで数値 (|count|) を入力しているときは、
@@ -68,8 +73,6 @@ ga			カーソル位置の文字の文字コードを、10/16/8 進数で表示�
 			これは、ö を入力するために CTRL-K o : とタイプすればよ
 			いことを意味しています。
 
-			{Vi にはない}
-
 							*g8*
 g8			カーソル位置の文字のバイト列を 16 進数で表示します。エ
 			ンコーディングが |UTF-8| の場合のみ正しく機能します。
@@ -77,8 +80,6 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 			せん。
 			2 文字の合成文字が結合されている文字の表示例:
 				e0 b8 81 + e0 b8 b9 + e0 b9 89 ~
-			{Vi にはない} {|+multi_byte| が有効な場合のみ利用でき
-			ます}
 
 							*8g8*
 8g8			カーソル以降の不正な UTF-8 バイト列を検索します。
@@ -93,8 +94,6 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 			を継続しません。
 			Note: カーソルがすでに不正なバイト列の上にある場合は、
 			カーソルは移動しません。
-			{Vi にはない} {|+multi_byte| が有効な場合のみ利用でき
-			ます}
 
 						*:p* *:pr* *:print* *E749*
 :[range]p[rint] [flags]
@@ -103,8 +102,8 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 			|:hardcopy| を参照してください。GUI を使用している場合
 			は、メニューの File.Print から印刷できます。
 			[flags] については |ex-flags| を参照してください。
-			|:filter| コマンドを、パターンにマッチした行だけを表示
-			するのに、使うことができる。
+			パターンにマッチした行だけを表示するのに、|:filter| コ
+			マンドを使うことができます。
 
 :[range]p[rint] {count} [flags]
 			[range] の開始行から {count} 行を表示します([range]を
@@ -115,6 +114,7 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 :[range]P[rint] [count] [flags]
 			:print と同じです。シフトキーを長く押し続けてしまう人
 			のために追加されました。
+			このコマンドは |Vim9| script ではサポートされません。
 			Note: ユーザーコマンドでこのコマンドを上書きできます。
 			[flags] については |ex-flags| を参照してください。
 
@@ -143,18 +143,20 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 				quit
 <
 							*:z* *E144*
-:{range}z[+-^.=]{count}	{range}に指定した行の周辺を表示します。{range} を省略
-			した場合は現在行の周辺を表示します。行の範囲をどれだけ
-			表示するかは {count} に指定します。{count} を省略した
-			場合、ウィンドウが一つだけなら  'scroll' オプションの
-			2 倍の数が、そうでなければカレントウィンドウの高さから
-			3 を引いた数が使われます。
+:[range]z[+-^.=][count]	[range]に指定した行の周辺を表示します。[range] を省略
+			した場合は現在行の周辺を表示します。
 
-			{count} が指定された場合は 'window' オプションがその値
-			に設定される。
+			行の範囲をどれだけ表示するかは [count] に指定します。
+			[count] を省略し、ウィンドウが一つだけなら 'scroll' オ
+			プションの 2 倍の数が、そうでなければカレントウィンド
+			ウの高さから 3 を引いた数が使われます。これは、下の表
+			の "画面" の値です。
 
-			:z は修飾マークを付加して使うこともできます。次の効果
-			があります。
+			[count] が指定された場合は 'window' オプションがその値
+			に設定されます。
+
+			:z はマークを付加して使うこともできます。次の効果があ
+			ります。
 
 			記号   開始行        終了行       新しいカーソル位置  ~
 			----   ------        ------         ----------
@@ -168,10 +170,13 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 			の場合は、現在行の周りにマイナス記号で作った線が表示さ
 			れます。
 
-:{range}z#[+-^.=]{count}				*:z#*
-			":z" と同じですが、行番号も表示します。
-			{Vi クローンによってはこの機能が使えないことがありま
-			す。引数が違う場合もあります}
+							*:z!*
+:[range]z![+-^.=][count]
+			":z" と同じですが、[count]が指定されてない時、デフォル
+			トでVimのウィンドウの高さ-1になります。
+
+:[range]z[!]#[+-^.=][count]				*:z#*
+			":z" や ":z!" と同じですが、行番号も表示します。
 
 							*:=*
 := [flags]		最終行の行番号を表示します。
@@ -225,14 +230,12 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 
 			例: >
 				:exe "normal \<c-w>\<c-w>"
-<			{Vi には、もちろんない}
 
 :{range}norm[al][!] {commands}				*:normal-range*
 			{range} の各行に対してノーマルモードコマンド{commands}
 			を実行します。{commands} はカーソルが行頭にある状態で
 			実行されます。その他は範囲指定の無い ":normal" コマン
 			ドと同じです。
-			{Vi にはない}
 
 							*:sh* *:shell* *E371*
 :sh[ell]		シェルを起動します。シェルを終了 ("exit"コマンドを実行)
@@ -243,10 +246,10 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 			が起動された場合には、コンパイラが標準入力を非対話型
 			モードにしてしまうので使用できません。
 
-							*:!cmd* *:!* *E34*
+							*:!cmd* *:!*
 :!{cmd}			シェルで {cmd} を実行します。'shell' と 'shelltype' も
 			参照。
-
+							*E34*
 			{cmd} の中の '!' は以前使用した外部プログラムに置
 			き換えられます ('cpoptions' も参照)。'!' の前にバック
 			スラッシュがある場合はバックスラッシュが削除され '!'
@@ -259,15 +262,20 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 			照)。
 
 			{cmd} が "%" を含んでいたらそれは現在のファイル名に展
-			開されます。特殊文字はエスケープされないので、特殊文字
-			の特殊な意味を打ち消すにはクォートを使います: >
+			開されます。"#" を含んでいたらそれは代替ファイル名に展
+			開されます。ファイル名に入っている特殊文字はエスケープ
+			されないので、特殊文字の特殊な意味を打ち消すにはクォー
+			トを使います: >
 				:!ls "%"
 <			ファイル名が "$" を含んでいるならシングルクォートを使
-			うといいでしょう (ただしシングルクォートは問題がある場
-			合もある): >
+			うとより良いでしょう、ただしそれでうまくいくのはファイ
+			ル名にシングルクォートが入っていない場合だけです: >
 				:!ls '%'
 <			次の例は常に機能します。ただし長い: >
-				:exe "!ls " . shellescape(expand("%"))
+				:exe "!ls " .. shellescape(expand("%"))
+			"%" か "#" のリテラルを得るにはバックスラッシュを前に
+			置きます。例えば、"%" で始まるファイルの一覧なら: >
+				:!ls \%*
 <
 			{cmd} の終わりを示す改行文字 (newline) 以降の文字は、
 			次の ":" コマンドとして解釈されます。改行文字の前に
@@ -297,7 +305,7 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 							*:!!*
 :!!			最後の ":!{cmd}" を繰り返します。
 
-							*:ve* *:version*
+							*:ve* *:ver* *:version*
 :ve[rsion]		エディタのバージョンを表示します。コンパイル時に
 			"__DATE__" が利用可能だった場合には、コンパイルされた
 			日時も表示されます。利用不可だった場合は、リリースの最
@@ -316,6 +324,7 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 			   B	big
 			   H	huge
 			   m	手動で組み込むか他の機能に依存
+			   -    削除された機能
 			 (none) システム依存
 			例えば "N" と書いてあれば、その機能は
 			normal、big、huge バージョンの Vim に含まれます。
@@ -324,6 +333,7 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
    *+acl*		|ACL| サポートを含む
    *+ARP*		Amiga のみ: ARP サポートを含む
 B  *+arabic*		|Arabic|言語サポート
+B  *+autochdir*		|autochdir| オプションをサポート
 T  *+autocmd*		|:autocmd|, 自動コマンド実行
 H  *+autoservername*	自動的に |clientserver| を有効にする
 m  *+balloon_eval*	GUIでの |balloon-eval| サポート。GUI が有効で、
@@ -335,13 +345,15 @@ N  *+builtin_terms*	幾つかの組み込み端末 |builtin-terms|
 B  *++builtin_terms*	全部の組み込み端末 |builtin-terms|
 N  *+byte_offset*	'statusline'の'o'フラグ、|go|、|:goto|をサポート
 m  *+channel*		プロセス間通信 |channel|
-N  *+cindent*		|'cindent'|, C言語インデント
+6  *+cindent*		|'cindent'|, C言語インデント
 N  *+clientserver*	UnixとWin32: リモート呼び出し |clientserver|
-   *+clipboard*		|clipboard|サポート
-N  *+cmdline_compl*	コマンドライン補完 |cmdline-completion|
-S  *+cmdline_hist*	コマンドライン履歴 |cmdline-history|
+   *+clipboard*		|clipboard| サポートコンパイル済み
+   *+clipboard_working*	|clipboard| サポートコンパイル済みかつ動作中
+T  *+cmdline_compl*	コマンドライン補完 |cmdline-completion|
+T  *+cmdline_hist*	コマンドライン履歴 |cmdline-history|
 N  *+cmdline_info*	|'showcmd'| と |'ruler'|
-N  *+comments*		|'comments'| サポート
+S  *+cmdwin*		|cmdline-window| サポート
+T  *+comments*		|'comments'| サポート
 B  *+conceal*		"conceal" サポート。|conceal| |:syn-conceal| 他 参照。
 N  *+cryptv*		暗号化サポート |encryption|
 B  *+cscope*		|cscope| サポート
@@ -357,9 +369,9 @@ N  *+digraphs*		|digraphs| *E196*
    *+dnd*		"~レジスタ |quote_~|を使ったDnDのサポート
 B  *+emacs_tags*	|emacs-tags| ファイル
 N  *+eval*		式評価 {訳注: Vim script} |eval.txt|
-N  *+ex_extra*		今は常にオン、かつてVimの拡張Exコマンドのためにあった
+T  *+ex_extra*		今は常にオン、かつてVimの拡張Exコマンドのためにあった
 N  *+extra_search*	|'hlsearch'| と |'incsearch'| オプション
-B  *+farsi*		|farsi| 言語
+-  *+farsi*		削除済み; |farsi| 言語
 N  *+file_in_path*	|gf|, |CTRL-W_f| と |<cfile>|
 N  *+find_in_path*	include ファイル検索: |[I|、|:isearch|、
 			|CTRL-W_CTRL-I|、|:checkpath|、その他
@@ -368,7 +380,7 @@ N  *+folding*		|folding|
    *+fork*		Unix のみ: |fork| シェルコマンド
    *+float*		浮動小数点数サポート
 N  *+gettext*		メッセージの翻訳 |multi-lang|
-   *+GUI_Athena*	Unix のみ: Athena |GUI|
+-  *+GUI_Athena*	Unix のみ: Athena |GUI|
    *+GUI_neXtaw*	Unix のみ: neXtaw |GUI|
    *+GUI_GTK*		Unix のみ: GTK+ |GUI|
    *+GUI_Motif*		Unix のみ: Motif |GUI|
@@ -376,27 +388,30 @@ N  *+gettext*		メッセージの翻訳 |multi-lang|
 m  *+hangul_input*	ハングル入力サポート |hangul|
    *+iconv*		iconv() 関数が組み込まれている
    *+iconv/dyn*		|iconv-dynamic| |/dyn| と同じ
-N  *+insert_expand*	|insert_expand| 挿入モード補完
+T  *+insert_expand*	|insert_expand| 挿入モード補完
+m  *+ipv6*		IPv6 ネットワーク通信サポート |channel|
 m  *+job*		job の開始と停止 |job|
-S  *+jumplist*		|jumplist|
+T  *+jumplist*		|jumplist|; 8.2.3795以降は常に有効
 B  *+keymap*		|'keymap'|
 N  *+lambda*		|lambda| と |closure|
 B  *+langmap*		|'langmap'|
 N  *+libcall*		|libcall()|
 N  *+linebreak*		|'linebreak'|、|'breakat'| と |'showbreak'|
-N  *+lispindent*	|'lisp'|
+t  *+lispindent*	|'lisp'|
 T  *+listcmds*		バッファリストや引数リストに対するVimコマンド
 			|buffer-hidden| |:argdelete|
-N  *+localmap*		バッファローカルなマップのサポート |:map-local|
+T  *+localmap*		バッファローカルなマップのサポート |:map-local|
 m  *+lua*		|Lua| インターフェイス
 m  *+lua/dyn*		|Lua| インターフェイス |/dyn|
 N  *+menu*		|:menu|
 N  *+mksession*		|:mksession|
-N  *+modify_fname*	|filename-modifiers|
-N  *+mouse*		マウス操作 |mouse-using|
+T  *+modify_fname*	|filename-modifiers|
+T  *+mouse*		マウス操作 |mouse-using|
 N  *+mouseshape*	|'mouseshape'|
 B  *+mouse_dec*		Unix のみ: Dec端末マウス操作 |dec-mouse|
 N  *+mouse_gpm*		Unix のみ: Linuxコンソールマウス操作 |gpm-mouse|
+m  *+mouse_gpm/dyn*	|+mouse_gpm| と同じだが、ライブラリへの依存がオプショ
+			ナル |/dyn|
 N  *+mouse_jsbterm*	JSB マウスサポート |jsbterm-mouse|
 B  *+mouse_netterm*	Unix のみ: nettermマウス操作 |netterm-mouse|
 N  *+mouse_pterm*	QNX  のみ: ptermマウス操作 |qnx-terminal|
@@ -404,19 +419,22 @@ N  *+mouse_sysmouse*	Unix のみ: *BSD コンソールマウス操作 |sysmouse|
 B  *+mouse_sgr*		Unix のみ: sgrマウス操作 |sgr-mouse|
 N  *+mouse_urxvt*	Unix のみ: urxvtマウス操作 |urxvt-mouse|
 N  *+mouse_xterm*	Unix のみ: xtermマウス操作 |xterm-mouse|
-N  *+multi_byte*	16ビット、32 ビット文字 |multibyte|
+T  *+multi_byte*	Unicodeサポート、16ビット、32 ビット文字 |multibyte|
    *+multi_byte_ime*	Win32 IMEサポート
 N  *+multi_lang*	多言語サポート |multi-lang|
 m  *+mzscheme*		Mzscheme インターフェイス |mzscheme|
 m  *+mzscheme/dyn*	Mzscheme インターフェイス |mzscheme-dynamic| |/dyn|
 m  *+netbeans_intg*	|netbeans|
-   *+num64*		64ビットの数値をサポート |Number|
+T  *+num64*		64ビットの数値をサポート |Number|
+   			8.2.0271以降は常に有効になっている。実際の数値のサイズ
+			を確認するにはv:numbersizeを使用すること。
 m  *+ole*		Win32 GUI のみ: |ole-interface|
 N  *+packages*		|packages| の読み込み
 N  *+path_extra*	'path'や'tags'での上下階の検索
 m  *+perl*		Perl インターフェイス |perl|
 m  *+perl/dyn*		Perl インターフェイス |perl-dynamic| |/dyn|
 N  *+persistent_undo*	永続 undo |undo-persistence|
+N  *+popupwin*		ポップアップウィンドウ |popup-window|
    *+postscript*	|:hardcopy| でPostScriptファイルの書き出し
 N  *+printer*		|:hardcopy| コマンド
 H  *+profile*		|:profile| コマンド
@@ -432,16 +450,20 @@ m  *+ruby*		Ruby インターフェイス |ruby|
 m  *+ruby/dyn*		Ruby インターフェイス |ruby-dynamic| |/dyn|
 T  *+scrollbind*	|'scrollbind'|
 B  *+signs*		|:sign|
-N  *+smartindent*	|'smartindent'|
+t  *+smartindent*	|'smartindent'|
+B  *+sodium*		より良い暗号化サポートのために libsodium とコンパイル
+			されている
+B  *+sound*		|sound_playevent()|, |sound_playfile()| 関数等
+N  *+spell*		スペルチェックサポート |spell|
 N  *+startuptime*	|--startuptime| 引数
 N  *+statusline*	オプション'statusline'、'rulerformat'と、
 			'titlestring'と'iconstring'の特殊フォーマット
-m  *+sun_workshop*	|workshop|
+-  *+sun_workshop*	削除済み; |workshop|
 N  *+syntax*		構文強調 |syntax|
    *+system()*		Unix のみ: |+fork|の反対
 T  *+tag_binary*	タグファイル内の高速(二分探索)検索 |tag-binary-search|
-N  *+tag_old_static*	静的タグの古い方法 |tag-old-static|
-m  *+tag_any_white*	tagsファイル内で空白文字を許す |tag-any-white|
+-  *+tag_old_static*	削除済み; 静的タグの方法 |tag-old-static|
+-  *+tag_any_white*	削除済み; タグファイル内の空白を許すためのものだった
 m  *+tcl*		Tcl インターフェイス |tcl|
 m  *+tcl/dyn*		Tcl インターフェイス |tcl-dynamic| |/dyn|
 m  *+terminal*		ターミナルウィンドウのサポート |terminal|
@@ -449,24 +471,27 @@ m  *+terminal*		ターミナルウィンドウのサポート |terminal|
 N  *+termresponse*	|t_RV| と |v:termresponse| のサポート
 B  *+termguicolors*	xterm互換端末での 24 ビット色のサポート
 N  *+textobjects*	|text-objects| 選択
+N  *+textprop*		|text-properties|
    *+tgetent*		非Unix のみ: 外部termcapを使用可能
 N  *+timers*		|timer_start()| 関数
-N  *+title*		ウィンドウタイトルとアイコン設定 |'title'| |'icon'|
+T  *+title*		ウィンドウタイトルとアイコン設定 |'title'| |'icon'|;
+			常に有効
 N  *+toolbar*		|gui-toolbar|
-N  *+user_commands*	ユーザー定義コマンド |user-commands|
+T  *+user_commands*	ユーザー定義コマンド |user-commands|
+			8.1.1210 からは常に有効。
 B  *+vartabs*		可変幅のタブストップ |'vartabstop'|
-N  *+viminfo*		|'viminfo'|
-   *+vertsplit*		ウィンドウの垂直分割 |:vsplit|; 8.0.1118 からは常に
+T  *+vertsplit*		ウィンドウの垂直分割 |:vsplit|; 8.0.1118 からは常に
 			有効。
-			|+windows| 機能と同調。
-N  *+virtualedit*	|'virtualedit'|
-S  *+visual*		ビジュアルモード |Visual-mode| 7.4.200からは常に有効
-N  *+visualextra*	拡張ビジュアルモードコマンド |blockwise-operators|
+T  *+vim9script*	|Vim9| script
+N  *+viminfo*		|'viminfo'|
+T  *+virtualedit*	|'virtualedit'| 8.1.826 からは常に有効
+T  *+visual*		ビジュアルモード |Visual-mode| 7.4.200からは常に有効
+T  *+visualextra*	拡張ビジュアルモードコマンド |blockwise-operators|
 T  *+vreplace*		|gR| と |gr|
    *+vtp*		MS-Windows コンソール上での 'termguicolors' のサポート
 N  *+wildignore*	|'wildignore'|
 N  *+wildmenu*		|'wildmenu'|
-   *+windows*		複数ウィンドウ; 8.0.1118 からは常に有効
+T  *+windows*		複数ウィンドウ; 8.0.1118 からは常に有効
 m  *+writebackup*	|'writebackup'|がデフォルトで有効
 m  *+xim*		Xインプットメソッド |xim|
    *+xfontset*		Xフォントセットサポート |xfontset|
@@ -485,7 +510,7 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 :ve[rsion] {nr}		現在は無視されます。これはかつて .vimrc の中でバージョ
 			ン番号をチェックするために使われていました。現在は
 			":if" コマンドを使ってバージョン依存の振る舞いを記述で
-			きるので、削除されています。{Vi にはない}
+			きるので、削除されています。
 
 							*:redi* *:redir*
 :redi[r][!] > {file}	コマンドの出力 (メッセージ) を {file} にリダイレクトし
@@ -507,68 +532,80 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 			このコマンドの代わりに、オプション 'verbosefile' を使
 			うこともできます。":redir" と同時に使うこともできま
 			す。
-			{Vi にはない}
 
 :redi[r] >> {file}	メッセージを {file} にリダイレクトします。
-			{file} が既に存在する場合は追記します。 {Vi にはない}
+			{file} が既に存在する場合は追記します。
 
 :redi[r] @{a-zA-Z}
 :redi[r] @{a-zA-Z}>	メッセージをレジスタ {a-z} にリダイレクトします。レジ
 			スタ名が大文字 {A-Z} の場合は、そのレジスタに追記され
 			ます。レジスタ名の後ろの ">" は省略可能です。
-			{Vi にはない}
-:redi[r] @{a-z}>>	メッセージをレジスタ {a-z} に追記します。{Vi にはない}
+:redi[r] @{a-z}>>	メッセージをレジスタ {a-z} に追記します。
 
 :redi[r] @*>
 :redi[r] @+>		メッセージをセレクションまたはクリップボードにリダイレ
 			クトします。互換性のため、レジスタ名の後ろの ">" は省
 			略できます。|quotestar| と |quoteplus| を参照。
-			{Vi にはない}
-:redi[r] @*>>		
+:redi[r] @*>>
 :redi[r] @+>>		メッセージをクリップボードに追記します。
-			{Vi にはない}
 
 :redi[r] @">		メッセージを無名レジスタにリダイレクトします。互換性の
 			ため、レジスタ名の後ろの ">" は省略できます。
-			{Vi にはない}
-:redi[r] @">>		メッセージを無名レジスタに追記します。{Vi にはない}
-
-:redi[r] => {var}	メッセージを変数にリダイレクトします。変数が存在しない
-			場合は、作成されます。変数がすでにある場合は、空文字列
-			で初期化されます。
+:redi[r] @">>		メッセージを無名レジスタに追記します。
+							*E1092*
+:redi[r] => {var}	メッセージを変数にリダイレクトします。
+			旧来のスクリプトでは: 変数が存在しない場合は、作成され
+			ます。変数がすでにある場合は、空文字列で初期化されま
+			す。リダイレクトを開始した後で変数を変更したり、ロック
+			したり、変数タイプを変更したりすると、それ以降のコマン
+			ドがメッセージを出力するときにエラーが起こります。
+			Vim9 script では: 変数が文字列として宣言されている必要
+			があります。
 			リダイレクトが終了するまでは、変数は空のままです。
-			文字列変数のみ使えます。リダイレクトを開始した後で変数
-			を変更したり、ロックしたり、変数タイプを変更したりする
-			と、それ以降のコマンドがメッセージを出力するときにエラー
-			が起こります。{Vi にはない}
-			コマンド1つの出力を取得するのには |execute()| 関数を使
-			うことができます。
+			文字列変数のみ使えます。
+			コマンド1つの出力を取得するのにはリダイレクトの代わりに
+			|execute()| 関数を使うことができます。
 
 :redi[r] =>> {var}	メッセージを変数に追記します。文字列変数のみ使えます。
-			{Vi にはない}
-
-:redi[r] END		メッセージのリダイレクトを終了します。 {Vi にはない}
+								 *E1185*
+:redi[r] END		メッセージのリダイレクトを終了します。
 
 							*:filt* *:filter*
-:filt[er][!] {pat} {command}
-:filt[er][!] /{pat}/ {command}
-			コマンドの出力を {pat} に一致する行に制限します。例と
-			して xml ファイルだけを一覧する場合には以下のようにし
-			ます: >
+:filt[er][!] {pattern} {command}
+:filt[er][!] /{pattern}/ {command}
+			コマンドの出力を {pattern} に一致する行に制限します。
+			例として xml ファイルだけを一覧する場合には以下のよう
+			にします: >
 				:filter /\.xml$/ oldfiles
-<			[!] を付けたときは、コマンドの出力を {pat} に一致しな
-			い行に制限します。
+<			[!] を付けたときは、コマンドの出力を {pattern} に一致
+			しない行に制限します。
 
-			{pat} は Vim の検索パターンです。パターンを囲む "/"
-			は、{pat} 内に使われない限り、非ID文字 (|'isident'|)
-			で代用できます。パターンを囲む文字を省略した場合は、パ
-			ターンにバー文字 {訳注: "|"} を含むことはできなくなり
-			ます。
+			{pattern} は Vim の検索パターンです。パターンを囲む
+			"/" は、{pattern} 内に使われない限り、非ID文字
+			(|'isident'|) で代用できます。パターンを囲む文字を省略
+			した場合は、パターンにバー文字 {訳注: "|"} を含むこと
+			はできなくなります。'ignorecase' は使われません。
 
 			パターンは出力に部分一致でマッチするので、行全体に
 			マッチするパターンを指定する必要はありません。一部のコ
 			マンドだけがフィルタリングをサポートしているので、サ
-			ポートしているかどうかは実際に試してみてください。
+			ポートしているかどうかは実際に試してみてください。フィ
+			ルタリングをサポートするコマンドの一部:
+			   |:#|          - 行全体をフィルタ
+			   |:clist|      - ファイル名かモジュール名でフィルタ
+			   |:command|    - コマンド名でフィルタ
+			   |:files|      - ファイル名でフィルタ
+			   |:highlight|  - ハイライトグループでフィルタ
+			   |:jumps|      - ファイル名でフィルタ
+			   |:let|        - 変数名でフィルタ
+			   |:list|       - 行全体をフィルタ
+			   |:llist|      - ファイル名かモジュール名でフィルタ
+			   |:marks|      - 現在のファイル内のテキストか他のファ
+			   		   イルのファイル名でフィルタ
+			   |:oldfiles|   - ファイル名でフィルタ
+			   |:registers|  - レジスタの内容でフィルタ
+					   (複数行は動作しない)
+			   |:set|        - オプション名でフィルタ
 
 			通常のメッセージだけがフィルタリングされ、エラー
 			メッセージはされません。 {訳注: 常に出力されます}
@@ -614,7 +651,7 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 			使用します。次の例では、|:silent| を使ってファイル読み
 			込みに関するメッセージを抑制しつつ、|:unsilent| を使っ
 			て各ファイルの最初の行を表示できるようにしています: >
-    		:silent argdo unsilent echo expand('%') . ": " . getline(1)
+		:silent argdo unsilent echo expand('%') .. ": " .. getline(1)
 <
 
 						*:verb* *:verbose*
@@ -642,10 +679,10 @@ N  *+X11*		Unix のみ: ウィンドウタイトルを復帰可能 |X11|
 
 							*:verbose-cmd*
 Vim のオプション、マップ、短縮入力、ユーザー定義関数、ユーザー定義コマンド、強
-調グループ、オートコマンド、を表示するとき、'verbose' がゼロ以外だと、それが設
-定された場所も表示されます。手動で設定したときは "Last set" メッセージは表示さ
-れません。関数、ユーザーコマンド、オートコマンド、を実行中に設定された場合に
-は、そのコマンドを定義したスクリプトが表示されます。
+調グループ、自動コマンド、を表示するとき、'verbose' がゼロ以外だと、それが設定
+された場所も表示されます。手動で設定したときは "Last set" メッセージは表示され
+ません。関数、ユーザーコマンド、自動コマンド、を実行中に設定された場合には、そ
+のコマンドを定義したスクリプトが表示されます。
 {|+eval| が有効な場合のみ利用できます}
 
 							*K*
@@ -674,30 +711,43 @@ K			カーソル位置のキーワードを調べるためのプログラムを�
 <			- 'keywordprg' が "man -s" の場合は、"K" の前に入力さ
 			  れたカウントは "-s" の後に挿入されます。カウントを省
 			  略した場合は、"-s" は除去されます。
-			{Vi にはない}
 
 							*v_K*
 {Visual}K		"K" と同じですが、キーワードにはビジュアル選択されたテ
 			キストが使用されます。複数行を選択したときは機能しませ
-			ん。{Vi にはない}
+			ん。
 
 [N]gs							*gs* *:sl* *:sleep*
-:[N]sl[eep] [N]	[m]	[N] 秒間何もしません。[m] を付けると、[N] ミリ秒間ス
+:[N]sl[eep] [N][m]	[N] 秒間何もしません。[m] を付けると、[N] ミリ秒間ス
 			リープします。"gs" に指定する数値は常に秒単位です。省
 			略時は 1 秒間スリープします。 >
 			     :sleep	     " 1 秒スリープ
 			     :5sleep	     " 5 秒スリープ
 			     :sleep 100m     " 100 ミリ秒スリープ
 			     10gs	     " 10 秒スリープ
-<			CTRL-C で割り込むことができます(MS-DOSではCTRL-Break)。
-			"gs" は "goto sleep" の略です。
+<			CTRL-C で割り込むことができます(MS-Windowsでは
+			CTRL-Break)。"gs" は "goto sleep" の略です。
 			カーソルが表示可能な位置にある場合は、スリープしている
 			間、カーソルはテキスト中に表示されます。
-			{Vi にはない}
 			スリープ中に受信した netbeans メッセージは処理されま
 			す。{|+netbeans_intg| 機能つきでコンパイルされたときの
 			み利用可能}
 
+							*:sl!* *:sleep!*
+:[N]sl[eep]! [N][m]	上記と同じですが、カーソルが非表示となります。
+
+							*:xrestore* *:xr*
+:xr[estore] [display]	X11サーバーへの接続を再初期化します。Xサーバーが再起動
+			した後に便利です。例えば、screen/tmux内でVimを長時間実
+			行していて、異なるマシンから接続しているとき。
+			[display] は $DISPLAY 環境変数の形式にする必要がありま
+			す (例: "localhost:10.0")
+			[display] を省略すると、前回このコマンドの実行で使用し
+			たものと同じ値を使用して、X11サーバーへの接続を再初期
+			化します。値が指定されていない場合は、Vimの起動時と同
+			じ環境変数 $DISPLAY の値が使用されます。
+			{|+clipboard| 機能つきでコンパイルされたときのみ利用可
+			能}
 
 							*g_CTRL-A*
 g CTRL-A		MEM_PROFILING を define して Vim をコンパイルしたとき
@@ -717,7 +767,7 @@ less のコマンドをシミュレートするためのマップを設定しま
 通常どおり、Vim のコマンドを使うことができます。
 
 完璧に同じ動作ではありません。例えば、短いファイルを表示する場合でも、Vim はス
-クリーンを占有します。しかし、ほとんどの場合は満足に機能します。それにとにか
+クリーンを占有します。しかし、ほとんどの場合は十分に機能します。それにとにか
 く、構文強調表示することができます。
 
 "h" キーを押すと使用できるコマンドのショートヘルプが表示されます。

@@ -1,0 +1,39 @@
+name: 'Run nvcheck with reviewdog'
+description: '🐶Run nvcheck with reviewdog on pull requests to improve document writing experience.'
+author: 'Tsuyoshi CHO <Tsuyoshi.CHO+develop@Gmail.com>'
+inputs:
+  github_token:
+    description: 'GITHUB_TOKEN.'
+    required: true
+    default: ${{ github.token }}
+  level:
+    description: 'Report level for reviewdog [info,warning,error]'
+    default: 'error'
+  reporter:
+    description: |
+      Reporter of reviewdog command [github-check,github-pr-review].
+      Default is github-pr-review.
+      github-pr-review can use Markdown and add a link to rule page in reviewdog reports.
+    default: 'github-pr-review'
+  filter_mode:
+    description: |
+      Filtering mode for the reviewdog command [added,diff_context,file,nofilter].
+      Default is added.
+    default: 'added'
+  fail_on_error:
+    description: |
+      Exit code for reviewdog when errors are found [true,false]
+      Default is `false`.
+    default: 'false'
+  reviewdog_flags:
+    description: 'Additional reviewdog flags'
+    default: ''
+  tool_name:
+    description: 'Tool name to use for reviewdog reporter'
+    default: 'nvcheck'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+branding:
+  icon: 'chevron-down'
+  color: 'green'

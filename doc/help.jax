@@ -1,4 +1,4 @@
-*help.txt*	For Vim バージョン 8.1.  Last change: 2017 Oct 28
+*help.txt*	For Vim バージョン 9.0.  Last change: 2022 May 13
 
 			   VIM - メインヘルプファイル
 									 k
@@ -11,26 +11,33 @@
   マウスでジャンプ:  ":set mouse=a" と入力してマウスを有効にしてください
 		     (xterm or GUI で利用可)。タグ (例: |bars|) をマウスの左ボ
 		     タンでダブルクリックすると、項目にジャンプできます。
-    元の場所に戻る:  CTRL-T or CTRL-O を押す。繰り返すと更に戻れます。
+    元の場所に戻る:  CTRL-O を押します。繰り返すと更に戻れます。
 
     項目を指定する:  |:help| コマンドに項目を指定することで、その項目を直ちに
 		    表示できます。修飾子を先行入力することで、調べたい項目の種
 		    類を指定することもできます:  *help-context*
 
 			  種類			修飾子	    例	~
-		  ノーマルモードコマンド		   :help x
-		  ビジュアルモードコマンド	 v_	   :help v_u
-		  挿入モードコマンド		 i_	   :help i_<Esc>
-		  コマンドラインコマンド	 :	   :help :quit
-		  コマンドライン編集		 c_	   :help c_<Del>
-		  Vim の起動引数		 -	   :help -r
-		  オプション			 '	   :help 'textwidth'
-		  正規表現			 /	   :help /[
+		      ノーマルモードコマンド		   :help x
+		      ビジュアルモードコマンド	  v_	   :help v_u
+		      挿入モードコマンド	  i_	   :help i_<Esc>
+		      コマンドラインコマンド	  :	   :help :quit
+		      コマンドライン編集	  c_	   :help c_<Del>
+		      Vim の起動引数		  -	   :help -r
+		      オプション		  '	   :help 'textwidth'
+		      正規表現			  /	   :help /[
 		    その他の種類については |help-summary| を参照してください。
+		    ヘルプの構文の説明は |notation| を参照してください。
+
 
   ヘルプを検索する: ":help word" とタイプしてから CTRL-D を押すと "word" に
 		    マッチするヘルプ項目の一覧が表示されます。
 		    もしくは ":helpgrep word" を使ってください。 |:helpgrep|
+
+  はじめに:	    Vimのチューター、基本的なコマンドのための30分間の対話コー
+		    スを行ってください。|vimtutor| を参照してください。
+		    ユーザーマニュアルを最初から最後まで読んでください:
+		    |usr_01.txt|
 
 Vim は Vi IMproved の略です。Vim の大部分は Bram Moolenaar によって作成され、
 たくさんの人が協力しました。|credits| 参照。
@@ -38,7 +45,7 @@ Vim は Vi IMproved の略です。Vim の大部分は Bram Moolenaar によっ�
 						*doc-file-list* *Q_ct*
 基本:
 |quickref|	よく使うコマンドのクイックリファレンス
-|tutor|		30分の初心者向けトレーニングコース
+|tutor|		30分の初心者向け対話コース
 |copying|	著作権について
 |iccf|		ウガンダの恵まれない子供達への支援活動
 |sponsor|	Vim 開発スポンサー制度、Vim の登録ユーザーになろう
@@ -86,9 +93,13 @@ Vim は Vi IMproved の略です。Vim の大部分は Bram Moolenaar によっ�
 |usr_44.txt|  構文ファイルを作成する
 |usr_45.txt|  言語を選択する
 
+Vim script を書く ~
+|usr_50.txt|  高度な Vim script の書き方
+|usr_51.txt|  プラグインを作る
+|usr_52.txt|  Vim9 script でプラグインを作る
+
 インストール ~
 |usr_90.txt|  Vim のインストール
-
 
 リファレンスマニュアルでは Vim の詳細を説明します。		*reference_toc*
 
@@ -103,8 +114,8 @@ Vim は Vi IMproved の略です。Vim の大部分は Bram Moolenaar によっ�
 |message.txt|	(エラー)メッセージの説明
 |quotes.txt|	Vimユーザーの感想
 |todo.txt|	既知のバグと、機能拡張の要望
-|debug.txt|	Vimのデバッグについて
 |develop.txt|	Vimの開発に関して
+|debug.txt|	Vimのデバッグについて
 |uganda.txt|	Vimの配布条件と、あなたが支払ったお金の使い道について
 
 基本的な編集 ~
@@ -114,7 +125,6 @@ Vim は Vi IMproved の略です。Vim の大部分は Bram Moolenaar によっ�
 |scroll.txt|	ウィンドウのスクロール
 |insert.txt|	挿入モードと置換モード
 |change.txt|	テキストの削除と変更
-|indent.txt|	C言語や、その他の言語の自動インデント
 |undo.txt|	アンドゥとリドゥ
 |repeat.txt|	繰り返しコマンド、Vim script、スクリプトのデバッグ
 |visual.txt|	ビジュアルモード (テキストの選択)
@@ -127,35 +137,48 @@ Vim は Vi IMproved の略です。Vim の大部分は Bram Moolenaar によっ�
 |pattern.txt|	検索コマンドと正規表現
 |map.txt|	キーマップと短縮入力
 |tagsrch.txt|	タグと特別な検索
-|quickfix.txt|	編集、コンパイル、修正、の流れを早くするコマンド
 |windows.txt|	マルチウィンドウとマルチバッファのコマンド
 |tabpage.txt|	タブページを操作するコマンド
-|syntax.txt|	構文強調
 |spell.txt|	スペルチェック
 |diff.txt|	バージョン違いのファイルの編集 (差分モード)
 |autocmd.txt|	イベントに応じて自動的にコマンドを実行する
-|filetype.txt|	ファイルタイプ別の設定
 |eval.txt|	式の評価、条件式 (Vim script リファレンス)
+|builtin.txt|	組み込み関数
+|userfunc.txt|	ユーザー定義関数
 |channel.txt|	ジョブ、チャネル、プロセス間通信
 |fold.txt|	ある範囲を隠す (折り畳む)
 
 特定機能 ~
+|testing.txt|	Vim と Vim script のテスト
 |print.txt|	印刷
 |remote.txt|	クライアント/サーバー機能
 |term.txt|	いろいろな端末やマウスについて
 |terminal.txt|	端末ウィンドウのサポート
+|popup.txt|	ポップアップウィンドウのサポート
+|vim9.txt|	Vim9 script
+
+プログラミング言語サポート ~
+|indent.txt|	C言語や、その他の言語の自動インデント
+|syntax.txt|	構文強調
+|textprop.txt|	ハイライトやその他のためにテキストにプロパティを付加する
+|filetype.txt|	ファイルタイプ別の設定
+|quickfix.txt|	編集、コンパイル、修正、の流れを早くするコマンド
+|ft_ada.txt|	Ada (プログラミング言語) のサポート
+|ft_ps1.txt|	Windows PowerShell ファイルタイププラグイン
+|ft_raku.txt|	Raku ファイルタイププラグイン
+|ft_rust.txt|	Rust ファイルタイププラグイン
+|ft_sql.txt|	SQL ファイルタイププラグイン
+
+言語サポート ~
 |digraph.txt|	利用可能なダイグラフ (digraph) の一覧
 |mbyte.txt|	マルチバイトテキストのサポート
 |mlang.txt|	英語以外の言語のサポート
+|rileft.txt|	右横書き (書字方向が右から左になるモード)
 |arabic.txt|	アラビア語のサポート
 |farsi.txt|	ペルシア語のサポート
 |hebrew.txt|	ヘブライ語のサポート
 |russian.txt|	ロシア語のサポート
-|ft_ada.txt|	Ada (プログラミング言語) のサポート
-|ft_rust.txt|	Rust ファイルタイププラグイン
-|ft_sql.txt|	SQL ファイルタイププラグイン
 |hangulin.txt|	ハングル (韓国語) の入力
-|rileft.txt|	右横書き (書字方向が右から左になるモード)
 
 GUI ~
 |gui.txt|	グラフィカルユーザーインターフェイス (GUI)
@@ -172,7 +195,6 @@ GUI ~
 |if_ole.txt|	Win32のOLEオートメーション
 |if_ruby.txt|	Ruby インターフェイス
 |debugger.txt|	デバッガ用のインターフェイス
-|workshop.txt|	Sun Visual Workshop インターフェイス
 |netbeans.txt|	NetBeans External Editor インターフェイス
 |sign.txt|	デバッグ用の目印
 
@@ -183,12 +205,14 @@ GUI ~
 |version6.txt|	Vim version 5.7 と 6.x の違い
 |version7.txt|	Vim version 6.4 と 7.x の違い
 |version8.txt|	Vim version 7.4 と 8.x の違い
+|version9.txt|	Vim version 8.2 と 9.0 の違い
 						*sys-file-list*
 システムに関する説明 ~
 |os_390.txt|	OS/390 Unix
 |os_amiga.txt|	Amiga
 |os_beos.txt|	BeOS と BeBox
-|os_dos.txt|	MS-DOS と MS-Windows NT/95 の共通事項
+|os_dos.txt|	MS-DOS と MS-Windows の共通事項
+|os_haiku.txt|	Haiku
 |os_mac.txt|	Macintosh
 |os_mint.txt|	Atari MiNT
 |os_msdos.txt|	MS-DOS (DOS と Windows の DOS プロンプト)
@@ -197,7 +221,7 @@ GUI ~
 |os_risc.txt|	RISC-OS
 |os_unix.txt|	Unix
 |os_vms.txt|	VMS
-|os_win32.txt|	MS-Windows 95/98/NT
+|os_win32.txt|	MS-Windows
 						*standard-plugin-list*
 標準プラグイン ~
 |pi_getscript.txt| Vim script の最新版をダウンロードする

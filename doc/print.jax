@@ -1,4 +1,4 @@
-*print.txt*     For Vim バージョン 8.1.  Last change: 2010 Jul 20
+*print.txt*     For Vim バージョン 9.0.  Last change: 2022 Oct 01
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -15,7 +15,6 @@
 7. PostScript ユーティリティ		|postscript-print-util|
 8. 改ページ文字				|printing-formfeed|
 
-{Vi にはない機能です}
 {|+printer| 機能付きでコンパイルした場合のみ利用可能}
 
 ==============================================================================
@@ -46,6 +45,8 @@ Note: |:hardcopy| による印刷が機能しない場合は、|:TOhtml| で HTM
 			して 'printexpr' の中で使うことができます。[arguments]
 			は無視することもできます。用紙サイズや両面印刷などの指
 			定を 'printoptions' に設定できます。
+			Note: PDFが必要な場合は、PostScriptをPDFに変換できる
+			"ps2pdf" 等のツールがあります。
 
 :[range]ha[rdcopy][!] >{filename}
 			上記と同じですが、PostScript を {filename} に保存しま
@@ -80,8 +81,8 @@ Note: |:hardcopy| による印刷が機能しない場合は、|:TOhtml| で HTM
 説明は |options.txt| を参照してください。
 
 							*pdev-option*
-'printdevice' 'pdev'	文字列	(初期値は空)
-			グローバル設定
+'printdevice' 'pdev'	文字列	(既定では空)
+			グローバル
 プリンタの名前を設定します。|:hardcopy| が ! 付きで実行され、プリンタ選択ダイ
 アログが省略されたときに使われます。Win32 では、標準印刷ダイアログで表示される
 プリンタの名前を正確に指定してください。
@@ -89,13 +90,13 @@ Note: |:hardcopy| による印刷が機能しない場合は、|:TOhtml| で HTM
 が使われます。
 
 							*penc-option* *E620*
-'printencoding' 'penc'	文字列	(初期値は空。あるいは次のとおり:
-					Windows, OS/2: cp1252,
+'printencoding' 'penc'	文字列	(既定では空。あるいは次のとおり:
+					MS-Windows: cp1252,
 					Macintosh: mac-roman,
 					VMS: dec-mcs,
 					HPUX: hp-roman8,
 					EBCDIC: ebcdic-uk)
-			グローバル設定
+			グローバル
 印刷に使う文字エンコーディングを設定します。'runtimepath' の "print" ディレク
 トリにある、このオプションに対応した印刷文字エンコーディングファイルが印刷に使
 われます。
@@ -105,11 +106,11 @@ Note: |:hardcopy| による印刷が機能しない場合は、|:TOhtml| で HTM
 'encoding' を参照してください。Vim が認識できないエンコーディング名は、すべて
 小文字に変換され、アンダースコアは '-' に置換されます。
 
-'printencoding' が空、もしくは印刷エンコーディングファイルが見つからなかった場
-合は、'encoding' に対応した印刷エンコーディングファイルを探します
-(|+multi_byte| が有効で、8-bit エンコーディングが設定されている場合のみ)。それ
-でも印刷エンコーディングファイルが見つからなかった場合は、"latin1" の印刷エン
-コーディングファイルが使われます。
+'printencoding' が空、もしくは印刷文字エンコーディングファイルが見つからなかっ
+た場合は、'encoding' に対応した印刷文字エンコーディングファイルを探します
+(8-bit エンコーディングが設定されている場合のみ)。それでも印刷文字エンコーディ
+ングファイルが見つからなかった場合は、"latin1" の印刷文字エンコーディングファ
+イルが使われます。
 
 'encoding' にマルチバイトエンコーディングが設定されている場合、印刷のときに、
 'encoding' から印刷エンコーディングに文字が変換されます ('printencoding' が空
@@ -118,13 +119,13 @@ Note: |:hardcopy| による印刷が機能しない場合は、|:TOhtml| で HTM
 いときは、印刷は失敗します。変換できない文字は、逆さクエスチョンマークに置換さ
 れます。
 
-Mac、VMS、HPUX、EBCDIC、環境の標準エンコーディングのための、印刷エンコーディン
-グファイルが用意されています。それは初期設定として使われます。Windows と OS/2
-では、コードページ1252 の印刷エンコーディングファイルが標準で使われます。
+Mac、VMS、HPUX、EBCDIC環境の標準エンコーディングのための、印刷文字エンコーディ
+ングファイルが用意されています。それは初期設定として使われます。MS-Windows で
+は、コードページ 1252 の印刷文字エンコーディングが標準で使われます。
 
 							*pexpr-option*
-'printexpr' 'pexpr'	文字列	(初期設定は下記参照)
-			グローバル設定
+'printexpr' 'pexpr'	文字列	(既定は下記参照)
+			グローバル
 |:hardcopy| で PostScript を印刷するためのスクリプトを設定します。
 印刷する PostScript ファイルは |v:fname_in| に設定されます。
 ":hardcopy" コマンドの引数は |v:cmdarg| に設定されます。
@@ -134,31 +135,34 @@ Mac、VMS、HPUX、EBCDIC、環境の標準エンコーディングのための�
 MS-Windows と VMS 以外の環境の初期設定では、単純に "lpr" を使ってファイルを印
 刷します: >
 
-    system('lpr' . (&printdevice == '' ? '' : ' -P' . &printdevice)
-	. ' ' . v:fname_in) . delete(v:fname_in) + v:shell_error
+    system('lpr' .. (&printdevice == '' ? '' : ' -P' .. &printdevice)
+	.. ' ' .. v:fname_in) .. delete(v:fname_in) + v:shell_error
 
-MS-Dos、MS-Windows、OS/2、での初期設定は、指定されている印刷デバイスにファイル
-をコピーします: >
+MS-Windows での初期設定は、現在指定されている印刷デバイスにファイルをコピーし
+ます: >
 
-    system('copy' . ' ' . v:fname_in . (&printdevice == ''
-		? ' LPT1:' : (' \"' . &printdevice . '\"')))
-		. delete(v:fname_in)
+    system('copy' .. ' ' .. v:fname_in .. (&printdevice == ''
+		? ' LPT1:' : (' \"' .. &printdevice .. '\"')))
+		.. delete(v:fname_in)
 
 VMS での初期設定は、標準の印刷デバイスか、指定されている印刷デバイスにファイル
 を送ります: >
 
-    system('print' . (&printdevice == '' ? '' : ' /queue=' .
-		&printdevice) . ' ' . v:fname_in) . delete(v:fname_in)
+    system('print' .. (&printdevice == '' ? '' : ' /queue=' ..
+		&printdevice) .. ' ' .. v:fname_in) .. delete(v:fname_in)
 
 このオプションを設定するときは、関数を使うと、スペースをエスケープしなくてもい
 いので簡単です。例: >
 
-	:set printexpr=PrintFile(v:fname_in)
-	:function PrintFile(fname)
-	:  call system("ghostview " . a:fname)
-	:  call delete(a:fname)
+	:set printexpr=PrintFile()
+	:function PrintFile()
+	:  call system("ghostview " .. v:fname_in)
+	:  call delete(v:fname_in)
 	:  return v:shell_error
 	:endfunc
+
+オプションに関数呼び出しのみが設定されている場合は、より効率的です、
+|expr-option-function| を参照。
 
 ファイルを読み込む前に制御を返す印刷プログラムもあるので注意してください。ファ
 イルをすぐに削除してしまうと、印刷できないかもしれません。ほとんどの場合、その
@@ -171,14 +175,21 @@ MS-Windows 以外のシステムの初期設定では、"v:shell_error" を足�
 クを使っています。"v:shell_error" には system() の呼び出しでエラーが起きたとき
 に 0 以外の値が入ります。
 
-セキュリティ上の理由により、このオプションは、|modeline| や |sandbox| の中では
-設定できません。
+式が s: か |<SID>| で始まる場合は、スクリプトID(|local-function|) に置き換えら
+れます。例: >
+		set printexpr=s:MyPrintFile()
+		set printexpr=<SID>SomePrintFile()
+そうでない場合、式はオプションが設定されたスクリプトのコンテキストで評価され、
+その結果スクリプトローカルな要素を使用できます。
+
+セキュリティ上の理由から、このオプションを |modeline| または |sandbox| 内で設
+定することはできません。
 
 							*pfn-option* *E613*
-'printfont' 'pfn'	文字列	(初期設定は "courier")
-			グローバル設定
+'printfont' 'pfn'	文字列	(既定では "courier")
+			グローバル
 |:hardcopy| コマンドの出力で使われるフォント名を設定します。このオプションは
-'guifont' と同じ書式で指定します。ただし、フォントは一つだけ指定可能です。
+'guifont' と同じ書式で指定します。ただし、フォントは1つだけ指定可能です。
 "guifont=*" と同じ特別な指定方法は使えません。
 
 Win32 GUI では、'guifont' と同じように、フォントの属性を追加指定できます。
@@ -187,16 +198,16 @@ Win32 GUI では、'guifont' と同じように、フォントの属性を追加
 イズをポイントで指定します。省略時のフォントサイズは 10 です。
 
 							*pheader-option*
-'printheader' 'pheader'  文字列  (初期値は "%<%f%h%m%=Page %N")
-			 グローバル設定
+'printheader' 'pheader'  文字列  (既定では "%<%f%h%m%=Page %N")
+			 グローバル
 |:hardcopy| の出力で使われるヘッダーの書式を設定します。このオプションは
 'statusline' と同じ書式で指定します。|+statusline| が無効な場合には、このオプ
 ションは機能しません。その場合は、初期設定の、ページ番号を表示するだけのシンプ
 ルなヘッダーが使われます。
 
 							*pmbcs-option*
-'printmbcharset' 'pmbcs'  文字列 (初期設定は "")
-			  グローバル設定
+'printmbcharset' 'pmbcs'  文字列 (既定では "")
+			  グローバル
 |:hardcopy| で漢字 (CJK文字) を出力するための文字セットを設定します。
 現在 Vim は、以下で定義されている文字セットを認識します。
 
@@ -248,9 +259,9 @@ Win32 GUI では、'guifont' と同じように、フォントの属性を追加
   Japanese	JIS_C_1978	   x	   x
 		JIS_X_1983	   x	   x
 		JIS_X_1990	   x		  x	  x
-		MSWINDOWS	   x
-		KANJITALK6	   x
-		KANJITALK7	   x
+		MSWINDOWS		   x
+		KANJITALK6		   x
+		KANJITALK7		   x
 
 				euc-kr	 cp949	ucs-2	utf-8 ~
   Korean	KS_X_1992	   x
@@ -269,8 +280,8 @@ Vim は、'runtimepath' の "print" ディレクトリから、指定された�
 ファイルを探します。
 
 							*pmbfn-option*
-'printmbfont' 'pmbfn'	文字列 (初期値は "")
-			グローバル設定
+'printmbfont' 'pmbfn'	文字列 (既定では "")
+			グローバル
 |:hardcopy| で漢字 (CJK) を出力するために使われるフォントのリストを設定しま
 す。リストはコンマで区切ります。フォント名には、そのフォントがどのスタイルで使
 われるかを指示する文字を前置します:
@@ -297,14 +308,14 @@ CJK フォントが ASCII 文字を持っていない場合があります。ま
   a:yes			ASCIIコードの範囲を ASCII 文字セットで出力します。
   a:no (初期値)
 
-次の例では、二つのマルチバイトフォントを指定しています。一つは普通文字と斜体文
-字、もう一つは太字と太字斜体文字の印刷に使われます。そして、ASCII コードの範囲
+次の例では、2つのマルチバイトフォントを指定しています。1つは普通文字と斜体文
+字、もう1つは太字と太字斜体文字の印刷に使われます。そして、ASCII コードの範囲
 の文字は、国内標準文字セットを使って、Courier で印刷されます: >
 	:set printmbfont=r:WadaMin-Regular,b:WadaMin-Bold,c:yes
 <
 							*popt-option*
-'printoptions' 'popt'	string (default "")
-			global
+'printoptions' 'popt'	文字列 (既定では "")
+			グローバル
 |:hardcopy| の出力を制御するためのオプションのリストを設定します。リストはコン
 マで区切ります:
 
@@ -326,7 +337,7 @@ CJK フォントが ASCII 文字を持っていない場合があります。ま
 			に 2 を指定した場合は空行が印刷されます。ヘッダーの書
 			式は 'printheader' で指定します。
   header:0		ヘッダーを印刷しません。
-  header:2  (標準設定)	ヘッダーの印刷に二行使います。
+  header:2  (標準設定)	ヘッダーの印刷に2行使います。
 
   syntax:n		構文強調を使わない。大きなファイルでも高速に印刷できま
 			す。
@@ -347,7 +358,7 @@ CJK フォントが ASCII 文字を持っていない場合があります。ま
   collate:y  (標準設定)	ページを順番にそろえる: 1 2 3, 1 2 3, 1 2 3
   collate:n		そのまま: 1 1 1, 2 2 2, 3 3 3
 
-  jobsplit:n (標準設定)	すべてを一回で印刷する。
+  jobsplit:n (標準設定)	すべてを1回で印刷する。
   jobsplit:y		印刷ジョブを部ごとに分ける。N-up 印刷をする場合に便利
 			です。
 
@@ -438,7 +449,7 @@ iii. 名前を変更した latin1.ps を編集し、ファイル内に表れる 
 iv.  'printencoding' に新しい印字エンコーディングを設定し印刷します。あなたの
      独自印字エンコーディングを使って印刷されます。
 
-リソースファイルの最初の三行の内容や順番が変更されているとエラーが表示されま
+リソースファイルの最初の3行の内容や順番が変更されているとエラーが表示されま
 す。%%Title: と %%Version: で始まる行は変更しても構いません。
 
 PostScript を知っている人への技術的な説明。Vim は印刷に使うエンコーディングと
@@ -486,7 +497,7 @@ CJK フォントにはたくさんのグリフが含まれていますが、国�
 トを使って、半角 ASCII 文字を印刷するようにしてください。他にも印刷されない文
 字がある場合は、別のフォントを探す必要があるでしょう。
 
-ASCII 文字についてもう一つ。国内標準文字セットによっては、ASCII 文字の範囲に
+ASCII 文字についてもう1つ。国内標準文字セットによっては、ASCII 文字の範囲に
 ASCII 文字とは別の文字を定義している場合があります。そのため、国内標準文字セッ
 トを使って ASCII テキストを印刷すると、予期しない文字が印刷されるかもしれませ
 ん。ASCII コードの範囲が ASCII 文字として印刷されるようにするには、
@@ -531,7 +542,7 @@ Specification, Version 1.0' を参照してください。http://www.adobe.com �
   んどの PostScript プリンタは、丁合の命令を無視しますが、そうでないプリンタも
   あります。その場合は、丁合の設定をオフにして印刷してください。
 
-- 構文強調。構文強調が有効になっているとき、使われている色が黒一色だけの場合で
+- 構文強調。構文強調が有効になっているとき、使われている色が黒1色だけの場合で
   も、生成された PostScript ファイルがモノクロプリンタで印刷されないように、印
   刷を中断する印刷管理プログラムがあります。その場合は、構文強調をオフにして印
   刷してください。
@@ -553,7 +564,7 @@ Ghostscript は PostScript と PDF のインタープリターです。PostScrip
 
 Ghostscript はさまざまな環境で動作します。
 
-次の三つのバージョンが利用可能です:
+次の3つのバージョンが利用可能です:
 
 - AFPL Ghostscript (かつての Aladdin Ghostscript)。非商用利用ではフリー。
   次の場所から入手できます:
@@ -602,22 +613,15 @@ OpenVMS
 
     http://wwwthep.physik.uni-mainz.de/~plass/gv/
 
-Windows and OS/2
+MS-Windows
 
 - GSview。次の場所から入手できます:
 
     http://www.cs.wisc.edu/~ghost/gsview/
 
-DOS
-
-- ps_view。次の場所から入手できます:
-
-    ftp://ftp.pg.gda.pl/pub/TeX/support/ps_view/
-    ftp://ftp.dante.de/tex-archive/support/ps_view/
-
 Linux
 
-- GSview。Windows や OS/2 で人気のあるプレビューアの Linux 版。
+- GSview。Windows で人気のあるプレビューアの Linux 版。
   次の場所から入手できます:
 
     http://www.cs.wisc.edu/~ghost/gsview/
@@ -648,7 +652,7 @@ PSUtils は、PostScript ドキュメントを処理するための便利なプ�
 
 
 N-UP 印刷
-{訳注: 複数のページを一ページにまとめて印刷。}
+{訳注: 複数のページを1ページにまとめて印刷。}
 
 Vim が生成した PostScript ファイルを psnum で処理し、n-up 版の PostScript を作
 成できます。2-up 印刷をするには、まず、次のように PostScript を作成します: >
@@ -663,7 +667,7 @@ Note: psnum が生成したファイルを Ghostscript プレビューアで表�
 示されることがありますが、無視して問題ないでしょう。
 
 そして、環境に合わせた方法で、final.ps を PostScript プリンタで印刷します。(印
-刷後、必要なら二つの PostScript ファイルを自分で削除してください)。'printexpr'
+刷後、必要なら2つの PostScript ファイルを自分で削除してください)。'printexpr'
 を設定し、印刷前にこの特別な処理をするように設定できます。
 
 
@@ -687,7 +691,7 @@ PSUtils の psselect を使って、両面印刷を安価に実現できます�
 
 1. 最初のページの位置。奇数ページを印刷したときに、最初のページが印刷物の上面
    にある場合、偶数ページの印刷順を逆にする必要があります。これは、psselect
-   に-rを指定すればできます。これで二ページ目が一ページ目の裏に印刷されます。
+   に-rを指定すればできます。これで2ページ目が1ページ目の裏に印刷されます。
    Note: 元の PostScript ファイルのページ数が奇数の場合は、偶数ページを逆順に
    印刷するよりも、奇数ページを逆順に印刷したほうがいいでしょう。
 
@@ -701,21 +705,21 @@ PSUtils の psselect を使って、両面印刷を安価に実現できます�
 ==============================================================================
 8. 改ページ文字						*printing-formfeed*
 
-標準設定では、Vim は |formfeed| 制御文字 (改ページ文字) の特別な処理を一切しま
-せん。'printoptions' の formfeed を設定すると、Vim は改ページ文字を認識するよ
-うになります。改ページ文字を含む行は新しいページの一行目に印刷されます。改ペー
-ジ文字を使って原始的な印刷制御ができますが、いくつか気をつけることがあります。
+標準設定では、Vim は formfeed 制御文字 (改ページ文字) の特別な処理を一切しませ
+ん。'printoptions' の formfeed を設定すると、Vim は改ページ文字を認識するよう
+になります。改ページ文字を含む行は新しいページの1行目に印刷されます。改ページ
+文字を使って原始的な印刷制御ができますが、いくつか気をつけることがあります。
 
 たとえ行頭の文字が改ページ文字であっても、その行は常に通常の位置から (設定に
 よっては行番号をともなって) 印刷されます。そのため、そのような行が (たまたま)
-ページの一行目だった場合、空白のページが印刷されます。
+ページの1行目だった場合、空白のページが印刷されます。
 
 行番号は、改ページ文字を含む行の印刷が開始したところに印刷されるので、その行の
 (改ページ文字以降の) 残りの部分が新しいページに印刷されるときには、行番号は印
 刷されません ('printoptions' の wrap がオンのときに、長い行が折り返して印刷さ
 れる場合も同じです)。
 
-改ページ文字が行の最後の文字だった場合、次の行は、新しいページの二行目に印刷さ
+改ページ文字が行の最後の文字だった場合、次の行は、新しいページの2行目に印刷さ
 れます。これは、Vim が改ページ文字を処理した後で改行を処理し、カーソルを下へ移
 動して、次の行を印刷するからです。
 
