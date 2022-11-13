@@ -5092,7 +5092,7 @@ guisp={color-name}					*highlight-guisp*
 	スを付けるとよい。慣例により、これらのカラーリストは colors/lists ディ
 	レクトリに配置される。その例を
 	'$VIMRUNTIME/colors/lists/csscolors.vim' で見ることができる。このリス
-	トは、以下を使用したカラースキームによってソースされる: >
+	トは、以下を使用したカラースキームによって読み込まれる: >
 
 	    :runtime colors/lists/csscolors.vim
 	    :highlight Comment guifg=css_turquoise
