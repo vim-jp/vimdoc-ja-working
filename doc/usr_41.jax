@@ -1,4 +1,4 @@
-*usr_41.txt*	For Vim バージョン 9.0.  Last change: 2022 Oct 07
+*usr_41.txt*	For Vim バージョン 9.0.  Last change: 2022 Nov 22
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -427,7 +427,7 @@ Vim は式の取り扱いはかなり標準的です。式の定義について�
 ることができます: >
 	echo $"Name: {name}"
 
-詳細は |interp-string| を参照してください。
+詳細は |interpolated-string| を参照してください。
 
 C 言語と同じ条件演算子も使えます: >
 
@@ -911,6 +911,7 @@ Blob 操作:						*blob-functions*
 
 他のバッファのテキストで動作するもの:
 	getbufline()		指定したバッファから行のリストを得る
+	getbufoneline()		指定したバッファから1行を得る
 	setbufline()		指定したバッファ内の行を置き換える
 	appendbufline()		指定したバッファに行のリストを追加する
 	deletebufline()		指定したバッファから行を削除する
@@ -1085,6 +1086,7 @@ Quickfixとlocationリスト:			*quickfix-functions*
 	getcharstr()		ユーザーが入力した文字を文字列として得る
 	getcharmod()		最後に入力した文字の修飾子(modifier)を得る
 	getmousepos()		最後に取得したマウスの位置を得る
+	getmouseshape()		現在のマウスカーソル形状名を得る
 	echoraw()		文字をそのまま出力する
 	feedkeys()		先行入力キューに文字を入れる
 	input()			ユーザーが入力した行を得る
