@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 9.0.  Last change: 2022 Oct 07
+*eval.txt*	For Vim バージョン 9.0.  Last change: 2022 Nov 22
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1505,7 +1505,7 @@ Note シングルクォートが使われていることに注意。
 	if a =~ '\s*'
 
 
-文字列補間					*$quote* *interp-string*
+文字列補間					*$quote* *interpolated-string*
 ----------
 $"string"		補間された文字列定数			*expr-$quote*
 $'string'		補間されたリテラル文字列定数		*expr-$'*
@@ -2781,8 +2781,8 @@ text...
 			|literal-string| として扱われるが、シングルクォートは
 			除外され2重にする必要はない。
 			"eval" が指定されている場合、{expr} 形式の任意の Vim
-			の式が評価され、結果が |interp-string| のように式を置
-			き換える。
+			の式が評価され、結果が |interpolated-string| のように
+			式を置き換える。
 			例として $HOME を展開する: >
 				let lines =<< trim eval END
 				  some text
@@ -2988,6 +2988,10 @@ text...
 
 :unlo[ckvar][!] [depth] {name} ...		*:unlockvar* *:unlo* *E1246*
 			内部変数{name}をアンロックする。|:lockvar|の逆を行う。
+
+			{name} が存在しない場合:
+			- |Vim9| script ではエラーになる。
+			- 旧来のスクリプトでは黙って無視される。
 
 :if {expr1}			*:if* *:end* *:endif* *:en* *E171* *E579* *E580*
 :en[dif]		{expr1}が非ゼロと評価された場合に、対応する `:else` か
