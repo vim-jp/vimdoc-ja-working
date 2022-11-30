@@ -2989,7 +2989,7 @@ text...
 :unlo[ckvar][!] [depth] {name} ...		*:unlockvar* *:unlo* *E1246*
 			内部変数{name}をアンロックする。|:lockvar|の逆を行う。
 
-			もし {name} が存在しない場合:
+			{name} が存在しない場合:
 			- |Vim9| script ではエラーになる。
 			- 旧来のスクリプトでは黙って無視される。
 
