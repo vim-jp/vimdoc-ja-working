@@ -80,52 +80,51 @@ modes.mf で定義されたキーワードをハイライトします。METAFONT
 
 					*'g:mp_close_tag'*
 インデントの終了するブロックの追加キーワードを定義します。例えば、あなたが定義
-したなら:
+するなら:
 >
-	g:mp_end_tag = ['\<endfoo\>']
+	g:mp_close_tag = ['\<endfoo\>']
 <
-any line starting with `endfoo` will be de-indented compared to its previous
-line.
+`endfoo` で始まる任意の行で前行と比較してインデントが戻されます。
 >
 	g:mp_close_tag = []
 <
 					*'b:mp_metafun'*
 					*'g:mp_metafun'*
-If set to 1, highlight ConTeXt's MetaFun keywords. MetaPost only.
+1 に設定した場合、ConTeXt の MetaFun キーワードがハイライトされます。MetaPost
+のみ。
 >
 	g:mp_metafun = 0
 <
 					*'g:mp_mfplain_macros'*
-Highlight keywords defined by mfplain.mp. MetaPost only.
+mfplain.mp に定義されたキーワードがハイライトされます。MetaPost のみ。
 >
 	g:mp_mfplain_macros = 1
 <
 					*'g:mp_open_tag'*
-Define additional keywords that start indented blocks. For instance, if you
-define:
+インデントを開始するブロックの追加キーワードを定義します。例えば、あなたが定義
+するなら:
 >
 	g:mp_open_tag = ['\<beginfoo\>']
 <
-the line following `beginfoo` will be indented.
+`beginfoo` に続く行はインデントされます。
 >
 	g:mp_open_tag = []
 <
 					*'g:mp_other_macros'*
-Highlight keywords defined by all base macro packages (boxes, rboxes, format,
-graph, marith, sarith, string, TEX). This option affects only MetaPost
-buffers.
+すべてのベースマクロパッケージ(boxes, rboxes, format, graph, marith, sarith,
+string, TEX) に定義されたキーワードがハイライトされます。このオプションは
+MetaPost のバッファにのみ影響を与えます。
 >
 	g:mp_other_macros = 1
 <
 					*'g:mp_plain_macros'*
-Highlight keywords defined by plain.mp. MetaPost only.
+plain.mp に定義されたキーワードがハイライトされます。MetaPost のみ。
 >
 	g:mp_plain_macros = 1
 <
 					*'g:no_mp_maps'*
 					*'g:no_mf_maps'*
-When set, do not define any mapping in buffers with the corresponding
-filetype.
+設定時、該当するファイルタイプのバッファでいかなるマッピングも定義しません。
 >
 	g:no_mp_maps = 0
 	g:no_mf_maps = 0
@@ -134,16 +133,16 @@ filetype.
 							*ft-metafont-mappings*
 マッピング ~
 
-]]			[count] vardefs, macros or figures forward.
+]]			[count] vardef, マクロ, 図に進む。
 
-[[			[count] vardefs, macros or figures backward.
+[[			[count] vardef, マクロ, 図に戻る。
 
-][			[count] end of vardefs, macros or figures forward.
+][			[count] vardef, マクロ, 図の終了に進む。
 
-[]			[count] end of vardefs, macros or figures backward.
+[]			[count] vardef, マクロ, 図の終了に戻る。
 
-]}			[count] end of blocks (fi, endfor, endgroup) forward.
+]}			[count] ブロックの終了(fi, endfor, endgroup)に進む。
 
-[{			[count] begin of blocks (if, for, begingroup) backward.
+[{			[count] ブロックの開始(if, for, begingroup)に戻る。
 
  vim:tw=78:sw=4:ts=8:noet:ft=help:norl:
