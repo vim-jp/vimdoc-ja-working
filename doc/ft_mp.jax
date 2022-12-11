@@ -19,24 +19,22 @@ NOTE: このプラグインは +vim9script が必要です。
 							*ft-metapost-intro*
 							*ft-metafont-intro*
 前書き ~
-This filetype plugin provides extensive support for editing METAFONT and
-MetaPost documents, including syntax coloring, indentation, and completion.
+このファイルタイププラグインは METAFONT および MetaPost 文書編集における、文法
+での色付け、インデント、補完などの広範囲なサポートを提供します。
 
-Defining indentation rules for METAFONT and MetaPost code is tricky and
-somewhat subjective, because the syntax is quite liberal. The plugin uses some
-heuristics that work well most of the time, but in particular cases you may
-want to to override the automatic rules, so that the manually defined
-indentation is preserved by commands like `gg=G`.
+METAFONT および MetaPost コードのインデントルールの定義はトリッキーで多少主観
+的です、なぜなら構文は完全に自由であるためです。プラグインはいくつかのヒューリ
+スティックを使い、多くの場合はうまく働きます、しかし特有の場合は自動的なルール
+を上書きする必要があり、その時は手動で定義することで `gg=G` のようなコマンドの
+時にインデントを温存できます。
 
-This can be achieved by appending `%>`, `%<`, `%=` or `%!` to a line to
-explicitly control the indentation of the next line. The `<` and `>` symbols
-may be repeated many times: for instance, `%>>` will cause the next line to be
-indented twice. Of course, `%<` means that the next line should be
-de-indented; `%=` sets the indentation of the next line to be equal to the
-indentation of the current line; and `%!` means that the indentation of the
-next line should not change from whatever it has been manually set.
+これは `%>`, `%<`, `%=` あるいは `%!` で明示的にある行の次行のインデントについ
+ての制御を達成できます。`<` と `>` のシンボルは幾度も繰り返されます:例えば、
+`%>>` は次行が2倍のインデントとなります。もちろん、`%<` は次行が逆インデントさ
+れ、`%=` は次行のインデントを現在行と同じに設定し、そして `%!` は次行のインデ
+ントは手動で設定されていてなにがあっても変更しないことを意味します。
 
-For example, this is the default indentation of a simple macro:
+例として、これはシンプルなマクロのデフォルトのインデントです:
 >
    def foo =
        makepen(
@@ -47,7 +45,7 @@ For example, this is the default indentation of a simple macro:
        withcolor black
    enddef
 <
-By adding the special comments, the indentation can be adjusted arbitrarily:
+特別なコメントを追加することで、インデントは自由最良で調整できます:
 >
    def foo =
        makepen(
@@ -61,16 +59,16 @@ By adding the special comments, the indentation can be adjusted arbitrarily:
 							*ft-metapost-commands*
 コマンド ~
 					*:FixBeginfigs*
-Renumber beginfig() blocks in the current buffer so that the n-th figure has
-number n. MetaPost only.
+カレントバッファの beginfig() ブロックがn番目の図番が番号としてnを持つようリナ
+ンバリングします。MetaPost のみ。
 
 							*ft-metapost-settings*
 							*ft-metafont-settings*
 設定 ~
 					*'g:mf_other_macros'*
-Highlight some other basic macro names, e.g., from cmbase, logo, etc. This is
-set to 1 by default in METAFONT buffers, and it is set to 0 by default in
-MetaPost buffers.
+いくつかの他の基本的なマクロ名をハイライトする、例えば、from cmbase, logo な
+ど。METAFONT バッファではデフォルトで1に設定されて、MetaPost バッファではデフォ
+ルトで0に設定されます。
 
 					*'g:mf_plain_macros'*
 Highlight keywords defined by plain.mf. This is set to 1 by default in
