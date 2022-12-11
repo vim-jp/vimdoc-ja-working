@@ -1,24 +1,24 @@
 *ft_mp.txt*	For Vim バージョン 9.0.  Last change: 2022 Aug 12
 
-This is the documentation for the METAFONT and MetaPost filetype plugins.
-Unless otherwise specified, the commands, settings and mappings defined below
-apply equally to both filetypes.
+これは METAFONT および MetaPost ファイルタイププラグインのドキュメントです。
+特に指定がない限り、以下で定義されているコマンド、設定、およびマッピングは、両
+方のファイルタイプに等しく適用されます。
 
-NOTE: the plugin requires +vim9script.
+NOTE: このプラグインは +vim9script が必要です。
 
 ==============================================================================
-CONTENTS						*mp.vim* *ft-metapost*
+☆内容							*mp.vim* *ft-metapost*
 							*mf.vim* *ft-metafont*
 
-1. Introduction				|ft-metapost-intro|
-2. Commands				|ft-metapost-commands|
-3. Settings				|ft-metapost-settings|
-4. Mappings				|ft-metapost-mappings|
+1. 前書き				|ft-metapost-intro|
+2. コマンド				|ft-metapost-commands|
+3. 設定					|ft-metapost-settings|
+4. マッピング				|ft-metapost-mappings|
 
 ==============================================================================
 							*ft-metapost-intro*
 							*ft-metafont-intro*
-Introduction ~
+前書き ~
 This filetype plugin provides extensive support for editing METAFONT and
 MetaPost documents, including syntax coloring, indentation, and completion.
 
@@ -59,14 +59,14 @@ By adding the special comments, the indentation can be adjusted arbitrarily:
    enddef
 <
 							*ft-metapost-commands*
-Commands ~
+コマンド ~
 					*:FixBeginfigs*
 Renumber beginfig() blocks in the current buffer so that the n-th figure has
 number n. MetaPost only.
 
 							*ft-metapost-settings*
 							*ft-metafont-settings*
-Settings ~
+設定 ~
 					*'g:mf_other_macros'*
 Highlight some other basic macro names, e.g., from cmbase, logo, etc. This is
 set to 1 by default in METAFONT buffers, and it is set to 0 by default in
@@ -134,7 +134,7 @@ filetype.
 <
 							*ft-metapost-mappings*
 							*ft-metafont-mappings*
-Mappings ~
+マッピング ~
 
 ]]			[count] vardefs, macros or figures forward.
 
