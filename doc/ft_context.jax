@@ -1,34 +1,34 @@
 *ft_context.txt*	For Vim バージョン 9.0.  Last change: 2022 Sep 27
 
-This is the documentation for the ConTeXt filetype plugin.
+これは ConTeXt ファイルタイププラグインのドキュメントです。
 
-NOTE: the plugin requires +vim9script.
+NOTE: このプラグインは +vim9script が必要です。
 
 ==============================================================================
-CONTENTS						*context.vim* *ft-context*
+☆内容						*context.vim* *ft-context*
 
-1. Introduction				|ft-context-intro|
-2. Commands				|ft-context-commands|
-3. Settings				|ft-context-settings|
-4. Mappings				|ft-context-mappings|
+1. 前書き				|ft-context-intro|
+2. コマンド				|ft-context-commands|
+3. 設定					|ft-context-settings|
+4. マッピング				|ft-context-mappings|
 
 ==============================================================================
 							*ft-context-intro*
-Introduction ~
+前書き ~
 
-ConTeXt, similarly to LaTeX, is a macro-based typesetting system built on TeX:
+ConTeXtは、LaTeXと同じで、Tex上に構築されたマクロベースの組版システムです:
 >
 	https://wiki.contextgarden.net
 	https://wiki.contextgarden.net/Vim
 <
-The ConTeXt plugin provides syntax highlighting, completion and support for
-typesetting ConTeXt documents. The recommended way to typeset a document is to
-use |:ConTeXt|. This will invoke the `mtxrun` script that is found in `$PATH`.
+ConTeXt プラグインは構文ハイライト、組版したConTeXt文章の補完とサポートを提供
+します。文章を組版するのに推奨する方法は |:ConTeXt| を使うことです。これは
+`$PATH` 上で見付けた `mtxrun` スクリプトを動作させます。
 
-For more fine grained control over the command and its environment,
-`context.Typeset()` can be used directly (or `context#Typeset()` from legacy
-Vim script). For instance, if a version of ConTeXt is installed in
-`~/context`, you may define a function to use it similar to the following:
+コマンドとその環境でよりきめ細かな制御をするには、`context.Typeset()` を直接使
+うことができます(あるいは旧来の Vim script からは `context#Typeset()`)。例え
+ば、もし `~/context` 内にインストールされているバージョンの ConTeXt なら、以下
+のものと同じように利用できる関数を定義できます:
 >
 	import autoload 'context.vim'
 
@@ -38,14 +38,14 @@ Vim script). For instance, if a version of ConTeXt is installed in
 	    context.Typeset("%", env)
 	enddef
 
-This code may go in `~/.vim/after/ftplugin/context.vim`. A mapping can then be
-defined to invoke the custom command:
+このコードを `~/.vim/after/ftplugin/context.vim` に置きます。マッピングでその
+定義したカスタムコマンドを実行できます:
 >
 	nnoremap <silent><buffer><leader>t <scriptcmd>MyConTeXt()<cr>
 <
-`context.Typeset()` accepts a third optional argument to specify a custom
-typesetting command. That must be a function that takes a path and returns the
-command as a List. For example:
+`context.Typeset()` は三番目のオプショナルな引数として指定したカスタムの組版コ
+マンドを受け付けます。それは関数でパスを取りリストとしてコマンドを返す必要があ
+ります。例えば:
 >
 	def ConTeXtCustomCommand(path: string): list<string>
 	  return ['mtxrun', '--script', 'context', '--nonstopmode, path]
@@ -53,106 +53,105 @@ command as a List. For example:
 
 	context.ConTeXtTypeset("%", v:none, ConTeXtCustomCommand)
 <
-Large projects are often organized as a root document and various chapter
-files. When editing a chapter file, it is convenient to invoke |:ConTeXt|
-directly on it, rather than having to switch to the root file. A "magic line"
-can be added at the beginning of each chapter file, which specifies the
-relative path to the root file. For instance:
+大きなプロジェクトでは時折ルートの文章とさまざまな章のファイルとして構造化され
+ています。章ファイルの編集時、ルートのファイルに切り替えて実行するよりも、その
+上で直接 |:ConTeXt| を実行するのが便利です。"マジック行" を各章のファイルの開
+始に追加することもでき、ルートのファイルへの相対パスを指定できます。例えば:
 >
 	% !TEX root = ../MyRoot.tex
 <
-Vim searches for the magic line in the first ten lines of the current buffer:
-if it is found, the document specified by that line is typeset rather than the
-one in the current buffer. The root document does not have to be opened in
-Vim.
+Vim はマジック行がカレントバッファの最初の10行にあるかを検索します: もし見付け
+れば、カレントバッファ単体ではなくその行で指定されるドキュメントとして組版され
+ます。ルートの文章はVimで開いている必要はありません。
 
-To extend completion and syntax highlighting, you may generate supporting
-files using ConTeXt and add them to your configuration. If you configuration
-resides in `~/.vim`, you may use these commands:
+補完と構文ハイライトが拡張され、ConTeXt で使う補助ファイル群を生成でき設定に追
+加できます。あなたの設定が `~/.vim` にあるのなら、これらのコマンドが使えます:
 >
 	mkdir -p ~/.vim/syntax/shared
 	cd ~/.vim/syntax/shared
 	mtxrun --script interface --vim
 <
-The last command will create the following syntax files:
+最後のコマンドは以下の構文ファイルを生成します:
 
 - `context-data-context.vim`;
 - `context-data-interfaces.vim`;
 - `context-data-metafun.vim`;
 - `context-data-tex.vim`.
 
-The same command can be used to update those syntax files.
+これらの構文ファイルを更新するのに同じコマンドを使うことができます。
 
 							*ft-context-commands*
-Commands ~
+コマンド ~
 					*:ConTeXt*
-Start a background |job| to typeset the document in the current buffer. The
-command accepts an optional buffer's name, if you want to typeset a document
-that is in a different buffer.
+カレントバッファの文書を組版するバックグラウンド |job| を開始します。このコマ
+ンドは、別バッファにある文書の組版を希望する場合、オプションとしてバッファ名を
+受け付けます。
 
 					*:ConTeXtLog*
-Edit the log file corresponding to the source in the current buffer.
+カレントバッファの文章ソースとして一致するログファイルを編集する。
 
 					*:ConTeXtJobsStatus*
-Echo the number of jobs currently running in the background.
+現在バックグラウンドで動作しているジョブ数を表示する。
 
 					*:ConTeXtStopJobs*
-Stop all the ConTeXt jobs currently running in the background.
+現在バックグラウンドで動作している ConTeXt ジョブをすべて停止する。
 
 							*ft-context-settings*
-Settings ~
+設定 ~
 					*'b:context_ignore_makefile'*
 					*'g:context_ignore_makefile'*
-`:make` can be used to (synchronously) typeset a document. If a Makefile exists
-and this option is not set, standard `make` is used. If this option is set,
-`mtxrun` is invoked instead, even if a Makefile exists.
+`:make` で(同期的な)文章の組版が行えます。Makefile が存在しこのオプションが設
+定されていないなら、通常の `make` が使用されます。このオプションが設定されてい
+るなら、Makefile が存在しても、`mtxrun` がかわりに実行されます。
 >
 	g:context_ignore_makefile = 0
 <
-NOTE: before using `:make`, set the working directory of the buffer to the
-directory of the file to be typeset.
+NOTE: `:make` 実行前に、ファイルの組版をするディレクトリとしてバッファの作業
+ディレクトリを設定します。
 
 					*'g:context_extra_options'*
-A list of additional options to pass to `mtxrun`.
+`mtxrun` に渡す追加のオプションのリスト。
 >
 	g:context_extra_options = []
 <
 					*'b:context_include'*
 					*'g:context_include'*
-Dictionary of filetype/GROUP pairs for which syntax highlighting should be
-activated between \startGROUP and \stopGROUP. The default is to highlight XML
-between `\startXML` and `\stopXML`.
+\startGROUP と \stopGROUP の間で有効になる構文ハイライトのファイルタイプ/GROUP
+のペアの辞書。デフォルトでは`\startXML` と `\stopXML` の間がXMLでハイライトさ
+れる。
 >
 	g:context_include = {'xml': 'XML'}
 
-NOTE: Lua and MetaPost are always highlighted within the respective blocks.
+NOTE: Lua と MetaPost は個別のブロック内では常にハイライトされる。
 
 					*'g:no_context_maps'*
-When set, do not define any mappings.
+設定時、マッピングは定義されない。
 >
 	g:no_context_maps = 0
 <
 							*ft-context-mappings*
-Mappings ~
+マッピング ~
 
-tp			"reflow TeX paragraph".
+tp			"reflow TeX paragraph"、TeX での段落を整形します。
 
-i$			"inside inline math block".
+i$			"inside inline math block"、インラインの数式ブロック内
+			部を選択します。
 
-a$			"around inline math block".
+a$			"around inline math block"、インラインの数式ブロックを
+			選択します。
 
-]]			[count] start of sections forward.
+]]			[count] セクションの開始に進む。
 
-[[			[count] start of sections backward.
+[[			[count] セクションの開始に戻る。
 
-][			[count] end sections forward.
+][			[count] セクションの終了に進む。
 
-[]			[count] end of sections backward.
+[]			[count] セクションの終了に戻る。
 
-]}			[count] end of blocks (\stop..., \setup...,
-			\define...) forward.
+]}			[count] ブロックの終了 (\stop..., \setup...,
+			\define...) に進む。
 
-[{			[count] begin of blocks (\start..., \setup...,
-			\define...) backward.
+[{			[count] ブロックの開始 (\start..., \setup...,
+			\define...) に戻る。
 
  vim:tw=78:sw=4:ts=8:noet:ft=help:norl:
