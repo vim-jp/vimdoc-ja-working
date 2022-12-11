@@ -32,7 +32,7 @@ METAFONT および MetaPost コードのインデントルールの定義はト�
 ての制御を達成できます。`<` と `>` のシンボルは幾度も繰り返されます:例えば、
 `%>>` は次行が2倍のインデントとなります。もちろん、`%<` は次行が逆インデントさ
 れ、`%=` は次行のインデントを現在行と同じに設定し、そして `%!` は次行のインデ
-ントは手動で設定されていてなにがあっても変更しないことを意味します。
+ントは手動で設定されていて何があっても変更しないことを意味します。
 
 例として、これはシンプルなマクロのデフォルトのインデントです:
 >
@@ -71,16 +71,16 @@ METAFONT および MetaPost コードのインデントルールの定義はト�
 ルトで0に設定されます。
 
 					*'g:mf_plain_macros'*
-Highlight keywords defined by plain.mf. This is set to 1 by default in
-METAFONT buffers, and it is set to 0 by default in MetaPost buffers.
+plain.mf で定義されたキーワードをハイライトします。METAFONT バッファではデフォ
+ルトで1に設定され、MetaPost バッファではデフォルトで0に設定されます。
 
 					*'g:mf_plain_modes'*
-Highlight keywords defined by modes.mf. This is set to 1 by default in
-METAFONT buffers, and it is set to 0 by default in MetaPost buffers.
+modes.mf で定義されたキーワードをハイライトします。METAFONT バッファではデフォ
+ルトで1に設定され、MetaPost バッファではデフォルトで0に設定されます。
 
 					*'g:mp_close_tag'*
-Define additional keywords that end indented blocks. For instance, if you
-define:
+インデントの終了するブロックの追加キーワードを定義します。例えば、あなたが定義
+したなら:
 >
 	g:mp_end_tag = ['\<endfoo\>']
 <
