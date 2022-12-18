@@ -90,7 +90,7 @@ modes.mf で定義されたキーワードをハイライトします。METAFONT
 <
 					*'b:mp_metafun'*
 					*'g:mp_metafun'*
-1 に設定した場合、ConTeXt の MetaFun キーワードがハイライトされます。MetaPost
+1に設定した場合、ConTeXt の MetaFun キーワードがハイライトされます。MetaPost
 のみ。
 >
 	g:mp_metafun = 0
