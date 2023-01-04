@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 9.0.  Last change: 2022 May 24
+*autocmd.txt*   For Vim バージョン 9.0.  Last change: 2022 Dec 12
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -94,7 +94,7 @@ Vim9 script での例: >
 `:autocmd` が Vim9 script (スクリプトが `:vim9script` で始まるのと `:def` 関数
 内) にあると {cmd} は Vim9 script として実行される。したがってこの依存は自動コ
 マンドが定義された位置に依存し、トリガーされた位置ではない。
-
+							*:autocmd-block*
 {cmd} は `:command` のようにブロックにできる。|:command-repl| を参照。例: >
 	au BufReadPost *.xml {
 		  setlocal matchpairs+=<:>
@@ -1043,8 +1043,8 @@ QuickFixCmdPre			QuickFixコマンドが実行される前 (|:make|,
 QuickFixCmdPost			QuickFixCmdPreと同様だが、QuickFixコマンドが実
 				行された後、最初の位置にジャンプする前に発生す
 				る。|:cfile| コマンドと |:lfile| コマンドの場
-				合はイベントはエラーファイルを読み込んだ後、最
-				初のエラーに移動する前に実行される。
+				合はイベントはそのエラーのファイルを読み込んだ
+				後、最初のエラーに移動する前に実行される。
 				|QuickFixCmdPost-example| を参照。
 							*QuitPre*
 QuitPre				`:quit`、`:wq` または `:qall` を使ったときで、
@@ -1323,8 +1323,9 @@ VimSuspend			Vimのインスタンスがサスペンドしたとき。Vim内で
 				CTRL-Z がタイプされた時、もしくは SIGTSTP シグ
 				ナルがVimに送られた時で、SIGSTOP ではない。
 							*WinClosed*
-WinClosed			ウィンドウが閉じた後。パターンは |window-ID|
-				に対して照合される。<amatch> と <afile> は共に
+WinClosed			ウィンドウが閉じる時、ウィンドウレイアウトから
+				削除される直前。パターンは |window-ID| に対し
+				て照合される。<amatch> と <afile> は共に
 				|window-ID| を設定する。再帰的に発生しない(こ
 				のイベントで自分自身を発行しない)。
 							*WinEnter*
@@ -1349,17 +1350,40 @@ WinNew				新しいウィンドウが作成されたとき。Vim がちょう
 				れない。WinEnter イベントの前。
 
 							*WinScrolled*
-WinScrolled			ウィンドウのコンテンツがスクロールした後、もし
-				くはウィンドウのサイズ変更後。
-				パターンは |window-ID| に対してマッチする。
-				<amatch> と <afile> はどちらも |window-ID| が
-				設定される。
-				再帰的に発生しない(このイベントで自分自身を発
-				行しない)。しかしながら、コマンド由来でウィン
-				ドウのスクロールあるいはサイズの変化があると別
-				の WinScrolled イベントが後で発行される。
-				コマンドの追加時には発行されず、その後の最初の
-				スクロールかサイズ変更でのみ発行される。
+WinScrolled			カレントのタブページにあるウィンドウでテキスト
+				がスクロール(垂直あるいは水平)、あるいは高さか
+				幅が変更になった後。|win-scrolled-resized| を
+				参照。
+
+				パターンはスクロールかリサイズがあった
+				|window-ID| に対して照合される。<amatch> と
+				<afile> はどちらも |window-ID| が設定される。
+
+				|v:event| にはサイズとスクロールの変更情報が設
+				定される。 |WinScrolled-event|
+
+				初期化が完了し最初の画面の再描画完了後のみ発生
+				するようになる。最初に WinScrolled あるいは
+				WinResized を定義したときには発生しない、しか
+				し追加の設定時には発生しうる。
+
+				非再帰的: WinScrolled イベントでコマンドの実行
+				中にはこのイベントは発生しない。しかしながら、
+				コマンド由来でウィンドウのスクロールあるいはサ
+				イズの変化があると別の WinScrolled イベントが
+				後で発行される。
+
+
+							*WinResized*
+WinResized			カレントのタブページにあるウィンドウの高さか幅
+				が変更になった後。|win-scrolled-resized| を参
+				照。
+
+				|v:event| にはサイズの変更情報が設定される。
+				|WinResized-event|
+
+				パターン、発生および再帰動作については
+				|WinScrolled| と同じ挙動になる。
 
 ==============================================================================
 6. パターン					*autocmd-patterns* *{aupat}*
