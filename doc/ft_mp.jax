@@ -67,9 +67,9 @@ METAFONT および MetaPost コードのインデントルールの定義は、�
 							*ft-metafont-settings*
 設定 ~
 					*'g:mf_other_macros'*
-いくつかの他の基本的なマクロ名をハイライトする、例えば、from cmbase, logo な
-ど。METAFONT バッファではデフォルトで1に設定されて、MetaPost バッファではデフォ
-ルトで0に設定されます。
+cmbase や logo 等、他のいくつかの基本的なマクロ名をハイライトします。これは、
+METAFONT バッファではデフォルトで 1 に設定され、MetaPost バッファではデフォル
+トで 0 に設定されます。
 
 					*'g:mf_plain_macros'*
 plain.mf で定義されたキーワードをハイライトします。METAFONT バッファではデフォ
