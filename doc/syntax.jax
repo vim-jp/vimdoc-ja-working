@@ -5215,9 +5215,10 @@ ModeMsg		'showmode' のメッセージ(例、"-- INSERT --")。
 							*hl-MoreMsg*
 MoreMsg		|more-prompt|
 							*hl-NonText*
-NonText		ウィンドウの端の '@' と 'showbreak' で設定された文字など、実際
-		のテキストには存在しない文字(例. 全角文字が行末に収まらないと
-		き ">" が表示される)。
+NonText		ウィンドウの端の '@' や、'smoothscroll' を設定しているときの行頭
+		に表示される "<<<"、'showbreak' で設定された文字など、実際の
+		テキストには存在しない文字(例. 全角文字が行末に収まらないとき
+		">" が表示される)。
 							*hl-Normal*
 Normal		通常のテキスト。
 							*hl-Pmenu*
