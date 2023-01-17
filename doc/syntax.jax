@@ -5229,6 +5229,10 @@ PmenuSel	ポップアップメニュー: 選択されている項目。
 PmenuSbar	ポップアップメニュー: スクロールバー。
 							*hl-PmenuThumb*
 PmenuThumb	ポップアップメニュー: スクロールバーのつまみ部分。
+							*hl-PopupNotification*
+PopupNotification
+		|popup_notification()| で生成されたポップアップウィンドウ。定義
+		されていないときは |hl-WarningMsg| が用いられる。
 							*hl-Question*
 Question	ヒットエンタープロンプト|hit-enter|とyes/noクエスチョン。
 							*hl-QuickFixLine*
