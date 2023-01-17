@@ -1827,6 +1827,17 @@ htmlプロセッサー言語は複数ある。html.vimはインクルードし�
 そしてプリプロセッサー言語を含むすべての領域をクラスタhtmlPreprocに加えればよ
 い。
 
+							         *html-folding*
+HTML 構文ファイルを使うと、開始タグと終了タグの間を折りたたむ|folding|ことができ
+る(|:syn-fold|を参照)。これをオンにするには >
+
+	:let g:html_syntax_folding = 1
+	:set foldmethod=syntax
+
+とする。
+Note: 構文による折り畳みは、構文ハイライトを著しく遅くする可能性がある。特に巨
+大なファイルではそうである。
+
 
 HTML/OS (by Aestiva)				*htmlos.vim* *ft-htmlos-syntax*
 
