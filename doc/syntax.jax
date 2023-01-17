@@ -5207,6 +5207,9 @@ CursorLineFold	FoldColumn と同じだが 'cursorline' が設定されたとき�
 							*hl-MatchParen*
 MatchParen	カーソル下の文字、または直後の文字が括弧であるとき、その文字と
 		対応する括弧に使われる。|pi_paren.txt|
+							*hl-MessageWindow*
+MessageWindow	`:echowindow` で表示されるポップアップウィンドウにおけるメッ
+		セージ。定義されていないときは |hl-WarningMsg| が用いられる。
 							*hl-ModeMsg*
 ModeMsg		'showmode' のメッセージ(例、"-- INSERT --")。
 							*hl-MoreMsg*
