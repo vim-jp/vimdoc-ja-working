@@ -677,7 +677,6 @@ Vim 内での表示と同じように表示され、タブ文字もそのまま�
 <body> 要素などを含めない。|g:html_use_css| が有効ならば (初期設定では有効)、
 CSS を手動で定義しなくてはならない。|g:html_dynamic_folds| および
 |g:html_line_ids| が設定されていれば (初期設定では無効)、JavaScript が挿入される
-{訳注: つまりこの設定によって挙動が変化しないということ}。
 
 
 							     *g:html_no_links*
