@@ -673,10 +673,10 @@ Vim 内での表示と同じように表示され、タブ文字もそのまま�
 <
 							       *g:html_no_doc*
 初期設定: 0
-1 なら、HTML ドキュメントを生成するさいに文書型宣言 (DOCTYPE) や <head>,
-<body> 要素などを含めない。|g:html_use_css| が有効ならば (初期設定では有効)、
-CSS を手動で定義しなくてはならない。|g:html_dynamic_folds| および
-|g:html_line_ids| が設定されていれば (初期設定では無効)、JavaScript が挿入される
+1 の場合、DOCTYPE, <head>, <body> などを含む完全な HTML ドキュメントは生成され
+ない。|g:html_use_css| が有効になっている場合 (デフォルト)、CSS を手動で定義す
+る必要がある。|g:html_dynamic_folds| および |g:html_line_ids| 設定 (デフォルト
+ではオフ) も、いくつかの JavaScript を挿入する。
 
 
 							     *g:html_no_links*
