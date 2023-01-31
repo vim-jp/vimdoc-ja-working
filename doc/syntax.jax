@@ -1827,13 +1827,12 @@ htmlプロセッサー言語は複数ある。html.vimはインクルードし�
 い。
 
 							         *html-folding*
-HTML 構文ファイルを使うと、開始タグと終了タグの間を折りたたむ|folding|ことができ
-る(|:syn-fold|を参照)。これをオンにするには >
+HTML 構文ファイルは、開始タグと終了タグ間の構文折り畳み |folding| (|:syn-fold|
+を参照) を提供する。これは次の方法でオンにできる >
 
 	:let g:html_syntax_folding = 1
 	:set foldmethod=syntax
 
-とする。
 Note: 構文による折り畳みは、構文ハイライトを著しく遅くする可能性がある。特に巨
 大なファイルではそうである。
 
