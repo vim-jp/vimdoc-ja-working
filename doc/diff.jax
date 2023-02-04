@@ -1,4 +1,4 @@
-*diff.txt*      For Vim バージョン 9.0.  Last change: 2022 Oct 01
+*diff.txt*      For Vim バージョン 9.0.  Last change: 2023 Jan 21
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -149,6 +149,9 @@ Vimが各ファイルについてウィンドウを開く時に起こること�
 			まにする。
 	'foldmethod'	"manual"
 	'foldcolumn'	0
+
+'foldmethod' が 'manual' に戻る時、ほとんどの場合、 'foldenable' がオフにリセットされる。
+折り返し自体はクリアされないが、表示されないようにするには 'foldenable' をリセットするのが一番良い。
 
 ==============================================================================
 2. 差分を眺める							*view-diffs*
