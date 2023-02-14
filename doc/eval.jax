@@ -159,7 +159,7 @@ Note: " " と "0" も空文字列ではないので、TRUE と見なされる。
 		*E611* *E745* *E728* *E703* *E729* *E730* *E731* *E908* *E910*
 		*E913* *E974* *E975* *E976* *E1319* *E1320* *E1321* *E1322*
 		*E1323* *E1324*
-リスト |List|, 辞書 |Dictionary|, |Funcref|, ジョブ |Job|, チャネル |Channel|
+リスト |List|, 辞書 |Dictionary|, |Funcref|, ジョブ |Job|, チャネル |Channel|,
 |Blob|, クラス |Class| および |object| は自動的に変換されない。
 
 							*E805* *E806* *E808*
