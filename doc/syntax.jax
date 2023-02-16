@@ -3716,7 +3716,7 @@ SYNTAX ISKEYWORD SETTING				*:syn-iskeyword*
 			バッファローカルの 'iskeyword' 設定を有効にする。
 	{option}        シンタックスの 'iskeyword' オプション値を設定する。
 
-	Example: >
+	例: >
   :syntax iskeyword @,48-57,192-255,$,_
 <
 	これは全てのアルファベットと数字、アクセント付き文字、および "_" と
