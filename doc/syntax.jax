@@ -3341,20 +3341,16 @@ LOCALMATHをあなたが決めた新しいmathグループに書き換える必�
 					*tex-style* *b:tex_stylish*
  Tex: 新しいスタイルを始めるには ~
 
-"\makeatletter" を用いれば、*.tex ファイルのなかで "@" という文字を含むコマンド
-を利用できる。しかしながら、拡張子が sty cls clo dtx ltx のどれでもない場合、@
-を含むコマンドはエラーとして表示される。これを解決するには: >
+*.tex ファイルで "\makeatletter" を使用すると、"@" を含むコマンドを使用できる
+ようになる。しかしながら、*.tex ファイルは sty cls clo dtx ltx のいずれかの接
+尾辞ではないため、構文の強調表示によって @ の使用箇所がエラーとして表示される。
+これを解決するには: >
 
 	:let b:tex_stylish = 1
 	:set ft=tex
 
 "let g:tex_stylish=1" を<.vimrc>に書くと<syntax/tex.vim>は常にこのような @ の
 使用法を受け入れるようになる。
-{訳注: この挙動は、おもに LaTeX において、「@ を含むコマンドは開発用途として
-使う」という取り決めがあることに由来する（と思われる）。ちょうど、一般のプログ
-ラミング言語における隠蔽変数のようなものである。「普通の」TeX ファイルを編集
-するさいには、そのようなコマンドを扱うことはないから、@ を含んだコマンドが
-「エラー」になるのはある意味で正しい挙動と言える。}
 
 					*tex-cchar* *tex-cole* *tex-conceal*
  Tex: Conceal モードを活用する ~
@@ -5226,10 +5222,10 @@ ModeMsg		'showmode' のメッセージ(例、"-- INSERT --")。
 							*hl-MoreMsg*
 MoreMsg		|more-prompt|
 							*hl-NonText*
-NonText		ウィンドウの端の '@' や、'smoothscroll' を設定しているときの
-		行頭に表示される "<<<"、'showbreak' で設定された文字など、
-		実際のテキストには存在しない文字(例. 全角文字が行末に収まらな
-		いとき ">" が表示される)。
+NonText		ウィンドウの端の '@' や、'smoothscroll' を設定しているときの行
+		頭に表示される "<<<"、'showbreak' で設定された文字など、実際の
+		テキストには存在しない文字(例. 全角文字が行末に収まらないとき
+		">" が表示される)。
 							*hl-Normal*
 Normal		通常のテキスト。
 							*hl-Pmenu*
@@ -5242,8 +5238,8 @@ PmenuSbar	ポップアップメニュー: スクロールバー。
 PmenuThumb	ポップアップメニュー: スクロールバーのつまみ部分。
 							*hl-PopupNotification*
 PopupNotification
-		|popup_notification()| で生成されたポップアップウィンドウ。
-		定義されていないときは |hl-WarningMsg| が用いられる。
+		|popup_notification()| で生成されたポップアップウィンドウ。定
+		義されていないときは |hl-WarningMsg| が用いられる。
 							*hl-Question*
 Question	ヒットエンタープロンプト|hit-enter|とyes/noクエスチョン。
 							*hl-QuickFixLine*
