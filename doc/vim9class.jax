@@ -1,80 +1,81 @@
-*vim9class.txt*	For Vim version 9.0.  Last change: 2023 Feb 26
+*vim9class.txt*	For Vim バージョン 9.0.  Last change: 2023 Feb 26
 
 
-		  VIM REFERENCE MANUAL	  by Bram Moolenaar
+		  VIMリファレンスマニュアル    by Bram Moolenaar
 
 
-NOTE - This is not finished yet, anything can still change! - NOTE
+NOTE - これはまだ完了しておらず、なんであれ変更することがあります! - NOTE
 
 
-Vim9 classes, objects, interfaces, types and enums.
+Vim9 のクラス、オブジェクト、インターフェイス、型と列挙値。
 
-1.  Overview			|Vim9-class-overview|
-2.  A simple class		|Vim9-simple-class|
-3.  Class members and functions	|Vim9-class-member|
-4.  Using an abstract class	|Vim9-abstract-class|
-5.  Using an interface		|Vim9-using-interface|
-6.  More class details		|Vim9-class|
-7.  Type definition		|Vim9-type|
-8.  Enum			|Vim9-enum|
+1.  概要			|Vim9-class-overview|
+2.  単純なクラス		|Vim9-simple-class|
+3.  クラスのメンバと関数	|Vim9-class-member|
+4.  抽象クラスを使う		|Vim9-abstract-class|
+5.  インターフェイスを使う	|Vim9-using-interface|
+6.  さらなるクラスの詳細	|Vim9-class|
+7.  型の定義			|Vim9-type|
+8.  列挙値			|Vim9-enum|
 
-9.  Rationale
-10. To be done later
-
-==============================================================================
-
-1. Overview					*Vim9-class-overview*
-
-The fancy term is "object-oriented programming".  You can find lots of study
-material on this subject.  Here we document what |Vim9| script provides,
-assuming you know the basics already.  Added are helpful hints about how to
-use this functionality effectively.
-
-The basic item is an object:
-- An object stores state.  It contains one or more variables that can each
-  have a value.
-- An object provides functions that use and manipulate its state.  These
-  functions are invoked "on the object", which is what sets it apart from the
-  traditional separation of data and code that manipulates the data.
-- An object has a well defined interface, with typed member variables and
-  member functions.
-- Objects are created from a class and all objects have the same interface.
-  This does not change at runtime, it is not dynamic.
-
-An object can only be created by a class.  A class provides:
-- A new() method, the constructor, which returns an object for the class.
-  This method is invoked on the class name: MyClass.new().
-- State shared by all objects of the class: class variables (class members).
-- A hierarchy of classes, with super-classes and sub-classes, inheritance.
-
-An interface is used to specify properties of an object:
-- An object can declare several interfaces that it implements.
-- Different objects implementing the same interface can be used the same way.
-
-The class hierarchy allows for single inheritance.  Otherwise interfaces are
-to be used where needed.
-
-
-Class modeling ~
-
-You can model classes any way you like.  Keep in mind what you are building,
-don't try to model the real world.  This can be confusing, especially because
-teachers use real-world objects to explain class relations and you might think
-your model should therefore reflect the real world.  It doesn't!  The model
-should match your purpose.
-
-Keep in mind that composition (an object contains other objects) is often
-better than inheritance (an object extends another object).  Don't waste time
-trying to find the optimal class model.  Or waste time discussing whether a
-square is a rectangle or that a rectangle is a square.  It doesn't matter.
-
+9.  論理的根拠
+10. 後で書く
 
 ==============================================================================
 
-2.  A simple class				*Vim9-simple-class*
+1. 概要						*Vim9-class-overview*
 
-Let's start with a simple example: a class that stores a text position (see
-below for how to do this more efficiently): >
+「オブジェクト指向プログラミング」は夢の単語です。この題材について、あなたは多
+数の勉強素材を見付けることができます。ここではあなたがすでに基本的なことを知っ
+ていると仮定して、|Vim9| script が何を提供するかを記載します。加えてどのように
+使うと効果的に機能させるかの有用なヒントもです。
+
+オブジェクトの基本用語:
+- オブジェクトは状態を持つ。1つあるいはそれ以上のそれぞれ値を持つ変数を包含し
+  ている。
+- オブジェクトはその状態の使用と操作を行う関数を提供する。それらの関数は「その
+  オブジェクト上で」呼び出される。これが従来のデータとそのデータを操作するコー
+  ドの分離とは一線を画すものになっている。
+- オブジェクトには型指定されたメンバ変数とメンバ関数によって、明確に定義された
+  インターフェイスがある。
+- オブジェクトはクラスから作られ、すべてのオブジェクトは同じインターフェイスを
+  持つ。 これは実行時には変更できず、動的ではない。
+
+オブジェクトはクラスによってのみ生成されます。クラスは以下を提供します:
+- コンストラクタとしての new() メソッド、これはクラスからオブジェクトを返しま
+  す。このメソッドはクラス名で呼び出す: MyClass.new()。
+- クラスにおける全オブジェクトで状態を共有する: クラス変数(クラスメンバ)。
+- 親クラスを子クラスが継承することでクラスの階層になる。
+
+インターフェイスはオブジェクトの特別なプロパティとして使用されます:
+- オブジェクトはいくつかのインターフェイスを実装する宣言ができる。
+- 同じインターフェイスを実装した異なるオブジェクトを同じように扱うことができ
+  る。
+
+クラス階層は単一の継承になります。それ以外についてはインターフェイスを使う必要
+があります。
+
+
+クラスのモデリング ~
+
+あたなの好きなようにクラスをモデル化できます。何を構築するのかを忘れずに、現実
+をモデル化しようとしないでください。これは混乱を招く可能性があります、特に講師
+は現実世界のオブジェクトを使ってクラスの関係を説明するので、モデルが現実を反映
+する必要があると考えてしまうのです。そうではありません! モデルはあなたの目的に
+合わせるべきです。
+
+合成(オブジェクトが他のオブジェクトを含む)は多くの場合で継承(別のオブジェクト
+を拡張したオブジェクト)より優れていることに留意してください。最適なクラスのモ
+デルを見付けようとして時間を無駄にしないように。あるいは正方形が長方形なのか長
+方形が正方形なのかで議論するのは時間の無駄です。それは問題ではありません。
+
+
+==============================================================================
+
+2.  単純なクラス				*Vim9-simple-class*
+
+まずは簡単な例で始めてみましょう: テキストの位置を格納するクラスです(どのよう
+により効果的にしているかは以下を参照): >
 
 	class TextPosition
 	   this.lnum: number
@@ -99,64 +100,64 @@ below for how to do this more efficiently): >
 	   enddef
 	 endclass
 <							*object* *Object*
-You can create an object from this class with the new() method: >
+このクラスと new() メソッドからオブジェクトを生成できます: >
 
 	var pos = TextPosition.new(1, 1)
 
-The object members "lnum" and "col" can be accessed directly: >
+このオブジェクトのメンバ "lnum" と "col" は直接アクセスできます: >
 
 	echo $'The text position is ({pos.lnum}, {pos.col})'
 <							*E1317* *E1327*
-If you have been using other object-oriented languages you will notice that
-in Vim the object members are consistently referred to with the "this."
-prefix.  This is different from languages like Java and TypeScript.  The
-naming convention makes the object members easy to spot.  Also, when a
-variable does not have the "this." prefix you know it is not an object member.
+他のオブジェクト指向言語を使ったことがあるなら Vim のオブジェクトのメンバは一
+貫して前置詞 "this." で参照されていることに気付くでしょう。これは Java や
+TypeScript のような他の言語とは違います。この命名規約はオブジェクトのメンバを
+容易に見付ることができます。また、前置詞 "this." がない変数の時はオブジェクト
+のメンバでないとわかります。
 
 
-Member write access ~
+メンバの書き込みアクセス ~
 
-Now try to change an object member directly: >
+オブジェクトのメンバの直接変更を試してください: >
 
 	pos.lnum = 9
 <							*E1335*
-This will give you an error!  That is because by default object members can be
-read but not set.  That's why the TextPosition class provides a method for it: >
+これはエラーになります! デフォルトではオブジェクトのメンバは読むことはできます
+が設定できないためです。そのため TextPosition クラスはそのためのメソッドを提供
+しています: >
 
 	pos.SetLnum(9)
 
-Allowing to read but not set an object member is the most common and safest
-way.  Most often there is no problem using a value, while setting a value may
-have side effects that need to be taken care of.  In this case, the SetLnum()
-method could check if the line number is valid and either give an error or use
-the closest valid value.
+オブジェクトのメンバが読めるけれども設定できないようにするのがもっとも基本的で
+最良の安全な手段となっています。ほとんどの場合で値を使用しても問題はありません
+が、値を設定するのは注意が必要な副作用が生じることがあります。この場合では、
+SetLnum() メソッドは行番号が正しいかチェックしなくてはならず、エラーにするか正
+しい範囲に閉じる値を使うかしなくてはいけません。
 							*:public* *E1331*
-If you don't care about side effects and want to allow the object member to be
-changed at any time, you can make it public: >
+副作用について考慮する必要がなくオブジェクトのメンバが何時でも変更を受け付ける
+ようにしたいなら、パブリックにすることができます: >
 
 	public this.lnum: number
 	public this.col: number
 
-Now you don't need the SetLnum(), SetCol() and SetPosition() methods, setting
-"pos.lnum" directly above will no longer give an error.
+このとき、SetLnum(), SetCol(), SetPosition() メソッドは必要なく、"pos.lnum" に
+直接設定してもエラーになることはありません。
 							*E1334*
-If you try to set an object member that doesn't exist you get an error: >
+オブジェクトのメンバとして存在しないものに設定する場合にエラーになります: >
 	pos.other = 9
 <	E1334: Object member not found: other ~
 
 
-Private members ~
+プライベートメンバ ~
 							*E1332* *E1333*
-On the other hand, if you do not want the object members to be read directly,
-you can make them private.  This is done by prefixing an underscore to the
-name: >
+一方で、オブジェクトのメンバを直接読めないようにしたい場合、それらをプライベー
+トにできます。名前にアンダースコアを前置すればそうなります: >
 
 	this._lnum: number
 	this._col number
 
-Now you need to provide methods to get the value of the private members.
-These are commonly called getters.  We recommend using a name that starts with
-"Get": >
+その時はプライベートなメンバの値を取得するメソッドを提供する必要があります。一
+般的にゲッターと呼ばれるものです。使用する名前は "Get" で始めることを推奨しま
+す: >
 
 	def GetLnum(): number
 	   return this._lnum
@@ -166,9 +167,9 @@ These are commonly called getters.  We recommend using a name that starts with
 	   return this._col
 	enddef
 
-This example isn't very useful, the members might as well have been public.
-It does become useful if you check the value.  For example, restrict the line
-number to the total number of lines: >
+この例はあまり役に立ちません、メンバはパブリックになっているのと同様であるため
+です。値をチェックする場合に便利になります。例えば、行番号を全体行数に制限する
+のは: >
 
 	def GetLnum(): number
 	   if this._lnum > this._lineCount
@@ -178,10 +179,10 @@ number to the total number of lines: >
 	enddef
 
 
-Simplifying the new() method ~
+new() メソッドの単純化 ~
 
-Many constructors take values for the object members.  Thus you very often see
-this pattern: >
+多くのコンストラクタはオブジェクトのメンバの値を取ります。なのでこのようなパ
+ターンをとてもよく見ます: >
 
 	 class SomeClass
 	   this.lnum: number
@@ -193,19 +194,18 @@ this pattern: >
 	   enddef
 	 endclass
 
-Not only is this text you need to write, it also has the type of each member
-twice.  Since this is so common a shorter way to write new() is provided: >
+この記述で、1度ではなく各メンバで2度型を書く必要があります。これは非常に一般的
+なので new() を短縮する方法が提供されます: >
 
 	   def new(this.lnum, this.col)
 	   enddef
 
-The semantics are easy to understand: Providing the object member name,
-including "this.", as the argument to new() means the value provided in the
-new() call is assigned to that object member.  This mechanism comes from the
-Dart language.
+この文法はとても理解しやすいです: new() の引数が、"this." を含んだオブジェクト
+のメンバ名で提供されており、new() 呼び出し時にオブジェクトのメンバに割り当てら
+れることを意味します。このメカニズムは Dart 言語から来ています。
 
-Putting together this way of using new() and making the members public results
-in a much shorter class definition as what we started with: >
+この new() を使う方法とメンバをパブリックにするのをあわせると当初よりとても短
+いクラス定義になります: >
 
 	class TextPosition
 	   public this.lnum: number
@@ -220,25 +220,24 @@ in a much shorter class definition as what we started with: >
 	   enddef
 	 endclass
 
-The sequence of constructing a new object is:
-1. Memory is allocated and cleared.  All values are zero/false/empty.
-2. For each declared member that has an initializer, the expression is
-   evaluated and assigned to the member.  This happens in the sequence the
-   members are declared in the class.
-3. Arguments in the new() method in the "this.name" form are assigned.
-4. The body of the new() method is executed.
+新しいオブジェクトを生成する流れは:
+1. メモリを確保しクリアする。すべての値は0/false/空になる。
+2. 初期化子で宣言した各メンバについて、式を評価してメンバに割り当てる。
+   これはメンバのクラス内で宣言された順に発生する。
+3. new() メソッドの引数の "this.name" 形式を割り当てる。
+4. new() メソッドの本体が実行される。
 
-If the class extends a parent class, the same thing happens.  In the second
-step the members of the parent class are done first.  There is no need to call
-"super()" or "new()" on the parent.
+親クラスを拡張したクラスの場合、同様の動作が発生します。2番目のステップでは親
+クラスのメンバが先に完了します。親の "super()" や "new()" を呼ぶ必要はありませ
+ん。
 
 ==============================================================================
 
-3.  class members and functions			*Vim9-class-member*
+3.  クラスのメンバと関数			*Vim9-class-member*
 
 						*:static* *E1337* *E1338*
-Class members are declared with "static".  They are used by the name without a
-prefix: >
+クラスメンバは "static" とともに宣言します。プリフィックスなしの名前を使いま
+す: >
 
 	class OtherThing
 	   this.size: number
@@ -249,28 +248,27 @@ prefix: >
 	   enddef
 	endclass
 <							*E1340* *E1341*
-Since the name is used as-is, shadowing the name by a function argument name
-or local variable name is not allowed.
+名前はそのまま使用されるので、関数の引数名やローカル変数としてシャドウィングす
+ることはできません。
 
-Just like object members the access can be made private by using an underscore
-as the first character in the name, and it can be made public by prefixing
-"public": >
+オブジェクトのメンバのアクセスと同様に、アンダースコアを名前の最初の文字に使
+うことでプライベートにでき、"public" を前置することでパブリックにできます: >
 
     class OtherThing
-	static total: number	      # anybody can read, only class can write
-	static _sum: number	      # only class can read and write
-	public static result: number  # anybody can read and write
+	static total: number	      # だれでも読め、クラスだけが書ける
+	static _sum: number	      # クラスだけが読み書きできる
+	public static result: number  # だれでも読み書きできる
     endclass
 <
 							*class-function*
-Class functions are also declared with "static".  They have no access to
-object members, they cannot use the "this" keyword. >
+クラス関数も同じように "static" とともに宣言します。オブジェクトのメンバへのア
+クセスはできず、"this" キーワードは使えません: >
 
 	class OtherThing
 	   this.size: number
 	   static totalSize: number
 
-	   # Clear the total size and return the value it had before.
+	   # 合計サイズをクリアし以前の値を返す。
 	   static def ClearTotalSize(): number
 	      var prev = totalSize
 	      totalSize = 0
@@ -278,23 +276,23 @@ object members, they cannot use the "this" keyword. >
 	   enddef
 	endclass
 
-Inside the class the function can be called by name directly, outside the
-class the class name must be prefixed: `OtherThing.ClearTotalSize()`.
+クラス内では関数は直接名前で呼び出し、クラス外ではクラス名を前置する必要があり
+ます: `OtherThing.ClearTotalSize()`。
 
 ==============================================================================
 
-4.  Using an abstract class			*Vim9-abstract-class*
+4.  抽象クラスを使う				*Vim9-abstract-class*
 
-An abstract class forms the base for at least one sub-class.  In the class
-model one often finds that a few classes have the same properties that can be
-shared, but a class with these properties does not have enough state to create
-an object from.  A sub-class must extend the abstract class and add the
-missing state and/or methods before it can be used to create objects for.
+抽象クラスは最低でも1つのサブクラスの元となる形式です。クラスのモデルでは、い
+くつかのクラスが共有できる同じ属性を持っていることがよくありますが、その属性を
+持つクラスではオブジェクトを作るには十分な状態ではありません。オブジェクトを生
+成して使う前にサブクラスで抽象クラスを拡張し不足の状態、あるいはメソッドを追加
+します。
 
-For example, a Shape class could store a color and thickness.  You cannot
-create a Shape object, it is missing the information about what kind of shape
-it is.  The Shape class functions as the base for a Square and a Triangle
-class, for which objects can be created.  Example: >
+例えば、Shape クラスは色と厚みを格納できます。あなたは Shape のオブジェクトは
+生成できません、それにはそれが何の形状の種別なのかという情報が欠けています。
+Shape クラスの機能は Square と Triangle クラスの基礎となり、オブジェクトが生成
+できます。例: >
 
 	abstract class Shape
 	   this.color = Color.Black
@@ -316,18 +314,18 @@ class, for which objects can be created.  Example: >
 	   enddef
 	endclass
 <
-An abstract class is defined the same way as a normal class, except that it
-does not have any new() method. *E1359*
+抽象クラスは new() メソッドが無いことを除けば、通常のクラスと同じ方法で定義で
+きます。 *E1359*
 
 
 ==============================================================================
 
-5.  Using an interface				*Vim9-using-interface*
+5.  インターフェイスを使う			*Vim9-using-interface*
 
-The example above with Shape, Square and Triangle can be made more useful if
-we add a method to compute the surface of the object.  For that we create the
-interface called HasSurface, which specifies one method Surface() that returns
-a number.  This example extends the one above: >
+上記の例で、Shape, Square, Triangle にオブジェクトの面積の計算メソッドが追加で
+きた場合、より便利になります。HasSurface いうインターフェイスを作成します、これ
+には数値を返す Surface() という1つのメソッドを記述します。この例で上のものを拡
+張すると: >
 
 	abstract class Shape
 	   this.color = Color.Black
@@ -361,10 +359,10 @@ a number.  This example extends the one above: >
 	   enddef
 	endclass
 
-If a class declares to implement an interface, all the items specified in the
-interface must appear in the class, with the same types. *E1348* *E1349*
+クラスでインターフェイスを実装すると宣言した場合、インターフェイスに記述されて
+いるすべての項目が同じ型でクラスに存在する必要があります。 *E1348* *E1349*
 
-The interface name can be used as a type: >
+インターフェイスの名前は型と同じように使えます: >
 
 	var shapes: list<HasSurface> = [
 				Square.new(12),
@@ -377,22 +375,22 @@ The interface name can be used as a type: >
 
 ==============================================================================
 
-6.  More class details				*Vim9-class* *Class* *class*
+6.  さらなるクラスの詳細			*Vim9-class* *Class* *class*
 
-Defining a class ~
+クラスの定義 ~
 					*:class* *:endclass* *:abstract*
-A class is defined between `:class` and `:endclass`.  The whole class is
-defined in one script file.  It is not possible to add to a class later.
+クラスは`:class` から `:endclass` の間に定義されます。クラス全体が1つのスクリ
+プトファイルに定義されます。クラスに後から追加することはできません。
 
-A class can only be defined in a |Vim9| script file.  *E1316*
-A class cannot be defined inside a function.
+|Vim9| script ファイルの中にのみクラスは定義できます。  *E1316*
+クラスは関数内には定義できません。
 
-It is possible to define more than one class in a script file.  Although it
-usually is better to export only one main class.  It can be useful to define
-types, enums and helper classes though.
+スクリプトファイルに1つ以上のクラスを定義できます。ただ通常はメインとなるクラ
+スだけをエクスポートすることをお勧めします。型、列挙型、ヘルパークラスを定義す
+ると便利な場合があります。
 
-The `:abstract` keyword may be prefixed and `:export` may be used.  That gives
-these variants: >
+`:abstract` キーワードを前置して `:export` が使えます。以下のようなバリエーショ
+ンになります: >
 
 	class ClassName
 	endclass
@@ -407,95 +405,95 @@ these variants: >
 	endclass
 <
 							*E1314*
-The class name should be CamelCased.  It must start with an uppercase letter.
-That avoids clashing with builtin types.
+クラス名はキャメルケース(CamelCased)でなくてはいけません。開始は大文字の必要が
+あります。これは組み込みの型との衝突を回避します。
 							*E1315*
-After the class name these optional items can be used.  Each can appear only
-once.  They can appear in any order, although this order is recommended: >
+クラス名の後にはオプショナルな項目を使うことができます。それぞれ1度だけ表記で
+きます。好きな順序で表記できますが、この順序を推奨します: >
 	extends ClassName
 	implements InterfaceName, OtherInterface
 	specifies SomeInterface
 <							*E1355*
-Each member and function name can be used only once.  It is not possible to
-define a function with the same name and different type of arguments.
+各メンバと関数名は一度だけ使えます。関数を同じ名前で違う引数の型では定義するこ
+とはできません。
 
 
-Extending a class ~
+クラスの拡張 ~
 							*extends*
-A class can extend one other class. *E1352* *E1353* *E1354*
-The basic idea is to build on top of an existing class, add properties to it.
+クラスは他のクラスを拡張できます。 *E1352* *E1353* *E1354*
+基本的なアイデアは頂点に既存のクラスを置いて、プロパティを追加して作っていくと
+いうものです。
 
-The extended class is called the "base class" or "super class".  The new class
-is called the "child class".
+拡張されたクラスは "基底クラス" あるいは "親クラス" と呼ばれます。新しいクラス
+は "子クラス" と呼ばれます。
 
-Object members from the base class are all taken over by the child class.  It
-is not possible to override them (unlike some other languages).
+基底クラスのオブジェクトのメンバはすべて子クラスに持ち越されます。これはそれら
+が上書きできないことを意味します(いくつかの他の言語とは違います)。
 
 						*E1356* *E1357* *E1358*
-Object methods of the base class can be overruled.  The signature (arguments,
-argument types and return type) must be exactly the same.  The method of the
-base class can be called by prefixing "super.".
+基底クラスのオブジェクトメソッドは封印することができます。シグニチャ (引数、引
+数の型、戻り値の型) が完全に一致している必要があります。基底クラスのメソッドは
+"super." を前置することで呼び出すことができます。
 
-Other object methods of the base class are taken over by the child class.
+他の基底クラスのオブジェクトメソッドは子クラスに持ち越されます。
 
-Class functions, including functions starting with "new", can be overruled,
-like with object methods.  The function on the base class can be called by
-prefixing the name of the class (for class functions) or "super.".
+"new" で始まる関数を含むクラス関数は、オブジェクトのメソッド同様に破棄されま
+す。基底クラスにある関数は(クラス関数であれば)クラス名、あるいは "super." を前
+置して呼べます。
 
-Unlike other languages, the constructor of the base class does not need to be
-invoked.  In fact, it cannot be invoked.  If some initialization from the base
-class also needs to be done in a child class, put it in an object method and
-call that method from every constructor().
+他の言語とは違い、基底クラスのコンストラクタの実行は必要ではありません。実際、
+実行できません。子クラスでも基底クラスのいくつかの初期化を実行する必要があるな
+ら、オブジェクトのメソッドとして用意し、そのメソッドを各コンストラクタで呼びま
+す。
 
-If the base class did not specify a new() function then one was automatically
-created.  This function will not be taken over by the child class.  The child
-class can define its own new() function, or, if there isn't one, a new()
-function will be added automatically.
+基底クラスに new() 関数がない場合にはひとつ自動生成されます。その関数は子クラ
+スには持ち越さることはありません。子クラスでは自分で new() 関数を定義でき、あ
+るいはひとつも定義しないなら自動で追加されます。
 
 
-A class implementing an interface ~
+インターフェイスを実装したクラス ~
 						*implements* *E1346* *E1347*
-A class can implement one or more interfaces.  The "implements" keyword can
-only appear once *E1350* .  Multiple interfaces can be specified, separated by
-commas.  Each interface name can appear only once. *E1351*
+クラスは1つ以上のインターフェイスを実装できます。"implements" キーワードは1度
+だけ表記できます *E1350* 。複数のインターフェイスをコンマ区切りで指定できます。各
+インターフェイスは1度だけ表記できます。 *E1351*
 
 
-A class defining an interface ~
+インターフェイスを定義するクラス ~
 							*specifies*
-A class can declare its interface, the object members and methods, with a
-named interface.  This avoids the need for separately specifying the
-interface, which is often done in many languages, especially Java.
+クラスは名前付きインターフェイスを使用して、そのインターフェイスやオブジェクト
+のメンバとメソッドを宣言できます。これは多くの言語、特にJavaでよく行なわている
+インターフェイスを個別指定する必要を回避できます。
 
 
-Items in a class ~
+クラスの項目 ~
 						*E1318* *E1325* *E1326*
-Inside a class, in between `:class` and `:endclass`, these items can appear:
-- An object member declaration: >
+`:class` と `:endclass` の間のクラス内で、以下の項目を表記できます:
+- オブジェクトのメンバの宣言: >
 	this._memberName: memberType
 	this.memberName: memberType
 	public this.memberName: memberType
-- A constructor method: >
+- コンストラクタメソッド: >
 	def new(arguments)
 	def newName(arguments)
-- An object method: >
+- オブジェクトメソッド: >
 	def SomeMethod(arguments)
 <							*E1329*
-For the object member the type must be specified.  The best way is to do this
-explicitly with ": {type}".  For simple types you can also use an initializer,
-such as "= 123", and Vim will see that the type is a number.  Avoid doing this
-for more complex types and when the type will be incomplete.  For example: >
+オブジェクトのメンバの型は指定しなくてはいけません。最良の実施方法は ":
+{type}" を使って明示することです。単純な型であれば、"= 123" のような初期化子を
+使うこともでき、Vimにその型を数値であるとみなさせれます。複雑な型を不完全な状
+態にするのは避けましょう。例えば: >
 	this.nameList = []
-This specifies a list, but the item type is unknown.  Better use: >
+これはリストであると指定していますが、項目の型が不明です。より良くするには: >
 	this.nameList: list<string>
-The initialization isn't needed, the list is empty by default.
+初期化は必要なく、リストは空がデフォルトです。
 							*E1330*
-Some types cannot be used, such as "void", "null" and "v:none".
+"void", "null", "v:none" といったいくつかの型は使えません。
 
 
-Defining an interface ~
+インターフェイスの定義 ~
 						*:interface* *:endinterface*
-An interface is defined between `:interface` and `:endinterface`.  It may be
-prefixed with `:export`: >
+インターフェイスは `:interface` から `:endinterface` の間に定義されます。
+`:export` を前置できます: >
 
 	interface InterfaceName
 	endinterface
@@ -503,37 +501,37 @@ prefixed with `:export`: >
 	export interface InterfaceName
 	endinterface
 <							*E1344*
-An interface can declare object members, just like in a class but without any
-initializer.
+インターフェイスにはオブジェクトのメンバを、初期化子無しでクラスと同じように宣
+言できます。
 							*E1345*
-An interface can declare methods with `:def`, including the arguments and
-return type, but without the body and without `:enddef`.  Example: >
+インターフェイスには `:def` でメソッドを引数と戻り値の型とともに宣言できます
+が、本体と `:enddef` はできません。例: >
 
 	interface HasSurface
 	   this.size: number
 	   def Surface(): number
 	endinterface
 
-An interface name must start with an uppercase letter. *E1343*
-The "Has" prefix can be used to make it easier to guess this is an interface
-name, with a hint about what it provides.
-An interface can only be defined in a |Vim9| script file.  *E1342*
+インターフェイスの名前は大文字で始めなくてはいけません。 *E1343*
+"Has" 前置詞は機能が何であるかのヒントとともにインターフェイス名を簡単に見付ら
+れるようにする方法として使うことができます。
+インターフェイスは |Vim9| script ファイルでしか宣言できません。 *E1342*
 
 
-null object ~
+null オブジェクト ~
 
-When a variable is declared to have the type of an object, but it is not
-initialized, the value is null.  When trying to use this null object Vim often
-does not know what class was supposed to be used.  Vim then cannot check if
-a member name is correct and you will get an "Using a null object" error,
-even when the member name is invalid. *E1360* *E1362*
+オブジェクトの型を持つ変数が宣言され、しかし初期化されていない場合は、値は
+null になります。null のオブジェクトを使おうとした時に Vim は時々どのクラスを
+使用することになっているかわからなくなります。Vim はメンバ名が正しい時でもその
+チェックができず "Using a null object" エラーが発生し、メンバ名が不正な場合と
+同じになります。 *E1360* *E1362*
 
 
-Default constructor ~
+デフォルトコンストラクタ ~
 
-In case you define a class without a new() method, one will be automatically
-defined.  This default constructor will have arguments for all the object
-members, in the order they were specified.  Thus if your class looks like: >
+new() メソッドなしでクラスを定義した場合、ひとつ自動で定義されます。デフォルト
+コンストラクタは全オブジェクトメンバを引数に持ち、その順序は定義した順になりま
+す。つまりあなたのクラスがこうであれば: >
 
 	class AutoNew
 	   this.name: string
@@ -541,45 +539,43 @@ members, in the order they were specified.  Thus if your class looks like: >
 	   this.gender: Gender
 	endclass
 
-Then The default constructor will be: >
+デフォルトコンストラクタはこうなります: >
 
 	def new(this.name = v:none, this.age = v:none, this.gender = v:none)
 	enddef
 
-The "= v:none" default values make the arguments optional.  Thus you can also
-call `new()` without any arguments.  No assignment will happen and the default
-value for the object members will be used.  This is a more useful example,
-with default values: >
+引数はデフォルト値 "= v:none" のオプショナルになります。そして `new()` は引数
+を任意で省略して呼び出せます。割り当てされない場合でオブジェクトメンバのデフォ
+ルト値が使えます。この、デフォルト値がとても便利な例として: >
 
 	class TextPosition
 	   this.lnum: number = 1
 	   this.col: number = 1
 	endclass
 
-If you want the constructor to have mandatory arguments, you need to write it
-yourself.  For example, if for the AutoNew class above you insist on getting
-the name, you can define the constructor like this: >
+コンストラクタが引数を持つのを強制したい場合、あなたが書く必要があります。例え
+ば、上の AutoNew クラスで名前を取得すると主張するなら、コンストラクタはこのよ
+うに定義します: >
 
 	def new(this.name, this.age = v:none, this.gender = v:none)
 	enddef
 <							*E1328*
-Note that you cannot use another default value than "v:none" here.  If you
-want to initialize the object members, do it where they are declared.  This
-way you only need to look in one place for the default values.
+Note "v:none" 以外のデフォルト値をここで使うことはできません。オブジェクトメン
+バが初期化されるのを望む場合は、宣言するしかありません。この方法はデフォルト値
+を1箇所で確認するだけですみます。
 
-All object members will be used in the default constructor, also private
-access ones.
+全オブジェクトのメンバはデフォルトコンストラクタ、あるいはプライベートなアクセ
+スで使用されます。
 
-If the class extends another one, the object members of that class will come
-first.
+クラスが拡張された場合、拡張したクラスのオブジェクトのメンバが最初に来ます。
 
 
-Multiple constructors ~
+複数のコンストラクタ ~
 
-Normally a class has just one new() constructor.  In case you find that the
-constructor is often called with the same arguments you may want to simplify
-your code by putting those arguments into a second constructor method.  For
-example, if you tend to use the color black a lot: >
+一般的にはクラスはただ1つの new() コンストラクタを持ちます。コンストラクタが同
+じ引数を使用して呼び出されることが多い場合は、それらの引数を 2番目のコンストラ
+クタメソッド内に入れることでコードを簡素化できます。例えば、color に黒をよく与
+えて使う場合: >
 
 	def new(this.garment, this.color, this.size)
 	enddef
@@ -588,8 +584,7 @@ example, if you tend to use the color black a lot: >
 	var shirt = new(Garment.shirt, Color.black, "XL")
 	var shoes = new(Garment.shoes, Color.black, "45")
 
-Instead of repeating the color every time you can add a constructor that
-includes it: >
+コンストラクタに毎回 color を与えて繰り返す代わりに内蔵したものにします: >
 
 	def newBlack(this.garment, this.size)
 	   this.color = Color.black
@@ -599,27 +594,27 @@ includes it: >
 	var shirt = newBlack(Garment.shirt, "XL")
 	var shoes = newBlack(Garment.shoes, "9.5")
 
-Note that the method name must start with "new".  If there is no method called
-"new()" then the default constructor is added, even though there are other
-constructor methods.
+Note "new" から始まる名前のメソッドにする必要があります。"new()" メソッドがな
+い場合は、他のコンストラクタメソッドがあってもデフォルトコンストラクタが追加さ
+れます。
 
 
 ==============================================================================
 
-7.  Type definition					*Vim9-type* *:type*
+7.  型の定義						*Vim9-type* *:type*
 
-A type definition is giving a name to a type specification.  For Example: >
+型定義は型の仕様に名前を与えます。 例: >
 
 	:type ListOfStrings list<string>
 
-TODO: more explanation
+TODO: さらなる説明
 
 
 ==============================================================================
 
-8.  Enum					*Vim9-enum* *:enum* *:endenum*
+8.  列挙値					*Vim9-enum* *:enum* *:endenum*
 
-An enum is a type that can have one of a list of values.  Example: >
+enum は、値のリスト1つを持つことができる型です。 例: >
 
 	:enum Color
 		White
@@ -629,272 +624,259 @@ An enum is a type that can have one of a list of values.  Example: >
 		Black
 	:endenum
 
-TODO: more explanation
+TODO: さらなる説明
 
 
 ==============================================================================
 
-9.  Rationale
+9. 論理的根拠
 
-Most of the choices for |Vim9| classes come from popular and recently
-developed languages, such as Java, TypeScript and Dart.  The syntax has been
-made to fit with the way Vim script works, such as using `endclass` instead of
-using curly braces around the whole class.
+|Vim9| クラスの多くの選択は人気があり現在開発されている言語、Java, TypeScript,
+Dart などから来ています。構文は、例えばクラス全体を波カッコでくくる代わりに
+`endclass` を使用するなど Vim script の動作に合せて作ってあります。
 
-Some common constructs of object-oriented languages were chosen very long ago
-when this kind of programming was still new, and later found to be
-sub-optimal.  By this time those constructs were widely used and changing them
-was not an option.  In Vim we do have the freedom to make different choices,
-since classes are completely new.  We can make the syntax simpler and more
-consistent than what "old" languages use.  Without diverting too much, it
-should still mostly look like what you know from existing languages.
+オブジェクト指向言語の一般的な構造の一部は、これらの言語が新しいころの非常に昔
+に選択され、後に最適ではないことが判明しました。その時点で、これらの構造は広く
+使用されており、それらを変更するのは選択肢ではありませんでした。Vimにおいては
+クラスが完全に新規であるため、さまざまな選択をする自由があります。"古い" 言語
+が使用するものよりも、構文を単純かつより一貫性のあるものにすることができます。
+あまり変更しなければ、既存の言語で知っているものとほとんど同じになるはずです。
 
-Some recently developed languages add all kinds of fancy features that we
-don't need for Vim.  But some have nice ideas that we do want to use.
-Thus we end up with a base of what is common in popular languages, dropping
-what looks like a bad idea, and adding some nice features that are easy to
-understand.
+いくつかの最近開発されている言語に追加されているファンシーな機能のすべてはVim
+では必要ではありません。しかし、中には私たちがぜひ使用したい素晴らしいアイデア
+をもっています。そして最終的には人気の言語の共通点を基本とし、問題のあるように
+見えるアイデアは落し、いくつかの覚えやすくて素晴しい機能を追加しました。
 
-The main rules we use to make decisions:
-- Keep it simple.
-- No surprises, mostly do what other languages are doing.
-- Avoid mistakes from the past.
-- Avoid the need for the script writer to consult the help to understand how
-  things work, most things should be obvious.
-- Keep it consistent.
-- Aim at an average size plugin, not at a huge project.
+意思決定として用いる主要なルールは次のとおりです:
+- 単純さの維持。
+- 驚きはなく、多くの他の言語で使っている。
+- 以前からの間違いを防止する。
+- スクリプト作成者が、どのように機能するかを理解するためにヘルプを参照する必要
+  がなく、ほとんどのことが明白。
+- 一貫性を保つ。
+- 大規模プロジェクトではなく、標準的なプラグインを標的とする。
 
 
-Using new() for the constructor ~
+コンストラクタとして new() を使用する ~
 
-Many languages use the class name for the constructor method.  A disadvantage
-is that quite often this is a long name.  And when changing the class name all
-constructor methods need to be renamed.  Not a big deal, but still a
-disadvantage.
+多くの言語ではクラス名をコンストラクタメソッドとして使用します。欠点は多くの場
+合に名前が長いことです。そしてクラス名の変更時にすべてのコンストラクタメソッド
+のリネームが必要なことです。大きな事柄ではないですが、それでもデメリットはあり
+ます。
 
-Other languages, such as TypeScript, use a specific name, such as
-"constructor()".  That seems better.  However, using "new" or "new()" to
-create a new object has no obvious relation with "constructor()".
+他の言語、TypeScriptでは特別な名前として "constructor()" を使用します。これは
+より良く見えます。しかしながら、新しいオブジェクトを生成するに "constructor()"
+と比べると "new" や "new()" の方が明白です。
 
-For |Vim9| script using the same method name for all constructors seemed like
-the right choice, and by calling it new() the relation between the caller and
-the method being called is obvious.
-
-
-No overloading of the constructor ~
-
-In Vim script, both legacy and |Vim9| script, there is no overloading of
-functions.  That means it is not possible to use the same function name with
-different types of arguments.  Therefore there also is only one new()
-constructor.
-
-With |Vim9| script it would be possible to support overloading, since
-arguments are typed.  However, this gets complicated very quickly.  Looking at
-a new() call one has to inspect the types of the arguments to know which of
-several new() methods is actually being called.  And that can require
-inspecting quite a bit of code.  For example, if one of the arguments is the
-return value of a method, you need to find that method to see what type it is
-returning.
-
-Instead, every constructor has to have a different name, starting with "new".
-That way multiple constructors with different arguments are possible, while it
-is very easy to see which constructor is being used.  And the type of
-arguments can be properly checked.
+|Vim9| script ではすべてのコンストラクタで同じ名前を使用するのが良い選択である
+と見做しており、new() で呼び出すことで呼び出し元とメソッドを呼ぶ側の関係が明白
+になります。
 
 
-No overloading of methods ~
+オーバーロードのないコンストラクタ ~
 
-Same reasoning as for the constructor: It is often not obvious what type
-arguments have, which would make it difficult to figure out what method is
-actually being called.  Better just give the methods a different name, then
-type checking will make sure it works as you intended.  This rules out
-polymorphism, which we don't really need anyway.
+Vim script の旧来および |Vim9| どちらも、関数のオーバーロードはありません。こ
+れが意味するのは、同じ関数名で引数の型が違うものを使うことができないということ
+です。したがって new() コンストラクタはただ一つです。
 
+|Vim9| script では引数が型付けされたことで、オーバーロードをサポートすることが
+できるようになりました。しかしながら、すぐに煩雑になってしまいます。1度の new()
+の呼び出しでは引数の型を調査してどの new() メソッドを呼ぶのが正しいか知る必要
+があります。いくつかの new() メソッドは実際に呼び出されます。そのためかなりの
+量のコードを検査します。例えば、メソッドが戻り値で引数の1つを返す場合、その型
+を返すメソッドを見付ける必要があります。
 
-Single inheritance and interfaces ~
-
-Some languages support multiple inheritance.  Although that can be useful in
-some cases, it makes the rules of how a class works quite complicated.
-Instead, using interfaces to declare what is supported is much simpler.  The
-very popular Java language does it this way, and it should be good enough for
-Vim.  The "keep it simple" rule applies here.
-
-Explicitly declaring that a class supports an interface makes it easy to see
-what a class is intended for.  It also makes it possible to do proper type
-checking.  When an interface is changed any class that declares to implement
-it will be checked if that change was also changed.  The mechanism to assume a
-class implements an interface just because the methods happen to match is
-brittle and leads to obscure problems, let's not do that.
+代わりとして、各コンストラクタが "new" から始まる違う名前を持ちます。この方法
+は引数の違う複数のコンストラクタが可能になり、どのコンストラクタを使うべきかと
+ても簡単に見分けられます。そして引数の型のチェックもちゃんと行えます。
 
 
-Using "this.member" everywhere ~
+オーバーロードのないメソッド ~
 
-The object members in various programming languages can often be accessed in
-different ways, depending on the location.  Sometimes "this." has to be
-prepended to avoid ambiguity.  They are usually declared without "this.".
-That is quite inconsistent and sometimes confusing.
-
-A very common issue is that in the constructor the arguments use the same name
-as the object member.  Then for these members "this." needs to be prefixed in
-the body, while for other members this is not needed and often omitted.  This
-leads to a mix of members with and without "this.", which is inconsistent.
-
-For |Vim9| classes the "this." prefix is always used.  Also for declaring the
-members.  Simple and consistent.  When looking at the code inside a class it's
-also directly clear which variable references are object members and which
-aren't.
+コンストラクタ(WIP: 題と噛み合ってない?)としている幾つかの理由: ときどき型引数
+を持つが明確ではなく、実際にメソッドを呼ぶにはどうすればよいのか説明が困難にな
+ります。メソッドには違う名前を与えるのが良く、そして型チェックがあなたの意図す
+るように動作します。これにより、実際には必要のないポリモーフィズムが除外されま
+す。
 
 
-Using class members ~
+単一の継承と複数のインターフェイス ~
 
-Using "static member" to declare a class member is very common, nothing new
-here.  In |Vim9| script these can be accessed directly by their name.  Very
-much like how a script-local variable can be used in a function.  Since object
-members are always accessed with "this." prepended, it's also quickly clear
-what kind of member it is.
+いくつかの言語では複数の継承をサポートしています。とはいえそれはいくつかのケー
+スで便利になりますが、クラスがどのように動作するかのルールを非常に複雑にしてし
+まいます。代わりに、インターフェイスの宣言を使うことでよりシンプルにそれをサ
+ポートします。とても人気のあるJava言語ではこの方法にしていて、Vimにもこれで十
+分です。ここに "keep it simple" のルールが適用されています。
 
-TypeScript prepends the class name before the class member, also inside the
-class.  This has two problems: The class name can be rather long, taking up
-quite a bit of space, and when the class is renamed all these places need to
-be changed too.
+クラスがサポートするインターフェイスを明示的に宣言することで、クラスの目的が簡
+単に見てとれます。また、適した型チェックが行えるようになります。インターフェイ
+スが変更されると実装を宣言したクラスもその変更がなされているかがチェックされま
+す。メソッドがたまたま一致したからといって、クラスがインターフェイスを実装して
+いるとみなすメカニズムは脆弱で、わかりにくい問題を引き起こすため、やめましょ
+う。
 
 
-Declaring object and class members ~
+どこでも "this.member" を使用する ~
 
-The main choice is whether to use "var" as with variable declarations.
-TypeScript does not use it: >
+多くのプログラミング言語のオブジェクトメンバよく違う方法でアクセスされ、その位
+置に依存します。時に "this." を前置することであいまいさを防ぎます。通常、これ
+らは "this." なしで宣言されます。これはまったく一貫性がなく時に混乱してしまい
+ます。
+
+これはコンストラクタ内で引数と同じ名前がオブジェクトメンバを使うときにとても普
+遍的な問題になります。その際にはそれらのメンバはコンストラクタ本体内で "this."
+の前置を必要とし、他のメンバには不要で時には除去されています。これは "this."
+について有り無しのメンバの混在を引き起し、一貫性がなくなります。
+
+|Vim9| のクラスでは "this." プリフィックスを常に使います。メンバの宣言時でもで
+す。シンプルで一貫性があります。クラス内のコードを見た時に変数がオブジェクトメ
+ンバかそうでないものを指しているかが直接的に明確になります。
+
+
+クラスメンバを使用する ~
+
+"static member" を使用するのがクラスメンバの宣言としてとても普遍的で、新しいと
+ころはありません。|Vim9| script ではその名前で直接アクセスできます。スクリプト
+ローカルな変数を使う変数ととても似ています。オブジェクトメンバは "this." を常
+に前置してアクセスし、こちらもどのメンバの種類かが明確になります。
+
+TypeScript はクラス内であっても、クラス名をクラスメンバに前置します。これには2
+つ問題があります: クラス名は必要以上に長く、スペースを余分に取り、クラスのリ
+ネーム時に置いてある全部を変更する必要があります。
+
+
+オブジェクトとクラスメンバの宣言 ~
+
+主要な選択肢として変数の宣言に "var" を使用するかどうかがあります。
+TypeScript は使用しない: >
 	class Point {
 	  x: number;
 	  y = 0;
 	}
 
-Following that Vim object members could be declared like this: >
+踏襲するVimのオブジェクトメンバについてこのように宣言する: >
 	class Point
 	  this.x: number
 	  this.y = 0
 	endclass
 
-Some users pointed out that this looks more like an assignment than a
-declaration.  Adding "var" changes that: >
+何人かのユーザーからは宣言で割り当てるにはより良いと指摘された。"var" を追加し
+たなら: >
 	class Point
 	  var this.x: number
 	  var this.y = 0
 	endclass
 
-We also need to be able to declare class members using the "static" keyword.
-There we can also choose to leave out "var": >
+クラスメンバ "static" キーワードを使って宣言にできなくてはいけません。
+"var" を外す選択もできる: >
 	class Point
 	  var this.x: number
 	  static count = 0
 	endclass
 
-Or do use it, before "static": >
+あるいは、"static" の前に使用する: >
 	class Point
 	  var this.x: number
 	  var static count = 0
 	endclass
 
-Or after "static": >
+あるいは "static" の後: >
 	class Point
 	  var this.x: number
 	  static var count = 0
 	endclass
 
-This is more in line with "static def Func()".
+これは "static def Func()" という行とより一致します。
 
-There is no clear preference whether to use "var" or not.  The two main
-reasons to leave it out are:
-1. TypeScript, Java and other popular languages do not use it.
-2. Less clutter.
-
-
-Using "ClassName.new()" to construct an object ~
-
-Many languages use the "new" operator to create an object, which is actually
-kind of strange, since the constructor is defined as a method with arguments,
-not a command.  TypeScript also has the "new" keyword, but the method is
-called "constructor()", it is hard to see the relation between the two.
-
-In |Vim9| script the constructor method is called new(), and it is invoked as
-new(), simple and straightforward.  Other languages use "new ClassName()",
-while there is no ClassName() method, it's a method by another name in the
-class called ClassName.  Quite confusing.
+これらは "var" を使用するかどうかの選択肢が明確ではありません。2つの理由から外
+すことにしました:
+1. TypeScript, Java, その他の人気の言語では使用していない。
+2. 混乱を減らす。
 
 
-Default read access to object members ~
+オブジェクトのコンストラクタ "ClassName.new()" を使用する ~
 
-Some users will remark that the access rules for object members are
-asymmetric.  Well, that is intentional.  Changing a value is a very different
-action than reading a value.  The read operation has no side effects, it can
-be done any number of times without affecting the object.  Changing the value
-can have many side effects, and even have a ripple effect, affecting other
-objects.
+多くの言語では "new" 演算子を使用してオブジェクトを生成しますが、コンストラク
+タはコマンドではなく引数を持つメソッドとして定義されているので、実際には少し奇
+妙です。TypeScript もまた "new" キーワードを持ちますが、しかしメソッドは
+"constructor()" と呼ばれ、この2つの間の関係を見てとるのは困難です。
 
-When adding object members one usually doesn't think much about this, just get
-the type right.  And normally the values are set in the new() method.
-Therefore defaulting to read access only "just works" in most cases.  And when
-directly writing you get an error, which makes you wonder if you actually want
-to allow that.  This helps writing code with fewer mistakes.
+|Vim9| script ではコンストラクタメソッドは new() と呼ばれ、実行するのも new()
+で、シンプルで直截的です。他の言語では "new ClassName()" を使用しますが
+ClassName() メソッドはなく、ClassName クラス内の別の名前のメソッドです。かなり
+混乱します。
 
 
-Making object members private with an underscore ~
+オブジェクトのメンバのデフォルト読み出しアクセス ~
 
-When an object member is private, it can only be read and changed inside the
-class (and in sub-classes), then it cannot be used outside of the class.
-Prepending an underscore is a simple way to make that visible.  Various
-programming languages have this as a recommendation.
+何人かのユーザーはオブジェクトメンバへアクセスするルールが非対称であることを覚
+えなくてはいけません。これは意図的なものです。値の変更は値の読み出しとはとても
+違う操作です。読み出し操作には副作用はなく、何回おこなってもオブジェクトに影響
+を与えません。値の変更は多くの副作用があり、おなじくらい他のオブジェクトへの波
+及効果もあります。
 
-In case you change your mind and want to make the object member accessible
-outside of the class, you will have to remove the underscore everywhere.
-Since the name only appears in the class (and sub-classes) they will be easy
-to find and change.
-
-The other way around is much harder: you can easily prepend an underscore to
-the object member inside the class to make it private, but any usage elsewhere
-you will have to track down and change.  You may have to make it a "set"
-method call.  This reflects the real world problem that taking away access
-requires work to be done for all places where that access exists.
-
-An alternative would have been using the "private" keyword, just like "public"
-changes the access in the other direction.  Well, that's just to reduce the
-number of keywords.
+オブジェクトメンバを追加する時に通常はこのことは考えず、ただ型が正しいようにす
+るだけです。そして通常 new() メソッドで値が設定されます。そうして多くの場合で
+デフォルトとした読み出しアクセスのみでちょうどよく動きます。そして直に設定しよ
+うとしたらエラーになり、許可されたい場合に驚くことになるでしょう。これはコード
+を書くに間違いを減らすのを助けてくれます。
 
 
-No protected object members ~
+オブジェクトのメンバをアンダースコアでプライベートにする ~
 
-Some languages provide several ways to control access to object members.  The
-most known is "protected", and the meaning varies from language to language.
-Others are "shared", "private" and even "friend".
+オブジェクトメンバがプライベートの時、クラス(およびサブクラス)内からしか読み/
+変更はできなくなり、クラスの外部からは使用できません。アンダースコアを前に付け
+ることでシンプルに可視化できます。いくつかのプログラミング言語ではこれが推奨さ
+れています。
 
-These rules make life more difficult.  That can be justified in projects where
-many people work on the same, complex code where it is easy to make mistakes.
-Especially when refactoring or other changes to the class model.
+考えを変えてオブジェクトメンバをクラス外からアクセス可能に変更したいときには、
+すべての箇所のアンダースコアを削除する必要があります。名前はクラス(およびサブ
+クラス)にのみ表れるので、見付けるのも変更するのも容易です。
 
-The Vim scripts are expected to be used in a plugin, with just one person or a
-small team working on it.  Complex rules then only make it more complicated,
-the extra safety provide by the rules isn't really needed.  Let's just keep it
-simple and not specify access details.
+逆の方法ははるかに大変です: クラス内のオブジェクトメンバの先頭にアンダースコア
+を追加することでプライベートにできますが、しかしそれ以外の箇所の利用については
+追跡して変更する必要があります。"set" メソッドの呼び出しにする必要がある場合も
+あります。これは、アクセスを奪うには、そのアクセスが存在するすべての場所に対し
+て作業を行う必要があるという現実の問題を反映しています。
+
+別の方法として "private" キーワードを使用するというのがあり、これは "public"
+とは違う方向にアクセスを変化させます。そうキーワード数を減らすためです。
+
+
+オブジェクトのメンバに protected はない ~
+
+いくつかの言語ではオブジェクトメンバのアクセス制御の手段をいくつか提供していま
+す。最も知られているのは "protected" で、その意味は言語によって異ります。他に
+は、"shared", "private", "friend" などがあります。
+
+これらのルールは生活をより困難にします。多くの人々が間違いを犯しやすい同じ複雑
+なコードに取り組むプロジェクトでは、これは当然のことです。とりわけ、リファクタ
+リングや他のクラスモデルへの変更時などはそうです。
+
+Vim script はプラグインへの使用が期待されていて、それは1人あるいは少人数チーム
+で作業します。複雑なルールはより困難にするだけです。ルールにさらなる安全性を提
+供する必要は本当にありません。単純さを保ち、特別なアクセスの詳細はなくていいの
+です。
 
 
 ==============================================================================
 
-10. To be done later
+10. 後で書く
 
-Can a newSomething() constructor invoke another constructor?  If yes, what are
-the restrictions?
+newSomething() コンストラクタは他のコンストラクタを実行できる? そうである場合
+は制限されるのは何か?
 
-Thoughts:
-- Generics for a class: `class <Tkey, Tentry>`
-- Generics for a function: `def <Tkey> GetLast(key: Tkey)`
-- Mixins: not sure if that is useful, leave out for simplicity.
+思い付いているもの:
+- クラスのジェネリクス: `class <Tkey, Tentry>`
+- 関数のジェネリクス: `def <Tkey> GetLast(key: Tkey)`
+- ミックスイン: 役立つかどうかはわかりません。簡単にするために省略します。
 
-Some things that look like good additions:
-- For testing: Mock mechanism
+いろいろ良さそうに見えるので追加する:
+- テスト向け: モック機構
 
-An important class to be provided is "Promise".  Since Vim is single
-threaded, connecting asynchronous operations is a natural way of allowing
-plugins to do their work without blocking the user.  It's a uniform way to
-invoke callbacks and handle timeouts and errors.
+重要なクラスとして "Promise" の提供。Vimはシングルスレッドで、非同期動作との接
+続はプラグインがユーザーをブロックしないで動作するには自然な手段です。これは
+コールバックを呼び出しタイムアウトとエラーを扱う統一的手段です。
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:
