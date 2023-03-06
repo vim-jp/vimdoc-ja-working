@@ -1,4 +1,4 @@
-*vim9.txt*	For Vim バージョン 9.0.  Last change: 2022 Sep 15
+*vim9.txt*	For Vim バージョン 9.0.  Last change: 2023 Feb 21
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
 
@@ -15,9 +15,9 @@ script の新しい文法と機能について書かれています。
 3.  新しいスタイルの関数		|fast-functions|
 4.  型					|vim9-types|
 5.  名前空間、Import と Export		|vim9script|
-6.  将来的な変更: クラス		|vim9-classes|
+6.  クラスとインターフェース		|vim9-classes|
 
-9.  言語設計の背景			|vim9-rationale|
+9.  理論的根拠				|vim9-rationale|
 
 ==============================================================================
 
@@ -108,13 +108,13 @@ Vim9 script と `:def` で定義する関数を使用する際に最もよく遭
 	`:t`
 	`:xit`
 - 一部のコマンド、特に制御構文として使われるコマンドは、省略することはできませ
-  ん。例えば、`:throw` を `:th` と書くことはできません。 *vim9-no-shorten*
+  ん。例えば、`:throw` を `:th` と書くことはできません。 *vIM9-No-shorten*
 - 波括弧変数は使用できません。
 - コマンドの前に範囲指定を置くときは、コロン (:) を前置しなくてはなりません: >
 	:%s/this/that
 - "@r" としてレジスタを実行することはできません。コロン (:) を前置するか、
   `:exe` を使ってください: >
-  	:exe @a
+	:exe @a
 - 特に指定しない限り、最新の |scriptversion| が使われます。
 - 式による指定のマッピングを定義する際は、その式はそのマッピングが定義されたス
   クリプトのコンテキストで評価されます。
@@ -510,7 +510,7 @@ Ex コマンドをシャドーイングするので、必要であれば変数�
 あります。JavaScript がその一例です。また、値そのものを不変にすることもあり、
 例えばリスト定数の内容を変更することができないとしている場合もあります。
 Vim9ではこのどちらも定義することができます。
-							*E1021*
+							*E1021* *E1307*
 変数とその値、両方を定数とするには、`:const` を使用します。何らかの複合的な値
 が変更できないようにする際に使用します。例: >
 	const myList = [1, 2]
@@ -752,8 +752,8 @@ Note これはヒアドキュメントの最初の行は | で始めることが
 	      | echom 'AFTER bar'
 <
 							*E1050*
-行頭の演算子と識別できるようにするために、範囲指定の前にはコロンを置きま
-す。"start" と "print" をつなげる例: >
+行頭の演算子と識別できるようにするために、範囲指定の前にはコロンを置きます。
+"start" と "print" をつなげる例: >
 	var result = start
 	+ print
 これは以下の記述と同じです: >
@@ -831,8 +831,8 @@ Vim9 script ではホワイトスペースの適切な使用を強制します�
 ホワイトスペースは大抵の演算子の周りで必須です。
 
 始まりと終わりと除いて、サブリスト (リストのスライス) の ":" の周りにホワイト
-スペースが必要です。
-	otherlist = mylist[v : count]  	# v:count は異なる意味を持つ
+スペースが必要です: >
+	otherlist = mylist[v : count]	# v:count は異なる意味を持つ
 	otherlist = mylist[:]		# リストのコピーを作る
 	otherlist = mylist[v :]
 	otherlist = mylist[: v]
@@ -886,7 +886,7 @@ Vim9 script ではホワイトスペースの適切な使用を強制します�
 る場合は、シングルクォートまたはダブルクォートで囲まれた文字列を使用します: >
 	var dict = {'key with space': value}
 	var dict = {"key\twith\ttabs": value}
-	var dict = {'': value}  		# 空のキー
+	var dict = {'': value}			# 空のキー
 <							*E1139*
 キーに式を使用する必要がある場合は、JavaScript と同様に角括弧を使用することが
 できます: >
@@ -968,6 +968,11 @@ for ループをつくるために幾つかのトリックがあります。Vim9
 	3
 一般的に、反復しているリストを変更してはいけません。必要であれば最初にコピーを
 作ります。
+リストのリストをループする場合、ネストされたリストを変更できます。ループ変数は
+"final" であり、変更することはできませんが、その値は変更できます。
+							*E1306*
+:for ループと :while ループを合わせたループの深さは、10 を超えることはできませ
+ん。
 
 
 条件と式 ~
@@ -1025,7 +1030,9 @@ falsy か truthy として評価されます。これは JavaScript とほぼ同
 
 単純型とは、文字列 (string)、数値 (float)、特殊値 (special) と真偽値 (bool) で
 す。他の型では |string()| を使う必要があります。
-						*false* *true* *null* *E1034*
+			*false* *true* *null* *null_blob* *null_channel*
+			*null_dict* *null_function* *null_job* *null_list*
+			*null_partial* *null_string* *E1034*
 Vim9 script では以下の定義済みの値が使えます: >
 	true
 	false
@@ -1259,6 +1266,7 @@ Note 認識されていないコマンドを "|" でつなぐと、その後の�
 :defc[ompile]		現在のスクリプトで定義されている関数のうち、まだコンパ
 			イルされていないものをコンパイルします。これはコンパイ
 			ル時に見つかったいかなるエラーも報告します。
+			クラス内部で定義された関数は除きます。
 
 :defc[ompile] {func}
 :defc[ompile] debug {func}
@@ -1267,6 +1275,11 @@ Note 認識されていないコマンドを "|" でつなぐと、その後の�
 			"profile" はコンパイルモードを指定するのに使います。こ
 			れはコンパイル時に見つかったいかなるエラーも報告しま
 			す。
+			{func} コールは、クラス内の関数やメソッドをコンパイル
+			する場合、"ClassName.functionName" とすることもできま
+			す。
+			{func} コールは、クラス内のすべての関数とメソッドをコ
+			ンパイルする場合、"ClassName" とすることもできます。
 
 						*:disa* *:disassemble*
 :disa[ssemble] {func}	{func} 用に生成された命令列を表示します。これはデバ
@@ -1410,7 +1423,7 @@ Note スクリプトレベルにおいて、ループ変数はループの後で
 	  echo line(1) .. line(2)
 
 - 常に行継続にバックスラッシュが必要なわけではない: >
-  	echo ['one',
+		echo ['one',
 		\ 'two',
 		\ 'three'
 		\ ]
@@ -1419,6 +1432,21 @@ Note スクリプトレベルにおいて、ループ変数はループの後で
 		'two',
 		'three'
 		]
+
+
+Calling a function in an expr option ~
+							*expr-option-function*
+The value of a few options, such as 'foldexpr', is an expression that is evaluated to get a value.  The evaluation can have quite a bit of overhead.  One way to minimize the overhead, and also to keep the option value very simple, is to define a compiled function and set the option to call it without arguments.  Example: >
+'foldexpr' などのいくつかのオプションの値は、値を取得するために評価される式で
+す。評価には、かなりのオーバーヘッドが発生する可能性があります。オーバーヘッド
+を最小限に抑え、オプション値を非常に単純に保つ 1 つの方法は、コンパイル済み関
+数を定義し、引数なしで呼び出すようにオプションを設定することです。例: >
+	vim9script
+	def MyFoldFunc(): any
+	   ... v:lnum の行の折り畳みレベルを計算する
+	   return level
+	enddef
+	set foldexpr=s:MyFoldFunc()
 
 ==============================================================================
 
@@ -1927,134 +1955,84 @@ Or: >
 
 ==============================================================================
 
-6. Future work: classes					*vim9-classes*
+6. クラスとインターフェース				*vim9-classes*
 
-Above "class" was mentioned a few times, but it has not been implemented yet.
-Most of Vim9 script can be created without this functionality, and since
-implementing classes is going to be a lot of work, it is left for the future.
-For now we'll just make sure classes can be added later.
+旧来のスクリプトでは、関数であるメンバーを追加することで、辞書を一種のオブジェ
+クトとして使用することができます。しかし、これは非常に非効率的で、すべてのオブ
+ジェクトが正しいメンバーを持っていることを確認する作業を作成者が行う必要があり
+ます。|Dictionary-function| を参照。
 
-Thoughts:
-- `class` / `endclass`, the whole class must be in one file
-- Class names are always CamelCase (to avoid a name clash with builtin types)
-- A single constructor called "constructor"
-- Single inheritance with `class ThisClass extends BaseClass`
-- `abstract class` (class with incomplete implementation)
-- `interface` / `endinterface` (abstract class without any implementation)
-- `class SomeClass implements SomeInterface`
-- Generics for class: `class <Tkey, Tentry>`
-- Generics for function: `def <Tkey> GetLast(key: Tkey)`
+|Vim9| スクリプトでは、一般的なオブジェクト指向プログラミング言語のように、ク
+ラス、オブジェクト、インターフェースを持つことができます。これは多くの機能を含
+んでいるため、別のヘルプファイルに記載されています: |vim9class.txt|
 
-Again, much of this is from TypeScript with a slightly different syntax.
-
-Some things that look like good additions:
-- Use a class as an interface (like Dart)
-- Extend a class with methods, using an import (like Dart)
-- Mixins
-- For testing: Mock mechanism
-
-An important class that will be provided is "Promise".  Since Vim is single
-threaded, connecting asynchronous operations is a natural way of allowing
-plugins to do their work without blocking the user.  It's a uniform way to
-invoke callbacks and handle timeouts and errors.
-
-Some commands have already been reserved:
-	*:class*
-	*:endclass*
-	*:abstract*
-	*:enum*
-	*:endenum*
-	*:interface*
-	*:endinterface*
-	*:static*
-	*:type*
-
-Some examples: >
-
-	abstract class Person 
-	    static const prefix = 'xxx'
-	    var name: string
-	    
-	    def constructor(name: string)
-		this.name = name
-	    enddef
-
-	    def display(): void
-		echo name
-	    enddef
-
-	    abstract def find(string): Person
-	endclass
 
 ==============================================================================
 
-9. Rationale						*vim9-rationale*
+9. 理論的根拠						*vim9-rationale*
 
-The :def command ~
+:def コマンド ~
 
-Plugin writers have asked for much faster Vim script.  Investigations have
-shown that keeping the existing semantics of function calls make this close to
-impossible, because of the overhead involved with calling a function, setting
-up the local function scope and executing lines.  There are many details that
-need to be handled, such as error messages and exceptions.  The need to create
-a dictionary for a: and l: scopes, the a:000 list and several others add too
-much overhead that cannot be avoided.
+プラグインの作者から、Vim script をもっと速くしたいとの要望がありました。関数
+呼び出しの既存のセマンティクスを維持することは、関数の呼び出し、ローカル関数ス
+コープの設定、行の実行に伴うオーバーヘッドのため、不可能に近いことが調査により
+判明しました。エラーメッセージや例外など、処理しなければならない細部はたくさん
+あります。a: および l: スコープ用の辞書を作成する必要性、a:000 のリスト、その
+他いくつかの回避できないオーバーヘッドを追加しすぎています。
 
-Therefore the `:def` method to define a new-style function had to be added,
-which allows for a function with different semantics.  Most things still work
-as before, but some parts do not.  A new way to define a function was
-considered the best way to separate the legacy style code from Vim9 style code.
+したがって、新しいスタイルの関数を定義するための `:def` メソッドを追加する必要
+があり、これにより異なるセマンティクスを持つ関数を定義することができるようにな
+りました。ほとんどのことは以前と同じように動作しますが、そうでない部分もありま
+す。関数を定義する新しい方法は、旧来のスタイルのコードとVim9スタイルのコードを
+分離するための最良の方法であると考えられていました。
 
-Using "def" to define a function comes from Python. Other languages use
-"function" which clashes with legacy Vim script.
-
-
-Type checking ~
-
-When compiling lines of Vim commands into instructions as much as possible
-should be done at compile time.  Postponing it to runtime makes the execution
-slower and means mistakes are found only later.  For example, when
-encountering the "+" character and compiling this into a generic add
-instruction, at runtime the instruction would have to inspect the type of the
-arguments and decide what kind of addition to do.  And when the type is
-dictionary throw an error.  If the types are known to be numbers then an "add
-number" instruction can be used, which is faster.  The error can be given at
-compile time, no error handling is needed at runtime, since adding two numbers
-cannot fail.
-
-The syntax for types, using <type> for compound types, is similar to Java.  It
-is easy to understand and widely used.  The type names are what were used in
-Vim before, with some additions such as "void" and "bool".
+"def" を使用して関数を定義するのは、Python に由来します。他の言語は、従来の
+Vim script と競合する "function" を使用します。
 
 
-Removing clutter and weirdness ~
+型チェック ~
 
-Once decided that `:def` functions have different syntax than legacy functions,
-we are free to add improvements to make the code more familiar for users who
-know popular programming languages.  In other words: remove weird things that
-only Vim does.
+Vim コマンドの行を命令にコンパイルする場合、可能な限りコンパイル時に行うべきで
+す。これを実行時に先送りすると、実行速度が遅くなり間違いに気づくのが遅くなりま
+す。例えば、"+" 文字に遭遇し、これを一般的な加算命令にコンパイルする場合、実行
+時に引数の型を検査し、どのような加算を行うかを決定する必要があります。そして、
+その型が辞書であった場合には、エラーを投げます。もし、型が数値であることが分か
+っていれば、「数値の加算」命令を使うことができ、その方が高速です。このエラーは
+コンパイル時に与えることができ、実行時のエラー処理は必要ありません。
 
-We can also remove clutter, mainly things that were done to make Vim script
-backwards compatible with the good old Vi commands.
-
-Examples:
-- Drop `:call` for calling a function and `:eval` for evaluating an
-  expression.
-- Drop using a leading backslash for line continuation, automatically figure
-  out where an expression ends.
-
-However, this does require that some things need to change:
-- Comments start with # instead of ", to avoid confusing them with strings.
-  This is good anyway, it is also used by several popular languages.
-- Ex command ranges need to be prefixed with a colon, to avoid confusion with
-  expressions (single quote can be a string or a mark, "/" can be divide or a
-  search command, etc.).
-
-Goal is to limit the differences.  A good criteria is that when the old syntax
-is accidentally used you are very likely to get an error message.
+複合型に <type> を使った型の構文は、Javaと似ています。理解しやすく、広く使われ
+ています。型名は、以前 Vim で使われていたものに、"void" や "bool" などが追加さ
+れています。
 
 
-Syntax and semantics from popular languages ~
+乱雑と奇妙さを取り除く ~
+
+`:def` 関数が旧来の関数と異なる構文であることが決まれば、一般的なプログラミン
+グ言語を知っているユーザーにとってより馴染みやすいコードにするための改良を加え
+ることは自由です。言い換えれば、Vim にしかできないような奇妙なことは削除します。
+
+また、Vimスクリプトを古き良きViコマンドと後方互換性を持たせるために行われたも
+のを中心に、雑多なものを取り除くことができます。
+
+
+例:
+- 関数を呼び出すための `:call` と式を評価するための `:eval` を削除します。
+- 行の継続のための先頭のバックスラッシュを使用しない。式がどこで終わるかを自動
+  的に把握します。
+
+しかし、そのためには、いくつかのことを変える必要があります:
+- コメントは、文字列と混同しないように、" の代わりに # で始まるようにしました。
+  これはとにかく良いことで、いくつかの一般的な言語でも使用されています。
+- Ex コマンドの範囲は、式との混同を避けるため、先頭にコロンを付ける必要があり
+  ます (シングルクォートは文字列またはマーク、"/" は割り算または検索コマンド、
+  等)。
+
+
+目標は、違いを制限することです。良い基準は、古い構文を誤って使用した場合に、
+エラーメッセージが表示される可能性が非常に高いことです。
+
+
+著名な言語の構文とセマンティクス ~
 
 Script writers have complained that the Vim script syntax is unexpectedly
 different from what they are used to.  To reduce this complaint popular
@@ -2101,7 +2079,7 @@ Specific items from TypeScript we avoid:
   matches that the imported script is only sourced once.
 
 
-Declarations ~
+宣言 ~
 
 Legacy Vim script uses `:let` for every assignment, while in Vim9 declarations
 are used.  That is different, thus it's good to use a different command:
@@ -2158,7 +2136,7 @@ punctuation, but it actually makes it easier to recognize the parts of a
 declaration.
 
 
-Expressions ~
+式 ~
 
 Expression evaluation was already close to what other languages are doing.
 Some details are unexpected and can be improved.  For example a boolean
@@ -2192,7 +2170,7 @@ Here you can explicitly express your intention to use the value as-is and not
 result in a boolean. This is called the |falsy-operator|.
 
 
-Import and Export ~
+Import と Export ~
 
 A problem of legacy Vim script is that by default all functions and variables
 are global.  It is possible to make them script-local, but then they are not
@@ -2227,7 +2205,7 @@ considered:
 Note that you CAN also use `:import` in legacy Vim script, see above.
 
 
-Compiling functions early ~
+関数を早期にコンパイルする ~
 
 Functions are compiled when called or when `:defcompile` is used.  Why not
 compile them early, so that syntax and type errors are reported early?
@@ -2252,7 +2230,7 @@ only reported then.  In case these errors should be found early, e.g. when
 testing, a `:defcompile` command at the end of the script will help out.
 
 
-Why not use an existing embedded language? ~
+なぜ既存の組み込み言語を使わないのか? ~
 
 Vim supports interfaces to Perl, Python, Lua, Tcl and a few others.  But
 these interfaces have never become widely used, for various reasons.  When
@@ -2269,19 +2247,6 @@ the tool into Vim script.  For that to be possible without too much
 translation, and keeping the code fast at the same time, the constructs of the
 tool need to be supported.  Since most languages support classes the lack of
 support for classes in Vim is then a problem.
-
-
-Classes ~
-
-Vim supports a kind-of object oriented programming by adding methods to a
-dictionary.  With some care this can be made to work, but it does not look
-like real classes.  On top of that, it's quite slow, because of the use of
-dictionaries.
-
-It would be good to support real classes, and this is planned for a later
-version.  The support is a "minimal common functionality" of class support in
-most languages.  It will work much like Java, which is the most popular
-programming language.
 
 
 
