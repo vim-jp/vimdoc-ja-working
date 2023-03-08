@@ -1752,8 +1752,8 @@ Export ~
 	export class MyClass ...
 	export interface MyClass ...
 <							*E1043* *E1044*
-このことからわかるように、定数、変数、`:def` 関数、クラスのみがエクスポート可
-能です。 {not implemented yet: class, interface}
+このことからわかるように、定数、変数、`:def` 関数、クラスのみが export 可能で
+す。 {not implemented yet: class, interface}
 
 							*E1042*
 `:export` はスクリプトレベルで、Vim9 script でのみ使用できます。
@@ -1808,42 +1808,43 @@ export された項目は、別のスクリプトで import することがで�
 関数内で `:import` を使用することはできません。import されたアイテムはスクリプ
 トレベルに存在し、一度だけ import されることを意図しています。
 
-The script name after `import` can be:
-- A relative path, starting "." or "..".  This finds a file relative to the
-  location of the script file itself.  This is useful to split up a large
-  plugin into several files.
-- An absolute path, starting with "/" on Unix or "D:/" on MS-Windows.  This
-  will rarely be used.
-- A path not being relative or absolute.  This will be found in the
-  "import" subdirectories of 'runtimepath' entries.  The name will usually be
-  longer and unique, to avoid loading the wrong file.
-  Note that "after/import" is not used.
+`import` の後のスクリプト名は次のようになります:
+- "." または ".." で始まる相対パス。スクリプトファイル自体の位置から相対的に
+  ファイルを検索する。大きなプラグインを複数のファイルに分割して使用する場合に
+  便利である。
+- 絶対パス。Unixでは "/"、MS-Windowsでは "D:/" で始まる。これはほとんど使用さ
+  れない。
+- 相対パスでも絶対パスでもないパス。これは、'runtimepath' エントリの "import"
+  サブディレクトリで見つかる。間違ったファイルを読み込まないようにするため、通
+  常、名前は長く、一意であるべきである。
+  Note "after/import" は使われない。
 
-If the name does not end in ".vim" then the use of "as name" is required.
+名前が ".vim" で終わらない場合は、"as name" を使用する必要があります。
 
-Once a vim9 script file has been imported, the result is cached and used the
-next time the same script is imported.  It will not be read again.
+vim9 script ファイルを一度 import すると、その結果はキャッシュされ、次に同じス
+クリプトを import するときに使用されます。再度読み込まれることはありません。
 
-It is not allowed to import the same script twice, also when using two
-different "as" names.
+2 つの異なる "as" 名を使用する場合も同様に、同じスクリプトを 2 回 import する
+ことはできません。
 
-When using the imported name the dot and the item name must be in the same
-line, there can be no line break: >
+import 名を使用する場合、ドットと項目名は同じ行になければならず、改行すること
+はできません: >
 	echo that.
-		name   # Error!
+		name   # エラー!
 	echo that
-		.name  # Error!
+		.name  # エラー!
 <						*import-map*
-When you've imported a function from one script into a vim9 script you can
-refer to the imported function in a mapping by prefixing it with |<SID>|: >
+あるスクリプトから vim9 script に関数を import した場合、import した関数の前に
+|<SID>| を付けることで、マッピングで参照することができます: >
 	noremap <silent> ,a :call <SID>name.Function()<CR>
 
-When the mapping is defined "<SID>name." will be replaced with <SNR> and the
-script ID of the imported script.
-An even simpler solution is using |<ScriptCmd>|: >
+マッピングが定義されると、"<SID>name." は <SNR> とimport されたスクリプトのス
+クリプトIDに置き換えられます。
+さらに簡単な方法として、|<ScriptCmd>| を使用することができます: >
+
 	noremap ,a <ScriptCmd>name.Function()<CR>
 
-Note that this does not work for variables, only for functions.
+Note これは変数には効かず、関数にしか効かないということです。
 
 					    *import-legacy* *legacy-import*
 `:import` can also be used in legacy Vim script.  The imported namespace still
