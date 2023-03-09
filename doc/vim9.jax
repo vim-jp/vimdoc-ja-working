@@ -248,9 +248,9 @@ Vim9 関数 ~
 Vim9 script でスクリプト直下に `:function` や `:def` を使って関数を定義する
 と、関数はプリフィックス "s:" をつけた際のように、スクリプトローカルで定義され
 ます。グローバルスコープの関数や変数を定義するにはプリフィックス "g:" をつける
-必要があります。 スクリプト内の関数のうち他のスクリプトからインポートされるも
-のとオートロードスクリプト内の関数について、他のスクリプトで利用できるようにす
-るためには "export" をつける必要があります。 >
+必要があります。 スクリプト内の関数のうち他のスクリプトから import されるもの
+とオートロードスクリプト内の関数について、他のスクリプトで利用できるようにする
+ためには "export" をつける必要があります。 >
 	def ThisFunction()          # スクリプトローカル
 	def g:ThatFunction()        # グローバル
 	export def Function()       # import と import autoload 関数
@@ -279,7 +279,7 @@ Vim9 script でスクリプト直下に `:function` や `:def` を使って関�
 - 同じ関数の中、ブロックスコープの中
 - スクリプトスコープの中
 
-インポートされた関数は、`:import` コマンドで決まる名前を前置して見つけられます。
+import された関数は、`:import` コマンドで決まる名前を前置して見つけられます。
 
 スクリプトローカル関数の参照が "s:" をつけることなく使えるので、スクリプトロー
 カル関数の名前はプリフィックス "s:" をつけて宣言した場合でも大文字から始まる必
@@ -306,10 +306,9 @@ Vim9 script 内では使いません。これはこのドキュメントの以�
 す。
 
 その結果として、名前空間を持たない関数や変数は通常、スクリプト内で定義されてい
-るか、インポートされたものかのどちらかで見つけることができます。グローバルな関
-数や変数はどこでも定義できます (どこで定義されているか、見つかるといいですね！
-しばしば |:verbose| を使ってどこで最後に値がセットされたか調べることができま
-す) 。
+るか、 import されたものかのどちらかで見つけることができます。グローバルな関数
+や変数はどこでも定義できます (どこで定義されているか、見つかるといいですね！し
+ばしば |:verbose| を使ってどこで最後に値がセットされたか調べることができます)。
 							*E1102*
 グローバル関数は引き続き、ほとんどいつでも定義し、削除することができます。Vim9
 script でのスクリプトローカル関数は、スクリプトが読み込まれたときに一度定義さ
@@ -444,9 +443,8 @@ Vim9 script では `:let` は使用できません。すでに存在する変数
 動作しません。
 				*E1006* *E1041* *E1167* *E1168* *E1213*
 変数と関数と関数の引数は、同じスクリプトファイル内で、すでに定義された、または
-インポートされた変数と関数をシャドーイングすることはできません。一方で変数は
-Ex コマンドをシャドーイングするので、必要であれば変数の名前を変更してくださ
-い。
+import された変数と関数をシャドーイングすることはできません。一方で変数は
+Ex コマンドをシャドーイングするので、必要であれば変数の名前を変更してください。
 
 グローバル変数の前には、スクリプトレベルでも "g:" を付けなければなりません。 >
 	vim9script
@@ -1802,7 +1800,7 @@ export された項目は、別のスクリプトで import することがで�
 要があります。
 
 `:import` は旧来の Vim script でも使用することができます。"s:" というプリフィ
-ックスが与えられていない場合でも、インポートされた項目はスクリプトローカルとな
+ックスが与えられていない場合でも、 import された項目はスクリプトローカルとな
 ります。
 
 関数内で `:import` を使用することはできません。import されたアイテムはスクリプ
@@ -1847,107 +1845,109 @@ import 名を使用する場合、ドットと項目名は同じ行になけれ�
 Note これは変数には効かず、関数にしか効かないということです。
 
 					    *import-legacy* *legacy-import*
-`:import` can also be used in legacy Vim script.  The imported namespace still
-becomes script-local, even when the "s:" prefix is not given. For example: >
+`:import` は旧来の Vim script でも使用することができます。"s:" というプリフィ
+ックスがない場合でも、 import された名前空間はスクリプトローカルとなります。
+例: >
         import "myfile.vim"
 	call s:myfile.MyFunc()
 
-And using the "as name" form: >
+そして "as name" 形式を使用する: >
 	import "otherfile.vim9script" as that
 	call s:that.OtherFunc()
 
-However, the namespace cannot be resolved on its own: >
+ただし、名前空間を単独で解決することはできません: >
 	import "that.vim"
 	echo s:that
 	" ERROR: E1060: Expected dot after name: s:that
 <
-This also affects the use of |<SID>| in the legacy mapping context.  Since
-|<SID>| is only a valid prefix for a function and NOT for a namespace, you
-cannot use it
-to scope a function in a script local namespace. Instead of prefixing the
-function with |<SID>| you should use|<ScriptCmd>|. For example: >
+これは、旧来のマッピングコンテキストにおける |<SID>| の使用にも影響します。
+|<SID>| は関数に対してのみ有効なプリフィックスであり、名前空間に対しては有効で
+はありません、スクリプトローカルな名前空間内の関数をスコープするために使用する
+ことはできません。関数の前に |<SID>| を付ける代わりに、|<ScriptCmd>| を使用す
+る必要があります。例: >
+
 	noremap ,a <ScriptCmd>:call s:that.OtherFunc()<CR>
 <
 							*:import-cycle*
-The `import` commands are executed when encountered.  If script A imports
-script B, and B (directly or indirectly) imports A, this will be skipped over.
-At this point items in A after "import B" will not have been processed and
-defined yet.  Therefore cyclic imports can exist and not result in an error
-directly, but may result in an error for items in A after "import B" not being
-defined.  This does not apply to autoload imports, see the next section.
+`import` コマンドは、遭遇したときに実行されます。スクリプト A がスクリプト B
+を import し、B が (直接または間接的に) A を import した場合、これはスキップさ
+れます。この時点では、"import B" 以降の A 内の項目はまだ処理されておらず、定義
+されていません。したがって、循環的な import が存在しても、直接的にはエラーにな
+りませんが、"import B" 以降の A 内の項目が定義されていないためにエラーになる可
+能性があります。これは自動ロード import には適用されません。次項参照。
 
 
-Importing an autoload script ~
+自動ロードスクリプトを import する ~
 					*vim9-autoload* *import-autoload*
-For optimal startup speed, loading scripts should be postponed until they are
-actually needed.  Using the autoload mechanism is recommended:
+起動速度を最適化するために、スクリプトの読み込みは実際に必要になるまで延期する
+必要があります。自動ロード機構を使用することをお勧めします:
 							*E1264*
-1. In the plugin define user commands, functions and/or mappings that refer to
-   items imported from an autoload script. >
+1. プラグインでは、自動ロードスクリプトから import された項目を参照するユーザー
+   コマンド、関数、マッピングを定義します。 >
 	import autoload 'for/search.vim'
 	command -nargs=1 SearchForStuff search.Stuff(<f-args>)
 
-<   This goes in .../plugin/anyname.vim.  "anyname.vim" can be freely chosen.
-   The "SearchForStuff" command is now available to the user.
+<   これは、.../plugin/anyname.vim に入ります。"anyname.vim" は自由に選ぶことが
+   できます。"SearchForStuff " コマンドが利用できるようになりました。
 
-   The "autoload" argument to `:import` means that the script is not loaded
-   until one of the items is actually used.  The script will be found under
-   the "autoload" directory in 'runtimepath' instead of the "import"
-   directory.  Alternatively a relative or absolute name can be used, see
-   below.
+   `import` の引数 "autoload" は、項目の1つが実際に使用されるまでスクリプトが
+   ロードされないことを意味します。スクリプトは "import" ディレクトリではなく、
+   'runtimepath' の "autoload" ディレクトリの下に見つかります。また、相対名や
+   絶対名を使用することもできます。以下を参照。
 
-2. In the autoload script put the bulk of the code. >
+2. 自動ロードスクリプトに、コードの大部分を置きます。 >
 	vim9script
 	export def Stuff(arg: string)
 	  ...
 
-<   This goes in .../autoload/for/search.vim.
+<   これは、.../autoload/for/search.vim に入ります。
 
-   Putting the "search.vim" script under the "/autoload/for/" directory has
-   the effect that "for#search#" will be prefixed to every exported item.  The
-   prefix is obtained from the file name, as you would to manually in a
-   legacy autoload script.  Thus the exported function can be found with
-   "for#search#Stuff", but you would normally use `import autoload` and not
-   use the prefix (which has the side effect of loading the autoload script
-   when compiling a function that encounters this name).
+   "search.vim" スクリプトを "/autoload/for/" ディレクトリに置くと、export さ
+   れた項目に "for#search#" というプリフィックスが付くようになります。このプリ
+   フィックスは、旧来の自動ロードスクリプトで手動で行うように、ファイル名から
+   取得されます。したがって、export された関数は "for#search#Stuff" で見つける
+   ことができますが、通常は `import autoload` を使用し、プリフィックスを使用し
+   ません (この名前に遭遇した関数をコンパイルするときに自動ロードスクリプトを
+   ロードするという副作用が発生します)。
 
-   You can split up the functionality and import other scripts from the
-   autoload script as you like.  This way you can share code between plugins.
+   機能を分割して、自動ロードスクリプトから他のスクリプトを好きなように import
+   することができます。こうすることで、プラグイン間でコードを共有することがで
+   きます。
 
-Searching for the autoload script in all entries in 'runtimepath' can be a bit
-slow.  If the plugin knows where the script is located, quite often a relative
-path can be used.  This avoids the search and should be quite a bit faster.
-Another advantage is that the script name does not need to be unique.  An
-absolute path is also possible.  Examples: >
+'runtimepath' のすべてのエントリから自動ロードスクリプトを検索するのは、少し時
+間がかかることがあります。プラグインがスクリプトの場所を知っている場合、多くの
+場合、相対パスが使用されます。これにより、検索が回避され、かなり速くなるはずで
+す。また、スクリプト名が一意である必要がないことも利点です。絶対パスも可能です。
+例: >
 	import autoload '../lib/implement.vim'
 	import autoload MyScriptsDir .. '/lib/implement.vim'
 
-For defining a mapping that uses the imported autoload script the special key
-|<ScriptCmd>| is useful.  It allows for a command in a mapping to use the
-script context of where the mapping was defined.
+import した自動ロードスクリプトを使用するマッピングを定義するには、特殊キー
+|<ScriptCmd>| が便利です。これは、マッピングのコマンドで、マッピングが定義され
+た場所のスクリプトコンテキストを使用することを可能にします。
 
-When compiling a `:def` function and a function in an autoload script is
-encountered, the script is not loaded until the `:def` function is called.
-This also means you get any errors only at runtime, since the argument and
-return types are not known yet.  If you would use the name with '#' characters
-then the autoload script IS loaded.
+`:def` 関数をコンパイルしているときに、自動ロードスクリプトの関数に遭遇すると、
+`:def` 関数が呼び出されるまでスクリプトはロードされません。これは、引数や戻り
+値の型がまだ分かっていないため、実行時にのみエラーが発生することも意味します。
+もし、'#' 文字を含む名前を使用するのであれば、その自動ロードスクリプトはロード
+されます。
 
-Be careful to not refer to an item in an autoload script that does trigger
-loading it unintentionally.  For example, when setting an option that takes a
-function name, make sure to use a string, not a function reference: >
+自動ロードスクリプトの中で、意図せずロードのきっかけとなる項目を参照しないよう
+に注意してください。例えば、関数名を取るオプションを設定する場合、関数参照では
+なく、必ず文字列を使用してください: >
 	import autoload 'qftf.vim'
-	&quickfixtextfunc = 'qftf.Func'  # autoload script NOT loaded
-	&quickfixtextfunc = qftf.Func    # autoload script IS loaded
-On the other hand, it can be useful to load the script early, at a time when
-any errors should be given.
+	&quickfixtextfunc = 'qftf.Func'  # 自動ロードスクリプトはロードされない
+	&quickfixtextfunc = qftf.Func    # 自動ロードスクリプトはロードされる
+一方、スクリプトを早めに読み込むことで、エラーが発生した場合に、その旨を伝える
+ことができるようになります。
 
-For testing the |test_override()| function can be used to have the
-`import autoload` load the script right away, so that the items and types can
-be checked without waiting for them to be actually used: >
+|test_override()| のテスト用関数を使用して、`import autoload` にスクリプトをす
+ぐにロードさせることができます。これにより、項目と型が実際に使用されるのを待た
+ずにチェックできるようになります: >
 	test_override('autoload', 1)
-Reset it later with: >
+後でリセットします: >
 	test_override('autoload', 0)
-Or: >
+または: >
 	test_override('ALL', 0)
 
 
