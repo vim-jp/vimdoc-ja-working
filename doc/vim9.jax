@@ -2132,36 +2132,35 @@ C や Java に慣れている人には1つ目の方が馴染みやすいと思�
 
 式 ~
 
-Expression evaluation was already close to what other languages are doing.
-Some details are unexpected and can be improved.  For example a boolean
-condition would accept a string, convert it to a number and check if the
-number is non-zero.  This is unexpected and often leads to mistakes, since
-text not starting with a number would be converted to zero, which is
-considered false.  Thus using a string for a condition would often not give an
-error and be considered false.  That is confusing.
+式の評価は、すでに他の言語が行っているものに近いものでした。いくつかの細部は予
+期せぬものであり、改善することができます。例えば、ブーリアン条件では、文字列を
+受け取り、それを数値に変換して、その数値が0でないかどうかをチェックします。こ
+れは予想外のことで、しばしば間違いにつながります。なぜなら、数字で始まらないテ
+キストはゼロに変換され、これは偽とみなされるからです。このように、条件に文字列
+を使うと、エラーが出ず、偽とみなされることが多いのです。これは紛らわしいです。
 
-In Vim9 type checking is stricter to avoid mistakes.  Where a condition is
-used, e.g. with the `:if` command and the `||` operator, only boolean-like
-values are accepted:
+Vim9 では、間違いを避けるために型チェックがより厳しくなっています。例えば `:if`
+コマンドや `||` 演算子など、条件が使われる場所では、ブーリアンライクな値しか受
+け付けません:
 	true:  `true`, `v:true`, `1`, `0 < 9`
 	false: `false`, `v:false`, `0`, `0 > 9`
-Note that the number zero is false and the number one is true.  This is more
-permissive than most other languages.  It was done because many builtin
-functions return these values, and changing that causes more problems than it
-solves.  After using this for a while it turned out to work well.
+Note 数字の 0 は偽で、数字の 1 は真です。これは、他の多くの言語よりも寛容です。
+これは、多くの組み込み関数がこれらの値を返すため、それを変更すると、解決するよ
+りも多くの問題を引き起こすからです。これをしばらく使ってみると、うまくいくこと
+が分かりました。
 
-If you have any type of value and want to use it as a boolean, use the `!!`
-operator:
+任意の型の値を持っていて、それをブーリアンとして使いたい場合は、`!!` 演算子を
+使います:
 	true: `!!'text'`   `!![99]`   `!!{'x': 1}`   `!!99`
 	false: `!!''`   `!![]`   `!!{}`
 
-From a language like JavaScript we have this handy construct: >
+JavaScriptのような言語から、このような便利な構文があります: >
 	GetName() || 'unknown'
-However, this conflicts with only allowing a boolean for a condition.
-Therefore the "??" operator was added: >
+ただし、これは、条件にブール値のみを許可することと競合します。したがって、"??"
+演算子が追加されました: >
 	GetName() ?? 'unknown'
-Here you can explicitly express your intention to use the value as-is and not
-result in a boolean. This is called the |falsy-operator|.
+ここでは、値をそのまま使用し、ブール値にしないという意図を明示的に表すことがで
+きます。これは |falsy-operator| と呼ばれます。
 
 
 Import と Export ~
