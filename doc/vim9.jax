@@ -2078,59 +2078,56 @@ TypeScript から避ける特定の項目:
 
 宣言 ~
 
-Legacy Vim script uses `:let` for every assignment, while in Vim9 declarations
-are used.  That is different, thus it's good to use a different command:
-`:var`.  This is used in many languages.  The semantics might be slightly
-different, but it's easily recognized as a declaration.
+旧来の Vim script では、すべての代入に `:let` を使用しますが、Vim9 では宣言が
+使用されます。これは異なるので、別のコマンドを使うのがよいでしょう。`var` で
+す。これは多くの言語で使用されています。セマンティクスは若干異なるかもしれませ
+んが、宣言として簡単に認識することができます。
 
-Using `:const`  for constants is common, but the semantics varies.  Some
-languages only make the variable immutable, others also make the value
-immutable.  Since "final" is well known from Java for only making the variable
-immutable we decided to use that.  And then `:const` can be used for making
-both immutable.  This was also used in legacy Vim script and the meaning is
-almost the same.
+定数に `:const` を使うのは一般的ですが、そのセマンティクスは様々です。変数だけ
+を不変にする言語もあれば、値も不変にする言語もあります。Java では "final" が変
+数だけを不変にするためによく知られているので、これを使うことにしました。 そし
+て、`:const` を使うことで、両方を不変にすることができます。これは旧来の Vim
+script でも使われていたもので、意味はほぼ同じです。
 
-What we end up with is very similar to Dart: >
-	:var name	# mutable variable and value
-	:final name	# immutable variable, mutable value
-	:const name	# immutable variable and value
+最終的に得られるものは、Dart と非常によく似ています: >
+	:var name	# 可変な変数と値
+	:final name	# 不変な変数、可変な値
+	:const name	# 不変な変数と値
 
-Since legacy and Vim9 script will be mixed and global variables will be
-shared, optional type checking is desirable.  Also, type inference will avoid
-the need for specifying the type in many cases.  The TypeScript syntax fits
-best for adding types to declarations: >
-	var name: string	  # string type is specified
+旧来と Vim9 script が混在し、グローバル変数が共有されるため、オプションで型
+チェックを行うことが望ましいです。また、型推論により、多くの場合、型を指定する
+必要がなくなります。宣言に型を追加するには、TypeScript の構文が最も適していま
+す: >
+	var name: string	  # 文字列型が指定される
 	...
 	name = 'John'
-	const greeting = 'hello'  # string type is inferred
+	const greeting = 'hello'  # 文字列型が推測される
 
-This is how we put types in a declaration: >
+これは、型を宣言に入れる方法です: >
 	var mylist: list<string>
 	final mylist: list<string> = ['foo']
 	def Func(arg1: number, arg2: string): bool
 
-Two alternatives were considered:
-1. Put the type before the name, like Dart: >
+2つの選択肢を検討しました:
+1. Dart のように名前の前に型を置く: >
 	var list<string> mylist
 	final list<string> mylist = ['foo']
 	def Func(number arg1, string arg2) bool
-2. Put the type after the variable name, but do not use a colon, like Go: >
+2. 変数名の後に型を入れるが、Go のようにコロンを使わない: >
 	var mylist list<string>
 	final mylist list<string> = ['foo']
 	def Func(arg1 number, arg2 string) bool
 
-The first is more familiar for anyone used to C or Java.  The second one
-doesn't really have an advantage over the first, so let's discard the second.
+C や Java に慣れている人には1つ目の方が馴染みやすいと思います。2つ目は1つ目に
+対しての優位性があまりないので、2つ目は捨ててしまいましょう。
 
-Since we use type inference the type can be left out when it can be inferred
-from the value.  This means that after `var` we don't know if a type or a name
-follows.  That makes parsing harder, not only for Vim but also for humans.
-Also, it will not be allowed to use a variable name that could be a type name,
-using `var string string` is too confusing.
+型推論を使うので、値から推論できる場合は型は省くことができます。つまり、`var`
+の後に型が続くのか名前が続くのかが分からないのです。そのため、Vim だけでなく人
+間にとっても構文解析が難しくなります。また、型名になりうる変数名を使うことは許
+されないでしょう。`var string string` を使うのはあまりにも紛らわしいです。
 
-The chosen syntax, using a colon to separate the name from the type, adds
-punctuation, but it actually makes it easier to recognize the parts of a
-declaration.
+コロンを使用して名前と型を区切る選ばれた構文は、句読点を追加しますが、実際に
+は、宣言の部分を認識しやすくします。
 
 
 式 ~
