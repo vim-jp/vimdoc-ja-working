@@ -2021,7 +2021,7 @@ Vim コマンドの行を命令にコンパイルする場合、可能な限り�
 
 しかし、そのためには、いくつかのことを変える必要があります:
 - コメントは、文字列と混同しないように、" の代わりに # で始まるようにしました。
-  これはとにかく良いことで、いくつかの一般的な言語でも使用されています。
+  これはとにかく良いことで、いくつかの人気のある言語でも使用されています。
 - Ex コマンドの範囲は、式との混同を避けるため、先頭にコロンを付ける必要があり
   ます (シングルクォートは文字列またはマーク、"/" は割り算または検索コマンド、
   等)。
@@ -2031,51 +2031,49 @@ Vim コマンドの行を命令にコンパイルする場合、可能な限り�
 エラーメッセージが表示される可能性が非常に高いことです。
 
 
-著名な言語の構文とセマンティクス ~
+人気のある言語から構文とセマンティクスを学ぶ ~
 
-Script writers have complained that the Vim script syntax is unexpectedly
-different from what they are used to.  To reduce this complaint popular
-languages are used as an example.  At the same time, we do not want to abandon
-the well-known parts of legacy Vim script.
+スクリプトの作成者は、Vim script の構文が慣れ親しんでいるものとは予想外に異な
+ると不満を漏らしています。この不満を軽減するために、人気のある言語を例として使
+用します。同時に、旧来の Vim script のよく知られた部分を放棄することは避けたい
+です。
 
-For many things TypeScript is followed.  It's a recent language that is
-gaining popularity and has similarities with Vim script.  It also has a
-mix of static typing (a variable always has a known value type) and dynamic
-typing (a variable can have different types, this changes at runtime).  Since
-legacy Vim script is dynamically typed and a lot of existing functionality
-(esp. builtin functions) depends on that, while static typing allows for much
-faster execution, we need to have this mix in Vim9 script.
+いろいろなことで TypeScript が踏襲されています。これは最近人気が出てきた言語で、
+Vim script に似ています。また、静的型付け (変数は常に既知の値型を持つ) と動的
+型付け (変数は異なる型を持つことができ、これは実行時に変更される) が混在してい
+ます。旧来の Vim script は動的型付けされており、既存の多くの機能 (特に組み込み
+関数) は動的型付けに依存していますが、静的型付けはより高速に実行できるため、
+Vim9 script でもこの混ぜ合わせが必要です。
 
-There is no intention to completely match TypeScript syntax and semantics.  We
-just want to take those parts that we can use for Vim and we expect Vim users
-will be happy with.  TypeScript is a complex language with its own history,
-advantages and disadvantages.  To get an idea of the disadvantages read the
-book: "JavaScript: The Good Parts".  Or find the article "TypeScript: the good
-parts" and read the "Things to avoid" section.
+There is no intention to completely match TypeScript syntax and semantics.  We just want to take those parts that we can use for Vim and we expect Vim users will be happy with.  TypeScript is a complex language with its own history, advantages and disadvantages.  To get an idea of the disadvantages read the book: "JavaScript: The Good Parts".  Or find the article "TypeScript: the good parts" and read the "Things to avoid" section.
+TypeScript の構文やセマンティクスに完全に合わせるつもりはありません。私たちは
+ただ、Vim に使える部分、Vim ユーザーが喜ぶと予想される部分を取り出したいだけで
+す。TypeScript は、独自の歴史、利点と欠点を持つ複雑な言語です。デメリットを知
+るには、この本を読んでください: "JavaScript: The Good Parts"。または、
+"TypeScript: the good parts" という記事を見つけて、"Things to avoid" セクショ
+ンを読んでください。
 
-People familiar with other languages (Java, Python, etc.) will also find
-things in TypeScript that they do not like or do not understand.  We'll try to
-avoid those things.
+他の言語 (Java、Pythonなど) に慣れている人も、TypeScript の中で気に入らないこ
+とや理解できないことを見つけるでしょう。そういったものを避けるようにします。
 
-Specific items from TypeScript we avoid:
-- Overloading "+", using it both for addition and string concatenation.  This
-  goes against legacy Vim script and often leads to mistakes.  For that reason
-  we will keep using ".." for string concatenation.  Lua also uses ".." this
-  way.  And it allows for conversion to string for more values.
-- TypeScript can use an expression like "99 || 'yes'" in a condition, but
-  cannot assign the value to a boolean.  That is inconsistent and can be
-  annoying.  Vim recognizes an expression with && or || and allows using the
-  result as a bool.  The |falsy-operator| was added for the mechanism to use a
-  default value.
-- TypeScript considers an empty string as Falsy, but an empty list or dict as
-  Truthy.  That is inconsistent.  In Vim an empty list and dict are also
-  Falsy.
-- TypeScript has various "Readonly" types, which have limited usefulness,
-  since a type cast can remove the immutable nature.  Vim locks the value,
-  which is more flexible, but is only checked at runtime.
-- TypeScript has a complicated "import" statement that does not match how the
-  Vim import mechanism works.  A much simpler mechanism is used instead, which
-  matches that the imported script is only sourced once.
+TypeScript から避ける特定の項目:
+- "+" をオーバーロードして、加算と文字列連結の両方に使用します。これは旧来の
+  Vim script に反しており、しばしば間違いにつながります。そのため、文字列の連
+  結には ".." を使い続けることにします。Lua もこの方法で ".." を使っています。
+  そして、より多くの値のために文字列に変換することができます。
+- TypeScript では、"99 || 'yes'" のような式を条件として使うことができますが、
+  その値をブール値に代入することができません。これは一貫性がなく、迷惑なことで
+  す。Vim は && や || を使った式を認識し、その結果を bool として使うことができ
+  ます。デフォルト値を使う仕組みとして、|falsy-operator| が追加されました。
+- TypeScript では、空の文字列を Falsy と見なしますが、空のリストや辞書を
+  Truthy と見なしています。これは矛盾しています。Vimでは、空のリストや辞書も
+  Falsy となります。
+- TypeScript にはさまざまな "読み出し専用" 型がありますが、型キャストによって
+  不変な性質を取り除くことができるため、有用性は限定的です。Vim は値をロックす
+  るので、より柔軟性がありますが、実行時にしかチェックされません。
+- TypeScript には複雑な "import" 文があり、Vim の import の仕組みとマッチしま
+  せん。代わりに、 import されたスクリプトが一度だけ読み込まれることにマッチす
+  る、よりシンプルなメカニズムが使用されています。
 
 
 宣言 ~
