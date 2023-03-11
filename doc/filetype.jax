@@ -673,7 +673,7 @@ MARKDOWN                                                *ft-markdown-plugin*
 折り畳みを有効にするには、次のようにする: >
 	let g:markdown_folding = 1
 
-'expandtab' はデフォルトに設定される。 これを望まないなら以下のようにする: >
+'expandtab' はデフォルトで設定される。それを望まない場合は、次のようにする: >
 	let g:markdown_recommended_style = 0
 
 
