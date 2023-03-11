@@ -306,7 +306,7 @@ Vim9 script 内では使いません。これはこのドキュメントの以�
 す。
 
 その結果として、名前空間を持たない関数や変数は通常、スクリプト内で定義されてい
-るか、 import されたものかのどちらかで見つけることができます。グローバルな関数
+るか、import されたものかのどちらかで見つけることができます。グローバルな関数
 や変数はどこでも定義できます (どこで定義されているか、見つかるといいですね！し
 ばしば |:verbose| を使ってどこで最後に値がセットされたか調べることができます)。
 							*E1102*
@@ -2045,7 +2045,6 @@ Vim script に似ています。また、静的型付け (変数は常に既知�
 関数) は動的型付けに依存していますが、静的型付けはより高速に実行できるため、
 Vim9 script でもこの混ぜ合わせが必要です。
 
-There is no intention to completely match TypeScript syntax and semantics.  We just want to take those parts that we can use for Vim and we expect Vim users will be happy with.  TypeScript is a complex language with its own history, advantages and disadvantages.  To get an idea of the disadvantages read the book: "JavaScript: The Good Parts".  Or find the article "TypeScript: the good parts" and read the "Things to avoid" section.
 TypeScript の構文やセマンティクスに完全に合わせるつもりはありません。私たちは
 ただ、Vim に使える部分、Vim ユーザーが喜ぶと予想される部分を取り出したいだけで
 す。TypeScript は、独自の歴史、利点と欠点を持つ複雑な言語です。デメリットを知
@@ -2154,7 +2153,7 @@ Note 数字の 0 は偽で、数字の 1 は真です。これは、他の多く
 	true: `!!'text'`   `!![99]`   `!!{'x': 1}`   `!!99`
 	false: `!!''`   `!![]`   `!!{}`
 
-JavaScriptのような言語から、このような便利な構文があります: >
+JavaScript のような言語から、このような便利な構文があります: >
 	GetName() || 'unknown'
 ただし、これは、条件にブール値のみを許可することと競合します。したがって、"??"
 演算子が追加されました: >
@@ -2165,81 +2164,83 @@ JavaScriptのような言語から、このような便利な構文がありま�
 
 Import と Export ~
 
-A problem of legacy Vim script is that by default all functions and variables
-are global.  It is possible to make them script-local, but then they are not
-available in other scripts.  This defies the concept of a package that only
-exports selected items and keeps the rest local.
+旧来の Vim script の問題点は、デフォルトですべての関数と変数がグローバルである
+ことです。スクリプトローカルにすることは可能ですが、そうすると他のスクリプトで
+利用できなくなります。これは、選択された項目のみをエクスポートし、残りをローカ
+ルに保つパッケージの概念に反しています。
 
-In Vim9 script a mechanism very similar to the JavaScript import and export
-mechanism is supported.  It is a variant to the existing `:source` command
-that works like one would expect:
-- Instead of making everything global by default, everything is script-local,
-  some of these are exported.
-- When importing a script the symbols that are imported are explicitly listed,
-  avoiding name conflicts and failures if functionality is added later.
-- The mechanism allows for writing a big, long script with a very clear API:
-  the exported functions, variables and classes.
-- By using relative paths loading can be much faster for an import inside of a
-  package, no need to search many directories.
-- Once an import has been used, its items are cached and loading it again is
-  not needed.
-- The Vim-specific use of "s:" to make things script-local can be dropped.
+Vim9 script では、JavaScript の import および export 機構に非常によく似た機構
+がサポートされています。これは既存の `:source` コマンドの亜種で、期待通りに動
+作します:
+- デフォルトですべてをグローバルにするのではなく、すべてをスクリプトローカルに
+  することで、その一部をエクスポートすることができる。
+- スクリプトの import 時には、import されるシンボルが明示的にリストされるため、
+  名前の衝突や、後から機能を追加した場合の失敗を回避することができる。
+- この機構により、export された関数、変数、クラスという非常に明確なAPIを持つ巨
+  大で長いスクリプトを書くことができる。
+- 相対パスを使用することで、パッケージ内のインポートのロードが非常に速くなり、
+  多くのディレクトリを検索する必要がない。
+- 一度インポートを使用すると、その項目はキャッシュされ、再ロードする必要はな
+  い。
+- スクリプトローカルにするための Vim 特有の "s:" の使用をやめることができる。
 
-When sourcing a Vim9 script (from a Vim9 or legacy script), only the items
-defined globally can be used, not the exported items.  Alternatives
-considered:
-- All the exported items become available as script-local items.  This makes
-  it uncontrollable what items get defined and likely soon leads to trouble.
-- Use the exported items and make them global.  Disadvantage is that it's then
-  not possible to avoid name clashes in the global namespace.
-- Completely disallow sourcing a Vim9 script, require using `:import`.  That
-  makes it difficult to use scripts for testing, or sourcing them from the
-  command line to try them out.
-Note that you CAN also use `:import` in legacy Vim script, see above.
+(Vim9 または 旧来の script から) Vim9 script を読み込む場合、グローバルに定義
+されたアイテムのみが使用可能で、export されたアイテムは使用できません。代替案
+を検討しました:
+- export された項目は、すべてスクリプトローカル項目として利用できるようにする。
+  これにより、どの項目が定義されるかは制御できず、すぐにトラブルに発展する可能
+  性がある。
+- export された項目を使用し、それらをグローバルにする。デメリットは、グローバ
+  ルな名前空間での名前の衝突を避けることができなくなることである。
+- Vim9 script を読み込むことを完全に禁止し、`:import` を使うことを要求する。こ
+  れにより、スクリプトをテストに使用したり、コマンドラインからスクリプトを取得
+  して試したりすることが難しくなる。
+Note 上記の通り、旧来の Vim script でも `:import` を使用することができます。
 
 
 関数を早期にコンパイルする ~
 
-Functions are compiled when called or when `:defcompile` is used.  Why not
-compile them early, so that syntax and type errors are reported early?
+関数は、呼び出されたとき、または `:defcompile` が使用されたときにコンパイルさ
+れます。なぜ、早期にコンパイルして、構文エラーや型エラーが早期に報告されるよう
+にしないのでしょうか？
 
-The functions can't be compiled right away when encountered, because there may
-be forward references to functions defined later.  Consider defining functions
-A, B and C, where A calls B, B calls C, and C calls A again.  It's impossible
-to reorder the functions to avoid forward references.
+なぜなら、後に定義される関数への前方参照が存在する可能性があるからです。例え
+ば、A、B、C という関数を定義し、A が B を呼び出し、B が C を呼び出し、C がまた
+A を呼び出すとします。前方参照を避けるために関数を並べ替えることは不可能です。
 
-An alternative would be to first scan through the file to locate items and
-figure out their type, so that forward references are found, and only then
-execute the script and compile the functions.  This means the script has to be
-parsed twice, which is slower, and some conditions at the script level, such
-as checking if a feature is supported, are hard to use.  An attempt was made
-to see if it works, but it turned out to be impossible to make work well.
+別の方法としては、まずファイルをスキャンして項目を見つけ、そのタイプを把握し、
+前方参照が見つかるようにしてから、スクリプトを実行し、関数をコンパイルする方法
+があります。この場合、スクリプトを2回解析する必要があり、遅いです。また、機能
+がサポートされているかどうかのチェックなど、スクリプトレベルでの条件もあるた
+め、使いにくいです。うまくいくかどうか試行錯誤しましたが、うまく動作させること
+は不可能であることが判明しました。
 
-It would be possible to compile all the functions at the end of the script.
-The drawback is that if a function never gets called, the overhead of
-compiling it counts anyway.  Since startup speed is very important, in most
-cases it's better to do it later and accept that syntax and type errors are
-only reported then.  In case these errors should be found early, e.g. when
-testing, a `:defcompile` command at the end of the script will help out.
+スクリプトの最後にすべての関数をコンパイルすることは可能でしょう。しかし、ある
+関数が一度も呼び出されない場合、その関数をコンパイルするためのオーバーヘッド
+が、いずれにせよカウントされてしまうという欠点があります。起動速度は非常に重要
+なので、ほとんどの場合、コンパイルは後回しにした方がよく、構文や型のエラーはそ
+の時にしか報告されないことを受け入れることができます。例えばテスト時など、これ
+らのエラーを早期に発見する必要がある場合は、スクリプトの最後の `:defcompile`
+コマンドが効果的です。
 
 
 なぜ既存の組み込み言語を使わないのか? ~
 
-Vim supports interfaces to Perl, Python, Lua, Tcl and a few others.  But
-these interfaces have never become widely used, for various reasons.  When
-Vim9 was designed a decision was made to make these interfaces lower priority
-and concentrate on Vim script.
+Vim は Perl、Python、Lua、Tcl、その他いくつかへのインターフェイスをサポートし
+ています。しかし、これらのインタフェースは様々な理由で広く使われるようになるこ
+とはありませんでした。Vim9 が設計されたとき、これらのインターフェースの優先順
+位を下げ、Vim script に集中させることが決定されました。
 
-Still, plugin writers may find other languages more familiar, want to use
-existing libraries or see a performance benefit.  We encourage plugin authors
-to write code in any language and run it as an external process, using jobs
-and channels.  We can try to make this easier somehow.
+それでも、プラグイン作成者は他の馴染みのある言語を探したり、既存のライブラリを
+使用したり、性能の恩恵を確認したりするかもしれません。我々は、プラグインの作者
+が任意の言語でコードを書き、ジョブやチャンネルを使って外部プロセスとして実行す
+ることを推奨します。我々は、これをどうにかして簡単にできるように努力することが
+できます。
 
-Using an external tool also has disadvantages.  An alternative is to convert
-the tool into Vim script.  For that to be possible without too much
-translation, and keeping the code fast at the same time, the constructs of the
-tool need to be supported.  Since most languages support classes the lack of
-support for classes in Vim is then a problem.
+外部ツールの使用にはデメリットもあります。代替案としては、ツールを Vim script
+に変換することです。この場合、過度の翻訳を行ずに、同時にコードを高速に保つに
+は、ツールの構成要素がサポートされている必要があります。ほとんどの言語がクラス
+をサポートしているので、Vim でクラスがサポートされていないのは問題です。
 
 
 
