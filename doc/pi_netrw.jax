@@ -2595,15 +2595,15 @@ netrw ブラウザーの各種設定は変数で管理されていて、それ�
 				 =3        cul u-cuc        cul   cuc
 				 =4        cul   cuc        cul   cuc
 				 =5      U-cul U-cuc      U-cul U-cuc
- 				 =6      U-cul U-cuc        cul U-cuc
- 				 =7        cul U-cuc        cul U-cuc
- 				 =8        cul U-cuc        cul   cuc
+				 =6      U-cul U-cuc        cul U-cuc
+				 =7        cul U-cuc        cul U-cuc
+				 =8        cul U-cuc        cul   cuc
 
 				記号の意味
 				  u-cul : |'cursorline'| のユーザー設定使用
 				  u-cuc : |'cursorcolumn'| のユーザー設定使用
- 				  U-cul : |'cursorline'| のユーザー設定を使用
- 				  U-cuc : |'cursorcolumn'| のユーザー設定を使用
+				  U-cul : |'cursorline'| のユーザー設定を使用
+				  U-cuc : |'cursorcolumn'| のユーザー設定を使用
 				  cul   : |'cursorline'|  をローカル設定する
 				  cuc   : |'cursorcolumn'| をローカル設定する
 
@@ -3826,31 +3826,31 @@ netrw かあるいは関与している他のプラグインと衝突してい�
 12. 変更履歴						*netrw-history* {{{1
 
 	v171:	Oct 09, 2020	* included code in s:NetrwOptionsSafe()
- 				  to allow |'bh'| to be set to delete when
- 				  rather than hide when g:netrw_fastbrowse
- 				  was zero.
- 				* Installed |g:netrw_clipboard| setting
- 				* Installed option bypass for |'guioptions'|
- 				  a/A settings
- 				* Changed popup_beval() to |popup_atcursor()|
- 				  in netrw#ErrorMsg (lacygoill). Apparently
- 				  popup_beval doesn't reliably close the
- 				  popup when the mouse is moved.
- 				* VimEnter() now using win_execute to examine
- 				  buffers for an attempt to open a directory.
- 				  Avoids issues with popups/terminal from
- 				  command line. (lacygoill)
- 		Jun 28, 2021	* (zeertzjq) provided a patch for use of
- 				  xmap,xno instead of vmap,vno in
- 				  netrwPlugin.vim. Avoids entanglement with
- 				  select mode.
- 		Jul 14, 2021	* Fixed problem addressed by tst976; opening
- 				  a file using tree mode, going up a
- 				  directory, and opening a file there was
- 				  opening the file in the wrong directory.
- 		Jul 28, 2021	* (Ingo Karkat) provided a patch fixing an
- 				  E488 error with netrwPlugin.vim
- 				  (occurred for vim versions < 8.02)
+				  to allow |'bh'| to be set to delete when
+				  rather than hide when g:netrw_fastbrowse
+				  was zero.
+				* Installed |g:netrw_clipboard| setting
+				* Installed option bypass for |'guioptions'|
+				  a/A settings
+				* Changed popup_beval() to |popup_atcursor()|
+				  in netrw#ErrorMsg (lacygoill). Apparently
+				  popup_beval doesn't reliably close the
+				  popup when the mouse is moved.
+				* VimEnter() now using win_execute to examine
+				  buffers for an attempt to open a directory.
+				  Avoids issues with popups/terminal from
+				  command line. (lacygoill)
+		Jun 28, 2021	* (zeertzjq) provided a patch for use of
+				  xmap,xno instead of vmap,vno in
+				  netrwPlugin.vim. Avoids entanglement with
+				  select mode.
+		Jul 14, 2021	* Fixed problem addressed by tst976; opening
+				  a file using tree mode, going up a
+				  directory, and opening a file there was
+				  opening the file in the wrong directory.
+		Jul 28, 2021	* (Ingo Karkat) provided a patch fixing an
+				  E488 error with netrwPlugin.vim
+				  (occurred for vim versions < 8.02)
 	v170:	Mar 11, 2020	* (reported by Reiner Herrmann) netrw+tree
 				  would not hide with the ^\..* pattern
 				  correctly.
