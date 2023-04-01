@@ -1215,9 +1215,8 @@ DOTNET							*compiler-dotnet*
 g:dotnet_errors_only に |v:true| を設定することで、出力がエラーのみを含むよう
 に制限できる。
 
-各エラーと警告には関連するプロジェクト名が含まれる。変数
-g:dotnet_show_project_file に |v:false| を設定することで、プロジェクト名が抑制
-される。
+各エラーと警告には関連するプロジェクト名が含まれる。プロジェクト名を抑制するに
+は、変数 g:dotnet_show_project_file に |v:false| を設定する。
 
 例: 表示がエラーのみに出力を制限し、プロジェクト名を抑制: >
 	let dotnet_errors_only = v:true
