@@ -1,4 +1,4 @@
-*repeat.txt*    For Vim バージョン 9.0.  Last change: 2022 Sep 22
+*repeat.txt*    For Vim バージョン 9.0.  Last change: 2023 May 01
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -62,8 +62,8 @@
 `:d` の後にアンダースコアを使用すると、レジスタやクリップボードの上書きを回避
 できる。これはコマンドの処理速度もより速くする。
 
-{pattern} の両側の '/' の代わりにどんなシングルバイト文字でも使うことができる。
-しかしアルファベット、'\'、'"'、'|' は使えない。
+{pattern} の両側の '/' の代わりにどんなシングルバイト文字でも使うことができる
+が、アルファベット、'\'、'"'、'|' 、'!' は使えない。
 これは、検索パターンや置換文字列に '/' が含まれる場合に便利である。
 
 パターンの定義については |pattern| を参照。
@@ -413,6 +413,7 @@ Vim script の書き方はユーザーマニュアルの41章|usr_41.txt|を参�
 			解決後に別の名前で読み込まれたとき、その別のスクリプト
 			は "->" の後に表示される。例えば、"20->22" はスクリプ
 			ト20はスクリプト22として読み込まれたことを意味する。
+			`getscriptinfo()` も参照。
 			{|+eval| 機能付きでコンパイルされたときのみ有効}
 
 :scr[iptnames][!] {scriptId}			*:script*
@@ -717,15 +718,15 @@ Filetype プラグインはファイルタイプに複数のプラグインが�
 アーカイブが作られるので、あなたは両方を同時に行うことができる。
 
 ディレクトリ構成は次のようになる。 >
-   start/foobar/plugin/foo.vim    	" 常にロードされ、コマンドを定義する
-   start/foobar/plugin/bar.vim    	" 常にロードされ、コマンドを定義する
-   start/foobar/autoload/foo.vim  	" fooコマンドを使用した時に読み込む
-   start/foobar/doc/foo.txt       	" foo.vimのヘルプ
-   start/foobar/doc/tags          	" ヘルプタグ
-   opt/fooextra/plugin/extra.vim  	" オプションのプラグイン、コマンド定義
-   opt/fooextra/autoload/extra.vim  	" extraコマンドを使用した時に読み込む
-   opt/fooextra/doc/extra.txt  	        " extra.vimのヘルプ
-   opt/fooextra/doc/tags  	        " ヘルプタグ
+   start/foobar/plugin/foo.vim		" 常にロードされ、コマンドを定義する
+   start/foobar/plugin/bar.vim		" 常にロードされ、コマンドを定義する
+   start/foobar/autoload/foo.vim	" fooコマンドを使用した時に読み込む
+   start/foobar/doc/foo.txt		" foo.vimのヘルプ
+   start/foobar/doc/tags		" ヘルプタグ
+   opt/fooextra/plugin/extra.vim	" オプションのプラグイン、コマンド定義
+   opt/fooextra/autoload/extra.vim	" extraコマンドを使用した時に読み込む
+   opt/fooextra/doc/extra.txt		" extra.vimのヘルプ
+   opt/fooextra/doc/tags		" ヘルプタグ
 
 これにより、ユーザーは次の操作を行うことができる。 >
 	mkdir ~/.vim/pack
@@ -1125,13 +1126,15 @@ Count の桁はその行が何回実行されたかを示す。7行目の "for" 
 プロファイリングはどこで時間が費やされたかのよい指標を与えてくれるが、多くの
 原因によりその結果がごまかされてしまう場合があるということを覚えておくように:
 
-- システム関数 gettimeofday() に依存する時間計測の精度。たとえ時間がマイクロ秒
-  で表示されていたとしても、1/100秒の精度しかないこともある。
+- 測定される時間の精度は、システム関数 gettimeofday()、または使用可能な場合は
+  clock_gettime に依存する。精度の範囲は 1/100 秒からナノ秒。clock_gettime の
+  場合は時間はナノ秒単位で表示され、それ以外の場合はマイクロ秒単位で表示され
+  る。`has("prof_nsec")` が使用できる。
 
 - 実経過時間が計測される。他のプロセスがビジーであると、それが予測できない箇
   所で遅れを引き起こす可能性がある。
 
-- 1行に複数のコマンドを書いていると、1つの時間しか得られない。ここのコマンド
+- 1行に複数のコマンドを書いていると、1つの時間しか得られない。個々のコマンド
   に対して時間を見るにはその行を分割すること。
 
 - 各行の時間の総和をとると、たいてい関数全体の時間より小さくなる。各行の間に
