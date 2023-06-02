@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 9.0.  Last change: 2022 Dec 12
+*autocmd.txt*   For Vim バージョン 9.0.  Last change: 2023 Feb 18
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -63,7 +63,7 @@ Vim9 script での例: >
 旧来のスクリプトの例: >
    call autocmd_add(#{replace: v:true,
 		    \ group: 'DemoGroup',
-   		    \ event: 'BufEnter',
+		    \ event: 'BufEnter',
 		    \ pattern: '*.txt',
 		    \ cmd: 'call DemoBufEnter()'
 		    \ })
@@ -404,7 +404,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |InsertEnter|		挿入モードを開始したとき
 |InsertChange|		挿入や置換モードで<Insert>をタイプしたとき
 |InsertLeave|		挿入モードを抜けるとき
-|InsertLeavePre| 	挿入モードを抜ける直前
+|InsertLeavePre|	挿入モードを抜ける直前
 |InsertCharPre|		挿入モードで文字が入力されたとき、その文字が挿入される
 			前
 
@@ -618,9 +618,10 @@ CmdlineEnter			ユーザーがコマンドを入力もしくは文字列を検�
 				きるコマンドラインにカーソルが移動した後、非イ
 				ンタラクティブなマッピング内での ":" 利用を含
 				むが、|<Cmd>| の利用は含まない。
+				パターンは、コマンドラインの種類を表す文字と照
+				合される。|cmdwin-char|
 				<afile> はコマンドラインの種類を示す 1 文字に
 				設定される。
-				|cmdwin-char|
 							*CmdlineLeave*
 CmdlineLeave			カーソルがコマンドラインを離れる前、非インタラ
 				クティブなマッピング内での ":" 利用を含むが、
