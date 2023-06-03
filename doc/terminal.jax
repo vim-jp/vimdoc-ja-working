@@ -1016,7 +1016,7 @@ Vimにこのエスケープシーケンスを送信させるトリック: >
             endif
 	enddef
 <
-そして、bash init ファイルには以下: >
+そして、bash の初期化ファイルには: >
         if [[ -n "$VIM_TERMINAL" ]]; then
             PROMPT_COMMAND='_vim_sync_PWD'
             function _vim_sync_PWD() {
@@ -1024,7 +1024,7 @@ Vimにこのエスケープシーケンスを送信させるトリック: >
             }
         fi
 <
-または、zsh の場合: >
+または、zsh の場合は: >
 	if [[ -n "$VIM_TERMINAL" ]]; then
 	    autoload -Uz add-zsh-hook
 	    add-zsh-hook -Uz chpwd _vim_sync_PWD
@@ -1033,7 +1033,7 @@ Vimにこのエスケープシーケンスを送信させるトリック: >
 	    }
 	fi
 <
-または、fish の場合: >
+または、fish の場合は: >
 	if test -n "$VIM_TERMINAL"
 	    function _vim_sync_PWD --on-variable=PWD
 		printf '\033]51;["call", "Tapi_lcd", "%s"]\007' "$PWD"
@@ -1402,9 +1402,9 @@ TermdebugStopPost		デバッグの終了後、gdb 関連ウィンドウが閉じ
 カスタマイズ ~
 				*termdebug-customizing* *g:termdebug_config*
 以前は、構成にいくつかのグローバル変数が使用されていました。これらは非推奨であ
-り、g:termdebug_config ディクショナリの使用が推奨されます。g:termdebug_config
-が存在する場合、他のグローバル変数は使用されません。推奨される方法は、空の辞書
-から始めることです: >
+り、g:termdebug_config 辞書の使用が推奨されます。g:termdebug_config が存在する
+場合、他のグローバル変数は使用されません。推奨される方法は、空の辞書から始める
+ことです: >
 	let g:termdebug_config = {}
 
 次に、以下のように辞書にエントリを追加することができます。非推奨のグローバル変
