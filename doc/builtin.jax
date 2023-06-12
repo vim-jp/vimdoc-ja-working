@@ -8531,7 +8531,7 @@ strutf16len({string} [, {countcc}])			*strutf16len()*
 		    echo strutf16len('ą́')		returns 1
 		    echo strutf16len('ą́', v:true)	returns 3
 
-<		Can also be used as a |method|: >
+<		|method| としても使用できる: >
 			GetText()->strutf16len()
 <
 strwidth({string})					*strwidth()*
