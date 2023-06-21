@@ -1,4 +1,4 @@
-*map.txt*       For Vim バージョン 9.0.  Last change: 2022 Jun 18
+*map.txt*       For Vim バージョン 9.0.  Last change: 2023 May 28
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -959,15 +959,15 @@ xterm のような端末では、起動しているときに、メニューの "
 
 1.11 META キーを使ったマップ				*:map-meta-keys*
 
-Mapping keys with the Meta modifier works very similar to using the Alt key.
-What key on your keyboard produces the Meta modifier depends on your keyboard
-and configuration.
+Meta 修飾子を使ったマッピングは Alt キーを使った場合と非常によく似た動きをしま
+す。キーボードのどのキーが Meta 修飾子として動作するかはキーボードと設定に依存
+します。
 
-Note that mapping <M-a> actually is for using the Alt key.  That can be
-confusing!  It cannot be changed, it would not be backwards compatible.
+Note <M-a> マップは実際には Alt キーを使うことに注意してください。これは混乱す
+るでしょう! 後方互換性がなくなるため、変更することはできません。
 
-For the Meta modifier the "T" character is used.  For example, to map Meta-b
-in Insert mode: >
+Meta 修飾子には文字 "T" が使われます。例えば挿入モードで Meta-b をマップするに
+は: >
 	:imap <T-b> terrible
 
 
@@ -1008,28 +1008,28 @@ Note <C-S-[> や <C-S-{> ではなく <C-{> が使われていることに注意
 警告: <C-[> をマップした場合、非常に多くのEscから開始するキーコードを破壊する
 ことがあります。他のマッピングの「後」であることを確認してください。
 
-Starting with xterm version 377 Vim can detect the modifyOtherKeys state by
-requesting it.  For this the 't_RK' termcap entry is used.  When the response
-is found then Vim will know whether modifyOtherKeys level 2 is enabled, and
-handle mappings accordingly.
+xterm version 377 以降では Vim は modifyOtherKeys の状態を要求して検出すること
+ができます。これには 't_RK' termcap エントリが使われます。その応答が見つかれば
+Vim は modifyOtherKeys レベル 2 が有効化されているかを知り、それに応じてマップ
+を扱います。
 
-Before version 377 Vim automatically detects if the modifyOtherKeys mode was
-enabled when it spots an escape sequence that must have been created by it.
-To see if Vim detected such an escape sequence use `:verbose map`, the first
-line will then show "Seen modifyOtherKeys: true" (possibly translated).
+version 377 より前では Vim は modifyOtherKeys モードによって生成されたエスケー
+プシーケンスを見つけた時に、それが有効化されていることを自動で検出します。Vim
+がそのようなエスケープシーケンスを検出したかを見るには `:verbose map` を使いま
+す。1 行目に "Seen modifyOtherKeys: true" (おそらく翻訳される) と表示されます。
 
-This automatic detection depends on receiving an escape code starting with
-"<1b>[27;".  This is the normal way xterm sends these key codes.  However, if
-the *formatOtherKeys* resource is set another form is used that is not
-recognized, therefore you must not set formatOtherKeys.
+この自動検出は "<1b>[27;" で始まるエスケープシーケンスを受信することに依存しま
+す。これは xterm がこれらのキーコードを送信する通常の方法です。しかし、もし
+*formatOtherKeys* リソースが他の形式を使って設定されているとこれが認識ができな
+いため、formatOtherKeys を設定してはいけません。
 
 既知の副作用として、挿入モードでは、CTRL-V キーの後に生のエスケープシーケンス
 が挿入されます。これは、modifyOtherKeys が有効になっているかどうかを確認するた
 めに使用できます。挿入モードで CTRL-SHIFT-V CTRL-V と入力し、1 バイトが得られ
 たら modifyOtherKeys はオフで、<1b>[27;5;118~ が得られたらオンです。
 
-Note that xterm up to version 376 has a bug that makes Shift-Esc send a
-regular Esc code, the Shift modifier is dropped.
+Note xterm の version 376 までは Shift-Esc が通常の Esc を送信し、Shift 修飾子
+がドロップするバグがあることに注意してください。
 
 'esckeys' オプションがオフの時、修飾子付きのすべてのキーが挿入モードを終了させ
 るのを防ぐため、挿入モードで modifyOtherKeys は無効化されます。
@@ -1037,29 +1037,28 @@ regular Esc code, the Shift modifier is dropped.
 
 1.13 KITTY キーボードプロトコルを使ったマップ	 *kitty-keyboard-protocol*
 
-If the value of 'term' contains "kitty" then Vim will send out an escape
-sequence to enable the Kitty keyboard protocol.  This can be changed with the
-'keyprotocol' option.
+'term' の値が "kitty" を含んでいる場合、Vim は Kitty キーボードプロトコルを有
+効化するエスケープシーケンスを送出します。これは 'keyprotocol' オプションで変
+更できます。
 
-Like modifyOtherKeys, this will make it possible to distinguish between more
-keys with modifiers.  Also, this protocol sends an escape sequence for the Esc
-key, so that Vim does not need to use a timeout to know whether receiving an
-Esc character means the Esc key was pressed or it's the start of an escape
-sequence.
+modifyOtherKeys と同様に、これはより多く修飾子付きキーを区別することを可能にし
+ます。またこのプロトコルは Esc キーに対してもエスケープシーケンスを送信するた
+め、Vim は受信した Esc キャラクタがタイプされた Esc キーを意味するのかエスケー
+プシーケンスの開始なのかを知るためのタイムアウトを使う必要がありません。
 
-Vim automatically detects if the Kitty keyboard protocol was enabled when it
-spots the response to the status request (this should be part of the |t_TI|
-termcap entry).  To see if Vim detected such an escape sequence use: >
+Vim はステータス要求 (これは |t_TI| termcap エントリの一部のはずです) を見た時
+に Kitty キーボードプロトコルが有効化されているかを自動で検出します。Vim がそ
+のようなエスケープシーケンスを検出したかを見るには以下を使います: >
 	:verbose map
-The first line will then show "Kitty keyboard protocol: {value}" (possibly
-translated).  The meaning of {value}:
-	Unknown		no status received yet
-	Off		protocol is not used
-	On		protocol is used
-	Disabled	protocol was used but expected to have been disabled
-			by 't_TE'
-	Cleared		protocol expected to have been disabled by 't_TE',
-			previous state is unknown
+1 行目に "Kitty keyboard protocol: {value}" (おそらく翻訳される) と表示されま
+す。{value} の意味は:
+	Unknown		ステータスはまだ受信していない
+	Off		プロトコルは使われていない
+	On		プロトコルが使われている
+	Disabled	プロトコルは使われているが 't_TE' で無効化されているこ
+			とが予想される
+	Cleared		プロトコルは 't_TE' で無効化されていることが予想され、
+			以前の状態は不明
 
 
 1.14 オペレータの作成					*:map-operator*
@@ -1544,10 +1543,10 @@ non-id	  マッチした場所の前がスペース、タブ、行頭、挿入�
 す。どのように動作するかはコマンドを定義するときに指定したコマンド属性に依存し
 ます。
 
-When defining a user command in a script, it will be able to call functions
-local to the script and use mappings local to the script.  When the user
-invokes the user command, it will run in the context of the script it was
-defined in.  This matters if |<SID>| is used in a command.
+ユーザーコマンドをスクリプトで定義するときは、スクリプトにローカルな関数を呼
+び、スクリプトにローカルなマッピングを使うことができます。ユーザーがそのユー
+ザーコマンドを実行すると、そのスクリプトが定義されたコンテキストで実行されま
+す。これはコマンド内で |<SID>| が使われているときに重要となります。
 
 たくさんの属性がありますが、それらは、引数の扱い方、補完の種類、範囲指定の仕
 方、特殊なケース、の4つの分野に分けることができます。以下、分野別に説明しま
@@ -1751,10 +1750,9 @@ Note これらの引数は省略できますが、これは廃止される機能
 ん。式の引数を持つコマンドなど、引数に "|" が出現する可能性のあるコマンドは、
 "|" の後に別のコマンドを続けることはできません。
 
-If the command is defined in Vim9 script (a script that starts with
-`:vim9script` and in a `:def` function) then {repl} will be executed as in Vim9
-script.  Thus this depends on where the command is defined, not where it is
-used.
+コマンドが Vim9 script (`:vim9script` で始まるスクリプトか `:def` 関数の中) で
+定期議されている場合、{repl} は Vim9 script 内で実行されます。つまりこれは、コ
+マンドがどこで使われたかではなく、どこで定義されたかに依存します。
 
 ユーザー定義コマンドでは、<...>表記を使った特別な文字列 {repl} を使用できます。
 その文字列はコマンドラインに入力された実際の引数に置き換えられます。その他のテ
@@ -1836,10 +1834,9 @@ used.
 	XX a\\\\ b	   'a\\', 'b'
 	XX		   [nothing]
 
-Note that if the "no arguments" situation is to be handled, you have to make
-sure that the function can be called without arguments.  For a compiled
-function you might want to use variable arguments, see
-|vim9-variable-arguments|.
+Note "引数無し" の状況を扱う場合、関数が引数無しでも呼び出せるようにしなければ
+ならないことに注意してください。コンパイル済み関数の場合、可変引数が使えます。
+|vim9-variable-arguments| 参照。
 
 ユーザーコマンドの例 >
 
