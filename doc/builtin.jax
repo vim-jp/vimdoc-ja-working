@@ -999,23 +999,23 @@ autocmd_add({acmds})					*autocmd_add()*
 		    cmd		この自動コマンドイベントに対して実行する Ex コ
 				マンド
 		    event	自動コマンドイベント名。|autocmd-events| を参
-				照。これは、単一のイベント名を含む文字列または
-				イベント名のリストのどちらかである。
+				照。これは、単一のイベント名の文字列またはイベ
+				ント名のリストのどちらかである。
 		    group	自動コマンドグループ名。|autocmd-groups| を参
 				照。グループが存在しない場合は作成される。指定
 				しない場合、または空の場合は、デフォルトのグ
 				ループが使用される。
-		    nested	booleanフラグ。ネストされた自動コマンドを追加
-				するには、v:true に設定する。
-				|autocmd-nested| を参照。
-		    once	booleanフラグ。v:true に設定すると、一度だけ実
+		    nested	真偽値フラグ。v:true に設定すると、ネストされ
+				た自動コマンドを追加する。|autocmd-nested| を
+				参照。
+		    once	真偽値フラグ。v:true に設定すると、一度だけ実
 				行される自動コマンドが追加される。
 				|autocmd-once| を参照。
 		    pattern	自動コマンドパターン文字列。|autocmd-patterns|
 				を参照。"bufnr" 項目が存在する場合、この項目は
 				無視される。単一のパターンを持つ文字列またはパ
 				ターンのリストにすることができる。
-		    replace	booleanフラグ。v:true に設定すると、指定された
+		    replace	真偽値フラグ。v:true に設定すると、指定された
 				自動コマンドイベントおよびグループに関連付けら
 				れたすべてのコマンドが削除され、{cmd} が追加さ
 				れる。これは、グループ内の自動コマンドイベント
@@ -1024,7 +1024,7 @@ autocmd_add({acmds})					*autocmd_add()*
 
 		成功した場合は v:true を返し、失敗した場合は v:false を返す。
 		例: >
-			" バッファ ５ のバッファローカルな自動コマンドを作成
+			" バッファ 5 のバッファローカルな自動コマンドを作成
 			let acmd = {}
 			let acmd.group = 'MyGroup'
 			let acmd.event = 'BufEnter'
@@ -1111,7 +1111,7 @@ autocmd_get([{opts}])					*autocmd_get()*
 		    event	自動コマンドイベント名。
 		    group	自動コマンドグループ名。
 		    nested	Booleanフラグ。ネストされた自動コマンドの場合、
-				v:true が設定される。|autocmd-nested| 参照。
+				v:true が設定される。|autocmd-nested| を参照。
 		    once	Booleanフラグ。自動コマンドが 1 回だけ実行され
 				る場合は、v:true に設定する。|autocmd-once| を
 				参照。
