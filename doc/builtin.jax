@@ -3171,7 +3171,7 @@ getbufinfo([{dict}])
 getbufline({buf}, {lnum} [, {end}])
 		バッファ{buf}の{lnum}行目から{end}行目まで(両端含む)の行からな
 		るリスト|List|を返す。{end}が省略されたときは{lnum}行目だけか
-		らなるリストを返す。行の取得のみについては `getbufoneline()`
+		らなるリストを返す。1 行のみの取得については `getbufoneline()`
 		を参照。
 
 		{buf}の指定の仕方については|bufname()|を参照。
@@ -3224,7 +3224,7 @@ getbufvar({buf}, {varname} [, {def}])				*getbufvar()*
 			GetBufnr()->getbufvar(varname)
 <
 getcellwidths()						*getcellwidths()*
-		|setcellwidths()| によって上書きされる文字範囲のセル幅の
+		|setcellwidths()| によって上書きされた文字範囲のセル幅の
 		|List| を返す。形式は |setcellwidths()| の引数と同じである。セ
 		ル幅が上書きされた文字範囲がない場合、空のリストが返される。
 
