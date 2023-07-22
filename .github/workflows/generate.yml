@@ -24,7 +24,7 @@ jobs:
       - name: Setup Vim
         uses: thinca/action-setup-vim@v1
         with:
-          vim_version: 'v8.2.0020'
+          vim_version: 'v9.0.0814'
           vim_type: 'Vim'
       - name: Generate new document
         run: |
@@ -78,7 +78,7 @@ jobs:
       - name: Setup Vim
         uses: thinca/action-setup-vim@v1
         with:
-          vim_version: 'v8.2.0020'
+          vim_version: 'v9.0.0814'
           vim_type: 'Vim'
       - name: Generate new document
         run: |
