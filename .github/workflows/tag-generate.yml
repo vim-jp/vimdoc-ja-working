@@ -1,0 +1,32 @@
+name: "Generate tag for check"
+on: [push, pull_request]
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Vim
+        uses: thinca/action-setup-vim@v1
+        with:
+          vim_version: 'v9.0.0814'
+          vim_type: 'Vim'
+
+      - name: Create tags
+        run: |
+          vim -eu tools/maketags.vim
+
+      - name: Rename for artifact/archive
+        run: |
+          mv -f README.md README-working.md
+          mv -f README-dist.md README.md
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: vimdoc-ja
+          path: |
+            doc/
+            syntax/
+            README.md
