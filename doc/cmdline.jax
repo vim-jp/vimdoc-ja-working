@@ -705,9 +705,9 @@ Exコマンドには、その前に行単位の範囲を指定できるものが
 	'T		マーク Tの位置 (大文字); マーク位置が別ファイルにある
 			ときには範囲指定には使えない
 	/{pattern}[/]	次に {pattern} のマッチする行 (下向き)	  *:/*
-				also see |:range-pattern| below
+				以下の |:range-pattern| も参照
 	?{pattern}[?]	次に {pattern} のマッチする行 (上向き)	  *:?*
-				also see |:range-pattern| below
+				以下の |:range-pattern| も参照
 	\/		次に直前の検索パターンのマッチする行 (下向き)
 	\?		次に直前の検索パターンのマッチする行 (上向き)
 	\&		次に直前の置換元パターンのマッチする行 (下向き)
@@ -717,41 +717,40 @@ Exコマンドには、その前に行単位の範囲を指定できるものが
 番号に加算または減算される。数が省略された場合は 1 が指定されたと見なされる。
 もし '+' や '-' の前に何も無い場合は現在行が使われる。
 						*:range-closed-fold*
-When a line number after the comma is in a closed fold it is adjusted to the
-last line of the fold, thus the whole fold is included.
+コンマ以降の行番号が閉じた折り畳みの中であるなら折り畳みの最終行に調整され、結
+果折り畳みすべてが含まれる。
 
-When a number is added this is done after the adjustment to the last line of
-the fold.  This means these lines are additionally included in the range.  For
-example: >
+折り畳みの最終行の調整が完了した後に数値が追加される。これはそれらの行が範囲に
+追加で含まれていることを意味する。例: >
    :3,4+2print
-On this text:
+このテキスト上で:
 	1 one ~
 	2 two ~
 	3 three ~
-	4 four FOLDED ~
-	5 five FOLDED ~
+	4 four 折り畳まれている ~
+	5 five 折り畳まれている ~
 	6 six ~
 	7 seven ~
 	8 eight ~
-Where lines four and five are a closed fold, ends up printing lines 3 to 7.
-The 7 comes from the "4" in the range, which is adjusted to the end of the
-closed fold, which is 5, and then the offset 2 is added.
+4 と 5 の行は折り畳まれており、最終的に print される行は 3 から 7 になってい
+る。7 については "4" の範囲で、閉じた折り畳みの最後の行調整がされた場合に 5 と
+なり、そしてオフセットとして 2 が追加されることに由来している。
 
-An example for subtracting (which isn't very useful): >
+引き算の例(これはあまり役に立たない): >
    :2,4-1print
-On this text:
+このテキスト上で:
 	1 one ~
 	2 two ~
-	3 three FOLDED~
-	4 four FOLDED ~
-	5 five FOLDED ~
-	6 six FOLDED ~
+	3 three 折り畳まれている ~
+	4 four 折り畳まれている ~
+	5 five 折り畳まれている ~
+	6 six 折り畳まれている ~
 	7 seven ~
 	8 eight ~
-Where lines three to six are a closed fold, ends up printing lines 2 to 6.
-The 6 comes from the "4" in the range, which is adjusted to the end of the
-closed fold, which is 6, and then 1 is subtracted, then this is still in the
-closed fold and the last line of that fold is used, which is 6.
+3 から 6 行目は閉じた折り畳みにあり、最終的に print されるのは 2 から 6 行目に
+なる。6 については "4" の範囲で、閉じた折り畳みの最後の行調整がされた場合に 6
+となり、1 が引かれ、その後閉じた折り畳み内に行がありその折り畳み最終行が使われ
+ることで 6 になる。
 
 							*:range-pattern*
 {pattern} の後の "/" と "?" は、パターンとその後の項目とを区別するために必要と
@@ -919,7 +918,8 @@ Note: これらは文字通りに打ち込まれる、これらは特別なキ�
 		   たは読み書き用のファイル名に置き換えられる。 *E495*
 							*:<abuf>* *<abuf>*
 	<abuf>     自動コマンドの実行時、カレントバッファの番号に置き換えられ
-		   る。 It is not set for all events, also see |bufnr()|.
+		   る。すべてのイベントで設定されるわけではない、|bufnr()| も
+		   参照。
 		   ":r file" と ":so file" のときにもカレントバッファの番号に
 		   置き換えられる。読み込まれているファイルはバッファ内にない。
 		   *E496*
