@@ -1208,6 +1208,7 @@ Vimサーバー:					*server-functions*
 	json_decode()		JSONの文字列をVimの型にデコードする
 	js_encode()		式をJSONの文字列にエンコードする
 	js_decode()		JSONの文字列をVimの型にデコードする
+	err_teapot()		418 か 503 のエラーになる
 
 ジョブ:						*job-functions*
 	job_start()		Job を開始する

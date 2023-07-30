@@ -1,4 +1,4 @@
-*repeat.txt*    For Vim バージョン 9.0.  Last change: 2023 May 01
+*repeat.txt*    For Vim バージョン 9.0.  Last change: 2023 May 26
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -300,7 +300,7 @@ Vim script の書き方はユーザーマニュアルの41章|usr_41.txt|を参�
 			る。
 
 			ファイルタイプの検知が有効化されていない場合(これは通
-			常.vimrc中の "syntax enable" か "filetype on" コマンド
+			常.vimrc中の `syntax enable` か `filetype on` コマンド
 			により行われる)、"{name}/ftdetect/*.vim" ファイルを参
 			照する。
 

@@ -1,4 +1,4 @@
-*filetype.txt*  For Vim バージョン 9.0.  Last change: 2023 Feb 15
+*filetype.txt*  For Vim バージョン 9.0.  Last change: 2023 Apr 29
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -170,6 +170,7 @@ NOTE: Vi互換とは全てのオプションがグローバルであることを
 	*.sys		g:filetype_sys
 	*.sh		g:bash_is_sh	|ft-sh-syntax|
 	*.tex		g:tex_flavor	|ft-tex-plugin|
+	*.typ		g:filetype_typ
 	*.w		g:filetype_w	|ft-cweb-syntax|
 
 いくつかのファイル形式のグローバル変数はファイル形式を検知できなかったときのみ
