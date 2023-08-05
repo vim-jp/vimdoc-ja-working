@@ -1,4 +1,4 @@
-*editing.txt*   For Vim バージョン 9.0.  Last change: 2022 Apr 16
+*editing.txt*   For Vim バージョン 9.0.  Last change: 2023 Apr 23
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -569,6 +569,44 @@ DOS 形式でファイルを読み込んで、Unix 形式でそれを保存す�
 オプション 'key' をオンに設定することで、保存されるファイルを暗号化できる。こ
 れは他人がユーザーのファイルを読むことに対して、ある程度の安全を保証する。
 |encryption|
+
+END OF LINE AND END OF FILE				*eol-and-eof*
+
+Vim has several options to control the file format:
+	'fileformat'	the <EOL> style: Unix, DOS, Mac
+	'endofline'	whether the last line ends with a <EOL>
+	'endoffile'	whether the file ends with a CTRL-Z
+	'fixendofline'	whether to fix eol and eof
+
+The first three values are normally detected automatically when reading the
+file and are used when writing the text to a file.  While editing the buffer
+it looks like every line has a line ending and the CTRL-Z isn't there (an
+exception is when 'binary' is set, it works differently then).
+
+The 'fixendofline' option can be used to choose what to write.  You can also
+change the option values to write the file differently than how it was read.
+
+Here are some examples how to use them.
+
+If you want files in Unix format (every line NL terminated): >
+	setl ff=unix fixeol
+You should probably do this on any Unix-like system.  Also modern MS-Windows
+systems tend to work well with this.  It is recommended to always use this
+format for Vim scripts.
+
+If you want to use an old MS-DOS file in a modern environment, fixing line
+endings and dropping CTRL-Z, but keeping the <CR><NL> style <EOL>: >
+	setl ff=dos fixeol
+This is useful for many MS-Windows programs, they regularly expect the
+<CR><NL> line endings.
+
+If you want to drop the final <EOL> and add a final CTRL-Z (e.g. for an old
+system like CP/M): >
+	setl ff=dos nofixeol noeol eof
+
+If you want to preserve the fileformat exactly as-is, including any final
+<EOL> and final CTRL-Z: >
+	setl nofixeol
 
 ==============================================================================
 3. 引数リスト					*argument-list* *arglist*
@@ -1480,9 +1518,11 @@ Note: メモリ内のテキストは暗号化されない。ユーザーがテ�
 
 'cryptmethod' オプションを設定することで暗号化メソッドを選択できる。次の中から
 選択できる: >
-	:setlocal cm=zip        " 弱いメソッド。後方互換。
-	:setlocal cm=blowfish   " 脆弱性ありのメソッド
-	:setlocal cm=blowfish2  " 中強度のメソッド
+	:setlocal cm=zip          " 弱いメソッド。後方互換。
+	:setlocal cm=blowfish     " 脆弱性ありのメソッド
+	:setlocal cm=blowfish2    " 中強度のメソッド
+	:setlocal cm=xchacha20v2  " libsodium 使用の中強度のメソッド
+
 ファイルを保存する前に設定する。暗号化されたファイルを読み込んだとき、このオプ
 ションは自動的にファイル保存時に使われたメソッドに設定される。ファイルを保存す
 る前に 'cryptmethod' を変更することで使用するメソッドを変更できる。
