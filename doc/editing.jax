@@ -570,42 +570,40 @@ DOS 形式でファイルを読み込んで、Unix 形式でそれを保存す�
 れは他人がユーザーのファイルを読むことに対して、ある程度の安全を保証する。
 |encryption|
 
-END OF LINE AND END OF FILE				*eol-and-eof*
+行終端とファイル終端						*eol-and-eof*
 
-Vim has several options to control the file format:
-	'fileformat'	the <EOL> style: Unix, DOS, Mac
-	'endofline'	whether the last line ends with a <EOL>
-	'endoffile'	whether the file ends with a CTRL-Z
-	'fixendofline'	whether to fix eol and eof
+Vim はファイルフォーマットを制御するオプションをいくつか持つ:
+	'fileformat'	<EOL> のスタイル: Unix, DOS, Mac
+	'endofline'	最終行の終端が <EOL> になるかどうか
+	'endoffile'	ファイルの終端が CTRL-Z になるかどうか
+	'fixendofline'	行終端とファイル終端を修正するかどうか
 
-The first three values are normally detected automatically when reading the
-file and are used when writing the text to a file.  While editing the buffer
-it looks like every line has a line ending and the CTRL-Z isn't there (an
-exception is when 'binary' is set, it works differently then).
+最初の 3 つの値はファイル読み込みおよびテキストでファイル書き込み時に通常自動
+的に検知する。バッファ編集中の各行末を見ると、行の終端と CTRL-Z はない(例外は
+'binary' が設定されら場合で、異った動作になる)。
 
-The 'fixendofline' option can be used to choose what to write.  You can also
-change the option values to write the file differently than how it was read.
+'fixendofline' オプションを使用して書き込み時の内容を選択できる。読み出したと
+きとは違う値を書き込こともできる。
 
-Here are some examples how to use them.
+これらの使用例をいくつか示す。
 
-If you want files in Unix format (every line NL terminated): >
+Unix フォーマットのファイルを望むなら(各行は NL で終端): >
 	setl ff=unix fixeol
-You should probably do this on any Unix-like system.  Also modern MS-Windows
-systems tend to work well with this.  It is recommended to always use this
-format for Vim scripts.
+どの Unix 風なシステムでもおそらくこうすべきである。また、最近の MS-Windows シ
+ステムでもこの状態で正常に動作するように進んでいる。Vim script には常にこの
+フォーマットを使用することを推奨する。
 
-If you want to use an old MS-DOS file in a modern environment, fixing line
-endings and dropping CTRL-Z, but keeping the <CR><NL> style <EOL>: >
+最近の環境で古い MS-DOS なファイルを使用したい場合、行末を修正し CTRL-Z を削除
+し、しかし <EOL> は <CR><NL> スタイルを維持する: >
 	setl ff=dos fixeol
-This is useful for many MS-Windows programs, they regularly expect the
-<CR><NL> line endings.
+通常 <CR><NL> 行末を予想する多くの MS-Windows プログラムで便利である。
 
-If you want to drop the final <EOL> and add a final CTRL-Z (e.g. for an old
-system like CP/M): >
+最終行の <EOL> を落とし最後に CTRL-Z を付与するのを望むなら(例えば、古い CP/M
+風のシステム): >
 	setl ff=dos nofixeol noeol eof
 
-If you want to preserve the fileformat exactly as-is, including any final
-<EOL> and final CTRL-Z: >
+最後の行の <EOL> と最後の CTRL-Z が厳密にそのまま維持されるファイルフォーマッ
+トを望むなら: >
 	setl nofixeol
 
 ==============================================================================
