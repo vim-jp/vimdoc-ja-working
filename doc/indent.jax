@@ -967,8 +967,8 @@ PYTHON							*ft-python-indent*
 辞書 `g:python_indent` によってインデントの量を設定することができ、値を追加す
 る前に生成する必要がある: >
 	let g:python_indent = {}
-この例では既定値を与えている。辞書の値は式に設定されており、値を更新しなくても
-後で 'shiftwidth' の値を変更できる。
+この例ではデフォルト値を与えている。辞書の値は式に設定されており、値を変更しな
+くても後で 'shiftwidth' の値を更新できる。
 
 開き括弧の後のインデント: >
 	let g:python_indent.open_paren = 'shiftwidth() * 2'
@@ -977,10 +977,9 @@ PYTHON							*ft-python-indent*
 継続行のインデント: >
 	let g:python_indent.continue = 'shiftwidth() * 2'
 
-By default, the closing paren on a multiline construct lines up under the first
-non-whitespace character of the previous line.
-If you prefer that it's lined up under the first character of the line that
-starts the multiline construct, reset this key: >
+デフォルトでは、複数行構成の閉じ括弧は、前の行の最初の非空白文字の下に並ぶ。複
+数行構成を開始する行の最初の文字の下に並べたい場合は、このキーをリセットする:
+>
 	let g:python_indent.closed_paren_align_last_line = v:false
 
 このメソッドは、|searchpair()| を使用して閉じられていない括弧に戻る。これは時々
@@ -1207,20 +1206,20 @@ generic/port 文の桁揃えが自動的に行われる。これによって、�
 
 VIM							*ft-vim-indent*
 							*g:vim_indent*
-Vim scripts indentation can be configured with the `g:vim_indent` dictionary
-variable.  It supports 3 keys, `line_continuation`, `more_in_bracket_block`,
-and `searchpair_timeout`.
-`line_continuation` expects a number which will be added to the indent level of
-a continuation line starting with a backslash, and defaults to
-`shiftwidth() * 3`.  It also accepts a string, which is evaluated at runtime.
-`more_in_bracket_block` expects a boolean value; when on, an extra
-`shiftwidth()` is added inside blocks surrounded with brackets.  It defaults to
-`v:false`.
+Vim scripts のインデントは辞書変数 `g:vim_indent` にて設定できる。これは 3 つ
+のキー `line_continuation`, `more_in_bracket_block`, `searchpair_timeout` をサ
+ポートする。
+`line_continuation` はバックスラッシュから始まる継続行でインデントレベルに追加
+する数値を要求し、デフォルトでは `shiftwidth() * 3` になる。また文字列も受け付
+け、それは実行時に評価される。
+`more_in_bracket_block` は真偽値を要求する。有効なときに括弧で括られたブロック
+内に `shiftwidth()` 分追加する。デフォルトは `v:false` 。
 `searchpair_timeout` expects a number which will be passed to `searchpair()` as
-a timeout.  Increasing the value might give more accurate results, but also
-causes the indentation to take more time.  It defaults to 100 (milliseconds).
+`searchpair_timeout` `searchpair()` のタイムアウトで経過する数値を要求する。値
+を増加させると、より正確な結果が得られる、ただしインデントにより時間がかかるよ
+うにもなる。デフォルトでは 100 (ミリ秒)。
 
-Example of configuration:
+設定の例:
 
 	let g:vim_indent = #{
 	    \ line_continuation: shiftwidth() * 3,
@@ -1229,8 +1228,8 @@ Example of configuration:
 	    \ }
 
 							*g:vim_indent_cont*
-This variable is equivalent to `g:vim_indent.line_continuation`.
-It's supported for backward compatibility.
+この変数は `g:vim_indent.line_continuation` と等価。
+これは後方互換性のためにサポートされている。
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:
