@@ -967,8 +967,8 @@ PYTHON							*ft-python-indent*
 辞書 `g:python_indent` によってインデントの量を設定することができ、値を追加す
 る前に生成する必要がある: >
 	let g:python_indent = {}
-この例ではデフォルト値を与えている。辞書の値は式に設定されており、値を変更しな
-くても後で 'shiftwidth' の値を更新できる。
+この例ではデフォルト値を与えている。辞書の値を式で設定しており、値を変更しなく
+ても後で 'shiftwidth' の値を更新できる。
 
 開き括弧の後のインデント: >
 	let g:python_indent.open_paren = 'shiftwidth() * 2'
