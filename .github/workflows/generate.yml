@@ -18,11 +18,11 @@ jobs:
           sudo apt-get -y install libfuse2
           echo "LD_PRELOAD=/lib/x86_64-linux-gnu/libgmodule-2.0.so" >> $GITHUB_ENV
       - name: checkout master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: work
       - name: Checkout vimdoc-ja
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: target
           repository: 'vim-jp/vimdoc-ja'
@@ -77,11 +77,11 @@ jobs:
           sudo apt-get -y install libfuse2
           echo "LD_PRELOAD=/lib/x86_64-linux-gnu/libgmodule-2.0.so" >> $GITHUB_ENV
       - name: checkout master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: work
       - name: Checkout vimdoc-ja
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: target
           repository: 'vim-jp/vimdoc-ja'
