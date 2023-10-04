@@ -118,13 +118,13 @@ ch_status({handle} [, {options}])
 changenr()			Number	current change number
 char2nr({expr} [, {utf8}])	Number	ASCII/UTF-8 value of first char in {expr}
 charclass({string})		Number	character class of {string}
-charcol({expr})			Number	column number of cursor or mark
+charcol({expr} [, {winid}])	Number	column number of cursor or mark
 charidx({string}, {idx} [, {countcc} [, {utf16}]])
 				Number	char index of byte {idx} in {string}
 chdir({dir})			String	change current working directory
 cindent({lnum})			Number	C indent for line {lnum}
 clearmatches([{win}])		none	clear all matches
-col({expr})			Number	column byte index of cursor or mark
+col({expr} [, {winid}])		Number	column byte index of cursor or mark
 complete({startcol}, {matches}) none	set Insert mode completion
 complete_add({expr})		Number	add completion match
 complete_check()		Number	check for key typed during completion
@@ -156,6 +156,7 @@ digraph_setlist({digraphlist})	Boolean	register multiple |digraph|s
 echoraw({expr})			none	output {expr} as-is
 empty({expr})			Number	|TRUE| if {expr} is empty
 environ()			Dict	return environment variables
+err_teapot([{expr}])		none	give E418, or E503 if {expr} is |TRUE|
 escape({string}, {chars})	String	escape {chars} in {string} with '\'
 eval({string})			any	evaluate {string} into its value
 eventhandler()			Number	|TRUE| if inside an event handler
@@ -198,7 +199,7 @@ foldlevel({lnum})		Number	fold level at {lnum}
 foldtext()			String	line displayed for closed fold
 foldtextresult({lnum})		String	text for closed fold at {lnum}
 foreground()			Number	bring the Vim window to the foreground
-fullcommand({name})		String	get full command from {name}
+fullcommand({name} [, {vim9}])	String	get full command from {name}
 funcref({name} [, {arglist}] [, {dict}])
 				Funcref	reference to function {name}
 function({name} [, {arglist}] [, {dict}])
@@ -221,8 +222,12 @@ getcharmod()			Number	modifiers for the last typed character
 getcharpos({expr})		List	position of cursor, mark, etc.
 getcharsearch()			Dict	last character search
 getcharstr([expr])		String	get one character from the user
+getcmdcompltype()		String	return the type of the current
+					command-line completion
 getcmdline()			String	return the current command-line
 getcmdpos()			Number	return cursor position in command-line
+getcmdscreenpos()		Number	return cursor screen position in
+					command-line
 getcmdtype()			String	return current command-line type
 getcmdwintype()			String	return current command-line window type
 getcompletion({pat}, {type} [, {filtered}])
@@ -246,6 +251,7 @@ getloclist({nr}, {what})	Dict	get specific location list properties
 getmarklist([{buf}])		List	list of global/local marks
 getmatches([{win}])		List	list of current matches
 getmousepos()			Dict	last known mouse position
+getmouseshape()			String	current mouse shape name
 getpid()			Number	process ID of Vim
 getpos({expr})			List	position of cursor, mark, etc.
 getqflist()			List	list of quickfix items
@@ -254,6 +260,7 @@ getreg([{regname} [, 1 [, {list}]]])
 				String or List   contents of a register
 getreginfo([{regname}])		Dict	information about a register
 getregtype([{regname}])		String	type of a register
+getscriptinfo([{opts}])		List	list of sourced scripts
 gettabinfo([{expr}])		List	list of tab pages
 gettabvar({nr}, {varname} [, {def}])
 				any	variable {varname} in tab {nr} or {def}
@@ -262,7 +269,7 @@ gettabwinvar({tabnr}, {winnr}, {name} [, {def}])
 gettagstack([{nr}])		Dict	get the tag stack of window {nr}
 gettext({text})			String	lookup translation of {text}
 getwininfo([{winid}])		List	list of info about each window
-getwinpos([{timeout}])		List	X and Y coord in pixels of the Vim window
+getwinpos([{timeout}])		List	X and Y coord in pixels of Vim window
 getwinposx()			Number	X coord in pixels of the Vim window
 getwinposy()			Number	Y coord in pixels of the Vim window
 getwinvar({nr}, {varname} [, {def}])
@@ -1461,7 +1468,7 @@ charclass({string})					*charclass()*
 		The class is used in patterns and word motions.
 
 
-charcol({expr})						*charcol()*
+charcol({expr} [, {winid}])				*charcol()*
 		Same as |col()| but returns the character index of the column
 		position given with {expr} instead of the byte position.
 
@@ -1556,8 +1563,8 @@ clearmatches([{win}])					*clearmatches()*
 		Can also be used as a |method|: >
 			GetWin()->clearmatches()
 <
-							*col()*
-col({expr})	The result is a Number, which is the byte index of the column
+col({expr} [, {winid}])					*col()*
+		The result is a Number, which is the byte index of the column
 		position given with {expr}.  The accepted positions are:
 		    .	    the cursor position
 		    $	    the end of the cursor line (the result is the
@@ -1572,6 +1579,8 @@ col({expr})	The result is a Number, which is the byte index of the column
 		and column number. Most useful when the column is "$", to get
 		the last column of a specific line.  When "lnum" or "col" is
 		out of range then col() returns zero.
+		With the optional {winid} argument the values are obtained for
+		that window instead of the current window.
 		To get the line number use |line()|.  To get both use
 		|getpos()|.
 		For the screen column position use |virtcol()|.  For the
@@ -2158,6 +2167,15 @@ environ()						*environ()*
 <		Note that the variable name may be CamelCase; to ignore case
 		use this: >
 			:echo index(keys(environ()), 'HOME', 0, 1) != -1
+
+
+err_teapot([{expr}])					*err_teapot()*
+		Produce an error with number 418, needed for implementation of
+		RFC 2324.
+		If {expr} is present and it is TRUE error 503 is given,
+		indicating that coffee is temporarily not available.
+		If {expr} is present it must be a String.
+
 
 escape({string}, {chars})				*escape()*
 		Escape the characters in {chars} that occur in {string} with a
@@ -2939,14 +2957,20 @@ foreground()	Move the Vim window to the foreground.  Useful when sent from
 		{only in the Win32, Motif and GTK GUI versions and the
 		Win32 console version}
 
-fullcommand({name})						*fullcommand()*
+fullcommand({name} [, {vim9}])				*fullcommand()*
 		Get the full command name from a short abbreviated command
 		name; see |20.2| for details on command abbreviations.
 
 		The string argument {name} may start with a `:` and can
 		include a [range], these are skipped and not returned.
-		Returns an empty string if a command doesn't exist or if it's
-		ambiguous (for user-defined commands).
+		Returns an empty string if a command doesn't exist, if it's
+		ambiguous (for user-defined commands) or cannot be shortened
+		this way. |vim9-no-shorten|
+
+		Without the {vim9} argument uses the current script version.
+		If {vim9} is present and FALSE then legacy script rules are
+		used.  When {vim9} is present and TRUE then Vim9 rules are
+		used, e.g. "en" is not a short form of "endif".
 
 		For example `fullcommand('s')`, `fullcommand('sub')`,
 		`fullcommand(':%substitute')` all return "substitute".
@@ -3405,6 +3429,14 @@ getcharstr([expr])					*getcharstr()*
 		Otherwise this works like |getchar()|, except that a number
 		result is converted to a string.
 
+getcmdcompltype()					*getcmdcompltype()*
+		Return the type of the current command-line completion.
+		Only works when the command line is being edited, thus
+		requires use of |c_CTRL-\_e| or |c_CTRL-R_=|.
+		See |:command-completion| for the return string.
+		Also see |getcmdtype()|, |setcmdpos()|, |getcmdline()| and
+		|setcmdline()|.
+		Returns an empty string when completion is not defined.
 
 getcmdline()						*getcmdline()*
 		Return the current command-line.  Only works when the command
@@ -3422,7 +3454,18 @@ getcmdpos()						*getcmdpos()*
 		Only works when editing the command line, thus requires use of
 		|c_CTRL-\_e| or |c_CTRL-R_=| or an expression mapping.
 		Returns 0 otherwise.
-		Also see |getcmdtype()|, |setcmdpos()| and |getcmdline()|.
+		Also see |getcmdtype()|, |setcmdpos()|, |getcmdline()| and
+		|setcmdline()|.
+
+getcmdscreenpos()					*getcmdscreenpos()*
+		Return the screen position of the cursor in the command line
+		as a byte count.  The first column is 1.
+		Instead of |getcmdpos()|, it adds the prompt position.
+		Only works when editing the command line, thus requires use of
+		|c_CTRL-\_e| or |c_CTRL-R_=| or an expression mapping.
+		Returns 0 otherwise.
+		Also see |getcmdpos()|, |setcmdpos()|, |getcmdline()| and
+		|setcmdline()|.
 
 getcmdtype()						*getcmdtype()*
 		Return the current command-line type. Possible return values
@@ -3846,6 +3889,12 @@ getmousepos()						*getmousepos()*
 		When using |getchar()| the Vim variables |v:mouse_lnum|,
 		|v:mouse_col| and |v:mouse_winid| also provide these values.
 
+getmouseshape()						*getmouseshape()*
+		Returns the name of the currently showing mouse pointer.
+		When the |+mouseshape| feature is not supported or the shape
+		is unknown an empty string is returned.
+		This function is mainly intended for testing.
+
 							*getpid()*
 getpid()	Return a Number which is the process ID of the Vim process.
 		On Unix and MS-Windows this is a unique number, until Vim
@@ -4055,6 +4104,47 @@ getregtype([{regname}])					*getregtype()*
 		Can also be used as a |method|: >
 			GetRegname()->getregtype()
 
+getscriptinfo([{opts}])					*getscriptinfo()*
+		Returns a |List| with information about all the sourced Vim
+		scripts in the order they were sourced, like what
+		`:scriptnames` shows.
+
+		The optional Dict argument {opts} supports the following
+		optional items:
+		    name	Script name match pattern. If specified,
+				and "sid" is not specified, information about
+				scripts with a name that match the pattern
+				"name" are returned.
+		    sid		Script ID |<SID>|.  If specified, only
+				information about the script with ID "sid" is
+				returned and "name" is ignored.
+
+		Each item in the returned List is a |Dict| with the following
+		items:
+		    autoload	Set to TRUE for a script that was used with
+				`import autoload` but was not actually sourced
+				yet (see |import-autoload|).
+		    functions   List of script-local function names defined in
+				the script.  Present only when a particular
+				script is specified using the "sid" item in
+				{opts}.
+		    name	Vim script file name.
+		    sid		Script ID |<SID>|.
+		    sourced	Script ID of the actually sourced script that
+				this script name links to, if any, otherwise
+				zero
+		    variables   A dictionary with the script-local variables.
+				Present only when a particular script is
+				specified using the "sid" item in {opts}.
+				Note that this is a copy, the value of
+				script-local variables cannot be changed using
+				this dictionary.
+		    version	Vimscript version (|scriptversion|)
+
+		Examples: >
+			:echo getscriptinfo({'name': 'myscript'})
+			:echo getscriptinfo({'sid': 15}).variables
+<
 gettabinfo([{tabnr}])					*gettabinfo()*
 		If {tabnr} is not specified, then information about all the
 		tab pages is returned as a |List|. Each List item is a
