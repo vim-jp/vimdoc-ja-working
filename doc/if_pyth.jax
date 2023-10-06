@@ -757,12 +757,12 @@ Unix ~
 
 'pythondll' と 'pythonthreedll' オプションを、コンパイル時に
 DYNAMIC_PYTHON_DLL と DYNAMIC_PYTHON3_DLL で指定されている Python の共有ライブ
-ラリのファイルの、代わりを指定するのに使えます。共有ライブラリのバージョン
-は、|python3-stable-abi| を使用しない限り、Vim がコンパイルされた Python 2.x
-または Python 3 のバージョン (|v:python3_version|) と一致しなければなりません。
+ラリのファイルの、代わりを指定するのに使えます。共有ライブラリのバージョンは、
+|python3-stable-abi| を使用しない限り、Vim がコンパイルされた Python 2.x また
+は Python 3 のバージョン (|v:python3_version|) と一致しなければなりません。
 
 
-Stable ABI and mixing Python versions ~
+Stable ABI と Python バージョンの混在 ~
 			*python-stable* *python-stable-abi* *python3-stable-abi*
 Vim が Stable ABI (Python 3 でのみ使用可能) でコンパイルされていない場合、
 Python 共有ライブラリのバージョンは Vim がコンパイルされたバージョンと一致して
