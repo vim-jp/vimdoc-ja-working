@@ -355,8 +355,8 @@ Note: 以下は |global-local| オプションにも適用される。
 ないため、若干異なる動作をする:
 
 	オプション	理由	~
-	'filetype'	オートコマンドによって明示的に設定される
-	'syntax'	オートコマンドによって明示的に設定される
+	'filetype'	自動コマンドによって明示的に設定される
+	'syntax'	自動コマンドによって明示的に設定される
 	'bufhidden'	|special-buffers| である
 	'buftype'	|special-buffers| である
 	'readonly'	自動的に検出される
