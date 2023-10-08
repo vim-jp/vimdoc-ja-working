@@ -2616,8 +2616,6 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 			後で変更された場合、同じバージョンの Vim で読み戻す必
 			要があるかもしれない。
 			廃れたので、今後は使用しないこと。
-	   xchacha20v2  Same algorithm as with "xchacha20" that correctly stores the key derivation parameters together with the encrypted file.  Should work better in case the parameters in the libsodium library ever change.
-			STILL EXPERIMENTAL: Files written with this method might have to be read back with the same version of Vim if the binary format changes later.
 	   xchacha20v2  "xchacha20" と同じアルゴリズムで、暗号化ファイルととも
 			に鍵導出パラメータを正しく保存する。libsodium ライブラ
 			リのパラメータが変更された場合に、よりうまく動作するは
