@@ -1287,9 +1287,9 @@ DOSバッチファイル			*dosbatch.vim* *ft-dosbatch-syntax*
 なる。
 
 オリジナルの MS-DOS では、コメント行を入力する代替手段としてダブルコロン（::）
-を使うイディオムをサポートしている。x このイディオムは現在の Windows コマンド
-インタープリタでも使えるが、( ... ) コマンドブロックの中で使うと問題になること
-がある。これについては Stack Overflow で議論されている -
+を使うイディオムをサポートしている。このイディオムは現在の Windows コマンドイ
+ンタープリタでも使えるが、( ... ) コマンドブロックの中で使うと問題になることが
+ある。これについては Stack Overflow で議論されている -
 
 https://stackoverflow.com/questions/12407800/which-comment-style-should-i-use-in-batch-files
 
@@ -1543,10 +1543,9 @@ FORM用の既定の拡張カラーモードではヘッダー命令とFORMプロ
 
 FORTH						*forth.vim* *ft-forth-syntax*
 
-Files matching "*.f" could be Fortran or Forth and those matching "*.fs" could be F# or Forth.  If the automatic detection doesn't work for you, or you don't edit F# or Fortran at all, use this in your startup vimrc: >
 ".f" にマッチするファイルは Fortran か Forth で、"*.fs" にマッチするファイルは
-F# か Forth です。自動検出がうまくいかない場合や、F# や Fortran をまったく編集
-しない場合は、スタートアップの vimrc でこれを使用する: >
+F# か Forth である。自動検出がうまくいかない場合や、F# や Fortran をまったく編
+集しない場合は、スタートアップの vimrc でこれを使用する: >
    :let filetype_f  = "forth"
    :let filetype_fs = "forth"
 
@@ -5258,7 +5257,7 @@ PmenuSel	ポップアップメニュー: 選択されている項目。
 							*hl-PmenuKind*
 PmenuKind	ポップアップメニュー: "kind" の通常の項目。
 							*hl-PmenuKindSel*
-PmenuKindSel	ポップアップメニュー: "kind" の択されている項目。
+PmenuKindSel	ポップアップメニュー: "kind" の選択されている項目。
 							*hl-PmenuExtra*
 PmenuExtra	ポップアップメニュー: "extra text" の通常の項目。
 							*hl-PmenuExtraSel*
