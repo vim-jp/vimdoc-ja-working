@@ -1283,8 +1283,8 @@ DOSバッチファイル			*dosbatch.vim* *ft-dosbatch-syntax*
 
   :let dosbatch_cmdextversion = 1
 
-変数が定義されていない際のデフォルトはs、Windows 2000 以降をサポートする 2 と
-なる。
+変数が定義されていない際のデフォルトは、Windows 2000 以降をサポートする 2 とな
+る。
 
 オリジナルの MS-DOS では、コメント行を入力する代替手段としてダブルコロン（::）
 を使うイディオムをサポートしている。このイディオムは現在の Windows コマンドイ
