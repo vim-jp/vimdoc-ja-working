@@ -3441,7 +3441,7 @@ getcmdscreenpos()					*getcmdscreenpos()*
 		コマンドラインの編集時のみ動作するため、|c_CTRL-e| または
 		|c_CTRL-R_=| または式マッピングを使用する必要がある。それ以外
 		は 0 を返す。
-		|getcmdpos()|、|setcmdpos()|、|getcmdline()|、|setcmdline()|
+		|getcmdpos()|, |setcmdpos()|, |getcmdline()|, |setcmdline()|
 		も参照。
 
 getcmdtype()						*getcmdtype()*
