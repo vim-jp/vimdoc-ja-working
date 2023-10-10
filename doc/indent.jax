@@ -964,7 +964,8 @@ PHP では 'case/default' ブロックの中で波カッコは不要なので、
 
 PYTHON							*ft-python-indent*
 
-インデントの量は `g:python_indent` |Dictionary| で設定できる。これは項目を追加する前に作成する必要がある: >
+インデントの量は `g:python_indent` |Dictionary| で設定できる。これは項目を追加
+する前に作成する必要がある: >
 	let g:python_indent = {}
 示されている例はデフォルトである。Note 辞書の値は式に設定されているので、これ
 らの値を更新しなくても後で 'shiftwidth' の値を変更できることに注意。
@@ -1226,8 +1227,8 @@ Example of configuration:
 	    \ }
 
 							*g:vim_indent_cont*
-この変数は `g:vim_indent.line_continuation` と等価です。
-後方互換性のためにサポートされています。
+この変数は `g:vim_indent.line_continuation` と等価である。
+後方互換性のためにサポートされている。
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:
