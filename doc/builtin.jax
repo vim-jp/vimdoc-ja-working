@@ -169,7 +169,7 @@ digraph_setlist({digraphlist})	真偽値	複数のダイグラフ |digraph| の�
 echoraw({expr})			なし	{expr} をそのまま出力する
 empty({expr})			数値	{expr}が空なら|TRUE|
 environ()			辞書	すべての環境変数を返す
-err_teapot([{expr}])		なし	{expr} が |TRUE|の場合、E418、または
+err_teapot([{expr}])		なし	{expr} が |TRUE| の場合、E418、または
 					E503 を与える
 escape({string}, {chars})	文字列	{string}内の{chars}を '\' でエスケープ
 eval({string})			任意	{string}を評価し、値を得る
