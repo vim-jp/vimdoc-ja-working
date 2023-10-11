@@ -144,7 +144,7 @@ prop_add({lnum}, {col}, {props})
 		   text		{col} の前、または {col} がゼロの場合は行の上/
 				下に表示されるテキスト。ハイライトによるパディ
 				ング用のスペースを先頭および/または末尾に追加
-				する。"length", "end_lnum"および "end_col" と
+				する。"length", "end_lnum" および "end_col" と
 				一緒に使用することはできない。
 				詳細については |virtual-text| を参照。
 							*E1294*
