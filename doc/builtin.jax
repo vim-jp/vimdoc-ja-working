@@ -330,7 +330,7 @@ inputsecret({prompt} [, {text}]) 文字列	input()だがテキストを隠す
 insert({object}, {item} [, {idx}])
 				リスト	{object}に要素{item}を挿入 [{idx}の前]
 instanceof({object}, {class})	数値	{object} が {class} のインスタンスの場
-合は |TRUE|
+					合は |TRUE|
 interrupt()			なし	スクリプトの実行を中断する
 invert({expr})			数値	ビット反転
 isabsolutepath({path})		数値	{path} が絶対パスならば |TRUE|
