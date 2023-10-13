@@ -117,9 +117,9 @@ CTRL-G u を使います。挿入コマンドを部分ごと (例えば文単位
 旧来のスクリプトでは: >
 	let &g:undolevels = &g:undolevels
 
-Note 同様に見える割り当て `let &undolevels=&undolevels` は、ローカルオプション
-が別の値に設定されている場合、グローバルオプションの 'undolevels' 値を保持しな
-いことに注意してください。例えば: >
+Note 同様に見える代入 `let &undolevels=&undolevels` は、ローカルオプションが別
+の値に設定されている場合、グローバルオプションの 'undolevels' 値を保持しないこ
+とに注意してください。例えば: >
 	" 'undolevels' に異なるグローバル値とローカル値を使用して開始する。
 	let &g:undolevels = 1000
 	let &l:undolevels = 2000
