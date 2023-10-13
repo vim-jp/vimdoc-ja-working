@@ -114,7 +114,6 @@ CTRL-G u を使います。挿入コマンドを部分ごと (例えば文単位
 い値が同じでもそうなります。`g:undolevels` を使用して、'undolevels' のグローバ
 ル値のみを明示的に読み書きします。|Vim9| script では: >
 	&g:undolevels = &g:undolevels
-	&undolevels = &undolevels
 旧来のスクリプトでは: >
 	let &g:undolevels = &g:undolevels
 
