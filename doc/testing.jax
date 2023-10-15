@@ -539,7 +539,7 @@ assert_false({actual} [, {msg}])			*assert_false()*
 		|assert_equal()|と同様に、{actual}がfalseでない場合、|v:errors|
 		にエラーメッセージを追加する。
 		エラーは "Expected false but got {actual}" という形式である。
-		{msg} が存在する場合は、その接頭辞が付けられる。
+		{msg} が存在する場合は、その前に置かれる。
 		|assert-return| も参照。
 
 		ゼロである時、その値はfalseである。{actual}が数値でない場合、
@@ -553,15 +553,14 @@ assert_inrange({lower}, {upper}, {actual} [, {msg}])	 *assert_inrange()*
 		り小さいか{upper}より大きい場合、|v:errors|にエラーメッセージ
 		が追加される。|assert-return| も参照。
 		エラーは "Expected range {lower} - {upper}, but got {actual}"
-		という形式である。{msg} が存在する場合は、その接頭辞が付けられ
-		る。
+		という形式である。{msg} が存在する場合は、その前に置かれる。
 
 								*assert_match()*
 assert_match({pattern}, {actual} [, {msg}])
 		{pattern}が{actual}と一致しない場合、|v:errors|にエラーメッセー
 		ジが追加される。|assert-return| も参照。
 		エラーは "Pattern {pattern} does not match {actual}" という形
-		式である。{msg} が存在する場合は、その接頭辞が付けられる。
+		式である。{msg} が存在する場合は、その前に置かれる。
 
 		|=~|と同じように{pattern}が使われる: マッチングは 'magic' や
 		'cpoptions' の実際の値に関係なく、'magic' が設定され、
