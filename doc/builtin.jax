@@ -776,7 +776,6 @@ utf16idx({string}, {idx} [, {countcc} [, {charidx}]])
 				数値	{string} のバイト {idx} の UTF-16 イン
 					デックス
 values({dict})			リスト	{dict}の値のリスト
-virtcol({expr})			数値	カーソルのスクリーンカラム位置
 virtcol({expr} [, {list} [, {winid}])
 				数値/リスト
 					カーソルまたはマークのスクリーン桁
@@ -889,11 +888,10 @@ append({lnum}, {text})					*append()*
 		{lnum}は0でもよく、その場合は1行目の前に行を挿入する。
 		{lnum}は|getline()|と同様に扱われる。
 		失敗した場合は1を返す({lnum}が不正な範囲であるか、メモリ不足)。
-		成功なら0を返す。
-		{text} が空のリストの場合、{lnum} の値に関係なくゼロが返され
-		る。
-		|Vim9| script では不正な引数であるか負数の場
-		合は結果がエラーになる。例: >
+		成功なら0を返す。{text} が空のリストの場合、{lnum} の値に関係
+		なくゼロが返される。
+		|Vim9| script では不正な引数であるか負数の場合は結果がエラーに
+		なる。例: >
 			:let failed = append(line('$'), "# THE END")
 			:let failed = append(0, ["Chapter 1", "the beginning"])
 
@@ -1008,7 +1006,7 @@ atan({expr})						*atan()*
 
 		|method| としても使用できる: >
 			Compute()->atan()
-<
+
 
 atan2({expr1}, {expr2})					*atan2()*
 		{expr1} / {expr2} の逆正接 (アークタンジェント) をラジアンで返
@@ -1261,8 +1259,8 @@ browsedir({title}, {initdir})
 		ラウジングが不可能ならば、空文字列が戻ってくる。
 
 bufadd({name})						*bufadd()*
-		バッファリストに {name} という名前でバッファを追加する (文字列
-		でなければならない)。
+		バッファリストに {name} (文字列でなければならない) という名前
+		でバッファを追加する。
 		もし、ファイル {name} 用のバッファが既に存在した場合、そのバッ
 		ファの番号を返す。そうでなければ、新しく作られたバッファの番号
 		を返す。{name} が空の文字列だったときは新しいバッファが常に作
@@ -1402,8 +1400,8 @@ bufwinid({buf})						*bufwinid()*
 
 	echo "A window containing buffer 1 is " .. (bufwinid(1))
 <
-		現在のタブページのみを処理する。
-		詳細については。|win_findbuf()| を参照。
+		現在のタブページのみを処理する。さらにウィンドウを探すために
+		は、|win_findbuf()| を参照。
 
 		|method| としても使用できる: >
 			FindBuffer()->bufwinid()
@@ -4791,16 +4789,16 @@ indexof({object}, {expr} [, {opts}])			*indexof()*
 		{object} は |List| または |Blob| でなければならない。
 
 		{object} が |List| の場合、式が v:true になるまでリスト内の各
-		項目の {expr} を評価し、この項目のインデックスを返す。
+		項目で {expr} を評価し、この項目のインデックスを返す。
 
 		{object} が |Blob| の場合、式が v:true になるまで Blob 内の各
-		バイトの {expr} を評価し、このバイトのインデックスを返す。
+		バイトで {expr} を評価し、このバイトのインデックスを返す。
 
 		{expr} は |string| または |Funcref| でなければならない。
 
 		{expr} が |string| の場合: {object} が |List| であれば、{expr}
 		の内部では |v:key| は現在のリスト項目のインデックスを持ち、
-		|v:val| はその項目の値を持つ。オブジェクト}が |Blob| の場合、
+		|v:val| はその項目の値を持つ。 {object} が |Blob| の場合、
 		{expr} の内部では |v:key| は現在のリスト項目のインデックスを持
 		ち、|v:val| は項目の値を持つ。|v:key| は現在のバイトのインデッ
 		クスを持ち、|v:val| はバイトの値を持つ。
@@ -4957,7 +4955,6 @@ insert({object}, {item} [, {idx}])			*insert()*
 instanceof({object}, {class})
 		結果は数値で、{object} 引数が {class} で指定された |Class| の
 		直接または間接インスタンスである場合に |TRUE| となる。
-
 		{class} が |List| の場合、{object} が指定されたクラスのいずれ
 		かのインスタンスであるとき、この関数は |TRUE| を返す。
 		例: >
@@ -6711,7 +6708,7 @@ range({expr} [, {max} [, {stride}]])				*range()*
 			GetExpr()->range()
 <
 
-readblob({fname})					*readblob()*
+readblob({fname} [, {offset} [, {size}]])			*readblob()*
 		ファイル {fname} をバイナリモードで読み |Blob| を返す。
 		{offset} が指定されている場合は、指定されたオフセットからファ
 		イルを読み取る。負の値の場合、ファイルの終わりからのオフセット
@@ -9035,9 +9032,9 @@ substitute({string}, {pat}, {sub}, {flags})		*substitute()*
 swapfilelist()						*swapfilelist()*
 		"vim -r" で表示されるようなスワップファイル名のリストを返す。
 		|-r| コマンド引数を参照。'directory' オプションは、検査するディ
-		レクトリに使用される。カレントディレクトリ内のスワップファイル
-		のリストのみを取得したい場合は、一時的に 'directory' をドット
-		に設定する: >
+		レクトリとして使用される。カレントディレクトリ内のスワップファ
+		イルのリストのみを取得したい場合は、一時的に 'directory' をドッ
+		トに設定する: >
 			let save_dir = &directory
 			let &directory = '.'
 			let swapfiles = swapfilelist()
