@@ -167,10 +167,6 @@ test_gui_event({event}, {args})
 				    left  現在のウィンドウの左スクロールバー
 				    right 現在のウィンドウの右スクロールバー
 				    hor   水平スクロールバー
-		    value:	スクロール量。垂直なスクロールバーの場合、値は
-				1からバッファの行数になる。水平スクロールバー
-				の場合、'wrap' が設定されていないと仮定すると、
-				値は1から最大行長までの間になる。
 		    value:	垂直スクロールバーの場合、値は 0 からバッファ
 				の行数から 1 を引いた値までの範囲になる。水平
 				スクロールバーの場合、'wrap' が設定されていな
@@ -267,7 +263,8 @@ test_mswin_event({event}, {args})		*test_mswin_event()*
                                 {args} row: と col: のみが使用され、必須。
 				'mousemoveevent' が設定されている場合、または
 				ポップアップでマウス移動イベントが使用されてい
-				る場合にのみ、イベントが発生する。
+				る場合に、結果としてイベントが発生するだけであ
+				る。
 		    cell:	GUI のオプション: 存在し、TRUE の場合、"move"
 				はピクセル位置の代わりにスクリーンセルを使用す
 				る。コンソールでは使用されない。
@@ -360,23 +357,24 @@ test_override({name}, {val})				*test_override()*
 		alloc_lines  確保したメモリ内に各バッファの行のコピーを作り、
 			     それによりメモリアクセスのエラーが valgrind で検
 			     出できる
-		autoload    `import autoload` でスクリプトを正しい手順でロード
-			     し、項目が使用されるまで延期はしない
+		autoload     `import autoload` でスクリプトを正しい手順でロー
+			     ドし、項目が使用されるまで延期はしない
 		char_avail   char_avail() 関数を無効化する
 		nfa_fail     古い正規表現エンジンに戻すために、NFA regexp エン
 			     ジンを失敗させる
 		no_query_mouse  "dec" 端末のマウス位置を問い合わせない
-		no_wait_return  "no_wait_return" フラグを設定する。"ALL" では
+		no_wait_return	"no_wait_return" フラグを設定する。"ALL" では
 				復元されない
 		redraw       redrawing() 関数を無効化する
 		redraw_flag  RedrawingDisabled フラグを無視する
 		starting     "starting" 変数を初期化する、下記参照
-		term_props	バージョン文字列が検出された場合、すべてのター
-				ミナルプロパティをリセットする。
-		ui_delay	ui_delay() で使用するミリ秒単位の時間; メッ
-				セージの最大3秒の待ち時間を上書きする。
-		unreachable  `throw` と `:return` の後のコードにエラーはない
-		uptime 	     sysinfo.uptime を上書きする
+		term_props   バージョン文字列が検出された場合、すべてのターミ
+			     ナルプロパティをリセットする。
+		ui_delay     ui_delay() で使用するミリ秒単位の時間; メッセージ
+			     の最大3秒の待ち時間を上書きする。
+		unreachable  `throw` と `:return` の後のコードではエラーになら
+			     ない
+		uptime	     sysinfo.uptime を上書きする
 		vterm_title  端末ウィンドウ内でジョブが走っている場合にウィン
 			     ドウタイトルを設定する
 		ALL	     alloc_lines 以外のすべての置き換えをクリアする
@@ -459,7 +457,7 @@ assert_equal({expected}, {actual} [, {msg}])
 		ージを追加し、1 が返る。そうでなければ 0 が返る。
 		|assert-return|
 		エラーは "Expected {expected} but got {actual}" という形式で
-		ある。{msg} が存在する場合は、その接頭辞が付けられる。
+		ある。{msg} が存在する場合は、その前に置かれる。
 
 		暗黙的な変換は行われないため、文字列 "4" は数値 4 とは異なる。
 		同様に、数値 4 は浮動小数点数 4.0 と異なる。ここでは
