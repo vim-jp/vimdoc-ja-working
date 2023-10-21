@@ -578,7 +578,7 @@ Vim には、ファイル形式を制御するためのいくつかのオプシ�
 	'fileformat'	<EOL> 形式: Unix, DOS, Mac
 	'endofline'	最後の行が <EOL> で終わるかどうか
 	'endoffile'	ファイルが CTRL-Z で終わるかどうか
-	'fixendofline'	eol と eof を固定するかどうか
+	'fixendofline'	eol と eof を修正するかどうか
 
 最初の 3 つの値は通常、ファイルの読み取り時に自動的に検出され、テキストをファ
 イルに書き込むときに使用される。バッファを編集していると、すべての行に行末があ
