@@ -386,8 +386,8 @@ is to use "path\[[]abc]", this matches the file "path\[abc]".
 
 					*starstar-wildcard*
 Expanding "**" is possible on Unix, Win32, macOS and a few other systems (but
-it may depend on your 'shell' setting. It's known to work correctly for zsh; for
-bash this requires at least bash version >= 4.X).
+it may depend on your 'shell' setting on Unix and macOS. It's known to work
+correctly for zsh; for bash this requires at least bash version >= 4.X).
 This allows searching a directory tree.  This goes up to 100 directories deep.
 Note there are some commands where this works slightly differently, see
 |file-searching|.
@@ -1097,8 +1097,8 @@ will get the ACL info of the original file.
    The ACL info is also used to check if a file is read-only (when opening the
 file).
 
-				*xattr* *E1506* *E1507* *E1508* *E1509*
-xattr stands for Extended Attributes  It is an advanced way to save metadata
+					*xattr* *E1506* *E1508* *E1509*
+xattr stands for Extended Attributes.  It is an advanced way to save metadata
 alongside the file in the filesystem.  It depends on the actual filesystem
 being used and Vim supports it only on a Linux system.
    Vim attempts to preserve the extended attribute info when writing a file.
