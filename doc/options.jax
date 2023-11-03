@@ -5067,8 +5067,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 		mok2	t_TE 値は次のように変更される:
 			    CSI >4;m	modifyOtherKeys を無効にする
 			t_TI 値は次のように変更される:
-			    CSI >4;2m	modifyOtherKeys 有効にする
-			    CSI ?4m	modifyOtherKeys 状態を要求する
+			    CSI >4;2m	modifyOtherKeys を有効にする
+			    CSI ?4m	modifyOtherKeys の状態を要求する
 
 		kitty	t_TE 値は次のように変更される:
 			    CSI >4;m	modifyOtherKeys を無効にする
