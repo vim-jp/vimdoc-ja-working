@@ -2835,7 +2835,7 @@ flattennew({list} [, {maxdepth}])			*flattennew()*
 float2nr({expr})					*float2nr()*
 		{expr} の小数点以下を切り捨てて |Number| に変換する。
 		{expr} は |Float| または |Number| に評価されなければならない。
-		{expr} が |Float| または |Number| でない場合は 0.0 を返す。
+		{expr} が |Float| または |Number| でない場合は 0 を返す。
 		{expr} の値が |Number| の範囲外の場合、結果は 0x7fffffff また
 		は -0x7fffffff になる(64ビット数値が有効化されている場合は
 		0x7fffffffffffffff または -0x7fffffffffffffff)。
