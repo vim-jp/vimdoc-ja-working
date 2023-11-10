@@ -5647,7 +5647,7 @@ maparg({name} [, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 		  "nowait"	他の長いマッピングを待たない。
 				(|:map-<nowait>|)。
 		  "abbr"     これが短縮入力 |abbreviations| の場合は True。
-		  "mode_bits" Vim の内部バイナリ表現の "mode"。|maplist()| は
+		  "mode_bits" "mode" の Vim の内部バイナリ表現。|maplist()| は
 			     これを無視する。"mode" のみが使用される。使用例に
 			     ついては、|maplist()| を参照。値は src/vim.h から
 			     のもので、将来変更される可能性がある。
