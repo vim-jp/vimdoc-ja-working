@@ -1451,19 +1451,19 @@ g:termdebug_config がない場合は、以下を使用できます: >
 マッピング ~
 					*termdebug_map_K* *termdebug-mappings*
 K へのバッファローカル (|:map-local|) マッピングがすでに存在している場合を除
-き、K キーは通常 |:Evaluate| にマップされます。これが不要な場合は: >
+き、K キーは通常 |:Evaluate| にマップされています。これが不要な場合は: >
 	let g:termdebug_config['map_K'] = 0
 g:termdebug_config がない場合は、以下を使用できます: >
 	let g:termdebug_map_K = 0
 <
 						*termdebug_map_minus*
 - へのバッファローカルマッピングがすでに存在している場合を除き、- は通常
-|:Down| にマッピングされています。これが不要な場合は: >
+|:Down| にマップされています。これが不要な場合は: >
 	let g:termdebug_config['map_minus'] = 0
 <
 						*termdebug_map_plus*
 + へのバッファローカルマッピングがすでに存在している場合を除き、+ は通常 |:Up|
-にマッピングされています。これが不要な場合は: >
+にマップされています。これが不要な場合は: >
 	let g:termdebug_config['map_plus'] = 0
 <
 						*termdebug_disasm_window*
