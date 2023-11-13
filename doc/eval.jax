@@ -4668,8 +4668,8 @@ Vim には、ランタイムやスクリプト作成者が使用できる Vim sc
 バージョンおよび Neovim で使用される) も使用できる。
 
 							*dist#vim* *dist#vim9*
-関数は、自動ロードされたプリフィックス "dist#vim" (旧来の Vim script およ
-び Neovim の場合) と、Vim9 script の場合 "dist#vim9" を使用する。
+関数は、オートロードされたプリフィックス "dist#vim" (旧来の Vim script および
+Neovim の場合) と、Vim9 script の場合 "dist#vim9" を使用する。
 
 以下の関数が使用可能:
 
