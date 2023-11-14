@@ -945,7 +945,6 @@ ClassName() メソッドはなく、ClassName というクラス内の別名の�
 
 Vim9class のアクセスモード ~
 						    *vim9-access-modes*
-The variable access modes, and their meaning, supported by Vim9class are
 Vim9class でサポートされる変数アクセスモードとその意味は、
 	|public-variable|	どこからでも読み書きできる
 	|read-only-variable|	どこからでも読み取れ、クラスおよびサブクラス内
