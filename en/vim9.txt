@@ -1488,7 +1488,7 @@ func({type})			function with argument type, does not return
 func({type}): {type}		function with argument type and return type
 func(?{type})			function with type of optional argument, does
 				not return a value
-(...list<{type}>)		function with type of list for variable number
+func(...list<{type}>)		function with type of list for variable number
 				of arguments, does not return a value
 func({type}, ?{type}, ...list<{type}>): {type}
 				function with:
