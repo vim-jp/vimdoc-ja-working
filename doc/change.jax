@@ -624,7 +624,7 @@ MS-Windows ではシステム関数 GetTempFileName() が使われる。
 			と、現在行から開始する。
 							*E939* *E1510*
 			[count] は正の数でなければならない (最大 2147483647)。
-			|cmdline-ranges|も参照。
+			|cmdline-ranges| も参照。
 
 			[flag] については |:s_flags| を参照。
 			デリミタは / である必要はない。|pattern-delimiter| を
