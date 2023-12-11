@@ -1,4 +1,4 @@
-*change.txt*    For Vim バージョン 9.0.  Last change: 2023 Nov 15
+*change.txt*    For Vim バージョン 9.0.  Last change: 2023 Dec 08
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -436,7 +436,7 @@ CTRL-X を使うと "0x0ff" となる。
 Note: 'nrformats' が "octal" を含んでいるとき、0で始まる10進数は、8進数と区別
 しづらいため、意図しない結果になる可能性がある。
 
-Note: 'nrformats' が "bin" を含んでいるとき、'0x' または '0X' で始まる2進数は
+Note: 'nrformats' が "bin" を含んでいるとき、'0b' または '0B' で始まる2進数は
 16進数として解釈される。これは '0b' が16進数の桁として有効だからである。
 {訳注: 0x0b0011 のような値のこと。}
 
