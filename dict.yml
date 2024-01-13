@@ -271,8 +271,10 @@ Vim9 script:
 挿入モード:
   - インサートモード
 
-置換モード:
-  - 上書きモード
+# インサートモードの Overstrike mode は "上書きモード" が妥当なため、以下の表記ゆれ記載をコメントにする。・
+# (https://github.com/vim-jp/vimdoc-ja-working/pull/1387#issuecomment-1833512419)
+#置換モード:
+#  - 上書きモード
 
 仮想置換モード:
   - Virtual上書き
