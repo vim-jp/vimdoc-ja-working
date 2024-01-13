@@ -736,8 +736,9 @@ Doループ ~
 プログラム単位 ~
 プログラム単位 (サブルーチン、関数、モジュール、プログラムブロック) のインデン
 トは、変数 fortran_indent_more を設定すると増やすことができ、変数
-fortran_indent_less を設定すると減らすことができる。これらの変数は、すべての
-fortran ファイルに対して .vimrc 内に以下のように設定することができる >
+fortran_indent_less を設定すると減らすことができる。これらの変数は、.vimrc 内
+に以下のように設定することで、すべての fortran ファイルに対して設定することが
+できる >
 
   let fortran_indent_less=1
 
