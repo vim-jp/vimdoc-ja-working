@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim version 9.1.  Last change: 2023 Nov 20
+*builtin.txt*	For Vim version 9.1.  Last change: 2024 Jan 25
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -198,6 +198,8 @@ foldclosedend({lnum})		Number	last line of fold at {lnum} if closed
 foldlevel({lnum})		Number	fold level at {lnum}
 foldtext()			String	line displayed for closed fold
 foldtextresult({lnum})		String	text for closed fold at {lnum}
+foreach({expr1}, {expr2})	List/Dict/Blob/String
+					for each item in {expr1} call {expr2}
 foreground()			Number	bring the Vim window to the foreground
 fullcommand({name} [, {vim9}])	String	get full command from {name}
 funcref({name} [, {arglist}] [, {dict}])
@@ -370,6 +372,8 @@ matchadd({group}, {pattern} [, {priority} [, {id} [, {dict}]]])
 matchaddpos({group}, {pos} [, {priority} [, {id} [, {dict}]]])
 				Number	highlight positions with {group}
 matcharg({nr})			List	arguments of |:match|
+matchbufline({buf}, {pat}, {lnum}, {end}, [, {dict})
+				List	all the {pat} matches in buffer {buf}
 matchdelete({id} [, {win}])	Number	delete match identified by {id}
 matchend({expr}, {pat} [, {start} [, {count}]])
 				Number	position where {pat} ends in {expr}
@@ -381,6 +385,8 @@ matchlist({expr}, {pat} [, {start} [, {count}]])
 				List	match and submatches of {pat} in {expr}
 matchstr({expr}, {pat} [, {start} [, {count}]])
 				String	{count}'th match of {pat} in {expr}
+matchstrlist({list}, {pat} [, {dict})
+				List	all the {pat} matches in {list}
 matchstrpos({expr}, {pat} [, {start} [, {count}]])
 				List	{count}'th match of {pat} in {expr}
 max({expr})			Number	maximum value of items in {expr}
@@ -2991,6 +2997,45 @@ foldtextresult({lnum})					*foldtextresult()*
 
 		Can also be used as a |method|: >
 			GetLnum()->foldtextresult()
+
+foreach({expr1}, {expr2})					*foreach()*
+		{expr1} must be a |List|, |String|, |Blob| or |Dictionary|.
+		For each item in {expr1} execute {expr2}. {expr1} is not
+		modified; its values may be, as with |:lockvar| 1. |E741|
+		See |map()| and |filter()| to modify {expr1}.
+
+		{expr2} must be a |string| or |Funcref|.
+
+		If {expr2} is a |string|, inside {expr2} |v:val| has the value
+		of the current item.  For a |Dictionary| |v:key| has the key
+		of the current item and for a |List| |v:key| has the index of
+		the current item.  For a |Blob| |v:key| has the index of the
+		current byte. For a |String| |v:key| has the index of the
+		current character.
+		Examples: >
+			call foreach(mylist, 'used[v:val] = true')
+<		This records the items that are in the {expr1} list.
+
+		Note that {expr2} is the result of expression and is then used
+		as a command.  Often it is good to use a |literal-string| to
+		avoid having to double backslashes.
+
+		If {expr2} is a |Funcref| it must take two arguments:
+			1. the key or the index of the current item.
+			2. the value of the current item.
+		With a legacy script lambda you don't get an error if it only
+		accepts one argument, but with a Vim9 lambda you get "E1106:
+		One argument too many", the number of arguments must match.
+		If the function returns a value, it is ignored.
+
+		Returns {expr1} in all cases.
+		When an error is encountered while executing {expr2} no
+		further items in {expr1} are processed.
+		When {expr2} is a Funcref errors inside a function are ignored,
+		unless it was defined with the "abort" flag.
+
+		Can also be used as a |method|: >
+			mylist->foreach(expr2)
 <
 							*foreground()*
 foreground()	Move the Vim window to the foreground.  Useful when sent from
@@ -3199,6 +3244,8 @@ getbufinfo([{dict}])
 			bufnr		Buffer number.
 			changed		TRUE if the buffer is modified.
 			changedtick	Number of changes made to the buffer.
+			command		TRUE if the buffer belongs to the
+					command-line window |cmdwin|.
 			hidden		TRUE if the buffer is hidden.
 			lastused	Timestamp in seconds, like
 					|localtime()|, when the buffer was
@@ -3423,7 +3470,7 @@ getcharmod()						*getcharmod()*
 			32	mouse double click
 			64	mouse triple click
 			96	mouse quadruple click (== 32 + 64)
-			128	command (Macintosh only)
+			128	command (Mac) or super (GTK)
 		Only the modifiers that have not been included in the
 		character itself are obtained.  Thus Shift-a results in "A"
 		without a modifier.  Returns 0 if no modifiers are used.
@@ -3566,6 +3613,7 @@ getcompletion({pat}, {type} [, {filtered}])		*getcompletion()*
 		help		help subjects
 		highlight	highlight groups
 		history		|:history| suboptions
+		keymap		keyboard mappings
 		locale		locale names (as output of locale -a)
 		mapclear	buffer argument
 		mapping		mapping name
@@ -5163,8 +5211,12 @@ items({dict})						*items()*
 			for [key, value] in items(mydict)
 			   echo key .. ': ' .. value
 			endfor
+<
+		A List or a String argument is also supported.  In these
+		cases, items() returns a List with the index and the value at
+		the index.
 
-<		Can also be used as a |method|: >
+		Can also be used as a |method|: >
 			mydict->items()
 
 job_ functions are documented here: |job-functions-details|
@@ -6050,6 +6102,51 @@ matcharg({nr})							*matcharg()*
 
 		Can also be used as a |method|: >
 			GetMatch()->matcharg()
+<
+							*matchbufline()*
+matchbufline({buf}, {pat}, {lnum}, {end}, [, {dict}])
+		Returns the |List| of matches in lines from {lnum} to {end} in
+		buffer {buf} where {pat} matches.
+
+		{lnum} and {end} can either be a line number or the string "$"
+		to refer to the last line in {buf}.
+
+		The {dict} argument supports following items:
+		    submatches	include submatch information (|/\(|)
+
+		For each match, a |Dict| with the following items is returned:
+		    byteidx	starting byte index of the match
+		    lnum	line number where there is a match
+		    text	matched string
+		Note that there can be multiple matches in a single line.
+
+		This function works only for loaded buffers. First call
+		|bufload()| if needed.
+
+		When {buf} is not a valid buffer, the buffer is not loaded or
+		{lnum} or {end} is not valid then an error is given and an
+		empty |List| is returned.
+
+		Examples: >
+		    " Assuming line 3 in buffer 5 contains "a"
+		    :echo matchbufline(5, '\<\k\+\>', 3, 3)
+		    [{'lnum': 3, 'byteidx': 0, 'text': 'a'}]
+		    " Assuming line 4 in buffer 10 contains "tik tok"
+		    :echo matchbufline(10, '\<\k\+\>', 1, 4)
+		    [{'lnum': 4, 'byteidx': 0, 'text': 'tik'}, {'lnum': 4, 'byteidx': 4, 'text': 'tok'}]
+<
+		If {submatch} is present and is v:true, then submatches like
+		"\1", "\2", etc. are also returned.  Example: >
+		    " Assuming line 2 in buffer 2 contains "acd"
+		    :echo matchbufline(2, '\(a\)\?\(b\)\?\(c\)\?\(.*\)', 2, 2
+						\ {'submatches': v:true})
+		    [{'lnum': 2, 'byteidx': 0, 'text': 'acd', 'submatches': ['a', '', 'c', 'd', '', '', '', '', '']}]
+<		The "submatches" List always contains 9 items.  If a submatch
+		is not found, then an empty string is returned for that
+		submatch.
+
+		Can also be used as a |method|: >
+			GetBuffer()->matchbufline('mypat', 1, '$')
 
 matchdelete({id} [, {win})		       *matchdelete()* *E802* *E803*
 		Deletes a match with ID {id} previously defined by |matchadd()|
@@ -6183,6 +6280,40 @@ matchlist({expr}, {pat} [, {start} [, {count}]])		*matchlist()*
 
 		Can also be used as a |method|: >
 			GetText()->matchlist('word')
+<
+						*matchstrlist()*
+matchstrlist({list}, {pat} [, {dict}])
+		Returns the |List| of matches in {list} where {pat} matches.
+		{list} is a |List| of strings.  {pat} is matched against each
+		string in {list}.
+
+		The {dict} argument supports following items:
+		    submatches	include submatch information (|/\(|)
+
+		For each match, a |Dict| with the following items is returned:
+		    byteidx	starting byte index of the match.
+		    idx		index in {list} of the match.
+		    text	matched string
+		    submatches	a List of submatches.  Present only if
+				"submatches" is set to v:true in {dict}.
+
+		Example: >
+		    :echo matchstrlist(['tik tok'], '\<\k\+\>')
+		    [{'idx': 0, 'byteidx': 0, 'text': 'tik'}, {'idx': 0, 'byteidx': 4, 'text': 'tok'}]
+		    :echo matchstrlist(['a', 'b'], '\<\k\+\>')
+		    [{'idx': 0, 'byteidx': 0, 'text': 'a'}, {'idx': 1, 'byteidx': 0, 'text': 'b'}]
+<
+		If "submatches" is present and is v:true, then submatches like
+		"\1", "\2", etc. are also returned.  Example: >
+		    :echo matchstrlist(['acd'], '\(a\)\?\(b\)\?\(c\)\?\(.*\)',
+						\ #{submatches: v:true})
+		    [{'idx': 0, 'byteidx': 0, 'text': 'acd', 'submatches': ['a', '', 'c', 'd', '', '', '', '', '']}]
+<		The "submatches" List always contains 9 items.  If a submatch
+		is not found, then an empty string is returned for that
+		submatch.
+
+		Can also be used as a |method|: >
+			GetListOfStrings()->matchstrlist('mypat')
 
 matchstr({expr}, {pat} [, {start} [, {count}]])			*matchstr()*
 		Same as |match()|, but return the matched string.  Example: >
@@ -6688,9 +6819,9 @@ printf({fmt}, {expr1} ...)				*printf()*
 <		This limits the length of the text used from "line" to
 		"width" bytes.
 
-		If the argument to be formatted is specified using a posional
-		argument specifier, and a '*' is used to indicate that a
-		number argument is to be used to specify the width or
+		If the argument to be formatted is specified using a
+		positional argument specifier, and a '*' is used to indicate
+		that a number argument is to be used to specify the width or
 		precision, the argument(s) to be used must also be specified
 		using a {n$} positional argument specifier. See |printf-$|.
 
@@ -7300,9 +7431,9 @@ reltime({start}, {end})					*reltime()*
 			echo startTime->reltime()->reltimestr()
 <
 		Without an argument reltime() returns the current time (the
-		representation is system-dependent, it can not be used as the
+		representation is system-dependent, it cannot be used as the
 		wall-clock time, see |localtime()| for that).
-		With one argument is returns the time passed since the time
+		With one argument it returns the time passed since the time
 		specified in the argument.
 		With two arguments it returns the time passed between {start}
 		and {end}.
@@ -10181,6 +10312,7 @@ type({expr})	The result is a Number representing the type of {expr}.
 			Blob:	   10  |v:t_blob|
 			Class:	   12  |v:t_class|
 			Object:	   13  |v:t_object|
+			Typealias: 14  |v:t_typealias|
 		For backward compatibility, this method can be used: >
 			:if type(myvar) == type(0)
 			:if type(myvar) == type("")
