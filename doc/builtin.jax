@@ -3005,8 +3005,8 @@ foldtextresult({lnum})					*foldtextresult()*
 			GetLnum()->foldtextresult()
 
 foreach({expr1}, {expr2})					*foreach()*
-		{expr1} は |List|, |String|, |Blob| または |Dyowictionary| で
-		なければならない。
+		{expr1} は |List|, |String|, |Blob| または |Dictionary| でなけ
+		ればならない。
 		{expr1} の各項目に対して {expr2} を実行する。{expr1} は変更さ
 		れない。その値は |:lockvar| 1 と同様に変更されるかもしれない。
 		|E741|
@@ -3014,9 +3014,10 @@ foreach({expr1}, {expr2})					*foreach()*
 
 		{expr2} は |string| か |Funcref| でなければならない。
 
-		{expr2}が |string| の場合、{expr2} 内では |v:val| は現在の項目
-		の値を持つ。|Dictionary| の場合、|v:key| は現在の項目のキーを
-		持ち、|List| の場合、|v:key| は現在の項目のインデックスを持つ。
+		{expr2} が |string| の場合、{expr2} 内では |v:val| は現在の項
+		目の値を持つ。|Dictionary| の場合、|v:key| は現在の項目のキー
+		を持ち、|List| の場合、|v:key| は現在の項目のインデックスを持
+		つ。
 		|Blob| の場合、|v:key| は現在のバイトインデックスを持つ。
 		|String| の場合、|v:key| は現在の文字インデックスを持つ。
 
