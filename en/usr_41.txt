@@ -1,4 +1,4 @@
-*usr_41.txt*	For Vim version 9.1.  Last change: 2023 May 06
+*usr_41.txt*	For Vim version 9.1.  Last change: 2024 Jan 13
 
 		     VIM USER MANUAL - by Bram Moolenaar
 
@@ -743,10 +743,13 @@ String manipulation:					*string-functions*
 	toupper()		turn a string to uppercase
 	charclass()		class of a character
 	match()			position where a pattern matches in a string
+	matchbufline()		all the matches of a pattern in a buffer
 	matchend()		position where a pattern match ends in a string
 	matchfuzzy()		fuzzy matches a string in a list of strings
 	matchfuzzypos()		fuzzy matches a string in a list of strings
 	matchstr()		match of a pattern in a string
+	matchstrlist()		all the matches of a pattern in a List of
+				strings
 	matchstrpos()		match and positions of a pattern in a string
 	matchlist()		like matchstr() and also return submatches
 	stridx()		first index of a short string in a long string
@@ -795,6 +798,7 @@ List manipulation:					*list-functions*
 	filter()		remove selected items from a List
 	map()			change each List item
 	mapnew()		make a new List with changed items
+	foreach()		apply function to List items
 	reduce()		reduce a List to a value
 	slice()			take a slice of a List
 	sort()			sort a List
@@ -826,6 +830,7 @@ Dictionary manipulation:				*dict-functions*
 	filter()		remove selected entries from a Dictionary
 	map()			change each Dictionary entry
 	mapnew()		make a new Dictionary with changed items
+	foreach()		apply function to Dictionary items
 	keys()			get List of Dictionary keys
 	values()		get List of Dictionary values
 	items()			get List of Dictionary key-value pairs
