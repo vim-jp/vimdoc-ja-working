@@ -2533,9 +2533,9 @@ v:termrbgresp	termcapのエントリ |t_RS| で端末から返されるエスケ
 
 						*v:termrfgresp*
 v:termrfgresp	termcapのエントリ |t_RF| で端末から返されるエスケープシーケン
-		ス。端末の文字色を調べるために使用される。このオプションが
-		セットされているとき、<amatch> に "foreground" がセットさ
-		れた状態で自動コマンドイベント TermResponseAll が発生する。
+		ス。端末の文字色を調べるために使用される。このオプションがセッ
+		トされているとき、<amatch> に "foreground" がセットされた状態
+		で自動コマンドイベント TermResponseAll が発生する。
 
 						*v:termu7resp*
 v:termu7resp	termcapのエントリ |t_u7| で端末から返されるエスケープシーケン
