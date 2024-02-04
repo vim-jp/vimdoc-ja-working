@@ -33,7 +33,7 @@ jobs:
           bash work/tools/script/get_doc_info.sh
           echo Update ${{ steps.current-time.outputs.ISOTime }} >> doc_info.md
       - name: Create or Update issue
-        uses: peter-evans/create-issue-from-file@v4
+        uses: peter-evans/create-issue-from-file@v5
         with:
           title: 'Vim help : number of untranslated lines diff status'
           content-filepath: ./doc_info.md
