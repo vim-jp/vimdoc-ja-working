@@ -701,7 +701,7 @@ Clojure のいくつかのフォームは、'lispwords' に依らず、すべて
 <
 FORTRAN							*ft-fortran-indent*
 
-Block if、select case、select type、select Rank、where、forall、type、
+ブロック if、select case、select type、select Rank、where、forall、type、
 interface、associate、block、enum、critical、および change team 構造はインデン
 トされる。サブルーチン、関数、モジュール、プログラムブロックのインデントは任
 意。コメント、ラベル付き文、そして 2 行にまたがった行は、Fortran が自由形式の
