@@ -1,6 +1,6 @@
 FROM golang:1.18.5-alpine3.16
 
-ENV REVIEWDOG_VERSION=v0.17.0
+ENV REVIEWDOG_VERSION=v0.17.1
 
 # hadolint ignore=DL3006
 RUN apk --no-cache add git
