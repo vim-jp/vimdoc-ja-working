@@ -304,8 +304,7 @@ Note 関数の辞書へのバインドは、その関数が辞書のメンバー
 	:let mylist += [7, 8]
 	:call extend(mylist, [7, 8])
 <
-リストをその場で (in-place) 変更する他の方法については |list-modification| を
-参照。
+リストをその場で変更する他の方法については |list-modification| を参照。
 
 
 部分リスト ~
@@ -421,8 +420,8 @@ Note リストの比較について注意: 2つのリストは、同じ長さを
 	:let listA = [1, 2]
 	:let listA += [3, 4]
 <
-2 つのリストが同じリストを参照している時は、片方のリストをその場で (in-place)
-変更すると、他方のリストもその場で (in-place) 変更される: >
+2 つのリストが同じリストを参照している時は、片方のリストをその場で変更すると、
+他方のリストもその場で変更される: >
 	:let listA = [1, 2]
 	:let listB = listA
 	:let listB += [3, 4]
@@ -797,8 +796,8 @@ Blob に要素をその場で (in-place) 追加するには、|:let+=| (|blob-co
 	:let blobA = 0z1122
 	:let blobA += 0z3344
 <
-2 つの Blob が同じ Blob を参照している時は、片方の Blob をその場で (in-place)
-変更すると、他方の Blob もその場で (in-place) 変更される: >
+2 つの Blob が同じ Blob を参照している時は、片方の Blob をその場で変更すると、
+他方の Blob もその場で変更される: >
 	:let blobA = 0z1122
 	:let blobB = blobA
 	:let blobB += 0z3344
