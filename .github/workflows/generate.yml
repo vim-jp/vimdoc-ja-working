@@ -28,7 +28,7 @@ jobs:
           repository: 'vim-jp/vimdoc-ja'
           ssh-key: ${{ secrets.VIMDOC_JA_SSH_KEY }}
       - name: Setup Vim
-        uses: thinca/action-setup-vim@v1
+        uses: thinca/action-setup-vim@v2
         with:
           vim_version: 'v9.1.0065'
           vim_type: 'Vim'
@@ -86,7 +86,7 @@ jobs:
           ssh-key: ${{ secrets.VIMDOC_JA_SSH_KEY }}
           ref: gh-pages
       - name: Setup Vim
-        uses: thinca/action-setup-vim@v1
+        uses: thinca/action-setup-vim@v2
         with:
           vim_version: 'v9.1.0065'
           vim_type: 'Vim'
