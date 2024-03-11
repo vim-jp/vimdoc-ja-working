@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 9.1.  Last change: 2024 Mar 06
+*options.txt*	For Vim バージョン 9.1.  Last change: 2024 Mar 11
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -363,6 +363,7 @@ Note: 以下は |global-local| オプションにも適用される。
 	オプション	理由	~
 	'previewwindow'	1つしか存在できない
 	'scroll'	既存のウィンドウに固有のもの
+	'winfixbuf'	既存のウィンドウに固有のもの
 	'winfixheight'	既存のウィンドウに固有のもの
 	'winfixwidth'	既存のウィンドウに固有のもの
 
@@ -9508,12 +9509,11 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 						*'winfixbuf'*
 'winfixbuf' 'wfb'	切替	(既定ではオフ)
 			ウィンドウについてローカル
-	有効にすると、バッファとそれを表示するウィンドウがペアになる。
+	有効にすると、ウィンドウとそれが表示しているバッファがペアになる。
 	例えば、|:edit| を使用してバッファを変更しようとすると失敗する。
 	ウィンドウのバッファを変更する |:cnext| のような他のコマンドも
-	'winfixbuf' が有効なウィンドウをスキップする。ただし、コマンドに "!"
-	オプションが含まれている場合は、ウィンドウのバッファを強制的に切り替え
-	ることができる。
+	'winfixbuf' が有効なウィンドウをスキップする。ただし、Ex コマンドに
+	"!" 修飾子がある場合は、バッファを強制的に切り替えることができる。
 
 			*'winfixheight'* *'wfh'* *'nowinfixheight'* *'nowfh'*
 'winfixheight' 'wfh'	切替	(既定ではオフ)
