@@ -41565,7 +41565,7 @@ vim9 オブジェクトによる内部組み込み関数のサポートを追加
 
 自動コマンド: ~
 
-|SessionWritePost|	セッションファイルを書いた後 |:mksession|
+|SessionWritePost|	セッションファイルを書き込んだ後 |:mksession|
 |TermResponseAll|	't_RV' 等に対する端末応答を受信した後
 |WinNewPre|		新しいウィンドウを作成する前
 
