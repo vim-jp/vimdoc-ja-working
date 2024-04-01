@@ -424,7 +424,7 @@ Python/Lua/Perl/Tcl/Ruby/MzScheme インターフェイスの heredoc で 'trim'
 明確な8進数の記法として "0o" を追加。|scriptversion-4|
 
 "tcd -" および "lcd -" を使用してタブローカルおよびウィンドウローカルでの直前
-のディレクトリに変更するのをサポート。(|:tcd-| and |:lcd-|)
+のディレクトリに変更するのをサポート。(|:tcd-| および |:lcd-|)
 
 |search()| の使用でスキップする式のサポートを追加。
 
@@ -41550,8 +41550,8 @@ Vim9 script の列挙型サポート |:enum|
 
 - ページ単位のスクロールの CTRL-F および CTRL-B には 'smoothscroll' ロジックを
   使用します。
-- 半ページ単位のスクロールの CTRL-D and CTRL-U には 'smoothscroll' ロジックを
-  使用します。
+- 半ページ単位のスクロールの CTRL-D および CTRL-U には 'smoothscroll' ロジック
+  を使用します。
 
 
 追加要素					*added-9.2*
