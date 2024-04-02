@@ -2105,7 +2105,7 @@ diff({fromlist}, {tolist} [, {options}])		*diff()*
 					書。サポートされている真偽値項目は
 					"myers", "minimal", "patience",
 					"histogram"。
-		    context		diff context の長さ。デフォルトは 0 。
+		    context		diff context の長さ。デフォルトは 0。
 		    iblank		行がすべて空白の変更は無視する。
 		    icase		テキストの大小文字の変更を無視する。
 		    indent-heuristic	内部 diff ライブラリのインデントヒュー
