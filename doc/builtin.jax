@@ -9371,8 +9371,8 @@ string({expr})	{expr}を文字列に変換して返す。{expr}が数値、浮�
 			Blob		0z00112233.44556677.8899
 			リスト		[item, item]
 			辞書		{key: value, key: value}
-			クラス		クラス SomeName
-			オブジェクト	オブジェクト SomeName {lnum: 1, col: 3}
+			クラス		class SomeName
+			オブジェクト	object of SomeName {lnum: 1, col: 3}
 			列挙型		enum EnumName
 			列挙値		enum name.value {name: str, ordinal: nr}
 
