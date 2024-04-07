@@ -1806,8 +1806,8 @@ confirm({msg} [, {choices} [, {default} [, {type}]]])
 		confirm()はユーザーに選択させるためのダイアログを提供する。戻
 		り値は選択した番号になる。最初の選択肢が1である。
 		Note: confirm()は、ダイアログサポートを有効にしてコンパイルし
-		た時にだけ動作する。|+dialog_con|, |+dialog_con_gui|
-		と|+dialog_gui|を参照。
+		た時にだけ動作する。|+dialog_con|, |+dialog_con_gui| と
+		|+dialog_gui| を参照。
 
 		ダイアログには{msg}に加えて{choices}の選択肢が表示される。
 		{choices}が指定されない、または空の場合は選択肢 "&OK" が表示さ
