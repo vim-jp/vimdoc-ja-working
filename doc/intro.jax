@@ -132,8 +132,8 @@ http://www.vim.org/maillist.php
    これはメーリングリストです。最初にメンバーになる必要があります。たくさんの
    人がそのメッセージを見ます。もしセキュリティ上の問題などの理由でそれを望ま
    ないのであれば、電子メールアドレス <vim-security@googlegroups.com> で現在の
-   Vim メンテナに連絡するか、Github でセキュリティアドバイザリを作成してくださ
-   い:
+   Vim メンテナーに連絡するか、Github でセキュリティアドバイザリを作成してくだ
+   さい:
    https://github.com/vim/vim/security/advisories
 
 メッセージは簡潔にお願いします。メールに回答する時間は、Vim を改良する時間から
