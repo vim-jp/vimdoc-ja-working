@@ -133,8 +133,7 @@ http://www.vim.org/maillist.php
    人がそのメッセージを見ます。もしセキュリティ上の問題などの理由でそれを望ま
    ないのであれば、電子メールアドレス <vim-security@googlegroups.com> で現在の
    Vim メンテナーに連絡するか、Github でセキュリティアドバイザリを作成してくだ
-   さい:
-   https://github.com/vim/vim/security/advisories
+   さい: https://github.com/vim/vim/security/advisories
 
 メッセージは簡潔にお願いします。メールに回答する時間は、Vim を改良する時間から
 消費されています! 常に再現可能な例をつけてください。そして、バグを引き起こす設
