@@ -1610,7 +1610,7 @@ NAG, PathScale コンパイラ(.f, .for, 固定形式の .f77, .f90, .f95, .f03,
 下のようなコマンドで変数 fortran_extended_line_length を設定すると、さらに長い
 132 文字の行長が許可される >
     :let fortran_extended_line_length=1
-コマンドの :syntax の前に置かれます。
+コマンドの :syntax の前に置かれる。
 
 CUDA Fortran 拡張をさらにハイライトしたい場合は、以下のようなコマンドで変数
 fortran_CUDA を設定する必要がある >
