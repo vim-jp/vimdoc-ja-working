@@ -2230,7 +2230,7 @@ Vim は方言タグを持つコメントを認識し、特定の方言を自動�
 *modula2_pim_disallow_octals*	8 進数リテラルを禁止する
 *modula2_pim_disallow_synonyms*	"&" および "~" の同義語を禁止する
 
-*modula2_r10_allow_lowline*	識別子の行数を減らす
+*modula2_r10_allow_lowline*	識別子内のアンダースコアを許可する
 
 MOO						*moo.vim* *ft-moo-syntax*
 
