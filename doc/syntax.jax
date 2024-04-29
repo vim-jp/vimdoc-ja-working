@@ -2222,7 +2222,7 @@ Vim は方言タグを持つコメントを認識し、特定の方言を自動�
 ハイライトは、以下の変数を使用して方言ごとにさらに構成できる。
 
 変数				ハイライト ~
-*modula2_iso_allow_lowline*	識別子の行数を減らす
+*modula2_iso_allow_lowline*	識別子内のアンダースコアを許可する
 *modula2_iso_disallow_octals*	8 進数リテラルを禁止する
 *modula2_iso_disallow_synonyms*	"@", "&" および "~" の同義語を禁止する
 
