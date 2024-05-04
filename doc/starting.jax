@@ -790,8 +790,8 @@ Evimでは以下のオプションが標準設定から変更される:
 	して、"vimrc" はVim特有のものである。|vimrc-intro|も参照。
 
 	個人の初期化ファイルの配置場所:
-		Unix		$HOME/.vimrc、$HOME/.vim/vimrc
-                                or $XDG_CONFIG_HOME/vim/vimrc
+		Unix		$HOME/.vimrc、$HOME/.vim/vimrc、
+                                $XDG_CONFIG_HOME/vim/vimrc
 		MS-Windows	$HOME/_vimrc、$HOME/vimfiles/vimrc、
 				$VIM/_vimrc
 		Amiga		s:.vimrc、home:.vimrc、home:vimfiles:vimrc、
