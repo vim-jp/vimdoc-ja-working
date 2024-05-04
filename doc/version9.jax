@@ -41546,7 +41546,7 @@ Vim9 script の列挙型サポート |:enum|
 
 その他の改良点					*new-other-9.2*
 --------------
-コメントプラグイン |comment-install| が含まれている。
+コメントプラグイン |comment-install| を同梱。
 
 変更点						*changed-9.2*
 ------
