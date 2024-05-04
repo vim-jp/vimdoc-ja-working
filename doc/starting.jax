@@ -1,4 +1,4 @@
-*starting.txt*  For Vim バージョン 9.1.  Last change: 2024 Apr 21
+*starting.txt*  For Vim バージョン 9.1.  Last change: 2024 May 02
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1085,8 +1085,8 @@ Unix システムの Vim は、その構成について `$XDG_CONFIG_HOME/vim/vi
 `~/.vimrc` および `~/.vim/vimrc` ファイルを移動する必要がある。
 
 							*xdg-runtime*
-|xdg-vimrc| が使用される場合、|'runtimepath'| はそれに応じて変更され、
-|xdg-base-dir| を尊重する: >
+|xdg-vimrc| が使用される場合、'runtimepath' および 'packpath' オプションはそれ
+に応じて変更され、|xdg-base-dir| を尊重する: >
 
     "$XDG_CONFIG_HOME/vim,$VIMRUNTIME,/after,$XDG_CONFIG_HOME/vim/after"
 <
