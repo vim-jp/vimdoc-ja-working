@@ -455,7 +455,7 @@ quickfixリストとlocationリストの中の項目の数をそれぞれ |getqf
 	echo getqflist({'efm' : '%f#%l#%m', 'lines' : ['F1#10#Line']})
 <
 
-☆quickfixリストやlocationリスト中のバッファに対してコマンドを実行:
+☆quickfix または location リスト中のバッファに対してコマンドを実行:
 							*:cdo*
 :cdo[!] {cmd}		quickfix リスト中の有効な各項目に対して {cmd} を実行す
 			る。以下の操作と同様に動作する: >
