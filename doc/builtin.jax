@@ -9738,9 +9738,9 @@ synconcealed({lnum}, {col})				*synconcealed()*
 			synconcealed(lnum, 5)   [1, 'X', 2]
 			synconcealed(lnum, 6)   [0, '', 0]
 
-		Note: 構文とマッチのハイライトは |syntax-vs-match| という 2 つ
-		の異なるメカニズムであるため、項目をハイライトする
-		|matchadd()| は考慮されない。
+		Note: 構文とマッチのハイライトは、2 つの異なるメカニズム
+		|syntax-vs-match| であるため、項目をハイライトする |matchadd()|
+		は考慮されない。
 
 
 synstack({lnum}, {col})					*synstack()*
