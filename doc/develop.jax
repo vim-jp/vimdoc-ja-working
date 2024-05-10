@@ -167,7 +167,7 @@ Vimのソースコードに変更を加える際、守るべきルールがあ�
 このリストは完全ではない。より多くの例は、ソースコードを見て欲しい。
 
 
-MAKING CHANGES						*style-changes*
+☆変更する						*style-changes*
 
 コードに変更を加える基本的なステップは:
 1. GitHub からコードを取得する。これによりあなたが変更したコードをメインのコー
@@ -186,7 +186,7 @@ MAKING CHANGES						*style-changes*
    るか GitHub でプルリクエストを作成する。
 
 
-C COMPILER				*style-compiler* *ANSI-C* *C89* *C99*
+☆Cコンパイラ				*style-compiler* *ANSI-C* *C89* *C99*
 
 サポートされている最小の C コンパイラのバージョンは C89 (ANSI C とも呼ばれてい
 る) である。C99 のような後継の標準規格はあまり普及していない、もしくは少なくと
@@ -240,7 +240,7 @@ for ループ変数のループ内宣言を推奨する:
   Marriott)
 
 
-USE OF COMMON FUNCTIONS					*style-functions*
+☆共通関数を使う					*style-functions*
 
 よく使われる関数のうち、特別なVimバージョンを持つものがある。これらは理由あっ
 て導入されたものなので、常にVimバージョンを使うように意識すること。
@@ -259,7 +259,7 @@ bcopy()		mch_memmove()	オーバーラップしたコピーを扱う
 memset()	vim_memset()	全てのシステムで一定である
 
 
-NAMES							*style-names*
+☆名前							*style-names*
 
 関数の名前に31文字より長い名前は使えない。(VMSのために)
 
@@ -312,7 +312,7 @@ dirname()	GNU 文字列関数(GNU string function)
 get_env_value()	Linux システム関数
 
 
-VARIOUS							*style-various*
+☆その他						*style-various*
 
 型の定義に使う名前は最後を "_T" にする: >
     typedef int some_T;
@@ -332,7 +332,7 @@ VARIOUS							*style-various*
     #if defined(HAVE_SOME)
 
 
-STYLE							*style-examples*
+☆スタイル						*style-examples*
 
 一般的なルール: １行に１つのステートメント。
 
@@ -411,7 +411,7 @@ OK:	/*
 
 
 
-SPACES AND PUNCTUATION					*style-spaces*
+☆空白と区切り						*style-spaces*
 
 関数名とブラケットの間にスペースを入れないこと:
 
