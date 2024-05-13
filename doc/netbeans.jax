@@ -77,9 +77,8 @@ NetBeans は、Sun Microsystems, Inc. と netbeans.org の開発者コミュニ�
 したが、今では C, C++, Fortran もサポートするようになっています。
 
 NetBeans に関してより詳しくは http://www.netbeans.org を参照してください。
-The External Ewww.sun.comditor は残念なことに obsolete と宣言されています。以
-下を参照ください (リンク切れのようです):
- http://externaleditor.netbeans.org
+The External Editor は残念なことに obsolete と宣言されています。以下を参照くだ
+さい (リンク切れのようです): http://externaleditor.netbeans.org
 
 Sun Microsystems, Inc. は NetBeans を Sun ONE Studio という名前でもリリース
 しています。Sun ONE Studio に関しては http://www.sun.com を参照してくださ
