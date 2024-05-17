@@ -598,7 +598,7 @@ FOUNDRY-FAMILY-WEIGHT-SLANT-WIDTH-STYLE-PIXEL-POINT-X-Y-SPACE-AVE-CR-CE
     -misc-fixed-medium-r-normal--16-110-100-100-c-160-jisx0208.1990-0
 
 
-☆X フォントセット (X FONTSET)
+☆X フォントセット
 						*fontset* *xfontset*
 シングルバイト文字セットは一般的に一つのフォントに関連付けられている。マルチバ
 イト文字セットはほとんどの場合、複数のフォントの組合せを使用する。そして表示す
@@ -679,7 +679,7 @@ Note 東アジアのフォントは、基本的には正四角形の範囲で表
 'guifontset' を設定して確認すること。
 
 
-☆リソースファイルを使う (USING RESOURCE FILES)
+☆リソースファイルを使う
 
 'guifontset' を設定する代わりにX11のリソースを設定すれば、Vimはそれを使用する。
 これはXのリソースファイルの働きを知っている人向けである。
@@ -831,7 +831,7 @@ Wnn4.2は多くのシステムで動作し、インターネットのさまざ�
     メソッドは別に用意した自分のウィンドウに未確定文字をすべて表示する。
 
 
-☆XIMを使用する (USING XIM)	*multibyte-input* *E284* *E285* *E286* *E287*
+☆XIMを使用する			*multibyte-input* *E284* *E285* *E286* *E287*
 					*E288* *E289*
 
 Note 表示と入力は独立している。インプットメソッドがなくてもあなたの言語を見る
@@ -886,7 +886,7 @@ xtermか、|XIM|をサポートしたxtermを使用する。
 	export XMODIFIERS="@im=kinput2"
 <
 
-☆XIMの制御 (FULLY CONTROLLED XIM)
+☆XIMの制御
 
 MS-WindowsのIME(|multibyte-ime|参照)のように、XIMを制御することができる。
 この機能は現在GTK GUIでのみ利用可能。
@@ -1034,7 +1034,7 @@ IMEやXIMがオンのときのカーソルの色				*CursorIM*
 字としては扱われない。
 {訳注: > シングルクォートを入力できるようにするには...
        'timeout' も参照。}
-"accents" キーマップはこれを使用する。				*keymap-accents*
+"accents" キーマップはこれを使用する。			*keymap-accents*
 
 最初の列は |<>| 表記で書くこともできる:
 	<C-c>		Ctrl-C
@@ -1067,7 +1067,7 @@ Note: Alt マッピングは機能しないことがある。それはキーボ�
 <maintainer@vim.org>
 
 
-☆ヘブライ語 キーマップ (HEBREW KEYMAP)			*keymap-hebrew*
+☆ヘブライ語キーマップ					*keymap-hebrew*
 
 このファイルはUTF-8とCP1255のエンコーディングで利用可能な文字と、その文字を入
 力するためのキーマップを説明している:
@@ -1306,7 +1306,7 @@ Overlong sequenceに対して特別な処理はされない。通常の文字と
   定するのがデフォルトである。
 
 
-☆VimをUTF-8モードで起動する (STARTING VIM)
+☆Vimを起動する
 
 ロケールがUTF-8の場合、Vimは自動的にUTF-8モードで起動する。
 
@@ -1338,7 +1338,7 @@ Note: この項はGTK+ 2 GUIには当てはまらない。
 ":hi Menu font={fontname}" コマンドを使って設定する。|:highlight|
 
 
-☆UTF-8を入力する (TYPING UTF-8)			*utf-8-typing*
+☆UTF-8を入力する					*utf-8-typing*
 
 X-Windowを使っているなら、UTF-8をサポートしているインプットメソッド使用する。
 
@@ -1358,7 +1358,7 @@ X-Windowを使っているなら、UTF-8をサポートしているインプッ�
 "1234" は16進数として解釈される。正しく4文字を入力しなくてはいけない。必要であ
 ればゼロを前置する。
 
-☆コマンド引数 (COMMAND ARGUMENTS)			*utf-8-char-arg*
+☆コマンド引数						*utf-8-char-arg*
 
 |f|、|F|、|t|、|r|のようなコマンドは一つの文字を引数に取る。UTF-8では一文字か
 二文字の合成文字の場合がある。Vimは合成文字の入力かどうかを調べるために次の入

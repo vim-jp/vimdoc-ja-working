@@ -3863,7 +3863,7 @@ ZSH						    *zsh.vim* *ft-zsh-syntax*
 	spell notoplevel" または "syntax spell default" を表示する。
 
 
-☆構文での iskeyword 設定				*:syn-iskeyword*
+☆構文の iskeyword 設定					*:syn-iskeyword*
 
 :sy[ntax] iskeyword [clear | {option}]
 	キーワード文字を定義する。'iskeyword' オプションに似ているがシン
@@ -4419,7 +4419,7 @@ Note マッチ "[^ \t].*" はホワイトスペース以外の全てのテキス
 Note この例はネストした "if" には機能しないことに注意。ネストに対応するには引
 数 "contains" を指定する必要がある(この例では簡単のため省略した)。
 
-☆暗黙の conceal (IMPLICIT CONCEAL)			*:syn-conceal-implicit*
+☆暗黙の conceal				*:syn-conceal-implicit*
 
 :sy[ntax] conceal [on|off]
 	これ以降の ":syntax" コマンドでキーワード、マッチ、リージョンを定義し
