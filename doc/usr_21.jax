@@ -214,7 +214,7 @@ Vim を終了するたびにマークが設定されます。最新のマーク�
 	3: /tmp/draft ~
 	Type number and <Enter> (q or empty cancels): ~
 
-Note: 今回は、レジュメにマッチしないファイルをすべて除外しました:
+Note: 今回は、resume にマッチしないファイルをすべて除外しました:
 
 
 詳細は |:oldfiles|、|v:oldfiles|、|c_#<| を参照してください。
