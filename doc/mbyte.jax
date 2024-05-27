@@ -1319,7 +1319,7 @@ UTF-8以外のロケールを使っている場合はこのようにする: >
 参照。
 
 
-X-WindowでUTF-8を使う (USING UTF-8 IN X-Windows)	*utf-8-in-xwindows*
+X-WindowでUTF-8を使う					*utf-8-in-xwindows*
 
 Note: この項はGTK+ 2 GUIには当てはまらない。
 
