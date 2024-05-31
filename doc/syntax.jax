@@ -3692,7 +3692,7 @@ syntax/vim.vim によって折り畳みが可能である: >
    g:vimsyn_folding == 0 または変数が存在しない: 構文ベースの折り畳みはしない
    g:vimsyn_folding =~ 'a' : augroups
    g:vimsyn_folding =~ 'f' : 関数を折り畳む
-   g:vimsyn_folding =~ 'h' : heredocs を折り畳む
+   g:vimsyn_folding =~ 'h' : heredoc を折り畳む
    g:vimsyn_folding =~ 'H' : Vim9-script の旧来のヘッダーを折り畳む
    g:vimsyn_folding =~ 'l' : lua      スクリプトを折り畳む
    g:vimsyn_folding =~ 'm' : mzscheme スクリプトを折り畳む
