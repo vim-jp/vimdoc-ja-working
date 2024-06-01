@@ -4220,7 +4220,6 @@ concealends						*:syn-concealends*
 能になる (リージョンの中身はならない)。アイテムが実際に Conceal 表示されるかど
 うかは 'conceallevel' の設定に依存する。"matchgroup" で別のハイライトを設定す
 ることでリージョンの終了部分だけを別に Conceal 表示するということもできる。
-The |synconcealed()| function can be used to retrieve information about conealed items.
 |synconcealed()| 関数を使用すると、conceal された項目に関する情報を取得できる。
 
 cchar							*:syn-cchar*
