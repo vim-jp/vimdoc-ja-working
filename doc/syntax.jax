@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim バージョン 9.1.  Last change: 2024 May 24
+*syntax.txt*	For Vim バージョン 9.1.  Last change: 2024 May 31
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2948,6 +2948,13 @@ R RESTRUCTURED TEXT				*rrst.vim* *ft-rrst-syntax*
 knitrチャンクヘッダー内のRコードをハイライトするには、|vimrc| に追加する: >
 	let rrst_syn_hl_chunk = 1
 
+
+RASI					*rasi.vim* *ft-rasi-syntax*
+
+Rasi は Rofi Advanced Style Information の略である。これは、検索ウィンドウのレ
+ンダリングをスタイル設定するために、プログラム rofi によって使用される。この言
+語は、CSS スタイルシートに大きく影響を受けている。次の拡張子を持つファイルは、
+rasi ファイルとして認識される: .rasi。
 
 READLINE				*readline.vim* *ft-readline-syntax*
 
