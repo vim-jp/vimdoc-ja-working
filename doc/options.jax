@@ -7289,11 +7289,11 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	  F	コマンドに対する |:silent| のように、ファイルを編集中	*shm-F*
 		にファイル情報を表示しない。note これは autocommand および
 		'autoread' の再読み込みからのメッセージにも影響する
-	  S     検索時に検索件数メッセージを表示しない。例えば "[1/5]"。*shm-S*
-		"S" フラグが指定されない (例えば、検索件数が表示される) 場
-		合、"search hit BOTTOM, continuing at TOP" および "search hit
-		TOP, continuing at BOTTOM" メッセージは、検索件数統計の前に
-		"W" (覚え方: Wrapped) 文字のみで示される。
+	  S     検索時に検索件数メッセージを表示しない。例えば		*shm-S*
+		"[1/5]"。"S" フラグが指定されない (例えば、検索件数が表示され
+		る) 場合、"search hit BOTTOM, continuing at TOP" および
+		"search hit TOP, continuing at BOTTOM" メッセージは、検索件数
+		統計の前に "W" (覚え方: Wrapped) 文字のみで示される。
 
 	{訳注: 以下日本語メッセージの場合:
 	  "[Incomplete last line]"	"[最終行が不完全]"
