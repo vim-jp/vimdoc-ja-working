@@ -961,7 +961,7 @@ job_info([{job}])					*job_info()*
 		|method| としても使用できる: >
 			GetJob()->job_info()
 <
-		戻り値の型: {job} が指定されたかどうかに依って、dict<any> また
+		戻り値の型: {job} が指定されたかどうかによって、dict<any> また
 		は list<any>
 
 
