@@ -1,4 +1,4 @@
-*channel.txt*      For Vim バージョン 9.1.  Last change: 2024 Jun 06
+*channel.txt*      For Vim バージョン 9.1.  Last change: 2024 Jun 13
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -962,7 +962,7 @@ job_info([{job}])					*job_info()*
 			GetJob()->job_info()
 <
 		戻り値の型: {job} が指定されたかどうかによって、dict<any> また
-		は list<any>
+		は list<job>
 
 
 job_setoptions({job}, {options})			*job_setoptions()*
@@ -1037,7 +1037,7 @@ job_start({command} [, {options}])			*job_start()*
 		|method| としても使用できる: >
 			BuildCommand()->job_start()
 <
-		戻り値の型: |Number|
+		戻り値の型: |job|
 
 
 job_status({job})					*job_status()* *E916*
@@ -1061,7 +1061,7 @@ job_status({job})					*job_status()* *E916*
 		|method| としても使用できる: >
 			GetJob()->job_status()
 <
-		戻り値の型: |job|
+		戻り値の型: |String|
 
 
 job_stop({job} [, {how}])					*job_stop()*
