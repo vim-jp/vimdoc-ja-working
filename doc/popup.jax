@@ -241,6 +241,7 @@ popup_beval({what}, {options})			*popup_beval()*
 			GetText()->popup_beval({})
 <
 		戻り値の型: |Number|
+
 							*popup_clear()*
 popup_clear([{force}])
 		不作法にふるまうプラグインに対する緊急の解決策: グローバルポッ
