@@ -334,7 +334,7 @@ test_null_channel()					*test_null_channel()*
 		null の |Channel| を返す。これはテストのみに使われる。
 		{|+channel| 機能つきでコンパイルされたときのみ有効}
 
-		戻り値の型: |Number|
+		戻り値の型: |Channel|
 
 test_null_dict()					*test_null_dict()*
 		null の |Dict| を返す。これはテストのみに使われる。
