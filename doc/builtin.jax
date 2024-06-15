@@ -192,7 +192,7 @@ extendnew({expr1}, {expr2} [, {expr3}])
 				リスト/辞書 |extend()| と同じだが新しいリスト/
 				辞書を作る
 feedkeys({string} [, {mode}])	数値	先行入力バッファにキーシーケンスを追加
-filecopy({from}, {to})		数値	ファイル {from} を {to} へコピー出来た
+filecopy({from}, {to})		数値	ファイル {from} を {to} へコピーできた
 					場合は |TRUE|
 filereadable({file})		数値	{file}が読み込み可能なら|TRUE|
 filewritable({file})		数値	{file}が書き込み可能なら|TRUE|
