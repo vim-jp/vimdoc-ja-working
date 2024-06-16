@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim version 9.1.  Last change: 2024 May 18
+*builtin.txt*	For Vim version 9.1.  Last change: 2024 Jun 03
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -178,6 +178,8 @@ extendnew({expr1}, {expr2} [, {expr3}])
 				List/Dict like |extend()| but creates a new
 					List or Dictionary
 feedkeys({string} [, {mode}])	Number	add key sequence to typeahead buffer
+filecopy({from}, {to})		Number	|TRUE| if copying file {from} to {to}
+					worked
 filereadable({file})		Number	|TRUE| if {file} is a readable file
 filewritable({file})		Number	|TRUE| if {file} is a writable file
 filter({expr1}, {expr2})	List/Dict/Blob/String
@@ -2757,6 +2759,18 @@ feedkeys({string} [, {mode}])				*feedkeys()*
 		Can also be used as a |method|: >
 			GetInput()->feedkeys()
 
+filecopy({from}, {to})					*filecopy()*
+		Copy the file pointed to by the name {from} to {to}. The
+		result is a Number, which is |TRUE| if the file was copied
+		successfully, and |FALSE| when it failed.
+		If a file with name {to} already exists, it will fail.
+		Note that it does not handle directories (yet).
+
+		This function is not available in the |sandbox|.
+
+		Can also be used as a |method|: >
+			GetOldName()->filecopy(newname)
+
 filereadable({file})					*filereadable()*
 		The result is a Number, which is |TRUE| when a file with the
 		name {file} exists, and can be read.  If {file} doesn't exist,
@@ -4288,14 +4302,14 @@ getregion({pos1}, {pos2} [, {opts}])			*getregion()*
 		The optional argument {opts} is a Dict and supports the
 		following items:
 
-			type		Specify the region's selection type
-					(default: "v"):
-			    "v"		for |characterwise| mode
-			    "V"		for |linewise| mode
-			    "<CTRL-V>"	for |blockwise-visual| mode
+			type		Specify the region's selection type.
+					See |getregtype()| for possible values,
+					except that the width can be omitted
+					and an empty string cannot be used.
+					(default: "v")
 
 			exclusive	If |TRUE|, use exclusive selection
-					for the end position
+					for the end position.
 					(default: follow 'selection')
 
 		You can get the last selection type by |visualmode()|.
@@ -4341,10 +4355,25 @@ getregionpos({pos1}, {pos2} [, {opts}])            *getregionpos()*
 		"bufnum" is the buffer number.
 		"lnum" and "col" are the position in the buffer.  The first
 		column is 1.
-		The "off" number is zero, unless 'virtualedit' is used.  Then
-		it is the offset in screen columns from the start of the
-		character.  E.g., a position within a <Tab> or after the last
-		character.
+		If the "off" number of a starting position is non-zero, it is
+		the offset in screen columns from the start of the character.
+		E.g., a position within a <Tab> or after the last character.
+		If the "off" number of an ending position is non-zero, it is
+		the offset of the character's first cell not included in the
+		selection, otherwise all its cells are included.
+
+		Apart from the options supported by |getregion()|, {opts} also
+		supports the following:
+
+			eol		If |TRUE|, indicate positions beyond
+					the end of a line with "col" values
+					one more than the length of the line.
+					If |FALSE|, positions are limited
+					within their lines, and if a line is
+					empty or the selection is entirely
+					beyond the end of a line, a "col"
+					value of 0 is used for both positions.
+					(default: |FALSE|)
 
 		Can also be used as a |method|: >
 			getpos('.')->getregionpos(getpos("'a"))
