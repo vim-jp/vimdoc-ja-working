@@ -4317,7 +4317,6 @@ getregionpos({pos1}, {pos2} [, {opts}])            *getregionpos()*
 		    [bufnum, lnum, col, off]
 		"bufnum" はバッファ番号。
 		"lnum" と "col" はバッファ内の位置。最初の桁は 1 である。
-
 		開始位置の "off" の数値がゼロ以外の場合、それは文字の先頭から
 		の画面桁のオフセットである。例えば、<Tab> 内の位置、または最後
 		の文字の後の位置である。
