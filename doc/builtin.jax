@@ -2756,7 +2756,7 @@ feedkeys({string} [, {mode}])				*feedkeys()*
 
 		|method| としても使用できる: >
 			GetInput()->feedkeys()
-<
+
 filecopy({from}, {to})					*filecopy()*
 		名前 {from} で指定されたファイルを {to} にコピーする。結果は数
 		値で、ファイルのコピーが成功した場合は |TRUE|、失敗した場合は
