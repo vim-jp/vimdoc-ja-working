@@ -854,7 +854,7 @@ abs({expr})							*abs()*
 		|method| としても使用できる: >
 			Compute()->abs()
 <
-		戻り値の型: |Number| または |Float|、{expr} による
+		戻り値の型: |Number| または |Float|。{expr} による
 
 
 acos({expr})							*acos()*
@@ -1592,7 +1592,7 @@ call({func}, {arglist} [, {dict}])			*call()* *E699*
 		|method| としても使用できる: >
 			GetFunc()->call([arg, arg], dict)
 <
-		戻り値の型: any、{func} による
+		戻り値の型: any。{func} による
 
 
 ceil({expr})							*ceil()*
@@ -2008,7 +2008,7 @@ copy({expr})							*copy()*
 		|method| としても使用できる: >
 			mylist->copy()
 <
-		戻り値の型: any、{expr} による
+		戻り値の型: any。{expr} による
 
 
 cos({expr})						*cos()*
@@ -2178,7 +2178,7 @@ deepcopy({expr} [, {noref}])				*deepcopy()* *E698*
 		|method| としても使用できる: >
 			GetObject()->deepcopy()
 <
-		戻り値の型: any、{expr} による
+		戻り値の型: any。{expr} による
 
 
 delete({fname} [, {flags}])				*delete()*
@@ -2306,7 +2306,7 @@ diff({fromlist}, {tolist} [, {options}])		*diff()*
 			GetFromList->diff(to_list)
 <
 		戻り値の型: |String| または list<dict<number>> または
-		list<any>、{options} による
+		list<any>。{options} による
 
 
 diff_filler({lnum})					*diff_filler()*
@@ -2518,7 +2518,7 @@ eval({string})	{string}を評価し、値を返す。|string()|の戻り値を�
 		|method| としても使用できる: >
 			argv->join()->eval()
 <
-		戻り値の型: any、{string} による
+		戻り値の型: any。{string} による
 
 
 eventhandler()						*eventhandler()*
@@ -2848,7 +2848,7 @@ expand({string} [, {nosuf} [, {list}]])				*expand()*
 		|method| としても使用できる: >
 			Getpattern()->expand()
 <
-		戻り値の型: |String| または list<string>、{list} による
+		戻り値の型: |String| または list<string>。{list} による
 
 
 expandcmd({string} [, {options}])			*expandcmd()*
@@ -2873,7 +2873,7 @@ expandcmd({string} [, {options}])			*expandcmd()*
 		|method| としても使用できる: >
 			GetCommand()->expandcmd()
 <
-		戻り値の型: |String| または list<string>、{list} による
+		戻り値の型: |String| または list<string>。{list} による
 
 extend({expr1}, {expr2} [, {expr3}])			*extend()*
 		{expr1}と{expr2}は両方ともリスト|List|であるか、両方とも辞書
@@ -2914,8 +2914,8 @@ extend({expr1}, {expr2} [, {expr3}])			*extend()*
 		|method| としても使用できる: >
 			mylist->extend(otherlist)
 <
-		戻り値の型: list<{type}> または dict<{type}>、{expr1} および
-		{expr2} による、エラーの場合: |Number|
+		戻り値の型: list<{type}> または dict<{type}>。{expr1} および
+		{expr2} による。エラーの場合: |Number|
 
 
 extendnew({expr1}, {expr2} [, {expr3}])			*extendnew()*
@@ -2923,8 +2923,8 @@ extendnew({expr1}, {expr2} [, {expr3}])			*extendnew()*
 		いリストまたは辞書が作成されて返される。{expr1} は変更されな
 		い。
 
-		戻り値の型: list<{type}> または dict<{type}>、{expr1} および
-		{expr2} による、エラーの場合: |Number|
+		戻り値の型: list<{type}> または dict<{type}>。{expr1} および
+		{expr2} による。エラーの場合: |Number|
 
 
 feedkeys({string} [, {mode}])				*feedkeys()*
@@ -2981,7 +2981,7 @@ feedkeys({string} [, {mode}])				*feedkeys()*
 		|method| としても使用できる: >
 			GetInput()->feedkeys()
 <
-		戻り値の型: |String| または list<string>、{list} による
+		戻り値の型: |String| または list<string>。{list} による
 
 
 filecopy({from}, {to})					*filecopy()*
@@ -3105,7 +3105,7 @@ filter({expr1}, {expr2})					*filter()*
 			mylist->filter(expr2)
 <
 		戻り値の型: |String|, |Blob|, list<{type}> または
-		dict<{type}>、{expr1} による
+		dict<{type}>。{expr1} による
 
 
 finddir({name} [, {path} [, {count}]])				*finddir()*
@@ -3413,7 +3413,7 @@ foreach({expr1}, {expr2})					*foreach()*
 		|method| としても使用できる: >
 			mylist->foreach(expr2)
 <
-		戻り値の型: |String|, |Blob| list<{type}> または dict<{type}>、
+		戻り値の型: |String|, |Blob| list<{type}> または dict<{type}>。
 		{expr1} による
 
 							*foreground()*
@@ -3584,7 +3584,7 @@ get({list}, {idx} [, {default}])			*get()*
 		|method| として使用したいなら: >
 			mylist->get(idx)
 <
-		戻り値の型: any、{list} による
+		戻り値の型: any。{list} による
 
 get({blob}, {idx} [, {default}])
 		|Blob| {blob}から{idx}番目のバイトを取得する。このバイトを取得
@@ -3605,7 +3605,7 @@ get({dict}, {key} [, {default}])
 		|method| として使用したいなら: >
 			mydict->get(key)
 <
-		戻り値の型: any、{dict} による
+		戻り値の型: any。{dict} による
 
 get({func}, {what})
 		Funcref {func} から項目 {what} を取得する。{what}の可能な値は:
@@ -3617,7 +3617,7 @@ get({func}, {what})
 		|method| として使用したいなら: >
 			myfunc->get(what)
 <
-		戻り値の型: any、{func} による
+		戻り値の型: any。{func} による
 
 							*getbufinfo()*
 getbufinfo([{buf}])
@@ -3753,7 +3753,7 @@ getbufvar({buf}, {varname} [, {def}])				*getbufvar()*
 <		|method| としても使用できる: >
 			GetBufnr()->getbufvar(varname)
 <
-		戻り値の型: any、{varname} による
+		戻り値の型: any。{varname} による
 
 
 getcellwidths()						*getcellwidths()*
@@ -4329,7 +4329,7 @@ getline({lnum} [, {end}])
 <		|method| としても使用できる: >
 			ComputeLnum()->getline()
 <
-		戻り値の型: list<string> または |String|、{end} による
+		戻り値の型: list<string> または |String|。{end} による
 
 		他のバッファの行を取得するには |getbufline()| および
 		|getbufoneline()| を参照。
@@ -4878,7 +4878,7 @@ gettabvar({tabnr}, {varname} [, {def}])				*gettabvar()*
 		|method| としても使用できる: >
 			GetTabnr()->gettabvar(varname)
 <
-		戻り値の型: any、{varname} による
+		戻り値の型: any。{varname} による
 
 
 gettabwinvar({tabnr}, {winnr}, {varname} [, {def}])		*gettabwinvar()*
@@ -4910,7 +4910,7 @@ gettabwinvar({tabnr}, {winnr}, {varname} [, {def}])		*gettabwinvar()*
 <		|method| としても使用できる: >
 			GetTabnr()->gettabwinvar(winnr, varname)
 <
-		戻り値の型: any、{varname} による
+		戻り値の型: any。{varname} による
 
 
 gettagstack([{winnr}])					*gettagstack()*
@@ -5054,7 +5054,7 @@ getwinvar({winnr}, {varname} [, {def}])				*getwinvar()*
 <		|method| としても使用できる: >
 			GetWinnr()->getwinvar(varname)
 <
-		戻り値の型: any、{varname} による
+		戻り値の型: any。{varname} による
 
 
 glob({expr} [, {nosuf} [, {list} [, {alllinks}]]])		*glob()*
@@ -5096,7 +5096,7 @@ glob({expr} [, {nosuf} [, {list} [, {alllinks}]]])		*glob()*
 		|method| としても使用できる: >
 			GetExpr()->glob()
 <
-		戻り値の型: |String| または list<string> または list<any>、
+		戻り値の型: |String| または list<string> または list<any>。
 		{list} による
 
 
@@ -5155,7 +5155,7 @@ globpath({path}, {expr} [, {nosuf} [, {list} [, {alllinks}]]])
 		|method| としても使用でき、ベースは第2引数として渡される: >
 			GetExpr()->globpath(&rtp)
 <
-		戻り値の型: |String| または list<string> または list<any>、
+		戻り値の型: |String| または list<string> または list<any>。
 		{list} による
 
 
@@ -5936,7 +5936,7 @@ js_decode({string})					*js_decode()*
 		|method| としても使用できる: >
 			ReadObject()->js_decode()
 <
-		戻り値の型: any、{varname} による
+		戻り値の型: any。{varname} による
 
 
 js_encode({expr})					*js_encode()*
@@ -5994,7 +5994,7 @@ json_decode({string})				*json_decode()* *E491*
 		|method| としても使用できる: >
 			ReadObject()->json_decode()
 <
-		戻り値の型: any、{varname} による
+		戻り値の型: any。{varname} による
 
 
 json_encode({expr})					*json_encode()*
@@ -6386,7 +6386,7 @@ luaeval({expr} [, {expr}])					*luaeval()*
 		|method| としても使用できる: >
 			GetExpr()->luaeval()
 <
-		戻り値の型: any、{expr} による
+		戻り値の型: any。{expr} による
 
 		{|+lua| 機能つきでコンパイルされたときのみ有効}
 
@@ -6452,7 +6452,7 @@ map({expr1}, {expr2})					*map()*
 			mylist->map(expr2)
 <
 		戻り値の型: |String|, |Blob|, list<{type}> または
-		dict<{type}>、{expr1} による
+		dict<{type}>。{expr1} による
 
 
 maparg({name} [, {mode} [, {abbr} [, {dict}]]])			*maparg()*
@@ -6528,7 +6528,7 @@ maparg({name} [, {mode} [, {abbr} [, {dict}]]])			*maparg()*
 <		|method| としても使用できる: >
 			GetKey()->maparg('n')
 <
-		戻り値の型: |String| または dict<any>、{dict} による
+		戻り値の型: |String| または dict<any>。{dict} による
 
 
 mapcheck({name} [, {mode} [, {abbr}]])			*mapcheck()*
@@ -6611,7 +6611,7 @@ mapnew({expr1}, {expr2})					*mapnew()*
 		に |deepcopy()| を利用すること。
 
 		戻り値の型: |String|, |Blob|, list<{type}> または
-		dict<{type}>、{expr1} による
+		dict<{type}>。{expr1} による
 
 mapset({mode}, {abbr}, {dict})					*mapset()*
 mapset({dict})
@@ -7358,7 +7358,7 @@ mzeval({expr})							*mzeval()*
 		|method| としても使用できる: >
 			GetExpr()->mzeval()
 <
-		戻り値の型: any、{expr} による
+		戻り値の型: any。{expr} による
 
 		{|+mzscheme| 機能を有効にしてコンパイルしたときのみ有効}
 
@@ -7451,7 +7451,7 @@ perleval({expr})					*perleval()*
 		|method| としても使用できる: >
 			GetExpr()->perleval()
 <
-		戻り値の型: any、{expr} による
+		戻り値の型: any。{expr} による
 
 		{|+perl| 機能付きでコンパイルされたときのみ利用可能}
 
@@ -7909,7 +7909,7 @@ py3eval({expr})						*py3eval()*
 		|method| としても使用できる: >
 			GetExpr()->py3eval()
 <
-		戻り値の型: any、{expr} による
+		戻り値の型: any。{expr} による
 
 		{|+python3| 機能付きでコンパイルされたときのみ利用可能}
 
@@ -7926,7 +7926,7 @@ pyeval({expr})						*pyeval()*
 		|method| としても使用できる: >
 			GetExpr()->pyeval()
 <
-		戻り値の型: any、{expr} による
+		戻り値の型: any。{expr} による
 
 		{|+python| 機能付きでコンパイルされたときのみ利用可能}
 
@@ -7940,7 +7940,7 @@ pyxeval({expr})						*pyxeval()*
 		|method| としても使用できる: >
 			GetExpr()->pyxeval()
 <
-		戻り値の型: any、{expr} による
+		戻り値の型: any。{expr} による
 
 		{|+python| または |+python3| 機能付きでコンパイルされたときの
 		み利用可能}
@@ -8200,7 +8200,7 @@ reduce({object}, {func} [, {initial}])			*reduce()* *E998*
 			echo mylist->reduce({ acc, val -> acc + val }, 0)
 <
 		戻り値の型: |String|, |Blob|, list<{type}> または
-		dict<{type}>、{object} および {func} による
+		dict<{type}>。{object} および {func} による
 
 
 reg_executing()						*reg_executing()*
@@ -8449,7 +8449,7 @@ remove({list}, {idx}, {end})
 		|method| としても使用できる: >
 			mylist->remove(idx)
 <
-		戻り値の型: any、{list} による
+		戻り値の型: any。{list} による
 
 
 remove({blob}, {idx})
@@ -8473,7 +8473,7 @@ remove({dict}, {key})
 <		{dict}に{key}がない場合はエラーになる。
 		エラー時はゼロを返す。
 
-		戻り値の型: any、{dict} による
+		戻り値の型: any。{dict} による
 
 
 rename({from}, {to})					*rename()*
@@ -8501,7 +8501,7 @@ repeat({expr}, {count})					*repeat()*
 		|method| としても使用できる: >
 			mylist->repeat(count)
 <
-		戻り値の型: |String|, |Blob| または list<{type}>、{expr} によ
+		戻り値の型: |String|, |Blob| または list<{type}>。{expr} によ
 		る
 
 
@@ -8538,7 +8538,7 @@ reverse({object})					*reverse()*
 <		|method| としても使用できる: >
 			mylist->reverse()
 <
-		戻り値の型: |String|, |Blob| または list<{type}>、{object} に
+		戻り値の型: |String|, |Blob| または list<{type}>。{object} に
 		よる
 
 
@@ -8576,7 +8576,7 @@ rubyeval({expr})					*rubyeval()*
 		|method| としても使用できる: >
 			GetRubyExpr()->rubyeval()
 <
-		戻り値の型: any、{expr} による
+		戻り値の型: any。{expr} による
 
 		{|+ruby| 機能つきでコンパイルされたときのみ有効}
 
@@ -10592,7 +10592,7 @@ submatch({nr} [, {list}])			*submatch()* *E935*
 		|method| としても使用できる: >
 			GetNr()->submatch()
 <
-		戻り値の型: |String| または list<string>、{list} による
+		戻り値の型: |String| または list<string>。{list} による
 
 
 substitute({string}, {pat}, {sub}, {flags})		*substitute()*
