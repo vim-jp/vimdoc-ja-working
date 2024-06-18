@@ -7373,6 +7373,8 @@ nextnonblank({lnum})					*nextnonblank()*
 
 		|method| としても使用できる: >
 			GetLnum()->nextnonblank()
+<
+		戻り値の型: |Number|
 
 nr2char({expr} [, {utf8}])				*nr2char()*
 		コード{expr}で表される1文字からなる文字列を返す。例: >
@@ -7393,6 +7395,9 @@ nr2char({expr} [, {utf8}])				*nr2char()*
 
 		|method| としても使用できる: >
 			GetNumber()->nr2char()
+<
+		戻り値の型: |String|
+
 
 or({expr}, {expr})					*or()*
 		二つの引数のビット論理和。引数は数値に変換される。リスト、辞
@@ -7408,6 +7413,8 @@ or({expr}, {expr})					*or()*
 		わないのは、Vi が常に "|" をコマンドの区切りに使ってきたからで
 		ある。多くの場所では、"|" が演算子なのかコマンドの区切りなのか
 		はっきりしない。
+
+		戻り値の型: |Number|
 
 pathshorten({path} [, {len}])				*pathshorten()*
 		パス{path}におけるディレクトリ名を短縮して返す。拡張子、ファイ
@@ -7425,6 +7432,9 @@ pathshorten({path} [, {len}])				*pathshorten()*
 
 		|method| としても使用できる: >
 			GetDirectories()->pathshorten()
+<
+		戻り値の型: |String|
+
 
 perleval({expr})					*perleval()*
 		Perl の式 {expr} をスカラーコンテキストで評価して、結果をVimの
@@ -7440,8 +7450,10 @@ perleval({expr})					*perleval()*
 
 		|method| としても使用できる: >
 			GetExpr()->perleval()
+<
+		戻り値の型: any、{expr} による
 
-<		{|+perl| 機能付きでコンパイルされたときのみ利用可能}
+		{|+perl| 機能付きでコンパイルされたときのみ利用可能}
 
 popup_ 関数群はここに文書化されている: |popup-functions|
 
@@ -7460,6 +7472,9 @@ pow({x}, {y})						*pow()*
 
 		|method| としても使用できる: >
 			Compute()->pow(3)
+<
+		戻り値の型: |Number|
+
 
 prevnonblank({lnum})					*prevnonblank()*
 		{lnum}行以前({lnum}行を含む)の最初の非空行の行番号を返す。
@@ -7471,6 +7486,9 @@ prevnonblank({lnum})					*prevnonblank()*
 
 		|method| としても使用できる: >
 			GetLnum()->prevnonblank()
+<
+		戻り値の型: |Number|
+
 
 printf({fmt}, {expr1} ...)				*printf()*
 		{fmt}にしたがって組み立てた文字列を返す。{fmt}中の "%" 変換指
@@ -7764,6 +7782,8 @@ printf({fmt}, {expr1} ...)				*printf()*
 		は、使用された正確なフォーマット文字列とパラメータをコピーし
 		て、Vim に対してバグを報告すること。
 
+		戻り値の型: |String|
+
 
 prompt_getprompt({buf})					*prompt_getprompt()*
 		バッファ {buf} で使われているプロンプトテキストを返す。{buf}
@@ -7774,8 +7794,10 @@ prompt_getprompt({buf})					*prompt_getprompt()*
 
 		|method| としても使用できる: >
 			GetBuffer()->prompt_getprompt()
+<
+		戻り値の型: |String|
 
-<		{|+channel| 機能つきでコンパイルされたときのみ存在する}
+		{|+channel| 機能つきでコンパイルされたときのみ存在する}
 
 
 prompt_setcallback({buf}, {expr})			*prompt_setcallback()*
@@ -7812,8 +7834,10 @@ prompt_setcallback({buf}, {expr})			*prompt_setcallback()*
 
 <		|method| としても使用できる: >
 			GetBuffer()->prompt_setcallback(callback)
+<
+		戻り値の型: |Number|
 
-<		{|+channel| 機能つきでコンパイルされたときのみ存在する}
+		{|+channel| 機能つきでコンパイルされたときのみ存在する}
 
 prompt_setinterrupt({buf}, {expr})			*prompt_setinterrupt()*
 		バッファ {buf} のコールバックを {expr} に設定する。{expr} が空
@@ -7826,8 +7850,10 @@ prompt_setinterrupt({buf}, {expr})			*prompt_setinterrupt()*
 
 		|method| としても使用できる: >
 			GetBuffer()->prompt_setinterrupt(callback)
+<
+		戻り値の型: |Number|
 
-<		{|+channel| 機能つきでコンパイルされたときのみ存在する}
+		{|+channel| 機能つきでコンパイルされたときのみ存在する}
 
 prompt_setprompt({buf}, {text})				*prompt_setprompt()*
 		バッファ {buf} のプロンプトを {text} に設定する。大抵の場合、
@@ -7838,8 +7864,10 @@ prompt_setprompt({buf}, {text})				*prompt_setprompt()*
 <
 		|method| としても使用できる: >
 			GetBuffer()->prompt_setprompt('command: ')
+<
+		戻り値の型: |Number|
 
-<		{|+channel| 機能つきでコンパイルされたときのみ存在する}
+		{|+channel| 機能つきでコンパイルされたときのみ存在する}
 
 prop_ 関数群はここに文書化されている: |text-prop-functions|
 
@@ -7856,11 +7884,17 @@ pum_getpos()						*pum_getpos()*
 
 		値は |CompleteChanged| 中の |v:event| と同じである。
 
+		戻り値の型: dict<any>
+
+
 pumvisible()						*pumvisible()*
 		ポップアップメニューが表示されているときには非0を返す。表示さ
 		れていないときは0を返す。|ins-completion-menu|を参照。
 		ポップアップメニューを消してしまうような操作を避けるために使わ
 		れる。
+
+		戻り値の型: |Number|
+
 
 py3eval({expr})						*py3eval()*
 		Python の式 {expr} を評価して、結果を Vim のデータ形式にして返
@@ -7874,8 +7908,10 @@ py3eval({expr})						*py3eval()*
 
 		|method| としても使用できる: >
 			GetExpr()->py3eval()
+<
+		戻り値の型: any、{expr} による
 
-<		{|+python3| 機能付きでコンパイルされたときのみ利用可能}
+		{|+python3| 機能付きでコンパイルされたときのみ利用可能}
 
 							*E858* *E859*
 pyeval({expr})						*pyeval()*
@@ -7889,8 +7925,10 @@ pyeval({expr})						*pyeval()*
 
 		|method| としても使用できる: >
 			GetExpr()->pyeval()
+<
+		戻り値の型: any、{expr} による
 
-<		{|+python| 機能付きでコンパイルされたときのみ利用可能}
+		{|+python| 機能付きでコンパイルされたときのみ利用可能}
 
 pyxeval({expr})						*pyxeval()*
 		Python の式 {expr} を評価して、結果を Vim のデータ形式にして返
@@ -7901,8 +7939,10 @@ pyxeval({expr})						*pyxeval()*
 
 		|method| としても使用できる: >
 			GetExpr()->pyxeval()
+<
+		戻り値の型: any、{expr} による
 
-<		{|+python| または |+python3| 機能付きでコンパイルされたときの
+		{|+python| または |+python3| 機能付きでコンパイルされたときの
 		み利用可能}
 
 rand([{expr}])						*rand()* *random*
@@ -7920,6 +7960,7 @@ rand([{expr}])						*rand()* *random*
 			:echo rand(seed)
 			:echo rand(seed) % 16  " random number 0 - 15
 <
+		戻り値の型: |Number|
 
 							*E726* *E727*
 range({expr} [, {max} [, {stride}]])				*range()*
@@ -7941,6 +7982,8 @@ range({expr} [, {max} [, {stride}]])				*range()*
 		|method| としても使用できる: >
 			GetExpr()->range()
 <
+		戻り値の型: list<number>
+
 
 readblob({fname} [, {offset} [, {size}]])			*readblob()*
 		ファイル {fname} をバイナリモードで読み |Blob| を返す。
@@ -7966,6 +8009,8 @@ readblob({fname} [, {offset} [, {size}]])			*readblob()*
 		利用可能なバイト数を超えるバイトを読み取ろうとすると、結果は切
 		り捨てられる。
 		|readfile()| と |writefile()| も参照。
+
+		戻り値の型: |Blob|
 
 
 readdir({directory} [, {expr} [, {dict}]])			*readdir()*
@@ -8026,6 +8071,9 @@ readdir({directory} [, {expr} [, {dict}]])			*readdir()*
 		|method| としても使用できる: >
 			GetDirName()->readdir()
 <
+		戻り値の型: list<string> または list<any>
+
+
 readdirex({directory} [, {expr} [, {dict}]])			*readdirex()*
 		|readdir()| の拡張バージョン。
 		{directory} にあるファイルとディレクトリの情報を持つ辞書のリス
@@ -8092,6 +8140,8 @@ readdirex({directory} [, {expr} [, {dict}]])			*readdirex()*
 		|method| としても使用できる: >
 			GetDirName()->readdirex()
 <
+		戻り値の型: list<dict<any>> または list<any>
+
 
 							*readfile()*
 readfile({fname} [, {type} [, {max}]])
@@ -8127,6 +8177,8 @@ readfile({fname} [, {type} [, {max}]])
 
 		|method| としても使用できる: >
 			GetFileName()->readfile()
+<
+		戻り値の型: list<string> または list<any>
 
 reduce({object}, {func} [, {initial}])			*reduce()* *E998*
 		文字列 |String|、リスト |List| もしくは |Blob| である {object}
@@ -8146,19 +8198,28 @@ reduce({object}, {func} [, {initial}])			*reduce()* *E998*
 <
 		|method| としても使用できる: >
 			echo mylist->reduce({ acc, val -> acc + val }, 0)
+<
+		戻り値の型: |String|, |Blob|, list<{type}> または
+		dict<{type}>、{object} および {func} による
 
 
 reg_executing()						*reg_executing()*
 		実行されているレジスタの名前を 1 文字で返す。レジスタが実行さ
 		れていない場合は空文字列を返す。|@| を参照。
 
+		戻り値の型: |String|
+
+
 reg_recording()						*reg_recording()*
 		記録されているレジスタの名前を 1 文字で返す。記録が行われてい
 		ない場合は空文字列を返す。|q| を参照。
 
-reltime()
+		戻り値の型: |String|
+
+
+reltime()						*reltime()*
 reltime({start})
-reltime({start}, {end})					*reltime()*
+reltime({start}, {end})
 		時刻値を表す値を返す。この値はリストで項目の形式はシステムに依
 		存する。Vim 9 script では list<any> 型が使われる。
 		この値を |reltimestr()| に渡すと文字列に変換でき、
@@ -8183,7 +8244,10 @@ reltime({start}, {end})					*reltime()*
 		|method| としても使用できる: >
 			GetStart()->reltime()
 <
+		戻り値の型: list<number>
+
 		{|+reltime| 機能付きでコンパイルされたときのみ利用可能}
+
 
 reltimefloat({time})				*reltimefloat()*
 		{time} の値を代わりに浮動小数点で返す。
@@ -8198,8 +8262,11 @@ reltimefloat({time})				*reltimefloat()*
 
 		|method| としても使用できる: >
 			reltime(start)->reltimefloat()
+<
+		戻り値の型: |Float|
 
-<		{|+reltime| 機能付きでコンパイルされたときのみ利用可能}
+		{|+reltime| 機能付きでコンパイルされたときのみ利用可能}
+
 
 reltimestr({time})				*reltimestr()*
 		時刻値{time}を表現する文字列を返す。秒、ドット、マイクロ秒とい
@@ -8219,8 +8286,10 @@ reltimestr({time})				*reltimestr()*
 
 		|method| としても使用できる: >
 			reltime(start)->reltimestr()
+<
+		戻り値の型: |String|
 
-<		{|+reltime| 機能付きでコンパイルされたときのみ利用可能}
+		{|+reltime| 機能付きでコンパイルされたときのみ利用可能}
 
 							*remote_expr()* *E449*
 remote_expr({server}, {string} [, {idvar} [, {timeout}]])
@@ -8254,6 +8323,9 @@ remote_expr({server}, {string} [, {idvar} [, {timeout}]])
 <
 		|method| としても使用できる: >
 			ServerName()->remote_expr(expr)
+<
+		戻り値の型: |String| または list<{type}>
+
 
 remote_foreground({server})				*remote_foreground()*
 		サーバー名 {server} のVimをフォアグラウンドに移動させる。
@@ -8269,8 +8341,10 @@ remote_foreground({server})				*remote_foreground()*
 
 		|method| としても使用できる: >
 			ServerName()->remote_foreground()
+<
+		戻り値の型: |Number|
 
-<		{VimのWin32, Motif, GTKのGUI版とWin32コンソール版でのみ利用可
+		{VimのWin32, Motif, GTKのGUI版とWin32コンソール版でのみ利用可
 		能}
 
 
@@ -8289,6 +8363,9 @@ remote_peek({serverid} [, {retvar}])		*remote_peek()*
 
 <		|method| としても使用できる: >
 			ServerId()->remote_peek()
+<
+		戻り値の型: |Number|
+
 
 remote_read({serverid}, [{timeout}])			*remote_read()*
 		{serverid}からの返信の中で最も古いものを取り出して返す。取り出
@@ -8305,8 +8382,10 @@ remote_read({serverid}, [{timeout}])			*remote_read()*
 <		|method| としても使用できる: >
 			ServerId()->remote_read()
 <
-							*remote_send()* *E241*
-remote_send({server}, {string} [, {idvar}])
+		戻り値の型: |String|
+
+
+remote_send({server}, {string} [, {idvar}])		*remote_send()* *E241*
 		{string} を {server} に送信する。引数 {server} は文字列。
 		|{server}| も参照。
 
@@ -8335,19 +8414,24 @@ remote_send({server}, {string} [, {idvar}])
 		|method| としても使用できる: >
 			ServerName()->remote_send(keys)
 <
-					*remote_startserver()* *E941* *E942*
-remote_startserver({name})
+		戻り値の型: |String|
+
+
+remote_startserver({name})		*remote_startserver()* *E941* *E942*
 		サーバー {name} になる。{name} は空ではない文字列である必要が
 		ある。すでにサーバーとして起動しており、|v:servername| が空で
 		ない場合は失敗する。
 
 		|method| としても使用できる: >
 			ServerName()->remote_startserver()
+<
+		戻り値の型: |Number|
 
-<		{|+clientserver| 機能付きでコンパイルされたときのみ利用可能}
+		{|+clientserver| 機能付きでコンパイルされたときのみ利用可能}
 
-remove({list}, {idx})
-remove({list}, {idx}, {end})				*remove()*
+
+remove({list}, {idx})						*remove()*
+remove({list}, {idx}, {end})
 		{end}を指定しなかった場合: リスト |List| {list}から{idx}位置の
 		要素を削除し、その要素を返す。
 		{end}を指定した場合: {idx}から{end}まで(両端を含む)の要素を削
@@ -8364,6 +8448,9 @@ remove({list}, {idx}, {end})				*remove()*
 
 		|method| としても使用できる: >
 			mylist->remove(idx)
+<
+		戻り値の型: any、{list} による
+
 
 remove({blob}, {idx})
 remove({blob}, {idx}, {end})
@@ -8377,12 +8464,17 @@ remove({blob}, {idx}, {end})
 		例: >
 			:echo "last byte: " .. remove(myblob, -1)
 			:call remove(mylist, 0, 9)
+<
+		戻り値の型: |Number|
 
 remove({dict}, {key})
 		{dict}からキー{key}を持つ要素を削除し、それを返す。例: >
 			:echo "removed " .. remove(dict, "one")
 <		{dict}に{key}がない場合はエラーになる。
 		エラー時はゼロを返す。
+
+		戻り値の型: any、{dict} による
+
 
 rename({from}, {to})					*rename()*
 		ファイルの名前を{from}から{to}へ変える。ファイルシステムを越え
@@ -8394,6 +8486,9 @@ rename({from}, {to})					*rename()*
 
 		|method| としても使用できる: >
 			GetOldName()->rename(newname)
+<
+		戻り値の型: |Number|
+
 
 repeat({expr}, {count})					*repeat()*
 		{expr}を{count}回繰り返し、連結して返す。例: >
@@ -8405,6 +8500,9 @@ repeat({expr}, {count})					*repeat()*
 
 		|method| としても使用できる: >
 			mylist->repeat(count)
+<
+		戻り値の型: |String|, |Blob| または list<{type}>、{expr} によ
+		る
 
 
 resolve({filename})					*resolve()* *E655*
@@ -8424,6 +8522,9 @@ resolve({filename})					*resolve()* *E655*
 
 		|method| としても使用できる: >
 			GetName()->resolve()
+<
+		戻り値の型: |String|
+
 
 reverse({object})					*reverse()*
 		{object} 内の項目の順序を逆にする。{object} は |List|、|Blob|、
@@ -8436,6 +8537,10 @@ reverse({object})					*reverse()*
 			:let revlist = reverse(copy(mylist))
 <		|method| としても使用できる: >
 			mylist->reverse()
+<
+		戻り値の型: |String|, |Blob| または list<{type}>、{object} に
+		よる
+
 
 round({expr})							*round()*
 		{expr} を最も近い整数に丸め、|Float| を返す。{expr} が二つの整
@@ -8453,6 +8558,9 @@ round({expr})							*round()*
 
 		|method| としても使用できる: >
 			Compute()->round()
+<
+		戻り値の型: |Float|
+
 
 rubyeval({expr})					*rubyeval()*
 		Rubyの式 {expr} を評価し、その結果を Vim のデータ構造に変換し
@@ -8467,8 +8575,10 @@ rubyeval({expr})					*rubyeval()*
 
 		|method| としても使用できる: >
 			GetRubyExpr()->rubyeval()
+<
+		戻り値の型: any、{expr} による
 
-<		{|+ruby| 機能つきでコンパイルされたときのみ有効}
+		{|+ruby| 機能つきでコンパイルされたときのみ有効}
 
 screenattr({row}, {col})					*screenattr()*
 		|screenchar()| と同様だが、属性を返す。これは他の位置の属性と
@@ -8477,6 +8587,9 @@ screenattr({row}, {col})					*screenattr()*
 
 		|method| としても使用できる: >
 			GetRow()->screenattr(col)
+<
+		戻り値の型: |Number|
+
 
 screenchar({row}, {col})					*screenchar()*
 		スクリーン上の位置 [row, col] の文字を数値で返す。これは全ての
@@ -8489,6 +8602,9 @@ screenchar({row}, {col})					*screenchar()*
 
 		|method| としても使用できる: >
 			GetRow()->screenchar(col)
+<
+		戻り値の型: |Number|
+
 
 screenchars({row}, {col})					*screenchars()*
 		結果は数値のリスト |List|。最初の数値は |screenchar()| が返す
@@ -8498,6 +8614,9 @@ screenchars({row}, {col})					*screenchars()*
 
 		|method| としても使用できる: >
 			GetRow()->screenchars(col)
+<
+		戻り値の型: list<number> または list<any>
+
 
 screencol()							*screencol()*
 		現在のカーソルのスクリーン列を数値で返す。一番左の列番号は 1。
@@ -8511,6 +8630,9 @@ screencol()							*screencol()*
 			nnoremap <silent> GG :echom screencol()<CR>
 			nnoremap GG <Cmd>echom screencol()<CR>
 <
+		戻り値の型: |Number|
+
+
 screenpos({winid}, {lnum}, {col})				*screenpos()*
 		結果はウィンドウ {winid} のテキスト行のバッファ位置 {lnum} 及
 		び列 {col} の画面位置を含む辞書。{col} は1ベースのバイトイン
@@ -8534,6 +8656,9 @@ screenpos({winid}, {lnum}, {col})				*screenpos()*
 
 		|method| としても使用できる: >
 			GetWinid()->screenpos(lnum, col)
+<
+		戻り値の型: dict<number> または dict<any>
+
 
 screenrow()							*screenrow()*
 		現在のカーソルのスクリーン行を数値で返す。一番上の行番号は 1。
@@ -8541,6 +8666,9 @@ screenrow()							*screenrow()*
 		代用として |winline()| を使う事ができる。
 
 		Note: |screencol()| と同様の制約あり。
+
+		戻り値の型: |Number|
+
 
 screenstring({row}, {col})					*screenstring()*
 		結果は文字列で、スクリーンの位置 [row, col] の基底文字と合成文
@@ -8552,6 +8680,8 @@ screenstring({row}, {col})					*screenstring()*
 		|method| としても使用できる: >
 			GetRow()->screenstring(col)
 <
+		戻り値の型: |String|
+
 								*search()*
 search({pattern} [, {flags} [, {stopline} [, {timeout} [, {skip}]]]])
 		正規表現パターン{pattern}を検索する。検索はカーソル位置から開
@@ -8656,6 +8786,9 @@ search({pattern} [, {flags} [, {stopline} [, {timeout} [, {skip}]]]])
 
 		|method| としても使用できる: >
 			GetPattern()->search()
+<
+		戻り値の型: |Number|
+
 
 searchcount([{options}])					*searchcount()*
 		最後の検索数の取得もしくは更新をする。'shortmess' で "S" 無し
@@ -8781,6 +8914,9 @@ searchcount([{options}])					*searchcount()*
 		|method| としても使用できる: >
 			GetSearchOpts()->searchcount()
 <
+		戻り値の型: dict<number>
+
+
 searchdecl({name} [, {global} [, {thisblock}]])			*searchdecl()*
 		{name}の宣言を検索する。
 
@@ -8802,6 +8938,8 @@ searchdecl({name} [, {global} [, {thisblock}]])			*searchdecl()*
 		|method| としても使用できる: >
 			GetName()->searchdecl()
 <
+		戻り値の型: |Number|
+
 							*searchpair()*
 searchpair({start}, {middle}, {end} [, {flags} [, {skip}
 				[, {stopline} [, {timeout}]]]])
@@ -8883,6 +9021,8 @@ searchpair({start}, {middle}, {end} [, {flags} [, {skip}
 	:echo searchpair('{', '', '}', 'bW',
 	     \ 'synIDattr(synID(line("."), col("."), 0), "name") =~? "string"')
 <
+		戻り値の型: |Number|
+
 							*searchpairpos()*
 searchpairpos({start}, {middle}, {end} [, {flags} [, {skip}
 				[, {stopline} [, {timeout}]]]])
@@ -8894,6 +9034,8 @@ searchpairpos({start}, {middle}, {end} [, {flags} [, {skip}
 			:let [lnum,col] = searchpairpos('{', '', '}', 'n')
 <
 		より大規模で役に立つ例に関しては|match-parens|を参照。
+
+		戻り値の型: list<number>
 
 							*searchpos()*
 searchpos({pattern} [, {flags} [, {stopline} [, {timeout} [, {skip}]]]])
@@ -8912,6 +9054,9 @@ searchpos({pattern} [, {flags} [, {stopline} [, {timeout} [, {skip}]]]])
 
 		|method| としても使用できる: >
 			GetPattern()->searchpos()
+<
+		戻り値の型: list<number>
+
 
 server2client({clientid}, {string})			*server2client()*
 		{clientid}に返信文字列を送る。最後に文字列を送った{clientid}は
@@ -8928,6 +9073,9 @@ server2client({clientid}, {string})			*server2client()*
 <		|method| としても使用できる: >
 			GetClientId()->server2client(string)
 <
+		戻り値の型: |Number|
+
+
 serverlist()					*serverlist()*
 		利用可能なサーバー名のリストを返す。1行に1つの形式。
 		サーバーが1つもないとき、または情報を取得できないときは空文字
@@ -8936,6 +9084,9 @@ serverlist()					*serverlist()*
 		例: >
 			:echo serverlist()
 <
+		戻り値の型: |String|
+
+
 setbufline({buf}, {lnum}, {text})			*setbufline()*
 		バッファ {buf} の行 {lnum} を {text} に設定する。これは特定の
 		バッファに対し、|setline()| のように機能する。
@@ -8964,6 +9115,9 @@ setbufline({buf}, {lnum}, {text})			*setbufline()*
 
 		|method| としても使用でき、ベースは第3引数として渡される: >
 			GetText()->setbufline(buf, lnum)
+<
+		戻り値の型: |Number|
+
 
 setbufvar({buf}, {varname}, {val})			*setbufvar()*
 		バッファ{buf}のオプションまたはローカル変数{varname}に{val}を
@@ -8982,6 +9136,8 @@ setbufvar({buf}, {varname}, {val})			*setbufvar()*
 
 		|method| としても使用でき、ベースは第3引数として渡される: >
 			GetValue()->setbufvar(buf, varname)
+<
+		戻り値の型: |Number|
 
 
 setcellwidths({list})					*setcellwidths()*
@@ -9017,6 +9173,8 @@ setcellwidths({list})					*setcellwidths()*
 		認識している内容とマッチするかどうかを確認する。正しく見えない
 		場合は、{list} 引数を調整する必要がある。
 
+		戻り値の型: |Number|
+
 
 setcharpos({expr}, {list})				*setcharpos()*
 		|setpos()| と同様だが指定に使う桁番号はその行のバイトインデッ
@@ -9031,6 +9189,9 @@ setcharpos({expr}, {list})				*setcharpos()*
 
 		|method| としても使用できる: >
 			GetPosition()->setcharpos('.')
+<
+		戻り値の型: |Number|
+
 
 setcharsearch({dict})					*setcharsearch()*
 		現在の文字検索の情報を{dict}に設定する。
@@ -9050,6 +9211,9 @@ setcharsearch({dict})					*setcharsearch()*
 
 		|method| としても使用できる: >
 			SavedSearch()->setcharsearch()
+<
+		戻り値の型: dict<any>
+
 
 setcmdline({str} [, {pos}])					*setcmdline()*
 		コマンドラインを {str} に設定し、カーソル位置を {pos} に設定す
@@ -9060,6 +9224,9 @@ setcmdline({str} [, {pos}])					*setcmdline()*
 
 		|method| としても使用できる: >
 			GetText()->setcmdline()
+<
+		戻り値の型: |Number|
+
 
 setcmdpos({pos})					*setcmdpos()*
 		コマンドラインの{pos}バイトの位置へカーソルを移動する。
@@ -9079,6 +9246,9 @@ setcmdpos({pos})					*setcmdpos()*
 
 		|method| としても使用できる: >
 			GetPos()->setcmdpos()
+<
+		戻り値の型: |Number|
+
 
 setcursorcharpos({lnum}, {col} [, {off}])		*setcursorcharpos()*
 setcursorcharpos({list})
@@ -9094,6 +9264,8 @@ setcursorcharpos({list})
 
 		|method| としても使用できる: >
 			GetCursorPos()->setcursorcharpos()
+<
+		戻り値の型: |Number|
 
 
 setenv({name}, {val})						*setenv()*
@@ -9105,6 +9277,9 @@ setenv({name}, {val})						*setenv()*
 
 		|method| としても使用でき、ベースは第2引数として渡される: >
 			GetPath()->setenv('PATH')
+<
+		戻り値の型: |Number|
+
 
 setfperm({fname}, {mode})				*setfperm()* *chmod*
 		{fname} のファイル許可属性を {mode} に設定する。
@@ -9125,12 +9300,15 @@ setfperm({fname}, {mode})				*setfperm()* *chmod*
 <
 		許可属性の読み取りについては|getfperm()|を参照。
 
+		戻り値の型: |Number|
+
 
 setline({lnum}, {text})					*setline()*
 		カレントバッファの{lnum}行目を{text}にする。行を挿入したい場合
 		は |append()| を使う。別のバッファの行を変更したい場合は
-		|setbufline()| を使う。{lnum}内のテキストプロパティはすべて消
-		去される。
+		|setbufline()| を使う。
+		{lnum}内のテキストプロパティはすべて消去される。
+		|text-prop-cleared|.
 
 		{lnum}は|getline()|のときと同じように解釈される。
 		{lnum}が最後の行の次の行の場合、最後の行の下に{text}が追加され
@@ -9158,6 +9336,9 @@ setline({lnum}, {text})					*setline()*
 
 		|method| としても使用でき、ベースは第2引数として渡される: >
 			GetText()->setline(lnum)
+<
+		戻り値の型: |Number|
+
 
 setloclist({nr}, {list} [, {action} [, {what}]])		*setloclist()*
 		ウィンドウ{nr}のlocationリストを作成・置き換え・追加する。
@@ -9177,6 +9358,9 @@ setloclist({nr}, {list} [, {action} [, {what}]])		*setloclist()*
 
 		|method| としても使用でき、ベースは第2引数として渡される: >
 			GetLoclist()->setloclist(winnr)
+<
+		戻り値の型: |Number|
+
 
 setmatches({list} [, {win}])				*setmatches()*
 		|getmatches()| で取得したマッチのリストを復元する。成功なら 0、
@@ -9188,8 +9372,10 @@ setmatches({list} [, {win}])				*setmatches()*
 		|method| としても使用できる: >
 			GetMatches()->setmatches()
 <
-							*setpos()*
-setpos({expr}, {list})
+		戻り値の型: |Number|
+
+
+setpos({expr}, {list})					*setpos()*
 		文字列{expr}の位置を設定する。有効な値は次の通り:
 			.	カーソル位置
 			'x	マーク x
@@ -9237,6 +9423,8 @@ setpos({expr}, {list})
 
 		|method| としても使用できる: >
 			GetPosition()->setpos('.')
+<
+		戻り値の型: |Number|
 
 
 setqflist({list} [, {action} [, {what}]])		*setqflist()*
@@ -9350,9 +9538,10 @@ setqflist({list} [, {action} [, {what}]])		*setqflist()*
 		|method| としても使用でき、ベースは第2引数として渡される: >
 			GetErrorlist()->setqflist()
 <
+		戻り値の型: |Number|
 
-							*setreg()*
-setreg({regname}, {value} [, {options}])
+
+setreg({regname}, {value} [, {options}])			*setreg()*
 		レジスタ{regname}に{value}をセットする。
 		{regname} が "" もしくは "@" のとき、無名レジスタ '"' を使う。
 		引数 {regname} は文字列。|Vim9-script| では {regname} は1文字
@@ -9405,6 +9594,9 @@ setreg({regname}, {value} [, {options}])
 
 <		|method| としても使用でき、ベースは第2引数として渡される: >
 			GetText()->setreg('a')
+<
+		戻り値の型: |Number|
+
 
 settabvar({tabnr}, {varname}, {val})			*settabvar()*
 		タブページ {tabnr} のタブローカル変数 {varname} を {val} に設
@@ -9418,6 +9610,9 @@ settabvar({tabnr}, {varname}, {val})			*settabvar()*
 
 		|method| としても使用でき、ベースは第3引数として渡される: >
 			GetValue()->settabvar(tab, name)
+<
+		戻り値の型: |Number|
+
 
 settabwinvar({tabnr}, {winnr}, {varname}, {val})	*settabwinvar()*
 		ウィンドウ{winnr}のオプションやローカル変数{varname}の値を
@@ -9441,6 +9636,9 @@ settabwinvar({tabnr}, {winnr}, {varname}, {val})	*settabwinvar()*
 
 		|method| としても使用でき、ベースは第4引数として渡される: >
 			GetValue()->settabwinvar(tab, winnr, name)
+<
+		戻り値の型: |Number|
+
 
 settagstack({nr}, {dict} [, {action}])			*settagstack()*
 		{dict}を使用してウィンドウ{nr}のタグスタックを変更する。
@@ -9476,6 +9674,9 @@ settagstack({nr}, {dict} [, {action}])			*settagstack()*
 <
 		|method| としても使用でき、ベースは第2引数として渡される: >
 			GetStack()->settagstack(winnr)
+<
+		戻り値の型: |Number|
+
 
 setwinvar({winnr}, {varname}, {val})			*setwinvar()*
 		|settabwinvar()|と同様。カレントタブページを対象とする。
@@ -9485,14 +9686,19 @@ setwinvar({winnr}, {varname}, {val})			*setwinvar()*
 
 <		|method| としても使用でき、ベースは第3引数として渡される: >
 			GetValue()->setwinvar(winnr, name)
+<
+		戻り値の型: |Number|
+
 
 sha256({string})						*sha256()*
 		{string}のSHA256チェックサムを64文字の16進文字列で返す。
 
 		|method| としても使用できる: >
 			GetText()->sha256()
+<
+		戻り値の型: |String|
 
-<		{|+cryptv| 機能つきでコンパイルされたときのみ有効}
+		{|+cryptv| 機能つきでコンパイルされたときのみ有効}
 
 shellescape({string} [, {special}])			*shellescape()*
 		シェルコマンドの引数として利用できるように{string}をエスケープ
@@ -9534,6 +9740,9 @@ shellescape({string} [, {special}])			*shellescape()*
 
 		|method| としても使用できる: >
 			GetCommand()->shellescape()
+<
+		戻り値の型: |String|
+
 
 shiftwidth([{col}])						*shiftwidth()*
 		実際に使用される 'shiftwidth' の値を返す。'shiftwidth' がゼロ
@@ -9549,6 +9758,8 @@ shiftwidth([{col}])						*shiftwidth()*
 
 		|method| としても使用できる: >
 			GetColumn()->shiftwidth()
+<
+		戻り値の型: |Number|
 
 sign_ 関数群はここに文書化されている: |sign-functions-details|
 
@@ -9569,6 +9780,9 @@ simplify({filename})					*simplify()*
 
 		|method| としても使用できる: >
 			GetName()->simplify()
+<
+		戻り値の型: |String|
+
 
 sin({expr})						*sin()*
 		{expr} の正弦(サイン)をラジアンで |Float| で返す。{expr} は
@@ -9582,6 +9796,9 @@ sin({expr})						*sin()*
 
 		|method| としても使用できる: >
 			Compute()->sin()
+<
+		戻り値の型: |Float|
+
 
 sinh({expr})						*sinh()*
 		{expr} の双曲線正弦 (ハイパボリックサイン) を返す。
@@ -9597,6 +9814,8 @@ sinh({expr})						*sinh()*
 
 		|method| としても使用できる: >
 			Compute()->sinh()
+<
+		戻り値の型: |Float|
 
 
 slice({expr}, {start} [, {end}])			*slice()*
@@ -9610,6 +9829,8 @@ slice({expr}, {start} [, {end}])			*slice()*
 
 		|method| としても使用できる: >
 			GetList()->slice(offset)
+<
+		戻り値の型: list<{type}>
 
 
 sort({list} [, {how} [, {dict}]])			*sort()* *E702*
@@ -9684,16 +9905,18 @@ sort({list} [, {how} [, {dict}]])			*sort()* *E702*
 <		簡単な式をラムダとして使う例: >
 			eval mylist->sort({i1, i2 -> i1 - i2})
 <
+		戻り値の型: list<{type}>
+
+
 sound_clear()						*sound_clear()*
 		すべてのサウンドの再生を停止する。
 
 		一部のLinuxシステムでは libcanberra-pulse のパッケージが必要に
 		なる場合があり、そうしないとサウンドが停止しない場合がある。
 
-		|method| としても使用できる: >
-			GetSoundName()->sound_playevent()
+		戻り値の型: |Number|
 
-<		{|+sound| 機能つきでコンパイルされたときのみ有効}
+		{|+sound| 機能つきでコンパイルされたときのみ有効}
 
 							*sound_playevent()*
 sound_playevent({name} [, {callback}])
@@ -9725,6 +9948,12 @@ sound_playevent({name} [, {callback}])
 
 		`sound_stop()` に渡すことができるサウンドIDを返す。
 		サウンドを再生できなかった場合はゼロを返す。
+
+		|method| としても使用できる: >
+			GetSoundName()->sound_playevent()
+<
+		戻り値の型: |Number|
+
 		{|+sound| 機能つきでコンパイルされたときのみ有効}
 
 							*sound_playfile()*
@@ -9736,8 +9965,10 @@ sound_playfile({name} [, {callback}])
 
 <		|method| としても使用できる: >
 			GetSoundPath()->sound_playfile()
+<
+		戻り値の型: |Number|
 
-<		{|+sound| 機能つきでコンパイルされたときのみ有効}
+		{|+sound| 機能つきでコンパイルされたときのみ有効}
 
 
 sound_stop({id})					*sound_stop()*
@@ -9754,8 +9985,10 @@ sound_stop({id})					*sound_stop()*
 
 		|method| としても使用できる: >
 			soundid->sound_stop()
+<
+		戻り値の型: |Number|
 
-<		{|+sound| 機能つきでコンパイルされたときのみ有効}
+		{|+sound| 機能つきでコンパイルされたときのみ有効}
 
 							*soundfold()*
 soundfold({word})
@@ -9770,8 +10003,10 @@ soundfold({word})
 		|method| としても使用できる: >
 			GetWord()->soundfold()
 <
-							*spellbadword()*
-spellbadword([{sentence}])
+		戻り値の型: |String|
+
+
+spellbadword([{sentence}])				*spellbadword()*
 		引数なしの場合: カーソル下またはカーソル以降のスペルミスした単
 		語を返す。その単語の先頭へカーソルを移動する。カレント行にスペ
 		ルミスした単語が見つからない場合は空文字列を返し、カーソルは移
@@ -9797,8 +10032,10 @@ spellbadword([{sentence}])
 		|method| としても使用できる: >
 			GetText()->spellbadword()
 <
-							*spellsuggest()*
-spellsuggest({word} [, {max} [, {capital}]])
+		戻り値の型: list<string>
+
+
+spellsuggest({word} [, {max} [, {capital}]])		*spellsuggest()*
 		{word}の正しいスペルの候補のリストを返す。{max}を指定すると、
 		候補の数の最大値となる。{max}を指定しないと、25個までの候補を
 		返す。
@@ -9821,6 +10058,9 @@ spellsuggest({word} [, {max} [, {capital}]])
 
 		|method| としても使用できる: >
 			GetWord()->spellsuggest()
+<
+		戻り値の型: list<string> または list<any>
+
 
 split({string} [, {pattern} [, {keepempty}]])			*split()*
 		{string}を分割してリスト |List| にする。{pattern}を省略した場
@@ -9847,6 +10087,8 @@ split({string} [, {pattern} [, {keepempty}]])			*split()*
 
 		|method| としても使用できる: >
 			GetString()->split()
+<
+		戻り値の型: list<string>
 
 sqrt({expr})						*sqrt()*
 		浮動小数点数 {expr} の非負平方根を |Float| で返す。
@@ -9863,6 +10105,8 @@ sqrt({expr})						*sqrt()*
 
 		|method| としても使用できる: >
 			Compute()->sqrt()
+<
+		戻り値の型: |Float|
 
 
 srand([{expr}])						*srand()*
@@ -9878,6 +10122,9 @@ srand([{expr}])						*srand()*
 			:let seed = srand()
 			:let seed = srand(userinput)
 			:echo rand(seed)
+<
+		戻り値の型: list<number>
+
 
 state([{what}])						*state()*
 		現在の状態を示す文字を含む文字列を返す。常に安全であるとは限ら
@@ -9915,6 +10162,9 @@ state([{what}])						*state()*
 			"ccc" まで繰り返す)
 		    s	画面がメッセージでスクロールされた
 
+		戻り値の型: |String|
+
+
 str2float({string} [, {quoted}])				*str2float()*
 		文字列 {string} を浮動小数点数に変換する。これは式の中で浮動小
 		数点数を使っているときと同じように働く
@@ -9935,6 +10185,9 @@ str2float({string} [, {quoted}])				*str2float()*
 
 		|method| としても使用できる: >
 			let f = text->substitute(',', '', 'g')->str2float()
+<
+		戻り値の型: |Float|
+
 
 str2list({string} [, {utf8}])					*str2list()*
 		文字列{string}の各文字を表す数値を含むリストを返す。例: >
@@ -9949,6 +10202,8 @@ str2list({string} [, {utf8}])					*str2list()*
 
 <		|method| としても使用できる: >
 			GetString()->str2list()
+<
+		戻り値の型: list<number>
 
 
 str2nr({string} [, {base} [, {quoted}]])			*str2nr()*
@@ -9972,6 +10227,8 @@ str2nr({string} [, {base} [, {quoted}]])			*str2nr()*
 
 		|method| としても使用できる: >
 			GetText()->str2nr()
+<
+		戻り値の型: |Number|
 
 strcharlen({string})					*strcharlen()*
 		結果は数値で、文字列 {string} の文字の数を返す。合成文字は無視
@@ -9984,6 +10241,8 @@ strcharlen({string})					*strcharlen()*
 
 		|method| としても使用できる: >
 			GetText()->strcharlen()
+<
+		戻り値の型: |Number|
 
 strcharpart({src}, {start} [, {len} [, {skipcc}]])		*strcharpart()*
 		|strpart()| と同様だがバイトのインデックスおよび長さではなく文
@@ -10001,6 +10260,8 @@ strcharpart({src}, {start} [, {len} [, {skipcc}]])		*strcharpart()*
 
 		|method| としても使用できる: >
 			GetText()->strcharpart(5)
+<
+		戻り値の型: |String|
 
 
 strchars({string} [, {skipcc}])					*strchars()*
@@ -10030,6 +10291,12 @@ strchars({string} [, {skipcc}])					*strchars()*
 		      endfunction
 		    endif
 <
+		|method| としても使用できる: >
+			GetText()->strchars()
+<
+		戻り値の型: |Number|
+
+
 strdisplaywidth({string} [, {col}])			*strdisplaywidth()*
 		結果は数値で、文字列 {string} が {col} (最初の桁はゼロ)で始ま
 		る時のスクリーン上での表示セル幅を返す。
@@ -10046,6 +10313,9 @@ strdisplaywidth({string} [, {col}])			*strdisplaywidth()*
 
 		|method| としても使用できる: >
 			GetText()->strdisplaywidth()
+<
+		戻り値の型: |Number|
+
 
 strftime({format} [, {time}])				*strftime()*
 		結果は文字列で、{format}に従って日付や時間がフォーマットされた
@@ -10069,6 +10339,9 @@ strftime({format} [, {time}])				*strftime()*
 
 <		|method| としても使用できる: >
 			GetFormat()->strftime()
+<
+		戻り値の型: |String|
+
 
 strgetchar({str}, {index})				*strgetchar()*
 		{str} 内の {index} 番目の文字に対応する数値を取得する。これは、
@@ -10080,6 +10353,9 @@ strgetchar({str}, {index})				*strgetchar()*
 
 		|method| としても使用できる: >
 			GetText()->strgetchar(5)
+<
+		戻り値の型: |Number|
+
 
 stridx({haystack}, {needle} [, {start}])		*stridx()*
 		結果は数値で、{haystack}の中で文字列{needle}が最初に現れる位置
@@ -10103,8 +10379,11 @@ stridx({haystack}, {needle} [, {start}])		*stridx()*
 		|method| としても使用できる: >
 			GetHaystack()->stridx(needle)
 <
-							*string()*
-string({expr})	{expr}を文字列に変換して返す。{expr}が数値、浮動小数点数、文字
+		戻り値の型: |Number|
+
+
+string({expr})							*string()*
+		{expr}を文字列に変換して返す。{expr}が数値、浮動小数点数、文字
 		列、Blob またはそれらの複合の場合は、この戻り値を |eval()| で
 		パースして復元できる。
 			{expr} 型	結果 ~
@@ -10134,6 +10413,8 @@ string({expr})	{expr}を文字列に変換して返す。{expr}が数値、浮�
 
 <		|strtrans()|も参照。
 
+		戻り値の型: |String|
+
 strlen({string})						*strlen()*
 		結果は数値で、文字列{string}のバイト単位での長さ。
 		引数が数値の場合は、まず文字列に変換される。
@@ -10143,6 +10424,9 @@ strlen({string})						*strlen()*
 
 		|method| としても使用できる: >
 			GetString()->strlen()
+<
+		戻り値の型: |Number|
+
 
 strpart({src}, {start} [, {len} [, {chars}]])			*strpart()*
 		結果は文字列で、{src}の{start}番目の文字から始まる、長さ{len}
@@ -10169,6 +10453,9 @@ strpart({src}, {start} [, {len} [, {chars}]])			*strpart()*
 
 		|method| としても使用できる: >
 			GetText()->strpart(5)
+<
+		戻り値の型: |String|
+
 
 strptime({format}, {timestring})				*strptime()*
 		結果は数値で、{format} で指定した書式に一致する {timestring} が
@@ -10196,6 +10483,9 @@ strptime({format}, {timestring})				*strptime()*
 <
 		全システムで使用可能ではない。調べるにはこれを使う: >
 			:if exists("*strptime")
+<
+		戻り値の型: |Number|
+
 
 strridx({haystack}, {needle} [, {start}])			*strridx()*
 		結果は数値で、{haystack}の中で文字列{needle}が最後に現れる位置
@@ -10215,6 +10505,9 @@ strridx({haystack}, {needle} [, {start}])			*strridx()*
 
 		|method| としても使用できる: >
 			GetHaystack()->strridx(needle)
+<
+		戻り値の型: |Number|
+
 
 strtrans({string})					*strtrans()*
 		結果は文字列で、{string}内の表示不可能な文字を|'isprint'|で指
@@ -10223,11 +10516,14 @@ strtrans({string})					*strtrans()*
 			echo strtrans(@a)
 <		これはレジスタの中の改行を、改行として表示する代わりに "^@" と
 		表示する。
-<
+
 		エラー時には空の文字列を返す。
 
 		|method| としても使用できる: >
 			GetString()->strtrans()
+<
+		戻り値の型: |String|
+
 
 strutf16len({string} [, {countcc}])			*strutf16len()*
 		結果は数値で、文字列 {string} 内の UTF-16 コード単位の数
@@ -10249,6 +10545,9 @@ strutf16len({string} [, {countcc}])			*strutf16len()*
 		|method| としても使用できる: >
 			GetText()->strutf16len()
 <
+		戻り値の型: |Number|
+
+
 strwidth({string})					*strwidth()*
 		結果は数値で、文字列 {string} のスクリーン上での表示セル幅を返
 		す。タブ文字の幅は 1 として数えられる (タブ文字の幅も考慮した
@@ -10260,6 +10559,9 @@ strwidth({string})					*strwidth()*
 
 		|method| としても使用できる: >
 			GetString()->strwidth()
+<
+		戻り値の型: |Number|
+
 
 submatch({nr} [, {list}])			*submatch()* *E935*
 		|:substitute| や substitute() 関数の中の式でのみ使われる。
@@ -10289,6 +10591,9 @@ submatch({nr} [, {list}])			*submatch()* *E935*
 
 		|method| としても使用できる: >
 			GetNr()->submatch()
+<
+		戻り値の型: |String| または list<string>、{list} による
+
 
 substitute({string}, {pat}, {sub}, {flags})		*substitute()*
 		結果は文字列で、{string}内で最初に{pat}にマッチした部分を{sub}
@@ -10335,6 +10640,9 @@ substitute({string}, {pat}, {sub}, {flags})		*substitute()*
 
 		|method| としても使用できる: >
 			GetString()->substitute(pat, sub, flags)
+<
+		戻り値の型: |String|
+
 
 swapfilelist()						*swapfilelist()*
 		"vim -r" で表示されるようなスワップファイル名のリストを返す。
@@ -10346,6 +10654,9 @@ swapfilelist()						*swapfilelist()*
 			let &directory = '.'
 			let swapfiles = swapfilelist()
 			let &directory = save_dir
+<
+		戻り値の型: list<string>
+
 
 swapinfo({fname})					*swapinfo()*
 		結果は、スワップファイル {fname} に関する情報を含む辞書。利用
@@ -10368,6 +10679,9 @@ swapinfo({fname})					*swapinfo()*
 
 		|method| としても使用できる: >
 			GetFilename()->swapinfo()
+<
+		戻り値の型: dict<any> または dict<string>
+
 
 swapname({buf})						*swapname()*
 		結果はバッファ {buf} のスワップファイルパス。
@@ -10378,6 +10692,9 @@ swapname({buf})						*swapname()*
 
 		|method| としても使用できる: >
 			GetBufname()->swapname()
+<
+		戻り値の型: |String|
+
 
 synID({lnum}, {col}, {trans})				*synID()*
 		結果は数値で、現在のウィンドウ内での位置{lnum}と{col}の位置の
@@ -10404,6 +10721,8 @@ synID({lnum}, {col}, {trans})				*synID()*
 		例(カーソルの下の構文アイテムの名前を表示する): >
 			:echo synIDattr(synID(line("."), col("."), 1), "name")
 <
+		戻り値の型: |Number|
+
 
 							*synIDattr()*
 synIDattr({synID}, {what} [, {mode}])
@@ -10444,6 +10763,8 @@ synIDattr({synID}, {what} [, {mode}])
 <
 		|method| としても使用できる: >
 	:echo synID(line("."), col("."), 1)->synIDtrans()->synIDattr("fg")
+<
+		戻り値の型: |String|
 
 
 synIDtrans({synID})					*synIDtrans()*
@@ -10456,6 +10777,9 @@ synIDtrans({synID})					*synIDtrans()*
 
 		|method| としても使用できる: >
 	:echo synID(line("."), col("."), 1)->synIDtrans()->synIDattr("fg")
+<
+		戻り値の型: |Number|
+
 
 synconcealed({lnum}, {col})				*synconcealed()*
 		結果は現状 3 つのアイテムを含むリスト |List| である。
@@ -10485,6 +10809,8 @@ synconcealed({lnum}, {col})				*synconcealed()*
 		|syntax-vs-match| であるため、項目をハイライトする |matchadd()|
 		は考慮されない。
 
+		戻り値の型: list<any>
+
 
 synstack({lnum}, {col})					*synstack()*
 		カレントウィンドウの {lnum}, {col} の位置の構文アイテムのスタッ
@@ -10503,6 +10829,9 @@ synstack({lnum}, {col})					*synstack()*
 <		{lnum} と {col} で指定された位置が無効な場合は、空のリストが返
 		される。行の最後の文字の直後と空行の最初の桁が有効な位置であ
 		る。
+
+		戻り値の型: list<number> または list<any>
+
 
 system({expr} [, {input}])				*system()* *E677*
 		シェルコマンド {expr} の実行結果を文字列 |String| として得る。
@@ -10566,6 +10895,9 @@ system({expr} [, {input}])				*system()* *E677*
 
 		|method| としても使用できる: >
 			:echo GetCmd()->system()
+<
+		戻り値の型: |String|
+
 
 systemlist({expr} [, {input}])				*systemlist()*
 		|system()| と同じだが行のリスト (|List|) を返す。行は NL 文字
@@ -10583,6 +10915,8 @@ systemlist({expr} [, {input}])				*systemlist()*
 
 		|method| としても使用できる: >
 			:echo GetCmd()->systemlist()
+<
+		戻り値の型: list<string>
 
 
 tabpagebuflist([{arg}])					*tabpagebuflist()*
@@ -10600,6 +10934,9 @@ tabpagebuflist([{arg}])					*tabpagebuflist()*
 
 		|method| としても使用できる: >
 			GetTabpage()->tabpagebuflist()
+<
+		戻り値の型: list<number>
+
 
 tabpagenr([{arg}])					*tabpagenr()*
 		結果は数値で、カレントタブページの番号。最初のタブページの番号
@@ -10613,6 +10950,8 @@ tabpagenr([{arg}])					*tabpagenr()*
 		この番号はコマンド|:tab|で指定できるものと同じである。
 
 		エラーの場合はゼロを返す。
+
+		戻り値の型: |Number|
 
 
 tabpagewinnr({tabarg} [, {arg}])			*tabpagewinnr()*
@@ -10631,10 +10970,15 @@ tabpagewinnr({tabarg} [, {arg}])			*tabpagewinnr()*
 		|method| としても使用できる: >
 			GetTabpage()->tabpagewinnr()
 <
-							*tagfiles()*
-tagfiles()	カレントバッファにおいて、タグを検索するときに使うファイルの名
+		戻り値の型: |Number|
+
+
+tagfiles()						*tagfiles()*
+		カレントバッファにおいて、タグを検索するときに使うファイルの名
 		前からなるリスト|List|を返す。オプション 'tags' を展開したもので
 		ある。
+
+		戻り値の型: list<string> または list<any>
 
 
 taglist({expr} [, {filename}])				*taglist()*
@@ -10678,6 +11022,9 @@ taglist({expr} [, {filename}])				*taglist()*
 
 		|method| としても使用できる: >
 			GetTagpattern()->taglist()
+<
+		戻り値の型: list<dict<any>> または list<any>
+
 
 tan({expr})						*tan()*
 		{expr} の正接 (タンジェント) をラジアンで返す。
@@ -10693,6 +11040,8 @@ tan({expr})						*tan()*
 
 		|method| としても使用できる: >
 			Compute()->tan()
+<
+		戻り値の型: |Float|
 
 
 tanh({expr})						*tanh()*
@@ -10709,6 +11058,8 @@ tanh({expr})						*tanh()*
 
 		|method| としても使用できる: >
 			Compute()->tanh()
+<
+		戻り値の型: |Float|
 
 
 tempname()					*tempname()* *temp-file-name*
@@ -10723,6 +11074,9 @@ tempname()					*tempname()* *temp-file-name*
 		MS-Windowsでは、'shellslash' がオンのときか、'shellcmdflag' が
 		'-' で始まり 'shell' が powershell か pwsh を含まない時はスラッ
 		シュが使われる。
+
+		戻り値の型: |String|
+
 
 term_ 関数群はここに文書化されている: |terminal-function-details|
 
@@ -10760,6 +11114,8 @@ terminalprops()						*terminalprops()*
 		- |t_RS| と |t_RC| の応答については |v:termstyleresp| と
 		  |v:termblinkresp| を参照。
 
+		戻り値の型: dict<string>
+
 
 test_ 関数群はここに文書化されている: |test-functions-details|
 
@@ -10782,8 +11138,11 @@ timer_info([{id}])
 
 		|method| としても使用できる: >
 			GetTimer()->timer_info()
+<
+		戻り値の型: list<dict<any>> または list<any>
 
-<		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+
 
 timer_pause({timer}, {paused})				*timer_pause()*
 		タイマーを一時停止もしくは再開する。一時停止したタイマーは時間
@@ -10800,8 +11159,11 @@ timer_pause({timer}, {paused})				*timer_pause()*
 
 		|method| としても使用できる: >
 			GetTimer()->timer_pause(1)
+<
+		戻り値の型: |Number|
 
-<		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+
 
 						*timer_start()* *timer* *timers*
 timer_start({time}, {callback} [, {options}])
@@ -10842,7 +11204,11 @@ timer_start({time}, {callback} [, {options}])
 			GetMsec()->timer_start(callback)
 
 <		|sandbox| では利用できない。
+
+		戻り値の型: |Number|
+
 		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+
 
 timer_stop({timer})					*timer_stop()*
 		タイマーを停止する。タイマーのコールバックは以降呼び出されな
@@ -10852,15 +11218,21 @@ timer_stop({timer})					*timer_stop()*
 
 		|method| としても使用できる: >
 			GetTimer()->timer_stop()
+<
+		戻り値の型: |Number|
 
-<		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+
 
 timer_stopall()						*timer_stopall()*
 		全てのタイマーを停止する。タイマーのコールバックは以降呼び出さ
 		れない。タイマーが不作法に振る舞う場合に便利である。タイマーが
 		存在しなかった場合でもエラーは発生しない。
 
+		戻り値の型: |Number|
+
 		{|+timers| 機能を有効にしてコンパイルしたときのみ有効}
+
 
 tolower({expr})						*tolower()*
 		引数の文字列の大文字を小文字に変換してできた文字列を返す(文字
@@ -10869,6 +11241,9 @@ tolower({expr})						*tolower()*
 
 		|method| としても使用できる: >
 			GetText()->tolower()
+<
+		戻り値の型: |String|
+
 
 toupper({expr})						*toupper()*
 		引数の文字列の小文字を大文字に変換してできた文字列を返す(文字
@@ -10877,6 +11252,9 @@ toupper({expr})						*toupper()*
 
 		|method| としても使用できる: >
 			GetText()->toupper()
+<
+		戻り値の型: |String|
+
 
 tr({src}, {fromstr}, {tostr})				*tr()*
 		文字列{src}の中で、{fromstr}に含まれる全ての文字を{tostr}の対
@@ -10895,6 +11273,9 @@ tr({src}, {fromstr}, {tostr})				*tr()*
 
 		|method| としても使用できる: >
 			GetText()->tr(from, to)
+<
+		戻り値の型: |String|
+
 
 trim({text} [, {mask} [, {dir}]])				*trim()*
 		{text} の先頭と/もしくは末尾から、{mask} 内のすべての文字を取
@@ -10925,6 +11306,9 @@ trim({text} [, {mask} [, {dir}]])				*trim()*
 
 		|method| としても使用できる: >
 			GetText()->trim()
+<
+		戻り値の型: |String|
+
 
 trunc({expr})							*trunc()*
 		{expr} をゼロ方向に切りつめた整数を |Float| で返す。
@@ -10941,6 +11325,9 @@ trunc({expr})							*trunc()*
 		|method| としても使用できる: >
 			Compute()->trunc()
 <
+		戻り値の型: |Float|
+
+
 							*type()*
 type({expr})	{expr}の型を示す数値を返す。
 		マジックナンバーを使わずに、v:t_ 変数を使う方が良い。それぞれ
@@ -10975,6 +11362,8 @@ type({expr})	{expr}の型を示す数値を返す。
 
 <		|method| としても使用できる: >
 			mylist->type()
+<
+		戻り値の型: |Number|
 
 
 typename({expr})					*typename()*
@@ -10982,6 +11371,8 @@ typename({expr})					*typename()*
 		例: >
 			echo typename([1, 2, 3])
 <			list<number> ~
+
+		戻り値の型: |String|
 
 
 undofile({name})					*undofile()*
@@ -10999,6 +11390,9 @@ undofile({name})					*undofile()*
 
 		|method| としても使用できる: >
 			GetFilename()->undofile()
+<
+		戻り値の型: |String|
+
 
 undotree([{buf}])					*undotree()*
 		カレントバッファ、または {buf} が指定されている場合は特定のバッ
@@ -11041,6 +11435,9 @@ undotree([{buf}])					*undotree()*
 				が入れ子にされている。それぞれのアイテムはさら
 				に "alt" アイテムを持っていることがある。
 
+		戻り値の型: dict<any>
+
+
 uniq({list} [, {func} [, {dict}]])			*uniq()* *E882*
 		{list} 内の隣接する同じ値の要素の 2 個目以降をその場で
 		(in-place) 削除する。{list} を返す。リストを変更したくない場合
@@ -11054,6 +11451,9 @@ uniq({list} [, {func} [, {dict}]])			*uniq()* *E882*
 		|method| としても使用できる: >
 			mylist->uniq()
 <
+		戻り値の型: list<{type}>
+
+
 							*utf16idx()*
 utf16idx({string}, {idx} [, {countcc} [, {charidx}]])
 		|charidx()| と同じだが、{string} の {idx} にあるバイトの
@@ -11084,6 +11484,8 @@ utf16idx({string}, {idx} [, {countcc} [, {charidx}]])
 <
 		|method| としても使用できる: >
 			GetName()->utf16idx(idx)
+<
+		戻り値の型: |Number|
 
 
 values({dict})						*values()*
@@ -11093,6 +11495,9 @@ values({dict})						*values()*
 
 		|method| としても使用できる: >
 			mydict->values()
+<
+		戻り値の型: list<any>
+
 
 virtcol({expr} [, {list} [, {winid}]])			*virtcol()*
 		結果は数値で、{expr}で与えられるファイルの位置の、スクリーン上
@@ -11103,7 +11508,10 @@ virtcol({expr} [, {list} [, {winid}]])			*virtcol()*
 		<Tab>があった場合、戻り値は8になる。|conceal| は無視される。
 		バイト位置については |col()| を使う。
 
-		{expr}の解釈の仕方については|col()|を参照。
+		{expr}の解釈の仕方については |getpos()| および |col()| を参照。
+		{expr} が "$" の場合、カーソル行末を意味するため、結果はカーソ
+		ル行のセル数に 1 を加えた数になる。
+
 		'virtualedit' がオンのときは[lnum, col, off]というリストを指定
 		することもできる。"off" は文字の開始位置からのスクリーン座標で
 		のオフセットである。例えば、<Tab>の中の位置や、行の最後の文字
@@ -11111,15 +11519,6 @@ virtcol({expr} [, {list} [, {winid}]])			*virtcol()*
 		れる。
 		現在のモードに対して仮想編集がオンのときは、行末を越えた位置が
 		返ってくることもある。|'virtualedit'| も参照。
-		可能な位置指定:
-		    .	    カーソルの位置
-		    $	    カーソル行の末尾(カーソル行に表示されている文字数
-			    +1となる)
-		    'x	    マークxの位置(マークが設定されていない場合、0が返
-			    る)
-		    v	    ビジュアルモードでは: ビジュアル選択領域の開始行
-			    (カーソルがその端)。ビジュアルモード以外ではカーソ
-			    ル位置を返す。すぐに更新される点が |'<| と違う。
 
 		{list} が存在し、非ゼロの場合、virtcol() は、文字が占める最初
 		と最後のスクリーン位置を含むリストを返す。
@@ -11127,8 +11526,9 @@ virtcol({expr} [, {list} [, {winid}]])			*virtcol()*
 		オプションの {winid} 引数を使用すると、カレントウィンドウの代
 		わりにそのウィンドウの値が取得される。
 
-		現在のファイルに対して設定されているマークだけが使用可能なこと
-		に注意。
+		Note 現在のファイルに対して設定されているマークだけが使用可能
+		なことに注意。
+
 		例: >
 			" テキスト "foo^Lbar" で、カーソルが "^L" の上にある:
 
@@ -11139,13 +11539,17 @@ virtcol({expr} [, {list} [, {winid}]])			*virtcol()*
 			" テキスト "	  there" で、'h' のところに 't:
 
 			virtcol("'t")	" 戻り値 6
-<		最初の桁は 1 である。エラーの場合は、0 または [0, 0] が返され
+<
+		最初の桁は 1 である。エラーの場合は、0 または [0, 0] が返され
 		る:
 		より高度な例(全ての行の長さの最大値を返す): >
 		    echo max(map(range(1, line('$')), "virtcol([v:val, '$'])"))
 
 <		|method| としても使用できる: >
 			GetPos()->virtcol()
+<
+		戻り値の型: |Number|
+
 
 virtcol2col({winid}, {lnum}, {col})			*virtcol2col()*
 		結果は数値で、ウィンドウ {winid} のバッファ行 {lnum} および仮
@@ -11168,6 +11572,9 @@ virtcol2col({winid}, {lnum}, {col})			*virtcol2col()*
 
 		|method| としても使用できる: >
 			GetWinid()->virtcol2col(lnum, col)
+<
+		戻り値の型: |Number|
+
 
 visualmode([{expr}])						*visualmode()*
 		結果は文字列で、カレントバッファ内で最後に使われたビジュアル
@@ -11186,6 +11593,9 @@ visualmode([{expr}])						*visualmode()*
 		ジュアルモードがクリアされ、以前の値を返す。|non-zero-arg| を
 		参照。
 
+		戻り値の型: |String|
+
+
 wildmenumode()					*wildmenumode()*
 		wildmenuが有効な場合は|TRUE|を返し、そうでなければ|FALSE|を返
 		す。'wildmenu' と 'wildmode' を参照。
@@ -11197,6 +11607,9 @@ wildmenumode()					*wildmenumode()*
     :cnoremap <expr> <C-j> wildmenumode() ? "\<Down>\<Tab>" : "\<c-j>"
 <
 		(Note 'wildcharm' オプションが適切に設定されている必要がある。)
+
+		戻り値の型: |Number|
+
 
 win_execute({id}, {command} [, {silent}])		*win_execute()*
 		`execute()` と似ているが、ウィンドウ {id} のコンテキスト内で実
@@ -11217,6 +11630,9 @@ win_execute({id}, {command} [, {silent}])		*win_execute()*
 
 		|method| としても使用でき、ベースは第2引数として渡される: >
 			GetCommand()->win_execute(winid)
+<
+		戻り値の型: |String|
+
 
 win_findbuf({bufnr})					*win_findbuf()*
 		バッファ {bufnr} が含まれているウィンドウについて |window-ID|
@@ -11224,6 +11640,9 @@ win_findbuf({bufnr})					*win_findbuf()*
 
 		|method| としても使用できる: >
 			GetBufnr()->win_findbuf()
+<
+		戻り値の型: list<number> または list<any>
+
 
 win_getid([{win} [, {tab}]])				*win_getid()*
 		特定のウィンドウに関する |window-ID|を得る。
@@ -11236,6 +11655,8 @@ win_getid([{win} [, {tab}]])				*win_getid()*
 
 		|method| としても使用できる: >
 			GetWinnr()->win_getid()
+<
+		戻り値の型: |Number|
 
 
 win_gettype([{nr}])					*win_gettype()*
@@ -11261,6 +11682,9 @@ win_gettype([{nr}])					*win_gettype()*
 		|method| としても使用できる: >
 			GetWinid()->win_gettype()
 <
+		戻り値の型: |String|
+
+
 win_gotoid({expr})					*win_gotoid()*
 		{expr} の ID で示されるウィンドウへ移動する。これは現在のタブ
 		ページも移動する。
@@ -11268,6 +11692,9 @@ win_gotoid({expr})					*win_gotoid()*
 
 		|method| としても使用できる: >
 			GetWinid()->win_gotoid()
+<
+		戻り値の型: |Number|
+
 
 win_id2tabwin({expr})					*win_id2tabwin()*
 		{expr} の ID で示されるタブ番号とウィンドウ番号のリストを返す:
@@ -11276,6 +11703,9 @@ win_id2tabwin({expr})					*win_id2tabwin()*
 
 		|method| としても使用できる: >
 			GetWinid()->win_id2tabwin()
+<
+		戻り値の型: list<number>
+
 
 win_id2win({expr})					*win_id2win()*
 		{expr} の ID で示されるウィンドウのウィンドウ番号を返す。
@@ -11284,6 +11714,9 @@ win_id2win({expr})					*win_id2win()*
 
 		|method| としても使用できる: >
 			GetWinid()->win_id2win()
+<
+		戻り値の型: |Number|
+
 
 win_move_separator({nr}, {offset})			*win_move_separator()*
 		ウィンドウ {nr} の垂直セパレータ(例えば、右側のボーダー)を
@@ -11301,6 +11734,9 @@ win_move_separator({nr}, {offset})			*win_move_separator()*
 
 		|method| としても使用できる: >
 			GetWinnr()->win_move_separator(offset)
+<
+		戻り値の型: |Number|
+
 
 win_move_statusline({nr}, {offset})			*win_move_statusline()*
 		ウィンドウ {nr} のステータス行(例えば、下側のボーダー)を
@@ -11316,6 +11752,9 @@ win_move_statusline({nr}, {offset})			*win_move_statusline()*
 
 		|method| としても使用できる: >
 			GetWinnr()->win_move_statusline(offset)
+<
+		戻り値の型: |Number|
+
 
 win_screenpos({nr})					*win_screenpos()*
 		ウィンドウ {nr} のスクリーン位置を 2 つの数値のリストで返す:
@@ -11328,6 +11767,9 @@ win_screenpos({nr})					*win_screenpos()*
 		|method| としても使用できる: >
 			GetWinid()->win_screenpos()
 <
+		戻り値の型: list<number>
+
+
 win_splitmove({nr}, {target} [, {options}])		*win_splitmove()*
 		一時的にウィンドウ {target} に移り、そしてウィンドウ {nr} を
 		{target} に隣接する新しい分割に移動する。
@@ -11351,6 +11793,8 @@ win_splitmove({nr}, {target} [, {options}])		*win_splitmove()*
 		|method| としても使用できる: >
 			GetWinid()->win_splitmove(target)
 <
+		戻り値の型: |Number|
+
 
 							*winbufnr()*
 winbufnr({nr})	結果は数値で、{nr}番目のウィンドウに関連付けられているバッファ
@@ -11364,16 +11808,24 @@ winbufnr({nr})	結果は数値で、{nr}番目のウィンドウに関連付け�
 		|method| としても使用できる: >
 			FindWindow()->winbufnr()->bufname()
 <
+		戻り値の型: |Number|
+
+
 							*wincol()*
 wincol()	結果は数値で、ウィンドウの中でカーソルがある位置の仮想桁番号を
 		表す。これはウィンドウの左側から数えたスクリーン上の桁である。
 		一番左の桁は1となる。
+
+		戻り値の型: |Number|
+
 
 							*windowsversion()*
 windowsversion()
 		文字列を返す。MS-Windows では OS のバージョンを示す。例えば、
 		Windows 10 は "10.0"、Windows 8 は "6.2"、Windows XP は "5.1"
 		である。MS-Windows 以外のシステムでは、結果は空文字列である。
+
+		戻り値の型: |String|
 
 winheight({nr})						*winheight()*
 		結果は数値で、{nr}で示されるウィンドウの高さ(行数)を示す。
@@ -11388,6 +11840,9 @@ winheight({nr})						*winheight()*
 <		|method| としても使用できる: >
 			GetWinid()->winheight()
 <
+		戻り値の型: |Number|
+
+
 winlayout([{tabnr}])					*winlayout()*
 		結果は、タブページ内のウィンドウの配置を含むネストしたリストで
 		ある。
@@ -11420,14 +11875,20 @@ winlayout([{tabnr}])					*winlayout()*
 		|method| としても使用できる: >
 			GetTabnr()->winlayout()
 <
-							*winline()*
-winline()	結果は数値で、ウィンドウの最上行から数えた行番号を返す。ウィン
+		戻り値の型: list<any>
+
+
+winline()							*winline()*
+		結果は数値で、ウィンドウの最上行から数えた行番号を返す。ウィン
 		ドウでの最上行が1となる。
 		カーソルが移動するとファイルの表示が更新され、それによってスク
 		ロールが引き起こされることがある。
 
-							*winnr()*
-winnr([{arg}])	結果は現在のウィンドウを示す数値。最上位のウィンドウは1であ
+		戻り値の型: |Number|
+
+
+winnr([{arg}])							*winnr()*
+		結果は現在のウィンドウを示す数値。最上位のウィンドウは1であ
 		る。ポップアップウィンドウは0を返す。
 
 		省略可能な引数{arg}は以下の値をサポートする:
@@ -11456,8 +11917,11 @@ winnr([{arg}])	結果は現在のウィンドウを示す数値。最上位の�
 <		|method| としても使用できる: >
 			GetWinval()->winnr()
 <
-							*winrestcmd()*
-winrestcmd()	現在のウィンドウサイズを復元するための一連の|:resize|コマンド
+		戻り値の型: |Number|
+
+
+winrestcmd()							*winrestcmd()*
+		現在のウィンドウサイズを復元するための一連の|:resize|コマンド
 		を返す。これが返すコマンドは、ウィンドウを開閉せず、カレント
 		ウィンドウとカレントタブページが変更されていないときのみ正しく
 		動作する。
@@ -11466,8 +11930,10 @@ winrestcmd()	現在のウィンドウサイズを復元するための一連の|
 			:call MessWithWindowSizes()
 			:exe cmd
 <
-							*winrestview()*
-winrestview({dict})
+		戻り値の型: |String|
+
+
+winrestview({dict})						*winrestview()*
 		|winsaveview()|が返す辞書|Dictionary|を使ってカレントウィンド
 		ウの表示状態を復元する。
 		Note: {dict} は |winsaveview()| の戻り値に含まれる値をすべて
@@ -11487,8 +11953,11 @@ winrestview({dict})
 		|method| としても使用できる: >
 			GetView()->winrestview()
 <
-							*winsaveview()*
-winsaveview()	カレントウィンドウの表示状態を復元するための情報を持つ辞書
+		戻り値の型: |Number|
+
+
+winsaveview()							*winsaveview()*
+		カレントウィンドウの表示状態を復元するための情報を持つ辞書
 		|Dictionary|を返す。この表示状態を復元するには|winrestview()|
 		を使う。
 		マッピング内でジャンプして、元の表示状態を戻したいときに使われ
@@ -11513,6 +11982,8 @@ winsaveview()	カレントウィンドウの表示状態を復元するための
 			skipcol		スキップされている桁
 		Note オプションの値は保存されない。
 
+		戻り値の型: dict<number>
+
 
 winwidth({nr})						*winwidth()*
 		結果は数値で、ウィンドウ{nr}の幅。
@@ -11528,6 +11999,8 @@ winwidth({nr})						*winwidth()*
 
 		|method| としても使用できる: >
 			GetWinid()->winwidth()
+<
+		戻り値の型: |Number|
 
 
 wordcount()						*wordcount()*
@@ -11550,8 +12023,10 @@ wordcount()						*wordcount()*
 			visual_words    ビジュアル選択領域内の単語数
 					(ビジュアルモードのみ)
 
-							*writefile()*
-writefile({object}, {fname} [, {flags}])
+		戻り値の型: dict<number>
+
+
+writefile({object}, {fname} [, {flags}])			*writefile()*
 		{object}が |List| の場合、それをファイル{fname}に書き込む。リ
 		ストの各要素は改行文字(NL)で区切られる。各要素は文字列か数値で
 		なければならない。
@@ -11600,6 +12075,8 @@ writefile({object}, {fname} [, {flags}])
 
 <		|method| としても使用できる: >
 			GetText()->writefile("thefile")
+<
+		戻り値の型: |Number|
 
 
 xor({expr}, {expr})					*xor()*
@@ -11612,6 +12089,7 @@ xor({expr}, {expr})					*xor()*
 		|method| としても使用できる: >
 			:let bits = bits->xor(0x80)
 <
+		戻り値の型: |Number|
 
 ==============================================================================
 3. 機能リスト						*feature-list*
