@@ -1278,7 +1278,7 @@ gdb の起動方法によっては、termdebug の起動時間が異なる場合
 gdb の起動プロセスに時間が掛かりすぎる場合に termdebug が停止しないように、設
 定可能なタイムアウトが含まれています。このタイムアウトは、10 ミリ秒の倍数で設
 定できます: >
-    let g:termdebug_config['timeout'] = 500 # 500 * 10ms = 5 seconds.
+    let g:termdebug_config['timeout'] = 500 # 500 * 10 ミリ秒 = 5 秒。
 
 デフォルトのタイムアウトは 3000 ミリ秒です。
 							*:TermdebugCommand*
