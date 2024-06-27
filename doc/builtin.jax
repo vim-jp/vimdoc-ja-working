@@ -4528,7 +4528,6 @@ getpos({expr})							*getpos()*
 		戻り値の型: list<number>
 
 
-H_EAST
 getqflist([{what}])					*getqflist()*
 		現在の全quickfixエラーのリスト |List| を返す。リストの各要素は
 		辞書で、以下の要素を持つ:
@@ -5616,6 +5615,7 @@ indexof({object}, {expr} [, {opts}])			*indexof()*
 			mylist->indexof(expr)
 <
 		戻り値の型: |Number|
+
 
 input({prompt} [, {text} [, {completion}]])		*input()*
 		結果は文字列で、ユーザーがコマンドラインに入力したものが返され
