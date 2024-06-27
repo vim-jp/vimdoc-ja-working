@@ -1,4 +1,4 @@
-*terminal.txt*	For Vim version 9.1.  Last change: 2024 Jun 13
+*terminal.txt*	For Vim version 9.1.  Last change: 2024 Jun 20
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -648,7 +648,7 @@ term_getjob({buf})					*term_getjob()*
 		Get the Job associated with terminal window {buf}.
 		{buf} is used as with |term_getsize()|.
 		Returns |v:null| when there is no job. In Vim9 script, return
-		null_job when there is no job.
+		|null_job| when there is no job.
 
 		Can also be used as a |method|: >
 			GetBufnr()->term_getjob()
@@ -1283,6 +1283,15 @@ When the debugger ends, typically by typing "quit" in the gdb window, the two
 opened windows are closed.
 
 Only one debugger can be active at a time.
+
+						*termdebug-timeout*
+Depending on how gdb is launched, termdebug startup time may vary.
+To avoid termdebug to get stuck if the startup process of gdb takes too long,
+a configurable timeout is included. Such time out is configurable in terms of
+multiple of 10ms: >
+    let g:termdebug_config['timeout'] = 500 # 500 * 10ms = 5 seconds.
+
+The default timeout is 3000 ms.
 							*:TermdebugCommand*
 If you want to give specific commands to the command being debugged, you can
 use the `:TermdebugCommand` command followed by the command name and
@@ -1383,8 +1392,8 @@ Put focus on the gdb window to type commands there.  Some common ones are:
 						*:Run* *:Arguments*
 In the window showing the source code these commands can be used to control
 gdb:
- :Run [args]	    run the program with [args] or the previous arguments
- :Arguments {args}  set arguments for the next `:Run`
+ `:Run` [args]	    run the program with [args] or the previous arguments
+ `:Arguments` {args}  set arguments for the next `:Run`
 
  *:Break*	set a breakpoint at the cursor position
  :Break {position}
@@ -1430,10 +1439,10 @@ breakpoint, or use the "Clear breakpoint" right-click menu entry.
 
 Inspecting variables ~
 					*termdebug-variables* *:Evaluate*
- :Evaluate	    evaluate the expression under the cursor
- K		    same (see |termdebug_map_K| to disable)
- :Evaluate {expr}   evaluate {expr}
- :'<,'>Evaluate     evaluate the Visually selected text
+ `:Evaluate`	    evaluate the expression under the cursor
+ `K`		    same (see |termdebug_map_K| to disable)
+ `:Evaluate` {expr}   evaluate {expr}
+ `:'<,'>Evaluate`     evaluate the Visually selected text
 
 This is similar to using "print" in the gdb window.
 You can usually shorten `:Evaluate` to `:Ev`.
@@ -1441,14 +1450,14 @@ You can usually shorten `:Evaluate` to `:Ev`.
 
 Navigating stack frames ~
 				*termdebug-frames* *:Frame* *:Up* *:Down*
- :Frame [frame]	select frame [frame], which is a frame number,
+ `:Frame` [frame]	select frame [frame], which is a frame number,
 			address, or function name (default: current frame)
- :Up [count]		go up [count] frames (default: 1; the frame that
+ `:Up` [count]		go up [count] frames (default: 1; the frame that
 			called the current)
- +			same (see |termdebug_map_plus| to disable)
- :Down [count]	go down [count] frames (default: 1; the frame called
+ `+`			same (see |termdebug_map_plus| to disable)
+ `:Down` [count]	go down [count] frames (default: 1; the frame called
 			by the current)
- -			same (see |termdebug_map_minus| to disable)
+ `-`			same (see |termdebug_map_minus| to disable)
 
 
 Other commands ~
@@ -1524,6 +1533,9 @@ If there is no g:termdebug_config you can use: >
 	let g:termdebug_use_prompt = 1
 <
 Mappings ~
+The termdebug plugin enables a few default mappings.  All those mappings
+are reset to their original values once the termdebug session concludes.
+
 					*termdebug_map_K* *termdebug-mappings*
 The K key is normally mapped to |:Evaluate| unless a buffer local (|:map-local|)
 mapping to K already exists.  If you do not want this use: >
