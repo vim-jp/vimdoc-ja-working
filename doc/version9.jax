@@ -41577,7 +41577,7 @@ XDG デスクトップ仕様 |xdg-base-dir| のサポート
 
 関数: ~
 
-|bindtextdomain()|	メッセージ検索翻訳ベースパスを設定する
+|bindtextdomain()|	メッセージの翻訳検索のベースパスを設定する
 |diff()|		２ つの文字列のリストの差分
 |filecopy()|		ファイル {from} を {to} にコピー
 |foreach()|		リストの項目に関数を適用
