@@ -101,7 +101,7 @@ g:rust_use_custom_ctags_defs~
         は、Universal Ctags が Tagbar と併用される場合、すでに Rust の組み込み
         サポートを備えているためです。
 
-        また、Note Universal Ctags 以外の ctags を使用する場合、Vim が異なる
+        Note また、Universal Ctags 以外の ctags を使用する場合、Vim が異なる
         ソースファイルの定義に移動するために使用できる |tags| ファイルを生成す
         るときに自動的には使用されないことに注意してください。|tags| ファイル
         を生成したい場合は、`rust.vim/ctags/rust.ctags` を自分の `~/.ctags` に
@@ -364,6 +364,9 @@ Playpen の統合
 
 		|g:rust_shortener_url| は短縮サービスのベース URL で、デフォル
 		トでは "https://is.gd/" です。
+
+		|g:rust_clip_command| は、playpen の URL をシステムのクリップ
+		ボードにコピーするために実行するコマンドです。
 
 
 単一の Rust ファイルの評価
