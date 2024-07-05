@@ -195,8 +195,8 @@ g:cargo_makeprg_params~
 
                                                   *g:cargo_shell_command_runner*
 g:cargo_shell_command_runner~
-	このオプションを設定すると、cargo コマンド|:Cargo|、|:Cbuild|、|:Crun|
-	等のシェルコマンドの実行方法が変更されます。
+	このオプションを設定すると、cargo コマンド |:Cargo|、|:Cbuild|、
+	|:Crun| 等のシェルコマンドの実行方法が変更されます。
 	デフォルトでは、|:terminal| はターミナルウィンドウでシェルコマンドを非
 	同期的に実行するために使用されます。ただし、コマンドの実行に |:!| を使
 	用する場合は、以下のように指定できます: >
