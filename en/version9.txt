@@ -1,4 +1,4 @@
-*version9.txt*  For Vim version 9.1.  Last change: 2024 Jun 18
+*version9.txt*  For Vim version 9.1.  Last change: 2024 Jun 20
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -41554,7 +41554,7 @@ Enum support for Vim9 script |:enum|
 							*new-other-9.2*
 Other new features ~
 ------------------
-The comment plugin |comment-install| is included.
+The new plugins |comment-install| and |nohlsearch-install| are included.
 
 Support for Wayland UI.
 
@@ -41562,6 +41562,9 @@ Support for the XDG Desktop Specification |xdg-base-dir|
 
 Support highlighting the matched text for insert-mode completion and
 command-line completion in |ins-completion-menu|.
+
+Support for translating messages in Vim script plugins using the |gettext()|
+and |bindtextdomain()| functions.
 
 							*changed-9.2*
 Changed~
@@ -41579,6 +41582,7 @@ Various syntax, indent and other plugins were added.
 
 Functions: ~
 
+|bindtextdomain()|	set message lookup translation base path
 |diff()|		diff two Lists of strings
 |filecopy()|		copy a file {from} to {to}
 |foreach()|		apply function to List items
@@ -41591,6 +41595,7 @@ Functions: ~
 
 Autocommands: ~
 
+|CursorMovedC|		after the cursor was moved in the comamnd-line
 |SessionWritePost|	after writing the session file |:mksession|
 |TermResponseAll|	after the terminal response to |t_RV| and others is
 			received
@@ -41634,7 +41639,8 @@ Improved visual highlighting.
 
 Python3 support in OpenVMS.
 
-Support |fuzzy-matching| during |ins-completion| with "fuzzy" item for 'completeopt'
+Support for |fuzzy-matching| during |ins-completion| with the "fuzzy" and
+"fuzzycollect" values of the 'completeopt' setting
 
 ==============================================================================
 COMPILE TIME CHANGES					*compile-changes-9.2*
@@ -41642,6 +41648,8 @@ COMPILE TIME CHANGES					*compile-changes-9.2*
 Support for building with Ruby 3.3.
 
 Support for building Vim 9 in z/OS (MVS).
+
+Clean-up old MS-Windows code.
 
 ==============================================================================
 PATCHES						*patches-9.2* *bug-fixes-9.2*
