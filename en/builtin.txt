@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim version 9.1.  Last change: 2024 Jun 17
+*builtin.txt*	For Vim version 9.1.  Last change: 2024 Jun 23
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -28,9 +28,9 @@ acos({expr})			Float	arc cosine of {expr}
 add({object}, {item})		List/Blob   append {item} to {object}
 and({expr}, {expr})		Number	bitwise AND
 append({lnum}, {text})		Number	append {text} below line {lnum}
-appendbufline({expr}, {lnum}, {text})
+appendbufline({buf}, {lnum}, {text})
 				Number	append {text} below line {lnum}
-					in buffer {expr}
+					in buffer {buf}
 argc([{winid}])			Number	number of files in the argument list
 argidx()			Number	current index in the argument list
 arglistid([{winnr} [, {tabnr}]]) Number	argument list id
@@ -67,6 +67,8 @@ autocmd_get([{opts}])		List	return a list of autocmds
 balloon_gettext()		String	current text in the balloon
 balloon_show({expr})		none	show {expr} inside the balloon
 balloon_split({msg})		List	split {msg} as used for a balloon
+bindtextdomain({package}, {path})
+				none	bind text domain to specied path
 blob2list({blob})		List	convert {blob} into a list of numbers
 browse({save}, {title}, {initdir}, {default})
 				String	put up a file requester
@@ -153,8 +155,8 @@ diff_filler({lnum})		Number	diff filler lines about {lnum}
 diff_hlID({lnum}, {col})	Number	diff highlighting at {lnum}/{col}
 digraph_get({chars})		String	get the |digraph| of {chars}
 digraph_getlist([{listall}])	List	get all |digraph|s
-digraph_set({chars}, {digraph})	Boolean	register |digraph|
-digraph_setlist({digraphlist})	Boolean	register multiple |digraph|s
+digraph_set({chars}, {digraph})	Bool	register |digraph|
+digraph_setlist({digraphlist})	Bool	register multiple |digraph|s
 echoraw({expr})			none	output {expr} as-is
 empty({expr})			Number	|TRUE| if {expr} is empty
 environ()			Dict	return environment variables
@@ -277,7 +279,8 @@ gettabvar({nr}, {varname} [, {def}])
 gettabwinvar({tabnr}, {winnr}, {name} [, {def}])
 				any	{name} in {winnr} in tab page {tabnr}
 gettagstack([{nr}])		Dict	get the tag stack of window {nr}
-gettext({text})			String	lookup translation of {text}
+gettext({text} [, {package}])
+				String	lookup translation of {text}
 getwininfo([{winid}])		List	list of info about each window
 getwinpos([{timeout}])		List	X and Y coord in pixels of Vim window
 getwinposx()			Number	X coord in pixels of the Vim window
@@ -429,6 +432,7 @@ popup_menu({what}, {options})	Number	create a popup window used as a menu
 popup_move({id}, {options})	none	set position of popup window {id}
 popup_notification({what}, {options})
 				Number	create a notification popup window
+popup_setbuf({id}, {buf})	Bool	set the buffer for the popup window {id}
 popup_setoptions({id}, {options})
 				none	set options for popup window {id}
 popup_settext({id}, {text})	none	set the text of popup window {id}
@@ -525,9 +529,9 @@ searchpos({pattern} [, {flags} [, {stopline} [, {timeout} [, {skip}]]]])
 server2client({clientid}, {string})
 				Number	send reply string
 serverlist()			String	get a list of available servers
-setbufline({expr}, {lnum}, {text})
+setbufline({buf}, {lnum}, {text})
 				Number	set line {lnum} to {text} in buffer
-					{expr}
+					{buf}
 setbufvar({buf}, {varname}, {val})
 				none	set {varname} in buffer {buf} to {val}
 setcellwidths({list})		none	set character cell width overrides
@@ -1217,6 +1221,13 @@ balloon_split({msg})					*balloon_split()*
 
 		Return type: list<any> or list<string>
 
+bindtextdomain({package}, {path})			*bindtextdomain()*
+		Bind a specific {package} to a {path} so that the
+		|gettext()| function can be used to get language-specific
+		translations for a package.  {path} is the directory name
+		for the translations. See |package-create|.
+
+		Return type: none
 
 blob2list({blob})					*blob2list()*
 		Return a List containing the number value of each byte in Blob
@@ -2579,7 +2590,7 @@ execute({command} [, {silent}])					*execute()*
 		Can also be used as a |method|: >
 			GetCommand()->execute()
 <
-		Return type: |Number|
+		Return type: |String|
 
 
 exepath({expr})						*exepath()*
@@ -4977,7 +4988,7 @@ gettagstack([{winnr}])					*gettagstack()*
 		Return type: dict<any>
 
 
-gettext({text})						*gettext()*
+gettext({text} [, {package}])				*gettext()*
 		Translate String {text} if possible.
 		This is mainly for use in the distributed Vim scripts.  When
 		generating message translations the {text} is extracted by
@@ -4987,6 +4998,9 @@ gettext({text})						*gettext()*
 		For {text} double quoted strings are preferred, because
 		xgettext does not understand escaping in single quoted
 		strings.
+		When the {package} is specified, the translation is looked up
+		for that specific package. You need to specify the path to
+		look for translations with the |bindtextdomain()| function.
 
 		Return type: |String|
 
