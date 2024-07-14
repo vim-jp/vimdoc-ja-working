@@ -74,7 +74,6 @@ balloon_show({expr})		なし	{expr} をバルーン内に表示
 balloon_split({msg})		リスト	{msg} をバルーンで使われるように分割す
 					る
 bindtextdomain({package}, {path})
-				なし	bind text domain to specied path
 				なし	指定されたパスにテキストドメインをバイ
 					ンドする
 blob2list({blob})		リスト	{blob} を数値のリストに変換する
@@ -474,7 +473,7 @@ popup_move({id}, {options})	なし	ポップアップウィンドウ {id} の位
 					セットする
 popup_notification({what}, {options})
 				数値	ポップアップウィンドウの通知を作成する
-popup_setbuf({id}, {buf})	真偽値	ポップアップ ウィンドウ {id} のバッファ
+popup_setbuf({id}, {buf})	真偽値	ポップアップウィンドウ {id} のバッファ
 					を設定する
 popup_setoptions({id}, {options})
 				なし	ポップアップウィンドウ {id} のオプショ
