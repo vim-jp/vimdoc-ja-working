@@ -1,4 +1,4 @@
-*version9.txt*  For Vim バージョン 9.1.  Last change: 2024 Jul 12
+*version9.txt*  For Vim バージョン 9.1.  Last change: 2024 Jul 15
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -41581,6 +41581,9 @@ XDG デスクトップ仕様 |xdg-base-dir| のサポート
 - |:cd| や同様のコマンドで 'cdpath' からディレクトリを補完できるように、
   |:command-complete| や |getcompletion()| 等に "cd_in_path" 補完タイプを追加
   します
+- add 'cpoptions' flag "z" |cpo-z|, to disable some (traditional) vi behaviour/inconsistency (see |d-special| and |cw|).
+- いくつかの (伝統的な) vi の動作/不整合を無効にするために、'cpoptions' にフラ
+  グ "z" |cpo-z| を追加します (|d-special| および |cw| を参照)。
 
 							*added-9.2*
 追加要素 ~
