@@ -41569,19 +41569,18 @@ XDG デスクトップ仕様 |xdg-base-dir| のサポート
 - 'commentstring' のデフォルトには、自動コメントの見栄えを良くするための空白の
   パディングが含まれています |comment-install|
 - 'completeopt' は |global-local| オプションになりました。
-- 'nrformat' は、マイナス記号の前の空白に基づいて符号付きまたは符号なしの数値
-  を決定する新しい "blank" サブオプションを受け付けます。
+- 'nrformat' は、マイナス記号の前の空白に基づいて符号付きか符号なしの数値かを
+  決定する新しい "blank" サブオプションを受け付けます。
 - 新しい目印を定義するときに優先順位を指定できるようにします |:sign-define|
 - get(function, "arity") 関数を使用して関数の引数に関する情報を提供します
-  |get()-function|
+  |get()-func|
 - |:bwipe| はジャンプリストとタグスタックのデータも消去します
 - |:bnext| や同様のコマンドを使用してバッファリスト内を移動すると、ドキュメン
   トどおりに動作し、ヘルプバッファをスキップします (ヘルプバッファから実行され
-  ていない場合は、次/前のヘルプバッファに移動します)。
+  ていない場合。そうでない場合は、次/前のヘルプバッファに移動します)。
 - |:cd| や同様のコマンドで 'cdpath' からディレクトリを補完できるように、
   |:command-complete| や |getcompletion()| 等に "cd_in_path" 補完タイプを追加
   します
-- add 'cpoptions' flag "z" |cpo-z|, to disable some (traditional) vi behaviour/inconsistency (see |d-special| and |cw|).
 - いくつかの (伝統的な) vi の動作/不整合を無効にするために、'cpoptions' にフラ
   グ "z" |cpo-z| を追加します (|d-special| および |cw| を参照)。
 
