@@ -585,8 +585,8 @@ popup_notification({what}, {options})			 *popup_notification()*
 popup_setbuf({id}, {buf})				*popup_setbuf()*
 		ポップアップウィンドウ {id} に表示されるバッファ {buf} を設定
 		する。{buf} の使用については、|bufname()| 関数を参照。
-		バッファテキストのサイズに合わせてウィンドウのサイズや位置を変
-		更することができる。
+		バッファテキストのサイズに合わせてウィンドウのサイズや位置が変
+		更されるかもしれない。
 
 		|method| としても使用できる: >
 			GetPopup()->popup_setbuf(bufnr('foobar'))
