@@ -3045,7 +3045,7 @@ text...
 				let lconst[0] = 2  " Error!
 				let lconst[1][0] = 'b'  " OK
 <							*E995*
-			:const を使用して既存の変数を指定するとエラーになる: >
+			:const を既存の変数に指定するとエラーになる: >
 				:let x = 1
 				:const x = 1  " エラー!
 <							*E996*
