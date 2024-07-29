@@ -1,4 +1,4 @@
-*terminal.txt*	For Vim バージョン 9.1.  Last change: 2024 Jul 20
+*terminal.txt*	For Vim バージョン 9.1.  Last change: 2024 Jul 28
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1241,7 +1241,7 @@ SSH 接続が1つあればリモートで機能します。
 							*termdebug-starting*
 以下のコマンドでプラグインを読み込みます: >
 	packadd termdebug
-<|.vimrc| ファイルからプラグインを読み込む時は、"!" 属性を追加します: >
+|.vimrc| ファイルからプラグインを読み込む時は、"!" 属性を追加します: >
 	packadd! termdebug
 <							*:Termdebug*
 デバッグを開始するには `:Termdebug` または `:TermdebugCommand` に続けてコマン
