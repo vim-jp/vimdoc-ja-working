@@ -2562,9 +2562,9 @@ executable({expr})					*executable()*
 		MS-Windowsではファイルが存在するかどうかだけを判定し、それが
 		ディレクトリでないことや、それが本当に実行可能であるかどうかは
 		判定されない。
-		MS-Windows では、Vim の実行ファイルと同じディレクトリに実行ファ
-		イルが常に見つかる。このディレクトリは $PATH に追加されるため、
-		|win32-PATH| を実行しても機能するはずだ。
+		MS-Windows では、Vim の実行可能ファイルと同じディレクトリにあ
+		る実行可能ファイルは常に見つかる。このディレクトリは $PATH に
+		追加されるため、|win32-PATH| を実行しても機能するはずだ。
 					*NoDefaultCurrentDirectoryInExePath*
 		MS-Windows では、通常、Vim のカレント作業ディレクトリにある実
 		行可能ファイルも見つかるが、
