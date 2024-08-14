@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim バージョン 9.1.  Last change: 2024 Aug 03
+*syntax.txt*	For Vim バージョン 9.1.  Last change: 2024 Aug 13
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2093,7 +2093,8 @@ Note これら 3 つの変数は HTML 構文ファイルで維持されること
 る。
 
 
-JSON						*json.vim* *ft-json-syntax*
+JSON			*json.vim* *ft-json-syntax* *g:vim_json_conceal*
+					       *g:vim_json_warnings*
 
 json構文ファイルは、標準で conceal サポート付きのシンタックスハイライトを提供
 する。conceal を無効にするには: >
@@ -2278,7 +2279,8 @@ V release 4で供給される標準的なパッケージセットの関数がユ
   mv_finance	 mv_logic	mv_powseries
 
 
-MARKDOWN						*ft-markdown-syntax*
+MARKDOWN			*ft-markdown-syntax* *g:markdown_minlines*
+		 *g:markdown_fenced_languages* *g:markdown_syntax_conceal*
 
 長い領域がある場合、間違ったハイライトがおこなわれる可能性がある。表示を遅くす
 る代償として、エンジンに領域の開始を同期するためにもっと後方を見るようにするこ
