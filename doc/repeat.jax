@@ -852,8 +852,9 @@ MO_PLUGPACKAGE_PATH	"lang/" ディレクトリの構造を含む変数。この�
  " および 'expandtab' をリセットする。
  let b:undo_ftplugin = "setl fo< com< cms< et<"
 
- " 'formatoptions' を設定すると、コメント行は分割されるが、他の行は分割されな
- " い。また、<CR> を押すか、"o" を使用すると、コメントリーダーが挿入される。
+ " 'formatoptions' を設定して、コメント行は分割されるが、他の行は分割されない
+ " ようにし、また、<CR> を押すか "o" を使用すると、コメントリーダーが挿入され
+ " るようにする。
  setlocal fo-=t fo+=croql
 
  " コメント内の破線リストをフォーマットするには、'comments' を設定する。
