@@ -857,7 +857,7 @@ MO_PLUGPACKAGE_PATH	"lang/" ディレクトリの構造を含む変数。この�
  " るようにする。
  setlocal fo-=t fo+=croql
 
- " コメント内の破線リストをフォーマットするには、'comments' を設定する。
+ " 'comments' を設定して、コメント内の破線リストをフォーマットする。
  setlocal comments=s:#\ -,m:#\ \ ,e:#,n:#,fb:-
  setlocal commentstring=#\ %s
 
