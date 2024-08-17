@@ -954,7 +954,7 @@ MO_PLUGPACKAGE_PATH	"lang/" ディレクトリの構造を含む変数。この�
 >
 	cd /d f:\forkvim\src\po
  (以下のコマンドは 1 行で入力する必要があるが、ここでは例のため区切られている)
- For Russian:
+ ロシア語:
 	nmake.exe -f Make_mvc.mak "PLUGPACKAGE=aap"
 	"PO_PLUGPACKAGE=e:\project\translate\plugins\ru.po"
 	"MO_PLUGPACKAGE_PATH=d:\Programs\vim\vim91\lang\ru\LC_MESSAGES"
