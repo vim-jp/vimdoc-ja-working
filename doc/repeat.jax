@@ -959,7 +959,7 @@ MO_PLUGPACKAGE_PATH	"lang/" ディレクトリの構造を含む変数。この�
 	"PO_PLUGPACKAGE=e:\project\translate\plugins\ru.po"
 	"MO_PLUGPACKAGE_PATH=d:\Programs\vim\vim91\lang\ru\LC_MESSAGES"
 	aap.mo
- For German:
+ ドイツ語:
 	nmake.exe -f Make_mvc.mak "PLUGPACKAGE=aap"
 	"PO_PLUGPACKAGE=e:\project\translate\plugins\de.po"
 	"MO_PLUGPACKAGE_PATH=d:\Programs\vim\vim91\lang\de\LC_MESSAGES"
