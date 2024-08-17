@@ -3398,8 +3398,8 @@ netrw#Call("funcname"[,args])        netrw の内部関数を指定の引数で
 		http://www.chiark.greenend.org.uk/~sgtatham/putty/
 
 		(Marlin Unruh) このプログラムは私のところでも動作しました。実
-		行可能ファイル 1 つなので、Windows\System32 フォルダにコピーして
-		ショートカットを作っておくといいかも。
+		行可能ファイル 1 つなので、Windows\System32 フォルダにコピーし
+		てショートカットを作っておくといいかも。
 
 		(Dudley Fox) plink も試してみるといいでしょう。こっちの方が目
 		的にあっていると思います。plink は putty スイートに含まれてい

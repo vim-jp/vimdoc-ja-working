@@ -4743,7 +4743,7 @@ dist#vim9#IsSafeExecutable(filetype:string, executable:string): bool ~
 
 この関数は、ファイルタイプと実行可能ファイルを受け取り、与えられた実行可能ファ
 イルを実行しても安全かどうかをチェックする。セキュリティ上の理由から、ユーザー
-はVim にランダムな実行可能ファイルを実行させたくない場合や、"<filetype>_exec"
+は Vim にランダムな実行可能ファイルを実行させたくない場合や、"<filetype>_exec"
 変数 (|plugin_exec|) を設定して特定のファイルタイプに対する実行を禁止している
 場合がある。
 
