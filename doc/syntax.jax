@@ -2519,7 +2519,7 @@ PANDOC						*ft-pandoc-syntax*
 
 デフォルトでは、markdown ファイルはファイルタイプ "markdown" として検出される。
 あるいは、代わりにファイルタイプ "pandoc" として検出されるようにすることもで
-る。これを行うには、*g:filetype_md* 変数:
+る。これを行うには、*g:filetype_md* 変数を設定する:
 
 	:let g:filetype_md = 'pandoc'
 
