@@ -29,22 +29,6 @@ version7.txt
 exclude_files=(`echo $exclude_files_str`)
 unchanged_file_count=0
 
-echo -n "|ファイル名" >> ${outf}
-echo -n "|行数" >> ${outf}
-echo -n "|変更行数" >> ${outf}
-echo -n "|削除行数" >> ${outf}
-echo -n "|作業者" >> ${outf}
-echo -n "|メモ" >> ${outf}
-echo "|" >> ${outf}
-
-echo -n "|:--------" >> ${outf}
-echo -n "|---:" >> ${outf}
-echo -n "|---:" >> ${outf}
-echo -n "|---:" >> ${outf}
-echo -n "|:---" >> ${outf}
-echo -n "|:---" >> ${outf}
-echo "|" >> ${outf}
-
 for fp in `ls -1 ${new_doc_dir}/*.txt`; do
 	fname=`basename ${fp}`
 	old_fp=${old_doc_dir}/${fname}
@@ -110,11 +94,31 @@ for fp in `ls -1 ${old_doc_dir}/*.txt`; do
 	fi
 done
 
-sort ${outf}.presort >> ${outf}
-rm -f ${outf}.presort
+if [ -e ${outf}.presort ]; then
+	echo -n "|ファイル名" >> ${outf}
+	echo -n "|行数" >> ${outf}
+	echo -n "|変更行数" >> ${outf}
+	echo -n "|削除行数" >> ${outf}
+	echo -n "|作業者" >> ${outf}
+	echo -n "|メモ" >> ${outf}
+	echo "|" >> ${outf}
 
-echo "" >> ${outf}
-echo "更新不要の ${unchanged_file_count} ファイルの表示は省略しています。" >> ${outf}
+	echo -n "|:--------" >> ${outf}
+	echo -n "|---:" >> ${outf}
+	echo -n "|---:" >> ${outf}
+	echo -n "|---:" >> ${outf}
+	echo -n "|:---" >> ${outf}
+	echo -n "|:---" >> ${outf}
+	echo "|" >> ${outf}
+
+	sort ${outf}.presort >> ${outf}
+	rm -f ${outf}.presort
+
+	echo "" >> ${outf}
+	echo "更新不要の ${unchanged_file_count} ファイルの表示は省略しています。" >> ${outf}
+else
+	echo ":ok_man: 未翻訳のファイルはありません。" >> ${outf}
+fi
 
 # Listing excluded files
 echo "" >> ${outf}
