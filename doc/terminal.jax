@@ -89,8 +89,8 @@
 	CTRL-W gt	次のタブページに移動する。`gt` と同じ	*t_CTRL-W_gt*
 	CTRL-W gT	前のタブページに移動する。`gT` と同じ	*t_CTRL-W_gT*
 
-CTRL-W の代わりに別のキーを使うにはオプション 'termwinkey' を参照。
-但し 'termwinkey' を2回タイプすると 'termwinkey' がジョブへ送信される。例:
+CTRL-W の代わりに別のキーを使うにはオプション 'termwinkey' を参照。但し、
+'termwinkey' を2回タイプすると 'termwinkey' がジョブへ送信される。例:
 	'termwinkey' CTRL-W    次のウィンドウにフォーカスを移動する
 	'termwinkey' :         Exコマンドに入る
 	'termwinkey' 'termwinkey' 端末内のジョブに 'termwinkey' を送信する
