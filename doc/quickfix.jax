@@ -1,4 +1,4 @@
-*quickfix.txt*  For Vim バージョン 9.1.  Last change: 2024 Aug 20
+*quickfix.txt*  For Vim バージョン 9.1.  Last change: 2024 Sep 09
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1284,6 +1284,18 @@ Vimがコンパイラから起動された場合、:shやいくつかの:!コマ
 がコンパイラと同じプロセスの中で動いているため、標準出力が利用できないからで
 ある。
 
+GROFF					*quickfix-groff* *compiler-groff*
+
+GROFF コンパイラプラグインは、mom マクロセット (groff_mom マニュアルページに記
+載) を入力として使用し、出力ファイルタイプ拡張子が make に渡されることを想定し
+ている。:make html や :make pdf 等。
+
+追加の引数は、`b:groff_compiler_args` または `g:groff_compiler_args` に設定す
+ることで groff に渡すことができる。groff に渡される `language` 引数は
+'spelllang' を使用して設定されるが、`b:groff_compiler_lang` を設定することで上
+書きできる。デフォルトのエンコードは `UTF-8` で、`b:groff_compiler_encoding`
+または `g:groff_compiler_encoding` を設定することで変更できる。
+
 PANDOC					*quickfix-pandoc* *compiler-pandoc*
 
 Pandoc コンパイラプラグインは、:make html や :make pdf のように、出力ファイル
@@ -1297,8 +1309,7 @@ Pandoc コンパイラプラグインは、:make html や :make pdf のように
 
 `--from` 引数はバッファのファイルタイプを使用した推測である。
 これは、`b:pandoc_compiler_from` を設定することで上書きできる。
-同様に、`--metadata lang` 引数は `&spelllang` を使って設定される。
-これは、`b:pandoc_compiler_lang` を設定することで上書きできる。
+`--metadata lang` 引数は 'spelllang' を使って設定される。
 `--from=markdown` が想定されており、タイトルヘッダや YAML ブロックにタイトルが
 設定されていない場合は、ファイル名 (拡張子なし) がタイトルとして使用される。
 
