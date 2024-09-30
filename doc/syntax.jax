@@ -3661,9 +3661,6 @@ syntax/tex.vimにそのパッケージを対応させてほしいと思うだろ
 変数 "starform" が真ならば、あなたが作ったmathグループがアスタリスクつきの形を
 もつことを意味する(例. eqnarray*)。
 
-LOCALMATHをあなたが決めた新しいmathグループに書き換える必要がある。そしてこれ
-を.vim/after/syntax/tex.vimに加えること。
-
 					*tex-style* *b:tex_stylish*
  Tex: 新しいスタイルを始めるには ~
 
