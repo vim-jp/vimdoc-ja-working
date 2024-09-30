@@ -4982,11 +4982,6 @@ gettagstack([{winnr}])					*gettagstack()*
 
 gettext({text} [, {package}])				*gettext()*
 		可能であれば文字列 {text} を翻訳する。
-		これは主に配布する Vim script で使う。
-		メッセージの翻訳を生成するときに {text} が xgettext によって抽
-		出され、翻訳者が .po ファイルで翻訳済みメッセージを追加でき
-		Vim は gettext() が呼ばれた時に翻訳を検索する。
-
 		これは Vim script で使用するためのものである。メッセージの翻訳
 		を生成するときに、{text} は `xgettext` によって抽出され、翻訳
 		者は翻訳されたメッセージを .po ファイルに追加することができ、
