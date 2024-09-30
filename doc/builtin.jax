@@ -4816,10 +4816,6 @@ getregionpos({pos1}, {pos2} [, {opts}])            *getregionpos()*
 					対して "col" 値 0 が使用される。
 					(デフォルト: |FALSE|)
 
-		'virtualedit' が使用されない限り、"off" の数値はゼロである。次
-		に、それは文字の先頭からの画面桁のオフセットになる。例えば、
-		<Tab> 内または最後の文字の後の位置である。
-
 		|method| としても使用できる: >
 			getpos('.')->getregionpos(getpos("'a"))
 <
