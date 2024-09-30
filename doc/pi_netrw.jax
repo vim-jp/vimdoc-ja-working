@@ -3763,7 +3763,7 @@ netrw かあるいは関与している他のプラグインと衝突してい�
 
 		:w! DBG
 
-	   clientserver をサポートしない vim では、デバッグ出力は別のタブに出
+<	   clientserver をサポートしない vim では、デバッグ出力は別のタブに出
 	   して: >
 
 		:tabnext
