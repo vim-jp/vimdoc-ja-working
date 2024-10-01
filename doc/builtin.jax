@@ -3102,16 +3102,6 @@ filter({expr1}, {expr2})					*filter()*
 		|Vim9| script では結果が true、false、0もしくは1になる。
 		それ以外の値では結果が型エラーになる。
 
-		この操作はその場で(in-place)行われる。リストや辞書を変更したく
-		ない場合は最初にコピーを作ること: >
-			:let l = filter(copy(mylist), 'v:val =~ "KEEP"')
-
-<		{expr1}のリスト |List|、|Blob|、 または辞書 |Dictionary| をフ
-		ィルターした結果を返す。{expr2}を評価している最中にエラーが発
-		生した場合は、{expr1}内のそれ以降の要素の処理は行われない。
-		{expr2}が関数参照の場合、関数が "abort" フラグつきで定義されて
-		いない限り、関数内のエラーは無視される。
-
 		リストや辞書でのこの操作はその場で(in-place)行われる。変更した
 		くない場合は最初にコピーを作ること: >
 			:let l = filter(copy(mylist), 'v:val =~ "KEEP"')
