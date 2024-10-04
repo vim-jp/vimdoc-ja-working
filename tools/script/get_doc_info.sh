@@ -96,7 +96,7 @@ done
 
 if [ -e ${outf}.presort ]; then
 	echo -n "|ファイル名" >> ${outf}
-	echo -n "|行数" >> ${outf}
+	echo -n "|総行数" >> ${outf}
 	echo -n "|変更行数" >> ${outf}
 	echo -n "|削除行数" >> ${outf}
 	echo -n "|作業者" >> ${outf}
