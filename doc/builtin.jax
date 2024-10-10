@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.1.  Last change: 2024 Sep 23
+*builtin.txt*	For Vim バージョン 9.1.  Last change: 2024 Oct 08
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -248,6 +248,8 @@ getcharmod()			数値	修飾キーの状態を表す数値を取得
 getcharpos({expr})		リスト	カーソル、マーク、その他のカーソル位置
 getcharsearch()			辞書	最後の文字検索を取得
 getcharstr([{expr}])		文字列	ユーザーから1文字を取得する
+getcmdcomplpat()		文字列	現在のコマンドライン補完の補完パターン
+					を返す
 getcmdcompltype()		文字列	現在のコマンドライン補完のタイプを返す
 getcmdline()			文字列	現在のコマンドライン入力を取得
 getcmdpos()			数値	コマンドラインのカーソル位置を取得
@@ -3961,6 +3963,17 @@ getcharstr([{expr}])					*getcharstr()*
 
 		戻り値の型: |String|
 
+getcmdcomplpat()					*getcmdcomplpat()*
+		現在のコマンドラインの補完パターンを返す。
+		コマンドラインが編集されている場合にのみ機能するため、
+		|c_CTRL-\_e| または |c_CTRL-R_=| を使用する必要がある。
+		|getcmdtype()|、|setcmdpos()|、|getcmdline()|、
+		|getcmdprompt()|、|getcmdcompltype()| および |setcmdline()| も
+		参照。
+		補完が定義されていない場合は空の文字列を返す。
+
+		戻り値の型: |String|
+
 
 getcmdcompltype()					*getcmdcompltype()*
 		現在のコマンドライン補完のタイプを返す。
@@ -3968,7 +3981,8 @@ getcmdcompltype()					*getcmdcompltype()*
 		|c_CTRL-R_=| を使用する必要がある。
                 返す文字列については |:command-completion| を参照のこと。
 		|getcmdtype()|, |setcmdpos()|, |getcmdline()|,
-		|getcmdprompt()|, |setcmdline()| も参照。
+		|getcmdprompt()|, |getcmdcomplpat()| および |setcmdline()| も
+		参照。
                 補完が定義されていない場合は空文字列を返す。
 
 		戻り値の型: |String|
