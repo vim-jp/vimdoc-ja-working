@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.1.  Last change: 2024 Oct 08
+*builtin.txt*	For Vim バージョン 9.1.  Last change: 2024 Oct 09
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -4078,7 +4078,7 @@ getcompletion({pat}, {type} [, {filtered}])		*getcompletion()*
 		cscope		|:cscope|のサブオプション
 		custom,{func}	{func} で定義されたカスタム補完
 		customlist,{func} {func} で定義されたカスタム補完
-		diff_buffer     |:diffget| と |:diffput| の補完
+		diff_buffer	|:diffget| と |:diffput| の補完
 		dir		ディレクトリ名
 		dir_in_path	|'cdpath'| 内のディレクトリ名
 		environment	環境変数名
@@ -4102,6 +4102,7 @@ getcompletion({pat}, {type} [, {filtered}])		*getcompletion()*
 		runtime		|:runtime| 補完
 		scriptnames	読み込まれているスクリプト名 |:scriptnames|
 		shellcmd	シェルコマンド
+		shellcmdline	ファイル名を引数とするシェルコマンドライン
 		sign		|:sign|サブオプション
 		syntax		構文ファイル名 |'syntax'|
 		syntime		|:syntime|サブオプション
