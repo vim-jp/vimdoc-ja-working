@@ -3967,8 +3967,8 @@ getcmdcomplpat()					*getcmdcomplpat()*
 		現在のコマンドラインの補完パターンを返す。
 		コマンドラインが編集されている場合にのみ機能するため、
 		|c_CTRL-\_e| または |c_CTRL-R_=| を使用する必要がある。
-		|getcmdtype()|、|setcmdpos()|、|getcmdline()|、
-		|getcmdprompt()|、|getcmdcompltype()| および |setcmdline()| も
+		|getcmdtype()|, |setcmdpos()|, |getcmdline()|,
+		|getcmdprompt()|, |getcmdcompltype()| および |setcmdline()| も
 		参照。
 		補完が定義されていない場合は空の文字列を返す。
 
