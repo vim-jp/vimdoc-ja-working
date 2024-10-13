@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.1.  Last change: 2024 Oct 09
+*builtin.txt*	For Vim バージョン 9.1.  Last change: 2024 Oct 12
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -8381,10 +8381,10 @@ remote_expr({server}, {string} [, {idvar} [, {timeout}]])
 		{string} を {server} に送信する。引数 {server} は文字列。
 		|{server}| も参照。
 
-		{string} は式と見なされ、評価した結果が返ってくる。戻り値は文
-		字列かリスト |List| でなければならない。リストの場合は要素を連
-		結して文字列に変換される。要素間の区切りは改行文字となる
-		(join(expr, "\n")と同様)。
+		{string} は式と見なされ、評価した結果が返ってくる。結果は文字
+		列または |List| でなければばらず、他の型は文字列に変換される。
+		|List| は、join(expr, "\n") のように、項目を改行で結合し (末尾
+		には付かない)、文字列に変換される。
 
 		空でない {idvar} が渡された場合は変数名と見なされ、後で
 		|remote_read()| で使われる {serverid} がその変数に保存される。
