@@ -2644,7 +2644,7 @@ exists({expr})							*exists()*
 		ば0となる。
 
 		Note: コンパイルされる |:def| 関数は実行時に評価が完了する。
-                `exists_compiled()` を使うことでコンパイル時に式が評価される。
+		`exists_compiled()` を使うことでコンパイル時に式が評価される。
 
 		ある機能がサポートされているか判定するには|has()|を使う。
 		ファイルが存在するかを判定するには|filereadable()|を使う。
@@ -3979,11 +3979,11 @@ getcmdcompltype()					*getcmdcompltype()*
 		現在のコマンドライン補完のタイプを返す。
 		コマンドラインが編集時にのみ動作するので、|c_CTRL-e| または
 		|c_CTRL-R_=| を使用する必要がある。
-                返す文字列については |:command-completion| を参照のこと。
+		返す文字列については |:command-completion| を参照のこと。
 		|getcmdtype()|, |setcmdpos()|, |getcmdline()|,
 		|getcmdprompt()|, |getcmdcomplpat()| および |setcmdline()| も
 		参照。
-                補完が定義されていない場合は空文字列を返す。
+		補完が定義されていない場合は空文字列を返す。
 
 		戻り値の型: |String|
 
@@ -4027,7 +4027,7 @@ getcmdprompt()						*getcmdprompt()*
 getcmdscreenpos()					*getcmdscreenpos()*
 		コマンドラインのカーソルのスクリーン位置をバイト単位で返す。最
 		初の桁は 1 である。
-                |getcmdpos()| の代わりにプロンプトの位置を加える。
+		|getcmdpos()| の代わりにプロンプトの位置を加える。
 		コマンドラインの編集時のみ動作するため、|c_CTRL-e| または
 		|c_CTRL-R_=| または式マッピングを使用する必要がある。それ以外
 		は 0 を返す。
@@ -7110,7 +7110,7 @@ matchlist({expr}, {pat} [, {start} [, {count}]])		*matchlist()*
 <		結果は['acd', 'a', '', 'c', 'd', '', '', '', '', '']となる。
 		マッチしなかったときは空リストを返す。
 
-                リストを渡すことはできるが、あまり役に立たない。
+		リストを渡すことはできるが、あまり役に立たない。
 
 		|method| としても使用できる: >
 			GetText()->matchlist('word')
