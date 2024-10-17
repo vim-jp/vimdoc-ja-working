@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 9.1.  Last change: 2024 Oct 14
+*options.txt*	For Vim バージョン 9.1.  Last change: 2024 Oct 16
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -8751,7 +8751,9 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	のタイトルが復元される |X11|。
 
 	値に関数 printf 形式の '%' による書式指定が含まれているときは、
-	'statusline' と同じ方法で展開される。
+	'statusline' と同じ方法で展開される。無効な '%' 形式が含まれている場
+	合、値はそのまま使用され、値が設定される時にエラーや警告は表示されな
+	い。
 	'modelineexpr' がオフの場合は、モードラインでこのオプションを設定する
 	ことはできない。
 
