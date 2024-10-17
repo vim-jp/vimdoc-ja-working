@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim version 9.1.  Last change: 2024 Oct 06
+*syntax.txt*	For Vim version 9.1.  Last change: 2024 Oct 13
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -2223,6 +2223,20 @@ define the vim variable 'lace_case_insensitive' in your startup file: >
 	:let lace_case_insensitive=1
 
 
+LF (LFRC)		*lf.vim* *ft-lf-syntax* *g:lf_shell_syntax*
+						*b:lf_shell_syntax*
+
+For the lf file manager configuration files (lfrc) the shell commands
+syntax highlighting can be changed globally and per buffer by setting
+a different 'include' command search pattern using these variables:
+	let g:lf_shell_syntax = "syntax/dosbatch.vim"
+	let b:lf_shell_syntax = "syntax/zsh.vim"
+
+These variables are unset by default.
+
+The default 'include' command search pattern is 'syntax/sh.vim'.
+
+
 LEX						*lex.vim* *ft-lex-syntax*
 
 Lex uses brute-force synchronizing as the "^%%$" section delimiter
@@ -2523,6 +2537,12 @@ set "msql_minlines" to the value you desire.  Example: >
 
 	:let msql_minlines = 200
 
+
+NEOMUTT			*neomutt.vim* *ft-neomuttrc-syntax* *ft-neomuttlog-syntax*
+
+To disable the default NeoMutt log colors >
+
+	:let g:neolog_disable_default_colors = 1
 
 N1QL						*n1ql.vim* *ft-n1ql-syntax*
 
