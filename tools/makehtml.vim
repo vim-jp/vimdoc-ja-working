@@ -24,6 +24,9 @@ function! MakeHtmlAll(...)
   let s:log = []
   call MakeTagsFile()
   echo ""
+  " Avoid problem with highlight group helpIgnore character not being removed
+  hi Ignore guifg=#ffffff ctermfg=white
+
   let files = split(glob('*.??[tx]'), '\n')
   for i in range(len(files))
     let file = files[i]
