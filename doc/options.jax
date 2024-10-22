@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 9.1.  Last change: 2024 Oct 16
+*options.txt*	For Vim バージョン 9.1.  Last change: 2024 Oct 22
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -3422,7 +3422,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 					*'fileformat'* *'ff'*
 'fileformat' 'ff'	文字列 (MS-Windows での既定値: "dos",
-				Unix, macOS での既定値: "unix")
+				Unix での既定値: "unix")
 			バッファについてローカル
 	バッファにファイルを読み込んだり、バッファからファイルに書き込んだりす
 	るときに使われる <EOL> を、カレントバッファについて設定する。
@@ -3447,7 +3447,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 					*'fileformats'* *'ffs'*
 'fileformats' 'ffs'	文字列 (既定値:
 				Vim+Vi	MS-Windows: "dos,unix",
-				Vim	Unix, macOS: "unix,dos",
+				Vim	Unix: "unix,dos",
 				Vi	Cygwin: "unix,dos",
 				Vi	その他: "")
 			グローバル
@@ -4973,7 +4973,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	'compatible' がオフになるとVimの既定値に設定されるので注意。
 
 						*'isprint'* *'isp'*
-'isprint' 'isp'	文字列	(Win32とmacOSでの既定値:
+'isprint' 'isp'	文字列	(Win32 と VMSで の既定値:
 				"@,~-255"; それ以外では: "@,161-255")
 			グローバル
 	このオプションで指定された文字は、画面に直接表示される。またパターン
@@ -6759,9 +6759,6 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 						$VIMRUNTIME,
 						$VIM/vimfiles/after,
 						$HOME/vimfiles/after"
-					macOS: "$VIM:vimfiles,
-						$VIMRUNTIME,
-						$VIM:vimfiles:after"
 					Haiku: "$BE_USER_SETTINGS/vim,
 						$VIM/vimfiles,
 						$VIMRUNTIME,
@@ -9104,7 +9101,6 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 				        Win32用: "$HOME/vimfiles/view",
 					Unix用: "$HOME/.vim/view" または
 					        "$XDG_CONFIG_HOME/vim/view"
-					macOS用: "$VIM/vimfiles/view",
 					VMS用: "sys$login:vimfiles/view")
 			グローバル
 			{|+mksession| 機能付きでコンパイルされたときのみ有効}
