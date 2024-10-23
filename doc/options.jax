@@ -3575,7 +3575,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	  eob		EndOfBuffer		|hl-EndOfBuffer|
 	  lastline	NonText			|hl-NonText|
 
-						*'findexpr'* *'fexpr'*
+						*'findexpr'* *'fexpr'* *E1514*
 'findexpr' 'fexpr'	文字列 (既定では "")
 			グローバル／バッファについてローカル  |local-noglobal|
 			{|+eval| 機能つきでコンパイルされたときのみ有効}
