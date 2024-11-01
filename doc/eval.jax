@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 9.1.  Last change: 2024 Oct 22
+*eval.txt*	For Vim バージョン 9.1.  Last change: 2024 Oct 28
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1970,6 +1970,12 @@ v:cmdbang	v:cmdargと同じく読み書きコマンドを実行したとき設�
 		書きコマンドに "!" が使われたときは1となり、使われていなければ
 		0となる。Note 自動コマンドの中でのみ利用可能なことに注意。
 		ユーザー定義コマンドでは|<bang>|を使えば同じことができる。
+
+					*v:cmdcomplete* *cmdcomplete-variable*
+v:cmdcomplete	'findexpr' を評価する場合: 'findexpr' がコマンドライン補完に使
+		用されている場合は、値は |v:true| になり、それ以外の場合は
+		|v:false| になる。
+
 						*v:collate* *collate-variable*
 v:collate	現在のロケール設定での実行環境の照合順序。これは Vim script が
 		現在のロケールのエンコーディングを検知するのを許可する。技術的
