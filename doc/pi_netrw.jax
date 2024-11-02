@@ -1,4 +1,4 @@
-*pi_netrw.txt*  For Vim バージョン 9.1.  Last change: 2024 Nov 01
+*pi_netrw.txt*  For Vim バージョン 9.1.  Last change: 2024 Nov 02
 
 	    ------------------------------------------------
 	    NETRW REFERENCE MANUAL    by Charles E. Campbell
@@ -1506,7 +1506,7 @@ html, gif, jpeg, (word/office) doc などのファイルは専用ハンドラ (�
 Netrw は、次の方法で特殊ハンドラを決定します:
 
   * |g:netrw_browsex_viewer| が存在する場合、それを使用してファイルを表示しよ
-    うとします。便利な設定の例 (<.vimrc> に配置):
+    うとします。
     使用したいビューアがリモート URL ディレクトリの処理をサポートしていない場
     合は、|g:netrw_browsex_support_remote| を 0 に設定します。
   * 上記以外:
