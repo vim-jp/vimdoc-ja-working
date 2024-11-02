@@ -1499,7 +1499,7 @@ html, gif, jpeg, (word/office) doc などのファイルは専用ハンドラ (�
 関連する設定変数:
 	|g:netrw_gx|	gx がカーソルの下のテキストを取得する方法を制御する
 	|g:netrw_nogx|	編集中に gx マップを防止する
-	|g:netrw_suppress_gx_mesg| gx のブラウザメッセージの抑制を制御する
+	|g:netrw_suppress_gx_mesg| gx のブラウザーメッセージの抑制を制御する
 
 ☆ファイルを開いてアプリを起動する	*netrw-gx* *:Open* *:Launch* {{{2
 
