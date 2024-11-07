@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 9.1.  Last change: 2024 Nov 02
+*options.txt*	For Vim バージョン 9.1.  Last change: 2024 Nov 06
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -3539,7 +3539,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	英数字、'-'、'_' のみ使用できる。
 
 						*'fillchars'* *'fcs'*
-'fillchars' 'fcs'	文字列	(既定では "vert:|,fold:-,eob:~")
+'fillchars' 'fcs'	文字列	(既定では "vert:|,fold:-,eob:~,lastline:@")
 			グローバル／ウィンドウについてローカル |global-local|
 	ウィンドウのステータス行、垂直分割の区切り、特殊行を埋める文字。
 	これはコンマで区切られた項目のリストである。各項目には、名前、コロン、
