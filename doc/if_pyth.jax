@@ -735,7 +735,7 @@ vim.Function オブジェクト			*python-Function*
 |pyxeval()| も使用可能です。
 
 オプションの {locals} 辞書を使用して、評価にローカル変数を挿入できます。これ
-は、vim.eval |python-eval| が def 関数内でローカル変数を見つけられない
+は、vim.eval |python-eval| が def 関数内のローカル変数を見つけられない
 vim9script で特に役立ちます。
 
 Python での "None" は v:none に変換されます。
