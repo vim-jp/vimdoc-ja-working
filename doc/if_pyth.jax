@@ -196,9 +196,9 @@ vim.eval(str)						*python-eval*
 	[{'cmd': '/^eval_expr(arg, nextcmd)$/', 'static': 0, 'name': ~
 	'eval_expr', 'kind': 'f', 'filename': './src/eval.c'}] ~
 
-	NOTE: vim9script では、def 関数内のローカル変数は Python の評価では表
-	示されません。ローカル変数を Python の評価に渡すには、|py3eval()| 等を
-	呼び出すときに {locals} 辞書を使用します。
+	NOTE: vim9script では、def 関数内のローカル変数は Python の評価では見
+	えません。ローカル変数を Python の評価に渡すには、|py3eval()| 等を呼び
+	出すときに {locals} 辞書を使用します。
 
 vim.bindeval(str)					*python-bindeval*
 	|python-eval| と似ていますが、特殊なオブジェクトを返します
