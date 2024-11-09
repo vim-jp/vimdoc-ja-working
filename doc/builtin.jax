@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.1.  Last change: 2024 Nov 06
+*builtin.txt*	For Vim バージョン 9.1.  Last change: 2024 Nov 09
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -5157,7 +5157,7 @@ glob({expr} [, {nosuf} [, {list} [, {alllinks}]]])		*glob()*
 		{list} による
 
 
-glob2regpat({string})					 *glob2regpat()*
+glob2regpat({string})					*glob2regpat()*
 		glob()に使われるファイルパターンを検索パターンに変換する。
 		結果はファイル名の文字列とのマッチに使用できる。例えば、 >
 			if filename =~ glob2regpat('Make*.mak')
@@ -5593,7 +5593,7 @@ iconv({string}, {from}, {to})				*iconv()*
 		戻り値の型: |String|
 
 
-id({item})							    *id()*
+id({item})							*id()*
 		結果は、{item} に関連付けられた一意の文字列であり、{item} の内
 		容に関連付けられたものではない。{item} が存在し参照されている
 		間のみ有効である。結果を生成する vim のインスタンスでのみ有効
@@ -6978,7 +6978,7 @@ matchbufline({buf}, {pat}, {lnum}, {end}, [, {dict}])
 		戻り値の型: list<dict<any>> または list<any>
 
 
-matchdelete({id}, [, {win}])		       *matchdelete()* *E802* *E803*
+matchdelete({id} [, {win})			*matchdelete()* *E802* *E803*
 		|matchadd()| または |:match| で定義したマッチの中で ID が {id}
 		であるものを削除する。成功したときは 0、失敗したときは
 		-1 を返す。|matchadd()| の例を参照。すべてのマッチを削除するの
