@@ -407,7 +407,6 @@ OK: >
 
 ☆関数						*style-functions*
 
-Use function declarations with the return type on a separate indented line.
 関数宣言は、戻り値の型を別のインデントされた行に記述して使用する:
 
 OK: >
