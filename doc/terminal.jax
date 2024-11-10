@@ -1,4 +1,4 @@
-*terminal.txt*	For Vim バージョン 9.1.  Last change: 2024 Nov 09
+*terminal.txt*	For Vim バージョン 9.1.  Last change: 2024 Nov 10
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1662,7 +1662,7 @@ Termdebug は、signcolumn のブレークポイント ID の 16 進数を使用
 	let g:termdebug_config['sign'] = '>>'
 10 進数 (基数 10) のブレークポイントの目印を使用するには: >
 	let g:termdebug_config['sign_decimal'] = 1
-g:terminal_config がまだない場合は、以下を使用できる: >
+変数 g:termdebug_config がまだ存在しない場合は、以下を使用できる: >
 	let g:termdebug_config = {'sign': '>>'}
 同様に 10 進数の目印を有効にするには: >
 	let g:termdebug_config = {'sign_decimal': 1}
