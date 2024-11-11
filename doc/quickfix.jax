@@ -1,4 +1,4 @@
-*quickfix.txt*  For Vim バージョン 9.1.  Last change: 2024 Nov 07
+*quickfix.txt*  For Vim バージョン 9.1.  Last change: 2024 Nov 10
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -336,7 +336,7 @@ locationリストが |autocommand| に変更される場合、それは中断さ
 			例: >
     :g/mypattern/caddexpr expand("%") .. ":" .. line(".") ..  ":" .. getline(".")
 <
-						*:lad* *:addd* *:laddexpr*
+						*:lad* *:ladd* *:laddexpr*
 :lad[dexpr] {expr}	":caddexpr" と同様だが、quickfixリストでなく、カレント
 			ウィンドウのlocationリストが使われる。
 
