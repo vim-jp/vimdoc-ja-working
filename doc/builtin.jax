@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.1.  Last change: 2024 Nov 09
+*builtin.txt*	For Vim バージョン 9.1.  Last change: 2024 Nov 10
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -513,9 +513,9 @@ prop_type_list([{props}])	リスト	プロパティタイプ一覧を取得
 pum_getpos()			辞書	ポップアップメニューが表示されている場
 					合、位置とサイズを取得
 pumvisible()			数値	ポップアップメニューが表示されているか
-py3eval({expr}[, {locals}])	任意	|python3| の式を評価する
-pyeval({expr}[, {locals}])	任意	|Python| の式を評価する
-pyxeval({expr}[, {locals}])	任意	|python_x| の式を評価する
+py3eval({expr} [, {locals}])	任意	|python3| の式を評価する
+pyeval({expr} [, {locals}])	任意	|Python| の式を評価する
+pyxeval({expr} [, {locals}])	任意	|python_x| の式を評価する
 rand([{expr}])			数値	疑似乱数を取得する
 range({expr} [, {max} [, {stride}]])
 				リスト	{expr}から{max}までの要素のリスト
@@ -7982,7 +7982,7 @@ pumvisible()						*pumvisible()*
 		戻り値の型: |Number|
 
 
-py3eval({expr}[, {locals}])				*py3eval()*
+py3eval({expr} [, {locals}])				*py3eval()*
 		Python の式 {expr} を評価して、結果を Vim のデータ形式にして返
 		す。
 		{locals} |Dictionary| が指定されている場合は、式で使用できる
@@ -8006,7 +8006,7 @@ py3eval({expr}[, {locals}])				*py3eval()*
 		{|+python3| 機能付きでコンパイルされたときのみ利用可能}
 
 							*E858* *E859*
-pyeval({expr}[, {locals}])				*pyeval()*
+pyeval({expr} [, {locals}])				*pyeval()*
 		Python の式 {expr} を評価して、結果を Vim のデータ形式にして返
 		す。
 		{locals} については |py3eval()| を参照。
@@ -8023,7 +8023,7 @@ pyeval({expr}[, {locals}])				*pyeval()*
 
 		{|+python| 機能付きでコンパイルされたときのみ利用可能}
 
-pyxeval({expr}[, {locals}])				*pyxeval()*
+pyxeval({expr} [, {locals}])				*pyxeval()*
 		Python の式 {expr} を評価して、結果を Vim のデータ形式にして返
 		す。
 		{locals} については |py3eval()| を参照。
