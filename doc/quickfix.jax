@@ -1369,7 +1369,7 @@ RUFF LINTER						*compiler-ruff*
 よく使用されるコンパイラオプションは、b/g:ruff_makeprg_params 変数を設定するこ
 とで 'makeprg' に追加できる。例: >
 
-	let b:ruff_makeprg_params = "--max-line-length"..&textwidth
+	let b:ruff_makeprg_params = "--max-line-length "..&textwidth
 
 グローバルのデフォルトは "--preview" である。
 
@@ -1378,7 +1378,7 @@ PYLINT LINTER						*compiler-pylint*
 よく使用されるコンパイラオプションは、b/g:pylint_makeprg_params 変数を設定する
 ことで 'makeprg' に追加できる。例: >
 
-	let b:pylint_makeprg_params = "--max-line-length"..&textwidth
+	let b:pylint_makeprg_params = "--max-line-length "..&textwidth
 
 グローバルデフォルトは "--jobs=0" で、(ほぼ) すべてのコアを使用する。
 
