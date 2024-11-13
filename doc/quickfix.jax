@@ -1,4 +1,4 @@
-*quickfix.txt*  For Vim バージョン 9.1.  Last change: 2024 Nov 10
+*quickfix.txt*  For Vim バージョン 9.1.  Last change: 2024 Nov 12
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1380,8 +1380,7 @@ PYLINT LINTER						*compiler-pylint*
 
 	let b:pylint_makeprg_params = "--max-line-length"..&textwidth
 
-グローバルのデフォルトは "--jobs=n" で、n は実行可能な場合、getconf によって報
-告されるコアの数である。それ以外の場合は、デフォルトで "" になる。
+グローバルデフォルトは "--jobs=0" で、(ほぼ) すべてのコアを使用する。
 
 PYUNIT COMPILER						*compiler-pyunit*
 
