@@ -1,4 +1,4 @@
-*filetype.txt*	For Vim バージョン 9.1.  Last change: 2024 Nov 12
+*filetype.txt*	For Vim バージョン 9.1.  Last change: 2024 Nov 14
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -833,6 +833,12 @@ MARKDOWN                                                *ft-markdown-plugin*
 'expandtab' はデフォルトで設定される。それを望まない場合は、次のようにする: >
 	let g:markdown_recommended_style = 0
 
+
+ORG							*ft-org-plugin*
+
+折り畳みを有効にするには、これを使う: >
+	let g:org_folding = 1
+<
 
 PDF							*ft-pdf-plugin*
 
