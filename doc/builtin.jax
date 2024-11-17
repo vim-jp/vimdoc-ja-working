@@ -3788,8 +3788,8 @@ getbufvar({buf}, {varname} [, {def}])				*getbufvar()*
 getcellpixels()						*getcellpixels()*
 		端末のセルのピクセルサイズの |List| を返す。
 		リストの形式は [xpixels, ypixels] である。
-		(端末) Unix でのみ動作する。gVim の場合や他のシステムの場合お
-		よび失敗した場合は [] を返す。
+		Unix (の端末) でのみ動作する。gVim の場合や他のシステムの場合
+		および失敗した場合は [] を返す。
 
 		戻り値の型: list<any>
 
