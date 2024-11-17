@@ -16,7 +16,7 @@ NOTE: このプラグインは +vim9script が必要である。
 							*ft-context-intro*
 前書き ~
 
-ConTeXt は、LaTeX と同じで、TeX上 に構築されたマクロベースの組版システムである:
+ConTeXt は、LaTeX と同じで、TeX 上に構築されたマクロベースの組版システムである:
 >
 	https://wiki.contextgarden.net
 	https://wiki.contextgarden.net/Vim
