@@ -61,7 +61,7 @@
   できる。バッファ毎に設定する場合は "b:matchparen_timeout" と
   "b:matchparen_insert_timeout" を設定する。
 
-|%| コマンドの動作を改善したい場合は matchit プラグインを使用できる。
+|%| コマンドの動作を改善したい場合は matchit プラグインが使用できる。
 |matchit-install| 参照。このプラグインを使うとコメント内のカッコをスキップする
 こともできる。これは matchparen プラグインとの関連性はない。matchit プラグイン
 は matchparen とは別のメカニズムを使っている。
