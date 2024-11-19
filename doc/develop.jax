@@ -168,9 +168,9 @@ Vimのソースコードに変更を加える際、守るべきルールがあ�
 
 このリストは完全ではない。より多くの例は、ソースコードを見て欲しい。
 
-コードリポジトリには editorconfig ファイルが含まれており、分散 editorconfig プ
-ラグイン |editorconfig-install| と一緒に使用し、推奨スタイルに従うようにするこ
-とができる。
+コードリポジトリには editorconfig ファイルが含まれており、配布されている
+editorconfig プラグイン |editorconfig-install| と一緒に使用し、推奨スタイルに
+従うようにすることができる。
 
 
 ☆変更する						*style-changes*
