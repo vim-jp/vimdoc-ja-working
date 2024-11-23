@@ -75,7 +75,7 @@ Copyright: Copyright (C) 2005-2015 Charles E Campbell	 *zip-copyright*
    "0" に設定すると、"unzip" コマンドの実行を防ぐことができる: >
 	let g:zip_exec=0
 <
-   ロードの無効化~
+   読み込みの無効化~
 
    何らかの理由で vim を使用して zip ファイルを検査したくない場合は、次の 2 つ
    の変数を <.vimrc> に追加して、zip プラグインが読み込まれないようにすること
