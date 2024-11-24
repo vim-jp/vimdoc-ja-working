@@ -82,7 +82,7 @@ Copyright 2005-2017:					*tar-copyright*
 			デフォルト
    変数			    値	  説明
    *g:tar_browseoptions*    "Ptf"   ファイル一覧を取得するときに使われる
-   *g:tar_readoptions*	  "OPxf"  tar ファイルを抽出するときに使われる
+   *g:tar_readoptions*	  "OPxf"  tar ファイルから抽出するときに使われる
    *g:tar_cmd*		  "tar"   tar プログラムの名前
    *g:tar_nomax*	    0	  true ならファイルウィンドウが最大化されない
    *g:tar_secure*	  undef   変数が存在する場合:
