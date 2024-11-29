@@ -1388,8 +1388,8 @@ Note 入力されたすべてのカスタム設定は、"g:spotbugs_properties" 
 "g:spotbugs_properties" 変数は、Java ファイルタイププラグイン
 (|ft-java-plugin|) によって参照され、説明されている自動化を調整する。したがっ
 て、Java ソースファイルがロードされたバッファに対して |FileType| イベントが発
-生する前に定義する必要がある。たとえば、[0] によってロードされるプロジェクト
-ローカルの |vimrc| で設定できる。
+生する前に定義する必要がある。例えば、[0] によってロードされるプロジェクトロー
+カルの |vimrc| で設定できる。
 
 [0] https://github.com/MarcWeber/vim-addon-local-vimrc/
 
