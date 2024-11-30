@@ -1320,7 +1320,7 @@ SpotBugs は、Java のバグを見つけるために使用できる静的解析
 		\ 'testClassDirPath':	'target/test-classes',
 	\ }
 
-Note パスキーの値は、SpotBugs がファイルを検索する場所のみを記述することに注
+Note パスのキー値は、SpotBugs がファイルを検索する場所のみを記述することに注
 意。詳細については、特定のコンパイラプラグインのドキュメントを参照。
 
 Ant、Maven、および Javac コンパイラプラグインには、デフォルトのプリコンパイラ
