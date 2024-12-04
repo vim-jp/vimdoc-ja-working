@@ -1,4 +1,4 @@
-*filetype.txt*	For Vim バージョン 9.1.  Last change: 2024 Nov 14
+*filetype.txt*	For Vim バージョン 9.1.  Last change: 2024 Dec 03
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -721,7 +721,6 @@ Markdown コメントの認識を有効にするには、`8.2.1397` 以降のバ
 は "javaformat.vim" を手動で再読込みすることを忘れないこと: >
 	runtime autoload/javaformat.vim
 <
-
 JSON-FORMAT						*ft-json-plugin*
 
 JSON ファイルタイプは、JSON のフォーマッティング (|gq| を使用) に 'formatexpr'
@@ -733,6 +732,11 @@ JSON ファイルタイプは、JSON のフォーマッティング (|gq| を使
 	import autoload 'dist/json.vim'
 	setl formatexpr=json.FormatExpr()
 
+LUA                                                     *ft-lua-plugin*
+
+|fold-expr| を使用して lua 関数の折り畳みを有効にするには: >
+
+	let g:lua_folding = 1
 
 MAIL							*ft-mail-plugin*
 
