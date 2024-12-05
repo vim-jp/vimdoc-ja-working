@@ -1,4 +1,4 @@
-*version9.txt*  For Vim バージョン 9.1.  Last change: 2024 Nov 28
+*version9.txt*  For Vim バージョン 9.1.  Last change: 2024 Dec 05
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -41610,6 +41610,8 @@ XDG デスクトップ仕様 |xdg-base-dir| のサポート
   削除されました
 - Vim のデフォルトの 'backspace' オプションは "indent,eol,start" に設定さ
   れ、|defaults.vim| から削除されました
+- |CompleteDone| 自動コマンドを処理するとき、|v:event| 辞書に補完した単語と補
+  完のタイプが提供されます。
 
 							*added-9.2*
 追加要素 ~
