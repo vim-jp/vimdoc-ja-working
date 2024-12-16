@@ -1,4 +1,4 @@
-*various.txt*   For Vim バージョン 9.1.  Last change: 2024 Nov 23
+*various.txt*   For Vim バージョン 9.1.  Last change: 2024 Dec 15
 
 
 		VIM リファレンスマニュアル    by Bram Moolenaar
@@ -327,6 +327,9 @@ g8			カーソル位置の文字のバイト列を 16 進数で表示します�
 			`:term ++shell ++close {cmd}` は、`:!{cmd}` の機能に近
 			いものになる。
 
+							*:!-range*
+:{range}!{cmd}		|:!| と似ているが、{range} の各行に対して {cmd} を実行
+			する。
 							*:!!*
 :!!			最後の ":!{cmd}" を繰り返します。
 
