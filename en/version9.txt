@@ -1,4 +1,4 @@
-*version9.txt*  For Vim version 9.1.  Last change: 2024 Dec 06
+*version9.txt*  For Vim version 9.1.  Last change: 2024 Dec 16
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -41653,6 +41653,7 @@ Autocommands: ~
 
 Highlighting: ~
 
+|hl-ComplMatchIns|	matched text of the currently inserted completion.
 |hl-MsgArea|		highlighting of the Command-line and messages area
 |hl-PmenuMatch|		Popup menu: highlighting of matched text
 |hl-PmenuMatchSel|	Popup menu: highlighting of matched text in selected
@@ -41661,7 +41662,8 @@ Highlighting: ~
 Commands: ~
 
 |[r| and |]r|		to move the cursor to previous/next rare word
-
+|:pbuffer|		Edit buffer [N] from the buffer list in the preview
+			window
 
 Options: ~
 
