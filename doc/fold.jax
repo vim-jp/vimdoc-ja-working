@@ -1,4 +1,4 @@
-*fold.txt*      For Vim バージョン 9.1.  Last change: 2024 Dec 16
+*fold.txt*      For Vim バージョン 9.1.  Last change: 2024 Dec 17
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -474,7 +474,7 @@ zk		カーソルより上方の折り畳みへ移動する。閉じられた折�
 
 折り畳みに対してコマンドを実行する ~
 
-:[range]foldd[oopen] {cmd}			*:foldd* *:folddo* *:folddoopen*
+:[range]foldd[oopen] {cmd}		*:foldd* *:folddo* *:folddoopen*
 		閉じた折り畳みの中以外の全ての行に対して{cmd}を実行する。
 		[range]が与えられた時は、その範囲だけが対象となる。
 		コマンドが各行に対して実行される時にはカーソルはその対象となる
