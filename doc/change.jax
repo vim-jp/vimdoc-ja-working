@@ -1471,7 +1471,6 @@ gww			"gw" と同様にして現在行を整形する。
 例えば、Vim と共に配布され $VIMRUNTIME/ftplugin ディレクトリに配置されている
 XML ファイルタイププラグインは、オプション 'formatexpr' を以下のように設定する:
 >
-
    setlocal formatexpr=xmlformat#Format()
 
 これは、xmlformat#Format() を定義している対応したスクリプトがファイル
