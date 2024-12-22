@@ -1474,7 +1474,7 @@ XML ファイルタイププラグインは、オプション 'formatexpr' を�
    setlocal formatexpr=xmlformat#Format()
 
 これは、xmlformat#Format() を定義している対応したスクリプトがファイル
-`$VIMRUNTIME/autoload/xmlformat.vim` で見つかることを意味している:
+`$VIMRUNTIME/autoload/xmlformat.vim` で見つかることを意味している。
 
 以下は、選択されたテキストから末尾の空白を取り除くスクリプトの例である。これを
 autoload ディレクトリに置くこと。例、~/.vim/autoload/format.vim:
