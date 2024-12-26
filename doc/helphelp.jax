@@ -1,4 +1,4 @@
-*helphelp.txt*	For Vim バージョン 9.1.  Last change: 2024 Dec 25
+*helphelp.txt*	For Vim バージョン 9.1.  Last change: 2024 Dec 26
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -430,28 +430,21 @@ Ex コマンドのブロックを例示するときは、大なり記号 (>) を
 	  echo "Example"
 	endfunction
 <
-
-ブロックに注釈を追加するには、大なり記号 (>) の後に注釈 (例: "lua") を配置しま
-す。例: >lua
-	print("hello")
-<
-Note: |g:help_example_languages| に "lua" キーがある場合は、lua 構文のハイライ
-トを使用します。
-
-コード例に Vim 構文ハイライトのサポートを追加することができます。
-例: >vim
+コードブロックの構文ハイライトを有効にするには、大なり記号 (>) の後に言語名の
+注釈 (例: "vim") を配置します。例: >vim
 	function Example_Func()
 	  echo "Example"
 	endfunction
 <
 						*g:help_example_languages*
-ブロック内の構文ハイライトを変更する場合は、以下のように変更できます: >
-	:let g:help_example_languages = #{ vim: 'vim', sh: 'bash' }
-キーは注釈マーカー名を表し、値は 'syntax' 名です。デフォルトでは、ヘルプファイ
-ルは Vim script のハイライトのみをサポートします。
-Note: "g:help_example_languages" を設定するときに "vim" キーを含めないと、Vim
-構文ハイライトは有効になりません。空の値に設定すると、埋め込み言語の構文のハイ
-ライトは無効になります。
+デフォルトでは、ヘルプファイルは Vim script のハイライトのみをサポートします。
+他の言語の構文ハイライトが必要な場合は、|vimrc| に以下を追加してください: >
+	:let g:help_example_languages = { "vim": "vim", "sh": "bash" }
+キーは注釈マーカー名を表し、値は 'syntax' 名です。
+
+Note: "g:help_example_languages" に "vim" を含めない場合、"vim" の構文ハイライ
+トは有効になりません。"g:help_example_languages" を空の値に設定すると、埋め込
+み言語の構文ハイライトは無効になります。
 
 さらに note: 含まれている 'syntax' スクリプトがそのような趣旨を考慮していない
 場合、ヘルプファイルに任意の構文言語を含めることは必ずしも完璧に機能するとは限
