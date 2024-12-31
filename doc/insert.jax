@@ -1,4 +1,4 @@
-*insert.txt*    For Vim バージョン 9.1.  Last change: 2024 Dec 28
+*insert.txt*    For Vim バージョン 9.1.  Last change: 2024 Dec 31
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1129,6 +1129,7 @@ Note 最初の呼び出し以降にカーソルが移動した可能性があり
 			|hl-PmenuKind| ハイライトグループが上書きされ、補完の
 			種類の ctermfg および guifg プロパティをカスタマイズで
 			きるようになる。
+	match		|complete_info()| の "matches" を参照。
 
 これらのうち "icase", "equal", "dup" および "empty" 以外は文字列でなければなら
 ない。これらの要件が満たされない場合はエラーメッセージが表示され、リスト中のそ
