@@ -1,4 +1,4 @@
-*version9.txt*  For Vim バージョン 9.1.  Last change: 2024 Dec 29
+*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Jan 02
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -31840,14 +31840,14 @@ OpenVMS x86_64 プラットフォームへの移植: http://www.polarhome.com/vi
 
 コマンド: ~
 
-|:abstract|		Vim9 抽象クラスを定義する
-|:class|		クラス指定の始まり
+|:abstract|		Vim9 抽象クラスを宣言する
+|:class|		クラス宣言の始まり
 |:defer|		現在の関数が終了したら関数を呼び出す
 |:echowindow|		:echomsg と同じ。但し、ポップアップウィンドウを使う
-|:endinterface|		インターフェイス指定の終わり
-|:endclass|		クラス指定の終わり
+|:endinterface|		インターフェイス宣言の終わり
+|:endclass|		クラス宣言の終わり
 |:horizontal|		以下のウィンドウコマンドは水平方向に作用する
-|:interface|		インターフェイス指定の始まり
+|:interface|		インターフェイス宣言の始まり
 |:public|		クラスまたはオブジェクトのメンバの接頭辞
 |:static|		クラスメンバまたは関数の接頭辞
 |:this|			オブジェクトメンバの接頭辞
@@ -41618,6 +41618,9 @@ XDG デスクトップ仕様 |xdg-base-dir| のサポート
   "bash" ファイルタイプとして検出するようになった
 - "keyprotocol" オプションのデフォルト値は、ghostty 端末エミュレータ (kitty プ
   ロトコルを使用) のサポートにより更新された
+- |complete_info()| は、"matches" キーを介してポップアップメニューに表示される
+  マッチのリストを返す
+- |v:stacktrace| 最後にキャッチされて終了していない例外のスタックトレース
 
 							*added-9.2*
 追加要素 ~
@@ -41626,15 +41629,18 @@ XDG デスクトップ仕様 |xdg-base-dir| のサポート
 
 関数: ~
 
+|base64_decode()|	base64 文字列を blob にデコードする
+|base64_encode()|	blob を base64 文字列にエンコードする
 |bindtextdomain()|	メッセージの翻訳検索のベースパスを設定する
 |diff()|		２ つの文字列のリストの差分
 |filecopy()|		ファイル {from} を {to} にコピー
 |foreach()|		リストの項目に関数を適用
+|getcellpixels()|	端末のセルのピクセルサイズのリストを取得する
 |getcmdcomplpat()|	シェルコマンドライン補完
 |getcmdprompt()|	input()/confirm() のプロンプトを取得
-|getcellpixels()|	端末のセルのピクセルサイズのリストを取得する
 |getregion()|		バッファからテキストの領域を取得
 |getregionpos()|	領域の位置をリストで取得
+|getstacktrace()|	Vim script の現在のスタックトレースを取得する
 |id()|			Dict、List、Object、Channel、または Blob 変数の一意の
 			識別子を取得
 |matchbufline()|	バッファ内のすべてのパターンのマッチ

@@ -1,4 +1,4 @@
-*version9.txt*  For Vim version 9.1.  Last change: 2024 Dec 29
+*version9.txt*  For Vim version 9.1.  Last change: 2025 Jan 02
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -31849,14 +31849,14 @@ Autocommands: ~
 
 Commands: ~
 
-|:abstract|		define a Vim9 abstract class
-|:class|		start of a class specification
+|:abstract|		declare a Vim9 abstract class
+|:class|		start of a class declaration
 |:defer|		call function when current function is done
 |:echowindow|		same as :echomsg, but use a popup window
-|:endinterface|		end of an interface specification
-|:endclass|		end of a class specification
+|:endinterface|		end of an interface declaration
+|:endclass|		end of a class declaration
 |:horizontal|		following window command works horizontally
-|:interface|		start of an interface specification
+|:interface|		start of an interface declaration
 |:public|		prefix for a class or object member
 |:static|		prefix for a class member or function
 |:this|			prefix for an object member
@@ -41621,6 +41621,10 @@ Changed~
   instead of the "sh" filetype
 - the default value of the 'keyprotocol' option has been updated by support
   for the ghostty terminal emulator (using kitty protocol)
+- |complete_info()| returns the list of matches shown in the poppu menu via
+  the "matches" key
+- |v:stacktrace| The stack trace of the exception most recently caught and
+  not finished
 
 							*added-9.2*
 Added ~
@@ -41629,15 +41633,18 @@ Various syntax, indent and other plugins were added.
 
 Functions: ~
 
+|base64_decode()|	decode a base64 string into a blob
+|base64_encode()|	encode a blob into a base64 string
 |bindtextdomain()|	set message lookup translation base path
 |diff()|		diff two Lists of strings
 |filecopy()|		copy a file {from} to {to}
 |foreach()|		apply function to List items
+|getcellpixels()|	get List of terminal cell pixel size
 |getcmdcomplpat()|	Shell command line completion
 |getcmdprompt()|	get prompt for input()/confirm()
-|getcellpixels()|	get List of terminal cell pixel size
 |getregion()|		get a region of text from a buffer
 |getregionpos()|	get a list of positions for a region
+|getstacktrace()|	get current stack trace of Vim scripts
 |id()|			get unique identifier for a Dict, List, Object,
 			Channel or Blob variable
 |matchbufline()|	all the matches of a pattern in a buffer
