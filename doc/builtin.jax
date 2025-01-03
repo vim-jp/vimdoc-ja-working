@@ -1300,7 +1300,7 @@ balloon_split({msg})					*balloon_split()*
 
 base64_decode({string})					*base64_decode()*
 		{string} の base64 でエンコードされた文字列からデコードされた
-		バイトを含む Blob を返す。
+		バイト列を含む Blob を返す。
 
 		{string} 引数は base64 でエンコードされた文字のみを含み、長さ
 		は 4 の倍数にする必要がある。
@@ -1320,7 +1320,7 @@ base64_decode({string})					*base64_decode()*
 
 
 base64_encode({blob})					*base64_encode()*
-		{blob} 内のバイトを表す base64 エンコードされた文字列を返す。
+		{blob} 内のバイト列を表す base64 エンコードされた文字列を返す。
 		RFC 4648 で定義されている base64 アルファベットが使用される。
 
 		例: >
