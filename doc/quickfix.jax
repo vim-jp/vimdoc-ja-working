@@ -1398,8 +1398,8 @@ User` を実行して、一度だけ実行される |ShellCmdPost| `:autocmd` �
 		if !exists('g:spotbugs_compilation_done')
 			doautocmd java_spotbugs_post User
 			execute 'make ' . a:arguments
-			" only run doautocmd when :make was synchronous
-			" see note below
+			" :make が同期している場合にのみ doautocmd を実行する。
+			" 下記の注記を参照
 			doautocmd java_spotbugs_post ShellCmdPost " XXX: (a)
 			let g:spotbugs_compilation_done = 1
 		else
@@ -1411,8 +1411,8 @@ User` を実行して、一度だけ実行される |ShellCmdPost| `:autocmd` �
 		if !exists('g:spotbugs_test_compilation_done')
 			doautocmd java_spotbugs_post User
 			execute 'make ' . a:arguments
-			" only run doautocmd when :make was synchronous
-			" see note below
+			" :make が同期している場合にのみ doautocmd を実行する。
+			" 下記の注記を参照
 			doautocmd java_spotbugs_post ShellCmdPost " XXX: (b)
 			let g:spotbugs_test_compilation_done = 1
 		else
