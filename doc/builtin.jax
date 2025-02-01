@@ -1361,8 +1361,8 @@ blob2list({blob})					*blob2list()*
 
 
 blob2str({blob} [, {options}])				*blob2str()*
-		{blob} 内のバイト列を文字に変換して、現在の 'encoding' で文字
-		列のリストを返す。
+		{blob} 内のバイト列を文字に変換した現在の 'encoding' の文字列
+		のリストを返す。
 
 		blob 内の各 <NL> バイトは文字列の末尾として解釈され、新しいリ
 		スト項目が追加される。blob 内の各 <NUL> バイトは <NL> 文字に変
