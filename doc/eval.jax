@@ -4799,4 +4799,5 @@ NOTE: <args> のエスケープはユーザーに任される
 	:call dist#vim9#Launch(<args>)
 	:Launch <app> <args>.
 <
+
  vim:tw=78:ts=8:noet:ft=help:norl:
