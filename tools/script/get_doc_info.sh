@@ -29,8 +29,9 @@ version7.txt
 exclude_files=(`echo $exclude_files_str`)
 unchanged_file_count=0
 
-for fp in `ls -1 ${new_doc_dir}/*.txt`; do
-	fname=`basename ${fp}`
+for sfp in `ls -1 ${new_doc_dir}/*.txt`; do
+	fname=`basename ${sfp}`
+	fp=`readlink -f ${sfp}`
 	old_fp=${old_doc_dir}/${fname}
 	for (( i = 0; i < ${#exclude_files[@]}; ++i )); do
 		if [ ${fname} == ${exclude_files[$i]} ]; then
