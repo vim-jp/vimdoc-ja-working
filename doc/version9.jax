@@ -41632,6 +41632,7 @@ XDG デスクトップ仕様 |xdg-base-dir| のサポート
 	"preinsert"	- 挿入する値をハイライトする
 - |dist#vim9#Launch()| と |dist#vim9#Open()| を |vim-script-library| に追加し、
   |netrw| から切り離す
+- ".=" を使用した新しいダイグラフ "APPROACHES THE LIMIT"
 
 							*added-9.2*
 追加要素 ~
@@ -41657,6 +41658,7 @@ XDG デスクトップ仕様 |xdg-base-dir| のサポート
 			識別子を取得
 |matchbufline()|	バッファ内のすべてのパターンのマッチ
 |matchstrlist()|	文字列のリスト内のすべてのパターンのマッチ
+|ngettext()|		単一/複数の翻訳メッセージの検索
 |popup_setbuf()|	ポップアップを別のバッファに切り替える
 |str2blob()|		文字列のリストを blob に変換する
 
