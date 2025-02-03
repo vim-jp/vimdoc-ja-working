@@ -7584,10 +7584,10 @@ nextnonblank({lnum})					*nextnonblank()*
 ngettext({single}, {plural}, {number}[, {domain})	*ngettext()*
 		言語の複数形の規則に基づいて、メッセージの正しい値を含む文字列
 		を返す。例: >
-			ngettext("File", "Files", 2)  # returns "Files"
+			ngettext("File", "Files", 2)  # "Files" を返す
 <
 		|method| としても使用できる: >
-			1->ngettext("File", "Files")  # returns "File"
+			1->ngettext("File", "Files")  # "File" を返す
 <
 		ドメインパラメータの詳細については、|gettext()| を参照。
 
