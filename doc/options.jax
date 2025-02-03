@@ -2913,8 +2913,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 				myers      デフォルトのアルゴリズム
 				minimal    可能な限り小さな差分を生成するため
 					   に余分な時間を費やす
-				patience   patience差分アルゴリズム
-				histogram  histogram差分アルゴリズム
+				patience   patience 差分アルゴリズム
+				histogram  histogram 差分アルゴリズム
 
 		closeoff	'diff' が設定されたウィンドウが閉じられ、同じ
 				タブページに 'diff' が設定されたウィンドウが
