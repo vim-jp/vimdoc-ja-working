@@ -2213,8 +2213,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 	   preinsert
 		    現在の補完リーダーの一部ではない最初の候補単語の部分を事前
-		    に挿入し、|hl-ComplMatchIns| ハイライトグループを使用す
-		    る。"fuzzy" も含まれている場合は機能しない。
+		    に挿入し、|hl-ComplMatchIns| ハイライトグループを使用する。
+		    "fuzzy" も含まれている場合は機能しない。
 
 					*'completepopup'* *'cpp'*
 'completepopup' 'cpp'	字列  (既定では空)
