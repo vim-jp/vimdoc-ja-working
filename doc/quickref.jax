@@ -714,7 +714,7 @@
 'errorfile'	  'ef'      QuickFixモードで使うファイルの名前
 'errorformat'	  'efm'     エラーファイルの書式の定義
 'esckeys'	  'ek'      挿入モードでファンクションキーを有効にする
-'eventignore'	  'ei'      無視する自動コマンドイベント
+'eventignore'	  'ei'      無視される自動コマンドイベント
 'eventignorewin'  'eiw'     ウィンドウ内で無視される自動コマンドイベント
 'expandtab'	  'et'      <Tab>入力でスペースを入力する
 'exrc'		  'ex'      カレントディレクトリの.vimrcと.exrcを読み込む
