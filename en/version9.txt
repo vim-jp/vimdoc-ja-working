@@ -1,4 +1,4 @@
-*version9.txt*  For Vim version 9.1.  Last change: 2025 Feb 08
+*version9.txt*  For Vim version 9.1.  Last change: 2025 Feb 11
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -41551,6 +41551,8 @@ Add support for internal builtin functions with vim9 objects, see
 
 Enum support for Vim9 script |:enum|
 
+Support for protected _new() method
+
 							*new-other-9.2*
 Other new features ~
 ------------------
@@ -41581,8 +41583,6 @@ Adjusted default values ~
   increased to 12pt to accomodate modern high-dpi monitors
 - the default value of the 'keyprotocol' option has been updated and support
   for the ghostty terminal emulator (using kitty protocol) has been added
-- 'termguicolors' is automatically enabled if the terminal supports the RGB
-  terminfo capability or supports 0x1000000 colors
 
 							*changed-9.2*
 Changed~
