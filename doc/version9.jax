@@ -41577,7 +41577,7 @@ XDG デスクトップ仕様 |xdg-base-dir| のサポート
 - 'keyprotocol' オプションのデフォルト値は、ghostty 端末エミュレータ (kitty プ
   ロトコルを使用) のサポートにより更新された
 
-							*changed-9.2*
+
 補完: ~
 - |:cd| や同様のコマンドで 'cdpath' からディレクトリを補完できるように、
   |:command-complete| や |getcompletion()| 等に "cd_in_path" 補完タイプを追加
