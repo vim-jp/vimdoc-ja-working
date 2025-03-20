@@ -1,4 +1,4 @@
-*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Mar 18
+*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Mar 19
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -41548,7 +41548,8 @@ protected _new() メソッドのサポート
 							*new-other-9.2*
 その他の新機能 ~
 --------------
-新しいプラグイン |comment-install| および |nohlsearch-install| を同梱。
+新しいプラグイン |package-comment|、|package-nohlsearch| および
+|package-hlyank| を同梱。
 
 Wayland UI のサポート
 

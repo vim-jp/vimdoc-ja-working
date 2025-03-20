@@ -41556,7 +41556,8 @@ Support for protected _new() method
 							*new-other-9.2*
 Other new features ~
 ------------------
-The new plugins |comment-install| and |nohlsearch-install| are included.
+The new packages |package-comment|, |package-nohlsearch| and |package-hlyank|
+are included.
 
 Support for Wayland UI.
 
