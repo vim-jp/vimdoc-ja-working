@@ -41548,7 +41548,7 @@ protected _new() メソッドのサポート
 							*new-other-9.2*
 その他の新機能 ~
 --------------
-新しいプラグイン |package-comment|、|package-nohlsearch| および
+新しいパッケージ |package-comment|、|package-nohlsearch| および
 |package-hlyank| を同梱。
 
 Wayland UI のサポート
