@@ -1,4 +1,4 @@
-*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Mar 15
+*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Mar 18
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -41694,6 +41694,10 @@ Ex コマンド: ~
 コマンド: ~
 
 |[r| および |]r|	カーソルを前/次の稀な単語に移動する
+
+Ex コマンド: ~
+
+|:iput|			|:put| と似ているが、インデントを調整する
 |:pbuffer|		バッファリストからバッファ [N] をプレビューウィンドウ
 			で編集する
 
