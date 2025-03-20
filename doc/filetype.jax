@@ -647,8 +647,8 @@ gitrebase ファイルタイプは、対話型の `git rebase` を支援する�
 
 	:Cycle  " 前のコマンドを切り替える
 <
-`:Cycle` コマンドは、CTRL-A キーと CTRL-X キーにもマップされる。詳細については
-`git-rebase --help` を参照。
+`:Cycle` コマンドは、CTRL-A キーと CTRL-X キーにもマップされる。
+詳細については `git-rebase --help` を参照。
 
 GO							*ft-go-plugin*
 
