@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.1.  Last change: 2025 Mar 22
+*builtin.txt*	For Vim バージョン 9.1.  Last change: 2025 Mar 24
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -225,7 +225,7 @@ foldclosedend({lnum})		数値	{lnum}の折り畳みの最後の行(閉じてい�
 foldlevel({lnum})		数値	{lnum}の折り畳みレベル
 foldtext()			文字列	閉じた折り畳みに表示されている行
 foldtextresult({lnum})		文字列	{lnum}で閉じている折り畳みのテキスト
-foreach({expr1}, {expr2})	リスト/辞書/Blob/文字列
+foreach({expr1}, {expr2})	リスト/Tuple/辞書/Blob/文字列
 					{expr1} の各項目に対して {expr2} を呼
 					び出す
 foreground()			数値	Vimウィンドウを前面に移動する
@@ -372,7 +372,7 @@ job_start({command} [, {options}])
 				ジョブ	ジョブを開始する
 job_status({job})		文字列	{job}のステータスを取得する
 job_stop({job} [, {how}])	数値	{job}を停止する
-join({list} [, {sep}])		文字列	{list}の要素を連結して文字列にする
+join({list} [, {sep}])		文字列	{expr}の項目を連結して文字列にする
 js_decode({string})		任意	JS形式のJSONをデコードする
 js_encode({expr})		文字列	JS形式のJSONにエンコードする
 json_decode({string})		任意	JSONをデコードする
@@ -388,6 +388,7 @@ line2byte({lnum})		数値	行{lnum}のバイトカウント
 lispindent({lnum})		数値	{lnum}行目のLispインデント量を取得
 list2blob({list})		Blob	数値のリスト {list} をBlobに変換する
 list2str({list} [, {utf8}])	文字列	数値のリスト {list} を文字列に変換する
+list2tuple({list})		Tuple	項目の {list} を tuple に変換する
 listener_add({callback} [, {buf}])
 				数値	変更を監視するためのコールバックを追加
 listener_flush([{buf}])		なし	リスナーコールバックを呼び出す
@@ -562,10 +563,10 @@ remove({blob}, {idx} [, {end}])	数値/Blob
 					{Blob}から{idx}と{end}間のバイトを削除
 remove({dict}, {key})		任意	{dict}から要素{key}を削除
 rename({from}, {to})		数値	{file}から{to}へファイル名変更
-repeat({expr}, {count})		リスト/Blob/文字列
+repeat({expr}, {count})		リスト/Tuple/Blob/文字列
 					{expr}を{count}回繰り返す
 resolve({filename})		文字列	ショートカットが指す先のファイル名
-reverse({obj})			リスト/Blob/文字列
+reverse({obj})			リスト/Tuple/Blob/文字列
 				{obj} を反転させる
 round({expr})			浮動小数点数	{expr} を四捨五入する
 rubyeval({expr})		任意	|Ruby| の式を評価
@@ -780,6 +781,7 @@ test_null_job()			ジョブ	テスト用のnull値
 test_null_list()		リスト	テスト用のnull値
 test_null_partial()		Funcref	テスト用のnull値
 test_null_string()		文字列	テスト用のnull値
+test_null_tuple()		Tuple	テスト用のnull値
 test_option_not_set({name})	なし	オプション設定フラグをリセットする
 test_override({expr}, {val})	なし	Vimの内部処理を置き換えてテストする
 test_refcount({expr})		数値	{expr}の参照カウントを取得
@@ -801,6 +803,7 @@ tr({src}, {fromstr}, {tostr})	文字列	{src}中に現れる文字{fromstr}を{t
 trim({text} [, {mask} [, {dir}]])
 				文字列	{text} から {mask} 内の文字を切り取る
 trunc({expr})			浮動小数点数	浮動小数点数{expr}を切り詰める
+tuple2list({tuple})		リスト	項目の {tuple} をリストに変換する
 type({expr})			数値	変数{expr}の型
 typename({expr})		文字列	{expr}の型を表す
 undofile({name})		文字列	{name}に対するアンドゥファイルの名前
@@ -2115,7 +2118,7 @@ copy({expr})							*copy()*
 		を変更してもコピーは変更されず、逆も同じである。しかし要素は共
 		通で、片方の要素に対し変更を加えると、もう一方の要素も変更され
 		る。
-		辞書はリストと同様な方法でコピーされる。
+		|Tuple| や |Dictionary| は |List| と同様な方法でコピーされる。
 		|deepcopy()|も参照。
 		|method| としても使用できる: >
 			mylist->copy()
@@ -2158,11 +2161,12 @@ cosh({expr})						*cosh()*
 
 
 count({comp}, {expr} [, {ic} [, {start}]])		*count()* *E706*
-		文字列|String|、リスト|List|または辞書|Dictionary| {comp} の中
-		に値 {expr} が何回現れるかを返す。
+		|String|、|List|、|Tuple| または |Dictionary| {comp} の中に値
+		{expr} が何回現れるかを返す。
 
 		{start} が指定されたときはそのインデックスの要素から検索を開始
-		する。{start} は {comp} がリストの場合のみ使用できる。
+		する。{start} は {comp} が |List| または |Tuple| の場合のみ使
+		用できる。
 
 		{ic} が指定され、|TRUE|の場合は大文字・小文字は区別されない。
 
@@ -2276,7 +2280,7 @@ deepcopy({expr} [, {noref}])				*deepcopy()* *E698*
 		リストまたは辞書であるときは、再帰的にコピーが作成される。
 		よってコピーの要素に変更を加えても元のリストの要素は変更を受け
 		ない。
-		辞書はリストと同様な方法でコピーされる。
+		|Tuple| や |Dictionary| は |List| と同様な方法でコピーされる。
 
 		{noref}が省略された、または0のとき、含まれているリストや辞書は
 		1度だけコピーされる。全ての参照はこのただ1つのコピーを指す。
@@ -2566,8 +2570,8 @@ echoraw({string})					*echoraw()*
 
 empty({expr})						*empty()*
 		{expr}が空なら1を、そうでなければ0を返す。
-		- リスト|List|または辞書|Dictionary|は要素を1個も持たないとき
-		  空とみなされる。
+		- |List|、|Tuple| または |Dictionary| は要素を1個も持たないと
+		  き空とみなされる。
 		- 文字列 |String| はその長さが0のとき空とみなされる。
 		- 数値と浮動小数点数は値が0のとき空とみなされる。
 		- |v:false|, |v:none|, |v:null| は空であり、|v:true| は空では
@@ -3480,9 +3484,9 @@ foldtextresult({lnum})					*foldtextresult()*
 		戻り値の型: |String|
 
 
-foreach({expr1}, {expr2})					*foreach()*
-		{expr1} は |List|, |String|, |Blob| または |Dictionary| でなけ
-		ればならない。
+foreach({expr1}, {expr2})				*foreach()* *E1525*
+		{expr1} は |List|, |Tuple|, |String|, |Blob| または
+		|Dictionary| でなければならない。
 		{expr1} の各項目に対して {expr2} を実行する。{expr1} は変更さ
 		れない。その値は |:lockvar| 1 と同様に変更されるかもしれない。
 		|E741|
@@ -3492,10 +3496,10 @@ foreach({expr1}, {expr2})					*foreach()*
 
 		{expr2} が |string| の場合、{expr2} 内では |v:val| は現在の項
 		目の値を持つ。|Dictionary| の場合、|v:key| は現在の項目のキー
-		を持ち、|List| の場合、|v:key| は現在の項目のインデックスを持
-		つ。
-		|Blob| の場合、|v:key| は現在のバイトインデックスを持つ。
-		|String| の場合、|v:key| は現在の文字インデックスを持つ。
+		を持ち、|List| または |Tuple| の場合、|v:key| は現在の項目のイ
+		ンデックスを持つ。|Blob| の場合、|v:key| は現在のバイトインデッ
+		クスを持つ。|String| の場合、|v:key| は現在の文字インデックス
+		を持つ。
 
 		例: >
 			call foreach(mylist, 'used[v:val] = true')
@@ -3522,8 +3526,8 @@ foreach({expr1}, {expr2})					*foreach()*
 		|method| としても使用できる: >
 			mylist->foreach(expr2)
 <
-		戻り値の型: |String|, |Blob| list<{type}> または dict<{type}>。
-		{expr1} による
+		戻り値の型: |String|, |Blob| list<{type}>, tuple<{type}> また
+		は dict<{type}>。{expr1} による
 
 							*foreground()*
 foreground()	Vimのウィンドウを前面に移動する。この関数はクライアントからVim
@@ -3690,16 +3694,25 @@ get({list}, {idx} [, {default}])			*get()* *get()-list*
 		リスト|List| {list}から{idx}番目の要素を取得する。この要素を取
 		得できないときは{default}を返す。{default}が省略されたときは0
 		を返す。
-		|method| として使用したいなら: >
+		|method| としても使用できる: >
 			mylist->get(idx)
 <
 		戻り値の型: any。{list} による
+
+get({tuple}, {idx} [, {default}])			*get()-tuple*
+		|Tuple| {tuple} から {idx} 番目の項目を取得する。この項目を取
+		得できない場合は {default} を返す。{default} が省略されたとき
+		は 0 を返す。
+		|method| としても使用できる: >
+			mytuple->get(idx)
+<
+		戻り値の型: any。{tuple} による
 
 get({blob}, {idx} [, {default}])			*get()-blob*
 		|Blob| {blob}から{idx}番目のバイトを取得する。このバイトを取得
 		できないときは{default}を返す。{default}が省略されたときは -1
 		を返す。
-		|method| として使用したいなら: >
+		|method| としても使用できる: >
 			myblob->get(idx)
 <
 		戻り値の型: |Number|
@@ -3711,7 +3724,7 @@ get({dict}, {key} [, {default}])			*get()-dict*
 			let val = get(g:, 'var_name', 'default')
 <		g:var_nameの値が存在する場合はこれを取得し使用するが、存在しな
 		い場合は 'default' を返す。
-		|method| として使用したいなら: >
+		|method| としても使用できる: >
 			mydict->get(key)
 <
 		戻り値の型: any。{dict} による
@@ -3737,7 +3750,7 @@ get({func}, {what})					*get()-func*
 
 		エラー時はゼロを返す。
 
-		|method| として使用したいなら: >
+		|method| としても使用できる: >
 			myfunc->get(what)
 <
 		戻り値の型: any。{func} および {what} による
@@ -5759,9 +5772,9 @@ id({item})							*id()*
 <		{item} がガベージコレクションされるのを防ぎ、`id` から {item}
 		を取得する方法を提供する。
 
-		{item} は、リスト、辞書、オブジェクト、ジョブ、チャネルまたは
-		Blob になる。アイテムが許可された型でない場合または null 値の
-		場合は、空の文字列が返される。
+		{item} は、リスト、Tuple、辞書、オブジェクト、ジョブ、チャネル
+		またはBlob になる。アイテムが許可された型でない場合または null
+		値indexの場合は、空の文字列が返される。
 
 		|method| としても使用できる: >
 			GetItem()->id()
@@ -5785,11 +5798,12 @@ index({object}, {expr} [, {start} [, {ic}]])			*index()*
 		{object} から {expr} を探し、そのインデックスを返す。ラムダを
 		使って項目を選択する方法については |indexof()| を参照。
 
-		{object}が |List| の場合は、{expr}に等しい要素の最小のインデッ
-		クスを返す。自動的な変換は行われないので、文字列の "4" は数値
-		の 4 とは異なると判定される。そして数値の 4 は浮動小数点数の
-		4.0 とも異なる。'ignorecase' の値はここでは使用されない。大文
-		字・小文字は引数 {ic} で示されているように区別される。
+		{object}が |List| または |Tuple| の場合は、{expr}に等しい要素
+		の最小のインデックスを返す。自動的な変換は行われないので、文字
+		列の "4" は数値の 4 とは異なると判定される。そして数値の 4 は
+		浮動小数点数の 4.0 とも異なる。'ignorecase' の値はここでは使用
+		されない。大文字・小文字は引数 {ic} で示されているように区別さ
+		れる。
 
 		{object}が |Blob| の場合は、{expr}に等しいバイト値の最小のイン
 		デックスを返す。
@@ -5813,21 +5827,22 @@ index({object}, {expr} [, {start} [, {ic}]])			*index()*
 
 indexof({object}, {expr} [, {opts}])			*indexof()*
 		{expr} が v:true である {object} 内の項目のインデックスを返す。
-		{object} は |List| または |Blob| でなければならない。
+		{object} は |List|、|Tuple| または |Blob| でなければならない。
 
-		{object} が |List| の場合、式が v:true になるまでリスト内の各
-		項目で {expr} を評価し、この項目のインデックスを返す。
+		{object} が |List| または |Tuple| の場合、式が v:true になるま
+		でリスト内または Tuple 内の各項目で {expr} を評価し、この項目
+		のインデックスを返す。
 
 		{object} が |Blob| の場合、式が v:true になるまで Blob 内の各
 		バイトで {expr} を評価し、このバイトのインデックスを返す。
 
 		{expr} は |string| または |Funcref| でなければならない。
 
-		{expr} が |string| の場合: {object} が |List| であれば、{expr}
-		の内部では |v:key| は現在のリスト項目のインデックスを持ち、
-		|v:val| はその項目の値を持つ。{object} が |Blob| の場合、{expr}
-		の内部では |v:key| は現在のバイトのインデックスを持ち、|v:val|
-		は項目の値を持つ。
+		{expr} が |string| の場合: {object} が |List| または |Tuple|
+		であれば、{expr} の内部では |v:key| は現在のリストまたは Tuple
+		項目のインデックスを持ち、|v:val| はその項目の値を持つ。
+		{object} が |Blob| の場合、{expr} の内部では |v:key| は現在の
+		バイトのインデックスを持ち、|v:val|は項目の値を持つ。
 
 		{expr} が |Funcref| の場合は引数を 2 つ取らなければならない:
 			1. 現在の項目のキーまたはインデックス。
@@ -6131,9 +6146,9 @@ items({dict})						*items()*
 			   echo key .. ': ' .. value
 			endfor
 <
-		リストまたは文字列引数もサポートされている。このようなケースで
-		は、items() はインデックスとインデックスの値を含むリストを返
-		す。
+		 |List|、|Tuple| または |String| 引数もサポートされている。こ
+		 のようなケースでは、items() はインデックスとインデックスの値
+		 を含むリストを返す。
 
 		|method| としても使用できる: >
 			mydict->items()
@@ -6143,15 +6158,17 @@ items({dict})						*items()*
 
 job_ 関数群はここに文書化されている: |job-functions-details|
 
-join({list} [, {sep}])					*join()*
-		リスト{list}の要素を連結し、1個の文字列にして返す。
+join({expr} [, {sep}])					*join()*
+		{expr} 内の項目を 1 つの文字列に連結する。{expr} は |List| ま
+		たは |Tuple| にすることができる。
 		{sep}が指定されたときは、要素の間にそれを挿入する。{sep}が指定
 		されなかったときは1個のスペースが使われる。
 		Note 末尾には{sep}がつかない。末尾にもつけたければ以下のように
 		する: >
 			let lines = join(mylist, "\n") .. "\n"
-<		{list}の要素が文字列なら、そのまま使われる。リストと辞書は
-		|string()|を使ったときと同じようにして文字列に変換される。
+<		{list} の要素が文字列の場合、そのまま使われる。
+		|Lists|、|Tuples| および |Dictionaries| は |string()| を使った
+		ときと同じようにして文字列に変換される。
 		この逆を行う関数は|split()|である。
 
 		|method| としても使用できる: >
