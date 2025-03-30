@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.1.  Last change: 2025 Mar 24
+*builtin.txt*	For Vim バージョン 9.1.  Last change: 2025 Mar 26
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -911,7 +911,7 @@ add({object}, {expr})					*add()*
 		|method| としても使用できる: >
 			mylist->add(val1)->add(val2)
 <
-		戻り値の型: list<{type}> (指定された |List|による) または
+		戻り値の型: list<{type}> (指定された |List| による) または
 		|Blob|
 
 
@@ -6259,9 +6259,11 @@ json_encode({expr})					*json_encode()*
 		   浮動小数点数 nan	"NaN"
 		   浮動小数点数 inf	"Infinity"
 		   浮動小数点数 -inf	"-Infinity"
-		   文字列 |String|	ダブルクォートで括られた文字列(null可)
+		   |String|		ダブルクォートで括られた文字列(null可)
 		   |Funcref|		不可、エラー
-		   リスト |List|	配列(null可)
+		   |List|		配列(null可)
+					再帰的に使用された場合: []
+		   |Tuple|		配列として(null可)
 					再帰的に使用された場合: []
 		   辞書 |Dict|		オブジェクト(null可)
 					再帰的に使用された場合: {}
@@ -6305,12 +6307,13 @@ keytrans({string})					*keytrans()*
 
 
 len({expr})						*len()* *E701*
-		結果は数値で、引数{expr}の長さ。{expr}が文字列または数値のとき
-		は|strlen()|と同じようにバイト単位での長さを返す。
-		{expr}がリスト |List| のときは要素数を返す。
-		{expr}が |Blob| の場合、バイト数を返す。
-		{expr}が辞書 |Dictionary| のときは要素数を返す。
-		{expr}が |Object| のときは、オブジェクトの len() メソッドを
+		結果は数値で、引数 {expr} の長さ。{expr} が文字列または数値の
+		ときは |strlen()| と同じようにバイト単位での長さを返す。
+		{expr} が |List| の場合、|List| の要素数を返す。
+		{expr} が |Tuple| の場合、|Tuple| の項目数を返す。
+		{expr} が |Blob| の場合、バイト数を返す。
+		{expr} が |Dictionary| の場合、|Dictionary| の要素数を返す。
+		{expr} が |Object| のときは、オブジェクトの len() メソッドを
 		(存在する場合) 呼び出して長さを取得する (|object-len()|)。それ
 		以外のときはゼロを返す。
 
@@ -6480,6 +6483,24 @@ list2str({list} [, {utf8}])				*list2str()*
 <
 		戻り値の型: |String|
 
+
+list2tuple({list})					*list2tuple()*
+		リスト項目の浅いコピーから Tuple を作成する。
+		例: >
+			list2tuple([1, 2, 3])		returns (1, 2, 3)
+<		|tuple2list()| はその逆を行う。
+
+		この関数は、{list} 内のすべてのリスト項目を再帰的に Tuple に変
+		換するわけではない。Note リストと Tuple の項目は同一であり、項
+		目を変更すると Tuple とリストの両方の内容が変更されることに注
+		意。
+
+		エラーの場合は空の tuple を返す。
+
+		|method| としても使用できる: >
+			GetList()->list2tuple()
+<
+		戻り値の型: tuple<{type}> (指定された |List| による)
 
 listener_add({callback} [, {buf}])			*listener_add()*
 		バッファ {buf} に変更が加えられたときに呼び出されるコールバッ
@@ -7369,14 +7390,14 @@ matchstrpos({expr}, {pat} [, {start} [, {count}]])		*matchstrpos()*
 
 
 max({expr})							*max()*
-		{expr}の全要素の値の最大値を返す。例: >
+		{expr} の全要素の値の最大値を返す。例: >
 			echo max([apples, pears, oranges])
 
-<		{expr}はリスト |List| か辞書 |Dictionary| である。辞書の場合、
-		辞書に含まれるすべての値の最大値を返す。
-		{expr}がリストでも辞書でもなかったり、要素のどれかが数値に変換
-		できない場合はエラーとなる。
-		空のリストまたは辞書の場合は0を返す。
+<		{expr} は |List|、|Tuple| または |Dictionary| である。辞書の場
+		合、辞書に含まれるすべての値の最大値を返す。
+		{expr} がリストでも Tuple でも辞書でもなかったり、項目のどれか
+		が数値に変換できない場合はエラーとなる。空の |List|、|Tuple|
+		または |Dictionary| の場合は 0 を返す。
 
 		|method| としても使用できる: >
 			mylist->max()
@@ -7459,14 +7480,15 @@ menu_info({name} [, {mode}])				*menu_info()*
 		戻り値の型: dict<any>
 
 min({expr})							*min()*
-		{expr}の全要素の値の最小値を返す。例: >
+		{expr} の全要素の値の最小値を返す。例: >
 			echo min([apples, pears, oranges])
 
-<		{expr}はリスト |List| か辞書 |Dictionary| である。辞書の場合、
-		辞書に含まれるすべての値の最小値を返す。
-		{expr}がリストでも辞書でもなかったり、要素のどれかが数値に変換
-		できない場合はエラーとなる。
-		空のリストまたは辞書の場合は0を返す。
+<		{expr} は |List|、|Tuple| または |Dictionary| である。辞書の場
+		合、辞書に含まれるすべての値の最小値を返す。
+		{expr} がリストでも Tuple でも辞書でもなかったり、要素のどれか
+		が数値に変換できない場合はエラーとなる。空の |List|、|Tuple|
+		または |Dictionary| の場合は 0 を返す。
+
 
 		|method| としても使用できる: >
 			mylist->min()
@@ -8167,12 +8189,13 @@ py3eval({expr} [, {locals}])				*py3eval()*
 		す。
 		{locals} |Dictionary| が指定されている場合は、式で使用できる
 		ローカル変数のセットを定義する。キーは変数名で、値は変数の値で
-		ある。|Dictionary| と |List| の値は参照され、式によって
-		(|python-bindeval| が使用されたかのように) 更新される場合があ
-		る。
+		ある。|Dictionary|、|List| および |Tuple| の値は参照され、式に
+		よって (|python-bindeval| が使用されたかのように) 更新される場
+		合がある。
 		数値と文字列はそのまま返る (ただし文字列はコピーされ、Unicode
 		から 'encoding' に変換される)。
 		リストは Vim の |List| 型に変換される。
+		Tuple は Vim の |Tuple| 型に変換される。
 		辞書は Vim の |Dictionary| 型に変換される。辞書のキーは文字列
 		に変換される。
 		Note `:def` 関数にあるローカル変数は {expr} からは見えない。
@@ -8192,6 +8215,7 @@ pyeval({expr} [, {locals}])				*pyeval()*
 		{locals} については |py3eval()| を参照。
 		数値と文字列はそのまま返る (ただし文字列はコピーされる)。
 		リストは Vim の |List| 型に変換される。
+		Tuple は Vim の |Tuple| 型に変換される。
 		辞書は Vim の |Dictionary| 型に変換される。文字列ではない辞書
 		のキーはエラーになる。
 		Note `:def` 関数にあるローカル変数は {expr} からは見えない。
@@ -8455,8 +8479,8 @@ readfile({fname} [, {type} [, {max}]])
 		戻り値の型: list<string> または list<any>
 
 reduce({object}, {func} [, {initial}])			*reduce()* *E998*
-		文字列 |String|、リスト |List| もしくは |Blob| である {object}
-		の各要素ごとに {func} を呼ぶ。{func} は2つの引数で呼ばれる: こ
+		|String|、|List|、|Tuple| もしくは |Blob| である {object} の各
+		要素ごとに {func} を呼ぶ。{func} は2つの引数で呼ばれる: こ
 		れまでの結果と現在の要素。全要素処理後は結果を返す。 *E1132*
 
 		{initial} は初期結果値。もし無いなら、最初の {object} の要素を
@@ -8765,18 +8789,19 @@ rename({from}, {to})					*rename()*
 
 
 repeat({expr}, {count})					*repeat()*
-		{expr}を{count}回繰り返し、連結して返す。例: >
+		{expr} を {count} 回繰り返し、連結して返す。例: >
 			:let separator = repeat('-', 80)
-<		{count}が0または負のときは空文字列を返す。{expr}がリスト
-		|List| または |Blob| の場合は{count}回連結した結果を返す。例: >
+<		{count} が0または負のときは空文字列を返す。{expr} が |List|、
+		|Tuple| または |Blob| の場合は {count} 回連結した結果を返す。
+		例: >
 			:let longlist = repeat(['a', 'b'], 3)
 <		結果は['a', 'b', 'a', 'b', 'a', 'b']となる。
 
 		|method| としても使用できる: >
 			mylist->repeat(count)
 <
-		戻り値の型: |String|, |Blob| または list<{type}>。{expr} によ
-		る
+		戻り値の型: |String|, |Blob|、list<{type}> または tuple<{type}>
+		{expr} による
 
 
 resolve({filename})					*resolve()* *E655*
@@ -8802,18 +8827,19 @@ resolve({filename})					*resolve()* *E655*
 
 reverse({object})					*reverse()*
 		{object} 内の項目の順序を逆にする。{object} は |List|、|Blob|、
-		または |String| にすることができる。リストと Blob の場合、項目
-		はその場で反転され、{object} が返される。
+		|Tuple| または |String| にすることができる。リストと Blob の場
+		合、項目はその場で反転され、{object} が返される。
+		Tuple の場合は、新しい Tuple が返される。
 		文字列の場合は、新しい文字列が返される。
-		{object} がリスト、Blob、または文字列でない場合は、ゼロを返す。
-		リストまたは Blob を変更せずに残しておきたい場合は、まずコピー
-		を作成する: >
+		{object} がリスト、Tuple、Blob、または文字列でない場合は、ゼロ
+		を返す。リストまたは Blob を変更せずに残しておきたい場合は、ま
+		ずコピーを作成する: >
 			:let revlist = reverse(copy(mylist))
 <		|method| としても使用できる: >
 			mylist->reverse()
 <
-		戻り値の型: |String|, |Blob| または list<{type}>。{object} に
-		よる
+		戻り値の型: |String|、|Blob|、list<{type}> または tuple<{type}>
+		{object} による
 
 
 round({expr})							*round()*
@@ -10109,7 +10135,7 @@ slice({expr}, {start} [, {end}])			*slice()*
 		|method| としても使用できる: >
 			GetList()->slice(offset)
 <
-		戻り値の型: list<{type}>
+		戻り値の型: list<{type}> または tuple<{type}>
 
 
 sort({list} [, {how} [, {dict}]])			*sort()* *E702*
@@ -10709,15 +10735,16 @@ string({expr})							*string()*
 			Funcref		function('name')
 			Blob		0z00112233.44556677.8899
 			リスト		[item, item]
+			Tuple		(item, item)
 			辞書		{key: value, key: value}
 			クラス		class SomeName
 			オブジェクト	object of SomeName {lnum: 1, col: 3}
 			列挙型		enum EnumName
 			列挙値		enum name.value {name: str, ordinal: nr}
 
-		リスト |List| や辞書 |Dictionary| に循環参照がある場合、それら
-		は "[...]" や "{...}" に置き換えられる。その結果に対して eval()
-		を使用すると失敗する。
+		|List|、|Tuple| または |Dictionary| に循環参照がある場合、それ
+		らは "[...]" や "(...)" や "{...}" に置き換えられる。その結果
+		に対して eval()を使用すると失敗する。
 
 		オブジェクトに対しては、string() メソッドを呼び出してオブジェ
 		クトのテキスト表現を取得する。メソッドが存在しない場合は、デ
@@ -11643,6 +11670,23 @@ trunc({expr})							*trunc()*
 		戻り値の型: |Float|
 
 
+tuple2list({list})					*tuple2list()*
+		tuple 項目の浅いコピーからリストを作成する。例: >
+			tuple2list((1, 2, 3))		returns [1, 2, 3]
+<		|list2tuple()| はその逆を行う。
+
+		この関数は、{tuple} 内のすべての Tuple 項目を再帰的にリストに
+		変換するわけではない。リストと tuple の項目は同一であり、項目
+		を変更すると tuple とリストの両方の内容が変更されることに注意。
+
+		エラーの場合は空のリストを返す。
+
+		|method| としても使用できる: >
+			GetTuple()->tuple2list()
+<
+		戻り値の型: list<{type}> (指定された |Tuple| による)
+
+
 							*type()*
 type({expr})	{expr}の型を示す数値を返す。
 		マジックナンバーを使わずに、v:t_ 変数を使う方が良い。それぞれ
@@ -11663,6 +11707,7 @@ type({expr})	{expr}の型を示す数値を返す。
 			型エイリアス: 14  |v:t_typealias|
 			列挙型:	      15  |v:t_enum|
 			列挙値:	      16  |v:t_enumvalue|
+			Tuple:	      17  |v:t_tuple|
 		後方互換性のためには、次のような使い方ができる: >
 			:if type(myvar) == type(0)
 			:if type(myvar) == type("")
