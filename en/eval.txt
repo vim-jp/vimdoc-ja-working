@@ -1,4 +1,4 @@
-*eval.txt*	For Vim version 9.1.  Last change: 2025 Feb 23
+*eval.txt*	For Vim version 9.1.  Last change: 2025 Mar 30
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -21,9 +21,10 @@ a remark is given.
     1.1 Variable types
     1.2 Function references		|Funcref|
     1.3 Lists				|Lists|
-    1.4 Dictionaries			|Dictionaries|
-    1.5 Blobs				|Blobs|
-    1.6 More about variables		|more-variables|
+    1.4 Tuples				|Tuples|
+    1.5 Dictionaries			|Dictionaries|
+    1.6 Blobs				|Blobs|
+    1.7 More about variables		|more-variables|
 2.  Expression syntax		|expression-syntax|
 3.  Internal variable		|internal-variables|
 4.  Builtin Functions		|functions|
@@ -46,8 +47,8 @@ Profiling is documented at |profiling|.
 
 1.1 Variable types ~
 					*E712* *E896* *E897* *E899* *E1098*
-					*E1107* *E1135* *E1138*
-There are ten types of variables:
+					*E1107* *E1135* *E1138* *E1523*
+There are eleven types of variables:
 
 							*Number* *Integer*
 Number		A 32 or 64 bit signed number.  |expr-number|
@@ -62,6 +63,10 @@ String		A NUL terminated string of 8-bit unsigned characters (bytes).
 
 List		An ordered sequence of items, see |List| for details.
 		Example: [1, 2, ['a', 'b']]
+
+Tuple		An ordered immutable sequence of items, see |Tuple| for
+		details.
+		Example: (1, 2, ('a', 'b'))
 
 Dictionary	An associative, unordered array: Each entry has a key and a
 		value. |Dictionary|
@@ -165,16 +170,17 @@ A List, Dictionary or Float is not a Number or String, thus evaluate to FALSE.
 
 		*E611* *E745* *E728* *E703* *E729* *E730* *E731* *E908* *E910*
 		*E913* *E974* *E975* *E976* *E1319* *E1320* *E1321* *E1322*
-		*E1323* *E1324*
-|List|, |Dictionary|, |Funcref|, |Job|, |Channel|, |Blob|, |Class| and
-|object| types are not automatically converted.
+		*E1323* *E1324* *E1520* *E1522*
+|List|, |Tuple|, |Dictionary|, |Funcref|, |Job|, |Channel|, |Blob|, |Class|
+and |object| types are not automatically converted.
 
 							*E805* *E806* *E808*
 When mixing Number and Float the Number is converted to Float.  Otherwise
 there is no automatic conversion of Float.  You can use str2float() for String
 to Float, printf() for Float to String and float2nr() for Float to Number.
 
-			*E362* *E891* *E892* *E893* *E894* *E907* *E911* *E914*
+					*E362* *E891* *E892* *E893* *E894*
+					*E907* *E911* *E914* *E1521*
 When expecting a Float a Number can also be used, but nothing else.
 
 						*no-type-checking*
@@ -267,9 +273,9 @@ position in the sequence.
 
 List creation ~
 							*E696* *E697*
-A List is created with a comma-separated list of items in square brackets.
+A List is created with a comma-separated sequence of items in square brackets.
 Examples: >
-	:let mylist = [1, two, 3, "four"]
+	:let mylist = [1, "two", 3, "four"]
 	:let emptylist = []
 
 An item can be any expression.  Using a List for an item creates a
@@ -327,13 +333,13 @@ similar to -1. >
 	:let otherlist = mylist[:]	" make a copy of the List
 
 Notice that the last index is inclusive.  If you prefer using an exclusive
-index use the |slice()| method.
+index use the |slice()| function.
 
-If the first index is beyond the last item of the List or the second item is
+If the first index is beyond the last item of the List or the last index is
 before the first item, the result is an empty list.  There is no error
 message.
 
-If the second index is equal to or greater than the length of the list the
+If the last index is equal to or greater than the length of the list the
 length minus one is used: >
 	:let mylist = [0, 1, 2, 3]
 	:echo mylist[2:8]		" result: [2, 3]
@@ -463,8 +469,8 @@ Changing the order of items in a list: >
 
 For loop ~
 
-The |:for| loop executes commands for each item in a List, String or Blob.
-A variable is set to each item in sequence.  Example with a List: >
+The |:for| loop executes commands for each item in a List, Tuple, String or
+Blob.  A variable is set to each item in sequence.  Example with a List: >
 	:for item in mylist
 	:   call Doit(item)
 	:endfor
@@ -496,6 +502,8 @@ It is also possible to put remaining items in a List variable: >
 	:      echo "remainder: " .. string(rest)
 	:   endif
 	:endfor
+
+For a Tuple one tuple item at a time is used.
 
 For a Blob one byte at a time is used.
 
