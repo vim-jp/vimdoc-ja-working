@@ -6263,7 +6263,7 @@ json_encode({expr})					*json_encode()*
 		   |Funcref|		不可、エラー
 		   |List|		配列(null可)
 					再帰的に使用された場合: []
-		   |Tuple|		配列として(null可)
+		   |Tuple|		配列(null可)
 					再帰的に使用された場合: []
 		   辞書 |Dict|		オブジェクト(null可)
 					再帰的に使用された場合: {}
