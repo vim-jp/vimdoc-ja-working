@@ -8826,9 +8826,9 @@ resolve({filename})					*resolve()* *E655*
 
 
 reverse({object})					*reverse()*
-		{object} 内の項目の順序を逆にする。{object} は |List|、|Blob|、
-		|Tuple| または |String| にすることができる。リストと Blob の場
-		合、項目はその場で反転され、{object} が返される。
+		{object} 内の項目の順序を逆にする。{object} は |List|、
+		|Tuple|、 |Blob| または |String| にすることができる。リストと
+		Blob の場合、項目はその場で反転され、{object} が返される。
 		Tuple の場合は、新しい Tuple が返される。
 		文字列の場合は、新しい文字列が返される。
 		{object} がリスト、Tuple、Blob、または文字列でない場合は、ゼロ
