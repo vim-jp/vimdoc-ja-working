@@ -372,7 +372,7 @@ job_start({command} [, {options}])
 				ジョブ	ジョブを開始する
 job_status({job})		文字列	{job}のステータスを取得する
 job_stop({job} [, {how}])	数値	{job}を停止する
-join({list} [, {sep}])		文字列	{expr}の項目を連結して文字列にする
+join({expr} [, {sep}])		文字列	{expr}の項目を連結して文字列にする
 js_decode({string})		任意	JS形式のJSONをデコードする
 js_encode({expr})		文字列	JS形式のJSONにエンコードする
 json_decode({string})		任意	JSONをデコードする
