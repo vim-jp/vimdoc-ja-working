@@ -41726,7 +41726,7 @@ Ex コマンド: ~
 'completeitemalign'	挿入モード補完ポップアップでの |complete-items| の順序
 'eventignorewin'	ウィンドウ内で無視される自動コマンドイベント
 'findfunc'		|:find| コマンドの結果を取得するための Vim の関数
-'lhistory'		ロケーションリストスタックのサイズ |quickfix-stack|
+'lhistory'		location リストスタックのサイズ |quickfix-stack|
 'messagesopt'		|:messages| と |hit-enter| プロンプトを設定する
 'pummaxwidth'		補完ポップアップメニューの最大幅
 'winfixbuf'		ウィンドウ内でバッファをフォーカスしたままにする
