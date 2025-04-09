@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 9.1.  Last change: 2025 Apr 04
+*options.txt*	For Vim バージョン 9.1.  Last change: 2025 Apr 08
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1764,6 +1764,17 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 
 	セキュリティ上の理由から、このオプションを |modeline| または |sandbox|
 	内で設定することはできない。
+
+						*'chistory'* *'chi'*
+'chistory' 'chi'	数値	(既定では 10)
+			グローバル
+			{|+quickfix| 機能付きでコンパイルされたときのみ有効}
+	quickfix スタックに記憶する quickfix リストの数。1 から 100 の間で指定
+	する必要がある。このオプションが quickfix リストスタック内のエントリ数
+	よりも小さい値に設定された場合、エントリは最も古いものから削除される。
+	現在の quickfix リストが削除された場合、スタックの先頭 (最も最近作成さ
+	れたもの) の quickfix リストが代わりに使用される。詳細については、
+	|quickfix-stack| を参照。
 
 				   *'cindent'* *'cin'* *'nocindent'* *'nocin'*
 'cindent' 'cin'		切替	(既定ではオフ)
@@ -3614,9 +3625,10 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 						*'fillchars'* *'fcs'*
 'fillchars' 'fcs'	文字列	(既定では "vert:|,fold:-,eob:~,lastline:@")
 			グローバル／ウィンドウについてローカル |global-local|
-	ウィンドウのステータス行、垂直分割の区切り、特殊行を埋める文字。
-	これはコンマで区切られた項目のリストである。各項目には、名前、コロン、
-	およびその項目の値がある: |E1511|
+	ウィンドウのステータス行、垂直分割の区切り、特殊行、および
+	|ins-completion-menu| 内の切り捨てられたテキストを埋めるための文字。こ
+	れはコンマで区切られた項目のリストである。各項目には、名前、コロン、お
+	よびその項目の値がある: |E1511|
 
 	  キーワード	既定値		変更の対象 ~
 	  stl		' '		カレントウィンドウのステータス行
@@ -3629,6 +3641,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	  diff		'-'		'diff' での削除された行
 	  eob		'~'		バッファ終端以降の空行
 	  lastline	'@'		'display' が含む最終行/切り捨て
+	  trunc		'>'		|ins-completion-menu| 内の切り捨てられ
+					たテキスト
 
 	指定されなかったキーワードについては、既定値が使われる。
 
@@ -3639,15 +3653,20 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	トおよびマルチバイトの文字をサポートしている。しかし全角文字幅の文字は
 	サポートしていない。|E1512|
 
-	強調表示が行われるものおよびその属するグループ:
+	ハイライトが行われるものおよびその属するグループ:
 	  項目名	ハイライトグループ ~
 	  stl		StatusLine		|hl-StatusLine|
 	  stlnc		StatusLineNC		|hl-StatusLineNC|
 	  vert		VertSplit		|hl-VertSplit|
 	  fold		Folded			|hl-Folded|
+	  foldopen	FoldColumn		|hl-FoldColumn|
+	  foldclose	FoldColumn		|hl-FoldColumn|
+	  foldsep	FoldColumn		|hl-FoldColumn|
 	  diff		DiffDelete		|hl-DiffDelete|
 	  eob		EndOfBuffer		|hl-EndOfBuffer|
 	  lastline	NonText			|hl-NonText|
+	  trunc		|hl-PmenuSel| のような多くのポップアップメニューハイラ
+			イトグループの 1 つ。
 
 						*'findfunc'* *'ffu'* *E1514*
 'findfunc' 'ffu'	文字列 (既定では "")
@@ -5367,6 +5386,17 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	これにより表示エラーとなることがある。再描画によってちらつきや速度低下
 	になる場合にのみ一時的に設定することを目的としてる。
 
+						*'lhistory'* *'lhi'*
+'lhistory' 'lhi'	数値	(既定では 10)
+			ウィンドウについてローカル
+			{|+quickfix| 機能付きでコンパイルされたときのみ有効}
+	'chistory' と同様だが、ウィンドウに関連付けられたロケーションリストス
+	タックを対象としている。ロケーションリストウィンドウ自体、またはロケー
+	ションリストスタックに関連付けられたウィンドウのいずれかでオプションが
+	変更された場合、新しい値はもう一方のウィンドウにも適用される。つまりこ
+	の値は、特定のロケーションリストウィンドウとそれに対応するウィンドウで
+	常に同じになる。詳細については |quickfix-stack| を参照。
+
 			*'linebreak'* *'lbr'* *'nolinebreak'* *'nolbr'*
 'linebreak' 'lbr'	切替	(既定ではオフ)
 			ウィンドウについてローカル
@@ -6519,8 +6549,11 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 			グローバル
 	補完用のポップアップメニューに使用する最大幅を決定する。ゼロの場合、最
 	大幅の制限はない。それ以外の場合、ポップアップメニューはこの値より広く
-	なることはない。切り捨てられたテキストは末尾に "..." で示される。
-	'pumwidth' よりも優先される。 |ins-completion-menu|。
+	なることはない。切り捨てられたテキストは、'fillchars' オプションの
+	"trunc" 値によって表示される。
+
+	このオプションは 'pumwidth' よりも優先される。
+	|ins-completion-menu|。
 
 						*'pumwidth'* *'pw'*
 'pumwidth' 'pw'		数値	(既定では 15)
