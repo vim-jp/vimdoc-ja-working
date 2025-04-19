@@ -41611,8 +41611,8 @@ Vim script および Vim9 script での |Tuple| データ型のサポート。
 	"f{func}"	- 与えられた関数を使って補完する
 	"f"		- 'completefunc' を使って補完する
 	"o"		- 'omnifunc' を使って補完する
-- "{flag}^<limit>" 表記を使用して、 'complete' のソースのマッチを制限できるよ
-  うにする
+- "{flag}^<limit>" 表記を使用して、 'complete' のソースのマッチ数を制限できる
+  ようにする
 
 オプション: ~
 - 'commentstring' のデフォルトには、自動コメントの見栄えを良くするための空白の
