@@ -648,9 +648,9 @@ CmdlineLeave			カーソルがコマンドラインを離れる前、非イン�
 				|cmdwin-char|
 							*CmdlineLeavePre*
 CmdlineLeavePre			コマンドラインを抜ける直前、かつ
-				|CmdlineLeave| の前に発生する。この情報は
+				|CmdlineLeave| の前に発生する。補完情報は
 				|CmdlineLeave| が呼び出される前にクリアされる
-				ため、|cmdcomplete_info()| で補完情報を取得す
+				ため、|cmdcomplete_info()| はこの情報を取得す
 				るのに便利である。マッピングで ":" を非対話的
 				に使用した場合に発生するが、|<Cmd>| を使用する
 				場合は発生しない。また、CTRL-C または <Esc> を
