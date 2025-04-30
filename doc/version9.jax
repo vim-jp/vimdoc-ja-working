@@ -41701,7 +41701,7 @@ Ex コマンド: ~
 自動コマンド: ~
 
 |CursorMovedC|		コマンドラインでカーソルが移動された後
-|CmdlineLeavePre|	コマンドラインから抜ける前
+|CmdlineLeavePre|	コマンドラインから抜ける準備の前
 |KeyInputPre|		任意のモードで任意のキーイベントを処理する前
 |SessionWritePost|	セッションファイルを書き込んだ後 |:mksession|
 |TabClosedPre|		|tabpage| を閉じる前
