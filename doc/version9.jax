@@ -41614,7 +41614,7 @@ Vim script および Vim9 script での |Tuple| データ型のサポート。
 - "{flag}^<limit>" 表記を使用して、 'complete' のソースのマッチ数を制限できる
   ようにする
 - ":filetype" コマンドの補完を追加
-- |getcompletion()| の "filetypecmd" 補完タイプを追加
+- |getcompletion()| に "filetypecmd" 補完タイプを追加
 
 オプション: ~
 - 'commentstring' のデフォルトには、自動コメントの見栄えを良くするための空白の
