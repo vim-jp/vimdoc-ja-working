@@ -404,7 +404,7 @@ Vimは以下のイベントを認識する。イベント名が大文字か小�
 |CmdlineChanged|	コマンドラインのテキストに変更が加えられた後
 |CmdlineEnter|		カーソルがコマンドラインに移動した後
 |CmdlineLeave|		カーソルがコマンドラインを離れる前
-|CmdlineLeavePre|	コマンドラインを離れる前
+|CmdlineLeavePre|	コマンドラインを離れる準備の前
 
 |InsertEnter|		挿入モードを開始したとき
 |InsertChange|		挿入や置換モードで<Insert>をタイプしたとき
