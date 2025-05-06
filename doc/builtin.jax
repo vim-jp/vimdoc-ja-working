@@ -149,7 +149,7 @@ complete({startcol}, {matches})	なし	挿入モード補完を設定する
 complete_add({expr})		数値	補完候補を追加する
 complete_check()		数値	補完中に押されたキーをチェックする
 complete_info([{what}])		辞書	現在の補完情報を取得
-complete_match([{lnum}, {col}])	リスト	補完桁とトリガーテキストを取得
+complete_match([{lnum}, {col}])	リスト	補完のカラムとトリガー文字列を取得
 confirm({msg} [, {choices} [, {default} [, {type}]]])
 				数値	ユーザーへの選択肢と番号
 copy({expr})			任意	{expr}の浅いコピーを作る
