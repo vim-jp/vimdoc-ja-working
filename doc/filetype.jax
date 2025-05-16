@@ -712,7 +712,7 @@ HTML							*ft-html-plugin*
 	let g:html_expr_folding_without_recomputation = 1
         doautocmd FileType
 <
-再計算を強制するには、以下のようする: >
+再計算を強制するには、以下のようにする: >
 	unlet! b:foldsmap
 	normal zx
 <
