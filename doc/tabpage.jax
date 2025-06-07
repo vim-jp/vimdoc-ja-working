@@ -444,7 +444,7 @@ GUI のタブページラインにはポップアップメニューがありま�
 'tabpanel' および 'showtabpanel' オプションは、'statusline' または 'tabline'
 オプションと同様の機能を持ちます。
 
-'tabpanelopt' オプションの "columns:" は、タブパネルの幅を指定します:
+'tabpanelopt' オプションの "columns:" 項目は、タブパネルの幅を指定します:
 >
               +------ この幅
               |
