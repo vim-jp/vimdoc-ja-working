@@ -439,8 +439,8 @@ GUI のタブページラインにはポップアップメニューがありま�
 	|           |text text text text text text text
 	|           |text text text text text text text
 <
-タブパネルを設定するには、以下のオプションを使用します:
-'tabpanel'、'showtabpanel'、'tabpanelopt'。
+タブパネルを設定するには、以下のオプションを使用します: 'tabpanel'、
+'showtabpanel'、'tabpanelopt'。
 'tabpanel' および 'showtabpanel' オプションは、'statusline' または 'tabline'
 オプションと同様の機能を持ちます。
 
