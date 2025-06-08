@@ -3903,7 +3903,7 @@ g:vimsyn_embed オプションは、どの外部スクリプト言語の埋め�
    g:vimsyn_embed =~ 't' : 埋め込み Tcl をサポート
 <
 デフォルトでは、g:vimsyn_embed は設定されておらず、Lua および Python スクリプ
-ト インターフェイスがサポートされている。
+トインターフェイスがサポートされている。
 
 						*g:vimsyn_folding*
 'foldmethod' が "syntax" に設定されている場合、一部の折り畳みがサポートされる
