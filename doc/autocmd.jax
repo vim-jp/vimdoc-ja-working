@@ -128,7 +128,7 @@ Note ":autocmd" の引数の中の特別な文字 (例えば "%" や "<cword>" �
 
 ここで <sfile> は、この行を含むファイルの名前に展開される。
 ただし、<sfile> は関数内では異なる動作をするため、同じ目的を達成するには
-<script> で `:execute` を使用する方が適切である: >
+<script> とともに `:execute` を使用する方が適切である: >
 >
 	:exe $'au BufNewFile,BufRead *.html so {expand("<script>:h")}/html.vim'
 
