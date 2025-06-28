@@ -1289,6 +1289,7 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:class|	:class		クラス宣言の開始
 |:clast|	:cla[st]	指定のエラーへジャンプ、省略時は最後のエラー
 |:clearjumps|	:cle[arjumps]	ジャンプリストを削除する
+|:clipreset|	:clip[reset]	'clipmethod' をリセットする
 |:clist|	:cl[ist]	すべてのエラーを一覧表示
 |:close|	:clo[se]	カレントウィンドウを閉じる
 |:cmap|		:cm[ap]		コマンドラインモードを対象とする":map"コマンド
@@ -1645,7 +1646,6 @@ Note: 1 = カーソル移動コマンド  2 = アンドゥ/リドゥ可能
 |:redrawtabpanel| :redrawtabp[anel] タブパネルを再描画する
 |:registers|	:reg[isters]	レジスタの内容を表示
 |:resize|	:res[ize]	カレントウィンドウの高さを変更
-|:clipreset|	:clip[reset]	'clipmethod' をリセットする
 |:retab|	:ret[ab]	タブの大きさを変更
 |:return|	:retu[rn]	ユーザー関数から戻る
 |:rewind|	:rew[ind]	引数リストの先頭のファイルを開く
