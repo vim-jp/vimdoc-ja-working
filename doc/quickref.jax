@@ -661,7 +661,7 @@
 'cinscopedecls'	  'cinsd'   'cino-g' によって認識される単語
 'cinwords'	  'cinw'    'si'、'cin' によるインデントの開始文字
 'clipboard'	  'cb'      無名レジスタ操作でクリップボードを使う
-'clipmethod'	  'cpm'	    使用するクリップボードメソッドの順序を指定する
+'clipmethod'	  'cpm'	    使用するクリップボードのメソッドの順序を指定する
 'cmdheight'	  'ch'      コマンドラインの行数
 'cmdwinheight'	  'cwh'     コマンドラインウィンドウの行数
 'colorcolumn'	  'cc'	    列を強調表示する
