@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 9.1.  Last change: 2025 Jun 28
+*options.txt*	For Vim バージョン 9.1.  Last change: 2025 Jul 01
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -10109,9 +10109,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 	Wayland 機能、特にクリップボードに使用する Wayland シートを指定する。
 	シートが存在しない場合、オプションは新しい値に設定され、結果として
 	Wayland クリップボードは使用できなくなる。空の値が渡された場合、Vim は
-	$XDG_SEAT が存在する場合はその値を使用しようとし、存在しない場合は最初
-	に見つかった利用可能なシートを使用する。このオプションを更新する
-	と、|v:clipmethod| も更新される。
+	最初に見つかった利用可能なシートを使用しようとする。このオプションを更
+	新すると、|v:clipmethod| も更新される。
 
 				*'wlsteal'* *'wst'* *'nowlsteal'* *'nowst'*
 'wlsteal' 'wst'		切替  (既定ではオフ)
