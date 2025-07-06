@@ -187,7 +187,7 @@ Note: `:global` コマンドを旧来のスクリプトで使うと、Vi の互�
     'ignorecase'	検索時に大文字と小文字を区別しない
     'imsearch'		検索パターンを入力するときに |IME| を使用する
     'incsearch'		パターンを入力すると、マッチするものが段階的に表示される
-    'shortmess'		メッセージを抑制 |shm-s|。検索数を表示 |shm-S|
+    'shortmess'		メッセージを抑制 |shm-s|。検索件数を表示 |shm-S|
     'smartcase'		パターンに大文字が含まれている場合は 'ignorecase' を上
 			書きする
     'wrapscan'		ファイルの先頭から検索を続行する
