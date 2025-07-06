@@ -1,4 +1,4 @@
-*version9.txt*  For Vim version 9.1.  Last change: 2025 Jun 28
+*version9.txt*  For Vim version 9.1.  Last change: 2025 Jul 05
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
@@ -41641,6 +41641,8 @@ Options: ~
 - 'completeopt' is now a |global-local| option.
 - add 'cpoptions' flag "z" |cpo-z|, to disable some (traditional) vi
   behaviour/inconsistency (see |d-special| and |cw|).
+- add 'cpoptions' flag "~" |cpo-~| to disable resolving symlinks on |:cd|
+  commands
 - new option values for 'fillchars':
 	"trunc"		- configure truncation indicator, 'pummaxwidth'
 	"truncrl"	- like "trunc" but in 'rl' mode, 'pummaxwidth'
@@ -41709,6 +41711,7 @@ Functions: ~
 |getcellpixels()|	get List of terminal cell pixel size
 |getcmdcomplpat()|	Shell command line completion
 |getcmdprompt()|	get prompt for input()/confirm()
+|getcompletiontype()|	get command-line completion type
 |getregion()|		get a region of text from a buffer
 |getregionpos()|	get a list of positions for a region
 |getstacktrace()|	get current stack trace of Vim scripts
