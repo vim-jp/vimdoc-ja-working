@@ -41629,8 +41629,8 @@ Vim script および Vim9 script での |Tuple| データ型のサポート。
 - 'completeopt' は |global-local| オプションになった。
 - いくつかの (伝統的な) vi の動作/不整合を無効にするために、'cpoptions' にフラ
   グ "z" |cpo-z| を追加する (|d-special| および |cw| を参照)。
-- |:cd| コマンドでのシンボリックリンクの解決を無効にするために、'cpoptions' フ
-  ラグ "~" |cpo-~| を追加。
+- |:cd| コマンドでのシンボリックリンクの解決を無効にするために、'cpoptions' に
+  フラグ "~" |cpo-~| を追加。
 - 'fillchars' の新しいオプション値:
 	"trunc"		- 切り詰め表示を設定する、'pummaxwidth'
 	"truncrl"	- "trunc" に似ているが 'rl' モード用 'pummaxwidth'
