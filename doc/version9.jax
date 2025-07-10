@@ -1,4 +1,4 @@
-*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Jul 08
+*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Jul 10
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -41587,39 +41587,39 @@ Vim script および Vim9 script での |Tuple| データ型のサポート。
 
 プラットフォーム固有~
 --------------------
-Wayland UI のサポートと Wayland クリップボードのサポートが追加された。
+- Wayland UI のサポートと Wayland クリップボードのサポートが追加された。
 
-XDG デスクトップ仕様 |xdg-base-dir| のサポートが追加され、環境変数 |$MYVIMDIR|
-は、ユーザーの個人ランタイムディレクトリ (Linux では$HOME/.vim または
-$HOME/.config/vim、Windows では $HOME/vimfiles) に設定される。
+- XDG デスクトップ仕様 |xdg-base-dir| のサポートが追加され、環境変数
+  |$MYVIMDIR|は、ユーザーの個人ランタイムディレクトリ (Linux では$HOME/.vim ま
+  たは$HOME/.config/vim、Windows では $HOME/vimfiles) に設定される。
 
-OpenVMS での Python3 のサポート。
+- OpenVMS での Python3 のサポート。
 
-Win32 GUI には、より優れたツールバーアイコンが付属している。
+- Win32 GUI には、より優れたツールバーアイコンが付属している。
 
 							*new-other-9.2*
 その他の新機能 ~
 --------------
-<D-Key> を使用した GTK でのスーパーキーマッピングのサポート。
+- <D-Key> を使用した GTK でのスーパーキーマッピングのサポート。
 
-新しいパッケージ |package-comment|、|package-nohlsearch| および
-|package-hlyank| を同梱。
+- 新しいパッケージ |package-comment|、|package-nohlsearch| および
+  |package-hlyank| を同梱。
 
-対話型チュータープラグイン |vim-tutor-mode| が含まれており、|:Tutor| から起動
-できる。
+- 対話型チュータープラグイン |vim-tutor-mode| が含まれており、|:Tutor| から起
+  動できる。
 
-|gettext()| および |bindtextdomain()| 関数を使用して Vim script プラグインで
-メッセージを翻訳するためのサポートが追加された。
+- |gettext()| および |bindtextdomain()| 関数を使用して Vim script プラグインで
+  メッセージを翻訳するためのサポートが追加された。
 
-|ins-completion-menu| で、挿入モード補完とコマンドライン補完の一致したテキスト
-と補完の種類のハイライトをサポートする。|complete-items| を参照。
+- |ins-completion-menu| で、挿入モード補完とコマンドライン補完の一致したテキス
+  トと補完の種類のハイライトをサポートする。|complete-items| を参照。
 
-垂直の 'tabline' である新しい垂直の |tabpanel| ウィンドウが追加された。
+- 垂直の 'tabline' である新しい垂直の |tabpanel| ウィンドウが追加された。
 
-|dist#vim9#Launch()| および |dist#vim9#Open()| 関数が |vim-script-library| に
-追加され、|netrw| から分離された。
+- |dist#vim9#Launch()| および |dist#vim9#Open()| 関数が |vim-script-library|
+  に追加され、|netrw| から分離された。
 
-".=" を使用した新しいダイグラフ "APPROACHES THE LIMIT" が追加された。
+- ".=" を使用した新しいダイグラフ "APPROACHES THE LIMIT" が追加された。
 
 							*changed-9.2*
 変更点~
@@ -41783,6 +41783,7 @@ Ex コマンド: ~
 'findfunc'		|:find| コマンドの結果を取得するための Vim の関数
 'isexpand'		補完のトリガーを定義する
 'lhistory'		location リストスタックのサイズ |quickfix-stack|
+'maxsearchcount'	検索ステータスの最大数を設定する |shm-S|
 'messagesopt'		|:messages| と |hit-enter| プロンプトを設定する
 'pummaxwidth'		補完ポップアップメニューの最大幅
 'showtabpanel'		|tabpanel| をいつ表示するか
@@ -41793,6 +41794,10 @@ Ex コマンド: ~
 't_xo'			端末は XON/XOFF ハンドシェイクを使用する (例: vt420)
 't_CF'			代替フォントハイライトの端末コードのサポート
 'winfixbuf'		ウィンドウ内でバッファをフォーカスしたままにする
+
+Vim 引数: ~
+|-Y|			Wayland コンポジタに接続しない。
+
 
 ==============================================================================
 ☆非互換な変更						*incompatible-9.2*
