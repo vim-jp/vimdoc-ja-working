@@ -962,7 +962,7 @@ NOTE: 以前のバージョンでは CTRL-V が特別に扱われていた。こ
 							*:ret* *:retab* *:retab!*
 :[range]ret[ab][!] [-indentonly] [{new-tabstop}]
 			{new-tabstop} を使用し、<Tab> を含むすべての空白文字の
-			シーケンスを新しい空白文字の文字列に置き換える。
+			連続を新しい空白文字の文字列に置き換える。
 			{new-tabstop} を指定しないか 0 を指定した場合、Vim は
 			現在の 'tabstop' の値を使用する。
 			'tabstop' の現在の値は、既存のタブの幅を計算する際に常
