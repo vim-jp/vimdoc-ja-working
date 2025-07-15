@@ -1,4 +1,4 @@
-*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Jul 10
+*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Jul 14
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -41679,6 +41679,8 @@ Ex コマンド: ~
   トどおりに動作し、ヘルプバッファをスキップする (ヘルプバッファから実行されて
   いない場合。そうでない場合は、次/前のヘルプバッファに移動する)。
 - |:keeppatterns| は、|:s| と共に使用された場合、最後の置換パターンを保持する
+- |:retab| は、インデントされた行の空白のみを変更する新しいオプションパラメー
+  タ -indentonly を受け付ける
 
 関数: ~
 - get(function, "arity") 関数を使用して関数の引数に関する情報を提供する
