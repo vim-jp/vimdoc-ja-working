@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.1.  Last change: 2025 Jul 11
+*builtin.txt*	For Vim バージョン 9.1.  Last change: 2025 Jul 14
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -4320,6 +4320,7 @@ getcompletion({pat}, {type} [, {filtered}])		*getcompletion()*
 		messages	|:messages|サブオプション
 		option		オプション
 		packadd		任意パッケージ |pack-add| 名
+		retab		|:retab| サブオプション
 		runtime		|:runtime| 補完
 		scriptnames	読み込まれているスクリプト名 |:scriptnames|
 		shellcmd	シェルコマンド
