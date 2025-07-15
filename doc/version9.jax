@@ -41635,7 +41635,6 @@ Vim script および Vim9 script での |Tuple| データ型のサポート。
 - 'keyprotocol' オプションのデフォルト値は、ghostty 端末エミュレータ (kitty プ
   ロトコルを使用) のサポートにより更新された
 - ビジュアルモードのハイライトの改善 |hl-Visual|
-- the default value for 'showcmd' is always enabled when using non-compatible mode (previously, it was off on UNIX systems) and consequently removed from |defaults.vim|
 - 非互換モードを使用する場合、'showcmd' のデフォルト値は常に有効になる (以前
   は、UNIX システムではオフだった)。そのため、|defaults.vim| から削除された。
 
