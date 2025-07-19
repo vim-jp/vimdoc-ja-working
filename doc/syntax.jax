@@ -1570,7 +1570,7 @@ Markdown を有効にしていない場合、この行は指定されたハイ�
 
 構成例: >
 
-	" ドキュメント文字列をMarkdownとしてハイライトする。
+	" ドキュメント文字列を Markdown としてハイライトする。
 	:let g:erlang_use_markdown_for_docs = 1
 
 	" 1. docstring 内の Markdown 要素を Markdown としてハイライトする。
