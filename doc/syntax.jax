@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim バージョン 9.1.  Last change: 2025 Jul 14
+*syntax.txt*	For Vim バージョン 9.1.  Last change: 2025 Jul 20
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -263,6 +263,9 @@ NOTE: 長い行があって表示が遅く、構文ハイライトをオフに�
 	 Debug		o デバッグ命令
 
 	*Underlined	o 目立つ文章, HTMLリンク
+	*Bold		o 太字のテキスト
+	*Italic		o 斜体のテキスト
+	*BoldItalic	o 太字かつ斜体のテキスト
 
 	*Ignore		o (見た目上)空白, 不可視  |hl-Ignore|
 
@@ -4227,13 +4230,13 @@ ZSH						    *zsh.vim* *ft-zsh-syntax*
 
 ☆キーワードの定義					*:syn-keyword*
 
-:sy[ntax] keyword {group-name} [{options}] {keyword} .. [{options}]
+:sy[ntax] keyword {group-name} [{options}] {keyword} ... [{options}]
 
 	キーワードを定義する。
 
 	{group-name}	"Comment" のような構文グループ名。
 	[{options}]	後述の|:syn-arguments|を参照。
-	{keyword} ..	このグループに含めるキーワードのリスト。
+	{keyword} ...	このグループに含めるキーワードのリスト。
 
 	例: >
   :syntax keyword   Type   int long char
