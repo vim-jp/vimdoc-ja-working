@@ -1,4 +1,4 @@
-*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Jul 16
+*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Jul 20
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -41626,6 +41626,9 @@ Vim script および Vim9 script での |Tuple| データ型のサポート。
   に追加され、|netrw| から分離された。
 
 - ".=" を使用した新しいダイグラフ "APPROACHES THE LIMIT" が追加された。
+
+- 構文スクリプトで使用するための新しいデフォルトのハイライトグループ "Bold"、
+  "Italic" および "BoldItalic" を追加した。
 
 							*changed-9.2*
 変更点~
