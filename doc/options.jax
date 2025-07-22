@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 9.1.  Last change: 2025 Jul 20
+*options.txt*	For Vim バージョン 9.1.  Last change: 2025 Jul 21
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -9824,7 +9824,7 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 <	'wildchar' は、|/|、|?|、|:s|、|:g|、|:v|、|:vim| などの検索パターンコ
 	ンテキストでも補完を有効にする。補完をトリガーする代わりに、文字の
 	<Tab> を挿入するには、<C-V><Tab> または "\t" と入力する。
-	|'wildoptions'| も参照。
+	|'wildoptions'| および |wildtrigger()| も参照。
 	NOTE: このオプションは 'compatible' がオンになると Vi の既定値に設定さ
 	れ、'compatible' がオフになると Vim の既定値に設定されるので注意。
 
