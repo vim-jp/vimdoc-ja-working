@@ -1,4 +1,4 @@
-*develop.txt*   For Vim バージョン 9.1.  Last change: 2025 Jul 21
+*develop.txt*   For Vim バージョン 9.1.  Last change: 2025 Jul 22
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -292,7 +292,8 @@ wordsのリストが必要である。どれが最良の方法かを探すため
 ==============================================================================
 3. 想定していること					*design-assumptions*
 
-以下のセクションでは、すべての Vim コードとビルドツールが遵守する必要がある移植性と互換性の制約を定義する。
+以下のセクションでは、すべての Vim コードとビルドツールが遵守する必要がある移
+植性と互換性の制約を定義する。
 
 
 MAKEFILES					*assumptions-makefiles*
