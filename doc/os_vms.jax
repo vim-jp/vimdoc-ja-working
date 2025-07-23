@@ -34,7 +34,7 @@ Vimと完全な互換性がある。
 2. ファイルのダウンロード				*vms-download*
 
 Vim のソースコードは Vim の公式サイトからダウンロードすることができる:
-	ftp://ftp.vim.org/pub/vim/
+	https://github.com/vim/vim/archive/refs/heads/master.zip
 または git を使用する: >
 	git clone https://github.com/vim/vim.git
 
