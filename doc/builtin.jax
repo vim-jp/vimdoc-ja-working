@@ -12085,7 +12085,7 @@ wildtrigger()						*wildtrigger()*
 						*cmdline-autocompletion*
 		例: コマンドラインで入力中に補完メニューを自動的に表示させるに
 		は、以下を使用する: >
-			autocmd CmdlineChanged [:/?] call wildtrigger()
+			autocmd CmdlineChanged [:/\?] call wildtrigger()
 			set wildmode=noselect:lastused,full wildoptions=pum
 <
 		通常の履歴ナビゲーションを維持するには (上/下キー): >
