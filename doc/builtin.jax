@@ -4306,7 +4306,7 @@ getcompletion({pat}, {type} [, {filtered}])		*getcompletion()*
 		event		自動コマンドのイベント
 		expression	Vim式
 		file		ファイルおよびディレクトリ名
-		file_in_path	'path'のファイルおよびディレクトリ名
+		file_in_path	'path' のファイルおよびディレクトリ名
 		filetype	ファイルタイプ名 'filetype'
 		filetypecmd	|:filetype| サブオプション
 		function	関数名
