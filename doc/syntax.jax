@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim バージョン 9.1.  Last change: 2025 Aug 08
+*syntax.txt*	For Vim バージョン 9.1.  Last change: 2025 Aug 10
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1609,7 +1609,7 @@ FLEXWIKI				*flexwiki.vim* *ft-flexwiki-syntax*
 
 
 FlexWiki は、ASP.NET ベースの wiki パッケージで、以前は
-http://www.flexwiki.com で入手できた。
+www.flexwiki.com で入手できた。
 NOTE: このサイトは現在機能していない。Wikipedia によると 2009 年に開発がストッ
 プした。
 
@@ -1915,7 +1915,7 @@ HTMLファイルのタグ用の構文ファイルは以下のように動作す�
 	:let html_my_rendering=1
 
 この例については以下からmysyntax.vimをダウンロードすること。
-http://www.fleiner.com/vim/download.html
+https://www.fleiner.com/vim/download.html
 
 次の行をvimrcに加えればこの描画を無効にできる: >
 	:let html_no_rendering=1
