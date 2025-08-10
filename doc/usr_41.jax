@@ -1566,7 +1566,7 @@ Registers:					*register-functions*
 
 次のように実行すると: >
 
-	:10,15 call Number()
+	:10,15call Number()
 
 関数は 6 回実行され、10行目から開始し終了は15行目です。
 
