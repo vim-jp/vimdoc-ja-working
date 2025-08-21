@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.1.  Last change: 2025 Aug 12
+*builtin.txt*	For Vim バージョン 9.1.  Last change: 2025 Aug 20
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -368,7 +368,7 @@ isinf({expr})			数値	{expr}が無限大の値(正または負)かどうか
 					を判定する
 islocked({expr})		数値	{expr}がロックされているなら|TRUE|
 isnan({expr})			数値	{expr}がNaNならば|TRUE|
-items({dict})			リスト	{dict}のキーと値のペアを取得
+items({expr})			リスト	{expr} のキーと値のペアを取得
 job_getchannel({job})		チャネル  {job}のチャネルハンドルを取得
 job_info([{job}])		辞書	{job}についての情報を取得
 job_setoptions({job}, {options}) なし	{job}のオプションを設定する
@@ -6240,19 +6240,29 @@ isnan({expr})						*isnan()*
 		戻り値の型: |Number|
 
 
-items({dict})						*items()*
-		{dict}の全要素のキー・値のペアからなるリストを返す。戻り値の各
+items({expr})						*items()*
+		{expr} の全要素のキー・値のペアからなるリストを返す。戻り値の各
 		要素はリストであり、キーと値の2個の要素を持つ。戻り値のリスト
 		の要素の順序は不定である。|keys()| と |values()| も参照。
-		例: >
-			for [key, value] in items(mydict)
-			   echo key .. ': ' .. value
-			endfor
-<
-		 |List|、|Tuple| または |String| 引数もサポートされている。こ
-		 のようなケースでは、items() はインデックスとインデックスの値
-		 を含むリストを返す。
 
+		{expr} のすべてのキー/インデックスと値のペアを含む |List| を返
+		す。各 |List| の項目は 2 つの項目を持つリストである。
+		- |Dict| の場合: キーと値
+		- |List|、|Tuple| または |String| の場合: インデックスと値
+		返される |List| は、|Dict| の場合は任意の順序で返されるが、そ
+		れ以外の場合はインデックスの昇順になる。
+
+		|keys()| および |values()| も参照。
+
+		例: >
+			let mydict = #{a: 'red', b: 'blue'}
+			for [key, value] in items(mydict)
+			   echo $"{key} = {value}"
+			endfor
+			echo items([1, 2, 3])
+			echo items(('a', 'b', 'c'))
+			echo items("foobar")
+<
 		|method| としても使用できる: >
 			mydict->items()
 <
@@ -12769,6 +12779,8 @@ scrollbind		'scrollbind' をサポート (常に true)
 showcmd			'showcmd' をサポート
 signs			|:sign|をサポート
 smartindent		'smartindent' をサポート。(常に true)
+socketserver		ソケットサーバー機能付きでコンパイルされている。(Unix
+			のみ)
 sodium			libsodium ライブラリによるより良い暗号のサポート
 sound			サウンド再生をサポート。例えば、`sound_playevent()`
 spell			スペルチェックをサポート |spell|
