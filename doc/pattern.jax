@@ -1,4 +1,4 @@
-*pattern.txt*   For Vim バージョン 9.1.  Last change: 2025 Aug 13
+*pattern.txt*   For Vim バージョン 9.1.  Last change: 2025 Aug 21
 
 
 		  VIMリファレンスマニュアル	  by Bram Moolenaar
@@ -1481,11 +1481,11 @@ Vim では、'^' と '$' は常に中間の改行にもマッチします。最�
 字列がパターンにどの程度マッチするかをスコア付けする。
 
 例: >
-    パターン:   "vim"
-    候補:       "vim"        -> 完璧
-                "vimeo"      -> 良い (v i m)
-                "voice mail" -> 弱い (v _ i _ _ _ m)
-                "vintage"    -> マッチしない (no "m")
+    パターン:	"vim"
+    候補:	"vim"	     -> 完璧
+		"vimeo"	     -> 良い (v i m)
+		"voice mail" -> 弱い (v _ i _ _ _ m)
+		"vintage"    -> マッチしない (no "m")
 <
 検索文字列に複数の単語が含まれている場合、各単語は個別にマッチし、候補リスト内
 で任意の順序で出現する可能性がある。例えば、"get pat" は "GetPattern"、
