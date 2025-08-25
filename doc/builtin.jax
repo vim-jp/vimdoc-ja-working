@@ -11963,7 +11963,7 @@ uri_decode({string})					*uri_decode()*
 		|method| としても使用できる: >
 			mystr->uri_decode()
 <
-		戻り値の型: |Number|
+		戻り値の型: |String|
 
 uri_encode({string})					*uri_encode()*
 		{string} の URI エンコード形式を返す。URI エンコードでは、安全
