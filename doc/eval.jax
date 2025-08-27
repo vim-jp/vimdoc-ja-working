@@ -2838,9 +2838,9 @@ v:termu7resp	termcapのエントリ |t_u7| で端末から返されるエスケ�
 						*v:termda1*
 v:termda1	端末からのプライマリデバイス属性 (DA1) クエリによって返される
 		エスケープシーケンス。このオプションが設定されている場合、
-		TermResponseAll 自動コマンドイベントが起動され、<amatch> が
-		"da1" に設定される。端末の OSC 52 サポートを検出するために使用
-		できる。
+		<amatch> に "da1" が設定セットされた状態で TermResponseAll 自
+		動コマンドイベントが発生する。端末の OSC 52 サポートを検出する
+		ために使用できる。
 
 					*v:testing* *testing-variable*
 v:testing	`test_garbagecollect_now()` を使う前に設定する必要がある。
