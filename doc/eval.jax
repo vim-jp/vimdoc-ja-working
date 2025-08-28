@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 9.1.  Last change: 2025 Aug 23
+*eval.txt*	For Vim バージョン 9.1.  Last change: 2025 Aug 27
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2183,8 +2183,10 @@ v:clipmethod	現在使用されているクリップボードへのアクセス�
 		かの値になる:
 			wayland		Wayland プロトコルが使用されている。
 			x11		X11 セレクションが使用されている。
-			none		上記の方法は利用できないか、使用できな
-					い。
+			gui		GUI固有のメソッドが使用されている。
+			other		他のメソッドが使用されています。
+			none		クリップボード機能が無効または使用でき
+					ない。
 		詳細は 'clipmethod' を参照。
 
 					*v:cmdarg* *cmdarg-variable*
@@ -2821,12 +2823,16 @@ v:termrbgresp	termcapのエントリ |t_RB| で端末から返されるエスケ
 		このオプションがセットされているとき、<amatch> に "background"
 		がセットされた状態で自動コマンドイベント TermResponseAll が発
 		生する。
+		これは通常、Vim に同梱されている
+		$VIMRUNTIME/plugin/colorresp.vim プラグインによって設定される
+		が、何をしているのか分かっている場合は手動で設定することもでき
+		る。
+		Note これを変更しても何も起こらないことに注意。
 
 						*v:termrfgresp*
 v:termrfgresp	termcapのエントリ |t_RF| で端末から返されるエスケープシーケン
-		ス。端末の文字色を調べるために使用される。このオプションがセッ
-		トされているとき、<amatch> に "foreground" がセットされた状態
-		で自動コマンドイベント TermResponseAll が発生する。
+		ス。端末の文字色を調べるために使用される。|v:termrbgresp| と同
+		じように動作する
 
 						*v:termu7resp*
 v:termu7resp	termcapのエントリ |t_u7| で端末から返されるエスケープシーケン
@@ -2841,6 +2847,14 @@ v:termda1	端末からのプライマリデバイス属性 (DA1) クエリによ
 		<amatch> に "da1" が設定セットされた状態で TermResponseAll 自
 		動コマンドイベントが発生する。端末の OSC 52 サポートを検出する
 		ために使用できる。
+
+						*v:termosc*
+v:termosc	ターミナルから受信した最新の OSC 応答のエスケープシーケンス。
+		このオプションが設定されている場合、|TermResponseAll| 自動コマ
+		ンドイベントが発行され、<amatch> が "osc" に設定される。また、
+		$VIMRUNTIME/plugin/colorresp.vim プラグイン経由で
+		|v:termrbgresp| および |v:termrfgresp| を設定する際にも使用さ
+		れる
 
 					*v:testing* *testing-variable*
 v:testing	`test_garbagecollect_now()` を使う前に設定する必要がある。
