@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 9.1.  Last change: 2025 Aug 27
+*autocmd.txt*   For Vim バージョン 9.1.  Last change: 2025 Aug 29
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1299,7 +1299,7 @@ TermResponseAll			ターミナルから |t_RV|、|t_RC|、|t_RS|、|t_u7|
 				    "version",
 				    "cursorblink",
 				    "cursorshape",
-				    "ambiguouswidth"
+				    "ambiguouswidth",
 				    "osc"
 				Note このイベントは、特にファイル I/O、シェル
 				コマンド、またはその他の時間の掛かるものが関係
@@ -1313,8 +1313,6 @@ TermResponseAll			ターミナルから |t_RV|、|t_RC|、|t_RS|、|t_u7|
 				"foreground" および "background" 値に遭遇する
 				と、"osc" イベントを処理し、TermResponseAll 自
 				動コマンドイベントを発行する。
-
-
 							*TextChanged*
 TextChanged			ノーマルモードでカレントバッファのテキストが変
 				更されたとき。つまり |b:changedtick| が更新さ
