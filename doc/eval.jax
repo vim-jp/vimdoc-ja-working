@@ -2817,7 +2817,7 @@ v:termstyleresp	termcapのエントリ |t_RS| で端末から返されるエス�
 		"cursorshape" がセットされた状態で自動コマンドイベント
 		TermResponseAll が発生する。
 
-					*v:termrfgresp* *termrfgresp-variable*
+					*v:termrbgresp* *termrbgresp-variable*
 v:termrbgresp	termcapのエントリ |t_RB| で端末から返されるエスケープシーケン
 		ス。端末の背景色を調べるために使用される。'background' を参照。
 		このオプションがセットされているとき、<amatch> に "background"
