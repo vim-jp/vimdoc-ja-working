@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 9.1.  Last change: 2025 Aug 29
+*autocmd.txt*   For Vim バージョン 9.1.  Last change: 2025 Sep 01
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1296,11 +1296,12 @@ TermResponseAll			ターミナルから |t_RV|、|t_RC|、|t_RS|、|t_u7|
 				|v:termstyleresp|、|v:termu7resp|、および
 				|v:termosc| の値がそれぞれ使用できる。<amatch>
 				は以下のいずれかに設定される:
-				    "version",
-				    "cursorblink",
-				    "cursorshape",
-				    "ambiguouswidth",
-				    "osc"
+				    "ambiguouswidth" (|t_u7|),
+				    "cursorblink" (|t_RC|),
+				    "cursorshape" (|t_RS|),
+				    "da1" (|t_Ms|),
+				    "osc",
+				    "version" (|t_RV|)
 				Note このイベントは、特にファイル I/O、シェル
 				コマンド、またはその他の時間の掛かるものが関係
 				する場合、別のイベントの実行途中でトリガーされ
