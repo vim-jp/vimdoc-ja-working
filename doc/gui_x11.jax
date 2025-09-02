@@ -1,4 +1,4 @@
-*gui_x11.txt*   For Vim バージョン 9.1.  Last change: 2025 Aug 10
+*gui_x11.txt*   For Vim バージョン 9.1.  Last change: 2025 Sep 01
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -704,9 +704,9 @@ Note "+ レジスタのテキストはビジュアル選択しただけで変更
 タは変更される。つまり選択したテキストを上書きできる。
 
 								*W23*
-"* または "+ レジスタにヤンクしている時に、Vim が X11 セレクション (またはク
-リップボード) への接続を確立できない場合、レジスタ 0 が使用され、警告が出力さ
-れる:
+"* または "+ レジスタにヤンクしている時に、Vim が X11 セレクション (または
+X11/Wayland クリップボード) への接続を確立できない場合、レジスタ 0 が使用され、
+警告が出力される:
 
   Warning: Clipboard register not available, using register 0 ~
 
