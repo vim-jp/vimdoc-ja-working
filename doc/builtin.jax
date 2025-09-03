@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.1.  Last change: 2025 Sep 01
+*builtin.txt*	For Vim バージョン 9.1.  Last change: 2025 Sep 02
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -12885,9 +12885,7 @@ vreplace		コマンド|gR|と|gr|をサポート (常に true)
 vtp			vcon をサポート |+vtp| (現在のコンソール内で機能するか
 			どうかを調べるには vcon を確認する)
 wayland			Wayland プロトコルをサポート
-wayland_clipboard	Wayland のクリップボートのサポート
-wayland_focus_steal	Wayland のクリップボードのフォーカススティールのサポー
-			ト
+wayland_clipboard	Wayland のセレクション/クリップボートのサポート
 wildignore		オプション 'wildignore' をサポート
 wildmenu		オプション 'wildmenu' を指定してコンパイル
 win16			MS-Windows 3.1 用の古いバージョン (常に false)
