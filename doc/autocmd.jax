@@ -1,4 +1,4 @@
-*autocmd.txt*   For Vim バージョン 9.1.  Last change: 2025 Sep 01
+*autocmd.txt*   For Vim バージョン 9.1.  Last change: 2025 Sep 02
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -1299,7 +1299,7 @@ TermResponseAll			ターミナルから |t_RV|、|t_RC|、|t_RS|、|t_u7|
 				    "ambiguouswidth" (|t_u7|),
 				    "cursorblink" (|t_RC|),
 				    "cursorshape" (|t_RS|),
-				    "da1" (|t_Ms|),
+				    "da1",
 				    "osc",
 				    "version" (|t_RV|)
 				Note このイベントは、特にファイル I/O、シェル
