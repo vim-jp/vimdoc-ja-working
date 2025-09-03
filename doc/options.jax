@@ -1,4 +1,4 @@
-*options.txt*	For Vim バージョン 9.1.  Last change: 2025 Sep 01
+*options.txt*	For Vim バージョン 9.1.  Last change: 2025 Sep 02
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -10223,8 +10223,8 @@ Note 1番目の形式では、行全体がオプション指定に使われる�
 				*'wlsteal'* *'wst'* *'nowlsteal'* *'nowst'*
 'wlsteal' 'wst'		切替  (既定ではオフ)
 			グローバル
-			{|+wayland_focus_steal| 機能付きでコンパイルされたとき
-			のみ有効}
+			{|+wayland_clipboard| 機能付きでコンパイルされたときの
+			み有効}
 	有効にすると、Vim はクリップボードにアクセスするために一時的なサーフェ
 	スを作成してフォーカスを奪取できるようになる。詳細については
 	|wayland-focus-steal| を参照。
