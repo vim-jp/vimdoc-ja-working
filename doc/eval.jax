@@ -2791,16 +2791,16 @@ v:termresponse	termcapのエントリ|t_RV|で端末から返されるエスケ�
 		字と ';' だけから構成され 'c' で終わるエスケープシーケンスを受
 		け取ったとき代入される。この変数がセットされると自動コマンドイ
 		ベント TermResponse が発生し、端末からの応答に反応することがで
-		きる。また、同様に自動コマンドイベント TermResponseAllが
+		きる。また、同様に自動コマンドイベント TermResponseAll が
 		<amatch> に "version" がセットされた状態で発生する。
 		|terminalprops()| を使うことで Vim が端末をどのように認識した
 		かを知ることができる。
-		新しいxtermからの応答は次の形式である:
-		 "<Esc>[> Pp ; Pv ; Pc c"。ここでPpは端末のタイプ: 0ならvt100、
-		 1ならvt220。Pvはパッチレベル(パッチ95で導入されたため常に95以
-		 上)。Pcは常に0。
- 		Pv が141以上の場合、Vim は端末コードの要求を試す。これは xterm
-		でのみ動作する |xterm-codes|。
+		新しい xterm からの応答は次の形式である:
+		"<Esc>[> Pp ; Pv ; Pc c"。ここで Pp は端末のタイプ: 0 なら
+		vt100、1 なら vt220。Pv はパッチレベル (パッチ 95 で導入された
+		ため常に 95 以上)。Pc は常に 0。
+		Pv が 141 以上の場合、Vim は端末コードの要求を試す。これは
+		xtermでのみ動作する |xterm-codes|。
 		{Vimが|+termresponse|機能付きでコンパイルされたときのみ有効}
 
 				    *v:termblinkresp* *termblinkresp-variable*
