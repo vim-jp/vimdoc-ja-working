@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 9.1.  Last change: 2025 Sep 14
+*eval.txt*	For Vim バージョン 9.1.  Last change: 2025 Sep 15
 
 
 		VIMリファレンスマニュアル    by Bram Moolenaar
@@ -2747,8 +2747,8 @@ v:swapchoice	イベント|SwapExists|により実行された自動コマンド�
 v:swapcommand	ファイルを開いた後に実行するノーマルモードコマンド。自動コマン
 		ド|SwapExists|で、他のVimインスタンスにファイルを開かせ、指定
 		位置までジャンプするために使うことができる。例えば、あるタグへ
-		ジャンプするには、この変数に":tag tagname\r" という値を代入す
-		る。":edit +cmd file" を実行させるには":cmd\r" を代入する。
+		ジャンプするには、この変数に ":tag tagname\r" という値を代入す
+		る。":edit +cmd file" を実行させるには ":cmd\r" を代入する。
 
 				*v:t_TYPE* *v:t_bool* *t_bool-variable*
 v:t_bool	真偽値 |Boolean| 型の値。読出し専用。 参照: |type()|
@@ -2789,10 +2789,10 @@ v:t_tuple	|Tuple| 型の値。読出し専用。 参照: |type()|
 v:termresponse	termcapのエントリ|t_RV|で端末から返されるエスケープシーケンス。
 		ESC [ または CSI で始まり、次に '>' または '?' が来て、途中数
 		字と ';' だけから構成され 'c' で終わるエスケープシーケンスを受
-		け取ったとき代入される。この変数がセットされると自動コマンドイ
-		ベント TermResponse が発生し、端末からの応答に反応することがで
-		きる。また、同様に自動コマンドイベント TermResponseAll が
-		<amatch> に "version" がセットされた状態で発生する。
+		け取ったとき代入される。この変数がセットされると TermResponse
+		自動コマンドイベントが発生し、端末からの応答に反応することがで
+		きる。また、同様に <amatch> に "version" がセットされた状態で
+		TermResponseAll 自動コマンドイベントが発生する。
 		|terminalprops()| を使うことで Vim が端末をどのように認識した
 		かを知ることができる。
 		新しい xterm からの応答は次の形式である:
@@ -2807,15 +2807,15 @@ v:termresponse	termcapのエントリ|t_RV|で端末から返されるエスケ�
 v:termblinkresp	termcapのエントリ |t_RC| で端末から返されるエスケープシーケン
 		ス。端末カーソルが点滅しているかを調べるために使用される。
 		|term_getcursor()| で使用される。この変数がセットされていると
-		き、<amatch> に "cursorblink" がセットされた状態で自動コマンド
-		イベント TermResponseAll が発生する。
+		き、<amatch> に "cursorblink" がセットされた状態で
+		TermResponseAll 自動コマンドイベントが発生する。
 
 				    *v:termstyleresp* *termstyleresp-variable*
 v:termstyleresp	termcapのエントリ |t_RS| で端末から返されるエスケープシーケン
 		ス。カーソルの形状を調べるために使用される。|term_getcursor()|
 		で使用される。この変数がセットされているとき、<amatch> に
-		"cursorshape" がセットされた状態で自動コマンドイベント
-		TermResponseAll が発生する。
+		"cursorshape" がセットされた状態で TermResponseAll 自動コマン
+		ドイベントが発生する。
 
 					*v:termrbgresp* *termrbgresp-variable*
 v:termrbgresp	termcapのエントリ |t_RB| で端末から返されるエスケープシーケン
