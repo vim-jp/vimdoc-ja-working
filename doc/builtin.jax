@@ -632,7 +632,8 @@ settagstack({nr}, {dict} [, {action}])
 				数値	{dict}を使ってタグスタックを変更
 setwinvar({nr}, {varname}, {val}) なし	ウィンドウ{nr}の変数{varname}に{val}を
 					セット
-sha256({expr})			文字列	文字列または Blob のSHA256チェックサム
+sha256({expr})			文字列	文字列または Blob の SHA256 チェックサ
+					ム
 shellescape({string} [, {special}])
 				文字列	{string}をシェルコマンド引数として使う
 					ためにエスケープする。
