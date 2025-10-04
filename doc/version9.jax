@@ -41729,7 +41729,7 @@ Ex コマンド: ~
   め、変更が発生するとすぐに処理される。
 
 プラグイン~
-- |zip| プラグインは PowerShell Core で動作する。
+- |zip| プラグインは PowerShell Core でも動作する。
 
 プラットフォーム固有 ~
 - MS-Windows: "\Windows" や "/Windows" などのパスは、相対パスではなく (カレン
