@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim version 9.1.  Last change: 2025 Sep 28
+*syntax.txt*	For Vim version 9.1.  Last change: 2025 Oct 07
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -2272,11 +2272,11 @@ cycles for such a feature to become either integrated into the platform or
 withdrawn from this effort.  To cater for early adopters, there is optional
 support in Vim for syntax related preview features that are implemented.  You
 can request it by specifying a list of preview feature numbers as follows: >
-	:let g:java_syntax_previews = [488]
+	:let g:java_syntax_previews = [507]
 
 The supported JEP numbers are to be drawn from this table:
 	`430`: String Templates [JDK 21]
-	`488`: Primitive types in Patterns, instanceof, and switch
+	`507`: Primitive types in Patterns, instanceof, and switch
 
 Note that as soon as the particular preview feature will have been integrated
 into the Java platform, its entry will be removed from the table and related
@@ -6024,6 +6024,11 @@ PmenuMatch	Popup menu: Matched text in normal item. Applied in
 							*hl-PmenuMatchSel*
 PmenuMatchSel	Popup menu: Matched text in selected item. Applied in
 		combination with |hl-PmenuSel|.
+							*hl-PmenuBorder*
+PmenuBorder	Popup menu: Border characters.
+		Linked to |hl-Pmenu| by default.
+							*hl-PmenuShadow*
+PmenuShadow	Popup menu: Used for shadow.
 							*hl-ComplMatchIns*
 ComplMatchIns	Matched text of the currently inserted completion.
 							*hl-PreInsert*
@@ -6092,6 +6097,16 @@ TabPanelSel	TabPanel, active tab page label.
 Terminal	|terminal| window (see |terminal-size-color|).
 							*hl-Title*
 Title		Titles for output from ":set all", ":autocmd" etc.
+							*hl-TitleBar*
+TitleBar	Title bar for the active Gui's window.
+		This feature is supported only in the MS-Windows GUI.
+		See |gui-w32-title-bar| for details
+		Only the `guibg` and `guifg` highlight arguments are effective.
+							*hl-TitleBarNC*
+TitleBarNC	Title bar for inactive Gui's window.
+		This feature is supported only in the MS-Windows GUI.
+		See |gui-w32-title-bar| for details
+		Only the `guibg` and `guifg` highlight arguments are effective.
 							*hl-Visual*
 Visual		Visual mode selection.
 							*hl-VisualNOS*
@@ -6492,10 +6507,10 @@ faster.  To see slowness switch on some features that usually interfere, such
 as 'relativenumber' and |folding|.
 
 Note: This is only available when compiled with the |+profile| feature.
-You many need to build Vim with "huge" features.
+You may need to build Vim with "huge" features.
 
-To find out what patterns are consuming most time, get an overview with this
-sequence: >
+To find out what patterns are consuming the most time, get an overview with
+this sequence: >
 	:syntime on
 	[ redraw the text at least once with CTRL-L ]
 	:syntime report
