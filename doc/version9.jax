@@ -41688,7 +41688,7 @@ Vim script および Vim9 script での |Tuple| データ型のサポート。
 - 'fillchars' の新しいオプション値:
 	"trunc"		- 切り詰め表示を設定する、'pummaxwidth'
 	"truncrl"	- "trunc" に似ているが 'rl' モード用 'pummaxwidth'
-	"tpl_vert"	- 'tabpanel' の縦垂セパレーター
+	"tpl_vert"	- 'tabpanel' の垂直セパレーター
 	"foldinner"	- ネストされた折り畳みレベルの 'foldcolumn' 内で使用さ
 			  れる文字
 - 'grepformat' は |global-local| オプションになった。
