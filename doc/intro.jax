@@ -1,4 +1,4 @@
-*intro.txt*     For Vim バージョン 9.1.  Last change: 2025 Oct 05
+*intro.txt*     For Vim バージョン 9.1.  Last change: 2025 Oct 11
 
 
 		  VIMリファレンスマニュアル    by Bram Moolenaar
@@ -271,10 +271,10 @@ Vim エディタは Stevie をベースにしており、下記の方々のソ�
 	Christian Brabandt	多くの修正、機能、ユーザーサポート等
 	Yegappan Lakshmanan	多くの quickfix 機能、Vim9 script の改善
 	Doug Kearns		Runtime ファイルのメンテナー
-	Foxe Chen		Waylandのサポートと新機能
+	Foxe Chen		Wayland のサポートと新機能
 	glepnir			補完機能
-	Girish Palya		挿入とコマンドラインの自動補完、検索/置換の補
-				完等。
+	Girish Palya		自動補完 (挿入/コマンドライン)、omnifunc 作成、
+				検索/置換の補完など
 	Hirohito Higashi	たくさんのパッチと修正
 	Yee Cheng Chin		MacVim のメンテナーおよび diff の改善
 	zeertzjq		多くの修正と改善
