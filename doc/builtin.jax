@@ -7929,7 +7929,7 @@ pow({x}, {y})						*pow()*
 preinserted()						*preinserted()*
 		'completeopt' に "preinsert" が指定されている場合、または
 		'autocomplete' が有効な状態で 'completeopt' に "longest" が指
-		定されている場合、カーソルの後にテキストが挿入されていると 0
+		定されている場合、カーソルの後ろにテキストが挿入されていると 0
 		以外の値を返す。それ以外の場合は 0 を返す。
 
 		戻り値の型: |Number|
