@@ -1644,7 +1644,7 @@ Notes
 <
   これらの補完では、候補を収集するのに数秒かかる場合がある。
 
-- 'autocomplete' は "no" オプションを補完出来ない:
+- 'autocomplete' は "no" オプションを補完できない:
 >
      set noautoindent
      set nobuflisted
