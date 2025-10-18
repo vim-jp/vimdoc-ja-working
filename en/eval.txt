@@ -38,6 +38,7 @@ a remark is given.
 12. The sandbox			|eval-sandbox|
 13. Textlock			|textlock|
 14. Vim script library		|vim-script-library|
+15. Clipboard providers		|clipboard-providers|
 
 Testing support is documented in |testing.txt|.
 Profiling is documented at |profiling|.
@@ -86,7 +87,7 @@ Job		Used for a job, see |job_start()|. *Job* *Jobs*
 
 Channel		Used for a channel, see |ch_open()|. *Channel* *Channels*
 
-Blob		Binary Large Object. Stores any sequence of bytes.  See |Blob|
+Blob		Binary Large Object.  Stores any sequence of bytes.  See |Blob|
 		for details
 		Example: 0zFF00ED015DAF
 		0z is an empty Blob.
@@ -1020,7 +1021,7 @@ Blob modification ~
 To change a specific byte of a blob use |:let| this way: >
 	:let blob[4] = 0x44
 
-When the index is just one beyond the end of the Blob, it is appended. Any
+When the index is just one beyond the end of the Blob, it is appended.  Any
 higher index is an error.
 
 To change a sequence of bytes the [:] notation can be used: >
@@ -1536,8 +1537,8 @@ byte under the cursor: >
 
 In |Vim9| script:					*E1147* *E1148*
 If expr10 is a String this results in a String that contains the expr1'th
-single character (including any composing characters) from expr10.  To use byte
-indexes use |strpart()|.
+single character (including any composing characters) from expr10.  To use
+byte indexes use |strpart()|.
 
 Index zero gives the first byte or character.  Careful: text column numbers
 start with one!
@@ -1595,7 +1596,7 @@ Examples: >
 							*slice*
 If expr10 is a |List| this results in a new |List| with the items indicated by
 the indexes expr1a and expr1b.  This works like with a String, as explained
-just above. Also see |sublist| below.  Examples: >
+just above.  Also see |sublist| below.  Examples: >
 	:let l = mylist[:3]		" first four items
 	:let l = mylist[4:4]		" List with one item
 	:let l = mylist[:]		" shallow copy of a List
@@ -1786,8 +1787,8 @@ A string constant accepts these special characters:
 	Don't use <Char-xxxx> to get a UTF-8 character, use \uxxxx as
 	mentioned above.
 \<*xxx>	Like \<xxx> but prepends a modifier instead of including it in the
-	character.  E.g. "\<C-w>" is one character 0x17 while "\<*C-w>" is four
-	bytes: 3 for the CTRL modifier and then character "W".
+	character.  E.g. "\<C-w>" is one character 0x17 while "\<*C-w>" is
+	four bytes: 3 for the CTRL modifier and then character "W".
 
 Note that "\xff" is stored as the byte 255, which may be invalid in some
 encodings.  Use "\u00ff" to store character 255 according to the current value
@@ -2185,7 +2186,7 @@ variables for each buffer.  Use local buffer variables instead |b:var|.
 PREDEFINED VIM VARIABLES			*vim-variable* *v:var* *v:*
 							*E963* *E1063*
 Most variables are read-only, when a variable can be set by the user, it will
-be mentioned at the variable description below. The type cannot be changed.
+be mentioned at the variable description below.  The type cannot be changed.
 
 					*v:argv* *argv-variable*
 v:argv		The command line arguments Vim was invoked with.  This is a
@@ -2198,11 +2199,11 @@ v:beval_col	The number of the column, over which the mouse pointer is.
 		Only valid while evaluating the 'balloonexpr' option.
 
 					*v:beval_bufnr* *beval_bufnr-variable*
-v:beval_bufnr	The number of the buffer, over which the mouse pointer is. Only
-		valid while evaluating the 'balloonexpr' option.
+v:beval_bufnr	The number of the buffer, over which the mouse pointer is.
+		Only valid while evaluating the 'balloonexpr' option.
 
 					*v:beval_lnum* *beval_lnum-variable*
-v:beval_lnum	The number of the line, over which the mouse pointer is. Only
+v:beval_lnum	The number of the line, over which the mouse pointer is.  Only
 		valid while evaluating the 'balloonexpr' option.
 
 					*v:beval_text* *beval_text-variable*
@@ -2215,9 +2216,9 @@ v:beval_text	The text under or after the mouse pointer.  Usually a word as
 		Only valid while evaluating the 'balloonexpr' option.
 
 					*v:beval_winnr* *beval_winnr-variable*
-v:beval_winnr	The number of the window, over which the mouse pointer is. Only
-		valid while evaluating the 'balloonexpr' option.  The first
-		window has number zero (unlike most other places where a
+v:beval_winnr	The number of the window, over which the mouse pointer is.
+		Only valid while evaluating the 'balloonexpr' option.  The
+		first window has number zero (unlike most other places where a
 		window gets a number).
 
 					*v:beval_winid* *beval_winid-variable*
@@ -2251,6 +2252,11 @@ v:clipmethod	The current method of accessing the clipboard that is being
 					unavailable.
 		See 'clipmethod' for more details.
 
+					*v:clipproviders*
+v:clipproviders
+		A dictionary containing clipboard providers, see
+		|clipboard-providers| for more information.
+
 					*v:cmdarg* *cmdarg-variable*
 v:cmdarg	This variable is used for two purposes:
 		1. The extra arguments given to a file read/write command.
@@ -2280,8 +2286,8 @@ v:collate	The current locale setting for collation order of the runtime
 		See |multi-lang|.
 
 								*v:colornames*
-v:colornames    A dictionary that maps color names to hex color strings. These
-		color names can be used with the |highlight-guifg|,
+v:colornames	A dictionary that maps color names to hex color strings.
+		These color names can be used with the |highlight-guifg|,
 		|highlight-guibg|, and |highlight-guisp| parameters.
 
 		The key values in the dictionary (the color names) should be
@@ -2289,20 +2295,20 @@ v:colornames    A dictionary that maps color names to hex color strings. These
 		name.
 
 		Updating an entry in v:colornames has no immediate effect on
-		the syntax highlighting. The highlight commands (probably in a
-		colorscheme script) need to be re-evaluated in order to use
-		the updated color values. For example: >
+		the syntax highlighting.  The highlight commands (probably in
+		a colorscheme script) need to be re-evaluated in order to use
+		the updated color values.  For example: >
 
 		    :let v:colornames['fuscia'] = '#cf3ab4'
 		    :let v:colornames['mauve'] = '#915f6d'
 		    :highlight Normal guifg=fuscia guibg=mauve
 <
 		This cannot be used to override the |cterm-colors| but it can
-		be used to override other colors. For example, the X11 colors
+		be used to override other colors.  For example, the X11 colors
 		defined in the `colors/lists/default.vim` (previously defined
-		in |rgb.txt|). When defining new color names in a plugin, the
+		in |rgb.txt|).  When defining new color names in a plugin, the
 		recommended practice is to set a color entry only when it does
-		not already exist. For example: >
+		not already exist.  For example: >
 
 		    :call extend(v:colornames, {
 			\ 'fuscia': '#cf3ab4',
@@ -2310,20 +2316,20 @@ v:colornames    A dictionary that maps color names to hex color strings. These
 			\ }, 'keep')
 <
 		Using |extend()| with the 'keep' option updates each color only
-		if it did not exist in |v:colornames|. Doing so allows the
+		if it did not exist in |v:colornames|.  Doing so allows the
 		user to choose the precise color value for a common name
 		by setting it in their |.vimrc|.
 
 		It is possible to remove entries from this dictionary but
 		doing so is NOT recommended, because it is disruptive to
-		other scripts. It is also unlikely to achieve the desired
+		other scripts.  It is also unlikely to achieve the desired
 		result because the |:colorscheme| and |:highlight| commands
 		will both automatically load all `colors/lists/default.vim`
 		color scripts.
 
 		You can make changes to that file, but make sure to add new
-		keys instead of updating existing ones, otherwise Vim will skip
-		loading the file (thinking it hasn't been changed).
+		keys instead of updating existing ones, otherwise Vim will
+		skip loading the file (thinking it hasn't been changed).
 
 				*v:completed_item* *completed_item-variable*
 v:completed_item
@@ -2426,7 +2432,7 @@ v:exception	The value of the exception most recently caught and not
 <		Output: "caught oops".
 
 					*v:false* *false-variable*
-v:false		A Number with value zero. Used to put "false" in JSON.  See
+v:false		A Number with value zero.  Used to put "false" in JSON.  See
 		|json_encode()|.
 		When used as a string this evaluates to "v:false". >
 			echo v:false
@@ -2519,7 +2525,7 @@ v:foldstart	Used for 'foldtext': first line of closed fold.
 					*v:hlsearch* *hlsearch-variable*
 v:hlsearch	Variable that indicates whether search highlighting is on.
 		Setting it makes sense only if 'hlsearch' is enabled which
-		requires |+extra_search|. Setting this variable to zero acts
+		requires |+extra_search|.  Setting this variable to zero acts
 		like the |:nohlsearch| command, setting it to one acts like >
 			let &hlsearch = &hlsearch
 <		Note that the value is restored when returning from a
@@ -2587,7 +2593,7 @@ v:mouse_col	Column number for a mouse click obtained with |getchar()|.
 		value is zero when there was no mouse button click.
 
 					*v:none* *none-variable* *None*
-v:none		An empty String. Used to put an empty item in JSON.  See
+v:none		An empty String.  Used to put an empty item in JSON.  See
 		|json_encode()|.
 		This can also be used as a function argument to use the
 		default value, see |none-function_argument|.
@@ -2601,7 +2607,7 @@ v:none		An empty String. Used to put an empty item in JSON.  See
 		an error.  Instead, use `is v:none` and `isnot v:none` .
 
 					*v:null* *null-variable*
-v:null		An empty String. Used to put "null" in JSON.  See
+v:null		An empty String.  Used to put "null" in JSON.  See
 		|json_encode()|.
 		When used as a number this evaluates to zero.
 		When used as a string this evaluates to "v:null". >
@@ -2637,27 +2643,27 @@ v:oldfiles	List of file names that is loaded from the |viminfo| file on
 		{only when compiled with the |+viminfo| feature}
 
 						    *v:option_new*
-v:option_new    New value of the option. Valid while executing an |OptionSet|
+v:option_new    New value of the option.  Valid while executing an |OptionSet|
 		autocommand.
 						    *v:option_old*
-v:option_old    Old value of the option. Valid while executing an |OptionSet|
-		autocommand. Depending on the command used for setting and the
-		kind of option this is either the local old value or the
+v:option_old    Old value of the option.  Valid while executing an |OptionSet|
+		autocommand.  Depending on the command used for setting and
+		the kind of option this is either the local old value or the
 		global old value.
 						    *v:option_oldlocal*
 v:option_oldlocal
-		Old local value of the option. Valid while executing an
+		Old local value of the option.  Valid while executing an
 		|OptionSet| autocommand.
 						    *v:option_oldglobal*
 v:option_oldglobal
-		Old global value of the option. Valid while executing an
+		Old global value of the option.  Valid while executing an
 		|OptionSet| autocommand.
 						    *v:option_type*
-v:option_type   Scope of the set command. Valid while executing an
-		|OptionSet| autocommand. Can be either "global" or "local"
+v:option_type   Scope of the set command.  Valid while executing an
+		|OptionSet| autocommand.  Can be either "global" or "local"
 						    *v:option_command*
 v:option_command
-		Command used to set the option. Valid while executing an
+		Command used to set the option.  Valid while executing an
 		|OptionSet| autocommand.
 			value		option was set via   ~
 			"setlocal"	|:setlocal| or ":let l:xxx"
@@ -2704,7 +2710,7 @@ v:progpath	Contains the command with which Vim was invoked, in a form
 		To get the full path use: >
 			echo exepath(v:progpath)
 <		If the command has a relative path it will be expanded to the
-		full path, so that it still works after `:cd`. Thus starting
+		full path, so that it still works after `:cd`.  Thus starting
 		"./vim" results in "/home/user/path/to/vim/src/vim".
 		On Linux and other systems it will always be the full path.
 		On Mac it may just be "vim" and using exepath() as mentioned
@@ -2871,9 +2877,9 @@ v:termresponse	The escape sequence returned by the terminal for the |t_RV|
 		terminal.  The TermResponseAll event is also fired, with
 		<amatch> set to "version".  You can use |terminalprops()| to
 		see what Vim figured out about the terminal.
-		The response from a new xterm is: "<Esc>[> Pp ; Pv ; Pc c".  Pp
-		is the terminal type: 0 for vt100 and 1 for vt220.  Pv is the
-		patch level (since this was introduced in patch 95, it's
+		The response from a new xterm is: "<Esc>[> Pp ; Pv ; Pc c".
+		Pp is the terminal type: 0 for vt100 and 1 for vt220.  Pv is
+		the patch level (since this was introduced in patch 95, it's
 		always 95 or higher).  Pc is always zero.
 		If Pv is 141 or higher then Vim will try to request terminal
 		codes.  This only works with xterm |xterm-codes|.
@@ -2882,7 +2888,7 @@ v:termresponse	The escape sequence returned by the terminal for the |t_RV|
 				    *v:termblinkresp* *termblinkresp-variable*
 v:termblinkresp	The escape sequence returned by the terminal for the |t_RC|
 		termcap entry.  This is used to find out whether the terminal
-		cursor is blinking. This is used by |term_getcursor()|.  When
+		cursor is blinking.  This is used by |term_getcursor()|.  When
 		this variable is set, the TermResponseAll autocommand event is
 		fired, with <amatch> set to "cursorblink".
 
@@ -2951,7 +2957,7 @@ v:throwpoint	The point where the exception most recently caught and not
 <		Output: "Exception from test.vim, line 2"
 
 						*v:true* *true-variable*
-v:true		A Number with value one. Used to put "true" in JSON.  See
+v:true		A Number with value one.  Used to put "true" in JSON.  See
 		|json_encode()|.
 		When used as a string this evaluates to "v:true". >
 			echo v:true
@@ -2991,7 +2997,8 @@ v:vim_did_enter	Zero until most of startup is done.  It is set to one just
 		before |VimEnter| autocommands are triggered.
 
 					*v:warningmsg* *warningmsg-variable*
-v:warningmsg	Last given warning message.  It's allowed to set this variable.
+v:warningmsg	Last given warning message.  It's allowed to set this
+		variable.
 
 				*v:wayland_display* *wayland_display-variable*
 v:wayland_display
@@ -3289,7 +3296,8 @@ text...
 				END
 <			There can be multiple Vim expressions in a single line
 			but an expression cannot span multiple lines.  If any
-			expression evaluation fails, then the assignment fails.
+			expression evaluation fails, then the assignment
+			fails.
 
 			{endmarker} must not contain white space.
 			{endmarker} cannot start with a lower case character.
@@ -5212,7 +5220,7 @@ $VIMRUNTIME/plugin/openPlugin.vim
 dist#vim9#Open(file: string) ~
 
 Opens `path` with the system default handler (macOS `open`, Windows
-`explorer.exe`, Linux `xdg-open`, …). If the variable |g:Openprg| exists the
+`explorer.exe`, Linux `xdg-open`, …).  If the variable |g:Openprg| exists the
 string specified in the variable is used instead.
 
 The |:Open| user command uses file completion for its argument.
@@ -5224,11 +5232,11 @@ This function is by default called using the gx mapping.  In visual mode
 tries to open the visually selected text.
 
 Associated setting variables:
-`g:gx_word`: control how gx picks up the text under the cursor. Uses
+`g:gx_word`: control how gx picks up the text under the cursor.  Uses
 	     `g:netrw_gx` as a fallback for backward compatibility.
 	     (default: `<cfile>`)
 
-`g:nogx`: disables the gx mapping. Uses `g:netrw_nogx` as a fallback for
+`g:nogx`: disables the gx mapping.  Uses `g:netrw_nogx` as a fallback for
 	  backward compatibility. (default: `unset`)
 
 
@@ -5242,7 +5250,7 @@ Usage: >vim
 						*dist#vim9#Launch()* *:Launch*
 dist#vim9#Launch(file: string) ~
 
-Launches <args> with the appropriate system programs. Intended for launching
+Launches <args> with the appropriate system programs.  Intended for launching
 GUI programs within Vim.
 
 The |:Launch| user command uses shell completion for its first argument.
@@ -5261,5 +5269,134 @@ Usage: >vim
 	:call dist#vim9#Launch(<args>)
 	:Launch <app> <args>.
 <
+==============================================================================
+15. Clipboard providers					*clipboard-providers*
 
+When Vim is compiled with the |+clipboard_provider| feature, which requires
+the |+eval| feature, creating custom clipboards is possible.  These providers
+handle the "+" and "*" registers.  Note that if |+wayland_clipboard| or
+|+xterm_clipboard| features are not compiled in, then the "+" register will
+not be available.
+
+To add a provider, add a new entry to the |v:clipproviders| dictionary, in the
+format of: >
+	let v:clipproviders["name"] = {
+            \   "available": function("Available"),
+            \   "paste": {
+            \       '+': function("Paste"), " For the + register
+            \       '*': function("Paste"), " For the * register
+            \   },
+            \   "copy": {
+            \       '+': function("Copy"), " Same thing as above
+            \       '*': function("Copy"),
+            \   },
+            \ }
+
+The key is the provider name, which should be used in 'clipmethod', for
+example in the following example, you would add "name" to 'clipmethod' in
+order to use it. >
+	set clipmethod=name,wayland,x11,gui
+
+Each callback can either be a name of a function in a string, a |Funcref|, or
+a |lambda| expression.
+
+Note that these dictionary entries are optional, for example, if you don't
+care about the "copy" functions, then you can simply exclude them.  When Vim
+yanks/copies something, then simply nothing will be done.
+
+						*clipboard-provider-available*
+The "available" callback should return a string, which should contain which
+clipboard registers are available.  For example, if the "+" register is only
+available, then the function would return "+", or if both "+" and "*" are
+available, then return "+*".
+
+						*clipboard-provider-paste*
+The "paste" callback takes a first argument which is the register being put
+(string), and a second argument which is the type of access (string).  It
+should return either a tuple/list or string.  If a tuple/list is returned, it
+should have two elements:
+	- The register type conforming to |setreg()|.
+	- A list of strings
+If the register type is an empty string, then the type is automatically
+chosen, see |setreg()|.  If a string is returned, then it can either be "clear"
+or "previous".  "clear" makes Vim clear the register, and "previous" makes Vim
+use the previous register contents (or current depending on how you view it).
+
+The second argument, the access type, can either be "explicit" or "implicit".
+"explicit" means that the user is directly accessing the clipboard, such as
+putting text, or calling |getreg()|;  "implicit" means that the clipboard is
+being accessed indirectly, such when |:registers| is called, or when an
+unrelated operation causes Vim to access the clipboard.
+
+This is useful since some operations in Vim implicity access the clipboard
+indirectly.  For example, if when you want to create a provider for the OSC52
+command (accessing the clipboard via an escape code).  Many terminals show a
+confirmation if you want Vim to access the clipboard.  This can be very
+annoying with the terminal asking for permission everytime you do something
+that accesses the clipboard behind the scenes.  A good way to handle implicit
+access is to return "previous", which leaves the register contents unchanged.
+
+						*clipboard-provider-copy*
+The "copy" callback returns nothing, and takes the given arguments in order:
+	- The register being operated on
+	- The register type, conforming to |getregtype()|
+	- A list of strings to copy
+
+The provider can do whatever it wants with the given information.  This
+function is called on every request to change the clipboard register(s).
+
+						*clipboard-provider-textlock*
+In both the "paste" and "copy" callbacks, it is not allowed to change the
+buffer text, see |textlock|.
+
+						*clipboard-provider-example*
+Here is an example script that uses the clipboard provider feature through the
+OSC52 command: >vim
+
+	func Available()
+	  return "*"
+	endfunc
+	
+	func Paste(reg, type)
+	  " If implicit access, don't do anything
+	  if a:type == "implicit"
+	    return "previous"
+	  endif
+	
+	  augroup OSC
+	    autocmd!
+	    autocmd TermResponseAll osc ++once call feedkeys("\<F30>", '!')
+	  augroup END
+	
+	  " Send command
+	  call echoraw("\<Esc>]52;;?\<Esc>\\")
+	
+	  " Wait until autocmd is triggered
+	  while getchar(-1) != "\<F30>"
+	  endwhile
+	
+	  autocmd! OSC
+	
+	  " Extract the base64 stuff
+	  let l:stuff = matchstr(v:termosc, '52;.\+;\zs[A-Za-z0-9+/=]\+')
+	
+	  return ("", blob2str(base64_decode(l:stuff)))
+	endfunc
+
+	func Copy(reg, type, lines)
+	  call echoraw("\<Esc>]52;c;" ..
+	    \ base64_encode(str2blob(a:lines)) .. "\<Esc>\\")
+	endfunc
+	let v:clipproviders["myosc"] = {
+	    \   "available": function("Available"),
+	    \   "paste": {
+	    \     '*': function("Paste")
+	    \   },
+	    \   "copy": {
+	    \     '*': function("Copy")
+	    \   },
+	    \ }
+	set clipmethod=myosc
+
+<
  vim:tw=78:ts=8:noet:ft=help:norl:
