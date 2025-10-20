@@ -6987,7 +6987,7 @@ mapcheck({name} [, {mode} [, {abbr}]])			*mapcheck()*
 		   mapcheck("ax")	yes	no	 no
 		   mapcheck("b")	no	no	 no
 
-		|maparg()| との違いは、mapcheck()は {name} にマッチするマップ
+		|maparg()| との違いは、mapcheck() は {name} にマッチするマップ
 		を見つけるが、|maparg()| はぴったり {name} に一致するマッピン
 		グのみを見つける。
 		{name} にマッチするキーマップが存在しない時には、空文字列が返
