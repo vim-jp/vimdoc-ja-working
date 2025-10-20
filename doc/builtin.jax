@@ -4566,7 +4566,7 @@ getfsize({fname})					*getfsize()*
 getftime({fname})					*getftime()*
 		結果は{fname}で与えられたファイルの、最終更新時間を示す数値。
 		1970年1月1日からの経過時間(秒)で、|strftime()| に渡すことがで
-		きるだろう。|localtime()|と|strftime()|も参照。
+		きるだろう。|localtime()| と |strftime()| も参照。
 		ファイル{fname}が見つからなかった場合には-1を返す。
 
 		|method| としても使用できる: >
