@@ -27,8 +27,7 @@ script の新しい文法と機能について書かれています。
 	らはソースとして実行できるため、実行して出力内容を確認できる。ソースと
 	して実行するには、`:'<,'>source` を使用する (|:source-range| を参照)。
 	これは、|V| で行を視覚的に選択し、`:so` と入力することで実行できる。
-	For example, try it on the following Vim9 script: >vim9
-	例えば、以下の Vim9 script で試してみてほしい。
+	例えば、以下の Vim9 script で試してみてほしい: >vim9
 
 		vim9script
 		echowindow "Welcome to Vim9 script!"
