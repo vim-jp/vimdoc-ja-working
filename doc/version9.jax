@@ -1,4 +1,4 @@
-*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Oct 14
+*version9.txt*  For Vim バージョン 9.1.  Last change: 2025 Oct 26
 
 
 		  VIM リファレンスマニュアル    by Bram Moolenaar
@@ -41639,8 +41639,6 @@ Vim script および Vim9 script での |Tuple| データ型のサポート。
 
 - |items()| 関数は Blob をサポートするようになった。
 
-- |clipboard-providers| のサポート。
-
 							*changed-9.2*
 変更点~
 ------
@@ -41888,7 +41886,6 @@ Ex コマンド: ~
 
 Vim 変数: ~
 |v:clipmethod|		カレントの 'clipmethod'.
-|v:clipproviders|	クリップボードプロバイダの情報を含む辞書。
 |v:stacktrace|		最後にキャッチされた例外。
 |v:t_enumvalue|		|enumvalue| の値。
 |v:t_enum|		|enum| 型の値。
@@ -41906,8 +41903,6 @@ Vim 引数: ~
 --with-wayland			|wayland| 機能を有効にする。
 --enable-wayland-focus-steal	|wayland-focus-steal| 機能を有効にする。
 --enable-socketserver		|socketserver-clientserver| 機能を有効にする。
---enable-clipboard-provider	|clipboard-providers| 機能を有効にする。
-
 
 ==============================================================================
 ☆非互換な変更						*incompatible-9.2*
