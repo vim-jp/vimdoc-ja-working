@@ -636,7 +636,6 @@ http://groups.yahoo.com/group/solarisonintel/message/12179.
 と。'buftype' が空でない場合は、このメッセージは表示されない。
 |FileChangedShell| 自動コマンドも参照。
 
-You will be given a dialog with the following options:
 次のオプションを含むダイアログが表示される:
 
 "OK":		警告を無視して編集を続行する。変更は読み込まれず、バッファはそ
