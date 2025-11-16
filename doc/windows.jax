@@ -1163,7 +1163,7 @@ CTRL-W g }						*CTRL-W_g}*
 		移動できる。Nはバッファの番号である。
 
 		ファイル名には、これらの特別な値が使用される:
-			"[Prompt"	|prompt-buffer|
+			"[Prompt]"	|prompt-buffer|
 			"[Popup]"	|popup-window| のバッファ
 			"[Scratch]"	'buftype' が "nofile"
 			"[No Name]"	ファイル名が指定されていない
