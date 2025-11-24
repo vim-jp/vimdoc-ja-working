@@ -20,11 +20,11 @@ jobs:
         uses: 1466587594/get-current-time@v2
         id: current-time
       - name: Checkout vimdoc-ja-working
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: work
       - name: Checkout vim
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: vim/vim
           path: vim
