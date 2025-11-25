@@ -41678,7 +41678,7 @@ Vim script および Vim9 script での |Tuple| データ型のサポート。
 - 'smartcase' は補完のフィルタリングに適用される
 
 オプション: ~
-- 'commentstring' はすべてのビルドで使用できるようになた。|+folding| 機能は不
+- 'commentstring' はすべてのビルドで使用できるようになり、|+folding| 機能は不
   要になった。
 - 'commentstring' のデフォルトには、自動コメントの見栄えを良くするための空白の
   パディングを含んでいる |comment-install|
