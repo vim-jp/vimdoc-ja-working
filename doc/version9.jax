@@ -1,4 +1,4 @@
-*version9.txt*	For Vim バージョン 9.1.  Last change: 2025 Nov 20
+*version9.txt*	For Vim バージョン 9.1.  Last change: 2025 Nov 26
 
 
 		  VIM リファレンスマニュアル	by Bram Moolenaar
@@ -41865,8 +41865,6 @@ Ex コマンド: ~
 'autocompletetimeout'	自動補完アルゴリズムの初期減衰タイムアウト
 'chistory'		quickfix スタックのサイズ |quickfix-stack|
 'clipmethod'		クリップボードにアクセスする方法
-'completefuzzycollect'	(一部の) |ins-completion| モード用のファジーな候補の収
-			集を有効にする
 'completeitemalign'	挿入モード補完ポップアップでの |complete-items| の順序
 'completetimeout'	CTRL-N と CTRL-P の初期減衰タイムアウト
 'diffanchors'		差分の同期を強制する {address} のリスト
