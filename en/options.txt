@@ -1,4 +1,4 @@
-*options.txt*	For Vim version 9.1.  Last change: 2025 Nov 23
+*options.txt*	For Vim version 9.1.  Last change: 2025 Nov 27
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -1843,9 +1843,9 @@ A jump table for the options with a short description can be found at |Q_op|.
 			option, yank operations (but not delete, change or
 			put) will additionally copy the text into register
 			'*'.  If Wayland is being used and the compositor does
-			not support the primary-selection-unstable-v1
-			protocol, then the regular selection is used in its
-			place.  Only available with the |+X11| or
+			not support the primary selection then the regular
+			selection is used in its place.  Only available with
+			the |+X11| or
 			|+wayland_clipboard| feature.  Availability can be
 			checked with: >
 			if has('unnamedplus')
@@ -2211,11 +2211,13 @@ A jump table for the options with a short description can be found at |Q_op|.
 						*'completefuzzycollect'* *'cfc'*
 'completefuzzycollect' 'cfc'	string	(default: empty)
 				global
-	A comma-separated list of strings to enable fuzzy collection for
-	specific |ins-completion| modes, affecting how matches are gathered
-	during completion.  For specified modes, fuzzy matching is used to
-	find completion candidates instead of the standard prefix-based
-	matching.  This option can contain the following values:
+	DEPRECATED: This option is no longer used; changing it has no effect.
+	When 'completeopt' contains "fuzzy", Vim will internally use the
+	equivalent of:
+		"keyword,files,whole_line"
+
+	The values below are kept for compatibility and for scripts that
+	may read this option:
 
 	keyword		keywords in the current file	|i_CTRL-X_CTRL-N|
 			keywords with flags ".", "w",	|i_CTRL-N| |i_CTRL-P|
@@ -2225,10 +2227,6 @@ A jump table for the options with a short description can be found at |Q_op|.
 	files		file names			|i_CTRL-X_CTRL-F|
 
 	whole_line	whole lines			|i_CTRL-X_CTRL-L|
-
-	When using the 'completeopt' "longest" option value, fuzzy collection
-	can identify the longest common string among the best fuzzy matches
-	and insert it automatically.
 
 						*'completeitemalign'* *'cia'*
 'completeitemalign' 'cia' string (default: "abbr,kind,menu")
@@ -2249,12 +2247,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 	   fuzzy    Enable |fuzzy-matching| for completion candidates.  This
 		    allows for more flexible and intuitive matching, where
 		    characters can be skipped and matches can be found even
-		    if the exact sequence is not typed.  Note: This option
-		    does not affect the collection of candidate list, it only
-		    controls how completion candidates are reduced from the
-		    list of alternatives.  If you want to use |fuzzy-matching|
-		    to gather more alternatives for your candidate list,
-		    see 'completefuzzycollect'.
+		    if the exact sequence is not typed.
 
 	   longest
 		    When 'autocomplete' is not active, only the longest common
@@ -5235,23 +5228,6 @@ A jump table for the options with a short description can be found at |Q_op|.
 	has a lowercase letter where the typed text has an uppercase letter,
 	and there is a letter before it, the completed part is made uppercase.
 	With 'noinfercase' the match is used as-is.
-
-						*'isexpand'* *'ise'*
-'isexpand' 'ise'	string	(default: "")
-			local to buffer
-	Defines characters and patterns for completion in insert mode.  Used
-	by the |complete_match()| function to determine the starting position
-	for completion.  This is a comma-separated list of triggers.  Each
-	trigger can be:
-	- A single character like "." or "/"
-	- A sequence of characters like "->", "/*", or "/**"
-
-	Note: Use "\\," to add a literal comma as trigger character, see
-	|option-backslash|.
-
-	Examples: >
-		set isexpand=.,->,/*,\\,
-<
 
 			*'insertmode'* *'im'* *'noinsertmode'* *'noim'*
 'insertmode' 'im'	boolean	(default off)
