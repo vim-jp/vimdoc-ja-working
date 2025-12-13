@@ -41639,7 +41639,7 @@ Vim script および Vim9 script での |Tuple| データ型のサポート。
 
 - |items()| 関数は Blob をサポートするようになった。
 
-- クリップボードプロバイダー機能が追加された |clipboard-providers|。
+- クリップボードプロバイダ機能が追加された |clipboard-providers|。
 
 							*changed-9.2*
 変更点~
@@ -41895,7 +41895,7 @@ Ex コマンド: ~
 
 Vim 変数: ~
 |v:clipmethod|		カレントの 'clipmethod'.
-|v:clipproviders|	クリップボードプロバイダーの構成を含む辞書
+|v:clipproviders|	クリップボードプロバイダの構成を含む辞書
 			|clipboard-providers|。
 |v:stacktrace|		最後にキャッチされた例外。
 |v:t_enumvalue|		|enumvalue| の値。
