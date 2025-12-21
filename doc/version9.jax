@@ -41616,7 +41616,7 @@ Vim script および Vim9 script での |Tuple| データ型のサポート。
 - <D-Key> を使用した GTK でのスーパーキーマッピングのサポート。
 
 - 新しいオプショナルなパッケージ |package-comment|、|package-nohlsearch|,
-  |package-hlyank|、|help-TOC|、|package-helpcurwin| および |package-osc52|を
+  |package-hlyank|、|help-TOC|、|package-helpcurwin| および |package-osc52| を
   同梱。
 
 - 対話型チュータープラグイン |vim-tutor-mode| が含まれており、|:Tutor| から起
