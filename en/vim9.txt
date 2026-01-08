@@ -2876,13 +2876,13 @@ errors: >vim9
 
 	vim9script
 	My1558<number>()
-	# Vim(eval):E1558: Unknown generic function: My1558
+	# E1558: Unknown generic function: My1558
 < >vim9
 	vim9script
 	def My1560(): void
 	enddef
 	My1560<string>()
-	# Vim(echo):E1560: Not a generic function: My1560
+	# E1560: Not a generic function: My1560
 <
 						*E1561*
 Type parameter names must not clash with other identifiers: >vim9

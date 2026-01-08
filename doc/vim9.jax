@@ -2126,10 +2126,10 @@ Vimは "b:two" の型を知らないため、式は list<any> となる。実行
 	var s = 'yes'   | echo $"{s} \t {s->type()} \t {s->typename()}"
 	var t = (42, )  | echo $"{t} \t {t->type()} \t {t->typename()}"
 <
-The type of a list, tuple, or dictionary is inferred from the common type of
-its values.  When the values are all the same type, that type is used.
-If there is a mix of types, the "any" type is used.  In the following example,
-the echoed |typename()| for each literal demonstrates these points: >vim9
+リスト、Tuple、または辞書の型は、その値の共通の型から推論される。値がすべて同
+じ型の場合、その型が使用される。
+複数の型が混在する場合は、"any" 型が使用される。以下の例では、各リテラルに対し
+て echo された |typename()| がこれらのポイントを示している: >vim9
 
 	vim9script
 	echo [1, 2]->typename()				 # list<number>
@@ -2137,9 +2137,9 @@ the echoed |typename()| for each literal demonstrates these points: >vim9
 	echo {ints: [1, 2], bools: [false]}->typename()	 # dict<list<any>>
 	echo (true, false)->typename()			 # tuple<bool, bool>
 <
-The common type of function references, when they do not all have the same
-number of arguments, is indicated with "(...)", meaning the number of
-arguments is unequal.  This script demonstrates a "list<func(...): void>": >vim9
+関数参照の一般的な型では、引数の数が異なる場合、"(...)" で示される。これは引数
+の数が不揃いであることを意味する。このスクリプトは "list<func(...): void>" の
+例である: >vim9
 
 	vim9script
 	def Foo(x: bool): void
@@ -2149,8 +2149,8 @@ arguments is unequal.  This script demonstrates a "list<func(...): void>": >vim9
 	var funclist = [Foo, Bar]
 	echo funclist->typename()
 <
-Script-local variables in a Vim9 script are type checked.  The type is
-also checked for variables declared in a legacy function.  For example: >vim9
+Vim9 script 内のスクリプトローカル変数は型チェックされる。また、旧来の関数内で
+宣言された変数についても型チェックが行われる。例: >vim9
 
 	vim9script
 	var my_local = (1, 2)
@@ -2162,18 +2162,18 @@ also checked for variables declared in a legacy function.  For example: >vim9
 	echo $"{b:legacy} is type {b:legacy->type()} ({b:legacy->typename()})"
 <
 							*E1013*
-When a type is declared for a List, Tuple, or Dictionary, the type is attached
-to it.  Similarly, if a type is not declared, the type Vim infers is attached.
-In either case, if an expression attempts to change the type, E1013 results.
-This example has its type inferred and demonstrates E1013: >vim9
+リスト、Tuple、または辞書の型が宣言されると、その型が関連付けられる。同様に、
+型が宣言されていない場合は、Vim が推論した型が関連付けられる。どちらの場合も、
+式によって型が変更されると、E1013 が発生する。以下の例では、型が推論され、
+E1013 が発生する: >vim9
 
 	vim9script
-	var lb = [true, true]	# Two bools, so Vim infers list<bool> type
-	echo lb->typename()	# Echoes list<bool>
+	var lb = [true, true]	# 2 つの bool なので Vim は list<bool> 型と推測
+	echo lb->typename()	# list<bool> を表示
 	lb->extend([0])		# E1013 Argument 2: type mismatch, ...
 <
-If you want a permissive list, either explicitly use <any> or declare an
-empty list initially (or both, i.e., `list<any> = []`).  Examples: >vim9
+許容的なリストが必要な場合は、<any> を明示的に使用するか、最初に空のリストを宣
+言する (または両方、つまり `list<any> = []`)。例: >vim9
 
 	vim9script
 	final la: list<any> = []
@@ -2181,7 +2181,7 @@ empty list initially (or both, i.e., `list<any> = []`).  Examples: >vim9
 	final le = []
 	echo le->extend(la)
 <
-Similarly for a permissive dictionary: >vim9
+許容的な辞書の場合も同様: >vim9
 
 	vim9script
 	final da: dict<any> = {}
@@ -2189,8 +2189,8 @@ Similarly for a permissive dictionary: >vim9
 	final de = {}
 	echo de->extend(da)->string()
 <
-And, although tuples themselves are immutable, permissive tuple concatenation
-can be achieved with either "any" or an empty tuple: >vim9
+また、Tuple 自体は不変だが、"any" または空の Tuple のいずれかを使用して、許容
+的な Tuple の連結を実現できる: >vim9
 
 	vim9script
 	var t_any: tuple<...list<any>> = (3, '2')
@@ -2200,8 +2200,8 @@ can be achieved with either "any" or an empty tuple: >vim9
 	t_dec_empty = t_dec_empty + (3, '2', true)
 	echo t_dec_empty
 <
-If a list literal or dictionary literal is not bound to a variable, its type
-may change, as this example shows: >vim9
+リストリテラルまたは辞書リテラルが変数にバインドされていない場合、以下の例に示
+すように、その型が変更される場合がある: >vim9
 
 	vim9script
 	echo [3, 2, 1]->typename()			 # list<number>
@@ -2210,50 +2210,49 @@ may change, as this example shows: >vim9
 	echo {1: ['One']}->extend({2: [2]})->typename()	 # dict<list<any>>
 <
 
-Stricter type checking ~
+より厳密な型チェック ~
 						*type-checking*
-In legacy Vim script, where a number was expected, a string would be
-automatically converted to a number.  This was convenient for an actual number
-such as "123", but leads to unexpected problems (and no error message) if the
-string doesn't start with a number.  Quite often this leads to hard-to-find
-bugs.  For example, in legacy Vim script this echoes "1": >vim
+旧来の Vim script では、数値が期待される文字列は自動的に数値に変換されていた。
+これは "123" のような実際の数値であれば便利だったが、文字列が数値で始まってい
+ない場合、予期せぬ問題が発生する (エラーメッセージも表示されない)。これは多く
+の場合、見つけにくいバグにつながる。例えば、旧来の Vim script では、これは "1"
+と表示される: >vim
 
 	echo 123 == '123'
 <
-However, if an unintended space is included, "0" is echoed: >vim
+ただし、意図しないスペースが含まれている場合は、"0" が表示される: >vim
 
 	echo 123 == ' 123'
 <
 						*E1206*
-In Vim9 script this has been made stricter.  In most places it works just as
-before if the value used matches the expected type.  For example, in both
-legacy Vim script and Vim9 script trying to use anything other than a
-dictionary when it is required: >vim
+Vim9 script では、この制限がより厳格になった。ほとんどの箇所では、使用される値
+が期待される型と一致する場合、以前と同じように動作する。例えば、旧来の Vim
+script と Vim9 script の両方で、辞書以外の値が必要なときに、辞書以外の値を使用
+しようとすると、以下のようになる: >vim
 
 	echo [8, 9]->keys()
 	vim9cmd echo [8, 9]->keys()	 # E1206: Dictionary required
 <
 						*E1023* *E1024* *E1029* *E1030*
 						*E1174* *E1175* *E1210* *E1212*
-However, sometimes there will be an error in Vim9 script, which breaks
-backwards compatibility.  The following examples illustrate various places
-this happens.  The legacy Vim script behavior, which does not fail, is shown
-first.  It is followed by the error that occurs if the same command is used
-in Vim9 script.
+しかし、Vim9 script ではエラーが発生し、後方互換性が損なわれることがある。以下
+の例は、この問題が発生する様々な場所を示しています。まず、旧来の Vim script の
+動作(エラーは発生しない) を示す。次に、同じコマンドを Vim9 script で使用した場
+合に発生するエラーを示す。
 
-  - Using a number (except 0 or 1) where a bool is expected: >vim
+  - bool が期待される場所で数値 (0 または 1 以外) を使用する: >vim
 
 	echo v:version ? v:true : v:false
 	vim9cmd echo v:version ? true : false  # E1023: Using a Number as a...
 <
-  - Using a number where a string is expected: >vim
+  - 文字列が期待される場所で数値を使用する: >vim
 
 	echo filter([1, 2], 0)
 	vim9cmd echo filter([1, 2], 0)  # E1024: Using a Number as a String
 <
-  - Not using a number where a number is expected: >vim
+  - 数字が期待されるところで数字を使用していない: >vim
 
-	" In this example, Vim script treats v:false as 0
+	" この例では、Vim script は v:false を 0 として扱う
 	function Not1029()
 	  let b:l = [42] | unlet b:l[v:false]
 	endfunction
@@ -2265,88 +2264,90 @@ in Vim9 script.
 	enddef
 	E1029()  # E1029: Expected number but got bool
 <
-  - Using a string as a number: >vim
+  - 文字列を数値として使用する: >vim
 
 	let b:l = [42] | unlet b:l['#'] | echo b:l
 	vim9cmd b:l = [42] | vim9cmd unlet b:l['#']  # E1030: Using a string...
 <
-  - Not using a string where an argument requires a string: >vim9
+  - 引数に文字列が必要な場合に文字列を使用しない: >vim9
 
 	echo substitute('Hallo', 'a', 'e', v:true)
 	vim9cmd echo substitute('Hallo', 'a', 'e', true)  # E1174: String...
 <
-  - Using an empty string in an argument that requires a non-empty string: >vim9
+  - 空でない文字列を必要とする引数で空の文字列を使用する: >vim9
 
 	echo exepath('')
 	vim9cmd echo exepath('') # E1175: Non-empty string required for arg...
 <
-  - Not using a number when it is required: >vim
+  - 必要なときに数字を使用しない: >vim
 
 	echo gettabinfo('a')
 	vim9cmd echo gettabinfo('a')  # E1210: Number required for argument 1
 <
-  - Not using a bool when it is required: >vim
+  - 必要なときに真偽値を使用しない: >vim
 
 	echo char2nr('¡', 2)
 	vim9cmd echo char2nr('¡', 2)  # E1212: Bool required for argument 2
 <
-  - Not using a number when a number is required (|E521|): >vim
+  - 数字が必要なときに数字を使用しない (|E521|): >vim
 
 	let &laststatus='2'
 	vim9cmd &laststatus = '2'
 <
-  - Not using a string when a string is required (|E928|): >vim
+  - 文字列が必要なときに文字列を使用しない (|E928|): >vim
 
 	let &langmenu = 42
 	vim9cmd &langmenu = 42  # E928: String required
 <
-  - Comparing a |Special| with 'is' fails in some instances (|E1037|, |E1072|): >vim
+  - |Special| と 'is' の比較は、場合によっては失敗する (|E1037|, |E1072|): >vim
 
-	" 1 is echoed because these are both true
+	" 両方とも真なので 1 が表示される
 	echo v:null is v:null && v:none is v:none
-	" 0 is echoed because all these expressions are false
+	" これらの式はすべて偽なので、0 が表示される
 	echo v:none is v:null || v:none is 8 || v:true is v:none
 	" All these are errors in Vim9 script
+	" これらはすべて Vim9 script のエラー
 	vim9cmd echo v:null is v:null # E1037: Cannot use 'is' with special
 	vim9cmd echo v:none is v:none # E1037: Cannot use 'is' with special
 	vim9cmd echo v:none is v:null # E1037: Cannot use 'is' with special
 	vim9cmd echo v:none is 8      # E1072: Cannot compare special with numb
 	vim9cmd echo v:true is v:none # E1072: Cannot compare bool with special
 <
-	  Note: Although the last two Vim9 script examples above error using
-		`v:none`, they return `false` using `null` (which is the same
-		as `v:null` - see |v:null|): >vim9
+	  Note: 上記の最後の 2 つの Vim9 script の例では、`v:none` を使用する
+		とエラーが発生するが、`null` を使用すると `false` が返される
+		(これは `v:null` と同じである - |v:null| を参照): >vim9
 
 			vim9script
 			echo null is 8		# false
 			echo true is null	# false
 <
-  - Using a string where a bool is required (|E1135|): >vim
+  - 真偽値が必要な場所で文字列を使用する (|E1135|): >vim
 
 	echo '42' ? v:true : v:false
 	vim9cmd echo '42' ? true : false  # E1135: Using a String as a Bool
 <
-  - Using a bool as a number (|E1138|): >vim
+  - 真偽値を数値として使用する (|E1138|): >vim
 
 	let &laststatus=v:true
 	vim9cmd &laststatus = true
 <
-  - Not using a string where an argument requires a string (|E1174|) >vim
+  - 引数に文字列が必要な場合に文字列を使用しない (|E1174|) >vim
 
 	echo substitute('Hallo', 'a', 'e', v:true)
 	vim9cmd echo substitute('Hallo', 'a', 'e', true)  # E1174: String...
 <
-One consequence is that the item type of a list or dict given to |map()| must
-not change when its type is either declared or inferred.  For example, this
-gives an error in Vim9 script, whereas in legacy Vim script it is allowed: >vim
+結果として、|map()| に渡されるリストまたは辞書の項目の型は、その型が宣言または
+推論された場合でも変更してはいけない。例えば、これは Vim9 script ではエラーに
+なるが、旧来の Vim script では許可される: >vim
 
-	" legacy Vim script changes s:mylist to ['item 0', 'item 1']
+	" 旧来の Vim script は s:mylist を ['item 0', 'item 1'] に変更する
 	let s:mylist = [0, 1]
 	call map(s:mylist, {i -> $"item {i}"})
 	echo s:mylist
 < >vim9
 	vim9script
-	var mylist = [0, 1]                # Vim infers mylist is list<number>
+	var mylist = [0, 1]                # Vim は mylist が list<number> で
+					   # あると推測する
 	map(mylist, (i, _) => $"item {i}") # E1012: type mismatch...
 <
 The error occurs because `map()` tries to modify the list elements to strings,
@@ -2850,13 +2851,13 @@ U、Aなど)。複数の文字で構成されている場合もあるが、名�
 
 	vim9script
 	My1558<number>()
-	# Vim(eval):E1558: Unknown generic function: My1558
+	# E1558: Unknown generic function: My1558
 < >vim9
 	vim9script
 	def My1560(): void
 	enddef
 	My1560<string>()
-	# Vim(echo):E1560: Not a generic function: My1560
+	# E1560: Not a generic function: My1560
 <
 						*E1561*
 型パラメータ名は他の識別子と競合してはならない: >vim9
