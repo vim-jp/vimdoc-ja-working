@@ -454,8 +454,8 @@ Note リストの比較について注意: 2つのリストは、同じ長さを
 	:call reverse(list)		" 項目の順序を反転させる
 	:call uniq(sort(list))		" ソートして重複を削除する
 
-Vim9 script または def メソッドでは、リストの長さをインデックスとして使用して、
-新しい項目をリストに追加できる: >
+Vim9 script または def メソッド内では、リストの長さをインデックスとして使用し
+て、新しい項目をリストに追加できる: >
     vim9script
     var l: list<string>
     l[0] = 'a'
