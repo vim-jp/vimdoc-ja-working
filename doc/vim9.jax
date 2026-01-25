@@ -2378,49 +2378,48 @@ script と Vim9 script の両方で、辞書以外の値が必要なときに、
 	# 文字列のリスト
 	echo [1, 2]->map((_, v) => $"#{v}")
 	echo [1, 2]->map((_, v) => $"#{v}")->typename()
-	# メソッド チェーン内の deepcopy()
+	# メソッドチェーン内の deepcopy()
 	var mylist = [1, 2]
 	echo mylist->deepcopy()->map((_, v) => $"#{v}")
 	echo mylist->deepcopy()->map((_, v) => $"#{v}")->typename()
 	echo mylist
 <
-The reasoning behind this is, when a type is either declared or inferred
-and the list is passed around and changed, the declaration/inference must
-always hold so that you can rely on the type to match the declared/inferred
-type.  For either a list literal or a fully copied list, that type safety is
-not needed because the original list is unchanged (as "echo mylist" shows,
-above).
+この理由は、型が宣言または推論され、リストが渡されたり変更されたりする場合、宣
+言/推論は常に成立していなければならないためである。そうすることで、型が宣言/推
+論された型と一致することを保証できる。文字列のリストでも完全にコピーされたリス
+トでも、元のリストは変更されないため、型安全性は必要ない (上記の "echo mylist"
+が示すように)。
 
-If the item type was not declared or determined to be "<any>", it will not
-change, even if all items later become the same type.  However, when `mapnew()`
-is used, inference means that the new list will reflect the type(s) present.
-For example: >vim9
+項目の型が "<any>" と宣言または決定されていない場合、後ですべての項目が同じ型
+になったとしても、項目の型は変更されない。ただし、`mapnew()` を使用する場合、
+推論とは、新しいリストが既存の型を反映することを意味する。例えば、以下のように
+なる: >vim9
 
 	vim9script
 	# list<any>
-	var mylist = [1, '2']			# mixed types, i.e., list<any>
+	var mylist = [1, '2']			# 混合型、つまり list<any>
 	echo (mylist, mylist->typename())	# ([1, '2'], 'list<any>')
-	mylist->map((_, v) => $"item {v}")	# all items are now strings
-	echo (mylist, mylist->typename())	# both strings, but list<any>
+	mylist->map((_, v) => $"item {v}")	# では、すべての項目が文字列に
+	echo (mylist, mylist->typename())	# なる。両方とも文字列だが、
+						# list<any> である
 	# mapnew()
 	var newlist = mylist->mapnew((_, v) => v)
-	echo (newlist, newlist->typename())	# newlist is a list<string>
+	echo (newlist, newlist->typename())	# newlist は list<string>
 <
-Using |extend()| and |extendnew()| is similar, i.e., a list literal may use
-the former, so, this is okay: >vim9
+|extend()| と |extendnew()| の使い方は似ている。つまり、文字列のリストでは前者
+を使用できるので、以下のようにして問題ない: >vim9
 
 	vim9cmd echo [1, 2]->extend(['3'])	# [1, 2, 3]
 <
-whereas, this is not: >vim9
+一方、これはそうではない: >vim9
 
 	vim9script
 	var mylist: list<number> = [1, 2]
 	echo mylist->extend(['3'])	   # E1013: Argument 2: type mismatch
 <
-Using |extendnew()| is needed for extending an existing typed list, except
-where the extension matches the list's type (or it is "any").  For example,
-first extending with an element of the same type, then extending with a
-different type: >vim9
+既存の型付きリストを拡張するには、|extendnew()| を使用する必要がある。ただし、
+拡張がリストの型と一致する場合 (または "any" の場合) は除く。例えば、最初に同
+じ型の要素で拡張し、次に異なる型で拡張する場合である: >vim9
 
 	vim9script
 	var mylist: list<number> = [1, 2]
@@ -2428,65 +2427,64 @@ different type: >vim9
 	echo mylist->extendnew(['4'])	   # [1, 2, 3, '4']
 
 <								*E1158*
-Using |flatten()| is not allowed in Vim9 script, because it is intended
-always to change the type.  This even applies to a list literal
-(unlike |map()| and |extend()|).  Instead, use |flattennew()|: >vim9
+Vim9 script では |flatten()| の使用は許可されていない。これは常に型を変更する
+ことを意図しているためである。これは文字列のリストにも適用される (|map()| や
+|extend()| とは異なる)。代わりに |flattennew()| を使用すること: >vim9
 
 	vim9cmd [1, [2, 3]]->flatten()		# E1158: Cannot use flatten
 	vim9cmd echo [1, [2, 3]]->flattennew()	# [1, 2, 3]
 <
-Assigning to a funcref with specified arguments (see |vim9-func-declaration|)
-involves strict type checking of the arguments.  For example, this works: >vim9
+指定された引数 (|vim9-func-declaration| 参照) を持つ関数参照への代入は、引数の
+厳密な型チェックを伴う。例えば、以下のように記述する: >vim9
 
 	vim9script
 	var F_name_age: func(string, number): string
 	F_name_age = (n: string, a: number): string => $"Name: {n}, Age: {a}"
 	echo F_name_age('Bob', 42)
 <
-whereas this fails with error |E1012| (type mismatch): >vim9
+一方、これはエラー |E1012| (型の不一致) で失敗する: >vim9
 
 	vim9script
 	var F_name_age: func(string, number): string
 	F_name_age = (n: string, a: string): string => $"Name: {n}, Age: {a}"
 <
-If there is a variable number of arguments they must have the same type, as in
-this example: >vim9
+引数の数が可変である場合、以下の例のように、引数は同じ型である必要がある: >vim9
 
 	vim9script
 	var Fproduct: func(...list<number>): number
 	Fproduct = (...v: list<number>): number => reduce(v, (a, b) => a * b)
-	echo Fproduct(3, 2, 4)  # Echoes 24
+	echo Fproduct(3, 2, 4)  # 24 を表示
 <
-And <any> may be used to accommodate mixed types: >vim9
+また、混合型に対応するために <any> を使用することもできる: >vim9
 
 	vim9script
 	var FlatSort: func(...list<any>): any
 	FlatSort = (...v: list<any>) => flattennew(v)->sort('n')
-	echo FlatSort(true, [[[5, 3], 2], 4])  # Echoes [true, 2, 3, 4, 5]
+	echo FlatSort(true, [[[5, 3], 2], 4])  # [true, 2, 3, 4, 5] を表示
 <
-	  Note: Using <any> in a lambda does not avoid type checking of the
-		funcref.  It remains constrained by the declared funcref's
-		type and, as these examples show, a runtime or compiling error
-		occurs when the types mismatch: >vim9
+	  Note: lambda 式で <any> を使用しても、funcref の型チェックは回避され
+		ない。宣言された funcref の型によって制約され、以下の例に示す
+		ように、型が一致しない場合は実行時エラーまたはコンパイルエラー
+		が発生する: >vim9
 
 		    vim9script
 		    var FuncSN: func(string): number
 		    FuncSN = (v: any): number => v->str2nr()
-		    echo FuncSN('162')->nr2char()  # Echoes ¢
+		    echo FuncSN('162')->nr2char()  # ¢ を表示
 		    echo FuncSN(162)->nr2char())   # E1013 (runtime error)
 < >vim9
 		    vim9script
 		    var FuncSN: func(string): number
 		    FuncSN = (v: any): number => v->str2nr()
 		    def FuncSNfail(): void
-		        echo FuncSN('162')->nr2char()  # No echo because ...
-		        echo FuncSN(162)->nr2char()    # Error while compiling
+		        echo FuncSN('162')->nr2char()  # 表示されないのは...
+		        echo FuncSN(162)->nr2char()    # コンパイルエラーの為
 		    enddef
 		    FuncSNfail()
 <
-When the funcref has no arguments specified, there is no type checking.  This
-example shows FlexArgs has a string argument the first time and a list the
-following time: >vim9
+funcref に引数が指定されていない場合、型チェックは行われない。この例では、
+FlexArgs が最初に文字列引数を受け取り、次にリスト引数を受け取ることを示してい
+る: >vim9
 
 	vim9script
 	var FlexArgs: func: string
@@ -2495,13 +2493,14 @@ following time: >vim9
 	FlexArgs = (...values: list<string>): string => join(values, ', ')
 	echo FlexArgs('3', '2', '1', 'GO!')
 <
-				*E1211* *E1217* *E1218* *E1219* *E1220* *E1221* *E1222*
-				*E1223* *E1224* *E1225* *E1226* *E1228* *E1235* *E1238*
-				*E1251* *E1253* *E1256* *E1297* *E1298* *E1301* *E1528*
-				*E1529* *E1530* *E1531* *E1534*
-Types are checked for most builtin functions to make it easier to spot
-mistakes.  The following one-line |:vim9| commands, calling builtin functions,
-demonstrate many of those type-checking errors: >vim9
+				*E1211* *E1217* *E1218* *E1219* *E1220*
+				*E1221* *E1222* *E1223* *E1224* *E1225*
+				*E1226* *E1228* *E1235* *E1238* *E1251*
+				*E1253* *E1256* *E1297* *E1298* *E1301*
+				*E1528* *E1529* *E1530* *E1531* *E1534*
+ほとんどの組み込み関数では、型チェックが行われており、間違いを見つけやすくなっ
+ている。以下の |:vim9| という 1 行のコマンドは、組み込み関数を呼び出すもので、
+型チェックエラーの多くを示している: >vim9
 
 	vim9 9->list2blob()               # E1211: List required for argument 1
 	vim9 9->ch_close()                # E1217: Channel or Job required for
