@@ -1073,8 +1073,11 @@ For ループ ~
 	special		true または v:true
 	job		非 NULL
 	channel		非 NULL
-	class		非 NULL
-	object		非 NULL (TODO: isTrue() が true を返すとき)
+	class		該当なし
+	object		非 NULL
+	enum		該当なし
+	enum value	常時
+	typealias	該当なし
 
 真偽値演算子 "||" と "&&" は、値が真偽値、0 または 1 であることを期待する: >
 	1 || false   == true
@@ -2350,11 +2353,12 @@ script と Vim9 script の両方で、辞書以外の値が必要なときに、
 					   # あると推測する
 	map(mylist, (i, _) => $"item {i}") # E1012: type mismatch...
 <
-The error occurs because `map()` tries to modify the list elements to strings,
-which conflicts with the declared type.
+このエラーは、`map()` がリスト要素を文字列に変更しようとし、宣言された型と衝突
+するために発生する。
 
-Use |mapnew()| instead.  It creates a new list, and Vim infers its type if it
-is not specified.  Inferred and declared types are shown in this example: >vim9
+代わりに |mapnew()| を使用する。これは新しいリストを作成し、型が指定されていな
+い場合は Vim がその型を推測する。推測された型と宣言された型は以下の例のとおり
+である: >vim9
 
 	vim9script
 	var mylist = [0, 1]
@@ -2363,18 +2367,18 @@ is not specified.  Inferred and declared types are shown in this example: >vim9
 	var declare: list<string> = mylist->mapnew((i, _) => $"item {i}")
 	echo [declare, declare->typename()]
 <
-The key concept here is, variables with declared or inferred types cannot
-have the types of the elements within their containers change.  However, type
-"changes" are allowed for either:
-  - a container literal (not bound to a variable), or
-  - a container where |copy()| or |deepcopy()| is used in method chaining.
-Both are demonstrated in this example: >vim9
+ここで重要な概念は、宣言型または推論型を持つ変数では、コンテナ内の要素の型は変
+更できないということである。ただし、以下のいずれかの場合は型の "変更" が許容さ
+れる:
+  - コンテナリテラル (変数に束縛されていない)、または
+  - メソッドチェーンで |copy()| または |deepcopy()| が使用されているコンテナ。
+この例では、どちらも示されている: >vim9
 
 	vim9script
-	# list literal
+	# 文字列のリスト
 	echo [1, 2]->map((_, v) => $"#{v}")
 	echo [1, 2]->map((_, v) => $"#{v}")->typename()
-	# deepcopy() in a method chain
+	# メソッド チェーン内の deepcopy()
 	var mylist = [1, 2]
 	echo mylist->deepcopy()->map((_, v) => $"#{v}")
 	echo mylist->deepcopy()->map((_, v) => $"#{v}")->typename()
