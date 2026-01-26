@@ -2528,31 +2528,32 @@ FlexArgs が最初に文字列引数を受け取り、次にリスト引数を�
 	vim9 9->get(9)                    # E1531: Argument of get() must be a
 	vim9 9->tuple2list()              # E1534: Tuple required for argument
 <
-Reserved for future use:			*E1227* *E1250* *E1252*
+将来の使用のために予約済み:			*E1227* *E1250* *E1252*
 	E1227: List or Dictionary required for argument %d
 	E1250: Argument of %s must be a List, String, Dictionary or Blob
 	E1252: String, List or Blob required for argument %d
 
 
-Categories of variables, defaults and null handling ~
+変数、デフォルト、および null 処理のカテゴリ ~
 					*variable-categories* *null-variables*
-There are three categories of variables:
-	primitive	number, float, boolean
-	container	string, blob, list, tuple, dict
-	specialized	function, job, channel, user-defined-object
+変数には 3 つのカテゴリがある:
+	プリミティブ型	数値、浮動小数点数、ブール値
+	コンテナ型	文字列、blob、リスト、tuple、辞書
+	特殊型		関数、ジョブ、チャネル、ユーザー定義オブジェクト
 
-When declaring a variable without an initializer, an explicit type must be
-provided.  Each category has different default initialization semantics.
+初期化子なしで変数を宣言する場合は、明示的に型を指定する必要がある。各カテゴリ
+には異なるデフォルトの初期化セマンティクスがある。
 
-Primitives default to type-specific values.  All primitives are empty but do
-not equal `null`: >vim9
+プリミティブ型は、デフォルトで型固有の値になります。すべてのプリミティブ型は空
+ですが、`null` と等しくはない: >vim9
 
     vim9script
     var n: number | echo [n, n->empty(), n == null]  # [0, 1, false]
     var f: float  | echo [f, f->empty(), f == null]  # [0.0, 1, false]
     var b: bool   | echo [b, b->empty(), b == null]  # [false, 1, false]
 <
-Containers default to an empty container.  Only an empty string equals `null`: >vim9
+コンテナ型はデフォルトで空のコンテナになる。空の文字列のみが `null` と等しくな
+る: >vim9
 
     vim9script
     var s: string       | echo [s, s->empty(), s == null]  # ['', 1, true]
@@ -2561,7 +2562,7 @@ Containers default to an empty container.  Only an empty string equals `null`: >
     var t: tuple<any>   | echo [t, t->empty(), t == null]  # [(), 1, false]
     var d: dict<number> | echo [d, d->empty(), d == null]  # [{}, 1, false]
 <
-Specialized types default to equaling `null`: >vim9
+特殊型はデフォルトで `null` になる: >vim9
 
     vim9script
     var F: func    | echo [F, F == null]  # [function(''), true]
@@ -2574,20 +2575,20 @@ Specialized types default to equaling `null`: >vim9
     endenum
     var e: Enum    | echo [e, e == null]  # [object of [unknown], true]
 <
-	  Note: See |empty()| for explanations of empty job, empty channel, and
-		empty object types.
+	  Note: 空のジョブ、空のチャネル、空のオブジェクト型の説明について
+		は、|empty()| を参照。
 
-Vim does not have a familiar null value.  Instead, it has various null_<type>
-predefined values including |null_string|, |null_list|, and |null_job|.
-Primitives do not have a null_<type>.  Typical use cases for null_<type> are:
-    - to clear a variable and release its resources,
-    - as a default for a parameter in a function definition (for an example,
-      see |null_blob|), or
-    - assigned to a container or specialized variable to set it to null
-      for later comparison (for an example, see |null-compare|).
+Vim にはお馴染みの null 値はない。代わりに、|null_string|、|null_list|、
+|null_job| など、様々な null_<type> 型の定義済み値がある。プリミティブ型には
+null_<type> 型はない。null_<type> 型の典型的な使用例は以下のとおりである:
+    - 変数をクリアしてリソースを解放する。
+    - 関数定義のパラメータのデフォルトとして使用する (例については |null_blob|
+      を参照)。
+    - コンテナ型または特殊型に割り当てて、後の比較のために null に設定する (例
+      については |null-compare| を参照)。
 
-For a specialized variable, like `job`, null_<type> is used to clear the
-resources.  For example: >vim9
+`job` のような特殊な変数の場合、リソースをクリアするために null_<type> が使用
+される。例: >vim9
 
 	vim9script
 	var mydate: list<string>
@@ -2599,11 +2600,11 @@ resources.  For example: >vim9
 	sleep 2
 	echo $"The date and time is {mydate->join('')}"
 	echo [myjob, myjob->job_status()]
-	myjob = null_job  # Clear the variable; release the job's resources.
+	myjob = null_job  # 変数をクリアし、ジョブのリソースを解放する。
 	echo myjob
 <
-For a container variable, resources may also be cleared by assigning an
-empty container to the variable.  For example: >vim9
+コンテナ変数の場合、変数に空のコンテナを割り当てることによってリソースをクリア
+することもできる。例: >vim9
 
 	vim9script
 	var perfect: list<number> = [1, 4]
@@ -2611,51 +2612,50 @@ empty container to the variable.  For example: >vim9
 	perfect = []
 	echo perfect
 
-Using an empty container, rather than null_<type>, to clear a container
-variable may avoid null complications - see |null-anomalies|.
+null_<type> ではなく空のコンテナを使用してコンテナ変数をクリアすると、null の
+複雑さを回避できる場合がある - |null-anomalies| を参照。
 
-The initialization semantics of container variables and specialized variables
-differ.  For containers:
-  - An uninitialized container defaults to empty but does not equal `null`
-    (except for a uninitialized string).
-  - A container initialized to [], (), {}, "", or 0z is empty but does not
-    equal `null`.
-  - A container initialized as null_<type> defaults to empty and equals `null`.
+コンテナ変数と特殊変数の初期化セマンティクスは異なる。コンテナの場合:
+  - 初期化されていないコンテナはデフォルトで空になるが、`null` と等しくない
+    (初期化されていない文字列を除く)。
+  - []、()、{}、""、または 0z に初期化されたコンテナは空だが、`null` と等しく
+    ない。
+  - null_<type> として初期化されたコンテナはデフォルトで空になり、`null` と等
+    しくなる。
 
-In the following example, the uninitialized list ("lu") and [] initialized
-list ("li") are equivalent and indistinguishable whereas "ln" is a null
-container, which is similar to, but not equivalent to, an empty container
-(see |null-anomalies|). >vim9
+以下の例では、初期化されていないリスト ("lu") と [] 初期化されたリスト ("li")
+は同等であり区別できないが、"ln" は null コンテナであり、空のコンテナに似てい
+るが同等ではない (|null-anomalies| を参照)。 >vim9
 
 	vim9script
-	# uninitialized: empty container, not null
+	# 初期化されていない: 空のコンテナ、null ではない
 	var lu: list<any>
 	echo ['lu', $"empty={lu->empty()}", $"null={lu == null}"]
-	# initialized: empty container, not null
+	# 初期化済み: 空のコンテナ、null ではない
 	var li: list<any> = []
 	echo ['li', $"empty={li->empty()}", $"null={li == null}"]
-	# initialized: empty container, null
+	# 初期化済み: 空のコンテナ、null
 	var ln: list<any> = null_list
 	echo ['ln', $"empty={ln->empty()}", $"null={ln == null}"]
 <
-Specialized variables default to equaling null.  These job initializations
-are equivalent and indistinguishable: >vim9
+特殊変数はデフォルトで null になる。以下のジョブ初期化は同等であり、区別できな
+い: >vim9
 
 	vim9script
 	var j1: job
 	var j2: job = null_job
 	var j3 = null_job
-	echo (j1 == j2) == (j2 == j3)  # true (equivalent, indistinguishable)
+	echo (j1 == j2) == (j2 == j3)  # true (同等、区別不能)
 <
-When a list, tuple, or dict is declared, if the item type is not specified
-it cannot be inferred.  Consequently, the item type defaults to "any": >vim9
+リスト、tuple、または辞書を宣言する際に、項目の型が指定されていない場合は推論
+できない。したがって、項目の型はデフォルトで "any" になる: >vim9
 
 	vim9script
 	var [t1, t2] = [(), null_tuple]
 	echo $'t1 is {t1->typename()} and t2 is {t2->typename()} too'
 <
-Tuples and functions (or partials) may be declared in various ways.
-See |tuple-type|, |variadic-tuple|, and |vim9-func-declaration|.
+Tuple と関数 (または部分関数) は様々な方法で宣言できる。|tuple-type|、
+|variadic-tuple|、および |vim9-func-declaration| を参照。
 
 						*null-compare*
 For familiar null compare semantics, where an empty container is not equal to
@@ -3049,7 +3049,7 @@ Vim9 クラスのメソッドはジェネリック関数になることができ
 ==============================================================================
 
 6. 名前空間、Import と Export
-					*vim9script* *vim9-export* *vim9-import*
+				*vim9script* *vim9-export* *vim9-import*
 
 Vim9 script は、import されるように書くことができます。これは、いくつかの項目
 が意図的に export され、他のスクリプトで利用できるようになることを意味します。
