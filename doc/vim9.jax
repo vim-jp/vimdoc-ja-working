@@ -2658,14 +2658,14 @@ Tuple と関数 (または部分関数) は様々な方法で宣言できる。|
 |variadic-tuple|、および |vim9-func-declaration| を参照。
 
 						*null-compare*
-For familiar null compare semantics, where an empty container is not equal to
-a null container, do not use null_<type> in a comparison.  That is because,
-in Vim9 script, although null_<type> == `null`, comparing an:
+空のコンテナと null コンテナが等しくないという、おなじみの null 比較セマンティ
+クスでは、比較に null_<type> を使用してはならない。これは、Vim9 script では
+null_<type> == `null` であっても、以下の比較が成立するからである:
 
-  - empty container to `null` is `false`, but
-  - empty container to null_<type> is `true`.
+  - 空のコンテナを `null` にすると `false` だが、
+  - 空のコンテナを null_<type> にすると `true` になる。
 
-So, compare against `null`, not null_<type>.  For example: >vim9
+したがって、null_<type> ではなく `null` と比較すること。例: >vim9
 
 	vim9script
 	var bonds: dict<list<string>> = {g: ['007', '008'], o: ['007', '009']}
@@ -2681,70 +2681,70 @@ So, compare against `null`, not null_<type>.  For example: >vim9
 	    echo result->empty() ? $"No matches for '{C}'" : $"{result}"
 	endif
 <
-	  NOTE: Using "result == null_list" instead of "result == null" would
-		fail to distinguish the error (nothing entered) and the valid
-		(nothing matched) result because [] == null_list whereas
-		[] != null.
+	  NOTE: "result == null" の代わりに "result == null_list" を使用する
+		と、[] != null であるのに対し [] == null_list であるため、エ
+		ラー (何も入力されていない) と有効な結果 (何も一致していない)
+		を区別できなくなる。
 
-Conceptually, think of the null_<type> construct as a hybrid/bridge between
-the general `null` and typed `empty` containers, having properties of both.
-In the following section there are details about comparison results.
+概念的には、null_<type> 構文は、汎用的な `null` と型付きの `empty` コンテナと
+の中間に位置するハイブリッド/ブリッジのようなものと考えるとよく、両者の性質を
+併せ持っている。比較結果の詳細については、以下の節で説明する。
 
 					*null-details* *null-anomalies*
-This section describes issues about using null and null_<type>; included below
-are the enumerated results of null comparisons.  In some cases, if familiar
-with vim9 null semantics, the programmer may choose to use null_<type> in
-comparisons and/or other situations.
+このセクションでは、null と null_<type> の使用に関する問題について説明する。以
+下に、null 比較の列挙結果を示す。場合によっては、vim9 の null のセマンティクス
+に精通しているプログラマは、比較やその他の状況で null_<type> を使用することを
+選択する場合がある。
 
-Elsewhere in the documentation it says, "often a null value is handled the
-same as an empty value, but not always".  For example, you cannot add to a
-null container: >vim9
+ドキュメントの別の箇所では、"多くの場合、null 値は空の値と同じように扱われる
+が、常にそうとは限らない」と書かれている。例えば、null コンテナにデータを追加
+することはできない: >vim9
 
 	vim9script
 	var le: list<any> = []
-	le->add('Okay')		# le is now ['Okay']
+	le->add('Okay')		# le は ['Okay']
 	var ln = null_list
 	ln->add("E1130")	# E1130: Cannot add to null list
 <
-As explained in |null-compare|, there is a non-transitive relationship among
-`null`, null_<type> containers, and `empty`.  To recap, for example: >vim9
+|null-compare| で説明したように、`null`、null_<type> コンテナ、`empty` の間に
+は非推移的な関係がある。まとめると、例えば以下のようになる: >vim9
 
 	vim9cmd echo (null_dict == {}, null_dict == null, {} != null)
 <
-The exception is an uninitialized string.  It is equal to `null` (and is the
-same instance as `null_string`).  The 'is' operator (|expr-is|) may be used to
-determine whether a string is uninitialized: >vim9
+例外は未初期化の文字列である。これは `null` と等しく (`null_string` と同じイン
+スタンスである)。文字列が未初期化かどうかを判断するには、'is' 演算子
+(|expr-is|) を使用できる: >vim9
 
 	vim9script
 	var s: string
 	echo s == null_string		# true
-	echo s is null_string		# true (the same instance)
-	echo s == null			# true (unexpected, perhaps)
-	echo s is null			# false (not the same instance)
+	echo s is null_string		# true (同じインスタンス)
+	echo s == null			# true (意外かもしれない)
+	echo s is null			# false (同じインスタンスではない)
 <
-However, don't do the same for the other containers because, when evaluated
-against their applicable null_<type> with 'is', they return `false`: >vim9
+ただし、他のコンテナについては同じことを行ってはならない。対応する null_<type>
+に対して 'is' で評価すると、`false` が返されるためである: >vim9
 
 	vim9script
 	var d: dict<any>
 	echo d == null_dict		# true
-	echo d is null_dict		# false (not the same instance)
-	echo d == null			# false (as expected)
-	echo d is null			# false (not the same instance)
+	echo d is null_dict		# false (同じインスタンスではない)
+	echo d == null			# false (期待通り)
+	echo d is null			# false (同じインスタンスではない)
 <
-The key distinction here is an uninitialized string is implemented as
-`null_string`, while an uninitialized list, dict, tuple, or blob is
-implemented as an empty container ([], {}, (), and 0z respectively).
-So, those uninitialized types are equal to, but not the same instance as,
-their null_<type> counterparts, as this example shows: >vim9
+ここでの重要な違いは、初期化されていない文字列は `null_string` として実装され
+るのに対し、初期化されていないリスト、辞書、tuple、または blob は空のコンテナ
+(それぞれ []、{}、()、および 0z) として実装されることである。
+したがって、これらの初期化されていない型は、以下の例に示すように、対応する
+null_<type> と同等であるが、同じインスタンスではない: >vim9
 
 	vim9script
 	var t: tuple<any>
 	echo t == null_tuple		# true
 	echo t is null_tuple		# false
 
-However, a variable initialized to the null_<type> is equal not only to the
-null_<type>, it is also equal to null.  For example: >vim9
+ただし、null_<type> に初期化された変数は、null_<type> と等しいだけでなく、null
+とも等しくなる。例: >vim9
 
 	vim9script
 	var t: tuple<any> = null_tuple
@@ -2752,9 +2752,9 @@ null_<type>, it is also equal to null.  For example: >vim9
 	echo t is null_tuple		# true
 	echo t == null			# true
 <
-An uninitialized container variable is not equal to null, except for an
-uninitialized string, which is explained in an example, above.  So, these
-all echo `true`: >vim9
+初期化されていないコンテナ変数は、上記の例で説明したように、初期化されていない
+文字列を除き、null と等しくない。したがって、以下の式はすべて `true` を表示す
+る: >vim9
 
 	vim9script
 	var b: blob		| echo b != null
@@ -2763,7 +2763,8 @@ all echo `true`: >vim9
 	var t: tuple<any>	| echo t != null
 	var s: string		| echo s == null
 
-An uninitialized specialized variable is equal to null so these all echo `true`: >vim9
+初期化されていない特殊変数は null に等しいため、これらはすべて `true` を表示す
+る: >vim9
 
 	vim9script
 	var c: channel		| echo c == null
@@ -2776,11 +2777,11 @@ An uninitialized specialized variable is equal to null so these all echo `true`:
 	endenum
 	var ne: Enum		| echo ne == null
 <
-	  Note: the specialized variables, like job, default to null and
-		no specialized variable has a corresponding empty value.
+	  Note: job のような特殊な変数はデフォルトで null に設定され、対応する
+		空の値を持つ特殊な変数はない。
 
-A container variable initialized to empty equals null_<type>, so these are all
-`true`: >vim9
+空に初期化されたコンテナ変数は null_<type> に等しいため、これらはすべて `true`
+になる: >vim9
 
 	vim9script
 	var s: string = ""     | echo s == null_string
@@ -2789,8 +2790,8 @@ A container variable initialized to empty equals null_<type>, so these are all
 	var t: tuple<any> = () | echo t == null_tuple
 	var d: dict<any> = {}  | echo d == null_dict
 <
-However, a container variable initialized to empty does not equal null, so
-these are all `true`: >vim9
+ただし、空に初期化されたコンテナ変数は null と等しくないため、これらはすべて
+`true` になる: >vim9
 
 	vim9script
 	var s: string = ""     | echo s != null
