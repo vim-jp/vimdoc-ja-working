@@ -3157,11 +3157,12 @@ doctest とその中のコードのハイライト: >
 	:let python_no_doctest_code_highlight = 1
 最初のオプションは 2 番目のオプションも含む。
 
-他のキーワードと区別するためにハイライトされた組み込み定数の場合: >
-	:let python_constant_highlight = 1
 
 行末の空白と、スペースとタブの混在のハイライト: >
 	:let python_space_error_highlight = 1
+
+他のキーワードとは区別される組み込み定数のハイライト: >
+	:let python_constant_highlight = 1
 
 全てのハイライトを有効化させるには: >
 	:let python_highlight_all = 1
