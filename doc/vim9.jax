@@ -2090,7 +2090,7 @@ Vimは "b:two" の型を知らないため、式は list<any> となる。実行
 	echo <list<any>>[3, 2, 1]->extend(['Go!'])
 	echo <string>[3, 2, 1]->extend(['Go!'])->string()
 	echo <tuple<...list<number>>>[3, 2, 1]->list2tuple()
-	# これらの型キャストは失敗する
+	# この型キャストは失敗する
 	echo <number>[3, 2, 1]->extend(['Go!'])->string()
 <
 						*E1272*
