@@ -12317,7 +12317,6 @@ win_findbuf({bufnr})					*win_findbuf()*
 <
 		戻り値の型: list<number>
 
-
 win_getid([{win} [, {tab}]])				*win_getid()*
 		特定のウィンドウに関する |window-ID|を得る。
 		{win} が未指定の時は現在のウィンドウとなる。
