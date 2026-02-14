@@ -102,7 +102,7 @@
 	   v	Enter the file/directory under the cursor in a new   netrw-v
 		browser window.  A vertical split is used.
 <
-ブラウザの表示を制御するには、以下のノーマルモードコマンドを使用できる:
+ブラウザーの表示を制御するには、以下のノーマルモードコマンドを使用できる:
 >
 	   i	Cycle between thin, long, wide, and tree listings    netrw-i
 	   r	Reverse sorting order                                netrw-r
@@ -121,8 +121,8 @@
      :Explore[!]  [dir] Explore directory of current file......netrw-explore
      :Hexplore[!] [dir] Horizontal Split & Explore.............netrw-explore
 <
-netrw ブラウザはローカルマシンだけに限定されない。以下のような URL も使用でき
-る: >
+netrw ブラウザーはローカルマシンだけに限定されない。以下のような URL も使用で
+きる: >
 
 	:Explore ftp://somehost/path/to/dir/
 	:e scp://somehost/path/to/dir/
