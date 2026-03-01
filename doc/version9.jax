@@ -1,4 +1,4 @@
-*version9.txt*	For Vim バージョン 9.2.  Last change: 2026 Feb 16
+*version9.txt*	For Vim バージョン 9.2.  Last change: 2026 Feb 25
 
 
 		  VIM リファレンスマニュアル	by Bram Moolenaar
@@ -52572,10 +52572,13 @@ Solution: Limit writing to max KEYBUFLEN bytes to prevent writing out of
 ポップアップ ~
 ------------
 - 透明性のサポートについては、|popup-opacity| を参照。
+- 'previewpopup' は 'completepopup' と同じ値をサポートする ("align" を除く)。
 
 その他 ~
 ------
-完全な XDG 互換性を実現する新しい |xdg.vim| スクリプトが同梱されている
+- 完全な XDG 互換性を実現する新しい |xdg.vim| スクリプトが同梱されている。
+- |ConPTY| のサポートは、Windows 11 時点では安定していると見なされている。
+- |debug-adapter-protocol| の "dap" チャネルモードのサポート。
 
 							*changed-9.3*
 変更点~
@@ -52584,6 +52587,11 @@ Solution: Limit writing to max KEYBUFLEN bytes to prevent writing out of
 							*added-9.3*
 追加要素 ~
 --------
+さまざまな構文、インデント、その他のプラグインが追加された。
+
+自動コマンド: ~
+
+|SessionLoadPre|	|Session| ファイルを読み込む前
 
 ==============================================================================
 ☆パッチ					*patches-9.3* *bug-fixes-9.3*
