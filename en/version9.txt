@@ -1,4 +1,4 @@
-*version9.txt*	For Vim version 9.2.  Last change: 2026 Feb 25
+*version9.txt*	For Vim version 9.2.  Last change: 2026 Mar 01
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -52593,6 +52593,8 @@ Other ~
 - The new |xdg.vim| script for full XDG compatibility is included.
 - |ConPTY| support is considered stable as of Windows 11.
 - Support for "dap" channel mode for the |debug-adapter-protocol|.
+- |status-line| can use several lines, see 'statuslineopt'.
+- New "leadtab" value for the 'listchars' setting.
 
 							*changed-9.3*
 Changed~
@@ -52606,6 +52608,11 @@ Various syntax, indent and other plugins were added.
 Autocommands: ~
 
 |SessionLoadPre|	before loading a |Session| file
+
+Options: ~
+
+'statuslineopt'		Extra options for the 'statusline', e.g. use the
+			"maxheight" suboption to use several lines.
 
 ==============================================================================
 PATCHES						*patches-9.3* *bug-fixes-9.3*
