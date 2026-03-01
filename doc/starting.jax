@@ -1437,8 +1437,8 @@ Note: .vimrcファイルを作成するときにはオプション 'compatible' 
 'sessionoptions' から "tabpages" が除かれていない限り、セッションはすべてのタ
 ブページを含む。|tab-page|
 
-|SessionLoadPre| 自動コマンドはセッションファイルが読み込まれる/ソースされる前
-にトリガーされ、|SessionLoadPost| 自動コマンドはその後にトリガーされる。
+|SessionLoadPre| 自動コマンドはセッションファイルが読み込まれる前にトリガーさ
+れ、|SessionLoadPost| 自動コマンドはその後にトリガーされる。
 						*SessionLoad-variable*
 セッションファイルを読み込んでいる間、グローバル変数 SessionLoad は 1 になる。
 プラグインはこれを使ってイベント SessionLoadPost が発生するまで、なんらかの作
