@@ -1,4 +1,4 @@
-*windows.txt*	For Vim バージョン 9.2.  Last change: 2026 Feb 14
+*windows.txt*	For Vim バージョン 9.2.  Last change: 2026 Feb 24
 
 
 		  VIM リファレンスマニュアル	by Bram Moolenaar
@@ -973,11 +973,20 @@ CTRL-W gT						*CTRL-W_gT*
 を使用することができる。設定されているときは、'previewwindow' および
 'previewheight' の設定は無効になる。このオプションは値をコンマで区切ったリスト
 である:
+	border		ボーダースタイル ('pumborder' 参照)
+	borderhighlight	ポップアップのボーダーの文字のハイライトグループ
+	close		閉じるボタンを表示: "on" (デフォルト) または "off"。値
+			が "on" の場合は、ボーダーの後に設定する必要がある。
 	height		ポップアップの最大高さ
+	highlight	ポップアップのハイライトグループ (デフォルトは Pmenu)
+	resize		リサイズハンドルを表示: "on" (デフォルト) または "off"
+	shadow		|hl-PmenuShadow| を使用。"off" (デフォルト) または "on"
 	width		ポップアップの最大幅
-	highlight	ポップアップのハイライトグループ(デフォルトは Pmenu)
+
 例: >
 	:set previewpopup=height:10,width:60
+	:set previewpopup=border:single,borderhilight:PmenuBorder
+	:set previewpopup=border:custom:─;│;─;│;┌;┐;┘;└
 
 いくつかの特徴:
 - ファイルが既にバッファにある場合、再利用される。これにより、ポップアップウィ
