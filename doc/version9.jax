@@ -1,4 +1,4 @@
-*version9.txt*	For Vim バージョン 9.2.  Last change: 2026 Mar 01
+*version9.txt*	For Vim バージョン 9.2.  Last change: 2026 Mar 02
 
 
 		  VIM リファレンスマニュアル	by Bram Moolenaar
@@ -52599,6 +52599,7 @@ Solution: Limit writing to max KEYBUFLEN bytes to prevent writing out of
 
 'statuslineopt'		'statusline' の追加オプション。例えば、複数の行を使用
 			するには、"maxheight" サブオプションを使用する。
+'winhighlight'		ウィンドウローカルのハイライトグループのマッピング
 
 ==============================================================================
 ☆パッチ					*patches-9.3* *bug-fixes-9.3*
