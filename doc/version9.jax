@@ -1,4 +1,4 @@
-*version9.txt*	For Vim バージョン 9.2.  Last change: 2026 Mar 02
+*version9.txt*	For Vim バージョン 9.2.  Last change: 2026 Mar 08
 
 
 		  VIM リファレンスマニュアル	by Bram Moolenaar
@@ -52585,6 +52585,7 @@ Solution: Limit writing to max KEYBUFLEN bytes to prevent writing out of
 							*changed-9.3*
 変更点~
 ------
+- NeXTStep のサポートはパッチ v9.2.0122 で廃止された。
 
 							*added-9.3*
 追加要素 ~
@@ -52599,6 +52600,9 @@ Solution: Limit writing to max KEYBUFLEN bytes to prevent writing out of
 
 'statuslineopt'		'statusline' の追加オプション。例えば、複数の行を使用
 			するには、"maxheight" サブオプションを使用する。
+'t_BS'			同期更新を開始する。
+'t_ES'			同期更新を終了する。
+'termsync'		ターミナル DEC 2026 同期モードのサポートを有効にする。
 'winhighlight'		ウィンドウローカルのハイライトグループのマッピング
 
 ==============================================================================
