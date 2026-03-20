@@ -1267,7 +1267,7 @@ Vimサーバー:					*server-functions*
 	ch_evalraw()		チャネル経由で raw 文字列を評価する
 	ch_getbufnr()		チャネルのバッファ番号を取得する
 	ch_getjob()		チャネルの Job を取得する
-	ch_info()		チャンネルに関する情報を取得する
+	ch_info()		チャネルに関する情報を取得する
 	ch_listen()		チャネルを listen する
 	ch_log()		チャネルのログにメッセージを出力する
 	ch_logfile()		チャネルアクティビティのログ記録を開始する
