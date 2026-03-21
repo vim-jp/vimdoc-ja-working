@@ -671,7 +671,7 @@ ch_listen({address} [, {options}])		*E1573* *E1574* *ch_listen()*
 		チャネルを返す。|ch_status()| を使用して、失敗したかどうかを確
 		認すること。
 
-		{address}は文字列である。使用可能な形式については、
+		{address} は文字列である。使用可能な形式については、
 		|channel-address|を参照。Note: IPv6 はまだサポートされていな
 		い。
 
