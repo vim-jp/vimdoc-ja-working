@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim version 9.2.  Last change: 2026 Feb 14
+*builtin.txt*	For Vim version 9.2.  Last change: 2026 Mar 17
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -106,6 +106,8 @@ ch_evalraw({handle}, {string} [, {options}])
 ch_getbufnr({handle}, {what})	Number	get buffer number for {handle}/{what}
 ch_getjob({channel})		Job	get the Job of {channel}
 ch_info({handle})		String	info about channel {handle}
+ch_listen({address} [, {options}])
+				Channel	listen on {address}
 ch_log({msg} [, {handle}])	none	write {msg} in the channel log file
 ch_logfile({fname} [, {mode}])	none	start logging channel activity
 ch_open({address} [, {options}])
@@ -11711,7 +11713,11 @@ system({expr} [, {input}])				*system()* *E677*
 		When prepended by |:silent| the terminal will not be set to
 		cooked mode.  This is meant to be used for commands that do
 		not need the user to type.  It avoids stray characters showing
-		up on the screen which require |CTRL-L| to remove. >
+		up on the screen which require |CTRL-L| to remove.
+		When calling system() from a 'statusline' expression, an
+		|autocommand| or a |timer| callback, you should use |:silent|
+		to avoid terminal responses (e.g. from cursor style queries)
+		being echoed on the screen. >
 			:silent let f = system('ls *.vim')
 <
 		Note: Use |shellescape()| or |::S| with |expand()| or
@@ -11768,6 +11774,11 @@ systemlist({expr} [, {input}])				*systemlist()*
 			echo system('echo hello')->split('\n', 1)
 <
 		Returns an empty string on error.
+
+		Like |system()|, prepend |:silent| when the command does not
+		need user interaction and is called from a 'statusline'
+		expression, an |autocommand| or a |timer| callback.  See
+		|system()| for details.
 
 		Can also be used as a |method|: >
 			:echo GetCmd()->systemlist()
@@ -13104,6 +13115,7 @@ acl			Compiled with |ACL| support.
 all_builtin_terms	Compiled with all builtin terminals enabled. (always
 			true)
 amiga			Amiga version of Vim.
+android			Android version of Vim. *android*
 arabic			Compiled with Arabic support |Arabic|.
 arp			Compiled with ARP support (Amiga).
 autocmd			Compiled with autocommand support. (always true)
@@ -13274,6 +13286,7 @@ termguicolors		Compiled with true color in terminal support.
 terminal		Compiled with |terminal| support.
 terminfo		Compiled with terminfo instead of termcap.
 termresponse		Compiled with support for |t_RV| and |v:termresponse|.
+termux			Termux version of Vim. *termux*
 textobjects		Compiled with support for |text-objects|.
 textprop		Compiled with support for |text-properties|.
 tgetent			Compiled with tgetent support, able to use a termcap
