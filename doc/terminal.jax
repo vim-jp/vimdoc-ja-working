@@ -934,7 +934,7 @@ term_start({cmd} [, {options}])			*term_start()*
 		が pipe に切り替わる。
 		Note: pty は行バッファリングされ、pipe はブロックバッファリン
 		グされるため、stdout と stderr の出力順序は保持されない場合が
-		ある。"err_cbw" を指定しない場合、stderr は stdout と同じ pty
+		ある。"err_cb" を指定しない場合、stderr は stdout と同じ pty
 		を使用するため、出力順序は保持されるが、stdout と stderr を区
 		別することはできない。
 
