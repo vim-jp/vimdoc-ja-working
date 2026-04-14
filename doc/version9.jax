@@ -1,4 +1,4 @@
-*version9.txt*	For Vim バージョン 9.2.  Last change: 2026 Apr 10
+*version9.txt*	For Vim バージョン 9.2.  Last change: 2026 Apr 14
 
 
 		  VIM リファレンスマニュアル	by Bram Moolenaar
@@ -52645,6 +52645,10 @@ Functions: ~
 'termresize'		端末のサイズ変更イベントを処理するメソッド。
 'termsync'		ターミナル DEC 2026 同期モードのサポートを有効にする。
 'winhighlight'		ウィンドウローカルのハイライトグループのマッピング
+
+ハイライト: ~
+
+|hl-VertSplitNC|	非カレントウィンドウのカラム区切り。
 
 ==============================================================================
 ☆パッチ					*patches-9.3* *bug-fixes-9.3*
