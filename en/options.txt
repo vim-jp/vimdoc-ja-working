@@ -1,4 +1,4 @@
-*options.txt*	For Vim version 9.2.  Last change: 2026 Apr 14
+*options.txt*	For Vim version 9.2.  Last change: 2026 Apr 17
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -324,12 +324,12 @@ that was last closed are used again.  If this buffer has been edited in this
 window, the values from back then are used.  Otherwise the values from the
 last closed window where the buffer was edited last are used.
 
-It's possible to set a local window option specifically for a type of buffer.
-When you edit another buffer in the same window, you don't want to keep
-using these local window options.  Therefore Vim keeps a global value of the
-local window options, which is used when editing another buffer.  Each window
-has its own copy of these values.  Thus these are local to the window, but
-global to all buffers in the window.  With this you can do: >
+":setlocal" can be used to set a local window option specifically for a type
+of buffer.  When you edit another buffer in the same window, you don't want to
+keep using these local window options.  Meanwhile ":set" also sets a global
+value of a local window option, which is used when editing another buffer.
+Each window has its own copy of these global values, making them local to the
+window, but global to all buffers in the window.  With this you can do: >
 	:e one
 	:set list
 	:e two
@@ -7577,8 +7577,8 @@ A jump table for the options with a short description can be found at |Q_op|.
 	Minimal number of screen lines to keep above and below the cursor.
 	This will make some context visible around where you are working.  If
 	you set it to a very large value (999) the cursor line will always be
-	in the middle of the window (except at the start or end of the file or
-	when long lines wrap).
+	in the middle of the window (except at the start or end of the file,
+	see 'scrolloffpad', or when long lines wrap).
 	After using the local value, go back the global value with one of
 	these two: >
 		setlocal scrolloff<
@@ -7586,7 +7586,24 @@ A jump table for the options with a short description can be found at |Q_op|.
 <	For scrolling horizontally see 'sidescrolloff'.
 	NOTE: This option is set to 0 when 'compatible' is set.
 
-						*'scrollopt'* *'sbo'*
+						*'scrolloffpad'* *'sop'*
+'scrolloffpad' 'sop'	number	(default 0)
+			global or local to window |global-local|
+	When 'scrolloff' and 'scrolloffpad' are greater than zero, allow
+	the cursor to remain centered when at the end of the file.
+	Normally, 'scrolloff' will not keep the cursor centered at the
+	end of the file.
+
+	A value of 0 disables this feature.  Any value above 0 enables it.
+	For a window-local value, -1 means to use the global value.
+	Values below -1 are invalid.
+
+	After using the local value, go back the global value with one of
+	these two: >
+		setlocal scrolloffpad<
+		setlocal scrolloffpad=-1
+
+<						*'scrollopt'* *'sbo'*
 'scrollopt' 'sbo'	string	(default "ver,jump")
 			global
 	This is a comma-separated list of words that specifies how
@@ -8672,7 +8689,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 							*stl-%[FuncName]*
 	%[ defines clickable regions in the statusline.  When the user clicks
 	on a region with the mouse, the specified function is called.  The
-	same syntax can also be used in 'tabline'.
+	same syntax can also be used in 'tabline' and 'tabpanel'.
 
 	  %[FuncName]	Start of a clickable region.  "FuncName" is the name
 			of a Vim function to call when the region is clicked.
@@ -8691,16 +8708,16 @@ A jump table for the options with a short description can be found at |Q_op|.
 	  "mods"	Modifier keys: combination of "s" (shift), "c" (ctrl),
 			"a" (alt).  Empty string if no modifiers.
 	  "winid"	|window-ID| of the window whose statusline was clicked,
-			or 0 when the click was in 'tabline'.
-	  "area"	"statusline" or "tabline".  Indicates which option the
-			clicked region belongs to.  Useful when a single
-			callback is shared between 'statusline' and 'tabline'.
+			or 0 when the click was in 'tabline' or 'tabpanel'.
+	  "area"	"statusline", "tabline", or "tabpanel".  Indicates
+			which option the clicked region belongs to.
+	  "tabnr"	(tabpanel only) Tab page number of the clicked label.
 
 	If the function returns non-zero, the statusline is redrawn.
 	Dragging the statusline to resize the window still works even when
-	click handlers are defined.  When used in 'tabline', clicks in
-	%[FuncName] regions are dispatched to the callback instead of the
-	default tab page selection behavior.
+	click handlers are defined.  When used in 'tabline' or 'tabpanel',
+	clicks in %[FuncName] regions are dispatched to the callback
+	instead of the default tab-selection behavior.
 
 	Example: >
 	    func! ClickFile(info)
