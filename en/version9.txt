@@ -1,4 +1,4 @@
-*version9.txt*	For Vim version 9.2.  Last change: 2026 Apr 20
+*version9.txt*	For Vim version 9.2.  Last change: 2026 Apr 21
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -52616,6 +52616,9 @@ Other ~
 - Allow mouse clickable regions in the 'statusline', 'tabline' and the
   'tabpanel' using the |stl-%[FuncName]| atom.
 - Enable reflow support in the |:terminal|.
+- Added "scroll" and "scrollbar" sub-options to 'tabpanelopt' so the
+  tabpanel can scroll when the tab list exceeds the visible screen
+  height.
 
 Platform specific ~
 -----------------
@@ -52656,8 +52659,8 @@ Autocommands: ~
 Options: ~
 
 'modelinestrict'	Only allow safe options to be set from a modeline.
-'pumopt'		Additional options for the popup menu
-'scrolloffpad'		Keep 'scrolloff' context at end of file
+'pumopt'		Additional options for the popup menu.
+'scrolloffpad'		Vertically center cursor at end of file.
 'statuslineopt'		Extra window-local options for the 'statusline', to
 			configure the height.
 't_BS'			Begin synchronized update.
