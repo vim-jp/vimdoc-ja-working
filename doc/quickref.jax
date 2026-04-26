@@ -912,7 +912,7 @@
 'scrollfocus'	  'scf'     スクロールホイールはポインタの下のウィンドウに適用
 'scrolljump'	  'sj'      スクロールする行数の最小値
 'scrolloff'	  'so'      カーソルの上下に確保する表示行
-'scrolloffpad'	  'sop'	    カーソルをファイルの末尾に垂直方向に中央揃えする
+'scrolloffpad'	  'sop'	    カーソルをファイルの末尾で垂直方向に中央揃えする
 'scrollopt'	  'sbo'     'scrollbind' がどのように振舞うか
 'sections'	  'sect'    節を分けるためのnroffのマクロ
 'secure'		    カレントディレクトリの.vimrcを安全に読む
