@@ -52647,7 +52647,7 @@ Functions: ~
 'modelinestrict'	モードラインからは安全なオプションのみを設定できるよう
 			にする。
 'pumopt'		ポップアップメニューの追加オプション。
-'scrolloffpad'		カーソルをファイルの末尾に垂直方向に中央揃えする。
+'scrolloffpad'		カーソルをファイルの末尾で垂直方向に中央揃えする。
 'statuslineopt'		'statusline' の高さを設定するための、ウィンドウローカ
 			ルな追加オプション。
 't_BS'			同期更新を開始する。
