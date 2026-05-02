@@ -1,4 +1,4 @@
-*channel.txt*	For Vim バージョン 9.2.  Last change: 2026 Apr 15
+*channel.txt*	For Vim バージョン 9.2.  Last change: 2026 Apr 29
 
 
 		  VIM リファレンスマニュアル	by Bram Moolenaar
@@ -169,6 +169,7 @@ Vimを起動し、リスニングチャネルを作成する: >
 	"js"   - JS (JavaScript) エンコーディングを使用し、JSON よりも効率的。
 	"nl"   - NL 文字で終わるメッセージを使う
 	"raw"  - raw メッセージを使う
+	"blob" - raw メッセージを使い、コールバックデータを |Blob| として渡す。
 	"lsp"  - language server protocol エンコーディングを使う
 	"dap"  - debug adapter protocol エンコーディングを使う
 						*channel-callback* *E921*
@@ -187,6 +188,8 @@ Vimを起動し、リスニングチャネルを作成する: >
 		ジである。
 		"mode" が "raw" の時には、"msg" 引数はメッセージ全体を格納し
 		た文字列である。
+		"mode" が "blob" の場合、"msg" 引数は |Blob| としてメッセージ
+		全体である。
 
 		すべてのコールバック: |function()| を使用して、引数および/また
 		は辞書にバインドします。または、"dict.function" という形式を使
