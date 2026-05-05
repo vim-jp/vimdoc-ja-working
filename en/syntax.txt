@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim version 9.2.  Last change: 2026 Apr 14
+*syntax.txt*	For Vim version 9.2.  Last change: 2026 May 04
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -847,6 +847,20 @@ abel_cpp_comments_illegal	do not interpret '//' as inline comment leader
 ADA
 
 See |ft-ada-syntax|
+
+
+ALGOL 68					*algol68* *ft-algol68-syntax*
+
+This syntax file currently targets the Algol 68 Genie project using the
+default UPPER stropping regime.  It should also be usuable in other
+environments using the UPPER stropping regime, though somewhat less complete.
+
+Highlighting can be further configured with the following variables.
+
+Variable			Highlight ~
+*algol68_no_preludes*		no prelude identifiers, procedures or
+				bold word operators
+*algol68_symbolic_operators*	all prelude symbolic operators
 
 
 ANT						*ant.vim* *ft-ant-syntax*
@@ -5979,13 +5993,28 @@ EndOfBuffer	Filler lines (~) after the last line in the buffer.
 ErrorMsg	Error messages on the command line.
 							*hl-VertSplit*
 VertSplit	Column separating vertically split windows that are adjacent
-		to the current window.  On the current window's status line
-		rows, the separator cell is drawn as a space with the
-		|hl-StatusLine| highlight so it blends into the status line
-		without a stray fillchar glyph.
+		to the current window.  The cell character and highlight at
+		each screen row depend on what is at that row on both sides
+		of the separator:
+		- On a status line row of the current window: the cell is
+		  drawn as a space with the |hl-StatusLine| highlight, so it
+		  visually merges into the current window's status line.
+		- On any other row (including a row that is a status line
+		  row of the adjacent non-current window but not of the
+		  current window): the cell is drawn with the "vert" item of
+		  'fillchars' and the VertSplit highlight.
 							*hl-VertSplitNC*
-VertSplitNC	Column separating vertically split windows of non-current
-		windows.  By default, highlighted like |hl-VertSplit|.
+VertSplitNC	Column separating vertically split windows where neither
+		adjacent window is the current window.  The cell character
+		and highlight at each screen row depend on what is at that
+		row on both sides of the separator:
+		- On a status line row of either adjacent (non-current)
+		  window: the cell is drawn as a space with the
+		  |hl-StatusLineNC| highlight of that window, so it visually
+		  merges into that window's status line.
+		- On any other row: the cell is drawn with the "vert" item
+		  of 'fillchars' and the VertSplitNC highlight.
+		By default, highlighted like |hl-VertSplit|.
 							*hl-Folded*
 Folded		Line used for closed folds.
 							*hl-FoldColumn*
@@ -6102,15 +6131,20 @@ SpellRare	Word that is recognized by the spellchecker as one that is
 		This will be combined with the highlighting used otherwise.
 							*hl-StatusLine*
 StatusLine	Status line of current window.
+		Also used for the vertical separator cell adjacent to the
+		current window's status line.  see |hl-VertSplit|.
 							*hl-StatusLineNC*
-StatusLineNC	status lines of not-current windows
+StatusLineNC	status lines of not-current windows.
+		Also used for the vertical separator cell adjacent to the
+		non-current window's status line.  see |hl-VertSplitNC|.
 		Note: If this is equal to "StatusLine", Vim will use "^^^" in
 		the status line of the current window.
 							*hl-StatusLineTerm*
 StatusLineTerm	Status line of current window, if it is a |terminal| window.
 							*hl-StatusLineTermNC*
-StatusLineTermNC	Status lines of not-current windows that is a
-			|terminal| window.
+StatusLineTermNC
+		Status lines of not-current windows that is a |terminal|
+		window.
 							*hl-TabLine*
 TabLine		Tab pages line, not active tab page label.
 							*hl-TabLineFill*
@@ -6130,18 +6164,19 @@ Title		Titles for output from ":set all", ":autocmd" etc.
 							*hl-TitleBar*
 TitleBar	Title bar for the active Gui's window.
 		This feature is supported only in the MS-Windows GUI.
-		See |gui-w32-title-bar| for details
+		See |gui-w32-title-bar| for details.
 		Only the `guibg` and `guifg` highlight arguments are effective.
 							*hl-TitleBarNC*
 TitleBarNC	Title bar for inactive Gui's window.
 		This feature is supported only in the MS-Windows GUI.
-		See |gui-w32-title-bar| for details
+		See |gui-w32-title-bar| for details.
 		Only the `guibg` and `guifg` highlight arguments are effective.
 							*hl-Visual*
 Visual		Visual mode selection.
 							*hl-VisualNOS*
 VisualNOS	Visual mode selection when vim is "Not Owning the Selection".
-		Only X11 Gui's |gui-x11| and |xterm-clipboard| supports this.
+		Only X11 Gui's |gui-x11|, |xterm-clipboard| and
+		|wayland-selections| supports this.
 							*hl-WarningMsg*
 WarningMsg	Warning messages.
 							*hl-WildMenu*
@@ -6161,10 +6196,9 @@ Menu		Current font, background and foreground colors of the menus.
 		Also used for the toolbar.
 		Applicable highlight arguments: font, guibg, guifg.
 
-		NOTE: For Motif the font argument actually
-		specifies a fontset at all times, no matter if 'guifontset' is
-		empty, and as such it is tied to the current |:language| when
-		set.
+		NOTE: For Motif the font argument actually specifies a fontset
+		at all times, no matter if 'guifontset' is empty, and as such
+		it is tied to the current |:language| when set.
 
 							*hl-Scrollbar*
 Scrollbar	Current background and foreground of the main window's
@@ -6175,10 +6209,9 @@ Scrollbar	Current background and foreground of the main window's
 Tooltip		Current font, background and foreground of the tooltips.
 		Applicable highlight arguments: font, guibg, guifg.
 
-		NOTE: For Motif the font argument actually
-		specifies a fontset at all times, no matter if 'guifontset' is
-		empty, and as such it is tied to the current |:language| when
-		set.
+		NOTE: For Motif the font argument actually specifies a fontset
+		at all times, no matter if 'guifontset' is empty, and as such
+		it is tied to the current |:language| when set.
 
 ==============================================================================
 15. Linking groups		*:hi-link* *:highlight-link* *E412* *E413*
