@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.2.  Last change: 2026 Apr 28
+*builtin.txt*	For Vim バージョン 9.2.  Last change: 2026 May 04
 
 
 		  VIM リファレンスマニュアル	by Bram Moolenaar
@@ -11630,8 +11630,8 @@ tabpanel_getinfo()					*tabpanel_getinfo()*
 
 tabpanel_scroll({n} [, {opts}])				*tabpanel_scroll()*
 		タブパネルを {n} 行スクロールする。正の値は下方向にスクロール
-		し (後ろのタブが表示される)、負の値は上方向にスクロールする。
-		新しいオフセットは有効な範囲に制限される。
+		し (後ろのタブページが表示される)、負の値は上方向にスクロール
+		する。新しいオフセットは有効な範囲に制限される。
 
 		{opts} が |Dictionary| かつ、その "absolute" エントリが |TRUE|
 		の場合、変化量 (デルタ) の代わりに {n} が新しい絶対スクロール
