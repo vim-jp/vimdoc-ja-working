@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim バージョン 9.2.  Last change: 2026 Apr 30
+*syntax.txt*	For Vim バージョン 9.2.  Last change: 2026 May 04
 
 
 		  VIM リファレンスマニュアル    by Bram Moolenaar
@@ -5947,8 +5947,8 @@ StatusLineNC	非カレントウィンドウのステータスライン。
 							*hl-StatusLineTerm*
 StatusLineTerm	|terminal| ウィンドウのカレントウィンドウのステータスライン。
 							*hl-StatusLineTermNC*
-StatusLineTermNC	|terminal| ウィンドウの非カレントウィンドウのステータ
-			スライン。
+StatusLineTermNC
+		|terminal| ウィンドウの非カレントウィンドウのステータスライン。
 							*hl-TabLine*
 TabLine		タブページの行の、アクティブでないタブページのラベル。
 							*hl-TabLineFill*
@@ -5968,12 +5968,12 @@ Title		":set all"、":autocmd" などによる出力のタイトル。
 							*hl-TitleBar*
 TitleBar	アクティブな GUI ウィンドウのタイトルバー。
 		この機能は、MS-Windows GUI でのみサポートされる。
-		詳細は |gui-w32-title-bar| を参照
+		詳細は |gui-w32-title-bar| を参照。
 		`guibg` および `guifg` のハイライト引数のみ効果がある。
 							*hl-TitleBarNC*
 TitleBarNC	非アクティブな GUI ウィンドウのタイトルバー。
 		この機能は、MS-Windows GUI でのみサポートされる。
-		詳細は |gui-w32-title-bar| を参照
+		詳細は |gui-w32-title-bar| を参照。
 		`guibg` および `guifg` のハイライト引数のみ効果がある。
 							*hl-Visual*
 Visual		ビジュアルモード選択。
