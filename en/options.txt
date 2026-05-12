@@ -1,4 +1,4 @@
-*options.txt*	For Vim version 9.2.  Last change: 2026 May 08
+*options.txt*	For Vim version 9.2.  Last change: 2026 May 10
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -6216,6 +6216,7 @@ A jump table for the options with a short description can be found at |Q_op|.
 		'filetype'
 		'foldcolumn'
 		'foldenable'
+		'foldmarker'
 		'foldmethod'
 		'modifiable'
 		'readonly'
