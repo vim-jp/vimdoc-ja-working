@@ -1,4 +1,4 @@
-*version9.txt*	For Vim version 9.2.  Last change: 2026 May 02
+*version9.txt*	For Vim version 9.2.  Last change: 2026 May 11
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -52588,6 +52588,7 @@ Popups ~
 - 'previewpopup' supports the same values as 'completepopup' (except for
   "align").
 - Support "opacity" setting for 'completepopup' option.
+- Support for clipping textproperty popups |popup-clipwindow|.
 
 Diff mode ~
 ---------
@@ -52625,6 +52626,9 @@ Other ~
 - Added the "u" flag to 'shortmess' to silence undo/redo messages: |shm-u|
 - |:command-completion-customlist| can return a list of dictionaries with
   kind/menu/info/abbr for the popup menu.
+- |C-indenting| detects comments better.
+- The |package-hlyank| can now optionally highlight the last put region as
+  well.
 
 Platform specific ~
 -----------------
@@ -52667,6 +52671,8 @@ Functions: ~
 Autocommands: ~
 
 |SessionLoadPre|	before loading a |Session| file
+|TextPutPost|		after putting text
+|TextPutPre|		before putting text
 
 Options: ~
 
