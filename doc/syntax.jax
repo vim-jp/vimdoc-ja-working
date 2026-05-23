@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim バージョン 9.2.  Last change: 2026 May 08
+*syntax.txt*	For Vim バージョン 9.2.  Last change: 2026 May 17
 
 
 		  VIM リファレンスマニュアル    by Bram Moolenaar
@@ -5886,6 +5886,18 @@ PmenuShadow	ポップアップメニュー: 影に使われる。
 ComplMatchIns	現在挿入されている補完のマッチしたテキスト。
 							*hl-PreInsert*
 PreInsert	"preinsert" が 'completeopt' にあるときに挿入されるテキスト。
+							*hl-Popup*
+Popup		ポップアップウィンドウの本体。ポップアップの 'wincolor' と明示
+		的な "highlight" 引数のどちらも設定されていない場合に使用され
+		る。デフォルトでは |hl-Pmenu| にリンクされる。
+							*hl-PopupBorder*
+PopupBorder	ポップアップウィンドウのボーダー文字。"borderhighlight" が設定
+		されておらず、ポップアップの 'wincolor' も設定されていない場合
+		に使用される。デフォルトでは |hl-Pmenu| にリンクされる。
+							*hl-PopupTitle*
+PopupTitle	ポップアップウィンドウのタイトル。"borderhighlight" が設定され
+		ておらず、ポップアップの 'wincolor' も設定されていない場合に使
+		用される。デフォルトでは |hl-Pmenu| にリンクされる。
 							*hl-PopupSelected*
 PopupSelected	|popup_menu()| で作成されたポップアップウィンドウ。デフォルト
 		では |hl-PmenuSel| にリンクされる。
@@ -5921,9 +5933,13 @@ SpellLocal	スペルチェッカによって他の地域で使われると判断
 SpellRare	スペルチェッカによってまず使わないと判断される単語。|spell|
 		これは他のハイライトと同時に組み合わせられる。
 							*hl-StatusLine*
-StatusLine	カレントウィンドウのステータスライン。
+StatusLine	カレントウィンドウのステータスライン。ステータスライン端のハイ
+		ライト (StatusLine、または'statusline' 内の任意の %#... / %N*)
+		は、ステータスラインが接続されている ('vert' の文字が描画され
+		ていない) 場合、隣接する垂直区切りのセルにも拡張される。
 							*hl-StatusLineNC*
-StatusLineNC	非カレントウィンドウのステータスライン。
+StatusLineNC	非カレントウィンドウのステータスライン。|hl-StatusLine| と同様
+		に、端のハイライトは隣接する垂直区切りのセルにも拡張される。
 		Note: これが "StatusLine" に等しい場合、カレントウィンドウのス
 		テータスラインに "^^^" が使われる。
 							*hl-StatusLineTerm*
