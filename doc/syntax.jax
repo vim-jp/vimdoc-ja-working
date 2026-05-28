@@ -835,8 +835,7 @@ ALGOL 68					*algol68* *ft-algol68-syntax*
 ハイライトは、以下の変数を使用してさらに設定できる。
 
 変数				ハイライト ~
-*algol68_no_preludes*		前置識別子、手続き、太字演算子はハイライトしない
-*algol68_symbolic_operators*	すべての前置記号演算子
+*algol68_no_preludes*		前置識別子、手続き、演算子はハイライトしない
 
 
 ANT						*ant.vim* *ft-ant-syntax*
