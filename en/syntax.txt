@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim version 9.2.  Last change: 2026 May 08
+*syntax.txt*	For Vim version 9.2.  Last change: 2026 May 23
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -402,9 +402,8 @@ the desired value, or restored to their default by removing the variable using
 Remarks:
 - Some truly ancient browsers may not show the background colors.
 - From most browsers you can also print the file (in color)!
-- The latest TOhtml may actually work with older versions of Vim, but some
-  features such as conceal support will not function, and the colors may be
-  incorrect for an old Vim without GUI support compiled in.
+- Colors may be incorrect for Vim without GUI support compiled in.
+- The latest TOhtml requires Vim 9.1 or later.
 
 Here is an example how to run the script over all .c and .h files from a
 Unix shell: >
@@ -852,15 +851,14 @@ See |ft-ada-syntax|
 ALGOL 68					*algol68* *ft-algol68-syntax*
 
 This syntax file currently targets the Algol 68 Genie project using the
-default UPPER stropping regime.  It should also be usuable in other
+default UPPER stropping regime.  It should also be usable in other
 environments using the UPPER stropping regime, though somewhat less complete.
 
 Highlighting can be further configured with the following variables.
 
 Variable			Highlight ~
 *algol68_no_preludes*		no prelude identifiers, procedures or
-				bold word operators
-*algol68_symbolic_operators*	all prelude symbolic operators
+				operators
 
 
 ANT						*ant.vim* *ft-ant-syntax*
@@ -6077,6 +6075,18 @@ PmenuShadow	Popup menu: Used for shadow.
 ComplMatchIns	Matched text of the currently inserted completion.
 							*hl-PreInsert*
 PreInsert	Text inserted when "preinsert" is in 'completeopt'.
+							*hl-Popup*
+Popup		Popup window body, used when neither the popup's 'wincolor'
+		nor explicit "highlight" argument is set.  Linked to |hl-Pmenu|
+		by default.
+							*hl-PopupBorder*
+PopupBorder	Popup window border characters, used when "borderhighlight" is
+		not set and the popup's 'wincolor' is also not set.
+		Linked to |hl-Pmenu| by default.
+							*hl-PopupTitle*
+PopupTitle	Popup window title, used when "borderhighlight" is not set and
+		the popup's 'wincolor' is also not set.  Linked to
+		|hl-Pmenu| by default.
 							*hl-PopupSelected*
 PopupSelected	Popup window created with |popup_menu()|.  Linked to
 		|hl-PmenuSel| by default.
@@ -6115,9 +6125,15 @@ SpellRare	Word that is recognized by the spellchecker as one that is
 		hardly ever used. |spell|
 		This will be combined with the highlighting used otherwise.
 							*hl-StatusLine*
-StatusLine	Status line of current window.
+StatusLine	Status line of current window.  The highlight at the status
+		line's edge (StatusLine, or any %#... / %N* in 'statusline')
+		also extends into the adjacent vertical separator cell when
+		the status lines are connected (The "vert" in 'fillchars' is
+		not being drawn).
 							*hl-StatusLineNC*
-StatusLineNC	status lines of not-current windows.
+StatusLineNC	status lines of not-current windows.  Like |hl-StatusLine|,
+		the edge highlight also extends into the adjacent vertical
+		separator cell.
 		Note: If this is equal to "StatusLine", Vim will use "^^^" in
 		the status line of the current window.
 							*hl-StatusLineTerm*
