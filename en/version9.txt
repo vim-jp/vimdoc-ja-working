@@ -1,4 +1,4 @@
-*version9.txt*	For Vim version 9.2.  Last change: 2026 May 19
+*version9.txt*	For Vim version 9.2.  Last change: 2026 May 25
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -52589,6 +52589,7 @@ GUI ~
 -----
 - Added support for the GTK 4 GUI (via patch 9.2.0501).  Enable with
   `--enable-gui=gtk4` configure switch at build time.
+- Add support for fullscreen mode in the GTK UI |'go-s'|.
 
 Popups ~
 ------
@@ -52621,6 +52622,8 @@ Other ~
 - New "leadtab" value for the 'listchars' setting.
 - Improved |:set+=|, |:set^=| and |:set-=| handling of comma-separated "key:value"
   pairs individually (e.g. 'listchars', 'fillchars', 'diffopt').
+- The |:TOhtml| command has been completely rewritten in Vim9 script, improving
+  performance and maintainability.
 - |system()| and |systemlist()| functions accept a list as first argument,
   bypassing the shell completely.
 - Allow mouse clickable regions in the 'statusline', 'tabline' and the
@@ -52639,6 +52642,8 @@ Other ~
   well.
 - New argument handling for user commands |:command-nargs| using the "-nars=_"
   attribute to handle completion of single arguments with spaces as expected.
+- Support %0{} in 'statusline' to insert the expression result verbatim and
+  not drop leading spaces |stl-%0{|.
 
 Platform specific ~
 -----------------
@@ -52665,6 +52670,7 @@ Changed ~
   if needed, see |wayland-primary-selection| for an example.
 - On Unix, filename completion for single-file Ex commands now treats embedded
   whitespace as part of the filename, like on other platforms.
+- Rewrite the clientserver socketserver backend to use channels and JSON.
 
 
 							*added-9.3*
