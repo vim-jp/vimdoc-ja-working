@@ -1025,7 +1025,7 @@ QUICK HELP						*netrw-quickhelp* {{{2
 	   C	ファイルを開くウィンドウを指定する                   |netrw-C|
 	   d	ディレクトリを作成する                               |netrw-d|
 	   D	ファイル/ディレクトリ(複数可)を削除する              |netrw-D|
-	   gb	前のブックマークされたディレクトリに移動             |netrw-gb|
+	   gb	ブックマークに移動する                               |netrw-gb|
 	   gd	取扱いをディレクトリに強制する                       |netrw-gd|
 	   gf	取扱いをファイルに強制する                           |netrw-gf|
 	   gh	ドットファイルの表示/非表示を切り替える              |netrw-gh|
@@ -1055,7 +1055,7 @@ QUICK HELP						*netrw-quickhelp* {{{2
 	   O	カーソル位置のファイルを取得する                     |netrw-O|
 	   p	ファイルをプレビューする                             |netrw-p|
 	   P	直前に使用していたウィンドウで開く                   |netrw-P|
-	   qb	ブックマークに移動する                               |netrw-qb|
+	   qb	ブックマークと履歴の一覧を表示する                   |netrw-qb|
 	   qf	ファイル情報を表示する                               |netrw-qf|
 	   qF	quickfix リストを使ってファイルをマークする          |netrw-qF|
 	   qL	|location-list| を使ってファイルをマークする           |netrw-qF|
