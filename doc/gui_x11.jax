@@ -362,8 +362,8 @@ $GDK_RENDERING を "image" に設定するのを試してみること。
 
 							*gtk4-slow*
 GTK4 GUI が起動直後に動作が遅い、フリーズする、またはキーボード入力を受け付け
-ない場合は、OpenGL レンダラーまたは GPU ドライバーが原因である可能性がある。以
-下の環境変数のいずれかを使用して gvim を起動してみて欲しい。$GSK_RENDERER を
+ない場合は、OpenGL レンダラーまたは GPU ドライバが原因である可能性がある。以下
+の環境変数のいずれかを使用して gvim を起動してみて欲しい。$GSK_RENDERER を
 "cairo" に設定すると、GSK OpenGL レンダラーが無効になる。
 $LIBGL_ALWAYS_SOFTWARE を "true" に設定すると、OpenGL レンダラーは保持される
 が、Mesa はソフトウェアレンダリングを使用するように強制される: >
