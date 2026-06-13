@@ -422,7 +422,7 @@ N  *+gettext*		メッセージの翻訳 |multi-lang|
 m  *+hangul_input*	ハングル入力サポート |hangul|
    *+iconv*		iconv() 関数が組み込まれている
    *+iconv/dyn*		|iconv-dynamic| |/dyn| と同じ
-H  *+image*		ポップアップウィンドウの画像属性については、
+H  *+image*		ポップアップウィンドウの画像属性サポート。
 			|popup-image| を参照
 H  *+image_cairo*	|+image| Cairo バックエンド (GTK GUI)
 H  *+image_gdi*		|+image| GDI バックエンド (Windows GUI)
