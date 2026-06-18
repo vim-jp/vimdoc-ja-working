@@ -370,7 +370,6 @@ $LIBGL_ALWAYS_SOFTWARE を "true" に設定すると、OpenGL レンダラーは
 
     $ GSK_RENDERER=cairo gvim
     $ LIBGL_ALWAYS_SOFTWARE=true gvim
-
 <
 							*gtk4-hwaccel*
 Vim を "--enable-gtk4-hwaccel" オプションを設定してコンパイルすると、GTK4 GUI
