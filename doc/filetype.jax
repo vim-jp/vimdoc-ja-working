@@ -489,12 +489,12 @@ AWK							*ft-awk-plugin*
 BEANCOUNT						*ft-beancount-plugin*
 
 Beancount のオムニ補完機能 |compl-omni| は、g:beancount_completion_enable で有
-効にすると、beancountcomplete.vim によって提供される。
+効にした場合、beancountcomplete.vim によって提供される。
 
 アカウント名の自動入力を有効にするには、以下を設定する: >
 	let g:beancount_completion_enable = 1
 <
-Note これを有効にすると、Beancount が追加のプラグインファイルを読み込む可能性
+Note: これを有効にすると、Beancount が追加のプラグインファイルを読み込む可能性
 がある。信頼できるコードに対してのみ有効にすること。
 
 変数:
@@ -508,8 +508,8 @@ g:beancount_completion_enable
 			デフォルト値: 0
 
 g:beancount_detailed_first
-			ゼロ以外の場合、階層の下位にあるアカウントが完了済みと
-			して最初に表示される。
+			非ゼロの場合、階層のより下位にあるアカウントが補完候補
+			として先に表示される。
 			デフォルト値: 0
 
 g:beancount_separator_col
