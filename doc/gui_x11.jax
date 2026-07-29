@@ -1,4 +1,4 @@
-*gui_x11.txt*	For Vim バージョン 9.2.  Last change: 2026 Jun 29
+*gui_x11.txt*	For Vim バージョン 9.2.  Last change: 2026 Jul 27
 
 
 		  VIM リファレンスマニュアル    by Bram Moolenaar
@@ -325,11 +325,24 @@ app-defaultsは使われない。
     -fg -foreground {color}			前景色
     -bg -background {color}			背景色
 
+GTK4 GUI を使用する場合、以下のもののみがサポートされる:
+    -fn  or  -font
+    -geom  or  -geometry    (ウィンドウの配置はサポートされていない)
+    -fg -foreground {color}
+    -bg -background {color}
+
+GTK4 固有のコマンドライン引数:
+    コマンドライン引数	    意味 ~
+    --prg-name {name}	    g_set_prgname() に渡される引数である。指定されない
+			    場合は "gvim" が使用される。Wayland 上では、これに
+			    よりアプリケーション ID (X11 の WM_CLASS に相当す
+			    るもの) が設定される。
+
 フォントを設定するには、'guifont' を参照。GTKについては、これをするメニューオ
 プションもある。
 
-さらに、GTKの内部で扱われるこれらのコマンドライン引数がある。それらがどのよう
-に用いられるかはGTKのドキュメントを見るとよい。
+さらに、GTKの内部で扱われるこれらのコマンドライン引数がある (GTK4 を除く、下記
+参照)。それらがどのように用いられるかはGTKのドキュメントを見るとよい。
 	--sync
 	--gdk-debug
 	--gdk-no-debug
@@ -346,6 +359,10 @@ app-defaultsは使われない。
 これらの引数は|+netbeans_intg|が有効なときは使われない。
 	-xrm
 	-mf
+
+GTK4 GUI を使用する場合、GTK 固有のコマンドライン引数はサポートされない。代わ
+りに、環境変数を使用して GTK を設定する。
+https://docs.gtk.org/gtk4/running.html
 
 色については、Vimの(構文強調表示についての)色の設定はまだ従来のVimの方法でなさ
 れている。より多くのヘルプについては|:highlight|を参照。
@@ -375,14 +392,6 @@ $LIBGL_ALWAYS_SOFTWARE を "true" に設定すると、OpenGL レンダラーは
     $ GSK_RENDERER=cairo gvim
     $ LIBGL_ALWAYS_SOFTWARE=true gvim
 <
-							*gtk4-hwaccel*
-Vim を "--enable-gtk4-hwaccel" オプションを設定してコンパイルすると、GTK4 GUI
-は Cairo の代わりに GtkSnapshot を使用するようになり、ハードウェアアクセラレー
-ションによるレンダリングが可能になるため、はるかに高速になる。この設定オプショ
-ンを有効にすると、GTK4 GUI はポップアップウィンドウ画像のレンダリングに
-|+image_cairo| の代わりに |+image_gdk| を使用するようになる。Note この機能は現
-在実験段階であることに注意。
-
 ツールチップの色 ~
 							*gtk-tooltip-colors*
 ツールチップの色を明るい黄色の背景に黒のテキストに設定する例: >
