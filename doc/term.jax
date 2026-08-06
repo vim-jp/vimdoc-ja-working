@@ -681,8 +681,9 @@ Note: キーコードの要求は起動時にのみ行われます。Vim の起�
 							*xterm-true-color*
 Vim は 端末がサポートする場合は、トゥルーカラーを使うこと (|highlight-guifg|
 及び |highlight-guibg| を流用する) をサポートする。これを機能させるには
-'termguicolors' オプションをセットする必要がある。トゥルーカラーをサポートする
-端末の一覧については https://github.com/termstandard/colors を参照。
+'termguicolors' オプションをセットする必要がある。
+トゥルーカラーをサポートする端末の一覧については
+https://github.com/termstandard/colors を参照。
 
 使用する RGB カラーを端末に伝えるために、|t_8f|、|t_8b| および |t_8u| termcap
 エントリが使用される。これらは、ほとんどの端末で動作する値にデフォルトで設定さ
