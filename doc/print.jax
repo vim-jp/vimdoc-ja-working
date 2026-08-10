@@ -721,7 +721,7 @@ Vim が |+pango| 付きでコンパイルされている場合、Pango (テキ�
 |popt-option| の "format" キーを参照。
 
 GTK GUI を使用する場合、|+pango| は常に有効化され、使用される。Vim の端末版ビ
-ルドでは、configure オプションに `--enable-hardcopy-pango` を指定する必要があ
+ルドでは、configure オプションに "--enable-hardcopy-pango" を指定する必要があ
 る。また、リンクされる Cairo ライブラリにおいて、PostScript および PDF のバッ
 クエンドが有効になっている必要がある。
 
