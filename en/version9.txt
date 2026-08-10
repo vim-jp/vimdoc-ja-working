@@ -1,4 +1,4 @@
-*version9.txt*	For Vim version 9.2.  Last change: 2026 Jul 22
+*version9.txt*	For Vim version 9.2.  Last change: 2026 Aug 06
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -52590,6 +52590,8 @@ GUI ~
 - Added support for the GTK 4 GUI (via patch 9.2.0501).  Enable with
   `--enable-gui=gtk4` configure switch at build time.
 - Add support for fullscreen mode in the GTK UI |'go-s'|.
+- Enable native printing diaglog for the GTK4 UI using pango library, see
+  |pango-printing|.
 
 Popups ~
 ------
@@ -52663,7 +52665,6 @@ Platform specific ~
 -----------------
 - support OpenType font features in 'guifont' for DirectWrite (Win32)
 - Include strptime() fallback for MS-Windows
-- Hardware-accelerated rendering for the GTK4 GUI via |gtk4-hwaccel|.
 - The NSIS installer has been reworked (Win32):
   - Support per-user and per-machine install.
   - Change the install directory structure.
@@ -52739,6 +52740,10 @@ Highlighting: ~
 |hl-Popup|		Popup window body.
 |hl-PopupBorder|	Popup window border.
 |hl-PopupTitle|		Popup window title.
+
+Configure Switches: ~
+
+--enable-hardcopy-pango	Enable the pango |:hardcopy| backend |pango-printing|
 
 ==============================================================================
 PATCHES						*patches-9.3* *bug-fixes-9.3*
