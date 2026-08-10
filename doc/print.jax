@@ -46,7 +46,7 @@ Note: |:hardcopy| による印刷が機能しない場合は、|:TOhtml| で HTM
 			が一時ファイルに書き込まれ、それを実際に印刷するために
 			'printexpr'が実行される。そのとき、[arguments] は
 			|v:cmdarg| として 'printexpr' の中で使うことができる。
-			[arguments]は無視することもできる。用紙サイズや両面印
+			[arguments] は無視することもできる。用紙サイズや両面印
 			刷などの指定を 'printoptions' に設定できる。
 			Note: PDF が必要な場合は、PostScript を PDF に変換でき
 			る "ps2pdf" 等のツールがある。|+pango| 機能が有効な場
