@@ -1692,14 +1692,14 @@ number			数定数				*expr-number*
 	0b1011'1110'1110'1111	|scriptversion-4| および |Vim9|
 
 						*floating-point-format*
-浮動小数点数は次の2つの形式で書ける:
+浮動小数点数は次の 2 つの形式で書ける:
 
 	{N}.{M}
 	{N}.{M}[eE][-+]{exp}
 
-{N} と {M} は十進数字の列である。|scriptversion-1| (デフォルト) では、{N} と
-{M} の両方が必要である。|scriptversion-2| 以降および |Vim9| script では、{N}
-は省略可能である。
+{N} と {M} は 10 進数字の列である。|scriptversion-1| (デフォルト) では、{N} と
+{M} の両方が必要である。|scriptversion-2| 以降および |Vim9| script では、{N}は
+省略可能である。
 
 {exp} は指数で、10 の乗数である。
 現在のロケールが何であれ、小数点にはドットのみを使える。コンマは使えない。
