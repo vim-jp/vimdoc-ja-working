@@ -1,4 +1,4 @@
-*eval.txt*	For Vim バージョン 9.2.  Last change: 2026 Aug 13
+*eval.txt*	For Vim バージョン 9.2.  Last change: 2026 Aug 16
 
 
 		  VIM リファレンスマニュアル	by Bram Moolenaar
@@ -1659,7 +1659,8 @@ Note この最後の呼び出しでは "(getFuncRef())" 関数の解決で "args
 --
 number			数定数				*expr-number*
 
-		*0x* *hex-number* *0o* *octal-number* *0b* *binary-number*
+					*0x* *hex-number* *0o* *octal-number*
+					*0b* *binary-number*
 数定数は、複数の形式で記述できる:
 
 	{N}		10 進数
