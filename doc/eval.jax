@@ -1144,7 +1144,7 @@ MY_VAR_6		viminfoファイル
 	expr10->name(expr1, ...) |method| 呼び出し
 
 
-|expr11|  number		数定数
+|expr11|  number		整数値
 	"string"		文字列定数。バックスラッシュは特別な意味を持つ
 	'string'		リテラル文字列定数。'を含めるには2重にする
 	[expr1, ...]		|List|
@@ -1657,11 +1657,11 @@ Note この最後の呼び出しでは "(getFuncRef())" 関数の解決で "args
 							*expr11*
 数
 --
-number			数定数				*expr-number*
+number			整数値				*expr-number*
 
 					*0x* *hex-number* *0o* *octal-number*
 					*0b* *binary-number*
-数定数は、複数の形式で記述できる:
+整数値は、複数の形式で記述できる:
 
 	{N}		10 進数
 	0x{N} or 0X{N}	16 進数
