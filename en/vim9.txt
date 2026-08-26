@@ -7,8 +7,10 @@
 Vim9 script commands and expressions.			*Vim9* *vim9*
 
 Most expression help is in |eval.txt|.  This file is about the new syntax and
-features in Vim9 script.
+features in Vim9 script, including more than 150 sourceable scripts.
 
+For a short primer on Vim9 script, other resources may be helpful too, e.g.,
+https://learnxinyminutes.com/vim9script/.
 
 
 1.  What is Vim9 script?		|Vim9-script|
@@ -23,26 +25,27 @@ features in Vim9 script.
 
 ------------------------------------------------------------------------------
 
-  NOTE: In this vim9.txt help file, the Vim9 script code blocks beginning
-	with `vim9script` (and individual lines starting with `vim9cmd`) are
-	Vim9 script syntax highlighted.  Also, they are sourceable, meaning
-	you can run them to see what they output.  To source them, use
-	`:'<,'>source` (see |:source-range|), which is done by visually
-	selecting the line(s) with |V| and typing `:so`.  For example, try it
-	on the following Vim9 script: >vim9
-
-		vim9script
-		echowindow "Welcome to Vim9 script!"
+NOTE: In this vim9.txt help file, the Vim9 script code blocks beginning with
+`vim9script` (and individual lines starting with `vim9cmd`) are Vim9 script
+syntax highlighted.  Also, they are sourceable, meaning you can run them to
+see what they output.  To source them, use `:'<,'>source` (see |:source-range|),
+which is done by visually selecting the line(s) with |V| and typing `:so`.
+For example, try it on the following Vim9 script:
+>vim9
+	vim9script
+	echowindow "Welcome to Vim9 script!"
 <
-	There are also code examples that should not be sourced - they
-	explain concepts that don't require a sourceable example.  Such code
-	blocks appear in generic code syntax highlighting, like this: >
-
-		def ThisFunction()          # script-local
-		def g:ThatFunction()        # global
-		export def Function()       # for import and import autoload
+There are also code examples that should not be sourced - they explain
+concepts that don't require a sourceable example.  Such code blocks appear
+in generic code syntax highlighting, like this:
+>
+	def ThisFunction()          # script-local
+	def g:ThatFunction()        # global
+	export def Function()       # for import and import autoload
+<
 
 ==============================================================================
+
 
 1. What is Vim9 script?					*Vim9-script*
 
@@ -78,7 +81,7 @@ Vim9 script and legacy Vim script can be mixed.  There is no requirement to
 rewrite old scripts, they keep working as before.  You may want to use a few
 `:def` functions for code that needs to be fast.
 
-:vim9[cmd] {cmd}				*:vim9* *:vim9cmd*
+:vim9[cmd] {cmd}					*:vim9* *:vim9cmd*
 		Evaluate and execute {cmd} using Vim9 script syntax,
 		semantics, and behavior.  Useful when typing a command,
 		in a `:function`, or a legacy Vim script.
@@ -86,61 +89,61 @@ rewrite old scripts, they keep working as before.  You may want to use a few
 		The following short example shows how a legacy Vim script
 		command and a :vim9cmd (so Vim9 script context) may appear
 		similar, though may differ not just syntactically, but also
-		semantically and behaviorally. >vim
-
-		  call popup_notification('entrée'[5:]
-		    \ ->str2list()->string(), #{time: 7000})
-		  vim9cmd popup_notification('entrée'[5 :]
-		      ->str2list()->string(), {time: 7000})
+		semantically and behaviorally.
+>vim
+			call popup_notification('entrée'[5:]
+			  \ ->str2list()->string(), #{time: 7000})
+			vim9cmd popup_notification('entrée'[5 :]
+			    ->str2list()->string(), {time: 7000})
 <
-		 Notes: 1) The reason for the different output is Vim9 script
-			   uses character indexing whereas legacy Vim script
-			   uses byte indexing - see |vim9-string-index|.
-			2) Syntax is different too.  In Vim9 script:
-			  - The space in "[5 :]" is mandatory (see
-			    |vim9-white-space|).
-			  - Line continuation with "\" is not required.
-			  - The "#" (to avoid putting quotes around dictionary
-			    keys) is neither required nor allowed - see |#{}|.
+		Notes: 1. The reason for the different output is Vim9 script
+		uses character indexing whereas legacy Vim script uses byte
+		indexing - see |vim9-string-index|.
+		2. Syntax is different too.  In Vim9 script:
+		- The space in "[5 :]" is mandatory (see |vim9-white-space|).
+		- Line continuation with "\" is not required.
+		- The "#" (to avoid putting quotes around dictionary keys) is
+		  neither required nor allowed - see |#{}|.
 
-						*E1164*
+							*E1164*
 		`:vim9cmd` cannot stand alone; it must be followed by a command.
 
-:leg[acy] {cmd}					*:leg* *:legacy*
+:leg[acy] {cmd}						*:leg* *:legacy*
 		Evaluate and execute {cmd} using legacy Vim script syntax,
 		semantics, and behavior.  It is only applicable in a Vim9
 		script or a `:def` function.  Using an equivalent script to
-		the one, above (see its notes for why the output differs): >vim9
-
-		  vim9script
-		  # Legacy context - so, this creates a popup with [769, 101]
-		  legacy call popup_notification('entrée'[5:]
-		    \ ->str2list()->string(), #{time: 7000})
-		  # Vim9 script context - so, this creates a pop up with [101]
-		  popup_notification('entrée'[5 :]
-		      ->str2list()->string(), {time: 7000})
+		the one, above (see its notes for why the output differs):
+>vim9
+			vim9script
+			# In legacy Vim script context the popup is [769, 101]
+			legacy call popup_notification('entrée'[5:]
+			  \ ->str2list()->string(), #{time: 7000})
+			# In Vim9 script context the popup is [101]
+			popup_notification('entrée'[5 :]
+			  ->str2list()->string(), {time: 7000})
 <
-		Vim9 script script-local variables may be used by prefixing
+		Vim9 script's script-local variables may be used by prefixing
 		"s:", like in legacy Vim script.  This example shows the
 		difference in syntax: "k" for the script-local variable in
-		Vim9 script, "s:k" in the legacy Vim script context. >vim9
-
-		  vim9script
-		  var k: string = "Okay"
-		  echo k
-		  legacy echo s:k
-<						*E1189*
+		Vim9 script, "s:k" in the legacy Vim script context.
+>vim9
+			vim9script
+			var k: string = "Okay"
+			echo k
+			legacy echo s:k
+<
+							*E1189*
 		Using `:legacy` is not allowed in compiled Vim9 script
-		control flow contexts. For example: >vim9
-
-		  vim9script
-		  def F_1189()
-		    if v:version == 900
-		    # E1189: Cannot use :legacy with this command: endif
-		    legacy endif
-		  enddef
-		  F_1189()
-<						*E1234*
+		control flow contexts. For example:
+>vim9
+			vim9script
+			def F_1189()
+			  if v:version == 900
+			  # E1189: Cannot use :legacy with this command: endif
+			  legacy endif
+			enddef
+			F_1189()
+<							*E1234*
 		`:legacy` cannot stand alone; it must be followed by a command.
 
 
@@ -495,7 +498,7 @@ And with autocommands: >
 Although using a :def function probably works better.
 
 				*E1022* *E1103* *E1130* *E1131* *E1133*
-				*E1134*
+				*E1134* *E1581*
 Declaring a variable with a type but without an initializer will initialize to
 false (for bool), empty (for string, list, dict, etc.) or zero (for number,
 any, etc.).  This matters especially when using the "any" type, the value will
@@ -914,9 +917,16 @@ Notes:
 	echo [1, 2]
 		[3, 4]
 - In some cases it is difficult for Vim to parse a command, especially when
-  commands are used as an argument to another command, such as `:windo`.  In
-  those cases the line continuation with a backslash has to be used.
-
+  commands are used as an argument to another command, such as `:windo`,
+  `:command` or `:autocmd`.  In those cases the line continuation with a
+  backslash has to be used.  For example: >
+	command! Foo call Bar('x', {
+	      \ 'key': 'value',
+	      \ })
+	autocmd BufWritePre * call Bar('x', {
+	      \ 'key': 'value',
+	      \ })
+<
 
 White space ~
 	*vim9-white-space* *E1004* *E1068* *E1069* *E1074* *E1127* *E1202*
@@ -1139,7 +1149,7 @@ should be used.
 			*false* *true* *null* *null_blob* *null_channel*
 			*null_class* *null_dict* *null_function* *null_job*
 			*null_list* *null_object* *null_partial* *null_string*
-			*E1034* *E1395*
+			*E1034*
 In Vim9 script one can use the following predefined values: >
 	true
 	false
@@ -1327,15 +1337,15 @@ Using ++var or --var in an expression is not supported yet.
 			the function follows in the next lines, until the
 			matching `:enddef`.
 							*E1073*
-			The {name} cannot be reused at the script-local level: >vim9
-
+			{name} cannot be reused at the script-local level:
+>vim9
 			  vim9script
 			  def F_1073()
 			  enddef
-			  def F_1073() # E1073: Name already defined: <SNR>...
+			  def F_1073()	# E1073: Name already defined: <SNR...
 			  enddef
 <							*E1011*
-			The {name} must be less than 100 bytes long.
+			{name} must be less than 100 bytes long.
 
 							*E1077*
 			{arguments} is a sequence of zero or more argument
@@ -1344,71 +1354,70 @@ Using ++var or --var in an expression is not supported yet.
 				{name} = {value}
 				{name}: {type} = {value}
 			The first form is a mandatory argument.  So, the
-			declaration must provide a type.  Example: >vim9
-
+			declaration must provide a type.  Example:
+>vim9
 			  vim9script
 			  def F_1077(x): void
-			      # E1077: Missing argument type for x
+			    # E1077: Missing argument type for x
 			  enddef
 <
 			For the second form, because the declaration does not
 			specify it, Vim infers the type.  For both second and
 			third forms, a default {value} applies when the
-			caller omits it.  Examples: >vim9
-
+			caller omits it.  Examples:
+>vim9
 			  vim9script
 			  def SecondForm(arg = "Hi"): void
-			      echo $'2. arg is a "{arg->typename()}" type ' ..
-			           $'and the default value of arg is "{arg}"'
+			    echo $'2. arg is a "{arg->typename()}" type ' ..
+				 $'and the default value of arg is "{arg}"'
 			  enddef
 			  SecondForm()
 			  def ThirdForm(arg2: number = 9): void
-			      echo $'3. default value of arg2 is {arg2}'
+			    echo $'3. default value of arg2 is {arg2}'
 			  enddef
 			  ThirdForm()
 <							*E1123*
 			Arguments in a builtin function called in a `:def`
-			function must have commas between arguments: >vim9
-
+			function must have commas between arguments:
+>vim9
 			  vim9script
 			  def F_1123(a: number, b: number): void
-			      echo max(a b)
-			      # E1123: Missing comma before argument: b)
+			    echo max(a b)  # E1123: Missing comma before ar...
 			  enddef
 			  F_1123(1, 2)
 <							*E1003* *E1027* *E1096*
 			The type of value used with `:return` must match
 			{return-type}.  When {return-type} is omitted or is
 			"void" the function is not allowed to return
-			anything.  Examples: >vim9
-
+			anything.  Examples:
+>vim9
 			  vim9script
 			  def F_1003(): bool
-			      return  # E1003: Missing return value
+			    return  # E1003: Missing return value
 			  enddef
 			  F_1003()
 < >vim9
 			  vim9script
 			  def F_1027(): bool
-			      echo false  # E1027: Missing return statement
+			    echo false  # E1027: Missing return statement
 			  enddef
 			  F_1027()
 < >vim9
 			  vim9script
 			  def F_1096(): void
-			      return false  # E1096: Returning a value ...
+			    return false  # E1096: Returning a value in a f...
 			  enddef
 			  F_1096()
 <							*E1056* *E1059*
 			When ": {return-type}" is specified, {return-type}
 			cannot be omitted (leaving a hanging colon).  The ": "
-			also cannot be preceded by white space.  Examples: >vim
-
+			also cannot be preceded by white space.  Examples:
+>vim
 			  def F_1056():
-                              # E1056: Expected a type:
+			  # E1056: Expected a type:
 			  enddef
 			  def F_1059() : bool
-                              # E1059: No white space allowed before colon:...
+			  # E1059: No white space allowed before colon: ... 
 			  enddef
 <
 			The function will be compiled into instructions when
@@ -1427,21 +1436,21 @@ Using ++var or --var in an expression is not supported yet.
 			In Vim9 script, ! is not allowed because script-local
 			functions cannot be deleted or redefined, though they
 			can be removed by reloading the script.  Also, nested
-			functions cannot use ! for redefinition.  Examples: >vim
-
+			functions cannot use ! for redefinition.  Examples:
+>vim
 			  " Legacy Vim script :def! example
 			  def! LegacyFunc()
-			      echo "def! is allowed in a legacy Vim script"
+			    echo "def! is allowed in a legacy Vim script"
 			  enddef
 			  call LegacyFunc()
 < >vim9
 			  vim9script
-			  def Func()
-			      def! InnerFunc()
-			          # E1117: Cannot use ! with nested :def
-			      enddef
+			  def F1117()
+			    def! InnerFunc()
+			      # E1117: Cannot use ! with nested :def
+			    enddef
 			  enddef
-			  Func()
+			  F1117()
 < >vim9
 			  vim9script
 			  def! F_477(): void  # E477: No ! allowed
@@ -1459,10 +1468,11 @@ Using ++var or --var in an expression is not supported yet.
 			reported at https://github.com/vim/vim/issues as
 			it could represent a gap in Vim's error reporting.
 
-					*:enddef* *E1057* *E1152* *E1173*
+							*:enddef*
+							*E1057* *E1152* *E1173*
 :enddef			End of a function defined with `:def`.  It should be on
-			a line by itself.  Examples: >vim9
-
+			a line by itself.  Examples:
+>vim9
 			  vim9script
 			  def MyFunc()
 			  echo 'Do Something' | enddef
@@ -1475,8 +1485,8 @@ Using ++var or --var in an expression is not supported yet.
 < >vim9
 			  vim9script
 			  def F_1152()
-			      function X()
-			      enddef  # E1152: Mismatched enddef
+			    function X()
+			    enddef  # E1152: Mismatched enddef
 			  enddef
 <
 You may also find this wiki useful.  It was written by an early adopter of
