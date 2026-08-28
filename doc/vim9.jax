@@ -118,7 +118,7 @@ Vim9 script と旧来の Vim script を混在させることができる。古�
 >vim9
 			vim9script
 			# 旧来の Vim script コンテキストでは、ポップアップは
-			# [769, 101] 
+			# [769, 101]
 			legacy call popup_notification('entrée'[5:]
 			    \ ->str2list()->string(), #{time: 7000})
 			# Vim9 script コンテキストでは、ポップアップは [101]
