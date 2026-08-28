@@ -1,4 +1,4 @@
-*vim9.txt*	For Vim バージョン 9.2.  Last change: 2026 Aug 21
+*vim9.txt*	For Vim バージョン 9.2.  Last change: 2026 Aug 16
 
 
 		  VIM リファレンスマニュアル    by Bram Moolenaar
@@ -907,10 +907,6 @@ Notes:
 <  これは動作しない: >
 	echo [1, 2]
 		[3, 4]
-- Vim では、コマンドのパースが困難な場合がある。特に、`:windo` のようにコマン
-  ドが別のコマンドの引数として使用されている場合には、その傾向が顕著である。そ
-  のような場合は、バックスラッシュによる行継続を使用する必要がある。
-- In some cases it is difficult for Vim to parse a command, especially when commands are used as an argument to another command, such as `:windo`, `:command` or `:autocmd`.  In those cases the line continuation with a backslash has to be used.  For example: >
 - Vim がコマンドを解析するのが難しい場合がある。特に、`:windo`、`:command`、
   `:autocmd` といった他のコマンドの引数としてコマンドを使用する場合などがそう
   である。そのような場合には、バックスラッシュによる行継続を使う必要がある。例:
