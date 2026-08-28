@@ -911,7 +911,7 @@ Notes:
   ドが別のコマンドの引数として使用されている場合には、その傾向が顕著である。そ
   のような場合は、バックスラッシュによる行継続を使用する必要がある。
 - In some cases it is difficult for Vim to parse a command, especially when commands are used as an argument to another command, such as `:windo`, `:command` or `:autocmd`.  In those cases the line continuation with a backslash has to be used.  For example: >
-- Vimがコマンドを解析するのが難しい場合がある。特に、`:windo`、`:command`、
+- Vim がコマンドを解析するのが難しい場合がある。特に、`:windo`、`:command`、
   `:autocmd` といった他のコマンドの引数としてコマンドを使用する場合などがそう
   である。そのような場合には、バックスラッシュによる行継続を使う必要がある。例:
 >
