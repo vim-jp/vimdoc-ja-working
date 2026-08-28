@@ -6786,8 +6786,6 @@ listener_add({callback} [, {buf} [, {options}]])	*listener_add()*
 		    added	0
 		    col		変更した最初の桁または 1
 
-		{unbuffered} が |FALSE| であるか指定されていない場合は、
-		{callback} が呼び出される:
 		{options} は、以下のオプションの項目を含む辞書である:
 		    unbuffered	変更のまとまりごとではなく、変更のたびに
 				{callback} を呼び出す
