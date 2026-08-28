@@ -2087,13 +2087,12 @@ complete_info([{what}])					*complete_info()*
 		挿入モードの補完に関する情報を辞書 |Dictionary| で返す。
 		|ins-completion| を参照。
 		要素は以下の通り:
-		   auto		Vim が 'autocomplete' などによって自律的に補完
-				を開始した場合は |TRUE| となり、
-				|i_CTRL-X_CTRL-O| のようにキー操作によって補完
-				が要求された場合は |FALSE| となる。
-				|complete-functions| で定義された関数は、この
-				値を読み取ることで両者を区別できる。{what} で
-				要求された場合にのみ返される。
+		   auto		'autocomplete' のように Vim が自律的に補完を開
+				始した場合は |TRUE| となり、|i_CTRL-X_CTRL-O|
+				のようにキー操作によって補完が要求された場合は
+				|FALSE| となる。|complete-functions| で定義さ
+				れた関数は、この値を読み取ることで両者を区別で
+				きる。{what} で要求された場合にのみ返される。
 		   completed	現在選択されているインデックス項目のエントリを
 				含む辞書を返す。
 		   items	すべての補完候補のリスト。各要素は、
