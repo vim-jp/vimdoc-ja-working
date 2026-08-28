@@ -908,7 +908,6 @@ Blob 操作:						*blob-functions*
 				する
 	remove()		Blob から1個以上の要素を取り除く
 	copy()			Blob の浅いコピーを作成する
-	deepcopy()		Blob の完全なコピーを作成する
 	filter()		Blob から選択された要素を取り除く
 	map()			Blob の各要素を変換する
 	mapnew()		変換した要素で新しい Blob を作成する
