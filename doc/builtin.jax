@@ -3175,7 +3175,7 @@ extend({expr1}, {expr2} [, {expr3}])			*extend()*
 			mylist->extend(otherlist)
 <
 		戻り値の型: list<{type}>、dict<{type}> または blob 。{expr1}
-		および{expr2} による。エラーの場合: |Number|
+		および {expr2} による。エラーの場合: |Number|
 
 
 extendnew({expr1}, {expr2} [, {expr3}])			*extendnew()*
