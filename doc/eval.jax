@@ -1015,7 +1015,7 @@ Blobの一部を変更するには、変更する最初と最後のバイトを�
 	:let blob[3:5] = 0z334455
 
 Blob に項目をその場で追加するには、|:let+=| または |extend()|
-(|blob-concatenation|)を使うことができる: >
+(|blob-concatenation|) を使うことができる: >
 	:let blobA = 0z1122
 	:let blobA += 0z3344
 	:call extend(blobA, 0z5566)
