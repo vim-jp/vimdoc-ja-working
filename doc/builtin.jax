@@ -3173,7 +3173,7 @@ extend({expr1}, {expr2} [, {expr3}])			*extend()*
 		|method| としても使用できる: >
 			mylist->extend(otherlist)
 <
-		戻り値の型: list<{type}>、dict<{type}> または blob 。{expr1}
+		戻り値の型: list<{type}>、dict<{type}> または blob。{expr1}
 		および {expr2} による。エラーの場合: |Number|
 
 
