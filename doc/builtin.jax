@@ -1,4 +1,4 @@
-*builtin.txt*	For Vim バージョン 9.2.  Last change: 2026 Aug 25
+*builtin.txt*	For Vim バージョン 9.2.  Last change: 2026 Sep 01
 
 
 		  VIM リファレンスマニュアル	by Bram Moolenaar
@@ -2267,7 +2267,7 @@ cosh({expr})						*cosh()*
 			:echo cosh(0.5)
 <			1.127626 >
 			:echo cosh(-0.5)
-<			-1.127626
+<			1.127626
 
 		|method| としても使用できる: >
 			Compute()->cosh()
