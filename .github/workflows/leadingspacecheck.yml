@@ -1,0 +1,12 @@
+name: "leading space check"
+on: [push, pull_request]
+
+jobs:
+  leadingspace:
+    name: Check leading space before a tab
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+      - name: leading space check
+        run: tools/script/check_leading_space.sh
