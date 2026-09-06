@@ -1,0 +1,21 @@
+name: "help tag diff check"
+on:
+  pull_request:
+    # ラベルの付け外しでも走らせる。既定の types だけだと、PR を出した後に
+    # ラベルを貼っても再発火せず、失敗したままの run が残る。
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  tagdiff:
+    name: Check help tag labels between en and ja
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-tag-diff') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+      - name: Setup Vim
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install vim
+      - name: help tag diff check
+        run: tools/script/check_tag_diff.sh
