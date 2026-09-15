@@ -52754,8 +52754,8 @@ C インクルード出力に終端ヌルバイトを追加するには、"-t" �
 |hl-PopupTitle|		ポップアップウィンドウのタイトル。
 
 Vim 引数: ~
-|--stdio-channel|	stdin/stdout を使用したチャネル経由で Vim を制御する
-			|channel-stdio|
+|--stdio-channel|	標準入力/標準出力を使用したチャネル経由で Vim を制御す
+			る |channel-stdio|
 
 構成の切り替え: ~
 
