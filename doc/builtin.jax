@@ -11923,7 +11923,7 @@ terminalprops()						*terminalprops()*
 		   rgb			端末が true color に対応しているかどう
 					か  **
 
-		** 不明ならば値 'u'、はいで 'y'、いいえで 'n'
+		** 値は、不明ならば 'u'、はいで 'y'、いいえで 'n' となる
 
 		|+termresponse| 機能が無いならば、結果は空の辞書になる。
 
