@@ -6382,7 +6382,7 @@ image_info([{id}])					*image_info()* *E1587*
 		    "data"	画像データの新たにコピーされた blob
 		    "width"	ピクセル単位の画像の幅
 		    "height"	ピクセル単位の画像の高さ
-		    "alpha"	画像にアルファチャンネル (RGBA) がある場合
+		    "alpha"	画像にアルファチャネル (RGBA) がある場合
 		    "format"	画像フォーマット。"rgb" または "rgba"
 
 		{|+image| 機能付きでコンパイルされたときのみ有効}
