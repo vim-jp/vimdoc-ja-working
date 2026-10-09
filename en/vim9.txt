@@ -1885,66 +1885,67 @@ folds after sourcing the script.)
 
 ==============================================================================
 
-4. Types					*vim9-types*
+4. Types						*vim9-types*
 
 The following types, each shown with its corresponding internal |v:t_TYPE|
 variable, are supported:
 
-	number					|v:t_number|
-	string					|v:t_string|
-	func					|v:t_func|
-	func: {type}				|v:t_func|
-	func({type}, ...)			|v:t_func|
-	func({type}, ...): {type}		|v:t_func|
-	list<{type}>				|v:t_list|
-	dict<{type}>				|v:t_dict|
-	float					|v:t_float|
-	bool					|v:t_bool|
-	none					|v:t_none|
-	job					|v:t_job|
-	channel					|v:t_channel|
-	blob					|v:t_blob|
-	class					|v:t_class|
-	object					|v:t_object|
-	typealias				|v:t_typealias|
-	enum					|v:t_enum|
-	enumvalue				|v:t_enumvalue|
-	tuple<{type}>				|v:t_tuple|
-	tuple<{type}, {type}, ...>		|v:t_tuple|
-	tuple<...list<{type}>>			|v:t_tuple|
-	tuple<{type}, ...list<{type}>>		|v:t_tuple|
+	number				|v:t_number|
+	string				|v:t_string|
+	func				|v:t_func|
+	func: {type}			|v:t_func|
+	func({type}, ...)		|v:t_func|
+	func({type}, ...): {type}	|v:t_func|
+	list<{type}>			|v:t_list|
+	dict<{type}>			|v:t_dict|
+	float				|v:t_float|
+	bool				|v:t_bool|
+	none				|v:t_none|
+	job				|v:t_job|
+	channel				|v:t_channel|
+	blob				|v:t_blob|
+	class				|v:t_class|
+	object				|v:t_object|
+	typealias			|v:t_typealias|
+	enum				|v:t_enum|
+	enumvalue			|v:t_enumvalue|
+	tuple<{type}>			|v:t_tuple|
+	tuple<{type}, {type}, ...>	|v:t_tuple|
+	tuple<...list<{type}>>		|v:t_tuple|
+	tuple<{type}, ...list<{type}>>	|v:t_tuple|
 	void
 
-						 *E1031* *E1186*
+							*E1031* *E1186*
 These types can be used in declarations, though no simple value can have the
-"void" type.  Trying to use a void as a value results in an error.  Examples: >vim9
-
+"void" type.  Trying to use a void as a value results in an error.
+Examples:
+>vim9
 	vim9script
 	def NoReturnValue(): void
 	enddef
 	try
-	    const X: any = NoReturnValue()
+	  const X: any = NoReturnValue()
 	catch
-	    echo v:exception	  # E1031: Cannot use void value
-	    try
-	        echo NoReturnValue()
-	    catch
-	        echo v:exception  # E1186: Expression does not result in a ...
-	    endtry
+	  echo v:exception  # E1031: Cannot use void value
+	  try
+	    echo NoReturnValue()
+	  catch
+	    echo v:exception  # E1186: Expression does not result in a valu...
+	  endtry
 	endtry
 <						*E1008* *E1009* *E1010* *E1012*
 Ill-formed declarations and mismatching types result in errors.  The following
-are examples of errors E1008, E1009, E1010, and E1012: >vim9
-
-	vim9cmd var l: list
-	vim9cmd var l: list<number
-	vim9cmd var l: list<invalidtype>
-	vim9cmd var l: list<number> = ['42']
+are examples of errors E1008, E1009, E1010, and E1012:
+>vim9
+	vim9cmd var l_1008: list
+	vim9cmd var l_1009: list<number
+	vim9cmd var l_1010: list<invalidtype>
+	vim9cmd var l_1012: list<number> = ['42']
 <
 There is no array type.  Instead, use either a list or a tuple.  Those types
 may also be literals (constants).  In the following example, [5, 6] is a list
-literal and (7, ) a tuple literal.  The echoed list is a list literal too: >vim9
-
+literal and (7, ) a tuple literal.  The echoed list is a list literal too:
+>vim9
 	vim9script
 	var l: list<number> = [1, 2]
 	var t: tuple<...list<number>> = (3, 4)
@@ -1962,111 +1963,267 @@ tuple<...list<number>>		a variadic tuple with zero or more items of
 tuple<number, ...list<string>>	a tuple with an item of type |Number| followed
 				by zero or more items of type |String|
 
-Examples: >
-    var myTuple: tuple<number> = (20,)
-    var myTuple: tuple<number, string> = (30, 'vim')
-    var myTuple: tuple<number, float, bool> = (40, 1.1, true)
-    var myTuple: tuple<...list<string>> = ('a', 'b', 'c')
-    var myTuple: tuple<number, ...list<string>> = (3, 'a', 'b', 'c')
+Examples:
+>vim9
+	vim9script
+	var t1: tuple<number> = (20,)
+	var t2: tuple<number, string> = (30, 'vim')
+	var t3: tuple<number, float, bool> = (40, 1.1, true)
+	var t4: tuple<...list<string>> = ('a', 'b', 'c')
+	var t5: tuple<number, ...list<string>> = (3, 'a', 'b', 'c', 'd')
 <
-						*variadic-tuple* *E1539*
+							*variadic-tuple* *E1539*
 A variadic tuple has zero or more items of the same type.  The type of a
-variadic tuple must end with a list type.  Examples: >
-    var myTuple: tuple<...list<number>> = (1, 2, 3)
-    var myTuple: tuple<...list<string>> = ('a', 'b', 'c')
-    var myTuple: tuple<...list<bool>> = ()
+variadic tuple must end with a list type otherwise E1539 is given.  Examples:
+>vim9
+	vim9script
+	var t6: tuple<...list<number>> = (1, 2, 3)
+	var t7: tuple<...list<string>> = ('a', 'b', 'c')
+	var t8: tuple<...list<bool>> = ()
+	var tE: tuple<...any> = () # E1539: Variadic tuple must end with li...
 <
-				    *vim9-func-declaration* *E1005* *E1007*
-				    *vim9-partial-declaration*
-				    *vim9-func-type*
-A function (or partial) may be declared in the following ways:
-func				any kind of function reference, no type
-				checking for arguments or return value
-func: void			any number and type of arguments, no return
-				value
-func: {type}			any number and type of arguments with specific
-				return type
+						*vim9-func-declaration*
+						*vim9-partial-declaration*
+						*vim9-func-type*
+A function (or partial) may be declared in many ways, including:
+>
+	func
+	func: void
+	func: {type}
+	func()[: void]
+	func(): {type}
+	func({type})[: void]
+	func({type}): {type}
+	func(?{type})[: void]
+	func(?{type}): {type}
+	func(...list<{type}>)[: void]
+	func(...list<{type}>): {type}
+	func({type}, ...list<{type}>)[: void]
+	func({type}, ...list<{type}>): {type}
+<
+If the return type is "void", the function does not return a value.  All the
+ways listed above are explained and demonstrated in the following examples,
+all of which echo '9'.
 
-func()				function with no argument, does not return a
-				value
-func(): void			same
-func(): {type}			function with no argument and return type
-
-func({type})			function with argument type, does not return
-				a value
-func({type}): {type}		function with argument type and return type
-func(?{type})			function with type of optional argument, does
-				not return a value
-func(...list<{type}>)		function with type of list for variable number
-				of arguments, does not return a value
-func({type}, ?{type}, ...list<{type}>): {type}
-				function with:
-				- type of mandatory argument
-				- type of optional argument
-				- type of list for variable number of
-				  arguments
-				- return type
-
-If the return type is "void" the function does not return a value.
-
+func
+		- any kind of function reference
+		- any type of return value or no return value
+>vim9
+		vim9script
+		const I = (n) => n + 1
+		const F: func = I->function()
+		echo F(8)
+<
+func: void
+		- any number and type of arguments
+		- does not return a value
+>vim9
+		vim9script
+		def I(n: number): void
+		  echo n + 1
+		enddef
+		const F: func: void = I->function()
+		F(8)
+<
+func: {type}
+		- any number and type of arguments
+		- returns a typed value
+>vim9
+		vim9script
+		const I = (n): number => n + 1
+		const F: func: number = I->function()
+		echo F(8)
+<
+func()[: void]
+		- no arguments
+		- does not return a value
+>vim9
+		vim9script
+		var n: number = 8
+		def I(): void
+		  echo n + 1
+		enddef
+		const F: func(): void = I->function()
+		F()
+<
+func(): {type}
+		- no arguments
+		- returns a typed value
+>vim9
+		vim9script
+		var n: number = 8
+		def I(): number
+		  return n + 1
+		enddef
+		const F: func(): number = I->function()
+		echo F()
+<
+func({type})[: void]
+		- typed argument
+		- does not return a value
+>vim9
+		vim9script
+		def I(n: number): void
+		  echo n + 1
+		enddef
+		const F: func(number): void = I->function()
+		F(8)
+<
+func({type}): {type}
+		- typed argument
+		- returns a typed value
+>vim9
+		vim9script
+		const I = (n: number): number => n + 1
+		const F: func(number): number = I->function()
+		echo F(8)
+<
+func(?{type})[: void]
+		- optional typed argument
+		- does not return a value
+>vim9
+		vim9script
+		def I(n: number = 8): void
+		  echo n + 1
+		enddef
+		const F: func(?number): void = I->function()
+		F()
+<
+func(?{type}): {type}
+		- optional typed argument
+		- returns a typed value
+>vim9
+		vim9script
+		def I(n: number = 8): number
+		  return n + 1
+		enddef
+		const F: func(?number): number = I->function()
+		echo F()
+<
+func(...list<{type}>)[: void]
+		- typed list for variable number of arguments
+		- does not return a value
+>vim9
+		vim9script
+		def L(...l: list<number>): void
+		  echo l->reduce((x, y) => x + y)
+		enddef
+		const F: func(...list<number>): void = L->function()
+		F(8, 0, 0, 1)
+<
+func(...list<{type}>): {type}
+		- typed list for variable number of arguments
+		- returns a typed value
+>vim9
+		vim9script
+		def L(...l: list<number>): number
+		  return l->reduce((x, y) => x + y)
+		enddef
+		const F: func(...list<number>): number = L->function()
+		echo F(8, 0, 0, 1)
+<
+func({type}, ...list<{type}>)[: void]
+		- typed mandatory argument
+		- typed list for variable number of arguments
+		- does not return a value
+>vim9
+		vim9script
+		def D(a: float, ...l: list<number>): void
+		  echo (a + l->reduce((x, y) => x + y))->float2nr()
+		enddef
+		const F: func(float, ...list<number>): void = D->function()
+		F(8.0, 0, 0, 1)
+<
+func({type}, ...list<{type}>): {type}
+		- typed mandatory argument
+		- typed list for variable number of arguments
+		- returns a typed value
+>vim9
+		vim9script
+		def D(a: float, ...l: list<number>): number
+		  return (a + l->reduce((x, y) => x + y))->float2nr()
+		enddef
+		const F: func(float, ...list<number>): number = D->function()
+		echo F(8.0, 0, 0, 1)
+<
 The reference can also be a |Partial|, in which case it stores extra arguments
 and/or a dictionary, which are not visible to the caller.  Since they are
 called in the same way, the declaration is the same.  This interactive example
-prompts for a circle's radius and returns its area to two decimal places,
-using a partial: >vim9
-
+prompts for a circle's radius and returns its area using a partial:
+>vim9
 	vim9script
 	def CircleArea(pi: float, radius: float): float
-	    return pi * radius->pow(2)
+	  return pi * radius->pow(2)
 	enddef
 	const AREA: func(float): float = CircleArea->function([3.14])
 	const RADIUS: float = "Enter a radius value: "->input()->str2float()
 	echo $"\nThe area of a circle with a radius of {RADIUS} is " ..
-	     $"{AREA(RADIUS)} (π to two d.p.)"
+	  $"{AREA(RADIUS)} (π to two d.p.)"
 <
-						*vim9-typealias-type*
+							*E1005*
+No more than 19 argument types may be used in a Funcref (one less than what is
+allowed in a function, including a `:def` or lambda - see |E740|).  Twenty or
+more argument types gives E1005, as this example shows:
+>vim9
+	vim9script
+	var X: func
+	X = (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) => 0
+	var F: func(any, any, any, any, any, any, any, any, any, any, any,
+	  \ any, any, any, any, any, any, any, any, any): any = X->function()
+	# E1005: Too many argument types
+<
+							*E1007*
+A mandatory argument may not come after an optional argument in a Funcref:
+>vim9
+	vim9script
+	def I(n: number, f: float): void
+	  echo n + f
+	enddef
+	const F: func(?number, float) = I->function()
+	# E1007: Mandatory argument after optional argument
+<
+							*vim9-typealias-type*
 Custom types (|typealias|) can be defined with `:type`.  They must start with
 a capital letter (which avoids name clashes with either current or future
 builtin types) similar to user functions.  This example creates a list of
-perfect squares and reports on |type()| (14, a typealias) and the |typename()|: >vim9
-
+perfect squares, reporting on |type()| (14, a typealias) and the |typename()|:
+>vim9
 	vim9script
 	type Ln = list<number>
 	final perfect_squares: Ln = [1, 4, 9, 16, 25]
 	echo "Typename (Ln): " ..
-	     $"type() is {Ln->type()} and typename() is {Ln->typename()}"
+	  $"type() is {Ln->type()} and typename() is {Ln->typename()}"
 <
-						*E1105*
-A typealias itself cannot be converted to a string: >vim9
-
+							*E1105*
+A typealias itself cannot be converted to a string:
+>vim9
 	vim9script
 	type Ln = list<number>
 	const FAILS: func = (): string => {
-	    echo $"{Ln}"  # E1105: Cannot convert typealias to string
-	    }
-<
-				    *vim9-class-type*  *vim9-interface-type*
+	  echo $"{Ln}"  # E1105: Cannot convert typealias to string
+	}
+<				    *vim9-class-type*  *vim9-interface-type*
 				    *vim9-object-type*
 A |class|, |object|, and |interface| may all be used as types.  The following
 interactive example prompts for a float value and returns the area of two
 different shapes.  It also reports on the |type()| and |typename()| of the
-classes, objects, and interface: >vim9
-
+classes, objects, and interface:
+>vim9
 	vim9script
 	interface Shape
-	    def InfoArea(): tuple<string, float>
+	  def InfoArea(): tuple<string, float>
 	endinterface
 	class Circle implements Shape
-	    var radius: float
-	    def InfoArea(): tuple<string, float>
-	        return ('Circle (π × r²)', 3.141593 * this.radius->pow(2))
-	    enddef
+	  var radius: float
+	  def InfoArea(): tuple<string, float>
+	    return ('Circle (π × r²)', 3.141593 * this.radius->pow(2))
+	  enddef
 	endclass
 	class Square implements Shape
-	    var side: float
-	    def InfoArea(): tuple<string, float>
-	        return ('Square (s²)', this.side->pow(2))
-	    enddef
+	  var side: float
+	  def InfoArea(): tuple<string, float>
+	    return ('Square (s²)', this.side->pow(2))
+	  enddef
 	endclass
 	const INPUT: float = "Enter a float value: "->input()->str2float()
 	echo "\nAreas of shapes:"
@@ -2074,8 +2231,8 @@ classes, objects, and interface: >vim9
 	var mySquare: object<Square> = Square.new(INPUT)
 	final shapes: list<Shape> = [myCircle, mySquare]
 	for shape in shapes
-	    const [N: string, A: float] = shape.InfoArea()
-	    echo $"\t- {N} has area of {A}"
+	  const [N: string, A: float] = shape.InfoArea()
+	  echo $"\t- {N} has area of {A}"
 	endfor
 	echo "\n\t\ttype()\ttypename()\n\t\t------\t----------"
 	echo $"Circle\t\t{Circle->type()}\t{Circle->typename()}"
@@ -2089,19 +2246,19 @@ classes, objects, and interface: >vim9
 An |enum| may be used as a type (|v:t_enum|).  Variables holding enum values
 have the enumvalue type (|v:t_enumvalue|) at runtime.  The following
 interactive example prompts for a character and returns information about
-either a square or a rhombus.  It also reports on the |type()| and |typename()|
-of the enum and enumvalue: >vim9
-
+either a square or a rhombus.  It also reports on the |type()| and the
+|typename()| of the enum and enumvalue:
+>vim9
 	vim9script
 	enum Quad
-	    Square('four', 'only'),
-	    Rhombus('opposite', 'no')
-	    var eq: string
-	    var ra: string
-	    def string(): string
-	        return $"\nA {this.name} has " ..
-	               $"{this.eq} equal sides and {this.ra} right angles\n\n"
-	    enddef
+	  Square('four', 'only'),
+	  Rhombus('opposite', 'no')
+	  var eq: string
+	  var ra: string
+	  def string(): string
+	    return $"\nA {this.name} has " ..
+	      $"{this.eq} equal sides and {this.ra} right angles\n\n"
+	  enddef
 	endenum
 	echo "Rhombus (r) or Square (s)?"
 	var myQuad: Quad = getcharstr() =~ '\c^R' ? Quad.Rhombus : Quad.Square
@@ -2109,10 +2266,10 @@ of the enum and enumvalue: >vim9
 	echo $"Quad  \t{Quad->type()}  \t{Quad->typename()}"
 	echo $"myQuad\t{myQuad->type()}\t{myQuad->typename()}"
 <
-	 Notes: This script uses builtin method "string()" (|object-string()|).
-		The typename() of Quad and myQuad are the same ("enum<Quad>")
-		whereas the type() is distinguished (myQuad returns 16,
-		enumvalue, whereas Quad returns 15, enum).
+	Notes: This uses builtin method "string()" - see |object-string()|.
+	The typename() of Quad and myQuad are the same ("enum<Quad>") whereas
+	the type() is distinguished (myQuad returns 16, which is an EnumValue,
+	whereas Quad returns 15, which is an Enum).
 
 Variable types and type casting	~
 							*variable-types*
