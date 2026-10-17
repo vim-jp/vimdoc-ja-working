@@ -4742,7 +4742,7 @@ getinfo({kind}, {name} [, {opts}])			*getinfo()*
 
 			{opts} に |vim9-types| のリストを持つ "argtypes" 項目
 			があるとき、"returns" はそれらの型の引数で呼んだときの
-			型になる。List に無い必須の引数は "any" とみなす。
+			型になる。リストに無い必須の引数は "any" とみなす。
 			"maxargs" より多い型や不明な型を渡すとエラーになる。引
 			数が受け付けない型はチェックしない。例: >
 				let opts = {'argtypes': ['list<number>']}
@@ -4863,7 +4863,6 @@ getinfo({kind}, {name} [, {opts}])			*getinfo()*
 				{name} は "v:count" のように "v:" で始まる必要
 				がある。
 			name	"v:" を含む変数名
-			type	the type as a String, see |vim9-types|
 			type	型を示す文字列。|vim9-types| 参照
 			readonly
 				変数を設定できない場合 |TRUE|
