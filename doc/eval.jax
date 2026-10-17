@@ -3090,17 +3090,16 @@ Vimはこれを見つけると、まず波括弧の中の式を評価し、そ�
 	let @{i} = false	|" E15: invalid expression
 <
 						*curly-braces-function-names*
-同様の方法で評価した名前により関数を定義したり呼び出したりできる。
-例: >
-	:let func_end='whizz'
-	:call my_func_{func_end}(parameter)
-
-この例は関数 "my_func_whizz(parameter)" を呼びだす。
-
-これらは機能しない: >
-  :let i = 3
-  :let @{i} = ''  " error
-  :echo @{i}      " error
+変数と同様に、評価された名前を使って関数を呼び出したり定義したりすることができ
+る。これは旧来の Vim script でのみ機能し、|Vim9| script では機能しない。
+例:
+>vim
+	let low_line = '_'
+	function F_curly()
+	  return 'F{low_line}curly() is a working curly-braces-function-name'
+	endfunction
+	echo F{low_line}curly()
+<
 
 ==============================================================================
 7. コマンド						*expression-commands*
