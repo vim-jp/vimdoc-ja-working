@@ -87,7 +87,6 @@
 合は移動の最初と最後の位置がオペレータの対象に含まれますが、排他的な場合はバッ
 ファの最後に向かって最後の文字は対象に含まれません。行単位の移動は常に最初と最
 後の位置が含まれます。
-For |o_CTRL-V| the motion is always inclusive, unless 'selection' is "exclusive".
 |o_CTRL-V| の場合、'selection' が "exclusive" に設定されているときを除き、モー
 ションは常に内包的となる。
 
