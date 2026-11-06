@@ -1012,8 +1012,8 @@ Note: ブロック折り畳みを有効にすると、小さな折り畳みが�
 BATS			*bats.vim* *ft-bats-syntax*
 
 Bats (Bash Automated Testing System) のファイルは Bash としてハイライト表示さ
-れる (|ft-sh-syntax| を参照)。さらに、"@test" 行およびテスト名、"
-# bats test_tags=" や "# bats file_tags=" といったコメント、そして bats-core
+れる (|ft-sh-syntax| を参照)。さらに、"@test" 行およびテスト名、
+"# bats test_tags=" や "# bats file_tags=" といったコメント、そして bats-core
 が提供するコマンド ("run"、"skip"、"load" など) についてもそれぞれハイライトが
 適用される。
 
