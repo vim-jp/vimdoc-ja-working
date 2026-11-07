@@ -169,7 +169,7 @@ make とは別に "configure" を実行する方法もあります。オプシ�
 				を参照してください。
 
 	--enable-perlinterp	Perl インターフェイスを有効にする。同様に、
-				ruby、python、tclなどもあります。
+				ruby、python、tcl などもあります。
 
 	--disable-gui		GUI インターフェイスをコンパイルしない。
 	--without-x		X-windows の機能をコンパイルしない。
